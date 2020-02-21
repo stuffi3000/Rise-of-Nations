@@ -1,0 +1,595 @@
+############################################################################################################
+#	Expert AI mod - misc effects
+############################################################################################################
+
+EAI_calculate_fuel_need = {
+
+	### air
+
+	set_temp_variable = { air_force_size = 0 }
+	while_loop_effect = { limit = { check_variable = { air_force_size < 15000 } }
+
+		if = { 
+			limit = {
+				meta_trigger = {
+					text = { NOT = { has_deployed_air_force_size = { size > [x] } } }
+					x = "[?air_force_size]"
+				}
+			} 
+		
+			set_temp_variable = { break = 1 }
+		}
+		else = {
+			add_to_temp_variable = { air_force_size = 500 }
+		}
+	}
+
+	multiply_temp_variable = { air_force_size = 1.8 } # fuel consumption estimate
+
+	### land
+
+	set_temp_variable = { armor_size = 0 }
+
+	set_temp_variable = { armor_size = num_battalions_with_type@medium_armor }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@medium_sp_anti_air_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@medium_sp_artillery_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@medium_tank_destroyer_brigade }
+
+	add_to_temp_variable = { armor_size = num_battalions_with_type@heavy_armor }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@heavy_sp_anti_air_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@heavy_sp_artillery_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@heavy_tank_destroyer_brigade }
+
+	add_to_temp_variable = { armor_size = num_battalions_with_type@modern_armor }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@modern_sp_anti_air_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@modern_sp_artillery_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@modern_tank_destroyer_brigade }
+
+	add_to_temp_variable = { armor_size = num_battalions_with_type@light_armor }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@light_sp_anti_air_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@light_sp_artillery_brigade }
+	add_to_temp_variable = { armor_size = num_battalions_with_type@light_tank_destroyer_brigade }
+
+	multiply_temp_variable = { armor_size = 50 } # fuel consumption estimate
+
+	### navy
+
+	set_temp_variable = { navy_size = num_ships }
+
+	multiply_temp_variable = { navy_size = 60 } # fuel consumption estimate
+
+	### total
+
+	set_variable = { EAI_max_fuel_consumption_estimate = air_force_size }
+	add_to_variable = { EAI_max_fuel_consumption_estimate = armor_size }
+	add_to_variable = { EAI_max_fuel_consumption_estimate = navy_size }
+}
+
+# command power cost when changing an ally's military focuses
+EAI_calculate_config_cp_cost = {
+
+	if = { 		limit = { strength_ratio = { tag = ROOT ratio > 1.0 } } 			set_variable = { ROOT.EAI_config_cp_cost = 100 } }
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.9 } } 			set_variable = { ROOT.EAI_config_cp_cost = 90 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.8 } } 			set_variable = { ROOT.EAI_config_cp_cost = 80 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.7 } } 			set_variable = { ROOT.EAI_config_cp_cost = 70 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.6 } } 			set_variable = { ROOT.EAI_config_cp_cost = 60 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.5 } } 			set_variable = { ROOT.EAI_config_cp_cost = 50 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.4 } } 			set_variable = { ROOT.EAI_config_cp_cost = 40 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.3 } } 			set_variable = { ROOT.EAI_config_cp_cost = 30 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.2 } } 			set_variable = { ROOT.EAI_config_cp_cost = 20 } } 
+	else_if = { limit = { strength_ratio = { tag = ROOT ratio > 0.1 } } 			set_variable = { ROOT.EAI_config_cp_cost = 10 } } 
+	else_if = { limit = { NOT = { strength_ratio = { tag = ROOT ratio > 0.1 } } } 	set_variable = { ROOT.EAI_config_cp_cost = 10 } }
+
+	multiply_variable = { ROOT.EAI_config_cp_cost = 0.5 }
+
+	if = { limit = { is_subject_of = ROOT }
+		multiply_variable = { ROOT.EAI_config_cp_cost = 0.5 } # 50% cheaper on subjects
+	}
+	
+	if = { limit = { ROOT = { is_subject_of = PREV } }
+		multiply_variable = { ROOT.EAI_config_cp_cost = 1.5 } # 50% more expensive on overlord
+	}
+	
+	# clamp_variable = { var = ROOT.EAI_config_cp_cost_@THIS min = 0 max = 100 } # max cost to allow weak minors to influence overlords
+	
+	set_variable = { ROOT.EAI_config_cp_cost_effect = ROOT.EAI_config_cp_cost }
+	
+	multiply_variable = { ROOT.EAI_config_cp_cost_effect = -1 }
+}
+
+EAI_num_surface_ships = {
+
+	set_variable = { EAI_num_surface_ships = num_ships_with_type@destroyer }
+	add_to_variable = { EAI_num_surface_ships = num_ships_with_type@light_cruiser }
+	add_to_variable = { EAI_num_surface_ships = num_ships_with_type@heavy_cruiser }
+	add_to_variable = { EAI_num_surface_ships = num_ships_with_type@battle_cruiser }
+	add_to_variable = { EAI_num_surface_ships = num_ships_with_type@battleship }
+}
+
+# stockpile display
+EAI_set_stockpile_variables = {
+
+	set_variable = { EAI_stockpile_infantry_equipment = Prev.num_equipment@infantry_equipment }
+	set_variable = { EAI_str_ratio_infantry_equipment = Prev.num_equipment_in_armies@infantry_equipment }
+	divide_variable = { EAI_str_ratio_infantry_equipment = Prev.num_target_equipment_in_armies@infantry_equipment }
+	multiply_variable = { EAI_str_ratio_infantry_equipment = 100 }
+
+	set_variable = { EAI_stockpile_support_equipment = Prev.num_equipment@support_equipment }
+	set_variable = { EAI_str_ratio_support_equipment = Prev.num_equipment_in_armies@support_equipment }
+	divide_variable = { EAI_str_ratio_support_equipment = Prev.num_target_equipment_in_armies@support_equipment }
+	multiply_variable = { EAI_str_ratio_support_equipment = 100 }
+
+	set_variable = { EAI_stockpile_motorized_equipment = Prev.num_equipment@motorized_equipment }
+	set_variable = { EAI_str_ratio_motorized_equipment = Prev.num_equipment_in_armies@motorized_equipment }
+	divide_variable = { EAI_str_ratio_motorized_equipment = Prev.num_target_equipment_in_armies@motorized_equipment }
+	multiply_variable = { EAI_str_ratio_motorized_equipment = 100 }
+
+	set_variable = { EAI_stockpile_mechanized_equipment = Prev.num_equipment@mechanized_equipment }
+	set_variable = { EAI_str_ratio_mechanized_equipment = Prev.num_equipment_in_armies@mechanized_equipment }
+	divide_variable = { EAI_str_ratio_mechanized_equipment = Prev.num_target_equipment_in_armies@mechanized_equipment }
+	multiply_variable = { EAI_str_ratio_mechanized_equipment = 100 }
+
+	set_variable = { EAI_stockpile_artillery_equipment = Prev.num_equipment@artillery_equipment }
+	set_variable = { EAI_str_ratio_artillery_equipment = Prev.num_equipment_in_armies@artillery_equipment }
+	divide_variable = { EAI_str_ratio_artillery_equipment = Prev.num_target_equipment_in_armies@artillery_equipment }
+	multiply_variable = { EAI_str_ratio_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_rocket_artillery_equipment = Prev.num_equipment@rocket_artillery_equipment }
+	set_variable = { EAI_str_ratio_rocket_artillery_equipment = Prev.num_equipment_in_armies@rocket_artillery_equipment }
+	divide_variable = { EAI_str_ratio_rocket_artillery_equipment = Prev.num_target_equipment_in_armies@rocket_artillery_equipment }
+	multiply_variable = { EAI_str_ratio_rocket_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_motorized_rocket_equipment_equipment = Prev.num_equipment@motorized_rocket_equipment_equipment }
+	set_variable = { EAI_str_ratio_motorized_rocket_equipment_equipment = Prev.num_equipment_in_armies@motorized_rocket_equipment_equipment }
+	divide_variable = { EAI_str_ratio_motorized_rocket_equipment_equipment = Prev.num_target_equipment_in_armies@motorized_rocket_equipment_equipment }
+	multiply_variable = { EAI_str_ratio_motorized_rocket_equipment_equipment = 100 }
+
+	set_variable = { EAI_stockpile_anti_tank_equipment = Prev.num_equipment@anti_tank_equipment }
+	set_variable = { EAI_str_ratio_anti_tank_equipment = Prev.num_equipment_in_armies@anti_tank_equipment }
+	divide_variable = { EAI_str_ratio_anti_tank_equipment = Prev.num_target_equipment_in_armies@anti_tank_equipment }
+	multiply_variable = { EAI_str_ratio_anti_tank_equipment = 100 }
+
+	set_variable = { EAI_stockpile_anti_air_equipment = Prev.num_equipment@anti_air_equipment }
+	set_variable = { EAI_str_ratio_anti_air_equipment = Prev.num_equipment_in_armies@anti_air_equipment }
+	divide_variable = { EAI_str_ratio_anti_air_equipment = Prev.num_target_equipment_in_armies@anti_air_equipment }
+	multiply_variable = { EAI_str_ratio_anti_air_equipment = 100 }
+
+
+	set_variable = { EAI_stockpile_light_tank_equipment = Prev.num_equipment@light_tank_equipment }
+	set_variable = { EAI_str_ratio_light_tank_equipment = Prev.num_equipment_in_armies@light_tank_equipment }
+	divide_variable = { EAI_str_ratio_light_tank_equipment = Prev.num_target_equipment_in_armies@light_tank_equipment }
+	multiply_variable = { EAI_str_ratio_light_tank_equipment = 100 }
+
+	set_variable = { EAI_stockpile_light_tank_artillery_equipment = Prev.num_equipment@light_tank_artillery_equipment }
+	set_variable = { EAI_str_ratio_light_tank_artillery_equipment = Prev.num_equipment_in_armies@light_tank_artillery_equipment }
+	divide_variable = { EAI_str_ratio_light_tank_artillery_equipment = Prev.num_target_equipment_in_armies@light_tank_artillery_equipment }
+	multiply_variable = { EAI_str_ratio_light_tank_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_light_tank_destroyer_equipment = Prev.num_equipment@light_tank_destroyer_equipment }
+	set_variable = { EAI_str_ratio_light_tank_destroyer_equipment = Prev.num_equipment_in_armies@light_tank_destroyer_equipment }
+	divide_variable = { EAI_str_ratio_light_tank_destroyer_equipment = Prev.num_target_equipment_in_armies@light_tank_destroyer_equipment }
+	multiply_variable = { EAI_str_ratio_light_tank_destroyer_equipment = 100 }
+
+	set_variable = { EAI_stockpile_light_tank_aa_equipment = Prev.num_equipment@light_tank_aa_equipment }
+	set_variable = { EAI_str_ratio_light_tank_aa_equipment = Prev.num_equipment_in_armies@light_tank_aa_equipment }
+	divide_variable = { EAI_str_ratio_light_tank_aa_equipment = Prev.num_target_equipment_in_armies@light_tank_aa_equipment }
+	multiply_variable = { EAI_str_ratio_light_tank_aa_equipment = 100 }
+
+
+	set_variable = { EAI_stockpile_medium_tank_equipment = Prev.num_equipment@medium_tank_equipment }
+	set_variable = { EAI_str_ratio_medium_tank_equipment = Prev.num_equipment_in_armies@medium_tank_equipment }
+	divide_variable = { EAI_str_ratio_medium_tank_equipment = Prev.num_target_equipment_in_armies@medium_tank_equipment }
+	multiply_variable = { EAI_str_ratio_medium_tank_equipment = 100 }
+
+	set_variable = { EAI_stockpile_medium_tank_artillery_equipment = Prev.num_equipment@medium_tank_artillery_equipment }
+	set_variable = { EAI_str_ratio_medium_tank_artillery_equipment = Prev.num_equipment_in_armies@medium_tank_artillery_equipment }
+	divide_variable = { EAI_str_ratio_medium_tank_artillery_equipment = Prev.num_target_equipment_in_armies@medium_tank_artillery_equipment }
+	multiply_variable = { EAI_str_ratio_medium_tank_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_medium_tank_destroyer_equipment = Prev.num_equipment@medium_tank_destroyer_equipment }
+	set_variable = { EAI_str_ratio_medium_tank_destroyer_equipment = Prev.num_equipment_in_armies@medium_tank_destroyer_equipment }
+	divide_variable = { EAI_str_ratio_medium_tank_destroyer_equipment = Prev.num_target_equipment_in_armies@medium_tank_destroyer_equipment }
+	multiply_variable = { EAI_str_ratio_medium_tank_destroyer_equipment = 100 }
+
+	set_variable = { EAI_stockpile_medium_tank_aa_equipment = Prev.num_equipment@medium_tank_aa_equipment }
+	set_variable = { EAI_str_ratio_medium_tank_aa_equipment = Prev.num_equipment_in_armies@medium_tank_aa_equipment }
+	divide_variable = { EAI_str_ratio_medium_tank_aa_equipment = Prev.num_target_equipment_in_armies@medium_tank_aa_equipment }
+	multiply_variable = { EAI_str_ratio_medium_tank_aa_equipment = 100 }
+
+
+	set_variable = { EAI_stockpile_heavy_tank_equipment = Prev.num_equipment@heavy_tank_equipment }
+	set_variable = { EAI_str_ratio_heavy_tank_equipment = Prev.num_equipment_in_armies@heavy_tank_equipment }
+	divide_variable = { EAI_str_ratio_heavy_tank_equipment = Prev.num_target_equipment_in_armies@heavy_tank_equipment }
+	multiply_variable = { EAI_str_ratio_heavy_tank_equipment = 100 }
+
+	set_variable = { EAI_stockpile_heavy_tank_artillery_equipment = Prev.num_equipment@heavy_tank_artillery_equipment }
+	set_variable = { EAI_str_ratio_heavy_tank_artillery_equipment = Prev.num_equipment_in_armies@heavy_tank_artillery_equipment }
+	divide_variable = { EAI_str_ratio_heavy_tank_artillery_equipment = Prev.num_target_equipment_in_armies@heavy_tank_artillery_equipment }
+	multiply_variable = { EAI_str_ratio_heavy_tank_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_heavy_tank_destroyer_equipment = Prev.num_equipment@heavy_tank_destroyer_equipment }
+	set_variable = { EAI_str_ratio_heavy_tank_destroyer_equipment = Prev.num_equipment_in_armies@heavy_tank_destroyer_equipment }
+	divide_variable = { EAI_str_ratio_heavy_tank_destroyer_equipment = Prev.num_target_equipment_in_armies@heavy_tank_destroyer_equipment }
+	multiply_variable = { EAI_str_ratio_heavy_tank_destroyer_equipment = 100 }
+
+	set_variable = { EAI_stockpile_heavy_tank_aa_equipment = Prev.num_equipment@heavy_tank_aa_equipment }
+	set_variable = { EAI_str_ratio_heavy_tank_aa_equipment = Prev.num_equipment_in_armies@heavy_tank_aa_equipment }
+	divide_variable = { EAI_str_ratio_heavy_tank_aa_equipment = Prev.num_target_equipment_in_armies@heavy_tank_aa_equipment }
+	multiply_variable = { EAI_str_ratio_heavy_tank_aa_equipment = 100 }
+
+
+	set_variable = { EAI_stockpile_modern_tank_equipment = Prev.num_equipment@modern_tank_equipment }
+	set_variable = { EAI_str_ratio_modern_tank_equipment = Prev.num_equipment_in_armies@modern_tank_equipment }
+	divide_variable = { EAI_str_ratio_modern_tank_equipment = Prev.num_target_equipment_in_armies@modern_tank_equipment }
+	multiply_variable = { EAI_str_ratio_modern_tank_equipment = 100 }
+
+	set_variable = { EAI_stockpile_modern_tank_artillery_equipment = Prev.num_equipment@modern_tank_artillery_equipment }
+	set_variable = { EAI_str_ratio_modern_tank_artillery_equipment = Prev.num_equipment_in_armies@modern_tank_artillery_equipment }
+	divide_variable = { EAI_str_ratio_modern_tank_artillery_equipment = Prev.num_target_equipment_in_armies@modern_tank_artillery_equipment }
+	multiply_variable = { EAI_str_ratio_modern_tank_artillery_equipment = 100 }
+
+	set_variable = { EAI_stockpile_modern_tank_destroyer_equipment = Prev.num_equipment@modern_tank_destroyer_equipment }
+	set_variable = { EAI_str_ratio_modern_tank_destroyer_equipment = Prev.num_equipment_in_armies@modern_tank_destroyer_equipment }
+	divide_variable = { EAI_str_ratio_modern_tank_destroyer_equipment = Prev.num_target_equipment_in_armies@modern_tank_destroyer_equipment }
+	multiply_variable = { EAI_str_ratio_modern_tank_destroyer_equipment = 100 }
+
+	set_variable = { EAI_stockpile_modern_tank_aa_equipment = Prev.num_equipment@modern_tank_aa_equipment }
+	set_variable = { EAI_str_ratio_modern_tank_aa_equipment = Prev.num_equipment_in_armies@modern_tank_aa_equipment }
+	divide_variable = { EAI_str_ratio_modern_tank_aa_equipment = Prev.num_target_equipment_in_armies@modern_tank_aa_equipment }
+	multiply_variable = { EAI_str_ratio_modern_tank_aa_equipment = 100 }
+
+	PREV = {
+		set_variable = { ROOT.EAI_stockpile_convoy_equipment = 0 }
+		while_loop_effect = {
+			limit = {
+				meta_trigger = {
+					text = { stockpile_ratio = { archetype = convoy ratio > [x] } }
+					x = "[?ROOT.EAI_stockpile_convoy_equipment]"
+				}
+			}
+			add_to_variable = { ROOT.EAI_stockpile_convoy_equipment = 1 }
+		}
+
+		set_variable = { ROOT.EAI_fielded_convoy_equipment = 0 }
+		while_loop_effect = { 
+			limit = {
+				meta_trigger = {
+					text = { has_navy_size = { size > [x] type = convoy } }
+					x = "[?ROOT.EAI_fielded_convoy_equipment]"
+				}
+			}
+			add_to_variable = { ROOT.EAI_fielded_convoy_equipment = 1 }
+		}
+	}
+	subtract_from_variable = { EAI_fielded_convoy_equipment = EAI_stockpile_convoy_equipment }
+
+
+	set_variable = { EAI_stockpile_fuel = Prev.fuel_k }
+	set_variable = { EAI_str_ratio_fuel = Prev.fuel_ratio }
+	multiply_variable = { EAI_str_ratio_fuel = 100 }
+}
+EAI_clear_stockpile_variables = {
+
+	clear_variable = EAI_stockpile_infantry_equipment
+	clear_variable = EAI_str_ratio_infantry_equipment
+
+	clear_variable = EAI_stockpile_support_equipment
+	clear_variable = EAI_str_ratio_support_equipment
+
+	clear_variable = EAI_stockpile_motorized_equipment
+	clear_variable = EAI_str_ratio_motorized_equipment
+
+	clear_variable = EAI_stockpile_mechanized_equipment
+	clear_variable = EAI_str_ratio_mechanized_equipment
+
+	clear_variable = EAI_stockpile_artillery_equipment
+	clear_variable = EAI_str_ratio_artillery_equipment
+
+	clear_variable = EAI_stockpile_rocket_artillery_equipment
+	clear_variable = EAI_str_ratio_rocket_artillery_equipment
+
+	clear_variable = EAI_stockpile_motorized_rocket_equipment_equipment
+	clear_variable = EAI_str_ratio_motorized_rocket_equipment_equipment
+
+	clear_variable = EAI_stockpile_anti_tank_equipment
+	clear_variable = EAI_str_ratio_anti_tank_equipment
+
+	clear_variable = EAI_stockpile_anti_air_equipment
+	clear_variable = EAI_str_ratio_anti_air_equipment
+
+
+	clear_variable = EAI_stockpile_light_tank_equipment
+	clear_variable = EAI_str_ratio_light_tank_equipment
+
+	clear_variable = EAI_stockpile_light_tank_artillery_equipment
+	clear_variable = EAI_str_ratio_light_tank_artillery_equipment
+
+	clear_variable = EAI_stockpile_light_tank_destroyer_equipment
+	clear_variable = EAI_str_ratio_light_tank_destroyer_equipment
+
+	clear_variable = EAI_stockpile_light_tank_aa_equipment
+	clear_variable = EAI_str_ratio_light_tank_aa_equipment
+
+
+	clear_variable = EAI_stockpile_medium_tank_equipment
+	clear_variable = EAI_str_ratio_medium_tank_equipment
+
+	clear_variable = EAI_stockpile_medium_tank_artillery_equipment
+	clear_variable = EAI_str_ratio_medium_tank_artillery_equipment
+
+	clear_variable = EAI_stockpile_medium_tank_destroyer_equipment
+	clear_variable = EAI_str_ratio_medium_tank_destroyer_equipment
+
+	clear_variable = EAI_stockpile_medium_tank_aa_equipment
+	clear_variable = EAI_str_ratio_medium_tank_aa_equipment
+
+
+	clear_variable = EAI_stockpile_heavy_tank_equipment
+	clear_variable = EAI_str_ratio_heavy_tank_equipment
+
+	clear_variable = EAI_stockpile_heavy_tank_artillery_equipment
+	clear_variable = EAI_str_ratio_heavy_tank_artillery_equipment
+
+	clear_variable = EAI_stockpile_heavy_tank_destroyer_equipment
+	clear_variable = EAI_str_ratio_heavy_tank_destroyer_equipment
+
+	clear_variable = EAI_stockpile_heavy_tank_aa_equipment
+	clear_variable = EAI_str_ratio_heavy_tank_aa_equipment
+
+
+	clear_variable = EAI_stockpile_modern_tank_equipment
+	clear_variable = EAI_str_ratio_modern_tank_equipment
+
+	clear_variable = EAI_stockpile_modern_tank_artillery_equipment
+	clear_variable = EAI_str_ratio_modern_tank_artillery_equipment
+
+	clear_variable = EAI_stockpile_modern_tank_destroyer_equipment
+	clear_variable = EAI_str_ratio_modern_tank_destroyer_equipment
+
+	clear_variable = EAI_stockpile_modern_tank_aa_equipment
+	clear_variable = EAI_str_ratio_modern_tank_aa_equipment
+
+
+	clear_variable = EAI_stockpile_convoy_equipment
+	clear_variable = EAI_fielded_convoy_equipment
+
+
+	clear_variable = EAI_stockpile_fuel
+	clear_variable = EAI_str_ratio_fuel
+}
+
+# submarines lost during 20 days
+EAI_track_submarine_losses = {
+
+	subtract_from_variable = { EAI_previous_subs = num_ships_with_type@submarine }
+
+	if = { limit = { check_variable = { EAI_previous_subs > 0 } }
+
+		divide_variable = { EAI_previous_subs = num_ships_with_type@submarine }
+		if = { limit = { check_variable = { EAI_previous_subs > 0.05 } } # lost more than 5%
+			set_country_flag = { flag = EAI_halt_sub_missions value = 1 days = 14 }
+		}
+	}
+
+	set_variable = { EAI_previous_subs = num_ships_with_type@submarine }
+}
+
+# track the max armor value seen from other countries and the max piercing value of this country
+EAI_armor_intel_check = {
+
+	if = {
+		limit = {
+			OR = { # only check if it has a template that can upgrade its piercing
+				has_country_flag = EAI_anti_tank_template_upgrade
+				has_country_flag = EAI_marm_template_upgrade
+				has_country_flag = EAI_harm_template_upgrade
+			}
+		}
+
+		### armor intel from other countries
+
+		# enemies + neighbors
+
+		set_temp_variable = { armor_intel_value = EAI_max_armor_seen }
+
+		while_loop_effect = { limit = { check_variable = { armor_intel_value < 200 } }
+
+			if = {
+				limit = {
+					meta_trigger = {
+						text = {
+							NOT = {
+								any_neighbor_country = { 
+									EAI_is_threat = yes
+									ROOT = { estimated_intel_max_armor = { tag = PREV value > [x] } } 
+								}
+								any_enemy_country = { ROOT = { estimated_intel_max_armor = { tag = PREV value > [x] } } }
+							}
+						}
+						x = "[?armor_intel_value|.0]"
+					}
+				}
+
+				if = { limit = { NOT = { check_variable = { EAI_max_armor_seen = armor_intel_value } } }
+
+					if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMOR INTEL: new highest armor intel value = [?armor_intel_value]" } 
+				}
+
+				set_variable = { EAI_max_armor_seen = armor_intel_value }
+				set_temp_variable = { break = 1 }
+			}
+
+			add_to_temp_variable = { armor_intel_value = 5 }
+		}
+
+		# enemies only
+
+		set_temp_variable = { armor_intel_value = EAI_max_armor_seen_enemies }
+
+		while_loop_effect = { limit = { check_variable = { armor_intel_value < 200 } }
+
+			if = {
+				limit = {
+					meta_trigger = {
+						text = {
+							NOT = {
+								any_enemy_country = { ROOT = { estimated_intel_max_armor = { tag = PREV value > [x] } } }
+							}
+						}
+						x = "[?armor_intel_value|.0]"
+					}
+				}
+
+				if = { limit = { NOT = { check_variable = { EAI_max_armor_seen_enemies = armor_intel_value } } }
+
+					if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMOR INTEL: new enemies highest armor intel value = [?armor_intel_value]" } 
+				}
+
+				set_variable = { EAI_max_armor_seen_enemies = armor_intel_value }
+				set_temp_variable = { break = 1 }
+			}
+
+			add_to_temp_variable = { armor_intel_value = 5 }
+		}
+
+		### armor piercing of this country
+
+		set_temp_variable = { piercing_value = EAI_max_piercing }
+
+		while_loop_effect = { limit = { check_variable = { piercing_value < 200 } }
+
+			if = {
+				limit = {
+					meta_trigger = {
+						text = {
+							NOT = { ROOT = { estimated_intel_max_piercing = { tag = ROOT value > [x] } } }
+						}
+						x = "[?piercing_value|.0]"
+					}
+				}
+
+				set_variable = { EAI_max_piercing = piercing_value }
+				set_temp_variable = { break = 1 }
+			}
+
+			add_to_temp_variable = { piercing_value = 2 }
+		}
+	}
+}
+
+### scripted trade AI
+
+EAI_trade_strategies = {
+
+	every_country = { EAI_allow_trade = yes }
+	
+	### GER - stop oversea trade
+
+	if = { 
+		limit = { 
+			GER = { EAI_PREV_on_same_side_with_THIS = yes }
+			capital_scope = { OR = { is_on_continent = europe is_on_continent = middle_east } }
+			has_war = yes 
+			alliance_naval_strength_ratio < 2
+		}
+
+		every_country = {
+			limit = { 
+				NOT = { capital_scope = { OR = { is_on_continent = europe is_on_continent = middle_east } } } 
+				NOT = { is_neighbor_of = ROOT }
+			}
+
+			EAI_block_trade = yes
+		}
+	}
+
+	### JAP - stop oversea trade
+
+	if = { 
+		limit = { 
+			JAP = { EAI_PREV_on_same_side_with_THIS = yes }
+			capital_scope = { OR = { is_on_continent = asia is_on_continent = pacific is_on_continent = oceania } }
+			has_war = yes 
+			alliance_naval_strength_ratio < 2
+		}
+
+		every_country = { 
+			limit = { 
+				NOT = { capital_scope = { OR = { is_on_continent = asia is_on_continent = pacific is_on_continent = oceania } } }
+				NOT = { is_neighbor_of = ROOT }
+			}
+
+			EAI_block_trade = yes
+		}
+	}
+
+	### ROM - direct oil trade to GER when needed
+
+	if = { 
+		limit = { 
+			OR = { is_in_faction_with = GER has_non_aggression_pact_with = GER GER = { EAI_PREV_has_same_ideology_with_THIS = yes } }
+			NOT = { original_tag = GER original_tag = ROM }
+			ROM = { is_in_faction_with = GER }
+			GER = { fuel_ratio < 0.5 }
+			NOT = { AND = { original_tag = ITA fuel_ratio < 0.25 } }
+			fuel_ratio > 0.1
+		}
+		
+		ROM = { 
+			EAI_block_trade = yes
+		}
+	}
+}
+
+EAI_block_trade = {
+
+	if = { limit = { NOT = { has_country_flag = EAI_block_trade_to_@PREV } }
+
+		set_country_flag = EAI_block_trade_to_@PREV
+
+		add_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_1 } 
+		add_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_2 } 
+		add_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_3 } 
+
+		# log = "[GetYear] [GetMonth] | AI | [Prev.GetName] | TRADE: blocking trade against [This.GetName]"
+	}
+}
+
+EAI_allow_trade = {
+
+	if = { limit = { has_country_flag = EAI_block_trade_to_@PREV }
+
+		clr_country_flag = EAI_block_trade_to_@PREV
+
+		remove_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_1 } 
+		remove_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_2 } 
+		remove_opinion_modifier = { target = PREV modifier = EAI_trade_opinion_3 } 
+
+		# log = "[GetYear] [GetMonth] | AI | [Prev.GetName] | TRADE: allowing trade against [This.GetName]"
+	}
+}
+
+###
+
+EAI_check_for_bugged_occupation = {
+
+	if = { limit = { has_war = yes has_country_flag = EAI_use_harshest_occupation }
+
+		for_each_scope_loop = { array = controlled_states
+		
+			if = {
+				limit = {
+					NOT = { is_core_of = ROOT }
+					OWNER = { has_war_with = ROOT }
+					check_variable = { modifier@local_factories = -0.7 } # stuck on gentle
+				}
+
+				if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | OCCUPATION: bugged occupation policy detected at [This.GetName]" } 
+
+				OWNER = {
+					ROOT = { set_country_flag = { flag = EAI_fix_occupation_law_@PREV value = 1 days = 3 } }
+				}
+			}
+		}
+	}
+}

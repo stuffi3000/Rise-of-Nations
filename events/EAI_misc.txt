@@ -1,0 +1,764 @@
+﻿############################################################################################################
+# Expert AI mod - background events
+############################################################################################################
+
+add_namespace = EAI_background
+
+# Scripted AI event
+country_event = { 
+	id = EAI_background.0
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+
+	trigger = { 
+		is_ai = yes 
+		NOT = { has_country_flag = EAI_delay }
+	}
+
+	immediate = {
+
+		if = { limit = { has_global_flag = EAI_performance_mode NOT = { has_country_flag = EAI_delay } } 
+		
+			set_country_flag = { flag = EAI_delay value = 1 days = 20 } 
+		}
+
+		### check the need to upgrade laws
+
+		EAI_upgrade_economy_law = yes
+
+		EAI_upgrade_conscription_law = yes
+
+		EAI_upgrade_trade_law = yes
+
+		### variant upgrades
+
+		EAI_upgrade_land_equipment = yes
+
+		EAI_upgrade_air_equipment = yes
+		
+		### controls when the AI should start upgrading specific templates
+
+		EAI_template_upgrades = yes
+
+		### check the need for more generals
+
+		EAI_recruit_general = yes
+
+		EAI_recruit_marshal = yes
+
+		### check armor intel
+
+		EAI_armor_intel_check = yes
+	
+		### check the need to mobilize
+		
+		if = { limit = { EAI_mobilize_army = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_mobilize_army } } 
+			
+				set_country_flag = EAI_mobilize_army
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | mobilizing army" }  
+			}
+		}
+		else = { clr_country_flag = EAI_mobilize_army }
+
+		### set targets for these actions
+		
+		EAI_update_naval_invasion_target = yes 
+		
+		EAI_update_lend_lease_targets = yes
+		
+		EAI_update_volunteer_targets = yes
+
+		### production strategies
+
+		EAI_army_production_strategies = yes
+
+		EAI_aircraft_production_strategies = yes
+
+		EAI_navy_production_strategies = yes
+
+		### anti-aggression script
+		
+		if = { limit = { has_global_flag = EAI_anti_aggression_diplomacy }
+			
+			every_country = {
+				limit = { NOT = { EAI_invite_to_faction = yes } has_country_flag = EAI_invite_to_faction_@ROOT }
+				
+				clr_country_flag = EAI_invite_to_faction_@ROOT
+			}
+		
+			every_country = {
+				limit = { EAI_invite_to_faction = yes }
+				
+				set_country_flag = EAI_invite_to_faction_@ROOT
+
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ANTI-AGGRESSION: inviting [This.GetName]" } 
+			}
+		}
+
+		### occupation laws
+
+		EAI_check_for_bugged_occupation = yes
+
+		if = { limit = { EAI_use_gentle_occupation = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_use_gentle_occupation } }
+			
+				set_country_flag = EAI_use_gentle_occupation
+			}
+		}
+		else = { clr_country_flag = EAI_use_gentle_occupation }
+
+		if = { limit = { EAI_use_harshest_occupation = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_use_harshest_occupation } } 
+			
+				set_country_flag = EAI_use_harshest_occupation
+			}
+		}
+		else = { clr_country_flag = EAI_use_harshest_occupation }
+
+		### defend core strategy
+
+		if = { limit = { EAI_defend_core = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_defend_core } } 
+			
+				set_country_flag = EAI_defend_core
+			}
+		}
+		else = { clr_country_flag = EAI_defend_core }
+
+		### keep a count of its surface ships
+
+		EAI_num_surface_ships = yes
+
+		### limit naval doctrine research on date
+
+		if = { limit = { EAI_naval_doctrine_progress_limit = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_naval_doctrine_progress_limit } } 
+			
+				set_country_flag = EAI_naval_doctrine_progress_limit
+			}
+		}
+		else = { clr_country_flag = EAI_naval_doctrine_progress_limit }
+
+		### mine sweepers needed
+
+		if = {
+			limit = {
+				any_enemy_country = {
+  					has_mined = {
+  					  target = ROOT
+  					  value > 100
+  					}
+				}
+			}
+			set_country_flag = EAI_enemy_mines_on_our_coasts
+		}
+		else = { clr_country_flag = EAI_enemy_mines_on_our_coasts }
+
+		if = {
+			limit = {
+				any_enemy_country = {
+  					has_mined = {
+  					  target = ROOT
+  					  value > 500
+  					}
+				}
+			}
+			set_country_flag = EAI_enemy_mines_on_our_coasts_critical
+		}
+		else = { clr_country_flag = EAI_enemy_mines_on_our_coasts_critical }
+	}
+
+	option = {}
+}
+
+# High priority scripts
+country_event = { 
+	id = EAI_background.1
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+
+	trigger = { 
+		is_ai = yes 
+	}
+
+	immediate = {
+
+		### store PP for law changes
+
+		EAI_store_PP = yes
+
+		###
+
+		EAI_track_submarine_losses = yes
+
+		### controls which countries the AI can trade with
+
+		EAI_trade_strategies = yes
+
+		###
+
+		EAI_priority_constructions = yes
+
+		###
+
+		EAI_set_template_flags = yes
+
+		### check division limits
+
+		EAI_check_division_limits = yes
+
+		if = { limit = { EAI_build_infantry = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_build_infantry } } 
+			
+				set_country_flag = EAI_build_infantry
+			}
+		}
+		else = { clr_country_flag = EAI_build_infantry }
+	}
+
+	option = {}
+}
+
+# Low priority scripts
+country_event = { 
+	id = EAI_background.11
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+
+	trigger = { 
+		is_ai = yes 
+		NOT = { has_country_flag = EAI_low_priority_delay }
+	}
+
+	immediate = {
+
+		set_country_flag = { flag = EAI_low_priority_delay value = 1 days = 80 }
+
+		### EAI_max_fuel_consumption_estimate
+
+		EAI_calculate_fuel_need = yes
+
+		### antiair infantry design
+
+		if = { limit = { EAI_anti_air_design_focus = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_anti_air_design_focus } } 
+			
+				set_country_flag = EAI_anti_air_design_focus
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | antiair infantry design" } 
+			}
+		}
+		else_if = { limit = { EAI_cancel_anti_air_design_focus = yes }
+		
+			clr_country_flag = EAI_anti_air_design_focus
+			if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CANCEL antiair infantry design" } 
+		}
+
+		### use stored xp for doctrine boosts
+
+		EAI_doctrine_xp_boost = yes
+
+		### prioritise ship hull techs
+
+		if = { limit = { EAI_prioritise_ship_hulls = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_prioritise_ship_hulls } } 
+			
+				set_country_flag = EAI_prioritise_ship_hulls
+			}
+		}
+		else = { clr_country_flag = EAI_prioritise_ship_hulls }
+
+		### prioritise aircraft techs
+
+		if = { limit = { EAI_prioritise_aircraft = yes } 
+
+			if = { limit = { NOT = { has_country_flag = EAI_prioritise_aircraft } } 
+			
+				set_country_flag = EAI_prioritise_aircraft
+			}
+		}
+		else = { clr_country_flag = EAI_prioritise_aircraft }
+	}
+
+	option = {}
+}
+
+### misc
+
+# USA advisor: because the AI won't save up 250 PP
+country_event = {
+	id = EAI_background.2
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+	trigger = {
+		original_tag = USA
+		is_ai = yes
+		has_political_power > 50
+		has_idea = USA_robert_taft
+		NOT = { has_idea = omar_bradley has_idea = george_patton }
+		OR = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } }
+	}
+	immediate = {
+		if = { limit = { check_variable = { EAI_USA_advisor_pp < 250 } }
+			add_to_variable = { EAI_USA_advisor_pp = 50 }
+			add_political_power = -50
+		}
+		if = { limit = { NOT = { check_variable = { EAI_USA_advisor_pp < 250 } } }
+			clear_variable = EAI_USA_advisor_pp
+
+			if = { limit = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } } add_ideas = george_patton }
+			if = { limit = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } } add_ideas = omar_bradley }
+		}
+		
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | USA advisor event" } 
+	}
+	option = {}
+}
+
+# mobile warfare doctrine tech switch to manpower branch
+country_event = { 
+	id = EAI_background.3
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+	trigger = {
+		is_ai = yes
+		has_idea = service_by_requirement
+		has_manpower < 500000
+		has_tech = modern_blitzkrieg
+		NOT = { has_country_flag = EAI_volkssturm_taken }
+		NOT = { has_country_flag = EAI_mobilizing_manpower }
+	}
+	immediate = {
+		set_country_flag = EAI_volkssturm_taken
+
+		set_technology = { firebrigades = 0 }
+		set_technology = { backhand_blow = 0 }
+		set_technology = { modern_blitzkrieg = 0 }
+
+		set_technology = { volkssturm = 1 }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | switching MW doctrine branch" } 
+	}
+	option = {}
+}
+
+# Research reduction setting
+country_event = { 
+	id = EAI_background.4
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+	trigger = {
+		has_global_flag = EAI_limit_research
+		NOT = { EAI_major_country = yes }
+		OR = {
+			AND = { original_research_slots > 3 NOT = { has_country_flag = EAI_slots_reduced_3 } }
+			AND = { original_research_slots > 2 original_research_slots < 4 NOT = { has_country_flag = EAI_slots_reduced_2 } }
+			AND = { original_research_slots > 1 original_research_slots < 3 NOT = { has_country_flag = EAI_slots_reduced_1 } }
+		}
+	}
+	immediate = {
+		if = { limit = { original_research_slots > 3 } add_research_slot = -3 set_country_flag = EAI_slots_reduced_3 }
+		if = { limit = { original_research_slots > 2 original_research_slots < 4 } add_research_slot = -2 set_country_flag = EAI_slots_reduced_2 }
+		if = { limit = { original_research_slots > 1 original_research_slots < 3 } add_research_slot = -1 set_country_flag = EAI_slots_reduced_1 }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | GAME | [Root.GetName] | reducing research slots" } 
+	}
+	option = {}
+}
+
+# Saves the original capital city location of a country
+country_event = { 
+	id = EAI_background.5
+	hidden = yes
+	mean_time_to_happen = { days = 2 }
+	trigger = {
+		NOT = { has_country_flag = EAI_capital_saved }
+		NOT = { any_state = { has_state_flag = EAI_original_capital_@ROOT } }
+	}
+	immediate = {
+		set_country_flag = EAI_capital_saved
+		capital_scope = { set_state_flag = EAI_original_capital_@ROOT }
+	}
+	option = {}
+}
+
+####################################################
+# DEBUG
+####################################################
+
+add_namespace = EAI_debug
+
+country_event = {
+	id = EAI_debug.0
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	trigger = {
+	}
+
+	immediate = {
+	}
+
+	option = { name = EAI_can_take_civilian_economy
+		trigger = { EAI_can_take_civilian_economy = yes }
+	}
+	option = { name = EAI_can_take_low_economic_mobilisation
+		trigger = { EAI_can_take_low_economic_mobilisation = yes }
+	}
+	option = { name = EAI_can_take_partial_economic_mobilisation
+		trigger = { EAI_can_take_partial_economic_mobilisation = yes }
+	}
+	option = { name = EAI_can_take_war_economy
+		trigger = { EAI_can_take_war_economy = yes }
+	}
+	option = { name = EAI_can_take_tot_economic_mobilisation
+		trigger = { EAI_can_take_tot_economic_mobilisation = yes }
+	}
+	
+	option = { name = EAI_can_take_volunteer_only
+		trigger = { EAI_can_take_volunteer_only = yes }
+	}
+	option = { name = EAI_can_take_limited_conscription
+		trigger = { EAI_can_take_limited_conscription = yes }
+	}
+	option = { name = EAI_can_take_extensive_conscription
+		trigger = { EAI_can_take_extensive_conscription = yes }
+	}
+	option = { name = EAI_can_take_service_by_requirement
+		trigger = { EAI_can_take_service_by_requirement = yes }
+	}
+	option = { name = EAI_can_take_all_adults_serve
+		trigger = { EAI_can_take_all_adults_serve = yes }
+	}
+	option = { name = EAI_can_take_scraping_the_barrel
+		trigger = { EAI_can_take_scraping_the_barrel = yes }
+	}
+	
+	option = { name = EAI_can_take_free_trade
+		trigger = { EAI_can_take_free_trade = yes }
+	}
+	option = { name = EAI_can_take_export_focus
+		trigger = { EAI_can_take_export_focus = yes }
+	}
+	option = { name = EAI_can_take_limited_exports
+		trigger = { EAI_can_take_limited_exports = yes }
+	}
+	option = { name = EAI_can_take_closed_economy
+		trigger = { EAI_can_take_closed_economy = yes }
+	}
+}
+
+country_event = {
+	id = EAI_debug.1
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	trigger = {
+		has_tech = basic_ship_hull_heavy
+	}
+
+	immediate = {
+	}
+
+	option = { name = EAI_CV_navy_production
+		trigger = { EAI_CV_navy_production = yes }
+	}
+	option = { name = EAI_BB_navy_production
+		trigger = { EAI_BB_navy_production = yes }
+	}
+	option = { name = EAI_BC_navy_production
+		trigger = { EAI_BC_navy_production = yes }
+	}
+	option = { name = EAI_CA_navy_production
+		trigger = { EAI_BC_navy_production = yes }
+	}
+	option = { name = EAI_CL_navy_production
+		trigger = { EAI_BC_navy_production = yes }
+	}
+	option = { name = EAI_DD_navy_production
+		trigger = { EAI_DD_navy_production = yes }
+	}
+	option = { name = EAI_SS_navy_production
+		trigger = { EAI_SS_navy_production = yes }
+	}
+}
+
+country_event = { # prints the number of countries for every focus
+	id = EAI_debug.22
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+	
+	immediate  = {
+
+		hidden_effect = {
+			every_country = { limit = { EAI_has_focuses = yes }
+
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/land_doctrine_[x] = 1 } } x = "[?EAI_FOCUS/LAND/land_doctrine]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/land_doctrine_path_[x] = 1 } } x = "[?EAI_FOCUS/LAND/land_doctrine_path]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/infantry_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/infantry_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/infantry_width_[x] = 1 } } x = "[?EAI_FOCUS/LAND/infantry_width]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/armor_focus_[x] = 1 } } x = "[?EAI_FOCUS/LAND/armor_focus]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/armor_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/armor_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/armor_width_[x] = 1 } } x = "[?EAI_FOCUS/LAND/armor_width]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/medium_armor_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/medium_armor_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/heavy_armor_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/heavy_armor_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/motorized_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/motorized_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/antitank_design_[x] = 1 } } x = "[?EAI_FOCUS/LAND/antitank_design]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/attachment_[x] = 1 } } x = "[?EAI_FOCUS/LAND/attachment]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/LAND/spec_ops_[x] = 1 } } x = "[?EAI_FOCUS/LAND/spec_ops]" }
+
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/AIR/air_doctrine_[x] = 1 } } x = "[?EAI_FOCUS/AIR/air_doctrine]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/AIR/heavy_fighter_[x] = 1 } } x = "[?EAI_FOCUS/AIR/heavy_fighter]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/AIR/ground_bomber_[x] = 1 } } x = "[?EAI_FOCUS/AIR/ground_bomber]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/AIR/naval_bomber_[x] = 1 } } x = "[?EAI_FOCUS/AIR/naval_bomber]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/AIR/strategic_bomber_[x] = 1 } } x = "[?EAI_FOCUS/AIR/strategic_bomber]" }
+
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/destroyer_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/destroyer]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/ASW_destroyer_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/ASW_destroyer]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/light_cruiser_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/light_cruiser]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/ASW_light_cruiser_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/ASW_light_cruiser]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/heavy_cruiser_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/heavy_cruiser]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/battlecruiser_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/battlecruiser]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/battleship_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/battleship]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/carrier_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/carrier]" }
+				meta_effect = { text = { add_to_temp_variable = { global.EAI_FOCUS/NAVY/submarine_[x] = 1 } } x = "[?EAI_FOCUS/NAVY/submarine]" }
+			}
+
+			#####################################################################
+
+			ROOT = {
+				print_variables = {
+					file = ai_focuses
+					text = "AI Focuses"
+					append = no
+					print_global = yes
+				}
+			}
+		}
+	}
+
+	option = {}
+}
+
+country_event = { # prints statistics on divisions counts
+	id = EAI_debug.30
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		set_variable = { global.1_num_divisions_TOTAL = 0 }
+		set_variable = { global.4_num_divisions_WAR = 0 }
+		set_variable = { global.5_num_divisions_PEACE = 0 }
+		set_variable = { global.2_num_divisions_MAJORS = 0 }
+		set_variable = { global.3_num_divisions_MINORS = 0 }
+
+		every_country = {
+			clear_variable = global.num_divisions_@THIS
+
+			add_to_variable = { global.1_num_divisions_TOTAL = num_divisions }
+		}
+
+		every_country = {
+			limit = { EAI_major_country = yes }
+
+			add_to_variable = { global.2_num_divisions_MAJORS = num_divisions }
+		}
+
+		every_country = {
+			limit = { NOT = { EAI_major_country = yes } }
+
+			add_to_variable = { global.3_num_divisions_MINORS = num_divisions }
+		}
+
+		every_country = {
+			limit = { has_war = yes }
+
+			add_to_variable = { global.4_num_divisions_WAR = num_divisions }
+		}
+
+		every_country = {
+			limit = { has_war = no }
+
+			add_to_variable = { global.5_num_divisions_PEACE = num_divisions }
+		}
+
+		every_country = {
+			limit = { has_war = yes }
+
+			set_variable = { global.num_divisions_@THIS = num_divisions }
+		}
+
+		print_variables = {
+			file = divs
+			text = "Division Statistics"
+			append = yes
+			print_global = yes
+		}
+	}
+
+	option = { name = 1
+
+	}
+}
+
+country_event = {
+	id = EAI_debug.33
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		every_country = { limit = { EAI_major_country = yes } set_country_flag = EAI_research_logging }
+	}
+		
+
+	option = {}
+}
+
+country_event = {
+	id = EAI_debug.34
+	hidden = yes
+
+	mean_time_to_happen = { days = 20 }
+	
+	trigger = { 
+
+		has_global_flag = EAI_research_fail_logging 
+		is_ai = yes 
+		EAI_major_country = yes
+	}
+
+	immediate = {
+
+		###########################
+		# 1937.6.1
+		###########################
+
+		if = { limit = { date > 1937.6.1 }
+
+			#concentrated_industry2
+			if = { limit = { EAI_concentrated_industry_tech_focus = yes NOT = { has_tech = concentrated_industry2 is_researching_technology = concentrated_industry2 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | concentrated_industry2" }
+			#improved_machine_tools
+			if = { limit = { NOT = { has_tech = improved_machine_tools is_researching_technology = improved_machine_tools } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | improved_machine_tools" }
+			#construction2
+			if = { limit = { NOT = { has_tech = construction2 is_researching_technology = construction2 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | construction2" }
+			#fighter1
+			if = { limit = { NOT = { has_tech = fighter1 is_researching_technology = fighter1 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | fighter1" }
+			#interwar_artillery
+			if = { limit = { NOT = { has_tech = interwar_artillery is_researching_technology = interwar_artillery } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | interwar_artillery" }
+		}
+
+		###########################
+		# 1939.6.1
+		###########################
+
+		if = { limit = { date > 1939.6.1 }
+
+			#concentrated_industry3
+			if = { limit = { EAI_concentrated_industry_tech_focus = yes NOT = { has_tech = concentrated_industry3 is_researching_technology = concentrated_industry3 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | concentrated_industry3" }
+			#advanced_machine_tools
+			if = { limit = { NOT = { has_tech = advanced_machine_tools is_researching_technology = advanced_machine_tools } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | advanced_machine_tools" }
+			#construction3
+			if = { limit = { NOT = { has_tech = construction3 is_researching_technology = construction3 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | construction3" }
+			#radio
+			if = { limit = { NOT = { has_tech = radio is_researching_technology = radio } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | radio" }
+			#improved_infantry_weapons
+			if = { limit = { NOT = { has_tech = improved_infantry_weapons is_researching_technology = improved_infantry_weapons } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | improved_infantry_weapons" }
+			#artillery1
+			if = { limit = { NOT = { has_tech = artillery1 is_researching_technology = artillery1 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | artillery1" }
+		}
+
+		###########################
+		# 1940.1.1
+		###########################
+
+		if = { limit = { date > 1940.1.1 }
+
+			#fighter2
+			if = { limit = { NOT = { has_tech = fighter2 is_researching_technology = fighter2 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | fighter2" }
+		}
+
+		###########################
+		# 1940.6.1
+		###########################
+
+		if = { limit = { date > 1940.6.1 }
+
+			#antitank2
+			if = { limit = { NOT = { has_tech = antitank2 is_researching_technology = antitank2 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | antitank2" }
+			#artillery2
+			if = { limit = { NOT = { has_tech = artillery2 is_researching_technology = artillery2 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | artillery2" }
+		}
+
+		###########################
+		# 1941.6.1
+		###########################
+
+		if = { limit = { date > 1941.6.1 }
+
+			#antitank3
+			if = { limit = { NOT = { has_tech = antitank3 is_researching_technology = antitank3 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | antitank3" }
+			#artillery3
+			if = { limit = { NOT = { has_tech = artillery3 is_researching_technology = artillery3 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | artillery3" }
+		}
+
+		###########################
+		# 1942.6.1
+		###########################
+
+		if = { limit = { date > 1942.6.1 }
+
+			#antitank4
+			if = { limit = { NOT = { has_tech = antitank4 is_researching_technology = antitank4 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | antitank4" }
+			#artillery4
+			if = { limit = { NOT = { has_tech = artillery4 is_researching_technology = artillery4 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | artillery4" }
+		}
+
+		###########################
+		# 1944.1.1
+		###########################
+
+		if = { limit = { date > 1944.1.1 }
+
+			#fighter3
+			if = { limit = { NOT = { has_tech = fighter3 is_researching_technology = fighter3 } } log = "[GetYear] [GetMonth] | AI RESEARCH FAIL | [Root.GetName] | fighter3" }
+		}
+	}
+		
+	option = {}
+}
+
+country_event = {
+	id = EAI_debug.35
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		ROOT = { estimated_intel_max_piercing = { tag = ROOT value > 21 } } 
+		ROOT = { estimated_intel_max_armor = { tag = ROOT value > 21 } } 
+
+		ROOT = { estimated_intel_max_piercing = { tag = ROOT value > 23 } } 
+		ROOT = { estimated_intel_max_armor = { tag = ROOT value > 23 } } 
+	}
+
+	immediate = {
+	}
+
+	option = {}
+		
+	option = { name = "yes"
+		trigger = {
+			
+		}
+	}
+}

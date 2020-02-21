@@ -1,0 +1,65 @@
+ability = {	
+	CHI_force_attack = {
+		name = ABILITY_FORCE_ATTACK
+		desc = ABILITY_FORCE_ATTACK_DESC
+		icon = GFX_ability_chi_force_attack
+		
+		sound_effect = command_power_ability_offensive
+		
+		type = army_leader
+		
+		allowed = {
+			is_leading_army_group = no
+			is_border_war = no
+			OWNER = {				
+				has_completed_focus = CHI_dare_to_die_corps
+			}
+		}
+		
+		cost = 0.11
+		duration = 168
+		
+		one_time_effect = {
+			add_temporary_buff_to_units = {
+				combat_offense = 0.25
+				combat_breakthrough = 0.25
+				org_damage_multiplier = -1.0
+				str_damage_multiplier = 0.25
+				war_support_reduction_on_damage = 0.2
+				cannot_retreat_while_attacking = 1.0
+				
+				days = 7
+				tooltip = ABILITY_FORCE_ATTACK_TOOLTIP
+			}
+
+			if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [From.GetName] | Used ability: CHI_force_attack" } 
+		}
+		
+		
+		ai_will_do = { #EAI
+			factor = -1
+			modifier = {
+				FROM = {
+					has_war_support > 0.4
+					command_power > 55
+					has_manpower > 100000
+					has_equipment = { infantry_equipment > 1000 }
+				}
+
+				set_temp_variable = { EAI_fraction_units_combat = num_units_offensive_combats }
+				divide_temp_variable = { EAI_fraction_units_combat = num_units }
+				OR = {
+					AND = { check_variable = { EAI_fraction_units_combat > 0.5 } }
+					AND = { FROM = { command_power > 90 } check_variable = { EAI_fraction_units_combat > 0.25 } }
+				}
+
+				OR = {
+					check_variable = { avg_offensive_combat_status < 0.5 }
+					FROM = { command_power > 75 }
+				}
+				
+				add = 2
+			}
+		}
+	}
+}

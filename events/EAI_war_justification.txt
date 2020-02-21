@@ -1,0 +1,745 @@
+﻿add_namespace = EAI_DM_W
+
+#######################################################
+# Expert AI mod - scripted AI war justifications
+#######################################################
+
+### These events allow the AI to justify wargoals and start wars
+
+# War aggressiveness setting: this event looks for a country for the AI to attack and starts the war preparation process for the AI
+country_event = { 
+	id = EAI_DM_W.0
+	hidden = yes
+
+	mean_time_to_happen = { 
+		days = 365 
+
+		modifier = {
+			factor = 0.5
+			check_variable = { global.EAI_justification_aggressiveness = 2 }
+		}
+		modifier = {
+			factor = 0.25
+			check_variable = { global.EAI_justification_aggressiveness = 3 }
+		}
+	}
+
+	trigger = {
+		is_ai = yes
+		date > 1936.4.1
+		has_variable = global.EAI_justification_aggressiveness
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		ROOT = { # basic requirements
+			num_divisions > 5
+			has_manpower > 25000
+			num_of_military_factories > 5
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		#OR = {
+		#	is_in_faction = no
+		#	is_faction_leader = yes
+		#	is_major = yes
+		#}
+
+		OR = { # only these ideologies invade randomly
+			has_government = fascism
+			has_government = communism
+		}
+
+		OR = { # world threat requirement
+			AND = { threat > 0.9 check_variable = { global.EAI_justification_aggressiveness = 1 } }
+			AND = { threat > 0.5 check_variable = { global.EAI_justification_aggressiveness = 2 } }
+			AND = { check_variable = { global.EAI_justification_aggressiveness = 3 } }
+		}
+
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+	}
+
+	immediate = {
+		# invade the closest target
+
+		set_temp_variable = { EAI_invasion_min_distance = 99999 }
+		set_temp_variable = { EAI_invasion_target_country = 0 }
+
+		every_country = {
+			limit = {
+				EAI_is_threat = yes
+				NOT = { 
+					has_war_with = ROOT 
+					has_non_aggression_pact_with = ROOT
+					ROOT = { has_country_flag = EAI_supports_@PREV }
+				}
+				OR = {
+					AND = {
+						has_navy_size = { size > 20 }
+						stockpile_ratio = { archetype = convoy ratio > 100 }
+					}
+					is_neighbor_of = ROOT
+					any_neighbor_country = {
+						is_neighbor_of = ROOT
+						OR = {
+							is_subject_of = ROOT
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				NOT = { ROOT = { has_opinion = { target = PREV value > 75 } } }
+				strength_ratio = { tag = ROOT ratio < 0.5 }
+				NOT = {
+					any_allied_country = {
+						strength_ratio = { tag = ROOT ratio > 1.5 }
+					}
+				}
+				ic_ratio = { tag = ROOT ratio < 1.5 }
+				check_variable = { num_divisions < Root.num_divisions }
+			}
+
+			for_each_scope_loop = { array = core_states
+
+				if = { limit = { is_controlled_by = PREV }
+
+					for_each_scope_loop = { array = ROOT.core_states 
+					
+						if = { limit = { is_controlled_by = ROOT check_variable = { EAI_invasion_min_distance > distance_to@PREV } }
+
+							set_temp_variable = { EAI_invasion_min_distance = distance_to@PREV }
+							set_temp_variable = { EAI_invasion_target_country = PREV.PREV.id }
+						}
+					}
+				}
+			}
+		}
+
+		if = { limit = { NOT = { check_variable = { EAI_invasion_target_country = 0 } } }
+		
+			var:EAI_invasion_target_country = { set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 } }
+			set_variable = { EAI_wardec_script_target = EAI_invasion_target_country }
+
+			if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | RANDOM WARDEC: against [?EAI_invasion_target_country.GetName]" } 
+		}
+	}
+
+	option = {}
+}
+
+### GER
+
+# Germany will try to take over the world if it has dealt with its main enemies
+country_event = {
+	id = EAI_DM_W.10
+	hidden = yes
+	
+	mean_time_to_happen = { days = 90 }
+
+	trigger = {
+		tag = GER
+		is_ai = yes 
+		date > 1941.1.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		has_manpower > 250000
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+		
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+				any_of_scopes = { array = controlled_states
+					is_on_continent = europe
+				}
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		any_country = {
+			EAI_is_threat = yes
+			NOT = { has_war_with = ROOT }
+			NOT = { ROOT = { has_opinion = { target = PREV value > 50 } } }
+			strength_ratio = { tag = ROOT ratio < 0.5 }
+			ic_ratio = { tag = ROOT ratio < 1.0 }
+			check_variable = { num_divisions < Root.num_divisions }
+		}
+
+		# take care of these countries first
+
+		SOV = {
+			NOT = { EAI_is_threat = yes }
+		}
+
+		FRA = {
+			NOT = { EAI_is_threat = yes }
+		}
+
+		POL = {
+			NOT = { EAI_is_threat = yes }
+		}
+	}
+	immediate = {
+		every_country = {
+			limit = {
+				EAI_is_threat = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { ROOT = { has_opinion = { target = PREV value > 50 } } }
+				strength_ratio = { tag = ROOT ratio < 0.5 }
+				ic_ratio = { tag = ROOT ratio < 1.0 }
+				check_variable = { num_divisions < Root.num_divisions }
+			}
+
+			add_to_temp_array = { array = justification_targets value = THIS.id }
+		}
+
+		if = {
+			limit = {
+				any_of_scopes = { array = justification_targets
+					is_neighbor_of = ROOT
+				}
+			}
+
+			random_scope_in_array = { array = justification_targets
+				limit = {
+					is_neighbor_of = ROOT
+				}
+
+				set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+
+				ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | RANDOM GER WARDEC: against [This.GetName]" } 
+			}
+		}
+		else_if = {
+			limit = {
+				any_of_scopes = { array = justification_targets
+					any_other_country = {
+						OR = {
+							tag = ROOT
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+						}
+						is_neighbor_of = PREV
+					}
+				}
+			}
+
+			random_scope_in_array = { array = justification_targets
+				limit = {
+					any_other_country = {
+						OR = {
+							tag = ROOT
+							is_in_faction_with = ROOT
+							is_subject_of = ROOT
+						}
+						is_neighbor_of = PREV
+					}
+				}
+
+				set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+
+				ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | RANDOM GER WARDEC: against [This.GetName]" } 
+			}
+		}
+		else = {
+			random_scope_in_array = { array = justification_targets
+
+				set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+
+				ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+
+				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | RANDOM GER WARDEC: against [This.GetName]" } 
+			}
+		}
+	}
+	option = {}
+}
+
+### JAP
+
+# Japan invades USSR opportunistically
+country_event = {
+	id = EAI_DM_W.20
+	hidden = yes
+	fire_only_once = yes
+
+	mean_time_to_happen = { days = 2 }
+	
+	trigger = {
+		tag = JAP 
+		is_ai = yes 
+		date > 1940.1.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+		
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		SOV = {
+			EAI_is_threat = yes
+			any_other_country = {
+				OR = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+				}
+				is_neighbor_of = PREV
+			}
+			NOT = { has_war_with = ROOT }
+		}
+
+		# take care of these countries first
+
+		CHI = {
+			NOT = { EAI_is_threat = yes }
+		}
+
+		OR = {
+			RAJ = {
+				NOT = { EAI_is_threat = yes }
+			}
+
+			SOV = {
+				surrender_progress > 0.9
+			}
+		}
+	}
+	immediate = {
+		SOV = {
+			set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+			
+			ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+		}
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | DIPLO WARDEC: against SOV" } 
+	}
+	option = {}
+}
+
+# Japan will try to take over the world if it has dealt with its main enemies
+country_event = {
+	id = EAI_DM_W.21
+	hidden = yes
+	
+	mean_time_to_happen = { days = 90 }
+
+	trigger = {
+		tag = JAP
+		is_ai = yes 
+		date > 1940.1.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		has_manpower > 250000
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+		
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		# take care of these countries first
+
+		CHI = {
+			NOT = { EAI_is_threat = yes }
+		}
+
+		RAJ = {
+			NOT = { EAI_is_threat = yes }
+		}
+
+		SOV = {
+			NOT = { EAI_is_threat = yes }
+		}
+	}
+	immediate = {
+		random_country = {
+			limit = {
+				EAI_is_threat = yes
+				NOT = { has_war_with = ROOT }
+				NOT = { ROOT = { has_opinion = { target = PREV value > 50 } } }
+				strength_ratio = { tag = ROOT ratio < 0.5 }
+				ic_ratio = { tag = ROOT ratio < 1.0 }
+				check_variable = { num_divisions < Root.num_divisions }
+
+				any_other_country = {
+					OR = {
+						tag = ROOT
+						is_in_faction_with = ROOT
+						is_subject_of = ROOT
+					}
+					is_neighbor_of = PREV
+				}
+			}
+
+			set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+			
+			ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+
+			if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | RANDOM JAP WARDEC: against [This.GetName]" } 
+		}
+	}
+	option = {}
+}
+
+# JAP invades NEP
+country_event = {
+	id = EAI_DM_W.22
+	hidden = yes
+	fire_only_once = yes
+
+	mean_time_to_happen = { days = 180 }
+
+	trigger = {
+		tag = JAP 
+		is_ai = yes 
+		date > 1942.6.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		NEP = {
+			EAI_is_threat = yes
+			any_other_country = {
+				OR = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+				}
+				is_neighbor_of = PREV
+			}
+			NOT = { has_war_with = ROOT }
+		}
+
+		# take care of these countries first
+
+		CHI = {
+			NOT = { EAI_is_threat = yes }
+		}
+	}
+	immediate = {
+		NEP = {
+			set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+			
+			ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+		}
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | DIPLO WARDEC: against NEP" } 
+	}
+	option = {}
+}
+
+# JAP invades BHU
+country_event = {
+	id = EAI_DM_W.23
+	hidden = yes
+	fire_only_once = yes
+
+	mean_time_to_happen = { days = 180 }
+
+	trigger = {
+		tag = JAP 
+		is_ai = yes 
+		date > 1942.6.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		BHU = {
+			EAI_is_threat = yes
+			any_other_country = {
+				OR = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+				}
+				is_neighbor_of = PREV
+			}
+			NOT = { has_war_with = ROOT }
+		}
+
+		# take care of these countries first
+
+		CHI = {
+			NOT = { EAI_is_threat = yes }
+		}
+	}
+	immediate = {
+		BHU = {
+			set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+			
+			ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+		}
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | DIPLO WARDEC: against BHU" } 
+	}
+	option = {}
+}
+
+# JAP invades TIB
+country_event = {
+	id = EAI_DM_W.24
+	hidden = yes
+	fire_only_once = yes
+
+	mean_time_to_happen = { 
+		days = 2000
+		
+		modifier = {
+			factor = 0.25
+			SOV = {
+				NOT = { EAI_is_threat = yes }
+			}
+		}
+	}
+
+	trigger = {
+		tag = JAP 
+		is_ai = yes 
+		date > 1942.6.1
+		NOT = { has_variable = EAI_wardec_script_target }
+
+		OR = {
+			is_in_faction = no
+			is_faction_leader = yes
+		}
+
+		OR = {
+			has_government = fascism
+			has_government = communism
+		} 
+
+		NOT = { # do not invade if losing
+			surrender_progress > 0.1
+			any_home_area_neighbor_country = {
+				has_war_with = ROOT
+			}
+		}
+
+		NOT = { # do not justify against more countries if it hasn't dealt with the previous target
+			any_country = {
+				OR = {
+					has_country_flag = EAI_prepare_for_war_from_@PREV 
+					has_country_flag = EAI_declare_war_from_@PREV
+				}
+			}
+		}
+
+		ROOT = {
+			has_capitulated = no
+			exists = yes
+			is_subject = no
+		}
+
+		TIB = {
+			EAI_is_threat = yes
+			any_other_country = {
+				OR = {
+					tag = ROOT
+					is_in_faction_with = ROOT
+					is_subject_of = ROOT
+				}
+				is_neighbor_of = PREV
+			}
+			NOT = { has_war_with = ROOT }
+		}
+
+		# take care of these countries first
+
+		CHI = {
+			NOT = { EAI_is_threat = yes }
+		}
+	}
+	immediate = {
+		TIB = {
+			set_country_flag = { flag = EAI_prepare_for_war_from_@ROOT value = 1 days = 365 }
+			
+			ROOT = { set_variable = { EAI_wardec_script_target = PREV.id } }
+		}
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | DIPLO WARDEC: against TIB" } 
+	}
+	option = {}
+}
+
+###
+
+# Starts the war justification process for the AI after some delay to allow the AI to move units to the border
+country_event = { 
+	id = EAI_DM_W.1000
+	hidden = yes
+	
+	mean_time_to_happen = { days = 60 }
+
+	trigger = {
+		is_ai = yes
+		NOT = { check_variable = { EAI_wardec_script_target = 0 } }
+	}
+
+	immediate = {
+		var:EAI_wardec_script_target = {
+			set_country_flag = { flag = EAI_declare_war_from_@PREV value = 1 days = 365 }
+		}
+
+		clear_variable = EAI_wardec_script_target
+
+		set_country_flag = { flag = EAI_justifying_wargoal value = 1 days = 90 }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | DIPLO WARDEC: clearing target" } 
+	}
+
+	option = {}
+}

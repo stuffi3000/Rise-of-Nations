@@ -1,0 +1,108 @@
+############################################################################################################
+#	Expert AI mod - army and air xp management
+############################################################################################################
+
+EAI_manage_xp = {
+
+	### land
+
+	if = { limit = { has_army_experience > 34 }
+	
+		while_loop_effect = { limit = { has_army_experience > 34 }
+
+			add_to_variable = { EAI_army_xp = 5 }
+			army_experience = -5
+		}
+		clamp_variable = { var = EAI_army_xp min = 0 max = 500 }
+	}
+	# keep 30 xp available to the AI for template changes
+	else_if = { limit = { has_army_experience < 30 check_variable = { EAI_army_xp > 4 } }
+
+		while_loop_effect = { limit = { has_army_experience < 30 check_variable = { EAI_army_xp > 4 } }
+
+			subtract_from_variable = { EAI_army_xp = 5 }
+			army_experience = 5
+		}
+	}
+
+	### air
+
+	if = { limit = { has_air_experience > 4 }
+	
+		while_loop_effect = { limit = { has_air_experience > 4 }
+
+			add_to_variable = { EAI_air_xp = 5 }
+			air_experience = -5
+		}
+		clamp_variable = { var = EAI_air_xp min = 0 max = 500 }
+	}
+}
+
+# since army/air xp is stored separately, doctrine boost has to be scripted
+EAI_doctrine_xp_boost = {
+	
+	# land
+	if = { 
+		limit = { 
+			NOT = { 
+				check_variable = { EAI_army_xp < 300 } 
+				check_variable = { EAI_land_doctrine_boosts > 5 }
+			} 
+			
+			NOT = {  
+				has_tech = modern_blitzkrieg is_researching_technology = modern_blitzkrieg
+				has_tech = werwolf_guerillas is_researching_technology = werwolf_guerillas
+
+				has_tech = shock_and_awe is_researching_technology = shock_and_awe
+				has_tech = air_land_battle is_researching_technology = air_land_battle
+
+				has_tech = infiltration_in_depth is_researching_technology = infiltration_in_depth
+				has_tech = c3i_theory is_researching_technology = c3i_theory
+
+				has_tech = guerilla_warfare is_researching_technology = guerilla_warfare
+				has_tech = continuous_offensive is_researching_technology = continuous_offensive
+			}
+		}
+
+		add_tech_bonus = {
+			name = EAI_land_doctrine_xp_boost
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		subtract_from_variable = { EAI_army_xp = 100 }
+		add_to_variable = { EAI_land_doctrine_boosts = 1 }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | XP: boosted land doctrine" } 
+	}
+
+	# air
+	if = {
+		limit = { 
+			NOT = { 
+				check_variable = { EAI_air_xp < 200 } 
+				check_variable = { EAI_air_doctrine_boosts > 7 }
+			} 
+			
+			NOT = {  
+				has_tech = mass_destruction is_researching_technology = mass_destruction
+				has_tech = offensive_formations is_researching_technology = offensive_formations
+
+				has_tech = forward_interception is_researching_technology = forward_interception
+
+				has_tech = high_level_bombing is_researching_technology = high_level_bombing
+			}
+		}
+
+		add_tech_bonus = {
+			name = EAI_air_doctrine_xp_boost
+			bonus = 1.0
+			uses = 1
+			category = air_doctrine
+		}
+		subtract_from_variable = { EAI_air_xp = 100 }
+		add_to_variable = { EAI_air_doctrine_boosts = 1 }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | XP: boosted air doctrine" }  
+	}
+}

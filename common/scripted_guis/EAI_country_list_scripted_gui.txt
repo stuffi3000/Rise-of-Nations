@@ -1,0 +1,127 @@
+scripted_gui = {
+	
+	EAI_config_country_list_window = {
+	
+		context_type = player_context
+
+		window_name = "EAI_config_country_list_window"
+		
+		visible = {
+			OR = {
+				has_country_flag = EAI_config_ARMY_GLOBAL
+				has_country_flag = EAI_config_COUNTRY_GLOBAL
+			}
+		}
+
+		dynamic_lists = {
+
+			EAI_config_country_list_selected_country_grid = { array = EAI_config_country_list_selected_country_array
+
+				change_scope = yes
+				entry_container = EAI_config_country_list_selected_country_entry
+			}
+		}
+ 
+		properties = {
+
+			EAI_config_country_list_selected_country_flag_icon = {
+                image = "[This.GetFlag]"
+            }
+		}
+		
+		effects = {
+			
+			# flag
+			EAI_config_country_list_selected_country_flag_icon_click = {
+
+				remove_from_array = { array = ROOT.EAI_config_country_list_selected_country_array value = THIS.id }
+			}
+
+			# clear all
+			EAI_config_country_list_clear_all_button_click = {
+
+				clear_array = ROOT.EAI_config_country_list_selected_country_array
+			}
+
+			# add all
+			EAI_config_country_list_add_all_button_click = {
+
+				every_country = { 
+					limit = { 
+						is_ai = yes
+
+						NOT = { is_in_array = { array = ROOT.EAI_config_country_list_selected_country_array value = THIS.id } }
+
+						if = { limit = { ROOT = { has_country_flag = EAI_config_ARMY_GLOBAL } }
+							
+							NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country }
+						}
+					}
+
+					add_to_array = { ROOT.EAI_config_country_list_selected_country_array = THIS.id }
+				}
+			}
+		}
+		
+		triggers = {
+
+		}
+	}
+
+	EAI_config_country_list_selected_country_window = {
+	
+		context_type = selected_country_context
+
+		window_name = "EAI_config_country_list_selected_country_window"
+
+		parent_window_name = "EAI_config_country_list_window"
+		
+		visible = {
+			ROOT = {
+				OR = {
+					has_country_flag = EAI_config_ARMY_GLOBAL
+					has_country_flag = EAI_config_COUNTRY_GLOBAL
+				}
+			}
+		}
+		
+		effects = {
+			
+			EAI_config_country_list_add_selected_country_button_click = {
+
+				add_to_array = { ROOT.EAI_config_country_list_selected_country_array = THIS.id }
+			}
+
+			EAI_config_country_list_remove_selected_country_button_click = {
+
+				remove_from_array = { ROOT.EAI_config_country_list_selected_country_array = THIS.id }
+			}
+		}
+		
+		triggers = {
+
+			EAI_config_country_list_add_selected_country_button_click_enabled = {
+
+				is_ai = yes
+
+				NOT = { is_in_array = { array = ROOT.EAI_config_country_list_selected_country_array value = THIS.id } }
+
+				if = { limit = { ROOT = { has_country_flag = EAI_config_ARMY_GLOBAL } }
+							
+					NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country }
+				}
+			}
+
+			EAI_config_country_list_add_selected_country_button_visible = {
+
+				NOT = { is_in_array = { array = ROOT.EAI_config_country_list_selected_country_array value = THIS.id } }
+			}
+
+			EAI_config_country_list_remove_selected_country_button_visible = {
+
+				is_in_array = { array = ROOT.EAI_config_country_list_selected_country_array value = THIS.id }
+			}
+		}
+	}
+}
+

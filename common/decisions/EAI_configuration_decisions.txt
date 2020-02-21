@@ -1,0 +1,71 @@
+############################################################################################################
+#	Expert AI mod - decisions
+############################################################################################################
+
+EAI_config_target_modified_DECISIONS = {
+	
+	EAI_config_target_modified_DECISION = {
+		allowed = {}
+
+		available = {
+			FROM = {
+				NOT = { 
+					has_country_flag = EAI_player_is_configuring_this_country
+					has_country_flag = EAI_AI_is_configuring_this_country
+				}
+			}
+			hidden_trigger = {
+				NOT = {
+					has_country_flag = EAI_config_COUNTRY
+					has_country_flag = EAI_config_ARMY
+					has_country_flag = EAI_config_ARMY_DIPLOMATIC
+				}
+			}
+		}
+
+		visible = {
+			has_country_flag = EAI_show_country_config_decisions
+			FROM = {
+				exists = yes
+				OR = {
+					has_country_flag = EAI_country_bonus
+					has_country_flag = EAI_desperate_defense
+					has_country_flag = EAI_division_spawning
+					has_country_flag = EAI_boost_planning
+				}
+			}
+		}
+
+		target_root_trigger = { is_ai = no }
+
+		target_trigger = {
+			FROM = {
+				is_ai = yes
+			}
+		}
+
+		cost = 0
+
+		days_re_enable = -1
+
+		complete_effect = {
+			hidden_effect = {
+				set_country_flag = EAI_config_COUNTRY
+
+				FROM = {
+					set_country_flag = EAI_player_is_configuring_this_country
+
+					set_country_flag = EAI_player_is_configuring_this_country_@ROOT
+				
+					set_variable = { ROOT.EAI_configuration_target = THIS.id }
+				}
+
+				set_variable = { ROOT.EAI_dd_unit_count = FROM.EAI_dd_unit_count }
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+}

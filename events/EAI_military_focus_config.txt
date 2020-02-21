@@ -1,0 +1,2866 @@
+﻿add_namespace = EAI_CFG
+
+############################################################################################################
+# Expert AI mod - AI military config events
+############################################################################################################
+
+####################################################################################
+# Land
+####################################################################################
+
+# Land doctrine
+# default: all
+country_event = { 
+	id = EAI_CFG.0
+	title = ""
+	desc = ""
+
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+		NOT = {
+			has_country_flag = EAI_initialization_delay
+			has_country_flag = EAI_army_config_triggered
+			has_country_flag = EAI_player_is_configuring_this_country
+		}
+	}
+
+	immediate = {
+		set_country_flag = EAI_army_config_triggered
+		set_country_flag = EAI_AI_is_configuring_this_country
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetDate] | AI | [Root.GetName] | initializing MILITARY CONFIG" } 
+
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_MW_doctrine = yes
+						EAI_SF_doctrine = yes
+						EAI_GB_doctrine = yes
+						EAI_MA_doctrine = yes
+					}
+					NOT = {
+						EAI_MW_doctrine = yes
+						EAI_SF_doctrine = yes
+						EAI_GB_doctrine = yes
+						EAI_MA_doctrine = yes
+					}
+				}
+			} 
+
+			country_event = { id = EAI_CFG.101 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.101 hours = 3 } }
+	}
+
+	option = { name = EAI_MW_doctrine
+
+		trigger = {
+			OR = {
+				EAI_MW_doctrine = yes
+				NOT = { EAI_MW_doctrine = yes EAI_SF_doctrine = yes EAI_GB_doctrine = yes EAI_MA_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } }
+			
+			######### copy from original country
+			NOT = {
+				AND = {
+					EAI_civil_war_country = yes 
+			
+					NOT = { EAI_has_OVERRIDE_focuses = yes }
+					
+					any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 0.5 NOT = { EAI_major_country = yes } }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE }
+
+		if = { limit = { OR = { has_tech = superior_firepower has_tech = trench_warfare has_tech = mass_assault } }
+			#set_technology = { mobile_warfare = 0 }
+			set_technology = { superior_firepower = 0 }
+			set_technology = { trench_warfare = 0 }
+			set_technology = { mass_assault = 0 }
+		}
+	}
+
+	option = { name = EAI_SF_doctrine
+
+		trigger = {
+			OR = {
+				EAI_SF_doctrine = yes
+				NOT = { EAI_MW_doctrine = yes EAI_SF_doctrine = yes EAI_GB_doctrine = yes EAI_MA_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } }
+			
+			######### copy from original country
+			NOT = {
+				AND = {
+					EAI_civil_war_country = yes 
+			
+					NOT = { EAI_has_OVERRIDE_focuses = yes }
+					
+					any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1.5
+		}
+
+		set_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE }
+
+		if = { limit = { OR = { has_tech = mobile_warfare has_tech = trench_warfare has_tech = mass_assault } }
+			set_technology = { mobile_warfare = 0 }
+			#set_technology = { superior_firepower = 0 }
+			set_technology = { trench_warfare = 0 }
+			set_technology = { mass_assault = 0 }
+		}
+	}
+
+	option = { name = EAI_GB_doctrine
+
+		trigger = {
+			OR = {
+				EAI_GB_doctrine = yes
+				NOT = { EAI_MW_doctrine = yes EAI_SF_doctrine = yes EAI_GB_doctrine = yes EAI_MA_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } }
+			
+			######### copy from original country
+			NOT = {
+				AND = {
+					EAI_civil_war_country = yes 
+			
+					NOT = { EAI_has_OVERRIDE_focuses = yes }
+					
+					any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1.5
+		}
+
+		set_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE }
+
+		if = { limit = { OR = { has_tech = mobile_warfare has_tech = superior_firepower has_tech = mass_assault } }
+			set_technology = { mobile_warfare = 0 }
+			set_technology = { superior_firepower = 0 }
+			#set_technology = { trench_warfare = 0 }
+			set_technology = { mass_assault = 0 }
+		}
+	}
+
+	option = { name = EAI_MA_doctrine
+
+		trigger = {
+			OR = {
+				EAI_MA_doctrine = yes
+				NOT = { EAI_MW_doctrine = yes EAI_SF_doctrine = yes EAI_GB_doctrine = yes EAI_MA_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } }
+			NOT = { # incompatible
+				check_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_26W_INF_WIDTH } check_variable = { EAI_FOCUS/LAND/infantry_width_OVERRIDE = global.EAI_26W_INF_WIDTH }
+			}
+			
+			######### copy from original country
+			NOT = {
+				AND = {
+					EAI_civil_war_country = yes 
+			
+					NOT = { EAI_has_OVERRIDE_focuses = yes }
+					
+					any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			
+			modifier = { factor = 2 original_tag = SOV }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE }
+		
+		if = { limit = { OR = { has_tech = mobile_warfare has_tech = superior_firepower has_tech = trench_warfare } }
+			set_technology = { mobile_warfare = 0 }
+			set_technology = { superior_firepower = 0 }
+			set_technology = { trench_warfare = 0 }
+			#set_technology = { mass_assault = 0 }
+		}
+	}
+
+	option = { name = skip
+	
+		trigger = { 
+			OR = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } }
+		
+			######### copy from original country
+			NOT = {
+				AND = {
+					EAI_civil_war_country = yes 
+			
+					NOT = { EAI_has_OVERRIDE_focuses = yes }
+					
+					any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+				}
+			}
+		}
+	}
+	
+	option = { name = copy
+	
+		trigger = { # copy focuses from the original country
+			EAI_civil_war_country = yes 
+			
+			NOT = { EAI_has_OVERRIDE_focuses = yes }
+			
+			any_other_country = { is_ai = yes has_country_flag = EAI_army_config_triggered NOT = { has_country_flag = EAI_player_is_configuring_this_country has_country_flag = EAI_AI_is_configuring_this_country } ROOT = { original_tag = PREV } }
+		}
+		
+		random_other_country = { limit = { ROOT = { original_tag = PREV }  } EAI_copy_focuses = yes }
+		
+		clr_country_flag = EAI_AI_is_configuring_this_country
+	}
+}
+
+# Land doctrine branch
+# default: all
+country_event = {
+	id = EAI_CFG.101
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.100"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_land_doctrine_left_path = yes
+						EAI_land_doctrine_right_path = yes
+					}
+					NOT = {
+						EAI_land_doctrine_left_path = yes
+						EAI_land_doctrine_right_path = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.102 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.102 hours = 3 } }
+	}
+
+	option = { name = EAI_land_doctrine_left_path
+
+		trigger = {
+			OR = {
+				EAI_land_doctrine_left_path = yes
+				NOT = { EAI_land_doctrine_left_path = yes EAI_land_doctrine_right_path = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_LEFT_PATH } check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_RIGHT_PATH } }
+		}
+
+		ai_chance = {
+			factor = 1
+			
+			modifier = { 
+				factor = 10 
+				
+				check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE }
+				
+				OR = {
+					AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } }
+				}
+			}
+			#modifier = { 
+			#	factor = 10 
+			#	
+			#	check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE }
+			#	
+			#	OR = {
+			#		
+			#	}
+			#}
+			#modifier = { 
+			#	factor = 10 
+			#	
+			#	check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE }
+			#	
+			#	OR = {
+			#		
+			#	}
+			#}
+			modifier = { 
+				factor = 10 
+				
+				check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE }
+				
+				OR = {
+					check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS }
+					check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_HARM_FOCUS }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_LEFT_PATH }
+	}
+
+	option = { name = EAI_land_doctrine_right_path
+
+		trigger = {
+			OR = {
+				EAI_land_doctrine_right_path = yes
+				NOT = { EAI_land_doctrine_left_path = yes EAI_land_doctrine_right_path = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_LEFT_PATH } check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_RIGHT_PATH } }
+		}
+
+		ai_chance = {
+			factor = 1
+			
+			modifier = { 
+				factor = 10 
+				
+				check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE }
+				
+				OR = {
+					check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_HARM_FOCUS }
+				}
+			}
+			#modifier = { 
+			#	factor = 10 
+			#	
+			#	check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE }
+			#	
+			#	OR = {
+			#		
+			#	}
+			#}
+			#modifier = { 
+			#	factor = 10 
+			#	
+			#	check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE }
+			#	
+			#	OR = {
+			#		
+			#	}
+			#}
+			modifier = { 
+				factor = 10 
+				
+				check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE }
+				
+				OR = {
+					NOT = { EAI_major_country = yes }
+					check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS }
+				}
+			}
+		}
+		
+		set_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_RIGHT_PATH }
+	}
+	
+	option = { name = skip
+	
+		trigger = { OR = { check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_LEFT_PATH } check_variable = { EAI_FOCUS/LAND/land_doctrine_path = global.EAI_RIGHT_PATH } } }
+	}
+}
+
+# Infantry design
+# default: A, B
+country_event = {
+	id = EAI_CFG.102
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.101"
+
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_infantry_design_A = yes
+						EAI_infantry_design_B = yes
+						EAI_infantry_design_C = yes
+					}
+					NOT = {
+						EAI_infantry_design_A = yes
+						EAI_infantry_design_B = yes
+						EAI_infantry_design_C = yes
+					}
+				}
+			} 
+
+			country_event = { id = EAI_CFG.103 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.103 hours = 3 } }
+	}
+
+	option = { name = EAI_infantry_design_A # pure infantry
+
+		trigger = {
+			OR = {
+				EAI_infantry_design_A = yes
+
+				NOT = {
+					EAI_infantry_design_A = yes
+					EAI_infantry_design_B = yes
+					EAI_infantry_design_C = yes
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_design = global.EAI_A_INF_DESIGN }
+	}
+
+	option = { name = EAI_infantry_design_B # 7/2 infantry
+
+		trigger = {
+			OR = {
+				EAI_infantry_design_B = yes
+
+				NOT = {
+					EAI_infantry_design_A = yes
+					EAI_infantry_design_B = yes
+					EAI_infantry_design_C = yes
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_design = global.EAI_B_INF_DESIGN }
+	}
+
+	option = { name = EAI_infantry_design_C # 4/4 infantry
+
+		trigger = {
+			EAI_infantry_design_C = yes
+		}
+
+		ai_chance = {
+			factor = 1
+
+			modifier = { factor = 4 EAI_prefer_artillery_design = yes } # country has a lvl 2-3 arty advisor
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_design = global.EAI_C_INF_DESIGN }
+	}
+}
+
+# Infantry width
+# default: 20w, 26w
+country_event = {
+	id = EAI_CFG.103
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.102"
+
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_infantry_width_20w = yes
+						EAI_infantry_width_26w = yes
+						EAI_infantry_width_40w = yes
+						EAI_infantry_width_10w = yes
+					}
+					NOT = {
+						EAI_infantry_width_20w = yes
+						EAI_infantry_width_26w = yes
+						EAI_infantry_width_40w = yes
+						EAI_infantry_width_10w = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.104 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.104 hours = 3 } }
+	}
+
+	option = { name = EAI_infantry_width_20w
+
+		trigger = {
+			OR = {
+				EAI_infantry_width_20w = yes
+
+				NOT = {
+					EAI_infantry_width_20w = yes
+					EAI_infantry_width_26w = yes
+					EAI_infantry_width_40w = yes
+					EAI_infantry_width_10w = yes
+				}
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_20W_INF_WIDTH }
+	}
+
+	option = { name = EAI_infantry_width_26w
+
+		trigger = {
+			OR = {
+				EAI_infantry_width_26w = yes
+
+				NOT = {
+					EAI_infantry_width_20w = yes
+					EAI_infantry_width_26w = yes
+					EAI_infantry_width_40w = yes
+					EAI_infantry_width_10w = yes
+				}
+			}
+
+			NOT = { check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MA_DOCTRINE } } # incompatible
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_26W_INF_WIDTH }
+	}
+
+	option = { name = EAI_infantry_width_40w
+
+		trigger = {
+			EAI_infantry_width_40w = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_40W_INF_WIDTH }
+	}
+
+	option = { name = EAI_infantry_width_10w
+
+		trigger = {
+			EAI_infantry_width_10w = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_10W_INF_WIDTH }
+	}
+}
+
+# Armor focus
+# default: all
+country_event = { 
+	id = EAI_CFG.104
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+	
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.103"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_marm_army_focus = yes
+						EAI_harm_army_focus = yes
+						EAI_anti_tank_army_focus = yes
+					}
+					NOT = {
+						EAI_marm_army_focus = yes
+						EAI_harm_army_focus = yes
+						EAI_anti_tank_army_focus = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.105 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.105 hours = 3 } }
+	}
+
+	option = { name = EAI_marm_army_focus
+
+		trigger = {
+			OR = {
+				EAI_marm_army_focus = yes
+				NOT = { EAI_marm_army_focus = yes EAI_harm_army_focus = yes EAI_anti_tank_army_focus = yes }
+			}
+			NOT = { # incompatible
+				check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MARM_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/attachment_OVERRIDE = global.EAI_MARM_ATTACHMENT }
+			}
+		}
+
+		ai_chance = {
+			factor = 1.3
+			
+			modifier = { factor = 1.5 EAI_Armor_Research_Focus_PRESET = yes }
+			modifier = { factor = 2 tungsten > 30 NOT = { EAI_major_country = yes } } # minors with a lot of tungsten prefer medium armor
+			modifier = { # countries with an armor advisor
+				factor = 2
+				OR = {
+					has_idea_with_trait = army_armored_2 has_available_idea_with_traits = { idea = army_armored_2 limit = 1 }
+					has_idea_with_trait = army_armored_3 has_available_idea_with_traits = { idea = army_armored_3 limit = 1 }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_MTD_AT_DESIGN }
+
+		set_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS }
+	}
+
+	option = { name = EAI_harm_army_focus
+
+		trigger = {
+			OR = {
+				EAI_harm_army_focus = yes
+				NOT = { EAI_marm_army_focus = yes EAI_harm_army_focus = yes EAI_anti_tank_army_focus = yes }
+			}
+			NOT = { # incompatible
+				check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_HARM_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/attachment_OVERRIDE = global.EAI_HARM_ATTACHMENT }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			modifier = { factor = 1.5 EAI_Armor_Research_Focus_PRESET = yes }
+			modifier = { factor = 2 chromium > 30 NOT = { EAI_major_country = yes } } # minors with a lot of chromium prefer heavy armor
+			modifier = { factor = 0.1 NOT = { chromium > 15 } NOT = { EAI_major_country = yes } } # if a minor doesn't have chromium, prefer medium armor
+			modifier = { factor = 5 tag = FRA }
+			modifier = { # countries with an armor advisor
+				factor = 2
+				OR = {
+					has_idea_with_trait = army_armored_2 has_available_idea_with_traits = { idea = army_armored_2 limit = 1 }
+					has_idea_with_trait = army_armored_3 has_available_idea_with_traits = { idea = army_armored_3 limit = 1 }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_HTD_AT_DESIGN }
+
+		set_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_HARM_FOCUS }
+	}
+
+	option = { name = EAI_anti_tank_army_focus
+
+		trigger = {
+			OR = {
+				EAI_anti_tank_army_focus = yes
+				NOT = { EAI_marm_army_focus = yes EAI_harm_army_focus = yes EAI_anti_tank_army_focus = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+
+			modifier = { factor = 3 NOT = { chromium > 30 tungsten > 30 } NOT = { EAI_major_country = yes } } # a minor without tungsten or chromium favors AT armies
+			modifier = { factor = 1.5 NOT = { EAI_major_country = yes } }
+			modifier = { factor = 0.1 check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } }
+			modifier = { factor = 2 check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_SF_DOCTRINE } }
+			modifier = { factor = 2 check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_GB_DOCTRINE } }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS }
+	}
+}
+
+# Armor design
+# default: all
+country_event = {
+	id = EAI_CFG.105
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+	
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.104"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_armor_design_A = yes
+						EAI_armor_design_B = yes
+						EAI_armor_design_C = yes
+					}
+					NOT = {
+						EAI_armor_design_A = yes
+						EAI_armor_design_B = yes
+						EAI_armor_design_C = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.106 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.106 hours = 3 } }
+	}
+
+	option = { name = EAI_armor_design_A
+
+		trigger = {
+			OR = {
+				EAI_armor_design_A = yes
+				NOT = { EAI_armor_design_A = yes EAI_armor_design_B = yes EAI_armor_design_C = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 OR = { tag = SOV tag = GER } }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_design = global.EAI_A_ARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/heavy_armor_design = global.EAI_A_HARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/medium_armor_design = global.EAI_A_MARM_DESIGN }
+	}
+
+	option = { name = EAI_armor_design_B
+
+		trigger = {
+			OR = {
+				EAI_armor_design_B = yes
+				NOT = { EAI_armor_design_A = yes EAI_armor_design_B = yes EAI_armor_design_C = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 OR = { tag = SOV tag = GER } }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_design = global.EAI_B_ARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/heavy_armor_design = global.EAI_B_HARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/medium_armor_design = global.EAI_B_MARM_DESIGN }
+	}
+
+	option = { name = EAI_armor_design_C
+
+		trigger = {
+			OR = {
+				EAI_armor_design_C = yes
+				NOT = { EAI_armor_design_A = yes EAI_armor_design_B = yes EAI_armor_design_C = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_design = global.EAI_C_ARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/heavy_armor_design = global.EAI_C_HARM_DESIGN }
+		set_variable = { EAI_FOCUS/LAND/medium_armor_design = global.EAI_C_MARM_DESIGN }
+	}
+}
+
+# Armor width
+# default: 20, 40
+country_event = {
+	id = EAI_CFG.106
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.105"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_40w_armor_width = yes
+						EAI_26w_armor_width = yes
+						EAI_20w_armor_width = yes
+					}
+					NOT = {
+						EAI_40w_armor_width = yes
+						EAI_26w_armor_width = yes
+						EAI_20w_armor_width = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.107 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.107 hours = 3 } }
+	}
+
+	option = { name = EAI_40w_armor_width
+
+		trigger = {
+			OR = {
+				EAI_40w_armor_width = yes
+				NOT = { EAI_40w_armor_width = yes EAI_26w_armor_width = yes EAI_20w_armor_width = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 2 OR = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_HARM_FOCUS } } }
+			modifier = { factor = 2 check_variable = { EAI_FOCUS/LAND/land_doctrine = global.EAI_MW_DOCTRINE } }
+			modifier = { factor = 0.25 NOT = { EAI_major_country = yes } }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_width = global.EAI_40W_ARM_WIDTH }
+	}
+
+	option = { name = EAI_26w_armor_width
+
+		trigger = {
+			EAI_26w_armor_width = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/armor_width = global.EAI_26W_ARM_WIDTH }
+	}
+
+	option = { name = EAI_20w_armor_width
+
+		trigger = {
+			OR = {
+				EAI_20w_armor_width = yes
+				NOT = { EAI_40w_armor_width = yes EAI_26w_armor_width = yes EAI_20w_armor_width = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1	
+		}
+		
+		set_variable = { EAI_FOCUS/LAND/armor_width = global.EAI_20W_ARM_WIDTH }
+	}
+}
+
+# Attachment
+# default: all
+country_event = {
+	id = EAI_CFG.107
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.106"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_motorized_attachment = yes
+						EAI_harm_attachment = yes
+						EAI_marm_attachment = yes
+						EAI_larm_attachment = yes
+					}
+					NOT = {
+						EAI_motorized_attachment = yes
+						EAI_harm_attachment = yes
+						EAI_marm_attachment = yes
+						EAI_larm_attachment = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.108 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.108 hours = 3 } }
+	}
+
+	option = { name = EAI_motorized_attachment
+
+		trigger = {
+			OR = {
+				EAI_motorized_attachment = yes
+				NOT = { EAI_motorized_attachment = yes EAI_marm_attachment = yes EAI_harm_attachment = yes EAI_larm_attachment = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 5 tag = FRA } # france prefers early AT
+			modifier = { # countries with a motorized advisor
+				factor = 2
+				OR = {
+					has_idea_with_trait = army_cavalry_2 has_available_idea_with_traits = { idea = army_cavalry_2 limit = 1 }
+					has_idea_with_trait = army_cavalry_3 has_available_idea_with_traits = { idea = army_cavalry_3 limit = 1 }
+				}
+			}
+			modifier = { factor = 2 NOT = { EAI_Armor_Research_Focus_PRESET = yes } }
+		}
+
+		if = { limit = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } }
+			set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_LINE_AT_DESIGN } # uses regular line artillery AT divisions
+		}
+
+		set_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT }
+	}
+
+	option = { name = EAI_harm_attachment
+
+		trigger = {
+			NOT = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_HARM_FOCUS } check_variable = { EAI_FOCUS/LAND/armor_focus_OVERRIDE = global.EAI_HARM_FOCUS } } # incompatible
+			OR = {
+				EAI_harm_attachment = yes
+				NOT = { EAI_motorized_attachment = yes EAI_marm_attachment = yes EAI_harm_attachment = yes EAI_larm_attachment = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 5 tag = FRA } # france prefers early AT
+			modifier = {
+				factor = 2
+				NOT = { EAI_major_country = yes }
+				chromium > 10
+				OR = {
+					has_idea_with_trait = army_armored_2 has_available_idea_with_traits = { idea = army_armored_2 limit = 1 }
+					has_idea_with_trait = army_armored_3 has_available_idea_with_traits = { idea = army_armored_3 limit = 1 }
+				}
+			}
+		}
+
+		if = { limit = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } }
+			set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_HTD_AT_DESIGN } # uses HTD AT divisions
+		}
+
+		set_variable = { EAI_FOCUS/LAND/attachment = global.EAI_HARM_ATTACHMENT }
+	}
+
+	option = { name = EAI_marm_attachment
+
+		trigger = {
+			NOT = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } check_variable = { EAI_FOCUS/LAND/armor_focus_OVERRIDE = global.EAI_MARM_FOCUS } } # incompatible
+			OR = {
+				EAI_marm_attachment = yes
+				NOT = { EAI_motorized_attachment = yes EAI_marm_attachment = yes EAI_harm_attachment = yes EAI_larm_attachment = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 2
+				NOT = { EAI_major_country = yes }
+				tungsten > 10
+				OR = {
+					has_idea_with_trait = army_armored_2 has_available_idea_with_traits = { idea = army_armored_2 limit = 1 }
+					has_idea_with_trait = army_armored_3 has_available_idea_with_traits = { idea = army_armored_3 limit = 1 }
+				}
+			}
+		}
+
+		if = { limit = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } }
+			set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_MTD_AT_DESIGN } # uses MTD AT divisions
+		}
+
+		set_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MARM_ATTACHMENT }
+	}
+	
+	option = { name = EAI_larm_attachment
+
+		trigger = {
+			OR = {
+				EAI_larm_attachment = yes
+				NOT = { EAI_motorized_attachment = yes EAI_marm_attachment = yes EAI_harm_attachment = yes EAI_larm_attachment = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = {
+				factor = 2
+				NOT = { EAI_major_country = yes }
+				OR = {
+					has_idea_with_trait = army_armored_2 has_available_idea_with_traits = { idea = army_armored_2 limit = 1 }
+					has_idea_with_trait = army_armored_3 has_available_idea_with_traits = { idea = army_armored_3 limit = 1 }
+				}
+			}
+		}
+
+		if = { limit = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } }
+			set_variable = { EAI_FOCUS/LAND/antitank_design = global.EAI_LINE_AT_DESIGN } # uses regular line artillery AT divisions
+		}
+
+		set_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT }
+	}
+}
+
+# Motorized design
+# default: all
+country_event = {
+	id = EAI_CFG.108
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.107"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } }
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } NOT = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } OR = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+					}
+					NOT = {
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } }
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } NOT = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+						AND = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } OR = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.109 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.109 hours = 3 } }
+	}
+
+	option = { name = EAI_motorized_design_A # MSPART
+
+		trigger = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_MARM_FOCUS } }
+
+		ai_chance = {
+			factor = 5
+			modifier = { factor = 20 tag = GER }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/motorized_design = global.EAI_A_MOT_DESIGN }
+	}
+
+	option = { name = EAI_motorized_design_B # MOTART
+
+		trigger = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } NOT = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 20 tag = SOV }
+		}
+
+		set_variable = { EAI_FOCUS/LAND/motorized_design = global.EAI_B_MOT_DESIGN }
+	}
+
+	option = { name = EAI_motorized_design_C # LSPART
+
+		trigger = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } OR = { check_variable = { EAI_FOCUS/LAND/armor_focus = global.EAI_AT_FOCUS } check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT } } }
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/LAND/motorized_design = global.EAI_C_MOT_DESIGN }
+	}
+
+	option = { name = skip
+
+		trigger = { NOT = { check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MOT_ATTACHMENT } } }
+
+		ai_chance = {
+			factor = 1
+		}
+	}
+}
+
+# Special forces
+# default: all
+country_event = {
+	id = EAI_CFG.109
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.108"
+		
+		if = {
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_marine_spec_ops = yes
+						EAI_mountaineer_spec_ops = yes
+						EAI_no_spec_ops = yes
+					}
+					NOT = {
+						EAI_marine_spec_ops = yes
+						EAI_mountaineer_spec_ops = yes
+						EAI_no_spec_ops = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.201 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.201 hours = 3 } }
+	}
+
+	option = { name = EAI_marine_spec_ops
+	
+		trigger = {
+			EAI_marine_spec_ops = yes
+		}
+		
+		set_variable = { EAI_FOCUS/LAND/spec_ops = global.EAI_MAR_SPEC_OPS }
+	}
+	
+	option = { name = EAI_mountaineer_spec_ops
+	
+		trigger = {
+			EAI_mountaineer_spec_ops = yes
+		}
+
+		set_variable = { EAI_FOCUS/LAND/spec_ops = global.EAI_MNT_SPEC_OPS }
+	}
+	
+	option = { name = EAI_no_spec_ops
+
+		trigger = {
+			OR = {
+				EAI_no_spec_ops = yes
+				NOT = { EAI_marine_spec_ops = yes EAI_mountaineer_spec_ops = yes EAI_no_spec_ops = yes }
+			}
+		}
+		
+		set_variable = { EAI_FOCUS/LAND/spec_ops = global.EAI_NO_SPEC_OPS }
+	}
+}
+
+####################################################################################
+# Air
+####################################################################################
+
+# Heavy fighter focus
+# default: off
+country_event = {
+	id = EAI_CFG.201
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.201"
+		
+		if = {
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_hftr_air_focus_1 = yes
+						EAI_hftr_air_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.202 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.202 hours = 3 } }
+	}
+
+	option = { name = EAI_hftr_air_focus_1
+
+		trigger = {
+			EAI_hftr_air_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/AIR/heavy_fighter = global.EAI_ON }
+	}
+
+	option = { name = EAI_hftr_air_focus_0
+
+		trigger = {
+			OR = {
+				EAI_hftr_air_focus_0 = yes
+				NOT = { EAI_hftr_air_focus_1 = yes EAI_hftr_air_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+		
+		set_variable = { EAI_FOCUS/AIR/heavy_fighter = global.EAI_OFF }
+	}
+}
+
+# Ground bomber focus
+# default: all
+country_event = {
+	id = EAI_CFG.202
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.202"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_CAS_air_focus = yes
+						EAI_TAC_air_focus = yes
+						EAI_no_ground_air_focus = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.203 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.203 hours = 3 } }
+	}
+
+	option = { name = EAI_CAS_air_focus
+
+		trigger = {
+			OR = {
+				EAI_CAS_air_focus = yes
+				NOT = { EAI_CAS_air_focus = yes EAI_TAC_air_focus = yes EAI_no_ground_air_focus = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 1.5 NOT = { EAI_major_country = yes } } # minors prefer cas
+			modifier = { factor = 1.5 OR = { tag = GER tag = SOV } } # ger/sov prefer cas
+		}
+
+		set_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_CAS_AIR }
+	}
+
+	option = { name = EAI_TAC_air_focus
+
+		trigger = {
+			OR = {
+				EAI_TAC_air_focus = yes
+				NOT = { EAI_CAS_air_focus = yes EAI_TAC_air_focus = yes EAI_no_ground_air_focus = yes }
+			}
+		}
+
+		ai_chance = { factor = 1 }
+
+		set_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_TAC_AIR }
+	}
+
+	option = { name = EAI_no_ground_air_focus
+
+		trigger = {
+			OR = {
+				EAI_no_ground_air_focus = yes
+			}
+		}
+
+		ai_chance = { factor = 1 }
+
+		set_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_NO_GROUND_AIR }
+	}
+}
+
+# Strategic bomber focus
+# default: off
+country_event = {
+	id = EAI_CFG.203
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.203"
+		
+		if = {
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_STR_air_focus_1 = yes
+						EAI_STR_air_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.204 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.204 hours = 3 } }
+	}
+
+	option = { name = EAI_STR_air_focus_1
+
+		trigger = {
+			EAI_STR_air_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 4 OR = { tag = ENG tag = USA } } # eng/usa prefer str
+		}
+
+		set_variable = { EAI_FOCUS/AIR/strategic_bomber = global.EAI_ON }
+	}
+
+	option = { name = EAI_STR_air_focus_0
+
+		trigger = {
+			OR = {
+				EAI_STR_air_focus_0 = yes
+				NOT = { EAI_STR_air_focus_1 = yes EAI_STR_air_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+			modifier = { factor = 100 NOT = { EAI_major_country = yes } } # minors dont want str
+		}
+		
+		set_variable = { EAI_FOCUS/AIR/strategic_bomber = global.EAI_OFF }
+	}
+}
+
+# Naval bomber focus
+# default: off
+country_event = { 
+	id = EAI_CFG.204
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.204"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_NAV_air_focus_1 = yes
+						EAI_NAV_air_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.205 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.205 hours = 3 } }
+	}
+
+	option = { name = EAI_NAV_air_focus_1
+
+		trigger = {
+			EAI_NAV_air_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 3 check_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_TAC_AIR } }
+		}
+
+		set_variable = { EAI_FOCUS/AIR/naval_bomber = global.EAI_ON }
+	}
+
+	option = { name = EAI_NAV_air_focus_0
+
+		trigger = {
+			OR = {
+				EAI_NAV_air_focus_0 = yes
+				NOT = { EAI_NAV_air_focus_1 = yes EAI_NAV_air_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+			modifier = { factor = 3 check_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_CAS_AIR } }
+		}
+		
+		set_variable = { EAI_FOCUS/AIR/naval_bomber = global.EAI_OFF }
+	}
+}
+
+# Air doctrine
+# default: all
+country_event = {
+	id = EAI_CFG.205
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.205"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_SD_doctrine = yes
+						EAI_BFS_doctrine = yes
+						EAI_OI_doctrine = yes
+					}
+					NOT = {
+						EAI_SD_doctrine = yes
+						EAI_BFS_doctrine = yes
+						EAI_OI_doctrine = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.301 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.301 hours = 3 } }
+	}
+
+	option = { name = EAI_SD_doctrine
+
+		trigger = {
+			OR = {
+				EAI_SD_doctrine = yes
+				NOT = { EAI_SD_doctrine = yes EAI_BFS_doctrine = yes EAI_OI_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_SD_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_BFS_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_OI_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 check_variable = { EAI_FOCUS/AIR/strategic_bomber = global.EAI_ON } } # countries that build str prefer sd
+		}
+
+		set_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_SD_DOCTRINE }
+		
+		if = { limit = { OR = { has_tech = formation_flying has_tech = force_rotation } }
+			#set_technology = { air_superiority = 0 }
+			set_technology = { formation_flying = 0 }
+			set_technology = { force_rotation = 0 }
+		}
+	}
+
+	option = { name = EAI_BFS_doctrine
+
+		trigger = {
+			OR = {
+				EAI_BFS_doctrine = yes
+				NOT = { EAI_SD_doctrine = yes EAI_BFS_doctrine = yes EAI_OI_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_SD_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_BFS_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_OI_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 1.25 check_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_CAS_AIR } } # countries that build cas prefer bfs
+		}
+
+		set_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_BFS_DOCTRINE }
+		
+		if = { limit = { OR = { has_tech = air_superiority has_tech = force_rotation } }
+			set_technology = { air_superiority = 0 }
+			#set_technology = { formation_flying = 0 }
+			set_technology = { force_rotation = 0 }
+		}
+	}
+
+	option = { name = EAI_OI_doctrine
+
+		trigger = {
+			OR = {
+				EAI_OI_doctrine = yes
+				NOT = { EAI_SD_doctrine = yes EAI_BFS_doctrine = yes EAI_OI_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_SD_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_BFS_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_OI_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 1.5 NOT = { check_variable = { EAI_FOCUS/AIR/ground_bomber = global.EAI_CAS_AIR } } } # countries that dont build cas prefer oi
+		}
+
+		set_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_OI_DOCTRINE }
+		
+		if = { limit = { OR = { has_tech = air_superiority has_tech = formation_flying } }
+			set_technology = { air_superiority = 0 }
+			set_technology = { formation_flying = 0 }
+			#set_technology = { force_rotation = 0 }
+		}
+	}
+	
+	option = { name = skip
+	
+		trigger = { OR = { check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_SD_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_BFS_DOCTRINE } check_variable = { EAI_FOCUS/AIR/air_doctrine = global.EAI_OI_DOCTRINE } } }
+	}
+}
+
+####################################################################################
+# Navy
+####################################################################################
+
+# Destroyer focus
+# default: off
+country_event = {
+	id = EAI_CFG.301
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.301"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_DD_navy_focus_3 = yes
+						EAI_DD_navy_focus_2 = yes
+						EAI_DD_navy_focus_1 = yes
+						EAI_DD_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.302 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.302 hours = 3 } }
+	}
+
+	option = { name = EAI_DD_navy_focus_3
+
+		trigger = {
+			EAI_DD_navy_focus_3 = yes
+		}
+
+		ai_chance = {
+			factor = 10
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_C_DD_DESIGN }
+	}
+
+	option = { name = EAI_DD_navy_focus_2
+
+		trigger = {
+			EAI_DD_navy_focus_2 = yes
+		}
+
+		ai_chance = {
+			factor = 10
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_B_DD_DESIGN }
+	}
+
+	option = { name = EAI_DD_navy_focus_1
+
+		trigger = {
+			EAI_DD_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 10
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_A_DD_DESIGN }
+	}
+
+	option = { name = EAI_DD_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_DD_navy_focus_0 = yes
+				NOT = { EAI_DD_navy_focus_2 = yes EAI_DD_navy_focus_3 = yes EAI_DD_navy_focus_1 = yes EAI_DD_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 100 NOT = { any_owned_state = { is_coastal = yes } } }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_OFF }
+	}
+}
+
+# ASW Destroyer focus
+# default: off
+country_event = {
+	id = EAI_CFG.302
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.302"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_ASW_DD_navy_focus_2 = yes
+						EAI_ASW_DD_navy_focus_1 = yes
+						EAI_ASW_DD_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.303 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.303 hours = 3 } }
+	}
+
+	option = { name = EAI_ASW_DD_navy_focus_2
+
+		trigger = {
+			EAI_ASW_DD_navy_focus_2 = yes
+		}
+
+		ai_chance = {
+			factor = 10
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/ASW_destroyer = global.EAI_B_ASW_DD_DESIGN }
+	}
+
+	option = { name = EAI_ASW_DD_navy_focus_1
+
+		trigger = {
+			EAI_ASW_DD_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 10
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/ASW_destroyer = global.EAI_A_ASW_DD_DESIGN }
+	}
+
+	option = { name = EAI_ASW_DD_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_ASW_DD_navy_focus_0 = yes
+				NOT = { EAI_ASW_DD_navy_focus_2 = yes EAI_ASW_DD_navy_focus_1 = yes EAI_ASW_DD_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 100 NOT = { any_owned_state = { is_coastal = yes } } }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/ASW_destroyer = global.EAI_OFF }
+	}
+}
+
+# Light cruiser focus
+# default: off
+country_event = {
+	id = EAI_CFG.303
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.303"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_CL_navy_focus_1 = yes
+						EAI_CL_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.304 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.304 hours = 3 } }
+	}
+
+	option = { name = EAI_CL_navy_focus_1
+
+		trigger = {
+			EAI_CL_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_ON }
+	}
+
+	option = { name = EAI_CL_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_CL_navy_focus_0 = yes
+				NOT = { EAI_CL_navy_focus_1 = yes EAI_CL_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_OFF }
+	}
+}
+
+# ASW Light cruiser focus
+# default: off
+country_event = {
+	id = EAI_CFG.304
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.304"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_ASW_CL_navy_focus_1 = yes
+						EAI_ASW_CL_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.305 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.305 hours = 3 } }
+	}
+
+	option = { name = EAI_ASW_CL_navy_focus_1
+
+		trigger = {
+			EAI_ASW_CL_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/ASW_light_cruiser = global.EAI_ON }
+	}
+
+	option = { name = EAI_ASW_CL_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_ASW_CL_navy_focus_0 = yes
+				NOT = { EAI_ASW_CL_navy_focus_1 = yes EAI_ASW_CL_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/ASW_light_cruiser = global.EAI_OFF }
+	}
+}
+
+# Heavy cruiser focus
+# default: off
+country_event = { 
+	id = EAI_CFG.305
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.305"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_CA_navy_focus_1 = yes
+						EAI_CA_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.306 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.306 hours = 3 } }
+	}
+
+	option = { name = EAI_CA_navy_focus_1
+
+		trigger = {
+			EAI_CA_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 2 OR = { has_tech = basic_ship_hull_cruiser has_tech = basic_heavy_cruiser } }
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 1
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 2
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+	}
+
+	option = { name = EAI_CA_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_CA_navy_focus_0 = yes
+				NOT = { EAI_CA_navy_focus_1 = yes EAI_CA_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+			modifier = { factor = 2 num_of_naval_factories < 5 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+	}
+}
+
+# Battlecruiser focus
+# default: off
+country_event = {
+	id = EAI_CFG.306
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.306"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_BC_navy_focus_1 = yes
+						EAI_BC_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.307 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.307 hours = 3 } }
+	}
+
+	option = { name = EAI_BC_navy_focus_1
+
+		trigger = {
+			EAI_BC_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 2 OR = { has_tech = basic_battlecruiser has_tech = basic_ship_hull_heavy } }
+			modifier = { factor = 0.5 check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON } }
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 1
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 2
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+	}
+
+	option = { name = EAI_BC_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_BC_navy_focus_0 = yes
+				NOT = { EAI_BC_navy_focus_1 = yes EAI_BC_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+			modifier = { factor = 3 num_of_naval_factories < 10 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+	}
+}
+
+# Battleship focus
+# default: off
+country_event = {
+	id = EAI_CFG.307
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.307"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_BB_navy_focus_SHBB = yes
+						EAI_BB_navy_focus_BB = yes
+						EAI_BB_navy_focus_0 = yes
+					}
+					NOT = {
+						EAI_BB_navy_focus_SHBB = yes
+						EAI_BB_navy_focus_BB = yes
+						EAI_BB_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.308 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.308 hours = 3 } }
+	}
+
+	option = { name = EAI_BB_navy_focus_SHBB
+
+		trigger = {
+			EAI_BB_navy_focus_SHBB = yes
+		}
+
+		ai_chance = {
+			factor = 0.25
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_B_BB_DESIGN }
+	}
+
+	option = { name = EAI_BB_navy_focus_BB
+
+		trigger = {
+			EAI_BB_navy_focus_BB = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 2 OR = { has_tech = basic_battleship has_tech = basic_ship_hull_heavy } }
+			modifier = { factor = 0.5 OR = { check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON } check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON } } }
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 1
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+			modifier = {
+				factor = 0.5
+
+				count_triggers = {
+					amount = 2
+					check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF }
+					check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON }
+					check_variable = { EAI_FOCUS/NAVY/battleship > global.EAI_OFF }
+				}
+			}
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_A_BB_DESIGN }
+	}
+
+	option = { name = EAI_BB_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_BB_navy_focus_0 = yes
+				NOT = { EAI_BB_navy_focus_SHBB = yes EAI_BB_navy_focus_BB = yes EAI_BB_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+			modifier = { factor = 3 num_of_naval_factories < 10 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+	}
+}
+
+# Carrier focus
+# default: off
+country_event = { 
+	id = EAI_CFG.308
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.308"
+		
+		if = {
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_CV_navy_focus_LCV = yes
+						EAI_CV_navy_focus_FCV = yes
+						EAI_CV_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.309 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.309 hours = 3 } }
+	}
+	
+	option = { name = EAI_CV_navy_focus_LCV
+
+		trigger = {
+			EAI_CV_navy_focus_LCV = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 has_tech = early_carrier } # countries that start with carrier tech will focus on carriers
+			modifier = { factor = 20 is_major = no }
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_B_CV_DESIGN }
+	}
+
+	option = { name = EAI_CV_navy_focus_FCV
+
+		trigger = {
+			EAI_CV_navy_focus_FCV = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 has_tech = early_carrier } # countries that start with carrier tech will focus on carriers
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_A_CV_DESIGN }
+	}
+
+	option = { name = EAI_CV_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_CV_navy_focus_0 = yes
+				NOT = { EAI_CV_navy_focus_FCV = yes EAI_CV_navy_focus_LCV = yes EAI_CV_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+			modifier = { factor = 3 num_of_naval_factories < 10 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_OFF }
+	}
+}
+
+# Submarine focus
+# default: off
+country_event = {
+	id = EAI_CFG.309
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		#log = "[GetDate] | AI | [Root.GetName] | EAI_CFG.309"
+		
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_SS_navy_focus_1 = yes
+						EAI_SS_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.310 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.310 hours = 3 } }
+	}
+
+	option = { name = EAI_SS_navy_focus_1
+
+		trigger = {
+			EAI_SS_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+			
+			modifier = { factor = 2 has_tech = basic_submarine }
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/submarine = global.EAI_ON }
+	}
+
+	option = { name = EAI_SS_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_SS_navy_focus_0 = yes
+				NOT = { EAI_SS_navy_focus_1 = yes EAI_SS_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+			modifier = { factor = 10 NOT = { any_owned_state = { is_coastal = yes } } }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/submarine = global.EAI_OFF }
+	}
+}
+
+# Mine Layer focus
+# default: off
+country_event = {
+	id = EAI_CFG.310
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_ML_DD_navy_focus_1 = yes
+						EAI_ML_DD_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.311 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.311 hours = 3 } }
+	}
+
+	option = { name = EAI_ML_DD_navy_focus_1
+
+		trigger = {
+			EAI_ML_DD_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/mine_layer = global.EAI_ON }
+	}
+
+	option = { name = EAI_ML_DD_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_ML_DD_navy_focus_0 = yes
+				NOT = { EAI_ML_DD_navy_focus_1 = yes EAI_ML_DD_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/mine_layer = global.EAI_OFF }
+	}
+}
+
+# Mine Sweeper focus
+# default: off
+country_event = {
+	id = EAI_CFG.311
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		if = { 
+			limit = { 
+				OR = {
+					count_triggers = {
+						amount = 2
+						EAI_MS_DD_navy_focus_1 = yes
+						EAI_MS_DD_navy_focus_0 = yes
+					}
+				}
+			} 
+		
+			country_event = { id = EAI_CFG.312 days = 1 }
+		}
+		else = { country_event = { id = EAI_CFG.312 hours = 3 } }
+	}
+
+	option = { name = EAI_MS_DD_navy_focus_1
+
+		trigger = {
+			EAI_MS_DD_navy_focus_1 = yes
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/mine_sweeper = global.EAI_ON }
+	}
+
+	option = { name = EAI_MS_DD_navy_focus_0
+
+		trigger = {
+			OR = {
+				EAI_MS_DD_navy_focus_0 = yes
+				NOT = { EAI_MS_DD_navy_focus_1 = yes EAI_MS_DD_navy_focus_0 = yes }
+			}
+		}
+
+		ai_chance = {
+			factor = 2
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/mine_sweeper = global.EAI_OFF }
+	}
+}
+
+# Naval doctrine
+# default: all
+country_event = {
+	id = EAI_CFG.312
+	title = ""
+	desc = ""
+	is_triggered_only = yes
+
+	immediate = {
+		
+	}
+
+	option = { name = EAI_FIB_doctrine
+
+		trigger = {
+			OR = {
+				EAI_FIB_doctrine = yes
+				NOT = { EAI_FIB_doctrine = yes EAI_TI_doctrine = yes EAI_BS_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_FIB_DOCTRINE }check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_TI_DOCTRINE } check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_BS_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		if = { limit = { OR = { has_tech = trade_interdiction has_tech = base_strike } }
+			#set_technology = { fleet_in_being = 0 }
+			set_technology = { trade_interdiction = 0 }
+			set_technology = { base_strike = 0 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_FIB_DOCTRINE }
+
+		clr_country_flag = EAI_AI_is_configuring_this_country
+		
+		EAI_clear_all_OVERRIDE_focuses = yes
+	}
+
+	option = { name = EAI_TI_doctrine
+
+		trigger = {
+			OR = {
+				EAI_TI_doctrine = yes
+				NOT = { EAI_FIB_doctrine = yes EAI_TI_doctrine = yes EAI_BS_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_FIB_DOCTRINE }check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_TI_DOCTRINE } check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_BS_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+		}
+
+		if = { limit = { OR = { has_tech = fleet_in_being has_tech = base_strike } }
+			set_technology = { fleet_in_being = 0 }
+			#set_technology = { trade_interdiction = 0 }
+			set_technology = { base_strike = 0 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_TI_DOCTRINE }
+
+		clr_country_flag = EAI_AI_is_configuring_this_country
+		
+		EAI_clear_all_OVERRIDE_focuses = yes
+	}
+
+	option = { name = EAI_BS_doctrine
+
+		trigger = {
+			OR = {
+				EAI_BS_doctrine = yes
+				NOT = { EAI_FIB_doctrine = yes EAI_TI_doctrine = yes EAI_BS_doctrine = yes }
+			}
+			NOT = { check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_FIB_DOCTRINE }check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_TI_DOCTRINE } check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_BS_DOCTRINE } }
+		}
+
+		ai_chance = {
+			factor = 1
+			modifier = { factor = 10 check_variable = { EAI_FOCUS/NAVY/carrier > global.EAI_OFF } } # countries that focus on carriers prefer bs
+		}
+
+		if = { limit = { OR = { has_tech = fleet_in_being has_tech = trade_interdiction } }
+			set_technology = { fleet_in_being = 0 }
+			set_technology = { trade_interdiction = 0 }
+			#set_technology = { base_strike = 0 }
+		}
+		
+		set_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_BS_DOCTRINE }
+
+		clr_country_flag = EAI_AI_is_configuring_this_country
+		
+		EAI_clear_all_OVERRIDE_focuses = yes
+	}
+	
+	option = { name = skip
+	
+		trigger = { OR = { check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_FIB_DOCTRINE }check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_TI_DOCTRINE } check_variable = { EAI_FOCUS/NAVY/naval_doctrine = global.EAI_BS_DOCTRINE } } }
+
+		clr_country_flag = EAI_AI_is_configuring_this_country
+		
+		EAI_clear_all_OVERRIDE_focuses = yes
+	}
+}
+
+######################################################
+#	AI focus switching
+######################################################
+
+### transitions the AI between focuses during the game
+
+add_namespace = EAI_CFG_switch
+
+########################
+#	LAND
+########################
+
+# infantry design
+country_event = { # on
+	id = EAI_CFG_switch.1030
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		NOT = { has_country_flag = EAI_upgrade_inf_design }
+		
+		### CONDITIONS
+
+		date > 1940.1.1
+		
+		stockpile_ratio = { 
+			archetype = infantry_equipment
+			ratio > 4
+		}
+		
+		check_variable = { EAI_army_xp > 50 }
+		
+		has_equipment = { infantry_equipment > 50000 }
+	}
+
+	immediate = {
+		set_country_flag = EAI_upgrade_inf_design
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: upgrade infantry" } 
+	}
+
+	option = {}
+}
+
+# upgrade to 40w inf
+country_event = { 
+	id = EAI_CFG_switch.1031
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		has_global_flag = EAI_challenging_Mode
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		NOT = { has_country_flag = EAI_inf_40w_upgrade }
+		
+		### CONDITIONS
+
+		OR = {
+			check_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_20W_INF_WIDTH }
+			check_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_26W_INF_WIDTH }
+		}
+		
+		check_variable = { EAI_army_xp > 15 }
+		
+		has_equipment = { infantry_equipment > 10000 }
+	}
+
+	immediate = {
+		set_country_flag = EAI_inf_40w_upgrade
+
+		set_variable = { EAI_FOCUS/LAND/infantry_width = global.EAI_40W_INF_WIDTH }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: upgrade to 40w infantry" } 
+	}
+
+	option = {}
+}
+
+# light -> medium armor
+country_event = { # on
+	id = EAI_CFG_switch.1040
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		check_variable = { EAI_FOCUS/LAND/attachment = global.EAI_LARM_ATTACHMENT }
+		
+		### CONDITIONS
+
+		date > 1945.1.1
+		
+		num_of_military_factories > 50
+	}
+
+	immediate = {
+		set_variable = { EAI_FOCUS/LAND/attachment = global.EAI_MARM_ATTACHMENT }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: light -> medium armor" } 
+	}
+
+	option = {}
+}
+
+########################
+#	AIR
+########################
+
+# strategic bomber
+country_event = { # on
+	id = EAI_CFG_switch.2010
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		check_variable = { EAI_FOCUS/AIR/strategic_bomber = global.EAI_OFF }
+		
+		### CONDITIONS
+		
+		num_of_military_factories > 200
+		
+		date > 1943.1.1
+		
+		NOT = { any_neighbor_country = { has_war_with = ROOT } }
+	}
+
+	immediate = {
+		set_variable = { EAI_FOCUS/AIR/strategic_bomber = global.EAI_ON }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: build strat bombers" } 
+	}
+
+	option = {}
+}
+
+# naval bomber
+country_event = { # on
+	id = EAI_CFG_switch.2020
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		check_variable = { EAI_FOCUS/AIR/naval_bomber = global.EAI_OFF }
+		
+		### CONDITIONS
+
+		enemies_naval_strength_ratio > 1 
+
+		num_of_military_factories > 50
+	}
+
+	immediate = {
+		set_variable = { EAI_FOCUS/AIR/naval_bomber = global.EAI_ON }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: build naval bombers" } 
+	}
+
+	option = {}
+}
+
+########################
+#	NAVY
+########################
+
+### fleet compositions for minors
+
+country_event = { # 1
+	id = EAI_CFG_switch.300
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		NOT = { check_variable = { EAI_fleet_comp = 1 } }
+
+		### CONDITIONS
+
+		num_of_naval_factories > 25
+	}
+
+	immediate = {
+		set_variable = { EAI_fleet_comp = 1 }
+
+		###
+
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+
+		###
+
+		random_list = {
+			1 = { set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_A_BB_DESIGN } }
+			1 = { set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON } }
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_ON }
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_C_DD_DESIGN }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: fleet composition 1" } 
+	}
+
+	option = {}
+}
+country_event = { # 2
+	id = EAI_CFG_switch.301
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+	
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		NOT = { check_variable = { EAI_fleet_comp = 2 } }
+
+		### CONDITIONS
+
+		num_of_naval_factories > 10
+		NOT = { num_of_naval_factories > 25 }
+	}
+
+	immediate = {
+		set_variable = { EAI_fleet_comp = 2 }
+
+		###
+
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+
+		###
+
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_ON }
+
+		set_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_ON }
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_C_DD_DESIGN }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: fleet composition 2" } 
+	}
+
+	option = {}
+}
+country_event = { # 3
+	id = EAI_CFG_switch.302
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		NOT = { EAI_major_country = yes }
+
+		NOT = { check_variable = { EAI_fleet_comp = 3 } }
+
+		### CONDITIONS
+
+		num_of_naval_factories > 3
+		NOT = { num_of_naval_factories > 10 }
+	}
+
+	immediate = {
+		set_variable = { EAI_fleet_comp = 3 }
+
+		###
+
+		set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+		set_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+
+		###
+
+		set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_C_DD_DESIGN }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: fleet composition 3" } 
+	}
+
+	option = {}
+}
+
+# carriers
+country_event = { # on
+	id = EAI_CFG_switch.3010
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		check_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_OFF }
+
+		### CONDITIONS
+		
+		num_of_naval_factories > 50
+
+		amount_research_slots > 4
+
+		if = { limit = { original_tag = GER is_historical_focus_on = yes } NOT = { SOV = { EAI_is_threat = yes } } }
+	}
+
+	immediate = {
+		set_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_B_CV_DESIGN }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: carrier focus" } 
+	}
+
+	option = {}
+}
+
+country_event = {
+	id = EAI_CFG_switch.3090
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		NOT = { has_country_flag = EAI_country_focuses_edited_by_player }
+
+		### CONDITIONS
+
+		num_of_naval_factories > 40
+
+		OR = {
+			AND = {
+				check_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_OFF }
+			}
+			AND = {
+				check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+			}
+			AND = {
+				check_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_OFF }
+			}
+		}
+
+		if = { limit = { original_tag = GER is_historical_focus_on = yes } NOT = { SOV = { EAI_is_threat = yes } } }
+		if = { limit = { original_tag = SOV is_historical_focus_on = yes } NOT = { GER = { EAI_is_threat = yes } } }
+	}
+
+	immediate = {
+		if = {
+			limit = {
+				check_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/light_cruiser = global.EAI_OFF }
+			}
+
+			set_variable = { EAI_FOCUS/NAVY/destroyer = global.EAI_C_DD_DESIGN }
+		}
+
+		if = {
+			limit = {
+				check_variable = { EAI_FOCUS/NAVY/heavy_cruiser = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_OFF }
+				check_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_OFF }
+			}
+
+			random_list = {
+				1 = { set_variable = { EAI_FOCUS/NAVY/battlecruiser = global.EAI_ON } }
+				1 = { set_variable = { EAI_FOCUS/NAVY/battleship = global.EAI_ON } }
+			}
+		}
+
+		set_variable = { EAI_FOCUS/NAVY/carrier = global.EAI_B_CV_DESIGN }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: large fleet focus" } 
+	}
+
+	option = {}
+}
+
+# mine sweepers
+country_event = {
+	id = EAI_CFG_switch.3091
+	hidden = yes
+	mean_time_to_happen = { days = 20 }
+
+	trigger = {
+		is_ai = yes
+
+		### CONDITIONS
+
+		check_variable = { EAI_FOCUS/NAVY/mine_sweeper = global.EAI_OFF }
+
+		has_country_flag = EAI_enemy_mines_on_our_coasts
+	}
+
+	immediate = {
+		set_variable = { EAI_FOCUS/NAVY/mine_sweeper = global.EAI_ON }
+
+		if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | ARMY-SWITCH: mine sweepers focus" } 
+	}
+
+	option = {}
+}
