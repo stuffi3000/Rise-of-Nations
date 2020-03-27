@@ -1,0 +1,326 @@
+#Remember to change the tooltips if the effects are changed
+#State scope. Prev is target country.
+PRC_execute_infiltration_effects_for_PREV = {
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 1
+			}
+		}
+		damage_building = {
+			type = infrastructure
+			damage = 2
+		}
+		damage_building = {
+			type = arms_factory
+			damage = 2
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 2
+			}
+		}
+		damage_building = {
+			type = infrastructure
+			damage = 4
+		}
+		damage_building = {
+			type = arms_factory
+			damage = 4
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 3
+			}
+		}
+		PREV = {
+			set_state_controller = PREV
+			division_template = {
+				name = "Communist Militia"
+				priority = 2
+				division_names_group = PRC_GAR_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+				}
+				support = {
+					
+				}
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_3
+		hidden_effect = {
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Militia\" division_template = \"Communist Militia\" start_experience_factor = 0.0" 
+				owner = PREV
+			}
+		}
+	}
+	if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@PREV
+				value = 4
+			}
+		}
+		#We probably don't want to destroy stuff in the state when we gain control and have units there.
+		PREV = {
+			set_state_controller = PREV
+			division_template = {
+				name = "Communist Elite"
+				priority = 2
+				division_names_group = PRC_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+				}
+				support = {
+					
+				}
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_4
+		hidden_effect = {
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+			create_unit = {
+				division = "name = \"Communist Elite\" division_template = \"Communist Elite\" start_experience_factor = 0.3" 
+				owner = PREV
+			}
+		}
+	}
+}
+
+#looks for 1 less than what is needed in the effect to match tooltip, since flag is modified after effect is run
+PRC_infiltration_succesful_show_uprising_effect = {
+	custom_effect_tooltip = PRC_infiltration_succesful
+	if = {
+		limit = {
+			OR = {
+				NOT = { has_state_flag = PRC_infiltration_@ROOT }
+				has_state_flag = {
+					flag = PRC_infiltration_@ROOT
+					value = 0
+				}
+			}
+		}		
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_1
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value = 1
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_1
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value = 2
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_2
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_3
+	}
+	else_if = {
+		limit = {
+			has_state_flag = {
+				flag = PRC_infiltration_@ROOT
+				value > 2
+			}
+		}
+		custom_effect_tooltip = PRC_infiltrate_uprising_header
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_2
+		custom_effect_tooltip = PRC_infiltrate_uprising_effect_4
+	}
+}
+
+
+#Important to put HIGHEST first
+PRC_low_popular_support_level_up = {
+	# level 5 not relevant. Cannot go above.
+	if = {
+		limit = { has_idea = PRC_low_popular_support_4 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_4
+			add_idea = PRC_low_popular_support_5
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_3 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_3
+			add_idea = PRC_low_popular_support_4
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_2 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_2
+			add_idea = PRC_low_popular_support_3
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_1 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_1
+			add_idea = PRC_low_popular_support_2
+		}		
+	}
+	if = {
+		limit = { NOT = { has_idea = PRC_low_popular_support_1 } }
+		add_ideas = PRC_low_popular_support_1
+	}
+}
+
+#Important to put LOWEST first
+PRC_low_popular_support_level_down = {
+	if = {
+		limit = { has_idea = PRC_low_popular_support_1 }
+		#Makes the tooltip clearer if player looks at the effect early in the game
+		effect_tooltip = {
+			swap_ideas = {
+				remove_idea = PRC_low_popular_support_2
+				add_idea = PRC_low_popular_support_1
+			}
+		}
+		hidden_effect = { remove_ideas = PRC_low_popular_support_1 }
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_2 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_2
+			add_idea = PRC_low_popular_support_1
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_3 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_3
+			add_idea = PRC_low_popular_support_2
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_4 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_4
+			add_idea = PRC_low_popular_support_3
+		}
+	}
+	if = {
+		limit = { has_idea = PRC_low_popular_support_5 }
+		swap_ideas = {
+			remove_idea = PRC_low_popular_support_5
+			add_idea = PRC_low_popular_support_4
+		}
+	}
+}
+PRC_transfer_negative_spirits = {
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_the_long_march_1
+			}
+		}
+		add_ideas = PRC_the_long_march_1
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_the_long_march_2
+			}
+		}
+		add_ideas = PRC_the_long_march_2
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_5
+			}
+		}
+		add_ideas = PRC_low_popular_support_5
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_4
+			}
+		}
+		add_ideas = PRC_low_popular_support_4
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_3
+			}
+		}
+		add_ideas = PRC_low_popular_support_3
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_2
+			}
+		}
+		add_ideas = PRC_low_popular_support_2
+	}
+	else_if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_low_popular_support_1
+			}
+		}
+		add_ideas = PRC_low_popular_support_1
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_power_struggles
+			}
+		}
+		add_ideas = PRC_power_struggles
+	}
+	if = {
+		limit = {
+			event_target:WTT_communist_china = {
+				has_idea = PRC_red_army_weakened
+			}
+		}
+		add_ideas = PRC_red_army_weakened
+	}
+}
