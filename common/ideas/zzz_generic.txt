@@ -91,6 +91,10 @@ ideas = {
 					instant = yes
 					build_cost_ic = -0.10
 				}
+				scout_plane_equipment = {
+					instant = yes
+					build_cost_ic = -0.10	
+				}
 			}		
 		}
 	}
@@ -443,7 +447,7 @@ ideas = {
 	
 			modifier = {
 				conscription = 0.05
-#				enemy_partisan_effect = -0.1
+				resistance_damage_to_garrison = -0.1 
 			}
 		}
 	
@@ -1008,8 +1012,8 @@ ideas = {
 			picture = chi_war_of_resistance3
 			
 			modifier = {
-				resistance_tick_in_states_controlled_by_enemy = 0.01
-#				partisan_effect = 0.25
+				resistance_growth_on_our_occupied_states = 0.1 
+				resistance_damage_to_garrison_on_our_occupied_states = 0.25 
 			}
 		}	
 		MTG_naval_treaty_adherent = {
@@ -1099,7 +1103,7 @@ ideas = {
 		generic_communist_revolutionary = {
 			
 			allowed = {
-				NOT = { OR = { tag = GER tag = ENG tag = SOV tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = CZE tag = ROM tag = CHI tag = MAN tag = MEX tag = HOL } }
+				NOT = { OR = { tag = GER tag = ENG tag = SOV original_tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = CZE tag = ROM tag = CHI tag = MAN tag = MEX tag = HOL original_tag = SPR } }
 				NOT = {
 					has_available_idea_with_traits = { idea = communist_revolutionary limit = 1 }
 				}
@@ -1132,19 +1136,15 @@ ideas = {
 				}
 			}
 	
-			ai_will_do = { #EAI
-				base = 0
-				modifier = { 
-					add = 10000
-					EAI_communist_focus = yes
-				}
+			ai_will_do = {
+				factor = 0
 			}
 		}
 			
 		generic_democratic_reformer = {
 			
 			allowed = {
-				NOT = { OR = { tag = GER tag = ENG tag = SOV tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = CZE tag = PRC tag = CHI tag = MAN tag = MEX tag = HOL } }
+				NOT = { OR = { tag = GER tag = ENG tag = SOV original_tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = CZE tag = PRC tag = CHI tag = MAN tag = MEX tag = HOL original_tag = SPR } }
 				NOT = {
 					has_available_idea_with_traits = { idea = democratic_reformer limit = 1 }
 				}
@@ -1166,6 +1166,10 @@ ideas = {
 					limit = { has_dlc = "Man the Guns" }	
 					NOT = { has_autonomy_state = autonomy_supervised_state }
 				}
+				if = {
+					limit = { has_dlc = "La Resistance" }	
+					NOT = { original_tag = POR }
+				}
 			}
 
 			
@@ -1181,19 +1185,15 @@ ideas = {
 				}
 			}
 	
-			ai_will_do = { #EAI
-				base = 0
-				modifier = { 
-					add = 10000
-					EAI_democratic_focus = yes
-				}
+			ai_will_do = {
+				factor = 0
 			}
 		}
 		
 		generic_fascist_demagogue = {
 			
 			allowed = {
-				NOT = { OR = { tag = GER tag = ENG tag = SOV tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = ROM tag = CZE tag = PRC tag = CHI tag = MAN tag = MEX tag = HOL } }
+				NOT = { OR = { tag = GER tag = ENG tag = SOV original_tag = FRA tag = ITA tag = JAP tag = USA tag = AST tag = RAJ tag = CAN tag = SAF tag = ROM tag = CZE tag = PRC tag = CHI tag = MAN tag = MEX tag = HOL original_tag = SPR original_tag = POR } }
 				NOT = {
 					has_available_idea_with_traits = { idea = fascist_demagogue limit = 1 }
 				}
@@ -1225,14 +1225,49 @@ ideas = {
 					has_government = fascism
 				}
 			}
+	
+			ai_will_do = {
+				factor = 0
+			}
+		}
 
-			ai_will_do = { #EAI
-				base = 0
-				modifier = { 
-					add = 10000
-					EAI_fascist_focus = yes
+		generic_head_of_intelligence = {
+			allowed = { 
+				has_dlc = "La Resistance"
+				# china gets a special one via focus
+				NOT = { original_tag = CHI }
+				NOT = { is_chinese_warlord = yes }
+			}
+			visible = {
+				OR = {
+					has_idea = generic_head_of_intelligence
+					NOT = {
+						OR = {
+							# ignore if a (historical) minister already available
+							has_allowed_idea_with_traits = { 
+								idea = head_of_intelligence 
+								limit = 1
+								ignore = generic_head_of_intelligence
+							}
+							# ignore if the other one is already taken
+							has_idea_with_trait = head_of_intelligence
+						}
+					}
 				}
 			}
+			available = {
+				has_intelligence_agency = yes
+			}
+			traits = { head_of_intelligence }
+
+			ai_will_do = {
+				factor = 1
+				modifier = {
+					has_intelligence_agency = no
+					factor = 0
+				}
+			}
+
 		}
 	}
 		
@@ -1317,6 +1352,12 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD }
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1361,6 +1402,12 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD tag = POR}
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1398,6 +1445,12 @@ ideas = {
 					AND = {
 						OR = { tag = MEX tag = HOL }
 						has_dlc = "Man the Guns"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD tag = POR }
+						has_dlc = "La Resistance"
 					}
 				}
 			}
@@ -1439,6 +1492,12 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD tag = POR }
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1472,6 +1531,12 @@ ideas = {
 					AND = {
 						OR = { tag = MEX tag = HOL }
 						has_dlc = "Man the Guns"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD tag = POR }
+						has_dlc = "La Resistance"
 					}
 				}
 			}
@@ -1510,6 +1575,12 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD }
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1544,6 +1615,12 @@ ideas = {
 					AND = {
 						OR = { tag = HOL tag = MEX }
 						has_dlc = "Man the Guns"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD }
+						has_dlc = "La Resistance"
 					}
 				}
 			}
@@ -1584,6 +1661,18 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD }
+						has_dlc = "La Resistance"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = POR }
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1617,6 +1706,18 @@ ideas = {
 						has_dlc = "Man the Guns"
 					}
 				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD tag = POR }
+						has_dlc = "La Resistance"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = POR }
+						has_dlc = "La Resistance"
+					}
+				}
 			}
 			
 			cost = 150
@@ -1648,6 +1749,18 @@ ideas = {
 					AND = {
 						OR = { tag = HOL }
 						has_dlc = "Man the Guns"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = SPR tag = SPA tag = SPB tag = SPC tag = SPD }
+						has_dlc = "La Resistance"
+					}
+				}
+				NOT = {
+					AND = {
+						OR = { tag = POR }
+						has_dlc = "La Resistance"
 					}
 				}
 			}
@@ -1759,6 +1872,7 @@ ideas = {
 	high_command = {
 
 		generic_army_art = {
+			ledger = army
 			
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1768,6 +1882,7 @@ ideas = {
 		}
 		
 		generic_army_log = {
+			ledger = army
 
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1777,6 +1892,7 @@ ideas = {
 		}
 
 		generic_navy_fleet_log = {
+			ledger = navy
 
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1786,6 +1902,7 @@ ideas = {
 		}
 
 		generic_air_air_combat_trainer = {
+			ledger = air
 
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1798,6 +1915,7 @@ ideas = {
 	theorist = {
 
 		generic_military_theorist = {
+			ledger = army
 			
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1811,6 +1929,7 @@ ideas = {
 		}
 	
 		generic_naval_theorist = {
+			ledger = navy
 			
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
@@ -1824,6 +1943,7 @@ ideas = {
 		}
 
 		generic_air_warfare_theorist = {
+			ledger = air
 			
 			allowed = {
 				OR = { original_tag = KOR original_tag = SER original_tag = ICE original_tag = SYR original_tag = LEB original_tag = EGY original_tag = JOR original_tag = CRO original_tag = LBA original_tag = INS original_tag = MAL original_tag = AZR original_tag = UKR original_tag = GEO original_tag = ARM original_tag = VIN original_tag = CAM original_tag = MNT original_tag = LIB original_tag = LAO original_tag = PAL }
