@@ -4,7 +4,6 @@ tags={
 }
 name="Rise of Nations"
 picture="thumbnail.png"
-supported_version="1.9.1"
 replace_path="history/countries"
 replace_path="history/states"
 replace_path="history/units"
@@ -23,3 +22,5 @@ replace_path="common/technology_sharing"
 replace_path="common/scripted_triggers"
 replace_path="common/scripted_localisation"
 replace_path="common/scripted_effects"
+supported_version="1.9.1"
+remote_file_id="2026448968"
