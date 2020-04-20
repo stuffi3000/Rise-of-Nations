@@ -1,0 +1,328 @@
+﻿###########################
+# Fininsh Events
+###########################
+
+add_namespace = finland
+
+# East Karelian Uprising
+country_event = {
+	id = finland.1
+	title = finland.1.t
+	desc = finland.1.d
+	picture = GFX_report_event_esu
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = SOV
+		tag = FIN
+		date > 1921.11.6
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = east_karelian_uprising
+	}
+	option = {
+		name = finland.1.a
+		# Takes place at 760
+	}
+}
+
+# Finnish Civil War Over Whites Win
+country_event = {
+	id = finland.2
+	title = finland.2.t
+	desc = finland.2.d
+	picture = GFX_report_event_finnish_civil_War
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FNN
+		NOT = { date > 1941.1.1 }
+		FNR = { has_capitulated = yes }
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		name = finland.2.a
+		set_global_flag = whiteswinfinland
+		news_event = { hours = 6 id = endsieg_news.105 }
+		FNN = {
+			annex_country = { target = FNR transfer_troops = no }
+		}
+	}
+}
+
+# Finnish Civil War Over Reds Win
+country_event = {
+	id = finland.3
+	title = finland.3.t
+	desc = finland.3.d
+	picture = GFX_report_event_finnish_civil_War
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FNR
+		NOT = { date > 1936.1.1 }
+		FNN = { has_capitulated = yes }
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		name = finland.3.a
+		news_event = { hours = 6 id = endsieg_news.111 }
+		FNR = {
+			annex_country = { target = FNN transfer_troops = no }
+		}
+		set_politics = {
+			ruling_party = leninist
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 0
+            paternal_autocrat = 0
+            social_conservative = 0
+            market_liberal = 0
+            social_liberal = 0
+            social_democrat = 0
+            leninist = 100
+            stalinist = 0
+            anarchist = 0
+        }
+	}
+}
+
+# Moscow Armistice
+country_event = {
+	id = finland.4
+	title = finland.4.t
+	desc = finland.4.d
+	picture = GFX_report_event_moscowarmistice
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = FIN
+		FIN = { has_war_with = SOV }
+		NOT = { has_global_flag = player_wants_custom_peacedeals }
+		OR = {
+			AND = {
+				146 = { NOT = { is_owned_and_controlled_by = FIN } }
+				147 = { NOT = { is_owned_and_controlled_by = FIN } }
+				215 = { NOT = { is_owned_and_controlled_by = FIN } }
+				date > 1936.1.1
+				has_global_flag = welcome_event_1941
+			}
+			AND = {
+				date > 1944.9.19
+				195 = { is_owned_and_controlled_by = SOV }
+			}
+			surrender_progress > 0.30
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = armistice
+	}
+	option = {
+		name = finland.4.a
+		ai_chance = { base = 10 }
+		leave_faction = yes
+		white_peace = ENG
+		white_peace = SOV
+
+		country_event = { id = finland.6 days = 15 }
+		SOV = {
+			transfer_state = 146
+			transfer_state = 147
+			transfer_state = 722
+			transfer_state = 215
+			transfer_state = 216
+			transfer_state = 859
+			transfer_state = 860
+		}
+		news_event = { hours = 6 id = endsieg_news.121 }
+		SOV = { give_military_access = FIN }
+	}
+	#Keep Fighting
+	option = {
+		name = finland.4.b
+		ai_chance = { base = 0 }
+		#set_global_flag = keep_fighting #Not necessary anymore
+	}
+}
+
+# Risto Ryti Resigns
+country_event = {
+	id = finland.5
+	title = finland.5.t
+	desc = finland.5.d
+	picture = GFX_report_event_ryti_resigns
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1944.12.1 }
+		NOT = { has_global_flag = fortythree }
+		tag = FIN
+		date > 1944.8.3
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = ryti_gone
+	}
+	option = {
+		name = finland.5.a
+		add_political_power = 250
+		add_stability = 0.05
+		news_event = { hours = 6 id = endsieg_news.119 }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "C.G.E Mannerheim"
+			desc = "POLITICS_MANNERHEIM_DESC"
+			picture = "Portrait_Finland_Mannerheim.dds"
+			expire = "1956.5.16"
+			ideology = paternal_autocrat
+			traits = {
+				indomitable_perseverance
+			}
+		}
+	}
+}
+
+# Lappland War
+country_event = {
+	id = finland.6
+	title = finland.6.t
+	desc = finland.6.d
+	picture = GFX_report_event_lappland_war
+
+	is_triggered_only = yes
+
+	immediate = {
+		set_global_flag = lappland_war
+	}
+	option = {
+		name = finland.6.a
+		news_event = { hours = 6 id = endsieg_news.120 }
+		if = {
+			limit = {
+				country_exists = GER
+				GER = { has_government = fascism }
+			}
+			FIN = { declare_war_on = { target = GER type = annex_everything } }
+			if = {
+				limit = { ENG = { has_war_with = GER } }
+				ENG = { add_to_faction = FIN }
+			}
+		}
+	}
+}
+
+# King Proclaimed in Finland
+country_event = {
+	id = finland.7
+	title = finland.7.t
+	desc = finland.7.d
+	picture = GFX_report_event_king_in_finland
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1925.1.1 }
+		tag = FIN
+		has_global_flag = whiteswinfinland
+		date > 1918.10.8
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = kinginfinland
+	}
+	option = {
+		name = finland.7.a
+		news_event = { hours = 6 id = endsieg_news.125 }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Väinö I"
+			desc = "POLITICS_FRIEDRICH_KARL_DESC"
+			picture = "Portrait_Finland_Friedrich_Karl_I.dds"
+			expire = "1943.5.16"
+			ideology = paternal_autocrat
+			traits = {
+				#
+			}
+		}
+	}
+}
+
+# King Abdicates in Finland
+country_event = {
+	id = finland.8
+	title = finland.8.t
+	desc = finland.8.d
+	picture = GFX_report_event_king_in_finland
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1925.1.1 }
+		tag = FIN
+		has_global_flag = compiegne
+		date > 1918.12.13
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		clr_global_flag = kinginfinland
+	}
+	option = {
+		name = finland.8.a
+		news_event = { hours = 6 id = endsieg_news.126 }
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 1
+            paternal_autocrat = 8
+            social_conservative = 10
+            market_liberal = 10
+            social_liberal = 20
+            social_democrat = 32
+            leninist = 13
+            stalinist = 0
+            anarchist = 6
+        }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Regent C.G.E Mannerheim"
+			desc = "POLITICS_MANNERHEIML_DESC"
+			picture = "Portrait_Finland_Mannerheim.dds"
+			expire = "1943.5.16"
+			ideology = social_democrat
+			traits = {
+				#
+			}
+		}
+	}
+}

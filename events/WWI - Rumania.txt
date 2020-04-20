@@ -1,0 +1,181 @@
+﻿###########################
+# Romanian Events
+###########################
+
+add_namespace = romania
+
+# TODO Make this work in 1910-1914
+# Treaty of Bucharest
+country_event = {
+	id = romania.1
+	title = romania.1.t
+	desc = romania.1.d
+	picture = GFX_report_event_treaty_of_bucharest
+
+	fire_only_once = yes
+
+	trigger = {
+		date < 1919.1.1
+		tag = ROM
+		date > 1918.5.7
+		country_exists = BUL
+		NOT = { has_global_flag = bucharestreaty }
+		NOT = { has_global_flag = welcome_event_1910 }
+		NOT = { has_global_flag = welcome_event_1914 }
+		NOT = { has_global_flag = armistice_of_villa_giusti }
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		name = romania.1.a
+		news_event = { hours = 6 id = endsieg_news.5 }
+		set_global_flag = bucharestreaty
+		BUL = {
+			transfer_state = 77 #Basically Dobrudja
+			transfer_state = 759
+			transfer_state = 778
+		}
+		AUH = {
+			transfer_state = 762 #Carpathian passages
+		}
+	}
+}
+
+# Treaty of Bucharest Reversed
+country_event = {
+	id = romania.2
+	title = romania.2.t
+	desc = romania.2.d
+	picture = GFX_report_event_bucharestreversed
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = ROM
+		has_global_flag = armistice_of_villa_giusti
+		has_global_flag = bucharestreaty
+		has_global_flag = compiegne
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		name = romania.2.a
+		clr_global_flag = bucharestreaty
+		ROM = {
+			set_global_flag = bucharestreatyreversed
+			transfer_state = 77
+			transfer_state = 759
+			transfer_state = 778
+		}
+	}
+}
+
+# Union of Romania with Bessarabia
+country_event = {
+	id = romania.3
+	title = romania.3.t
+	desc = romania.3.d
+	picture = GFX_report_event_bessarabia
+
+	fire_only_once = yes
+
+	trigger = {
+		date < 1919.1.1
+		tag = ROM
+		date > 1918.4.9
+		NOT = { has_global_flag = bessarabia }
+		RO2 = { is_puppet_of = ROM }
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+
+	option = {
+		name = romania.3.a
+		news_event = { hours = 6 id = endsieg_news.18 }
+		ROM = {
+			annex_country = { target = RO2 transfer_troops = yes }
+		}
+	}
+}
+
+# New Commie Gov
+country_event = {
+	id = romania.4
+	title = romania.4.t
+	desc = romania.4.d
+	picture = GFX_report_event_king_michael
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = ROM
+		SOV = { controls_state = 79 }
+		NOT = { has_global_flag = commie }
+		date > 1943.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 1
+	}
+	option = {
+		name = romania.4.a
+		set_global_flag = commie
+		set_global_flag = CMR
+		news_event = { hours = 6 id = endsieg_news.124 }
+		ROM = {
+			add_ai_strategy = {
+				type = alliance
+				id = "SOV"
+				value = 200
+			}
+		}
+		GER = { remove_from_faction = ROM }
+
+		white_peace = ENG
+		white_peace = SOV
+		white_peace = GER
+
+		ROM = { declare_war_on = { target = GER type = annex_everything } }
+		SOV = { add_to_faction = ROM }
+		set_politics = {
+			ruling_party = stalinist
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 0
+            paternal_autocrat = 0
+            social_conservative = 0
+            market_liberal = 0
+            social_liberal = 0
+            social_democrat = 0
+            leninist = 0
+            stalinist = 100
+            anarchist = 0
+        }
+		SOV = {
+			puppet = ROM
+			if = {
+				limit = { 78 = { is_owned_by = ROM } }
+				transfer_state = 78
+			}
+			if = {
+				limit = { 865 = { is_owned_by = ROM } }
+				transfer_state = 865
+			}
+			if = {
+				limit = { 80 = { is_owned_by = ROM } }
+				transfer_state = 80
+			}
+		}
+	}
+}

@@ -1,0 +1,185 @@
+﻿###########################
+# Ukranian Events
+###########################
+
+add_namespace = ww1_ukraine
+
+# Ukranian Hetmanate
+country_event = {
+	id = ww1_ukraine.1
+	title = ww1_ukraine.1.t
+	desc = ww1_ukraine.1.d
+	picture = GFX_report_event_hetmanate
+
+	fire_only_once = yes
+
+	trigger = {
+		country_exists = GER
+		tag = UKR
+		date < 1919.1.1
+		UKR = { has_government = social_democrat }
+		NOT = { date > 1932.12.1 }
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = hetmanate
+	}
+	option = {
+		name = ww1_ukraine.1.a
+		news_event = { hours = 6 id = endsieg_news.13 }
+
+		set_country_flag = skoropadskytakesover
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 0
+            paternal_autocrat = 45
+            social_conservative = 30
+            market_liberal = 5
+            social_liberal = 5
+            social_democrat = 0
+            leninist = 0
+            stalinist = 0
+            anarchist = 15
+        }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Hetman Skoropatsky"
+			desc = "POLITICS_SKOROPATSKY_DESC"
+			picture = "Portrait_Ukraine_Hetman_Skoropadsky.dds"
+			expire = "1943.5.16"
+			ideology = paternal_autocrat
+			traits = {
+				dictator
+			}
+		}
+		UKR = {
+			load_oob = "HET_1918"
+		}
+		if = {
+			limit = { GER = { NOT = { is_puppet = yes } } }
+			GER = { puppet = UKR }
+		}
+	}
+}
+
+# Ukranian Hetmanate falls from power
+country_event = {
+	id = ww1_ukraine.3
+	title = ww1_ukraine.3.t
+	desc = ww1_ukraine.3.d
+	picture = GFX_report_event_hetmanate
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = UKR
+		date > 1918.11.14
+		has_global_flag	= compiegne
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	immediate = {
+		set_global_flag = hetmanate_falls
+	}
+	option = {
+		name = ww1_ukraine.3.a
+		news_event = { hours = 6 id = endsieg_news.34 }
+		# Ukranian Directorate Gov. Takes Over
+		set_politics = {
+			ruling_party = social_conservative
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 0
+            paternal_autocrat = 25
+            social_conservative = 50
+            market_liberal = 5
+            social_liberal = 5
+            social_democrat = 0
+            leninist = 0
+            stalinist = 0
+            anarchist = 15
+        }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Ukranian Directorate"
+			desc = "POLITICS_SKOROPATSKY_DESC"
+			picture = "nothingyet"
+			expire = "1943.5.16"
+			ideology = social_conservative
+			traits = {
+				# none
+			}
+		}
+		UKR = {
+			load_oob = "UKR_1918"
+		}
+	}
+}
+
+# Act Zluky
+country_event = {
+	id = ww1_ukraine.4
+	title = ww1_ukraine.4.t
+	desc = ww1_ukraine.4.d
+	picture = GFX_report_event_act_zluky
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = POL
+		date > 1918.1.22
+		has_global_flag = armistice_of_villa_giusti
+		has_global_flag = hutsul
+	}
+
+	mean_time_to_happen = { days = 16 }
+
+	immediate = {
+		set_global_flag = hungarianromwar
+	}
+	option = {
+		name = ww1_ukraine.4.a
+		news_event = { hours = 6 id = endsieg_news.46 }
+	}
+}
+
+#Germany has transferred Crimea to us!
+country_event = {
+	id = ww1_ukraine.5
+	title = ww1_ukraine.5.t
+	desc = ww1_ukraine.5.d
+	picture = GFX_report_event_crimeaoffensive1918
+
+	is_triggered_only = yes
+
+	option = { #It's all ours!
+		name =  ww1_ukraine.5.a
+		UKR = {
+			add_state_core = 194
+			add_stability = 0.05
+			add_war_support = 0.05
+		}
+		ai_chance = { factor = 100 }
+	}
+	option = { #Release the Crimeans in Crimea
+		name = ww1_ukraine.5.b
+		CRI = {
+			add_state_core = 194
+			transfer_state = 194
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+		ai_chance = { factor = 0 }
+	}
+}
