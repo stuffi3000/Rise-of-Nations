@@ -1,0 +1,336 @@
+﻿###########################
+# Turkey Events
+###########################
+
+add_namespace = INT_turkey
+
+# Turkish independence war
+country_event = {
+	id = INT_turkey.1
+	title = INT_turkey.1.t
+	desc = INT_turkey.1.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		has_global_flag = armistice_of_mudros
+		date > 1919.5.19
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = INT_turkey.1.a
+		declare_war_on = { target = FRA type = annex_everything }
+		declare_war_on = { target = ENG type = annex_everything }
+		declare_war_on = { target = GRE type = annex_everything }
+		declare_war_on = { target = ITA type = annex_everything }
+		declare_war_on = { target = IRQ type = annex_everything }
+		hidden_effect = {
+			load_oob = TUR_independence_war
+			TUR = { country_event = { id = INT_turkey.4 days = 60 } }
+		}
+		set_global_flag = turkish_independence_war
+	}
+}
+
+# Turkish independence war victory
+country_event = {
+	id = INT_turkey.2
+	title = INT_turkey.2.t
+	desc = INT_turkey.2.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		has_global_flag = turkish_independence_war
+		controls_state = 339
+		controls_state = 344
+		controls_state = 350
+		controls_state = 788
+		controls_state = 784
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = INT_turkey.2.a
+		every_country = {
+			limit = { has_war_with = TUR }
+			white_peace = TUR
+		}
+		TUR = {
+			transfer_state = 784
+			transfer_state = 344
+			transfer_state = 350
+		}
+		set_global_flag = TUR_independence_war_victory
+	}
+}
+
+# Turkish independence war defeat
+country_event = {
+	id = INT_turkey.3
+	title = INT_turkey.3.t
+	desc = INT_turkey.3.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		has_global_flag = turkish_independence_war
+		FRA = {
+			controls_state = 344
+			controls_state = 350
+		}
+
+		OR = {
+			AND = {
+				743 = { NOT = { is_controlled_by = TUR } }
+				345 = { NOT = { is_controlled_by = TUR } }
+				348 = { NOT = { is_controlled_by = TUR } }
+				346 = { NOT = { is_controlled_by = TUR } }
+				349 = { NOT = { is_controlled_by = TUR } }
+			}
+			surrender_progress > 0.40
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = INT_turkey.3.a
+		every_country = {
+			limit = { has_war_with = TUR }
+			white_peace = TUR
+		}
+
+		if = {
+			limit = { country_exists = GRE }
+			GRE = {
+				transfer_state = 339
+				transfer_state = 805
+				transfer_state = 788
+			}
+		}
+		ITA = {
+		    transfer_state = 342
+		    transfer_state = 345
+		    transfer_state = 346
+		    transfer_state = 343
+		}
+		ARM = {
+			transfer_state = 353
+			transfer_state = 354
+			transfer_state = 784
+			transfer_state = 230
+		}
+		ENG = {
+			transfer_state = 352
+		}
+		set_global_flag = TUR_independence_war_defeat
+	}
+}
+
+# Treaty of Sevres
+country_event = {
+	id = INT_turkey.4
+	title = INT_turkey.4.t
+	desc = INT_turkey.4.d
+	#picture = GFX_report_event_oslo
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_turkey.4.a
+		TUR = {
+			white_peace = ENG
+			white_peace = FRA
+			diplomatic_relation = {
+				country = ENG
+				relation = non_aggression_pact
+				active = yes
+			}
+			diplomatic_relation = {
+				country = FRA
+				relation = non_aggression_pact
+				active = yes
+			}
+		}
+		GRE = {
+			leave_faction = yes
+			transfer_state = 788
+			transfer_state = 339
+		}
+		set_global_flag = treaty_of_sevres
+		341 = { set_demilitarized_zone = yes }
+		805 = { set_demilitarized_zone = yes }
+		340 = { set_demilitarized_zone = yes }
+	}
+}
+
+# Turkish Armenian war
+country_event = {
+	id = INT_turkey.5
+	title = INT_turkey.5.t
+	desc = INT_turkey.5.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		NOT = { has_global_flag = TUR_independence_war_defeat }
+		has_global_flag = turkish_independence_war
+		country_exists = ARM
+		NOT = { ARM = { is_puppet_of = TUR } }
+		OR = {
+			354 = { is_owned_by = ARM }
+			353 = { is_owned_by = ARM }
+			784 = { is_owned_by = ARM }
+		}
+	}
+
+	mean_time_to_happen = { days = 5 }
+
+	option = { #take em
+		name = INT_turkey.5.a
+		ai_chance = { factor = 100 }
+		TUR = { declare_war_on = { target = ARM type = annex_everything } }
+		set_global_flag = turkish_armenian_war
+	}
+
+	option = { #nah fam enough on our plate
+		ai_chance = { factor = 0 }
+		name = INT_turkey.5.b
+	}
+}
+
+# Turkish Armenian war victory
+country_event = {
+	id = INT_turkey.6
+	title = INT_turkey.6.t
+	desc = INT_turkey.6.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		has_global_flag = turkish_armenian_war
+		OR = {
+			TUR = {
+				controls_state = 354
+				controls_state = 353
+				controls_state = 784
+			}
+			ARM = { has_capitulated = yes }
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = { #Take our main claims
+		name = INT_turkey.6.a
+		ai_chance = { factor = 100 }
+		if = {
+			limit = {
+				OR = {
+					controls_state = 353
+					ARM = { controls_state = 353 }
+				}
+			}
+			transfer_state = 353
+		}
+		if = {
+			limit = {
+				OR = {
+					controls_state = 354
+					ARM = { controls_state = 354 }
+				}
+			}
+			transfer_state = 354
+		}
+		if = {
+			limit = {
+				OR = {
+					controls_state = 784
+					ARM = { controls_state = 784 }
+				}
+			}
+			transfer_state = 784
+		}
+		white_peace = ARM
+		ARM = { leave_faction = yes }
+	}
+
+	option = { #Annex everything!
+		ai_chance = { factor = 0 }
+		name = INT_turkey.6.b
+		if = {
+			limit = { controls_state = 353 }
+			transfer_state = 353
+		}
+		if = {
+			limit = { controls_state = 354 }
+			transfer_state = 354
+		}
+		if = {
+			limit = { controls_state = 784 }
+			transfer_state = 784
+		}
+		annex_country = { target = ARM }
+		add_political_power = -150
+		add_stability = -0.15
+	}
+}
+
+# Treaty of Lausanne
+country_event = {
+	id = INT_turkey.7
+	title = INT_turkey.7.t
+	desc = INT_turkey.7.d
+	#picture = GFX_report_event_oslo
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = { date > 1932.12.1 }
+		tag = TUR
+		has_global_flag = treaty_of_sevres
+		has_global_flag = TUR_independence_war_victory
+		controls_state = 340
+		controls_state = 339
+		controls_state = 342
+		controls_state = 345
+	}
+
+	mean_time_to_happen = { days = 20 }
+
+	option = {
+		name = INT_turkey.7.a
+		every_country = {
+			limit = { has_war_with = TUR }
+			white_peace = TUR
+		}
+		TUR = {
+			transfer_state = 339
+			transfer_state = 340
+			transfer_state = 341
+			transfer_state = 805
+			transfer_state = 342
+			transfer_state = 788
+		}
+		set_global_flag = treaty_of_lausanne
+	}
+}

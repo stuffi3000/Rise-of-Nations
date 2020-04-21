@@ -1,0 +1,355 @@
+﻿###########################
+# Hungarian Events
+###########################
+
+add_namespace = INT_hungary
+
+# Treaty of Trianon
+country_event = {
+	id = INT_hungary.1
+	title = INT_hungary.1.t
+	desc = INT_hungary.1.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.1.a
+		set_global_flag = treaty_of_trianon
+		set_politics = {
+			ruling_party = paternal_autocrat
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 5
+            paternal_autocrat = 45
+            social_conservative = 10
+            market_liberal = 0
+            social_liberal = 0
+            social_democrat = 25
+            leninist = 15
+            stalinist = 0
+            anarchist = 0
+        }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Miklos Horthy"
+			desc = "POLITICS_MIKLOS_HORTHY_DESC"
+			picture = "Portrait_Hungary_Miklos_Horthy.dds"
+			expire = "1956.1.1"
+			ideology = paternal_autocrat
+			traits = {
+				man_of_the_people1
+			}
+		}
+	}
+}
+
+# Communist Takeover
+country_event = {
+	id = INT_hungary.2
+	title = INT_hungary.2.t
+	desc = INT_hungary.2.d
+	picture = GFX_report_event_hungarian_sr
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.2.a
+		set_country_flag = HNN_communist_takover
+		country_event = { id = INT_hungary.6 days = 15 }
+		set_politics = {
+			ruling_party = leninist
+			elections_allowed = no    }
+
+        set_popularities = {
+            populist = 0
+            fascism = 0
+            paternal_autocrat = 0
+            social_conservative = 0
+            market_liberal = 0
+            social_liberal = 0
+            social_democrat = 35
+            leninist = 65
+            stalinist = 0
+            anarchist = 0
+        }
+		retire_country_leader = yes
+		create_country_leader = {
+			name = "Bela Kun"
+			desc = "POLITICS_BELA_KUN_DESC"
+			picture = "Portrait_Hungary_Bela_Kun.dds"
+			expire = "1943.5.16"
+			ideology = leninist
+			traits = {
+				dictator
+			}
+		}
+	}
+}
+
+# Yugoslavia Occupies Vojvodina
+country_event = {
+	id = INT_hungary.3
+	title = INT_hungary.3.t
+	desc = INT_hungary.3.d
+	picture = GFX_report_event_yugoslav_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.3.a
+		YUG = {
+			transfer_state = 45
+			add_state_core = 45
+		}
+	}
+}
+
+# Czechoslovakia Occupies Carpathian Ruthenia
+country_event = {
+	id = INT_hungary.4
+	title = INT_hungary.4.t
+	desc = INT_hungary.4.d
+	picture = GFX_report_event_yugoslav_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.4.a
+		CZE = {
+			transfer_state = 73
+		}
+	}
+}
+
+# Hungarian-Romanian War
+country_event = {
+	id = INT_hungary.5
+	title = INT_hungary.5.t
+	desc = INT_hungary.5.d
+	picture = GFX_report_event_hungarian_romanian_war
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.5.a
+		set_global_flag = hungarian_romanian_war
+		ROM = { declare_war_on = { target = HUN type = annex_everything } }
+	}
+}
+
+# The Vix Note
+country_event = {
+	id = INT_hungary.6
+	title = INT_hungary.6.t
+	desc = INT_hungary.6.d
+	picture = GFX_report_event_vix_note
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.6.a
+		# Accept Vix Note
+		set_global_flag = HNN_vix_note_YES
+		add_political_power = -300
+		76 = { set_demilitarized_zone = no }
+		84 = { set_demilitarized_zone = no }
+		83 = { set_demilitarized_zone = no }
+	}
+	option = {
+		name = INT_hungary.6.b
+		# Decline Vix Note
+		set_global_flag = HNN_vix_note_NO
+		76 = { set_demilitarized_zone = no }
+		84 = { set_demilitarized_zone = no }
+		83 = { set_demilitarized_zone = no }
+		hidden_effect = { HUN = { country_event = { id = INT_hungary.5 days = 15 } } }
+	}
+}
+
+# Communist Demonstration Turns Violent
+country_event = {
+	id = INT_hungary.7
+	title = INT_hungary.7.t
+	desc = INT_hungary.7.d
+	picture = GFX_report_event_hungarian_cp
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.7.a
+		add_stability = -0.10
+	}
+}
+
+################################
+
+# Romania wins hungarian war
+country_event = {
+	id = INT_hungary.8
+	title = INT_hungary.8.t
+	desc = INT_hungary.8.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = HUN
+		has_global_flag = hungarian_romanian_war
+		ROM = {
+			controls_state = 154
+			has_war_with = HUN
+		}
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = INT_hungary.8.a
+		ai_chance = { factor = 100 }
+		set_global_flag = treaty_of_trianon
+		HUN = {
+			country_event = { id = INT_hungary.1 days = 1 }
+		}
+		ROM = {
+			white_peace = HUN
+			transfer_state = 83
+			transfer_state = 826
+		}
+	}
+
+	option = {
+		name = INT_hungary.8.b
+		ai_chance = { factor = 0 }
+		HUN = {
+			country_event = { id = INT_hungary.9 days = 1 }
+		}
+		ROM = {
+			white_peace = HUN
+			transfer_state = 83
+			transfer_state = 826
+			transfer_state = 154
+			add_stability = -0.15
+		}
+	}
+}
+
+# Romania takes land
+country_event = {
+	id = INT_hungary.9
+	title = INT_hungary.9.t
+	desc = INT_hungary.9.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	is_triggered_only = yes
+
+	option = {
+		name = INT_hungary.9.a
+		add_war_support = 0.20
+	}
+}
+
+# Hungary wins war
+country_event = {
+	id = INT_hungary.10
+	title = INT_hungary.10.t
+	desc = INT_hungary.10.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = HUN
+		has_global_flag = hungarian_romanian_war
+		HUN = {
+			controls_state = 76
+			controls_state = 84
+			controls_state = 814
+			has_war_with = ROM
+		}
+	}
+
+	immediate = { white_peace = ROM }
+
+	mean_time_to_happen = { days = 1 }
+
+	option = {
+		name = INT_hungary.10.a
+		ai_chance = { factor = 10 }
+		transfer_state = 76
+		transfer_state = 84
+		transfer_state = 814
+	}
+
+	option = {
+		name = INT_hungary.10.b
+		ai_chance = { factor = 30 }
+		transfer_state = 76
+		transfer_state = 84
+	}
+
+	option = {
+		name = INT_hungary.10.c
+		ai_chance = { factor = 60 }
+		transfer_state = 76
+	}
+}
+
+country_event = {
+	id = INT_hungary.11
+	title = INT_hungary.11.t
+	desc = INT_hungary.11.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = HUN
+		date > 1919.5.29
+	}
+
+	mean_time_to_happen = { days = 0 }
+
+	option = {
+		name = INT_hungary.11.a
+		ai_chance = { factor = 10 }
+		end_puppet = PRM
+		PRM = {
+			kill_country_leader = yes
+			create_country_leader = {
+				name = "Vilmos Tkálecz"
+				desc = ""
+				picture = "gfx/leaders/PRM/Portrait_Vilmos_Tka.dds"
+				expire = "1924.5.16"
+				ideology = leninist
+				traits = {
+					stout_defender
+				}
+			}
+		}
+	}
+}
+
+country_event = {
+	id = INT_hungary.12
+	title = INT_hungary.12.t
+	desc = INT_hungary.12.d
+	picture = GFX_report_event_treaty_of_trianon
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = HUN
+		date > 1919.6.6
+	}
+
+	mean_time_to_happen = { days = 0 }
+
+	option = {
+		name = INT_hungary.12.a
+		ai_chance = { factor = 10 }
+		transfer_state = 747
+	}
+}
