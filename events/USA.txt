@@ -4,6 +4,10 @@
 
 add_namespace = usa
 
+
+#todo- add Anglo-Persian Oil Company events for Iran, and let Britain puppet it via event and build more oil fields there
+#todo- also add event for Anglo-Persian Oil Company to be reorganized into BP and expand Burgan Field to get Kuwait oil (completed in 1946 irl) in event of CSA choosing Germany
+
 # Amelia Eartharts wants to join the USAAC
 country_event = {
 	id = usa.1
@@ -40,6 +44,34 @@ country_event = {
 	}
 }
 
+# World Police
+country_event = {
+	id = usa.2
+	title = usa.2.t
+	desc = usa.2.d
+	picture = GFX_report_event_usa_heavy_cruiser
+
+	is_triggered_only = yes
+
+	
+	option = { 
+		name = usa.2.a
+		every_other_country = {
+			limit = {
+				OR = {
+					has_government = fascism
+					has_government = communism
+				}
+			}
+			save_event_target_as = war_target
+			ROOT = {
+				create_wargoal = { type = annex_everything target = event_target:war_target }
+			}
+		}
+	}
+
+}
+
 # Pearl Harbor Gambit
 country_event = {
 	id = usa.3
@@ -74,9 +106,6 @@ country_event = {
 
 	option = {
 		name = usa.3.a
-		USA = {
-			add_war_support = 0.5
-		}
 		create_wargoal = {
 			type = take_state
 			target = USA
@@ -98,15 +127,7 @@ country_event = {
 		name = usa.4.a
 		custom_effect_tooltip = usa.4.a.tt
 		hidden_effect = {
-			if = {
-				limit = { not = { has_dlc = "Man the Guns" } }
-				ENG = {	load_oob = "ENG_destroyers_for_bases" }
-				CAN = { load_oob = "CAN_destroyers_for_bases" }
-			}
-			else = {
-				ENG = {	load_oob = "ENG_destroyers_for_bases_mtg" }
-				CAN = { load_oob = "CAN_destroyers_for_bases_mtg" }
-			}
+			ENG = {	load_oob = "ENG_destroyers_for_bases" }
 			ENG = {
 				if = { limit = { 696 = { is_controlled_by = ENG } }
 					remove_state_core = 696
@@ -127,6 +148,7 @@ country_event = {
 					remove_state_core = 691
 				}
 			}
+			CAN = { load_oob = "CAN_destroyers_for_bases" }
 		}
 		USA = {
 			if = { limit = { 696 = { is_controlled_by = ENG } }
@@ -151,7 +173,6 @@ country_event = {
 				target = ROOT
 				modifier = destroyers_for_bases_opinion
 			}
-			country_event = { id = usa.401 days = 3 }
 		}
 	}
 
@@ -161,20 +182,6 @@ country_event = {
 		ai_chance = { factor = 0 }
 	}
 
-}
-
-# Britain accepts offer
-country_event = {
-	id = usa.401
-	title = usa.401.t
-	desc = usa.401.desc
-	picture = GFX_report_event_usa_destroyers
-
-	is_triggered_only = yes
-	
-	option = { 
-		name = usa.401.a
-	}
 }
 
 # Britain refuses offer
@@ -206,104 +213,66 @@ country_event = {
 		date > 1936.1.1
 		date < 1937.1.1
 	}
-
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
-	}
-
+	
 	option = { 	
 		name = usa.6.a
+		trigger = { NOT = { has_country_flag = USA_election_1936_focus } }
 		ai_chance = {
 			factor = 75
-			modifier = {
-				OR = {
-					has_game_rule = {
-						rule = USA_ai_behavior
-						option = FASCIST
-					}
-					has_country_flag = USA_AI_RANDOM_FASCIST
-				}
-				has_dlc = "Man the Guns"
-				factor = 0
-			}
 		}		
-		add_ideas = new_deal
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
+		#add_ideas = new_deal
+		add_political_power = -100
 	}
 
 	option = { 
 		name = usa.6.b
+		trigger = { NOT = { has_country_flag = USA_election_1936_focus } }
 		ai_chance = {
 			factor = 25
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
-				has_game_rule = {
-					rule = USA_ai_behavior
-					option = DEFAULT
-				}
 			}
 		}		
 		set_party_name = { ideology = democratic long_name = USA_republican_party name = USA_republican_party }
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		custom_effect_tooltip = usa_congress_elections_tt_good
-		add_political_power = 120
 		if = {
 			limit = {
-				has_idea = standard_oil_california
+				has_idea = standard_oil_california_im
 			}
 			add_political_power = 150
 		}
 		if = {
 			limit = {
-				NOT = { has_idea = standard_oil_california }
+				NOT = { has_idea = standard_oil_california_im }
 			}
-			add_ideas = standard_oil_california
+			add_ideas = standard_oil_california_im
+		}
+		if = {
+			limit = {  
+				has_idea = usa_packed_court
+			}
+			remove_ideas = usa_packed_court
 		}
 		create_country_leader = {
 			name = "Alf Landon"
 			desc = "POLITICS_ALF_LANDON_DESC"
-			picture = "portrait_USA_alf_landon.dds"
+			picture = "Portrait_USA_Generic_2.dds"
 			expire = "1965.1.1"
 			ideology = conservatism
 			traits = {
 				staunch_constitutionalist
 			}
 		}
-		country_event = usa.31
+	}
+	
+	option = { 	
+		name = usa.6.c
+		trigger = { has_country_flag = USA_election_1936_focus }
+		ai_chance = {
+			factor = 100
+		}		
+		#add_ideas = new_deal
+		add_political_power = 350
 	}
 }
 
@@ -321,24 +290,7 @@ country_event = {
 		democratic > 0.5
 		date > 1940.1.1
 		date < 1941.1.1
-		has_idea = new_deal
-	}
-
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
+		has_country_leader = { id = 1776 ruling_only = yes name = "Franklin Delano Roosevelt" } 
 	}
 	
 	option = {
@@ -346,23 +298,9 @@ country_event = {
 		ai_chance = {
 			factor = 75
 		}
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
+		add_political_power = 40
+		add_stability = 0.1
+		#remove_ideas = great_depression
 	}
 
 	option = {
@@ -377,13 +315,6 @@ country_event = {
 		set_party_name = { ideology = democratic long_name = USA_republican_party name = USA_republican_party }
 		remove_ideas = new_deal
 		add_ideas = wilkies_new_deal
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		add_political_power = 120
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		custom_effect_tooltip = usa_congress_elections_tt_good
 		create_country_leader = {
 			name = "Wendell Wilkie"
 			desc = "POLITICS_WENDELL_WILKIE_DESC"
@@ -394,7 +325,14 @@ country_event = {
 				
 			}
 		}
-		country_event = usa.31 #weighted towards gain of support
+		if = {
+			limit = {  
+				has_idea = usa_packed_court
+			}
+			remove_ideas = usa_packed_court
+		}
+		add_stability = -0.1
+		#remove_ideas = great_depression
 	}
 }
 
@@ -412,61 +350,23 @@ country_event = {
 		democratic > 0.5
 		date > 1940.1.1
 		date < 1941.1.1
-		NOT = { has_idea = new_deal }
-	}
-
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
+		NOT = { has_country_leader = { id = 1776 ruling_only = yes name = "Franklin Delano Roosevelt" }  }
 	}
 	
 	option = { 
 		name = usa.8.a
-		add_political_power = -40
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
+		add_political_power = 250
+		add_stability = -0.1
+		#remove_ideas = great_depression
 	}
 
 	option = { 
 		name = usa.8.b
 		set_party_name = { ideology = democratic long_name = USA_democratic_party name = USA_democratic_party }
-		add_ideas = new_deal
+		#add_ideas = new_deal
 		retire_country_leader = yes
-		add_political_power = 120
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		custom_effect_tooltip = usa_congress_elections_tt_good
-		country_event = usa.31
+		#remove_ideas = great_depression
+		add_stability = 0.2
 	}
 }
 
@@ -478,28 +378,13 @@ country_event = {
 	picture = GFX_report_event_usa_election_roosevelt_dewey
 
 	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
-	}
+
 	trigger = {
 		tag = USA
 		democratic > 0.5
 		date > 1944.1.1
 		date < 1945.1.1
-		has_idea = new_deal
+		has_country_leader = { id = 1776 ruling_only = yes name = "Franklin Delano Roosevelt" } 
 		has_war = no
 	}
 	
@@ -508,24 +393,7 @@ country_event = {
 		ai_chance = {
 			factor = 75
 		}
-		add_political_power = 10
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
+		add_political_power = -100
 	}
 
 	option = { 
@@ -539,24 +407,22 @@ country_event = {
 		}		
 		remove_ideas = new_deal
 		set_party_name = { ideology = democratic long_name = USA_republican_party name = USA_republican_party }
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		add_political_power = 120
-		custom_effect_tooltip = usa_congress_elections_tt_good
 		create_country_leader = {
 			name = "Thomas E. Dewey"
 			desc = "POLITICS_THOMAS_DEWEY_DESC"
-			picture = "portrait_USA_thomas_dewey.dds"
+			picture = "Portrait_USA_Generic_2.dds"
 			expire = "1965.1.1"
 			ideology = conservatism
 			traits = {
 				
 			}
 		}
-		country_event = usa.31
+		if = {
+			limit = {  
+				has_idea = usa_packed_court
+			}
+			remove_ideas = usa_packed_court
+		}
 	}
 }
 
@@ -568,69 +434,29 @@ country_event = {
 	picture = GFX_report_event_usa_election_generic
 
 	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
-	}
+
 	trigger = {
 		tag = USA
 		democratic > 0.5
 		date > 1944.1.1
 		date < 1945.1.1
-		NOT = { has_idea = new_deal }
+		NOT = { has_country_leader = { id = 1776 ruling_only = yes name = "Franklin Delano Roosevelt" }  }
 	}
 	
 	option = { 
 		name = usa.10.a
-		add_political_power = 10
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
+		add_political_power = 100
 	}
 
 	option = { 
 		name = usa.10.b
-		add_ideas = new_deal
+		#add_ideas = new_deal
 		set_party_name = { ideology = democratic long_name = USA_democratic_party name = USA_democratic_party }
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		add_political_power = 120
-		custom_effect_tooltip = usa_congress_elections_tt_good
 		if = {
 			limit = { has_idea = wilkies_new_deal }
 			remove_ideas = wilkies_new_deal
 		}
 		retire_country_leader = yes
-		country_event = usa.31
 	}
 }
 
@@ -642,22 +468,7 @@ country_event = {
 	picture = GFX_report_event_usa_election_roosevelt_macarthur
 
 	is_triggered_only = yes
-	immediate = {
-		hidden_effect = {
-			if = {
-				limit = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-				country_event = { id = usa.32 days = 730 } # midterms
-			}
-			else = {
-				country_event = { id = usa.35 days = 730 } # midterms
-			}
-		}
-	}
+
 	trigger = {
 		tag = USA
 		democratic > 0.5
@@ -676,23 +487,6 @@ country_event = {
 			factor = 25
 		}	
 		add_political_power = 10
-		if = {
-			limit = {
-				OR = {
-					has_completed_focus = USA_voter_registration_act
-					has_completed_focus = USA_union_representation_act
-				}
-			}
-			country_event = usa.32
-		}
-		else = {
-			set_variable = { election_factor = random }
-			add_to_variable = { election_factor = -0.5 }
-			USA_election_senate = yes
-			USA_election_house = yes
-			custom_effect_tooltip = usa_congress_elections_tt_bad
-			country_event = usa.30
-		}
 	}
 
 	option = { 
@@ -706,13 +500,6 @@ country_event = {
 		}
 		remove_ideas = new_deal
 		set_party_name = { ideology = democratic long_name = USA_republican_party name = USA_republican_party }
-		set_variable = { election_factor = random }
-		add_to_variable = { election_factor = -0.6 }
-		USA_election_senate = yes
-		USA_election_house = yes
-		USA_flip_support = yes
-		add_political_power = 120
-		custom_effect_tooltip = usa_congress_elections_tt_good
 		create_country_leader = {
 			name = "Douglas MacArthur"
 			desc = "POLITICS_DOUGLAS_MACARTHUR_DESC"
@@ -723,8 +510,13 @@ country_event = {
 				
 			}
 		}
-		country_event = usa.31
 		remove_unit_leader = 57
+		if = {
+			limit = {  
+				has_idea = usa_packed_court
+			}
+			remove_ideas = usa_packed_court
+		}
 	}
 }
 
@@ -767,7 +559,7 @@ country_event = {
 	trigger = {
 		tag = USA
 		date > 1945.3.29
-		has_idea = new_deal
+		has_country_leader = { id = 1776 ruling_only = yes name = "Franklin Delano Roosevelt" } 
 		has_government = democratic
 	}
 
@@ -779,7 +571,7 @@ country_event = {
 	
 	option = {
 		name = usa.13.a
-		add_political_power = -40
+		#add_political_power = -40
 		kill_country_leader = yes
 		create_country_leader = {
 			name = "Harry S. Truman"
@@ -817,10 +609,9 @@ country_event = {
 		}
 		set_political_party = {
 			ideology = democratic
-			popularity = 50
+			popularity = 0.5
 		}
 		remove_ideas = great_depression
-		add_war_support = 0.2
 		add_timed_idea = { idea = fascism_defeated days = 730 }
 		if = {
 			limit = {
@@ -848,7 +639,7 @@ country_event = {
 }
 
 #DO NOT USE USA.15 AS EVENT ID
-#It will make the event text pop up as the name or requirement for two radar technologies for Finland if they are Fascist due to a hash conflict.
+#It will make the event text pop up as the name or requirement for two radar technologies for Finland if they are Fascist.
 
 
 # USA option to intervene in war
@@ -959,7 +750,6 @@ country_event = {
 				add_to_war = {
 					targeted_alliance = PREV
 					enemy = ROOT
-					hostility_reason = guarantee
 				}
 			}
 		}
@@ -1113,10 +903,9 @@ country_event = {
 		}
 		set_political_party = {
 			ideology = democratic
-			popularity = 50
+			popularity = 0.5
 		}
 		remove_ideas = great_depression
-		add_war_support = 0.2
 		add_timed_idea = { idea = communism_defeated days = 730 }
 		if = {
 			limit = {
@@ -1144,779 +933,2204 @@ country_event = {
 	}
 }
 
-# US congress elections - outcome
+
+
+
+
+
+
+
+
+
+
+# Usefulness of Rockets Recognized
 country_event = {
-	id = usa.30
-	title = usa.30.t
-	desc = usa.30.desc
-	picture = GFX_report_event_election_vote
+	id = usa.89
+	title = usa.89.t
+	desc = usa.89.d
+	picture = GFX_report_event_usa_heavy_cruiser
 
-	is_triggered_only = yes
-
-	option = {
-		name = usa.30.a
-		clear_variable = sen_loc
-		clear_variable = ror_loc
-		clear_variable = senators_for_reelection
-		clear_variable = representatives_for_reelection
-	}
-
-}
-# elections - new president, opposition/support switch roles
-country_event = {
-	id = usa.31
-	title = usa.31.t
-	desc = usa.31.desc
-	picture = GFX_report_event_usa_election_generic
-
-	is_triggered_only = yes
-
-	option = {
-		name = usa.31.a
-		clear_variable = sen_loc
-		clear_variable = ror_loc
-		clear_variable = senators_for_reelection
-		clear_variable = representatives_for_reelection
-	}
-
-}
-# elections in the US - player has a majority guaranteed
-country_event = {
-	id = usa.32
-	title = usa.32.t
-	desc = usa.32.desc
-	picture = GFX_report_event_election_vote
-
-	is_triggered_only = yes
+	fire_only_once = yes
+	
 	trigger = {
-		OR = {
-			has_completed_focus = USA_voter_registration_act
-			has_completed_focus = USA_union_representation_act
-		}
+		has_idea = qian_xuesen
+	}
+
+	mean_time_to_happen = {
+		days = 100
 	}
 
 	option = {
-		name = usa.32.a
-		USA_return_majority = yes
-	}
-
-}
-
-#midterm elections
-country_event = {
-	id = usa.35
-	title = usa.35.t
-	desc = usa.35.desc
-	picture = GFX_report_event_election_vote
-	hidden = yes
-	is_triggered_only = yes
-
-	immediate = {
-		if = {
-			limit = {
-				NOT = {
-					OR = {
-						has_completed_focus = USA_voter_registration_act
-						has_completed_focus = USA_union_representation_act
-					}
-				}
-			}
-			random_list = {
-				50 = {
-					set_variable = { election_factor = random }
-					add_to_variable = { election_factor = -0.6 }
-					USA_election_senate = yes
-					USA_election_house = yes
-					country_event = usa.30
-				}
-				50 = {
-					set_variable = { election_factor = random }
-					add_to_variable = { election_factor = -0.3 }
-					USA_election_senate = yes
-					USA_election_house = yes
-					country_event = usa.30
-				}
-			}
+		name = usa.89.a
+		set_country_flag = usefulness_of_rockets_recognized
+		add_tech_bonus = {
+			ahead_reduction = 1
+			category = rocketry
 		}
-		else = {
-			country_event = usa.32
-		}
-	}
-
-	option = {
-		name = usa.35.a
 		
 	}
-
-}
-#small support event - senate
-country_event = {
-	id = usa.40
-	title = usa.40.t
-	desc = usa.40.desc
-	picture = GFX_report_event_FDR_speech
-
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
-
-	option = {
-		name = usa.40.a
-		USA_senate_small_support = yes
-		hidden_effect = {
-			country_event = { id = usa.50 days = 70 random_days = 10 }
-		}
-	}
-
-}
-# small support event - house
-country_event = {
-	id = usa.41
-	title = usa.41.t
-	desc = usa.41.desc
-	picture = GFX_report_event_FDR_speech
-
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
-
-	option = {
-		name = usa.41.a
-		USA_house_small_support = yes
-		hidden_effect = {
-			country_event = { id = usa.51 days = 70 random_days = 10 }
-		}
-	}
-
 }
 
-#small opposition event - senate
-country_event = {
-	id = usa.42
-	title = usa.42.t
-	desc = usa.42.desc
-	picture = GFX_report_event_journalists_speech
 
-	is_triggered_only = yes
+
+
+
+
+
+
+
+
+# In Trouble for Long
+country_event = {
+	id = usa.90
+	title = usa.90.t
+	desc = usa.90.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
 	
 	trigger = {
 		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
+		OR = {
+			has_completed_focus = USA_political_chaos
+			focus_progress = {
+				focus = USA_political_chaos
+				progress > 0.1
 			}
 		}
+	}
+
+	mean_time_to_happen = {
+		days = 1
 	}
 
 	option = {
-		name = usa.42.a
-		USA_senate_small_opposition = yes
-		hidden_effect = {
-			country_event = { id = usa.50 days = 70 random_days = 10 }
-		}
+		name = usa.90.a
+		country_event = { id = usa.92 days = 1 }
 	}
-
 }
-# small opposition event - house
-country_event = {
-	id = usa.43
-	title = usa.43.t
-	desc = usa.43.desc
-	picture = GFX_report_event_journalists_speech
 
-	is_triggered_only = yes
+
+#Bounce
+country_event = {
+	id = usa.91
+	title = usa.91.t
+	desc = usa.91.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
+	#is_triggered_only = yes
+
 	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
+		tag = FAS
+		#has_completed_focus = USA_political_chaos
 	}
+
+	#mean_time_to_happen = {
+	#	days = 1
+	#}
 
 	option = {
-		name = usa.43.a
-		USA_house_small_opposition = yes
-		hidden_effect = {
-			country_event = { id = usa.51 days = 70 random_days = 10 }
-		}
+		name = usa.91.a
+		FAS = { country_event = { id = usa.99 days = 1 } }
+		ACO = { country_event = { id = usa.99 days = 1 } }
+		CSA = { country_event = { id = usa.99 days = 1 } }
 	}
-
 }
 
-#medium support event - senate
-country_event = {
-	id = usa.44
-	title = usa.44.t
-	desc = usa.44.desc
-	picture = GFX_report_event_FDR_speech
 
+
+#Southern Grumblings
+country_event = {
+	id = usa.92
+	title = usa.92.t
+	desc = usa.92.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
 	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
+	
+	#trigger = {
+	#	tag = USA
+	#	has_completed_focus = USA_political_chaos
+	#}
 
 	option = {
-		name = usa.44.a
-		USA_senate_medium_support = yes
-		hidden_effect = {
-			country_event = { id = usa.50 days = 70 random_days = 20 }
-		}
+		name = usa.92.a
+		hidden_effect = { country_event = { id = usa.93 days = 3 } }
 	}
-
 }
-# medium support event - house
-country_event = {
-	id = usa.45
-	title = usa.45.t
-	desc = usa.45.desc
-	picture = GFX_report_event_FDR_speech
 
+
+
+
+
+#The Confederacy Leaves the Union
+country_event = {
+	id = usa.93
+	title = usa.93.t
+	desc = usa.93.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
 	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
+
+	option = { # Play as CSA
+		name = usa.93.a
+		trigger = { is_ai = no }
+		
+		hidden_effect = {
+			
+			CSA = {
+				#add_state_core = 756
+				add_state_core = 362
+				add_state_core = 763
+				add_state_core = 363
+				add_state_core = 364
+				add_state_core = 365
+				add_state_core = 766
+				add_state_core = 366
+				
+				#add_state_core = 764
+				
+				#add_state_core = 762
+				add_state_core = 369
+				add_state_core = 368
+				add_state_core = 367
+				add_state_core = 370
+				add_state_core = 788
+				add_state_core = 372
+				add_state_core = 767
+				add_state_core = 371
+				add_state_core = 774
+				add_state_core = 775
+				add_state_core = 773
+				add_state_core = 776
+				add_state_core = 777
+				add_state_core = 375
+				add_state_core = 772
+				add_state_core = 374
+				
+				
+				add_state_core = 817
+				add_state_core = 818
+				add_state_core = 819
+				add_state_core = 811
+				add_state_core = 765
+				
+				#capital = 756
+				
+				
+				#transfer_state = 756
+				transfer_state = 362
+				transfer_state = 763
+				transfer_state = 363
+				transfer_state = 364
+				transfer_state = 365
+				transfer_state = 766
+				transfer_state = 366
+				
+				#transfer_state = 764
+				
+				#transfer_state = 762
+				transfer_state = 369
+				transfer_state = 368
+				transfer_state = 367
+				transfer_state = 370
+				transfer_state = 788
+				transfer_state = 372
+				transfer_state = 767
+				transfer_state = 371
+				transfer_state = 774
+				transfer_state = 775
+				transfer_state = 773
+				transfer_state = 776
+				transfer_state = 777
+				transfer_state = 375
+				transfer_state = 772
+				transfer_state = 374
+				
+				
+				transfer_state = 817
+				transfer_state = 818
+				transfer_state = 819
+				transfer_state = 811
+				transfer_state = 765
+				
 			}
+			
+			USA = {
+				
+				#remove_state_core = 756
+				remove_state_core = 362
+				remove_state_core = 763
+				remove_state_core = 363
+				remove_state_core = 364
+				remove_state_core = 365
+				remove_state_core = 766
+				remove_state_core = 366
+				
+				#remove_state_core = 764
+				
+				#remove_state_core = 762
+				remove_state_core = 369
+				remove_state_core = 368
+				remove_state_core = 367
+				remove_state_core = 370
+				remove_state_core = 788
+				remove_state_core = 372
+				remove_state_core = 767
+				remove_state_core = 371
+				remove_state_core = 774
+				remove_state_core = 775
+				remove_state_core = 773
+				remove_state_core = 776
+				remove_state_core = 777
+				remove_state_core = 375
+				remove_state_core = 772
+				remove_state_core = 374
+				
+				
+				remove_state_core = 817
+				remove_state_core = 818
+				remove_state_core = 819
+				remove_state_core = 811
+				remove_state_core = 765
+				
+			}
+			
+			
+			country_event = { id = usa.94 days = 5 }
+			
+			
+			
+			CSA = { change_tag_from = ROOT }
+			
+			CSA = {	load_oob = "CSA_1936" } 
 		}
+			
 	}
+	
+	option = { #AI Release CSA
+		name = usa.93.b
+		
+		hidden_effect = {
+			CSA = {
+				#add_state_core = 756
+				add_state_core = 362
+				add_state_core = 763
+				add_state_core = 363
+				add_state_core = 364
+				add_state_core = 365
+				add_state_core = 766
+				add_state_core = 366
+				
+				#add_state_core = 764
+				
+				#add_state_core = 762
+				add_state_core = 369
+				add_state_core = 368
+				add_state_core = 367
+				add_state_core = 370
+				add_state_core = 788
+				add_state_core = 372
+				add_state_core = 767
+				add_state_core = 371
+				add_state_core = 774
+				add_state_core = 775
+				add_state_core = 773
+				add_state_core = 776
+				add_state_core = 777
+				add_state_core = 375
+				add_state_core = 772
+				add_state_core = 374
+				
+				
+				add_state_core = 817
+				add_state_core = 818
+				add_state_core = 819
+				add_state_core = 811
+				add_state_core = 765
+				
+				#capital = 756
+				
+				
+				
+				
+				
+				#transfer_state = 756
+				transfer_state = 362
+				transfer_state = 763
+				transfer_state = 363
+				transfer_state = 364
+				transfer_state = 365
+				transfer_state = 766
+				transfer_state = 366
+				
+				#transfer_state = 764
+				
+				#transfer_state = 762
+				transfer_state = 369
+				transfer_state = 368
+				transfer_state = 367
+				transfer_state = 370
+				transfer_state = 788
+				transfer_state = 372
+				transfer_state = 767
+				transfer_state = 371
+				transfer_state = 774
+				transfer_state = 775
+				transfer_state = 773
+				transfer_state = 776
+				transfer_state = 777
+				transfer_state = 375
+				transfer_state = 772
+				transfer_state = 374
+				
+				
+				transfer_state = 817
+				transfer_state = 818
+				transfer_state = 819
+				transfer_state = 811
+				transfer_state = 765
+				
+				#capital = 756
+				
+			}
+			
+			USA = {
+				
+				#remove_state_core = 756
+				remove_state_core = 362
+				remove_state_core = 763
+				remove_state_core = 363
+				remove_state_core = 364
+				remove_state_core = 365
+				remove_state_core = 766
+				remove_state_core = 366
+				
+				#remove_state_core = 764
+				
+				#remove_state_core = 762
+				remove_state_core = 369
+				remove_state_core = 368
+				remove_state_core = 367
+				remove_state_core = 370
+				remove_state_core = 788
+				remove_state_core = 372
+				remove_state_core = 767
+				remove_state_core = 371
+				remove_state_core = 774
+				remove_state_core = 775
+				remove_state_core = 773
+				remove_state_core = 776
+				remove_state_core = 777
+				remove_state_core = 375
+				remove_state_core = 772
+				remove_state_core = 374
+				
+				
+				remove_state_core = 817
+				remove_state_core = 818
+				remove_state_core = 819
+				remove_state_core = 811
+				remove_state_core = 765
+				
+			}
+			
+			CSA = {	load_oob = "CSA_1936" } 
+			
+			country_event = { id = usa.94 days = 1 }
+			
+		}
+		
+		
+	}
+}
+
+
+#Buisness Plot Grumblings
+country_event = {
+	id = usa.94
+	title = usa.94.t
+	desc = usa.94.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
 
 	option = {
-		name = usa.45.a
-		USA_house_medium_support = yes
+		name = usa.94.a
+		
+		add_stability = -0.05
 		hidden_effect = {
-			country_event = { id = usa.51 days = 70 random_days = 10 }
+			country_event = { id = usa.95 days = 1 }
 		}
+		
 	}
-
 }
 
-#medium opposition event - senate
-country_event = {
-	id = usa.46
-	title = usa.46.t
-	desc = usa.46.desc
-	picture = GFX_report_event_journalists_speech
 
+#MacArthur Takes Over
+country_event = {
+	id = usa.95
+	title = usa.95.t
+	desc = usa.95.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
 	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
 
 	option = {
-		name = usa.46.a
-		USA_senate_medium_opposition = yes
-		hidden_effect = {
-			country_event = { id = usa.50 days = 70 random_days = 20 }
-		}
-	}
-
-}
-# medium opposition event - house
-country_event = {
-	id = usa.47
-	title = usa.47.t
-	desc = usa.47.desc
-	picture = GFX_report_event_journalists_speech
-
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
+		name = usa.95.a
+		
+		kill_country_leader = yes
+		
+		create_country_leader = {
+			name = "Douglas MacArthur"
+			desc = "POLITICS_Douglas_MacArthur_DESC"
+			picture = "Portrait_USA_Douglas_MacArthur.dds"
+			expire = "1947.1.1"
+			ideology = liberalism
+			traits = {
+				
 			}
 		}
+		
+		hidden_effect = {
+			country_event = { id = usa.96 days = 1 }
+		}
+		
 	}
+}
+
+
+
+
+#Grumblings - particularly from Henry Wallace
+country_event = {
+	id = usa.96
+	title = usa.96.t
+	desc = usa.96.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
 
 	option = {
-		name = usa.47.a
-		USA_house_medium_opposition = yes
+		name = usa.96.a
+		add_stability = -0.1
+		country_event = { id = usa.97 days = 5 }
+	}
+}
+
+
+country_event = {
+	id = usa.97
+	title = usa.97.t
+	desc = usa.97.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	#trigger = {
+	#	country_exists = CSA
+	#}
+	
+	#mean_time_to_happen = {
+	#	days = 3
+	#}
+	
+	option = { # Play as ACO
+		name = usa.97.a
+		trigger = { is_ai = no }
+		
 		hidden_effect = {
-			country_event = { id = usa.51 days = 70 random_days = 10 }
+			ACO = {
+				add_state_core = 769
+				add_state_core = 376
+				add_state_core = 768
+				add_state_core = 377
+				add_state_core = 786
+				add_state_core = 380
+				add_state_core = 387
+				add_state_core = 386
+				add_state_core = 785
+				add_state_core = 784
+				add_state_core = 385
+				add_state_core = 787
+				add_state_core = 379
+				add_state_core = 783
+				add_state_core = 782
+				add_state_core = 378
+				add_state_core = 780
+				add_state_core = 781
+				add_state_core = 778
+				add_state_core = 779
+				add_state_core = 764
+				
+				transfer_state = 769
+				transfer_state = 376
+				transfer_state = 768
+				transfer_state = 377
+				transfer_state = 786
+				transfer_state = 380
+				transfer_state = 387
+				transfer_state = 386
+				transfer_state = 785
+				transfer_state = 784
+				transfer_state = 385
+				transfer_state = 787
+				transfer_state = 379
+				transfer_state = 783
+				transfer_state = 782
+				transfer_state = 378
+				transfer_state = 780
+				transfer_state = 781
+				transfer_state = 778
+				transfer_state = 779
+				transfer_state = 764
+			}
+			
+			USA = {
+				remove_state_core = 769
+				remove_state_core = 376
+				remove_state_core = 768
+				remove_state_core = 377
+				remove_state_core = 786
+				remove_state_core = 380
+				remove_state_core = 387
+				remove_state_core = 386
+				remove_state_core = 785
+				remove_state_core = 784
+				remove_state_core = 385
+				remove_state_core = 787
+				remove_state_core = 379
+				remove_state_core = 783
+				remove_state_core = 782
+				remove_state_core = 378
+				remove_state_core = 780
+				remove_state_core = 781
+				remove_state_core = 778
+				remove_state_core = 779
+				remove_state_core = 764
+			}
+			
+			ACO = { change_tag_from = ROOT }
+			country_event = { id = usa.98 days = 3 }
+			
+			ACO = {	load_oob = "ACO_1936" }
 		}
+			
 	}
-
+	
+	option = { #AI Release ACO
+		name = usa.97.b
+		
+		hidden_effect = {
+			ACO = {
+				add_state_core = 769
+				add_state_core = 376
+				add_state_core = 768
+				add_state_core = 377
+				add_state_core = 786
+				add_state_core = 380
+				add_state_core = 387
+				add_state_core = 386
+				add_state_core = 785
+				add_state_core = 784
+				add_state_core = 385
+				add_state_core = 787
+				add_state_core = 379
+				add_state_core = 783
+				add_state_core = 782
+				add_state_core = 378
+				add_state_core = 780
+				add_state_core = 781
+				add_state_core = 778
+				add_state_core = 779
+				add_state_core = 764
+				
+				
+				
+				
+				transfer_state = 769
+				transfer_state = 376
+				transfer_state = 768
+				transfer_state = 377
+				transfer_state = 786
+				transfer_state = 380
+				transfer_state = 387
+				transfer_state = 386
+				transfer_state = 785
+				transfer_state = 784
+				transfer_state = 385
+				transfer_state = 787
+				transfer_state = 379
+				transfer_state = 783
+				transfer_state = 782
+				transfer_state = 378
+				transfer_state = 780
+				transfer_state = 781
+				transfer_state = 778
+				transfer_state = 779
+				transfer_state = 764
+				
+			}
+			
+			
+			USA = {
+				remove_state_core = 769
+				remove_state_core = 376
+				remove_state_core = 768
+				remove_state_core = 377
+				remove_state_core = 786
+				remove_state_core = 380
+				remove_state_core = 387
+				remove_state_core = 386
+				remove_state_core = 785
+				remove_state_core = 784
+				remove_state_core = 385
+				remove_state_core = 787
+				remove_state_core = 379
+				remove_state_core = 783
+				remove_state_core = 782
+				remove_state_core = 378
+				remove_state_core = 780
+				remove_state_core = 781
+				remove_state_core = 778
+				remove_state_core = 779
+				remove_state_core = 764
+			}
+			ACO = {	load_oob = "ACO_1936" }
+			country_event = { id = usa.98 days = 1 }
+			
+		}
+		
+		
+	}
 }
 
-# dispatcher event - senate
-country_event = {
-	id = usa.50
-	Hidden = yes
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
 
-	immediate = {
-		random_list = {
-			20 = { 
-				modifier = {
-					not = { congress_medium_support_trigger = yes }
-					factor = 1.25
-				}
-				modifier = {
-					not = { congress_low_support_trigger = yes }
-					factor = 2
-				}
-				country_event = { id = usa.40 days = 15 random_days = 6 } #small support
-			} 
-			20 = { 
-				modifier = {
-					check_variable = { var = senators_support value = quorum_high compare = greater_than_or_equals }
-					factor = 3
-				}
-				modifier = {
-					has_idea_with_trait = fascist_demagogue
-					factor = 2
-				}
-				modifier = {
-					has_idea_with_trait = communist_revolutionary
-					factor = 2
-				}
-				country_event = { id = usa.42 days = 20 random_days = 6 } #small opposition 
-			} 
-			15 = { 
-				modifier = {
-					not = { congress_medium_support_trigger = yes }
-					factor = 1.25
-				}
-				modifier = {
-					not = { congress_low_support_trigger = yes }
-					factor = 2
-				}
-				country_event = { id = usa.44 days = 20 random_days = 10 } #medium support
-			} 
-			15 = { 
-				modifier = {
-					check_variable = { var = senators_support value = quorum_high compare = greater_than_or_equals }
-					factor = 3
-				}
-				modifier = {
-					has_idea_with_trait = fascist_demagogue
-					factor = 2
-				}
-				modifier = {
-					has_idea_with_trait = communist_revolutionary
-					factor = 2
-				}
-				country_event = { id = usa.46 days = 20 random_days = 10 }  #medium opposition
+country_event = {
+	id = usa.98
+	title = usa.98.t
+	desc = usa.98.d
+	picture = GFX_report_event_huey_long
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	#trigger = {
+		#country_exists = CSA
+		#country_exists = ACO
+	#}
+	
+	option = { # Play as FAS
+		name = usa.98.a
+		trigger = { is_ai = no }
+		
+		hidden_effect = {
+			FAS = {
+				add_state_core = 357
+				add_state_core = 794
+				add_state_core = 358
+				
+				add_state_core = 796
+				add_state_core = 359
+				add_state_core = 360
+				add_state_core = 793
+				add_state_core = 797
+				add_state_core = 361
+				add_state_core = 795
+				add_state_core = 261
+				add_state_core = 393
+				add_state_core = 396
+				add_state_core = 395
+				add_state_core = 394
+				add_state_core = 373
+				add_state_core = 392
+				add_state_core = 391
+				
+				add_state_core = 789
+				add_state_core = 383
+				add_state_core = 790
+				add_state_core = 384
+				add_state_core = 791
+				add_state_core = 390
+				add_state_core = 792
+				add_state_core = 389
+				add_state_core = 388
+				add_state_core = 771
+				add_state_core = 381
+				add_state_core = 770
+				add_state_core = 382
+				
+				add_state_core = 799
+				add_state_core = 798
+				
+				add_state_core = 798
+				add_state_core = 799
+				add_state_core = 800
+				add_state_core = 801
+				add_state_core = 802
+				add_state_core = 803
+				add_state_core = 804
+				add_state_core = 805
+				add_state_core = 806
+				add_state_core = 807
+				add_state_core = 808
+				add_state_core = 809
+				add_state_core = 810
+				add_state_core = 812
+				add_state_core = 813
+				add_state_core = 814
+				add_state_core = 815
+				add_state_core = 816
+				add_state_core = 820
+				
+				
+				
+				
+				
+				add_state_core = 686
+				add_state_core = 685
+				add_state_core = 629
+				add_state_core = 650
+				add_state_core = 643
+				add_state_core = 821
+				
+				add_state_core = 642
+				add_state_core = 727
+				
+				add_state_core = 630
+				add_state_core = 632
+				add_state_core = 631
+				add_state_core = 638
+				add_state_core = 463
+				
+				transfer_state = 357
+				transfer_state = 794
+				transfer_state = 358
+				
+				transfer_state = 796
+				transfer_state = 359
+				transfer_state = 360
+				transfer_state = 793
+				transfer_state = 797
+				transfer_state = 361
+				transfer_state = 795
+				transfer_state = 261
+				transfer_state = 393
+				transfer_state = 396
+				transfer_state = 395
+				transfer_state = 394
+				transfer_state = 373
+				transfer_state = 392
+				transfer_state = 391
+				
+				transfer_state = 789
+				transfer_state = 383
+				transfer_state = 790
+				transfer_state = 384
+				transfer_state = 791
+				transfer_state = 390
+				transfer_state = 792
+				transfer_state = 389
+				transfer_state = 388
+				transfer_state = 771
+				transfer_state = 381
+				transfer_state = 770
+				transfer_state = 382
+				
+				transfer_state = 799
+				transfer_state = 798
+				
+				transfer_state = 798
+				transfer_state = 799
+				transfer_state = 800
+				transfer_state = 801
+				transfer_state = 802
+				transfer_state = 803
+				transfer_state = 804
+				transfer_state = 805
+				transfer_state = 806
+				transfer_state = 807
+				transfer_state = 808
+				transfer_state = 809
+				transfer_state = 810
+				transfer_state = 812
+				transfer_state = 813
+				transfer_state = 814
+				transfer_state = 815
+				transfer_state = 816
+				transfer_state = 820
+				
 			}
-			30 = { #investment opportunity
-				modifier = {
-					has_country_flag = USA_congress_investment
-					factor = 0
+			USA = { 
+				delete_unit_template_and_units = {
+					division_template = "Infantry Division"
 				}
-				modifier = {
-					has_completed_focus = USA_wpa
-					factor = 1.5
-				} 
-				country_event = { id = usa.60 days = 10 random_days = 15 } 
-			} 
+				delete_unit_template_and_units = {
+					division_template = "Garrison Brigade"
+				}
+				delete_unit_template_and_units = {
+					division_template = "Cavalry Division"
+				}
+			}
+			
+			
+			FAS = { change_tag_from = ROOT }
+			
+			FAS = {
+				transfer_state = 686
+				transfer_state = 685
+				transfer_state = 629
+				transfer_state = 650
+				transfer_state = 643
+				transfer_state = 821
+				
+				transfer_state = 642
+				transfer_state = 727
+				
+				transfer_state = 630
+				transfer_state = 632
+				transfer_state = 631
+				transfer_state = 638
+				transfer_state = 463
+				
+				transfer_state = 327
+				transfer_state = 623
+				transfer_state = 624
+				transfer_state = 625
+				transfer_state = 626
+				transfer_state = 627
+				transfer_state = 628
+				
+			}
+			
+			FAS = {	load_oob = "FAS_1936" }
+			
+			USA = {
+				remove_state_core = 357
+				remove_state_core = 794
+				remove_state_core = 358
+				
+				remove_state_core = 796
+				remove_state_core = 359
+				remove_state_core = 360
+				remove_state_core = 793
+				remove_state_core = 797
+				remove_state_core = 361
+				remove_state_core = 795
+				remove_state_core = 261
+				remove_state_core = 393
+				remove_state_core = 396
+				remove_state_core = 395
+				remove_state_core = 394
+				remove_state_core = 373
+				remove_state_core = 392
+				remove_state_core = 391
+				
+				remove_state_core = 789
+				remove_state_core = 383
+				remove_state_core = 790
+				remove_state_core = 384
+				remove_state_core = 791
+				remove_state_core = 390
+				remove_state_core = 792
+				remove_state_core = 389
+				remove_state_core = 388
+				remove_state_core = 771
+				remove_state_core = 381
+				remove_state_core = 770
+				remove_state_core = 382
+				
+				remove_state_core = 799
+				remove_state_core = 798
+				
+				remove_state_core = 798
+				remove_state_core = 799
+				remove_state_core = 800
+				remove_state_core = 801
+				remove_state_core = 802
+				remove_state_core = 803
+				remove_state_core = 804
+				remove_state_core = 805
+				remove_state_core = 806
+				remove_state_core = 807
+				remove_state_core = 808
+				remove_state_core = 809
+				remove_state_core = 810
+				remove_state_core = 812
+				remove_state_core = 813
+				remove_state_core = 814
+				remove_state_core = 815
+				remove_state_core = 816
+				remove_state_core = 820
+				
+				
+				
+				
+				
+				remove_state_core = 686
+				remove_state_core = 685
+				remove_state_core = 629
+				remove_state_core = 650
+				remove_state_core = 643
+				remove_state_core = 821
+				
+				remove_state_core = 642
+				remove_state_core = 727
+				
+				remove_state_core = 630
+				remove_state_core = 632
+				remove_state_core = 631
+				remove_state_core = 638
+				remove_state_core = 463
+				
+				
+			}
+			
+			#bounce
+			#PRU = { country_event = { id = usa.91 days = 5 } }
+			
 		}
+			
+	}
+	
+	option = { #AI Releases FAS
+		name = usa.98.b
+		trigger = { is_ai = yes }
+		
+		hidden_effect = {
+			FAS = {
+				add_state_core = 357
+				add_state_core = 794
+				add_state_core = 358
+				
+				add_state_core = 796
+				add_state_core = 359
+				add_state_core = 360
+				add_state_core = 793
+				add_state_core = 797
+				add_state_core = 361
+				add_state_core = 795
+				add_state_core = 261
+				add_state_core = 393
+				add_state_core = 396
+				add_state_core = 395
+				add_state_core = 394
+				add_state_core = 373
+				add_state_core = 392
+				add_state_core = 391
+				
+				add_state_core = 789
+				add_state_core = 383
+				add_state_core = 790
+				add_state_core = 384
+				add_state_core = 791
+				add_state_core = 390
+				add_state_core = 792
+				add_state_core = 389
+				add_state_core = 388
+				add_state_core = 771
+				add_state_core = 381
+				add_state_core = 770
+				add_state_core = 382
+				
+				add_state_core = 799
+				add_state_core = 798
+				
+				add_state_core = 798
+				add_state_core = 799
+				add_state_core = 800
+				add_state_core = 801
+				add_state_core = 802
+				add_state_core = 803
+				add_state_core = 804
+				add_state_core = 805
+				add_state_core = 806
+				add_state_core = 807
+				add_state_core = 808
+				add_state_core = 809
+				add_state_core = 810
+				add_state_core = 812
+				add_state_core = 813
+				add_state_core = 814
+				add_state_core = 815
+				add_state_core = 816
+				add_state_core = 820
+				
+				
+				
+				
+				
+				add_state_core = 686
+				add_state_core = 685
+				add_state_core = 629
+				add_state_core = 650
+				add_state_core = 643
+				add_state_core = 821
+				
+				add_state_core = 642
+				add_state_core = 727
+				
+				add_state_core = 630
+				add_state_core = 632
+				add_state_core = 631
+				add_state_core = 638
+				add_state_core = 463
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				transfer_state = 357
+				transfer_state = 794
+				transfer_state = 358
+				
+				transfer_state = 796
+				transfer_state = 359
+				transfer_state = 360
+				transfer_state = 793
+				transfer_state = 797
+				transfer_state = 361
+				transfer_state = 795
+				transfer_state = 261
+				transfer_state = 393
+				transfer_state = 396
+				transfer_state = 395
+				transfer_state = 394
+				transfer_state = 373
+				transfer_state = 392
+				transfer_state = 391
+				
+				transfer_state = 789
+				transfer_state = 383
+				transfer_state = 790
+				transfer_state = 384
+				transfer_state = 791
+				transfer_state = 390
+				transfer_state = 792
+				transfer_state = 389
+				transfer_state = 388
+				transfer_state = 771
+				transfer_state = 381
+				transfer_state = 770
+				transfer_state = 382
+				
+				transfer_state = 799
+				transfer_state = 798
+				
+				transfer_state = 798
+				transfer_state = 799
+				transfer_state = 800
+				transfer_state = 801
+				transfer_state = 802
+				transfer_state = 803
+				transfer_state = 804
+				transfer_state = 805
+				transfer_state = 806
+				transfer_state = 807
+				transfer_state = 808
+				transfer_state = 809
+				transfer_state = 810
+				transfer_state = 812
+				transfer_state = 813
+				transfer_state = 814
+				transfer_state = 815
+				transfer_state = 816
+				transfer_state = 820
+				
+				
+				
+				
+				
+				transfer_state = 686
+				transfer_state = 685
+				transfer_state = 629
+				transfer_state = 650
+				transfer_state = 643
+				transfer_state = 821
+				
+				transfer_state = 642
+				transfer_state = 727
+				
+				transfer_state = 630
+				transfer_state = 632
+				transfer_state = 631
+				transfer_state = 638
+				transfer_state = 463
+				
+				
+			}
+			
+			USA = {
+				remove_state_core = 357
+				remove_state_core = 794
+				remove_state_core = 358
+				
+				remove_state_core = 796
+				remove_state_core = 359
+				remove_state_core = 360
+				remove_state_core = 793
+				remove_state_core = 797
+				remove_state_core = 361
+				remove_state_core = 795
+				remove_state_core = 261
+				remove_state_core = 393
+				remove_state_core = 396
+				remove_state_core = 395
+				remove_state_core = 394
+				remove_state_core = 373
+				remove_state_core = 392
+				remove_state_core = 391
+				
+				remove_state_core = 789
+				remove_state_core = 383
+				remove_state_core = 790
+				remove_state_core = 384
+				remove_state_core = 791
+				remove_state_core = 390
+				remove_state_core = 792
+				remove_state_core = 389
+				remove_state_core = 388
+				remove_state_core = 771
+				remove_state_core = 381
+				remove_state_core = 770
+				remove_state_core = 382
+				
+				remove_state_core = 799
+				remove_state_core = 798
+				
+				remove_state_core = 798
+				remove_state_core = 799
+				remove_state_core = 800
+				remove_state_core = 801
+				remove_state_core = 802
+				remove_state_core = 803
+				remove_state_core = 804
+				remove_state_core = 805
+				remove_state_core = 806
+				remove_state_core = 807
+				remove_state_core = 808
+				remove_state_core = 809
+				remove_state_core = 810
+				remove_state_core = 812
+				remove_state_core = 813
+				remove_state_core = 814
+				remove_state_core = 815
+				remove_state_core = 816
+				remove_state_core = 820
+				
+				
+				
+				
+				
+				remove_state_core = 686
+				remove_state_core = 685
+				remove_state_core = 629
+				remove_state_core = 650
+				remove_state_core = 643
+				remove_state_core = 821
+				
+				remove_state_core = 642
+				remove_state_core = 727
+				
+				remove_state_core = 630
+				remove_state_core = 632
+				remove_state_core = 631
+				remove_state_core = 638
+				remove_state_core = 463
+				
+				
+			}
+			
+			FAS = {	load_oob = "FAS_1936" }
+			#annex_country = {
+			#	target = USA
+			#	transfer_troops = no
+			#}
+			USA = { 
+				delete_unit_template_and_units = {
+					division_template = "Infantry Division"
+				}
+				delete_unit_template_and_units = {
+					division_template = "Garrison Brigade"
+				}
+				delete_unit_template_and_units = {
+					division_template = "Cavalry Division"
+				}
+			}
+			#bounce
+			#PRU = { country_event = { id = usa.91 days = 5 } }
+		}
+		
 	}
 }
 
-# dispatcher event - house
-country_event = {
-	id = usa.51
-	Hidden = yes
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
 
-	immediate = {
-		random_list = {
-			35 = { 
-				modifier = {
-					check_variable = { representatives_support < 218 }
-					factor = 1.5
-				}
-				modifier = {
-					check_variable = { representatives_support < 180 }
-					factor = 3
-				}
-				country_event = { id = usa.41 days = 15 random_days = 6 } #small support
-			} 
-			25 = {
-				modifier = {
-					check_variable = { representatives_support > 260 }
-					factor = 2
-				}
-				modifier = {
-					check_variable = { representatives_support < 180 }
-					factor = 0.5
-				}
-				modifier = {
-					has_idea_with_trait = fascist_demagogue
-					factor = 2
-				}
-				modifier = {
-					has_idea_with_trait = communist_revolutionary
-					factor = 2
-				} 
-				country_event = { id = usa.43 days = 20 random_days = 6 } #small opposition
-			} 
-			25 = { 
-				modifier = {
-					check_variable = { representatives_support < 180 }
-					factor = 1.5
-				}
-				modifier = {
-					check_variable = { representatives_support < 100 }
-					factor = 10
-				}
-				country_event = { id = usa.45 days = 25 random_days = 10 } #medium support
-			} 
-			15 = { 
-				modifier = {
-					check_variable = { representatives_support > 260 }
-					factor = 2
-				}
-				modifier = {
-					check_variable = { representatives_support > 400 }
-					factor = 10
-				}
-				modifier = {
-					check_variable = { representatives_support < 180 }
-					factor = 0.5
-				}
-				modifier = {
-					check_variable = { representatives_support < 100 }
-					factor = 0
-				}
-				modifier = {
-					has_idea_with_trait = fascist_demagogue
-					factor = 2
-				}
-				modifier = {
-					has_idea_with_trait = communist_revolutionary
-					factor = 2
-				}
-				country_event = { id = usa.47 days = 30 random_days = 15 } #medium opposition
-			} 
-		}
-	}
-}
-# senator wants investment in their state - hidden dispatch event
 country_event = {
-	id = usa.60
-	hidden = yes
-	is_triggered_only = yes
-	trigger = {
-		tag = USA
-		NOT = {
-			OR = {
-				has_completed_focus = USA_voter_registration_act
-				has_completed_focus = USA_union_representation_act
-			}
-		}
-	}
+	id = usa.99
+	title = usa.99.t
+	desc = usa.99.d
+	picture = GFX_report_event_huey_long
 
-	immediate = {
-		set_country_flag = USA_congress_investment
+	#fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	#trigger = {
+	#	NOT = { country_exists = USA }
+	#	OR = {
+	#		TAG = CSA
+	#		TAG = ACO
+	#		TAG = FAS
+	#	}
+	#}
+	
+	option = { # The Second American Civil War Begins
+		name = usa.99.a
+		
+		
 		if = {
-			limit = { has_event_target = USA_congress_investment_state }
-			clear_global_event_target = USA_congress_investment_state
+			limit = { tag = FAS }
+			
+			declare_war_on = {
+				target = ACO
+				type = annex_everything
+			}
+			
+			declare_war_on = {
+				target = CSA
+				type = annex_everything
+			}
+			
+			add_ideas = usa_the_second_american_civil_war
+			ACO = { add_ideas = usa_the_second_american_civil_war }
+			CSA = { add_ideas = usa_the_second_american_civil_war }
+			FAS = { add_threat = -5 }
+			
+			hidden_effect = {
+				FAS = {	load_oob = "FAS_militias" } 
+				ACO = {	load_oob = "ACO_militias" } 
+				CSA = {	load_oob = "CSA_militias" }
+			}
+			
 		}
+		
+	}
+}
+
+
+
+country_event = {
+	id = usa.100
+	title = usa.100.t
+	desc = usa.100.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Friends with the Soviets
+		name = usa.100.a
+		set_global_flag = us_companies_allowed_in_soviet_union
+		USA = { add_opinion_modifier = { target = SOV modifier = us_soviet_cooperation } }
+		SOV = { add_opinion_modifier = { target = USA modifier = us_soviet_cooperation } }
+	}
+	option = { # Screw the Soviets
+		name = usa.100.b
+		
+	}
+}
+
+country_event = {
+	id = usa.101
+	title = usa.101.t
+	desc = usa.101.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Dust Bowl
+		name = usa.101.a
+		add_stability = 0.05
+	}
+}
+
+country_event = {
+	id = usa.102
+	title = usa.102.t
+	desc = usa.102.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Begin Polio Research
+		name = usa.102.a
+		USA = { country_event = { id = usa.103 days = 100 } }
+	}
+}
+
+country_event = {
+	id = usa.103
+	title = usa.103.t
+	desc = usa.103.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = no
+	
+	is_triggered_only = yes
+	
+	option = { # Polio Research
+		name = usa.103.a
 		random_list = {
-			25 = {
-				modifier = {
-					NOT = {
-						any_owned_state = {
-							is_core_of = ROOT
-							is_controlled_by = ROOT
-							free_building_slots = {
-								building = industrial_complex
-								size > 0
-								include_locked = no
-							}
-						}
-					}
-					factor = 0
-				}
-				random_owned_state = {
-					limit = {
-						is_core_of = ROOT
-						is_controlled_by = ROOT
-						free_building_slots = {
-							building = industrial_complex
-							size > 0
-							include_locked = no
-						}
-					}
-					
-					save_global_event_target_as = USA_congress_investment_state
-					state_event = { id = usa.61 trigger_for = controller }
-				}
+		
+			add_political_power = -25
+		
+			90 = { 
+				#No Cure
+				
+				USA = { country_event = { id = usa.103 days = 365 } }
+				
+				#add_political_power = 600 
 			}
-			25 = {
-				modifier = {
-					NOT = {
-						any_owned_state = {
-							is_core_of = ROOT
-							is_controlled_by = ROOT
-							free_building_slots = {
-								building = arms_factory
-								size > 0
-								include_locked = no
-							}
-						}
-					}
-					factor = 0
-				}
-				modifier = {
-					has_completed_focus = USA_military_construction
-					factor = 2
-				}
-				random_owned_state = {
-					limit = {
-						is_core_of = ROOT
-						is_controlled_by = ROOT
-						free_building_slots = {
-							building = arms_factory
-							size > 0
-							include_locked = no
-						}
-					}
-					save_global_event_target_as = USA_congress_investment_state
-					state_event = { id = usa.62 trigger_for = controller }
-				}
-			}
-			25 = { 
-				modifier = {
-					NOT = {
-						any_owned_state = {
-							is_core_of = ROOT
-							is_controlled_by = ROOT
-							is_coastal = yes
-							free_building_slots = {
-								building = dockyard
-								size > 0
-								include_locked = no
-							}
-						}
-					}
-					factor = 0
-				}
-				random_owned_state = {
-					limit = {
-						is_core_of = ROOT
-						is_controlled_by = ROOT
-						free_building_slots = {
-							building = dockyard
-							size > 0
-							include_locked = no
-						}
-					}
-					save_global_event_target_as = USA_congress_investment_state
-					state_event = { id = usa.64 trigger_for = controller }
-				}
-			}
-			25 = {
-				modifier = {
-					NOT = {
-						any_owned_state = {
-							is_core_of = ROOT
-							free_building_slots = {
-								building = infrastructure
-								size > 0
-								include_locked = no
-							}
-						}
-					}
-					factor = 0
-				}
-				modifier = {
-					has_completed_focus = USA_USACE_projects
-					factor = 2
-				}
-				random_owned_state = {
-					limit = {
-						is_core_of = ROOT
-						is_controlled_by = ROOT
-						free_building_slots = {
-							building = infrastructure
-							size > 0
-							include_locked = no
-						}
-					}
-					save_global_event_target_as = USA_congress_investment_state
-					state_event = { id = usa.63 trigger_for = controller }
-				}
+			10 = { 
+				#Cure
+				
+				USA = { country_event = { id = usa.104 days = 365 } }
+				
+				#add_political_power = 50
 			}
 		}
+	}
+}
+
+country_event = {
+	id = usa.104
+	title = usa.104.t
+	desc = usa.104.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Polio Cure
+		name = usa.104.a
+		remove_ideas = usa_polio_epidemic
+		add_stability = 0.05
+		add_political_power = 350
+	}
+}
+
+
+country_event = {
+	id = usa.105
+	title = usa.105.t
+	desc = usa.105.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Packing the Court Fight
+		name = usa.105.a
+		#available = {
+		#	date < 1936.07.04
+		#}
+		add_political_power = -200
+		add_stability = -0.05
 		hidden_effect = {
-			country_event = { id = usa.50 days = 70 random_days = 10 }
+			USA = { country_event = { id = usa.106 days = 145 } }
 		}
 	}
-}
-# senator wants investment in civilian factory
-country_event = {
-	id = usa.61
-	title = usa.61.t
-	desc = usa.61.desc
-	picture = GFX_report_event_generic_sign_treaty3
 	
-	is_triggered_only = yes
-	
-
-	option = {
-		name = usa.61.a #accept
-		ai_chance = {
-			factor = 0
-		}
-		unlock_decision_tooltip = { decision = USA_invest_in_state_factory show_effect_tooltip = yes }
-		event_target:USA_congress_investment_state = {
-			set_state_flag = USA_congress_build_factory
-			set_variable = { factory_goal = industrial_complex_level }
-			add_to_variable = { factory_goal = 1 }
-		}
-	}
-	option = {
-		name = usa.61.b #refuse
-		ai_chance = {
-			factor = 100
-		}
-		ROOT = { clr_country_flag = USA_congress_investment }
-		clear_global_event_target = USA_congress_investment_state
+	option = { # Packing the Court Retreat
+		name = usa.105.b
+		add_stability = 0.05
 	}
 }
 
-# senator wants investment in military factory
+
+
+
 country_event = {
-	id = usa.62
-	title = usa.61.t
-	desc = usa.62.desc
-	picture = GFX_report_event_tank_factory
+	id = usa.106
+	title = usa.106.t
+	desc = usa.106.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
 	
 	is_triggered_only = yes
 	
+	option = { # Packing the Court Fight
+		name = usa.106.a
+		
+		add_country_leader_trait = american_strongman
+		remove_country_leader_trait = champion_of_the_common_man
+		#add_ideas = usa_packed_court
+	}
+	
+} 
 
-	option = {
-		name = usa.62.a #accept
-		ai_chance = {
-			factor = 0
-		}
-		unlock_decision_tooltip = { decision = USA_invest_in_state_arms_factory show_effect_tooltip = yes }
-		event_target:USA_congress_investment_state = {
-			set_state_flag = USA_congress_build_arms_factory
-			set_variable = { arms_factory_goal = arms_factory_level }
-			add_to_variable = { arms_factory_goal = 1 }
-		}
+country_event = {
+	id = usa.107
+	title = usa.107.t
+	desc = usa.107.d
+	picture = GFX_report_event_stalin_01
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Meeting with Stalin
+		name = usa.107.a
+		country_event = usa.108
+		
 	}
-	option = {
-		name = usa.62.b #refuse
-		ai_chance = {
-			factor = 100
-		}
-		ROOT = { clr_country_flag = USA_congress_investment }
-		clear_global_event_target = USA_congress_investment_state
+	
+} 
+
+country_event = {
+	id = usa.108
+	title = usa.108.t
+	desc = usa.108.d
+	picture = GFX_report_event_stalin_01
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Meeting with Stalin
+		name = usa.108.a
+		
+		add_stability = 0.05
+		add_political_power = -50
 	}
+	
+} 
+
+
+
+
+country_event = {
+	id = usa.199
+	title = usa.199.t
+	desc = usa.199.d
+	picture = GFX_report_event_usa_pearl_harbor_airphoto
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	#trigger = {
+		#has_defensive_war_with = JAP
+		#tag = USA
+	#}
+	
+	option = { #Pearl Harbor
+		name = usa.199.a
+		add_war_support = 0.1
+		
+		#add_ideas = usa_remember_pearl_harbor
+		
+		if = {
+			limit = { 
+				date < 1940.1.1 
+				date > 1936.1.1 }
+			add_manpower = -4500
+			destroy_ships = {
+				type = battleship
+				count = 8
+			}
+			destroy_ships = {
+				type = carrier
+				count = 2
+			}
+		}
+		if = {
+			limit = { 
+				date < 1941.1.1
+				date > 1940.1.1 }
+			add_manpower = -3400
+			destroy_ships = {
+				type = battleship
+				count = 6
+			}
+			destroy_ships = {
+				type = carrier
+				count = 1
+			}
+		}
+		if = {
+			limit = { 
+				date < 1942.1.1 
+				date > 1941.1.1 }
+			add_manpower = -2300
+			destroy_ships = {
+				type = battleship
+				count = 4
+			}
+		}
+		if = {
+			limit = { 
+				date < 1943.1.1
+				date > 1942.1.1  }
+			add_manpower = -1300
+			destroy_ships = {
+				type = battleship
+				count = 2
+			}
+		}
+		
+	}
+	
 }
-# senator wants investment in infrastructure
+
+#Japanese Fun Times
+
 country_event = {
-	id = usa.63
-	title = usa.63.t
-	desc = usa.63.desc
-	picture = GFX_report_event_generic_train
+	id = usa.200
+	title = usa.200.t
+	desc = usa.200.d
+	picture = GFX_report_event_usa_amelia_earhart_airplane
+
+	fire_only_once = yes
 	
 	is_triggered_only = yes
 	
-
-	option = {
-		name = usa.63.a #accept
-		ai_chance = {
-			factor = 0
-		}
-		unlock_decision_tooltip = { decision = USA_invest_in_state_infrastructure show_effect_tooltip = yes }
-		event_target:USA_congress_investment_state = {
-			set_state_flag = USA_congress_build_infrastructure
-			set_variable = { infrastructure_goal = infrastructure_level }
-			add_to_variable = { infrastructure_goal = 1 }
-		}
+	option = { # Japanese Event Diplomatic Complaint
+		name = usa.200.a
+		add_war_support = -0.05
+		
+		#hidden_effect = {
+		#	USA = { add_country_flag = usa_successful_first_warning }
+		#}
 	}
-	option = {
-		name = usa.63.b #refuse
-		ai_chance = {
-			factor = 100
-		}
-		ROOT = { clr_country_flag = USA_congress_investment }
-		clear_global_event_target = USA_congress_investment_state
-	}
+	
 }
-# senator wants investment in dockyards
+
 country_event = {
-	id = usa.64
-	title = usa.64.t
-	desc = usa.64.desc
-	picture = GFX_report_event_ast_navy
+	id = usa.201
+	title = usa.201.t
+	desc = usa.201.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
 	
 	is_triggered_only = yes
 	
+	option = { # Japanese Event Economic Pressure
+		name = usa.201.a
+		add_political_power = -50
+		
+		#hidden_effect = {
+		#	USA = { add_country_flag = usa_successful_first_warning }
+		#}
+	}
+	
+}
 
-	option = {
-		name = usa.64.a #accept
-		ai_chance = {
-			factor = 0
+
+country_event = {
+	id = usa.202
+	title = usa.202.t
+	desc = usa.202.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.202.a
+		add_war_support = -0.05
+		
+	}
+	
+}
+
+country_event = {
+	id = usa.203
+	title = usa.203.t
+	desc = usa.203.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.203.a
+		add_political_power = -25
+		
+	}
+	
+}
+
+country_event = {
+	id = usa.204
+	title = usa.204.t
+	desc = usa.204.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.204.a
+		add_political_power = -50
+		
+	}
+	
+}
+
+
+country_event = {
+	id = usa.205
+	title = usa.205.t
+	desc = usa.205.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.205.a
+		add_political_power = -75
+		
+	}
+	
+	option = { 
+		name = usa.205.b
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
 		}
-		unlock_decision_tooltip = { decision = USA_invest_in_state_dockyard show_effect_tooltip = yes }
-		event_target:USA_congress_investment_state = {
-			set_state_flag = USA_congress_build_dockyard
-			set_variable = { dockyard_goal = building_level@dockyard }
-			add_to_variable = { dockyard_goal = 1 }
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+
+country_event = {
+	id = usa.206
+	title = usa.206.t
+	desc = usa.206.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.206.a
+		add_political_power = -100
+		
+	}
+	
+	option = { 
+		name = usa.206.b
+		add_political_power = 50
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+
+country_event = {
+	id = usa.207
+	title = usa.207.t
+	desc = usa.207.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.207.a
+		add_political_power = -150
+		add_war_support = -0.05
+	}
+	
+	option = { 
+		name = usa.207.b
+		add_political_power = 100
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+country_event = {
+	id = usa.208
+	title = usa.208.t
+	desc = usa.208.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.208.a
+		add_political_power = -150
+		add_war_support = -0.1
+	}
+	
+	option = { 
+		name = usa.208.b
+		add_political_power = 150
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+country_event = {
+	id = usa.209
+	title = usa.209.t
+	desc = usa.209.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.209.a
+		add_political_power = -250
+		add_war_support = -0.2
+	}
+	
+	option = { 
+		name = usa.209.b
+		add_political_power = 150
+		add_war_support = 0.05
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+country_event = {
+	id = usa.210
+	title = usa.210.t
+	desc = usa.210.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.210.a
+		add_political_power = -150
+		add_stability = -0.2
+	}
+	
+	option = { 
+		name = usa.210.b
+		add_political_power = 150
+		add_war_support = 0.1
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+country_event = {
+	id = usa.211
+	title = usa.211.t
+	desc = usa.211.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.211.a
+		
+		declare_war_on = {
+			target = USA
+			type = annex_everything
+		}
+		
+		USA = { country_event = { id = usa.199 days = 1 } }
+	}
+	
+}
+
+
+
+
+country_event = {	#rubber drive
+	id = usa.212
+	title = usa.212.t
+	desc = usa.212.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.212.a
+		
+		add_resource = {
+			type = rubber
+			amount = 150
+			state = 369
+		}
+		
+		hidden_effect = { USA = { country_event = { id = usa.213 days = 365 } } }
+	}
+	
+}
+
+country_event = {
+	id = usa.213
+	title = usa.213.t
+	desc = usa.213.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.213.a
+		
+		add_resource = {
+			type = rubber
+			amount = -150
+			state = 369
+		}
+		
+		#hidden_effect = { USA = { country_event = { id = usa.213 days = 365 } } }
+	}
+	
+}
+
+
+
+
+
+country_event = {	#scrap drive
+	id = usa.214
+	title = usa.214.t
+	desc = usa.214.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.214.a
+		
+		add_resource = {
+			type = chromium
+			amount = 15
+			state = 369
+		}
+		add_resource = {
+			type = tungsten
+			amount = 35
+			state = 369
+		}
+		add_resource = {
+			type = aluminium
+			amount = 150
+			state = 369
+		}
+		add_resource = {
+			type = steel
+			amount = 450
+			state = 369
+		}
+		
+		hidden_effect = { USA = { country_event = { id = usa.215 days = 365 } } }
+	}
+	
+}
+
+country_event = {
+	id = usa.215
+	title = usa.215.t
+	desc = usa.215.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { 
+		name = usa.215.a
+		
+		add_resource = {
+			type = chromium
+			amount = -15
+			state = 369
+		}
+		add_resource = {
+			type = tungsten
+			amount = -35
+			state = 369
+		}
+		add_resource = {
+			type = aluminium
+			amount = -150
+			state = 369
+		}
+		add_resource = {
+			type = steel
+			amount = -450
+			state = 369
+		}
+		
+		#hidden_effect = { USA = { country_event = { id = usa.213 days = 365 } } }
+	}
+	
+}
+
+
+
+country_event = { #recession time
+	id = usa.216
+	title = usa.216.t
+	desc = usa.216.d
+	picture = GFX_report_event_usa_election_generic
+
+	fire_only_once = yes
+	
+	trigger = {
+		tag = USA
+		date > 1937.05.01
+	}
+	
+	option = { 
+		name = usa.216.a
+		
+		add_ideas = usa_recession
+		#add_timed_idea = { idea = usa_recession days = 1395 }
+		remove_ideas = usa_economic_recovery
+		
+	}
+	
+}
+
+
+
+
+
+country_event = { #Rape of Nanjing
+	id = usa.217
+	title = usa.217.t
+	desc = usa.217.d
+	picture = GFX_report_event_japanese_soldiers_01
+
+	fire_only_once = yes
+	
+	trigger = {
+		tag = USA
+		JAP = { controls_state = 613 }
+	}
+	
+	mean_time_to_happen = {
+		days = 5
+	}
+	
+	option = { 
+		name = usa.217.a
+		
+		JAP = { 
+			add_named_threat = { 
+			threat = 5 
+			name = GER_rhineland
+			}
+		}
+		add_war_support = 0.1
+		add_timed_idea = { idea = usa_chinese_aid days = 365 }
+	}
+	
+	option = { 
+		name = usa.217.b
+		
+		JAP = { 
+			add_named_threat = { 
+			threat = 5 
+			name = GER_rhineland
+			}
+		}
+		add_war_support = 0.05
+		add_political_power = 100
+	}
+	
+	option = { 
+		name = usa.217.c
+		
+	}
+	
+}
+
+country_event = { #UN
+	id = usa.218
+	title = usa.218.t
+	desc = usa.218.d
+	picture = GFX_report_event_japanese_soldiers_01
+
+	is_triggered_only = yes
+	
+	
+	option = { 
+		name = usa.218.a
+		ai_chance = { factor = 100 }
+		add_ai_strategy = {
+			type = alliance
+			id = USA
+			value = 200
+		}
+		USA = { add_to_faction = ROOT }
+		add_stability = 0.05
+	}
+	
+	option = { 
+		name = usa.218.b
+		add_stability = -0.05
+		
+	}
+	
+}
+
+
+country_event = { #Guarantee Democracy
+	id = usa.219
+	title = usa.219.t
+	desc = usa.219.d
+	picture = GFX_report_event_japanese_soldiers_01
+
+	is_triggered_only = yes
+	
+	
+	option = { 
+		name = usa.219.a
+		ai_chance = { factor = 95 }
+		
+		USA = { give_guarantee = ROOT }
+		add_stability = 0.05
+	}
+	
+	option = { 
+		name = usa.219.b
+		ai_chance = { factor = 5 }
+		add_stability = -0.05
+		
+	}
+	
+}
+
+country_event = { 
+	id = usa.220
+	title = usa.220.t
+	desc = usa.220.d
+	picture = GFX_report_event_japanese_soldiers_01
+
+	is_triggered_only = yes
+	
+	
+	option = { 
+		name = usa.220.a
+		
+		add_timed_idea = { idea = usa_recession3 days = 1095 }
+		add_stability = -0.05
+	}
+	
+}
+
+
+
+
+country_event = {
+	id = usa.666
+	title = usa.666.t
+	desc = usa.666.desc
+	picture = GFX_report_event_german_reichstag_gathering
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = USA
+		USA = {
+			casualties > 2000000
 		}
 	}
-	option = {
-		name = usa.64.b #refuse
+
+	option = { #unfortunate!
+		name = usa.666.a
 		ai_chance = {
-			factor = 100
+			base = 100
 		}
-		ROOT = { clr_country_flag = USA_congress_investment }
-		clear_global_event_target = USA_congress_investment_state
+		set_country_flag = usa_suffered_2m_casualties
+
 	}
+
 }
