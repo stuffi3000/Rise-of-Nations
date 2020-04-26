@@ -1,0 +1,157 @@
+#################################################
+#			Persian/Iranian Decisions			#
+#################################################
+
+PER_cease_oil_concessions = {
+
+	PER_expel_aioc = {
+	
+		icon = decision_generic_break_treaty
+		
+		allowed = {
+			original_tag = PER
+		}
+
+		available = {
+			country_exists = ENG
+			country_exists = PER
+			NOT = { is_subject_of = ENG }
+			OR = {
+				has_completed_focus = nationalism_focus
+				has_completed_focus = internationalism_focus
+				has_completed_focus = interventionism_focus
+				AND = {
+					has_completed_focus = neutrality_focus
+					ENG = { has_added_tension_amount > 0.09 }
+				}
+			}
+		}
+
+		cost = 200
+
+		fire_only_once = yes
+
+		visible = {
+			country_exists = ENG
+			country_exists = PER
+			NOT = { is_subject_of = ENG }
+			OR = {
+				has_completed_focus = nationalism_focus
+				has_completed_focus = internationalism_focus
+				has_completed_focus = interventionism_focus
+				AND = {
+					has_completed_focus = neutrality_focus
+					ENG = { has_added_tension_amount > 0.09 }
+				}
+			}
+		}
+		
+		highlight_states = {
+			state = 410
+			state = 412
+		}
+
+#		cancel_if_not_visible = yes
+
+		complete_effect = {
+			ENG = {
+				remove_resource_rights = 410
+				remove_resource_rights = 412
+				remove_ideas = ENG_anglo-iranian_oil_company
+				country_event = {days = 1 id = britain.126 }
+			}
+			add_timed_idea = { idea = aioc_expulsion  days = 1095 }
+		}
+
+		ai_will_do = {
+			factor = 50
+			modifier = {
+				factor = 90
+				is_historical_focus_on = yes
+				date > 1940.1.1
+				NOT = {
+					OR = {
+						is_subject_of = ENG
+						is_in_faction_with = ENG
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				date > 1940.1.1
+				OR = {
+					is_subject_of = ENG
+					is_in_faction_with = ENG
+				}
+			}
+		}
+	}
+}
+
+PER_foreign_politics_and_diplomacy = {
+
+	PER_Surrender = {
+
+		allowed = {
+			original_tag = PER
+		}
+
+		available = {
+			Operation_countenance_in_progress = yes
+			PER = {
+				surrender_progress > 0.2
+			}
+		}
+
+		visible = {
+			FROM = { exists = yes }
+			Operation_countenance_in_progress = yes
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 90
+				is_historical_focus_on = yes
+				surrender_progress > 0.6
+				NOT = { is_subject_of = ENG }
+			}
+		}
+
+		complete_effect = {
+			ENG = {
+				if = {
+					limit = {
+						has_global_flag = sov_yes_cooperation_full_occupation
+					}
+					country_event = {
+						id = britain.93
+						hours = 12
+					}
+				}
+				else_if = {
+					limit = {
+						has_global_flag = sov_yes_cooperation_partial_occupation
+					}
+					country_event = {
+						id = britain.932
+						hours = 12
+					}
+				}
+				else_if = {
+					limit = {
+						has_global_flag = intervention_in_iran
+					}
+					country_event = {
+						id = britain.94
+						hours = 12
+					}
+				}
+			}
+		}
+	}
+}
