@@ -4,6 +4,132 @@ ideas = {
 	
 	#### Extra Ideas
 	
+	reparations_to_germany = {
+			
+			allowed = {
+				always = yes
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			removal_cost = -1
+			
+			picture = generic_foreign_capital
+			
+			modifier = {
+				consumer_goods_factor = 0.3
+				political_power_cost = 0.3
+			}
+		}
+		
+		a_revised_versailles = {
+			
+			allowed = {
+				always = yes
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			removal_cost = -1
+			
+			modifier = {
+				#unity_factor = 0.05
+				stability_factor = 0.05
+			}
+		}
+		
+		fresh_blitzkreig = {
+			allowed = {
+				original_tag = GER
+			}
+			
+			allowed = {
+				always = no
+			}
+			
+			removal_cost = -1
+			
+			picture = generic_armor
+			
+			modifier = {
+				army_org_Factor = 0.05
+				army_attack_factor = 0.15
+				army_speed_factor = 0.15
+				planning_speed = 0.15
+				enemy_partisan_effect = -0.10
+			}
+		}
+		
+		bomb_america = {
+			
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			picture = strategic_bombing_focus
+			
+			removal_cost = -1
+			
+			equipment_bonus = {
+				heavy_fighter_equipment = {
+					air_range = 0.5 air_agility = 0.5 instant = yes
+				}
+				strat_bomber_equipment = {
+					air_range = 0.5 air_defence = 0.5 instant = yes
+				}
+				jet_fighter_equipment = {
+					air_range = 0.5 air_agility = 0.5 instant = yes
+				}
+			}
+			
+		}
+		
+		An_Invasion_of_The_Moon = {
+			
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			picture = idea_generic_coastal_navy
+			
+			removal_cost = -1
+			
+			equipment_bonus = {
+				submarine = {
+					naval_range = 0.25 instant = yes
+				}
+				screen_ship = {
+					naval_range = 0.25 instant = yes
+				}
+				carrier = {
+					naval_range = 0.25 instant = yes
+				}
+				capital_ship = {
+					naval_range = 0.25 instant = yes
+				}
+			}
+			
+			modifier = {
+				convoy_escort_efficiency = 0.25
+				amphibious_invasion = 0.35
+				amphibious_invasion_defence = 0.35
+				naval_invasion_capacity = 100
+			}
+			
+		}
+	
 	fascist_propaganda_surrender = {
 
 			allowed = { always = no }
@@ -3497,8 +3623,7 @@ ideas = {
 		}
 	}
 	
-	
-
+		
 	political_advisor = {
 		todt = {
 
@@ -3507,10 +3632,14 @@ ideas = {
 				original_tag = GER
 			}
 			available = {
-				has_completed_focus = GER_autobahn
+				#has_completed_focus = GER_west_wall
 			}
 			
-			traits = { fortification_engineer }
+			traits = { ger_armaments_organizer }
+			
+			ai_will_do = {  #EAI
+				factor = 0
+			}
 		}
 		
 		speer = {
@@ -3520,7 +3649,11 @@ ideas = {
 				original_tag = GER
 			}
 			
-			traits = { armaments_organizer }
+			traits = { military_production_genius }
+			
+			ai_will_do = {  #EAI
+				factor = 0
+			}
 		}
 		
 		hjalmar_schacht = {
@@ -3529,8 +3662,16 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+			available = {
+				#has_completed_focus = GER_four_year_plan
+				#NOT = { has_completed_focus = GER_demand_sudetenland }
+			}
 			
-			traits = { captain_of_industry }
+			traits = { ger_industrialist_genius }
+			
+			ai_will_do = {  #EAI
+				factor = 0
+			}
 		}
 		
 		walther_funk = {
@@ -3541,6 +3682,15 @@ ideas = {
 			}
 			
 			traits = { war_industrialist }
+
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 5000
+
+					date > 1938.1.1
+				}
+			}
 		}
 
 		ernst_thalmann = {
@@ -3550,12 +3700,15 @@ ideas = {
 				original_tag = GER
 			}
 			
-			traits = { communist_revolutionary }
-	
-			on_add = {
-				country_event = political.1
+			available = {
+			if = {
+					limit = { has_dlc = "Man the Guns" }	
+					NOT = { has_autonomy_state = autonomy_supervised_state }
+				}
 			}
-	
+			
+			traits = { communist_revolutionary }
+
 			do_effect = {
 				NOT = {
 					has_government = communism
@@ -3574,12 +3727,12 @@ ideas = {
 				original_tag = GER
 			}
 			
-			traits = { democratic_reformer }
-	
-			on_add = {
-				country_event = political.13
+			available = {
+				has_completed_focus = GER_new_chancellor
 			}
-	
+			
+			traits = { democratic_reformer }
+
 			do_effect = {
 				NOT = {
 					has_government = democratic
@@ -3597,17 +3750,23 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
-			
-			traits = { fascist_demagogue }
-	
-			on_add = {
-				country_event = political.7
+
+			available = {
+			OR = {
+			has_government = fascism
+			has_country_flag = GER_reinstated_nazi_leadership
 			}
-	
-			do_effect = {
-				NOT = {
-					has_government = fascism
+			
+				if = {
+					limit = { has_dlc = "Man the Guns" }	
+					NOT = { has_autonomy_state = autonomy_supervised_state }
 				}
+			}
+			
+			traits = { ger_propaganda_expert }
+
+			do_effect = {
+			has_government = fascism
 			}
 			
 			ai_will_do = {
@@ -3623,9 +3782,17 @@ ideas = {
 			}
 			available = {
 				NOT = { has_country_flag = flight_of_hess }
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
 			}
 			
 			traits = { silent_workhorse }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
 		}
 		
 		heinrich_himmler = {
@@ -3634,8 +3801,26 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+			}
+
+			on_add = {
+			#country_event = as_waffen_ss.39
+			custom_effect_tooltip = GER_SS_himmler_recruit
+			}
 			
-			traits = { prince_of_terror }
+			traits = { reichsfueher_of_the_schutzstaffel }
+			
+			ai_will_do = { #EAI
+				factor = 0
+				
+				modifier = { factor = 0 OR = { date < 1940.1.1 has_war = no } }
+			}
 		}
 		
 		martin_bormann = {
@@ -3644,8 +3829,19 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+			}
 			
 			traits = { silent_workhorse }
+			
+			ai_will_do = { #EAI
+				factor = 50000
+			}
 		}
 		
 		joachim_von_ribbentrop = {
@@ -3654,8 +3850,15 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+			}
 			
-			traits = { backroom_backstabber }
+			traits = { cutthroat_diplomacy }
 
 			ai_will_do = {
 				factor = 0
@@ -3669,63 +3872,81 @@ ideas = {
 				original_tag = GER
 			}
 			
-			traits = { smooth_talking_charmer }
+			traits = { old_school_diplomat }
+
+			ai_will_do = { #EAI
+				factor = 0
+			}
 		}
 		
+		heydrich = {
+		
+			allowed = {
+				original_tag = GER
+			}
+			available = {
+				NOT = { has_global_flag = heydrich_dead }
+				
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+				
+			}
+			
+			ai_will_do = {
+				factor = 15
+			}
+			
+			traits = { man_with_the_iron_heart }
+			
+			cancel_if_invalid = yes
+			
+		}
+		
+			goering_e = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+				#has_completed_focus = GER_four_year_plan
+			}			
+			traits = { guns_over_butter_advocate }
+			
+			ai_will_do = {
+				factor = 5
+			}
+		}
 		wilhelm_frick = {
 			allowed = {
 				original_tag = GER
 			}
 			
 			traits = { loyal_fascist }
-		}
-		
-		heinrich_rau = {
-			allowed = {
-				original_tag = GER
-			}
 			
-			traits = { liberal_socialist }
-		}
-		
-		otto_grotewohl = {
-			allowed = {
-				original_tag = GER
+			ai_will_do = {
+				factor = 5
 			}
-			
-			traits = { humane_socialist }
 		}
-		
-		ludwig_erhard = {
-			allowed = {
-				original_tag = GER
-			}
-			
-			traits = { social_market_democrat }
-		}
-		
-		theodor_heuss = {
-			allowed = {
-				original_tag = GER
-			}
-			
-			traits = { cordial_democrat }
-		}
-		
-		carl_friedrich_goerdeler = {
-			allowed = {
-				original_tag = GER
-			}
-			
-			traits = { conservative_monarchist }
-		}
-		
 		heinrich_bruning = {
 			allowed = {
 				original_tag = GER
 			}
 			
 			traits = { antiextremist_monarchist }
+			
+			available = {
+				has_completed_focus = GER_restore_hohenzollern
+			}
+			
+			ai_will_do = {
+				factor = 5
+			}
 		}
 		
 		fedor_von_bock = {
@@ -3734,7 +3955,144 @@ ideas = {
 			}
 			
 			traits = { military_monarchist }
+			
+			available = {
+				has_completed_focus = GER_restore_hohenzollern
+			}
+			
+			ai_will_do = {
+				factor = 5
+			}
 		}
+
+		GER_hans_oster = {
+		
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				has_completed_focus = GER_oppose_hitler
+			}
+			
+			traits = { anti_fascist_agent }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+
+		GER_alfred_hugenberg = {
+		
+
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				has_completed_focus = GER_restore_hohenzollern
+			}
+			
+			traits = { monarchist_media_mogul }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+		
+		
+
+		GER_carl_friedrich_goerdeler = {
+					
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				has_completed_focus = GER_restore_hohenzollern
+			}
+			
+			traits = { economist }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+
+		GER_julius_leber = {
+		
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				has_completed_focus = GER_new_chancellor
+			}
+			
+			traits = { connected_citizen }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+
+		GER_theodor_heuss = {
+		
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				has_completed_focus = GER_new_chancellor
+			}
+			
+			traits = { liberal_journalist }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+		
+		GER_alfred_rosenberg = {
+		
+		picture = Portrait_GER_Alfred_Rosenberg
+
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				has_completed_focus = GER_oppose_hitler
+			}
+			
+			traits = { loyal_fascist }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+		
+		GER_ludwig_beck = {
+		
+		picture = Portrait_Germany_Ludwig_August_Theodor_Beck
+		
+
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				has_completed_focus = GER_oppose_hitler
+			}
+			
+			traits = { authoritarian_supporter }
+
+			ai_will_do = {
+				factor = 0
+			}
+		}
+		
+		
 	}
 
 	
@@ -3755,6 +4113,10 @@ ideas = {
 			}
 			
 			traits = { heavy_tank_manufacturer }
+			
+			ai_will_do = { #EAI
+				factor = 1000
+			}
 
 		}
 		
@@ -3771,12 +4133,14 @@ ideas = {
 			
 			traits = { fast_tank_manufacturer }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
-		MAN_tank = {
+		GER_MAN = {
+
+			picture = GER_MAN
 			
 			allowed = {
 				original_tag = GER
@@ -3788,10 +4152,147 @@ ideas = {
 			
 			traits = { medium_tank_manufacturer }
 
+			ai_will_do = { #EAI
+				factor = 1000
+			}
+		}
+		
+		daimler_benz_tank = {
+			allowed = {
+				original_tag = GER
+			}	
+			ai_will_do = {
+				factor = 500
+			}					
+			#cost = 25			
+			traits = { daimler_benz_tank_manufacturer }
+			equipment_bonus = {	
+				medium_tank_equipment = { instant = yes build_cost_ic = -0.10}
+				modern_tank_equipment = { instant = yes build_cost_ic = -0.10}					
+			}			
+			research_bonus = {
+				armor = 0.10
+			}				
+		}
+		
+			krupp_tank = {
+			allowed = {
+				original_tag = GER
+			}		
+			ai_will_do = {
+				factor = 600
+			}				
+			#cost = 25			
+			traits = { krupp_tank_manufacturer }
+			equipment_bonus = {	
+				medium_tank_equipment = { instant = yes build_cost_ic = -0.10}
+				modern_tank_equipment = { instant = yes build_cost_ic = -0.10}				
+			}			
+			research_bonus = {
+				armor = 0.1			
+			}				
+		}	
+		
+		vomag_tank 	= {
+			allowed = {
+				original_tag = GER
+			}
+			ai_will_do = {
+				factor = 0 #AI is unlikely to make good use of porsche
+			}				
+			#cost = 25			
+			traits = { vomag_tank_manufacturer }
+			equipment_bonus = {	
+				medium_tank_destroyer_equipment = { instant = yes build_cost_ic = -0.20}
+			}	
+			research_bonus = {
+				armor = 0.1			
+			}			
+		}		
+		
+				nibelungenwerke  = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			traits = { GER_nibelungenwerke_tank_manufacturer }
+	
+			research_bonus = {
+				armor = -0.05		
+			}
+				
+			equipment_bonus = {
+				medium_tank_equipment  = {
+					armor_value = -0.05 hard_attack = -0.05 soft_attack = -0.05 build_cost_ic = -0.20 
+				}
+			}	
+
 			ai_will_do = {
 				factor = 1
 			}
 		}
+		
+		GER_ckd = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			available = {
+				OR = { GER = { controls_state = 9 } any_other_country = { is_in_faction_with = GER controls_state = 9 } }
+				}			
+			traits = { GER_ckd_tank_manufacturer }
+
+			research_bonus = {
+				armor = -0.05		
+			}
+		
+			equipment_bonus = {
+				light_tank_equipment = {
+					build_cost_ic = -0.1 reliability = 0.1  
+				}
+				light_tank_destroyer_equipment = {
+					build_cost_ic = -0.1 ap_attack = 0.1 reliability = 0.05
+				}
+				light_tank_artillery_equipment = {
+					build_cost_ic = -0.1 soft_attack = 0.05 reliability = 0.05
+				} 
+			}
+		}
+		
+				steyr = {
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = { 
+				has_completed_focus = GER_anschluss 
+			}
+			
+			traits = { german_medium_tank_manufacturer }
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+		
+		waffenamt = {
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				armor = 0.10
+			}
+			
+			traits = { chassis_conversion_manufacturer }
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+		
+		
 	}
 	
 	naval_manufacturer = { 
@@ -3813,7 +4314,11 @@ ideas = {
 				
 			}
 			
-			traits = { atlantic_fleet_naval_manufacturer }
+			traits = { german_baltic_fleet_naval_manufacturer }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
 			
 		}
 		
@@ -3834,9 +4339,15 @@ ideas = {
 				
 			}
 			
-		}
-
-		howaldtswerke = {
+			ai_will_do = { #EAI
+				factor = 1
+				modifier = { factor = 0 date < 1942.1.1 }
+			}
+			
+		}	
+		
+		
+				howaldtswerke = {
 			allowed = {
 				original_tag = GER
 			}
@@ -3847,6 +4358,65 @@ ideas = {
 			
 			traits = { quality_submarine_manufacturer }
 		}
+		
+		deutsche_werke = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				naval_equipment = 0.10
+			}
+			
+			traits = { german_battleship_manufacturer }
+			
+			equipment_bonus = {
+				
+			}
+			
+		}
+		
+		ag_weser = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				naval_equipment = 0.10
+			}
+			
+			traits = { ger_convoy_interdiction_naval_manufacturer }
+			
+			equipment_bonus = {
+				
+			}
+			
+		}	
+		
+		vulcan_werke = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				naval_equipment = 0.10
+			}
+			
+			traits = { ger_first_world_war_naval_manufacturer }
+			
+			equipment_bonus = {
+				
+			}
+			
+		}	
+		
+		
 	}
 	
 	aircraft_manufacturer = { 
@@ -3863,14 +4433,14 @@ ideas = {
 				air_equipment = 0.10
 			}
 			
-			traits = { light_aircraft_manufacturer }
+			traits = { german_air_superiority_manufacturer }
 			
 			equipment_bonus = {
 				
 			}
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 100
 			}
 		}
 		
@@ -3883,14 +4453,14 @@ ideas = {
 				air_equipment = 0.10
 			}
 			
-			traits = { CAS_manufacturer }
+			traits = { german_ground_support_manufacturer }
 			
 			equipment_bonus = {
 				
 			}
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}	
 		
@@ -3907,10 +4477,10 @@ ideas = {
 				air_equipment = 0.10
 			}
 			
-			traits = { medium_aircraft_manufacturer }
+			traits = { german_heavy_fighter_manufacturer }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -3928,8 +4498,8 @@ ideas = {
 			
 			traits = { heavy_aircraft_manufacturer }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -3946,10 +4516,80 @@ ideas = {
 			
 			traits = { naval_aircraft_manufacturer }
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+		}	
+		
+		blohm_und_voss2 = {
+
+			allowed = {
+				original_tag = GER
+			}
+			
+			picture = blohm_und_voss
+			
+			
+			traits = { german_metal_aircraft_manufacturer }
+			
 			ai_will_do = {
 				factor = 1
 			}
-		}	
+		}
+		
+		arado = {
+
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				air_equipment = 0.10
+			}
+			
+			traits = { german_seaplane_manufacturer }
+			
+			ai_will_do = {
+				factor = 1
+			}
+		}
+		
+		fiesler = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				jet_technology = 0.3
+			}
+			
+			available = {
+				date > 1945.1.1
+			}
+			
+			traits = { german_jet_aircraft_manufacturer }
+			
+			ai_will_do = {
+				factor = 10
+			}
+		}
+		
+		gotha = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			
+			traits = { amerika_bomber_manufacturer }
+			
+			ai_will_do = {
+				factor = 1
+			}
+		}
 
 
 	}
@@ -3969,8 +4609,8 @@ ideas = {
 			
 			traits = { refinery_concern }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -3986,6 +4626,10 @@ ideas = {
 			}
 			
 			traits = { industrial_concern }
+			
+			ai_will_do = { #EAI
+				factor = 5000
+			}
 		}
 
 		siemens = {
@@ -3999,9 +4643,62 @@ ideas = {
 			}
 			
 			traits = { electronics_concern }
-		}
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+		}		
+		
+				reichsbahn_ic = {
+			allowed = {
+				original_tag = GER
+			}
+			ai_will_do = {
+				factor = 500
+				modifier = {
+					factor = 1
+				}
+			}			
+			
+			traits = { reichsbahn_concern }						
+			modifier = {
+				production_speed_infrastructure_factor = 0.10
+				production_factory_max_efficiency_factor = 0.10
+				production_factory_efficiency_gain_factor = 0.05
+				industrial_capacity_factory = 0.05
+				global_building_slots_factor = 0.10			 
+				land_reinforce_rate = 0.10
+				local_resources_factor = 0.10
+			}
+		}	
+		
+			reichswerke_hermann_goring = {
 
-		bergwerks_huttenbau = {
+			allowed = {
+				original_tag = GER
+			}
+
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+				#has_completed_focus = GER_hermann_goring_werke
+			}	
+
+			modifier = {
+				local_resources_factor = 0.2
+				political_power_cost = 0.25
+			}
+
+			traits = { industrial_concern }
+
+			ai_will_do = { 
+				factor = 1
+			}
+		}	
+		
+			bergwerks_huttenbau = {
 			allowed = {original_tag = GER}
 		
 			research_bonus = {
@@ -4010,6 +4707,139 @@ ideas = {
 		
 			traits = { resource_concern}
 		}
+		
+		temmler = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			modifier = {
+				army_attack_factor = 0.05
+				army_defence_factor = 0.05
+				army_morale_factor = -0.05
+				air_air_superiority_agility_factor = 0.1
+				air_accidents_factor = 0.1
+			}
+			
+			traits = { ger_pharmaceutical_concern }
+			
+			ai_will_do = {
+				factor = 1
+			}
+		}
+		
+		dyckerhoff_widmann = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				construction_tech = 0.25
+				
+			}
+			
+			traits = { ger_construction_concern }
+		}	
+		
+		buessing = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			modifier = {
+				production_speed_buildings_factor = 0.15
+			}
+			
+			research_bonus = {
+				#industry = 0.05
+				
+			}
+			
+			traits = { ger_heavy_industry_concern }
+		}	
+		
+		vereinigte_stahlwerke = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			modifier = {
+				local_resources_factor = 0.25
+			}
+			
+			traits = { ger_steel_concern }
+		}	
+		
+		miag = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			modifier = {
+				industrial_capacity_factory = 0.15
+			}
+			
+			research_bonus = {
+				industry = 0.05
+				
+			}
+			
+			traits = { ger_manufacturer_concern }
+			
+			ai_will_do = {
+				factor = 10
+			}
+		}	
+		
+		fischer = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			modifier = {
+				industrial_capacity_factory = 0.1
+				production_factory_max_efficiency_factor = 0.1
+			}
+			
+			
+			traits = { ball_bearings_concern }
+		}	
+		
+		robert_bosch_gmbh = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				electronics = 0.15
+			}
+			
+			traits = { ger_electronics_engineering_concern }
+		}	
+		
+		ger_philips = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				controls_state = 35
+			}
+			
+			research_bonus = {
+				electronics = 0.05
+			}
+			
+			traits = { ger_captured_electronics_concern }
+		}	
+		
 	}
 	
 	materiel_manufacturer = {
@@ -4026,10 +4856,14 @@ ideas = {
 				artillery = 0.10
 			}
 			
-			traits = { artillery_manufacturer }
+			traits = { ger_artillery_designer2 }
 			
 			modifier = {
 				# +10% arty/at/aa research speed
+			}
+			
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -4044,10 +4878,10 @@ ideas = {
 				infantry_weapons = 0.10
 			}
 			
-			traits = { infantry_equipment_manufacturer }
+			traits = { ger_rifle_manufacturer }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 10
 			}
 		}
 		
@@ -4064,10 +4898,47 @@ ideas = {
 				motorized_equipment = 0.10
 			}
 			
-			traits = { motorized_equipment_manufacturer }
+			traits = { ger_truck_manufacturer }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
 		}
 		
-		tg_steyr_daimler_puch = {
+				buessing_transport = {
+			allowed = {
+				original_tag = GER
+			}
+			ai_will_do = {
+				factor = 500
+			}	
+			equipment_bonus = {
+				light_tank_equipment = { instant = yes build_cost_ic = -0.10 }
+			}	
+			traits = { buessing_transport_manufacturer }
+		
+		}
+
+		junkers_transport = {
+			allowed = {
+				original_tag = GER
+			}
+			available = {
+				has_tech = paratroopers
+			}			
+			ai_will_do = {
+				factor = 500
+			}	
+			equipment_bonus = {	
+				junkers_transport_equipment = { instant = yes build_cost_ic = -0.10 }
+			}
+			research_bonus = {	
+				para_tech = 0.10
+			}											
+			traits = { junkers_transport_manufacturer }						
+		}	
+		
+				tg_steyr_daimler_puch = {
 			allowed = {original_tag = GER}
 			research_bonus = {
 				motorized_equipment = 0.05
@@ -4089,18 +4960,154 @@ ideas = {
 			traits = { uniform_manufacturer }
 		}
 		
-		volkswagen = {
+		junkers2 = { 
 			allowed = {
-					original_tag = GER
-					has_completed_focus = GER_volkswagen
+				original_tag = GER
+			}
+			
+			picture = junkers
+			
+			#research_bonus = {
+			#	air_equipment = 0.10
+			#}
+			
+			traits = { ger_junkers_engines }
+			
+			equipment_bonus = {
+				
+			}
+			
+			ai_will_do = {
+				factor = 1
+			}
+		}	
+		
+		daimler3 = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			picture = daimler
+			
+			#modifier = {
+			#	consumer_goods_factor = -0.03
+			#}
+			
+			traits = { ger_daimler_engines }
+		}
+		
+		ger_bmw = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			#modifier = {
+			#	consumer_goods_factor = -0.03
+			#}
+			
+			traits = { ger_bmw_engines }
+		}
+		
+		krupp3 = {
+
+			picture = krupp
+			
+			allowed = {
+				original_tag = GER
 			}
 			
 			research_bonus = {
-				motorized_equipment = 0.10
+				artillery = 0.10
 			}
 			
-			traits = { peoples_vehicle_manufacturer }
+			traits = { ger_artillery_designer }
+			
+			ai_will_do = {
+				factor = 1
+			}
 		}
+		
+		steyr2 = {
+
+			picture = steyr
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				has_completed_focus = GER_anschluss
+			}
+			
+			research_bonus = {
+				infantry_weapons = 0.15
+			}
+			
+			traits = { ger_smg_manufacturer }
+
+			ai_will_do = {
+				factor = 1
+			}
+		}
+		
+		walther = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				infantry_weapons = 0.2
+			}
+			
+			traits = { ger_semi_rifle_manufacturer }
+
+			ai_will_do = {
+				factor = 20
+			}
+		}
+		
+		hanomag = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			#research_bonus = {
+			#	motorized_equipment = 0.10
+			#}
+			
+			traits = { ger_half_track_designer }
+		}
+		
+		daimler = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			#modifier = {
+			#	consumer_goods_factor = -0.03
+			#}
+			
+			traits = { ger_luxury_vehicle_designer }
+		}
+		
+		zundapp = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			research_bonus = {
+				support_tech = 0.10
+			}
+			
+			traits = { ger_motorcycle_designer }
+		}
+		
 	}
 	
 	theorist = {
@@ -4115,6 +5122,10 @@ ideas = {
 			}
 			
 			traits = { rocket_scientist }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
 		}
 		
 		heisenberg = {
@@ -4129,6 +5140,51 @@ ideas = {
 			}
 			
 			traits = { nuclear_scientist }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+		}
+		
+				zuse = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				#has_completed_focus = GER_Wunderwaffe
+			}
+			
+			cost = 250
+		
+			research_bonus = {
+				computing_tech = 0.15
+			}
+			
+			traits = { ger_computing_scientist }
+		}
+		
+		ludwig_boelkow = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				#has_completed_focus = GER_Wunderwaffe
+			}
+			
+			cost = 350
+		
+			research_bonus = {
+				#rocketry = 0.2
+				jet_technology = 0.25
+			}
+			
+			traits = { german_jet_aircraft_designer }
 		}
 		
 		heinz_guderian = {
@@ -4142,6 +5198,9 @@ ideas = {
 				land_doctrine = 0.07
 			}
 			
+			ai_will_do = { #EAI
+				factor = 50000
+			}
 			
 			traits = { blitzkrieg_theorist }
 		}
@@ -4159,8 +5218,11 @@ ideas = {
 				cat_mobile_warfare = 0.10
 			}
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
 
-			traits = { mobile_warfare_expert }
+			traits = { military_theorist }
 		}
 		
 		wolfram_von_richthofen = {
@@ -4176,6 +5238,10 @@ ideas = {
 				cat_battlefield_support = 0.10
 			}
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+			
 			traits = { close_air_support_proponent }
 		}
 		
@@ -4187,10 +5253,14 @@ ideas = {
 			}
 			
 			research_bonus = {
-				air_doctrine = 0.07
+				cat_strategic_destruction = 0.10
 			}
 			
-			traits = { air_warfare_theorist }
+			ai_will_do = { #EAI
+				factor = 0
+			}
+			
+			traits = { victory_through_airpower }
 		}
 		
 		ernst_udet = {
@@ -4202,6 +5272,10 @@ ideas = {
 			
 			research_bonus = {
 				air_doctrine = 0.07
+			}
+			
+			ai_will_do = { #EAI
+				factor = 0
 			}
 			
 			traits = { dive_bomber }
@@ -4220,6 +5294,10 @@ ideas = {
 				cat_trade_interdiction = 0.20
 			}
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+			
 			traits = { submarine_specialist }
 		}
 		
@@ -4234,22 +5312,42 @@ ideas = {
 				naval_doctrine = 0.07
 			}
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+			
 			traits = { naval_theorist }
 		}
 		
-		albert_einstein = {
+		schmeisser = {
+		#STG 44
 			allowed = {
 				original_tag = GER
-				has_country_flag = einstein_returns
 			}
+			
+			available = {
+				date > 1942.06.01
+				has_war_with = SOV
+			}
+			
+			cost = 650
 			
 			research_bonus = {
-				nuclear = 0.10
+				infantry_weapons = 0.15
 			}
 			
-			traits = { scientific_giant }
+			traits = { ger_breakthrough_small_arms_designer }
+			
+			#on_add = {
+				#set_technology = { infantry_equipment_31 = 1 }
+			#}
+			
+			ai_will_do = {
+				factor = 100
+			}
+		
 		}
-	}
+	}	
 		
 	# MILITARY
 	army_chief = {
@@ -4261,9 +5359,9 @@ ideas = {
 				original_tag = GER
 			}
 			
-			traits = { army_chief_organizational_2 }			
-			ai_will_do = {
-				factor = 1
+			traits = { army_chief_defensive_2 }			
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 
@@ -4273,11 +5371,15 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+
+			available = {
+				has_government = fascism
+			}
 						
-			traits = { army_chief_drill_2 }
+			traits = { army_chief_morale_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 	
@@ -4289,9 +5391,9 @@ ideas = {
 			}
 						
 			traits = { army_chief_offensive_2 }
-			
-			ai_will_do = {
-				factor = 1
+		
+			ai_will_do = { #EAI
+				base = 0
 			}
 		}
 	
@@ -4301,28 +5403,81 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+			available = {
+				#has_completed_focus = GER_army_innovation
+			}
 
-			traits = { army_chief_maneuver_2 }
+					
+			traits = { army_chief_drill_2 }
+			
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 10000
+
+					OR = {
+						has_war = yes
+						date > 1939.1.1
+					}
+				}
+			}
+		}
+		
+				gerd_von_rundstedt2 = {
+
+			picture = gerd_von_rundstedt 
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				NOT = { has_idea = gerd_von_rundstedt }
+			}
+			
+			traits = { army_chief_organizational_3 }
+			
+			ai_will_do = {
+				factor = 7
+			}
+		}
+	
+		manstein3 = {
+
+			picture = manstein 
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				NOT = { has_idea = manstein2 }
+			}
+			
+			traits = { army_chief_organizational_3 }
 			
 			ai_will_do = {
 				factor = 1
 			}
 		}
 		
-		kurt_zeitzler = {
-			allowed = {original_tag = GER}
+		heinz_guderian3 = {
+
+			picture = heinz_guderian
 			
-			ai_will_do = {factor = 1}
+			allowed = {
+				original_tag = GER
+			}
 			
-			traits = { army_chief_supply }
-		}
-		
-		heinz_guderian2 = {
-			allowed = {original_tag = GER}
+			available = {
+				NOT = { has_idea = heinz_guderian2 }
+			}
 			
-			ai_will_do = {factor = 1}
+			traits = { army_chief_maneuver_3 }
 			
-			traits = { army_chief_panzer }
+			ai_will_do = {
+				factor = 0
+			}
 		}
 		
 	}
@@ -4335,11 +5490,26 @@ ideas = {
 			allowed = {
 				original_tag = GER
 			}
+
+			available = {
+				OR = {
+					has_government = fascism
+					has_country_flag = GER_reinstated_nazi_leadership
+				}
+			}
 						
-			traits = { air_chief_ground_support_2 }
+			traits = { air_air_combat_training_3 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 10
+
+					OR = {
+						has_war = yes
+						date > 1939.1.1
+					}
+				}
 			}
 		}
 		
@@ -4350,13 +5520,13 @@ ideas = {
 				original_tag = GER
 			}
 			available = {
-				has_completed_focus = GER_air_superiority_english_channel
+				#has_completed_focus = GER_air_innovation
 			}
 						
-			traits = { air_chief_all_weather_2 }
+			traits = { air_chief_ground_support_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -4369,28 +5539,60 @@ ideas = {
 						
 			traits = { air_chief_reform_2 }
 			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+		}
+		
+		erhard_milch = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			traits = { air_chief_old_guard }
+			
 			ai_will_do = {
 				factor = 1
 			}
 		}
 		
-		erhard_milch2 = {
-			allowed = {original_tag = GER}
+		
+		walther_wever2 = {
+		
+			picture = walther_wever
+		
+			allowed = {
+				original_tag = GER
+			}
 			
-			ai_will_do = {factor = 1}
+			available = {
+				NOT = { has_global_flag = walther_weaver_dead }
+			}
+						
+			traits = { air_strategic_bombing_2 }
 			
-			traits = { airforce_chief_wunderwaffe }
-			
-			research_bonus = {
-				jet_technology = 0.05
-				light_fighter = 0.05
-				cat_heavy_fighter = 0.05
-				tactical_bomber = 0.05
-				cat_strategic_bomber = 0.05
-				naval_bomber = 0.05
-				cas_bomber = 0.05
+			ai_will_do = {
+				factor = 0
 			}
 		}
+		
+		
+		hugo_sperrle = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			traits = { air_close_air_support_2 }
+			
+			ai_will_do = {
+				factor = 0
+			}
+		}
+		
 	}
 	
 	navy_chief = { #CHIEF OF NAVY
@@ -4406,6 +5608,8 @@ ideas = {
 			
 			ai_will_do = {
 				factor = 1
+
+				modifier = { factor = 0 check_variable = { EAI_FOCUS/NAVY/submarine = global.EAI_ON } }
 			}
 		}
 		
@@ -4418,13 +5622,32 @@ ideas = {
 						
 			traits = { navy_chief_commerce_raiding_3 }
 			
-			ai_will_do = {
+			ai_will_do = { #EAI
 				factor = 1
+				modifier = { factor = 0 check_variable = { EAI_FOCUS/NAVY/submarine = global.EAI_OFF } }
 			}
+			
 		}
 	}
 
 	high_command = {
+	
+	paul_hausser2 = {
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				date > 1941.1.1
+			}
+			
+			traits = { german_ss_specialist }
+			
+			ai_will_do = {
+				factor = 6
+			}
+		}
 
 		ferdinand_schorner = {
 
@@ -4435,8 +5658,16 @@ ideas = {
 			
 			traits = { army_infantry_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 30000
+
+					OR = {
+						has_war = yes
+						date > 1939.1.1
+					}
+				}
 			}
 		}
 		
@@ -4447,13 +5678,59 @@ ideas = {
 				original_tag = GER
 			}
 			available = {
-					has_completed_focus = GER_blitzkreig_tactics
+					#has_completed_focus = GER_army_innovation
 				}
 			
 			traits = { army_armored_3 }
 			
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 10000
+
+					OR = {
+						has_war = yes
+						date > 1939.1.1
+					}
+				}
+			}
+		}
+		
+		heinz_guderian2 = {
+
+			picture = heinz_guderian
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				NOT = { has_idea = heinz_guderian3 }
+			}
+			
+			traits = { army_armored_3 }
+			
 			ai_will_do = {
-				factor = 1
+				factor = 4
+			}
+		}
+		
+		manstein2 = {
+
+			picture = manstein 
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			available = {
+				NOT = { has_idea = manstein3 }
+			}
+			
+			traits = { german_motorized_genius }
+			
+			ai_will_do = {
+				factor = 4
 			}
 		}
 		
@@ -4466,8 +5743,16 @@ ideas = {
 			
 			traits = { army_regrouping_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				base = 0
+				modifier = {
+					add = 10
+
+					OR = {
+						has_war = yes
+						date > 1939.1.1
+					}
+				}
 			}
 		}
 		
@@ -4479,6 +5764,22 @@ ideas = {
 			}
 			
 			traits = { army_logistics_2 }
+			
+			ai_will_do = { #EAI
+				factor = 0
+			}
+		}
+		
+		ernst_udet2 = {
+
+			
+			allowed = {
+				original_tag = GER
+			}
+			
+			picture = ernst_udet
+			
+			traits = { air_close_air_support_3 }
 			
 			ai_will_do = {
 				factor = 1
@@ -4492,13 +5793,13 @@ ideas = {
 				original_tag = GER
 			}
 			available = {
-					has_completed_focus = GER_air_superiority_english_channel
+					#has_completed_focus = GER_air_innovation
 			}
 			
 			traits = { air_close_air_support_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -4511,8 +5812,8 @@ ideas = {
 			
 			traits = { air_bomber_interception_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -4525,8 +5826,8 @@ ideas = {
 			
 			traits = { air_airborne_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}	
 		
@@ -4539,8 +5840,8 @@ ideas = {
 			
 			traits = { navy_naval_air_defense_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		
@@ -4553,8 +5854,8 @@ ideas = {
 			
 			traits = { navy_fleet_logistics_2 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 		 
@@ -4567,11 +5868,12 @@ ideas = {
 			
 			traits = { navy_anti_submarine_1 }
 			
-			ai_will_do = {
-				factor = 1
+			ai_will_do = { #EAI
+				factor = 0
 			}
 		}
 	}
+
 	
 	hidden_ideas = {
 
