@@ -5634,8 +5634,8 @@ focus_tree = {
 		relative_position_id = ITA_econ_reform
 		cost = 10
 		ai_will_do = {
-			factor = 5
-		}	
+			factor = 0 #EAI
+		}
 		completion_reward = {
 			# French border
 			158 = {
@@ -5975,7 +5975,8 @@ focus_tree = {
 		cost = 10
 
 		ai_will_do = {
-			factor = 10
+			factor = 1
+			modifier = { factor = 0 date < 1946.1.1 } #EAI
 		}	
 		completion_reward = {
 			add_resource = {
@@ -6886,8 +6887,8 @@ focus_tree = {
 		relative_position_id = ITA_mare_nostrum
 		
 		cost = 10
-		ai_will_do = {
-			factor = 10
+		ai_will_do = { #EAI
+			factor = 0
 		}
 
 		completion_reward = {
@@ -6958,7 +6959,8 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 10
+			factor = 1 #EAI
+			modifier = { factor = 0 date < 1946.1.1 }
 		}
 
 		completion_reward = {
@@ -6985,7 +6987,8 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 15
+			factor = 1 #EAI
+			modifier = { factor = 0 date < 1946.1.1 }
 		}
 
 		completion_reward = {
@@ -7090,7 +7093,8 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 10
+			factor = 1
+			modifier = { factor = 0 date < 1946.1.1 } #EAI
 		}
 
 		completion_reward = {
@@ -7360,8 +7364,12 @@ focus_tree = {
 		relative_position_id = ITA_mare_nostrum
 		
 		cost = 10
+		historical_ai = { #EAI
+			OR = { has_tech = basic_battleship is_researching_technology = basic_battleship has_tech = basic_ship_hull_heavy is_researching_technology = basic_ship_hull_heavy }
+		}
 		ai_will_do = {
-			factor = 10
+			factor = 1 #EAI
+			modifier = { factor = 0 NOT = { has_tech = basic_battleship is_researching_technology = basic_battleship has_tech = basic_ship_hull_heavy is_researching_technology = basic_ship_hull_heavy } }
 		}
 
 		completion_reward = {
@@ -7676,8 +7684,12 @@ focus_tree = {
 		relative_position_id = ITA_air_expansion
 		
 		cost = 10
+		historical_ai = { #EAI
+			OR = { has_tech = tactical_bomber1 is_researching_technology = tactical_bomber1 }
+		}
 		ai_will_do = {
-			factor = 15
+			factor = 1 #EAI
+			modifier = { factor = 0 NOT = { has_tech = tactical_bomber1 is_researching_technology = tactical_bomber1 } }
 		}
 
 		completion_reward = {
@@ -7813,7 +7825,8 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 10
+			factor = 1 #EAI
+			modifier = { factor = 0 date < 1943.1.1 }
 		}
 
 		completion_reward = {
@@ -7972,7 +7985,8 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 15
+			factor = 1
+			modifier = { factor = 0 date < 1946.1.1 } #EAI
 		}
 		available = {
 			has_government = fascism
@@ -8020,8 +8034,12 @@ focus_tree = {
 		relative_position_id = ITA_victoryinETH
 		
 		cost = 10
-		ai_will_do = {
-			factor = 15
+		historical_ai = { #EAI
+			date > 1940.10.1
+		}
+		ai_will_do = { #EAI
+			factor = 1
+			modifier = { factor = 0 NOT = { date > 1940.10.1 } is_historical_focus_on = yes }
 		}
 		available = {
 			has_government = fascism
@@ -8099,7 +8117,16 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 10
+			factor = 1
+			modifier = { #EAI
+				factor = 0 
+				is_historical_focus_on = yes
+			}
+			modifier = { factor = 0 YUG = { is_in_faction_with = GER } } #EAI
+			modifier = {
+				factor = 0
+				surrender_progress > 0.1
+			}
 		}	
 		completion_reward = {
 			YUG = { country_event = { id = italy.30 }}
@@ -8133,7 +8160,14 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 20
+			factor = 1
+			modifier = { factor = 0 date < 1941.1.1 } #EAI
+			modifier = { factor = 0 YUG = { is_in_faction_with = GER } } #EAI
+			modifier = { factor = 1000 ITA = { has_war_with = GRE } } #EAI
+			modifier = {
+				factor = 0
+				surrender_progress > 0.1
+			}
 		}	
 		completion_reward = {
 			create_wargoal = {
@@ -8169,8 +8203,49 @@ focus_tree = {
 		relative_position_id = ITA_victoryinETH
 		
 		cost = 10
+		historical_ai = { #EAI
+			date > 1940.6.1
+			
+			OR = { 
+				POL = { has_capitulated = yes }
+				POL = { exists = no }
+				POL = { is_puppet = yes }
+				POL = { has_government = fascism }
+				is_in_faction_with = POL
+			}
+			
+			OR = { 
+				FRA = { has_capitulated = yes }
+				FRA = { exists = no }
+				FRA = { is_puppet = yes }
+				FRA = { has_government = fascism }
+				is_in_faction_with = FRA
+			}
+			
+			NOT = { 
+				GRE = { has_capitulated = yes }
+				GRE = { exists = no }
+				GRE = { is_puppet = yes }
+				GRE = { has_government = fascism }
+				is_in_faction_with = GRE
+			}
+			
+			NOT = {
+				any_state = {
+					OR = { region = 21 region = 23 }
+					controller = { has_war_with = ITA }
+				}
+			}
+		}
+		
 		ai_will_do = {
-			factor = 30
+			factor = 1
+			modifier = { factor = 0 date < 1940.6.1 } #EAI
+			modifier = { factor = 0 TUR = { is_in_faction_with = GER } } #EAI
+			modifier = {
+				factor = 0
+				surrender_progress > 0.1
+			}
 		}	
 		completion_reward = {
 			create_wargoal = {
@@ -8270,7 +8345,13 @@ focus_tree = {
 		
 		cost = 10
 		ai_will_do = {
-			factor = 20
+			factor = 1
+			modifier = { factor = 0 date < 1946.1.1 } #EAI
+			modifier = { factor = 0 TUR = { is_in_faction_with = GER } } #EAI
+			modifier = {
+				factor = 0
+				surrender_progress > 0.1
+			}
 		}	
 		completion_reward = {
 			TUR = { country_event = { id = italy.33 }}
@@ -11295,7 +11376,16 @@ focus_tree = {
 			}
 		}
 		ai_will_do = {
-			factor = 25
+			factor = 1
+			modifier = { factor = 0 date < 1946.1.1 } #EAI
+			modifier = { #EAI
+				factor = 0 
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				factor = 0
+				surrender_progress > 0.1
+			}
 		}	
 		completion_reward = {
 			add_named_threat = { threat = 10 name = ITA_Balkan_Dominion }
