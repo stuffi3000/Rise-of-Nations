@@ -3,7 +3,7 @@ tags={
 	"Gameplay"
 }
 name="Rise of Nations"
-picture="thumbnail.png"
+picture="Rise_of_Nations.gif"
 replace_path="history/countries"
 replace_path="history/states"
 replace_path="history/units"
