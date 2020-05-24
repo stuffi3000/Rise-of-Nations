@@ -36,6 +36,10 @@ country_event = {
 			}			
 			hidden_effect = {			
 			inherit_technology = GER
+			add_state_core = 110
+			add_state_core = 142
+			add_state_core = 143
+			add_state_core = 144
 			add_state_core = 1010
 			add_state_core = 1011
 			add_state_core = 1012
@@ -912,7 +916,6 @@ country_event = {
 				set_autonomy = { target = PGG autonomy_state = autonomy_military_administration_ger }
 				hidden_effect = { 
 				set_country_flag = PGG_1	
-				country_event = { days = 3 id = BP_germany.101 } 
 				}	
 			}		
 			hidden_effect = {
@@ -962,6 +965,7 @@ country_event = {
 		}
 		GER = {
 			set_autonomy = { target = RPD autonomy_state = autonomy_satellite }
+			transfer_state = 804
 		}		
 	}
 	option = { #No need
@@ -1993,17 +1997,34 @@ country_event = {
 	option = { #Create RP Scandinavia
 		name = BP_germany.301.a
 		ai_chance = { factor = 70 }
-
-		GER = { annex_country = { target = RKN } } 
 		
-		RKN = { 
+		every_state = { limit = { is_core_of = SWE } add_core_of = RPS }
+		every_state = { limit = { is_core_of = NOR } add_core_of = RPS }
+		every_state = { limit = { is_core_of = DEN } add_core_of = RPS }
+
+			if = { 
+				limit = { RKN = { exists = yes } }
+				GER = { annex_country = { target = RKN } }
+			}
+			
+			if = { 
+				limit = { RKS = { exists = yes } }
+				GER = { annex_country = { target = RKS } }
+			}
+			
+			if = { 
+				limit = { RPD = { exists = yes } }
+				GER = { annex_country = { target = RPD } }
+			}
+		
+		RPS = { 
 			if = { 
 				limit = { SWE = { exists = no } }
 				GER = { release = SWE }
 			}	
 			SWE = {
 				every_unit_leader = {
-					set_nationality = RKN
+					set_nationality = RPS
 				}
 			}
 			annex_country = { target = SWE transfer_troops = yes }		
@@ -2014,7 +2035,7 @@ country_event = {
 			}
 			DEN = {
 				every_unit_leader = {
-					set_nationality = RKN
+					set_nationality = RPS
 				}
 			}
 			annex_country = { target = DEN transfer_troops = yes }		
@@ -2024,43 +2045,21 @@ country_event = {
 			}	
 			NOR = {
 				every_unit_leader = {
-					set_nationality = RKN
+					set_nationality = RPS
 				}
 			}
 			annex_country = { target = NOR transfer_troops = yes }		
-		
-			set_cosmetic_tag = SCA
 
 			create_country_leader = {
 				name = "Curt von Gottberg"
-				desc = ""
 				picture = "gfx/leaders/GER/Portrait_Germany_Curt_von_Gottberg.dds"
 				expire = "1965.1.1"
-				ideology = nazism
-				traits = {
-
-				}				
+				ideology = nazism				
 			}
 			
-			99 = { add_core_of = RKN }
-			37 = { add_core_of = RKN }
-			138 = { add_core_of = RKN }
-			139 = { add_core_of = RKN }
-			124 = { add_core_of = RKN }
-			140 = { add_core_of = RKN }
-			141 = { add_core_of = RKN }
-			38 = { add_core_of = RKN }
-			110 = { add_core_of = RKN }
-			142 = { add_core_of = RKN }
-			143 = { add_core_of = RKN }
-			666 = { add_core_of = RKN }
-			144 = { add_core_of = RKN }
-			337 = { add_core_of = RKN }
-			100 = { add_core_of = RKN }
-			101 = { add_core_of = RKN }
-			
 			GER = {
-				set_autonomy = { target = RKN autonomy_state = autonomy_reichsprotectorate }
+				set_autonomy = { target = RPS autonomy_state = autonomy_reichsprotectorate }
+				transfer_state = 804
 			}
 		}
 	
@@ -2068,6 +2067,21 @@ country_event = {
 	option = { #Create puppets Denmark, Norway and Sweden
 		name = BP_germany.301.b
 		ai_chance = { factor = 10 }
+		
+			if = { 
+				limit = { RKN = { exists = yes } }
+				GER = { annex_country = { target = RKN } }
+			}
+			
+			if = { 
+				limit = { RKS = { exists = yes } }
+				GER = { annex_country = { target = RKS } }
+			}
+			
+			if = { 
+				limit = { RPD = { exists = yes } }
+				GER = { annex_country = { target = RPD } }
+			}
 		
 		if = { 
 			limit = { SWE = { exists = no } }
@@ -2117,17 +2131,22 @@ country_event = {
 		}	
 		if = { 
 			limit = { NOR = { exists = no } }
-			GER = { 
-				annex_country = { target = RKN }			
-				release = NOR
-				set_autonomy = { target = NOR autonomy_state = autonomy_satellite }				
-			}
+			GER = { release = NOR }
+		}
+		GER = {
+			set_autonomy = { target = NOR autonomy_state = autonomy_satellite }
+		}
 			NOR = {
 
-				set_state_controller = 110
-				set_state_controller = 142
-				set_state_controller = 143
-				set_state_controller = 144			
+			transfer_state = 110
+			transfer_state = 142
+			transfer_state = 143
+			transfer_state = 144
+			transfer_state = 1010
+			transfer_state = 1011
+			transfer_state = 1012
+			transfer_state = 1013
+			transfer_state = 1014		
 			
 				set_cosmetic_tag = NOR_Quisling
 				create_country_leader = {
@@ -2141,53 +2160,11 @@ country_event = {
 					}				
 				}			
 			}			
-		}			
-		if = { 
-			limit = { 
-				NOR = { 
-					exists = yes 
-					is_in_faction_with = ENG
-				} 
-			}
-			GER = { annex_country = { target = RKN } 
-				hidden_effect = {
-					NOR = {
-						set_state_controller = 110
-						set_state_controller = 142
-						set_state_controller = 143
-						set_state_controller = 144
-					}
-				}
-			}
-			NOR = {
-				start_civil_war = { ideology = fascism size = 1 }
-			}
-			random_country = {
-				limit= {
-					tag = NOR
-					has_government = fascism
-				}
-				transfer_state = 110
-				transfer_state = 142
-				transfer_state = 143
-				transfer_state = 144
-				GER = {
-					puppet = PREV
-					set_autonomy = { target = PREV autonomy_state = autonomy_satellite }
-				}
-				set_cosmetic_tag = NOR_Quisling
-				create_country_leader = {
-					name = "Vidkun Quisling"
-					desc = ""
-					picture = "gfx/leaders/GER/Portrait_Germany_Vidkun_Quisling.dds"
-					expire = "1965.1.1"
-					ideology = nazism
-					traits = {
-
-					}				
-				}	
-			}		
-		}
+					
+		
+		GER = { transfer_state = 804 }
+		
+		
 	}	
 	option = { #Create puppet Sweden
 		name = BP_germany.301.c
@@ -2229,37 +2206,20 @@ country_event = {
 			GER = { 
 				has_country_flag = ger_demand_submission
 				has_country_flag = swe_say_no2
+				NOT = { country_exists = RKS }
 			} 
 		}			
 		ai_chance = { factor = 10 }
-
-		RKS = {			
-			set_state_controller = 138		
-			set_state_controller = 139			
-			set_state_controller = 140	
-			set_state_controller = 141			
-			set_state_controller = 38
-			set_state_controller = 666
-			set_state_controller = 124			
-			add_state_claim = 138
-			add_state_claim = 139
-			add_state_claim = 140
-			add_state_claim = 141
-			add_state_claim = 38
-			add_state_claim = 666
-			add_state_claim = 124			
-			set_capital = 141
-			
-			create_country_leader = {
-				name = "Curt von Gottberg"
-				desc = ""
-				picture = "gfx/leaders/GER/Portrait_Germany_Curt_von_Gottberg.dds"
-				expire = "1965.1.1"
-				ideology = nazism
-				traits = {
-					reichskommissar
-				}				
+		
+		if = { 
+				limit = { SWE = { exists = yes } }
+				RKS = { annex_country = { target = SWE } }
 			}
+		
+		every_state = { limit = { is_core_of = SWE } add_core_of = RKS }
+		every_state = { limit = { is_core_of = SWE is_controlled_by = GER } RKS = { transfer_state = PREV } }
+		
+		RKS = {						
 			GER = {
 				puppet = PREV
 				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
@@ -2591,6 +2551,19 @@ country_event = {
 				transfer_state = 349 #Sivas
 				transfer_state = 350 #Malatya
 				transfer_state = 352 #Van
+				transfer_state = 1001
+				transfer_state = 955
+				transfer_state = 959
+				transfer_state = 960
+				transfer_state = 961
+				transfer_state = 877
+				transfer_state = 950
+				transfer_state = 951
+				transfer_state = 953
+				transfer_state = 954
+				transfer_state = 956
+				transfer_state = 957
+				transfer_state = 958
 				
 				set_cosmetic_tag =  TUR_NAZI
 			}
@@ -4042,4 +4015,42 @@ country_event = {
 		add_political_power = 10
         add_stability = 0.05
 	}
+}
+
+# Reichskommissariat Sweden
+country_event = {
+	id = BP_germany.700
+	title = BP_germany.700.t
+	desc = BP_germany.700.d
+	picture = GFX_report_event_rk_sweden
+	
+	fire_only_once = yes
+	
+	is_triggered_only = yes
+	
+	option = { # Answer
+		name = BP_germany.700.a
+		
+		if = { 
+				limit = { SWE = { exists = yes } }
+				RKS = { annex_country = { target = SWE } }
+			}
+		
+		every_state = { limit = { is_core_of = SWE } add_core_of = RKS }
+		every_state = { limit = { is_core_of = SWE is_controlled_by = GER } RKS = { transfer_state = PREV } }
+		
+		RKS = {						
+			GER = {
+				puppet = PREV
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}			
+		}
+	
+	}
+	
+	option = { #No need
+		name = BP_germany.700.b
+		ai_chance = { factor = 0 }		 
+	}
+	
 }
