@@ -1,0 +1,379 @@
+
+add_namespace = chinese_empire
+
+	country_event = {
+		id = chinese_empire.1
+		title = chinese_empire.1.t
+		desc = chinese_empire.1.d
+		
+		fire_only_once = yes
+		trigger = {
+			date > 1900.1.1
+			date < 1900.2.1
+			tag = QIN
+		}
+		
+		option = { #Anti Western alliance
+		name = chinese_empire.1.a
+		ai_chance = { base = 1 }
+		set_country_flag = ally_the_boxer
+		
+		}
+		
+		option = { #Crush the boxer revolt
+		name = chinese_empire.1.b
+		ai_chance = {base = 0}
+		}
+		
+	
+	}
+	country_event = {
+		id = chinese_empire.2
+		title = chinese_empire.2.t
+		desc = chinese_empire.2.d
+		
+		fire_only_once = yes
+		
+		trigger = {
+			tag = QIN
+			date > 1900.6.21
+			date < 1900.12.1
+			has_country_flag = ally_the_boxer
+		
+		}
+		
+		option = {
+			name = chinese_empire.2.a
+			ai_chance = {factor = 1}
+			QIN = {
+				declare_war_on = {
+					target = FRA
+					type = take_core_state
+				}
+				declare_war_on = {
+					target = ENG
+					type = take_core_state
+				}
+				declare_war_on = {
+					target = GER
+					type = take_core_state
+				}
+			}
+   
+		}
+	}
+	country_event = {
+		id = chinese_empire.3
+		title = chinese_empire.3.t
+		desc = chinese_empire.3.d
+		
+		fire_only_once = yes
+		
+		trigger = {
+			OR ={
+				AND = {
+					has_country_flag = ally_the_boxer
+					tag = QIN
+					date > 1901.9.7
+					date < 1901.12.1
+					NOT = {has_country_flag = civil_war}
+				}
+				AND = {
+					QIN = {surrender_progress > 0.3}
+					has_country_flag = ally_the_boxer 
+					NOT = {has_country_flag = civil_war}
+				}
+			}
+		
+		}
+		
+		option = { #propose peace
+			name = chinese_empire.3.a
+			ai_chance = {base = 1000}
+			every_country = {
+				limit = { has_war_with = QIN}
+				country_event = chinese_empire.4
+				add_manpower = 100
+				
+			}
+			clr_country_flag = ally_the_boxer
+			CHI = {country_event = chinese_empire.9}
+			
+		}
+		option = {	#keep fighting
+			name = chinese_empire.3.b
+			set_country_flag = refused_peace
+		
+		}
+	
+	}
+	
+	country_event = {
+		id = chinese_empire.4
+		title = chinese_empire.4.t
+		desc = chinese_empire.4.d
+		
+		fire_only_once = no
+		
+		is_triggered_only = yes
+		
+		option = {	# accept chinese peace
+			name = chinese_empire.4.a
+			ai_chance = {base = 10000}
+			white_peace = QIN
+			
+		}
+		option = {	#refuse chinese peace
+			name = chinese_empire.4.b
+		}
+	}
+	
+	country_event = { #Bitter peace
+		id = chinese_empire.5
+		title = chinese_empire.5.t
+		desc = chinese_empire.5.d
+		
+		fire_only_once = yes
+		
+		trigger = { 
+			has_country_flag = ally_the_boxer
+			has_country_flag = refused_peace
+			QIN = {surrender_progress > 0.6}
+
+		}
+		
+		option = {	#no hopes left...
+			name = chinese_empire.5.a
+			
+			every_country = {
+				limit = {
+					has_war_with = QIN
+				}
+				white_peace = QIN
+			
+			}
+			every_state = { 
+				limit = { 
+					is_owned_by = QIN  
+					has_state_flag = FRA_influence }
+				FRA = { transfer_state = PREV }
+			}
+			every_state = { 
+				limit = { 
+					is_owned_by = QIN  
+					has_state_flag = ENG_influence }
+				RAJ = { transfer_state = PREV }
+			}
+			every_state = { 
+				limit = { 
+					is_owned_by = QIN  
+					has_state_flag = JAP_influence }
+				JAP = { transfer_state = PREV }
+			}
+			every_state = { 
+				limit = { 
+					is_owned_by = QIN  
+					has_state_flag = GER_influence }
+				GER = { transfer_state = PREV }
+			}
+			every_state = { 
+				limit = { 
+					is_owned_by = QIN  
+					has_state_flag = RUE_influence }
+				RUE = { transfer_state = PREV }
+			}
+			QIN = {set_country_flag = splitted}
+			QIN = {release = MON}
+			QIN = {release = SIK}
+			QIN = {release = MAN}
+			QIN = {release = MEN}
+			QIN = {release = SHX}
+			QIN = {release = XSM}
+			XSM = {transfer_state = 752}
+			QIN = {
+				set_variable = {
+					var = QIN_civilwar_support
+					value = 0
+				}
+				set_variable = {
+					var = QIN_opposition_support
+					value = 100
+				}
+				set_variable = {
+					var = num_smuggled_weapons
+					value = 0
+				}
+				
+			}
+			
+		}
+	}
+	country_event = {
+		id = chinese_empire.6
+		title = chinese_empire.6.t
+		desc = chinese_empire.6.d
+		
+		fire_only_once = yes
+		
+		trigger = {
+			NOT = {has_country_flag = civil_war}
+			has_country_flag = ally_the_boxer
+			has_country_flag = splitted
+			date > 1904.2.3
+			date < 1904.6.6
+		}
+		option = { #republic path
+			name = chinese_empire.6.a
+			ai_chance = { factor = 10}
+			hidden_effect = {
+				
+				CHI = {
+					add_state_core = 622
+					add_state_core = 744
+					add_state_core = 607
+					add_state_core = 1030
+					add_state_core = 1031
+				
+				}
+				QIN = {release = CHI }
+				transfer_units_fraction= {
+					target = CHI
+					size = QIN_opposition_support
+					stockpile_ratio = QIN_opposition_support
+					army_ratio = QIN_opposition_support
+					navy_ratio = QIN_opposition_support
+					air_ratio = QIN_opposition_support
+			
+				}
+				QIN = {
+					add_state_core = 622
+					add_state_core = 744
+					add_state_core = 607
+					add_state_core = 1030
+					add_state_core = 1031
+				}
+				declare_war_on = {
+					target = CHI
+					type = civil_war 
+					
+				}
+				every_state = { 
+					limit = { 
+						is_owned_by = QIN
+					}
+					add_core_of = CHI
+				}
+		
+			
+				set_country_flag = civil_war
+				
+				send_equipment = {
+					equipment = infantry_equipment
+					amount = num_smuggled_weapons
+					target = CHI
+				}
+				
+			}
+			CHI = { change_tag_from = QIN }
+			CHI = {add_ideas = CHI_civilwar}
+			QIN = {add_ideas = CHI_civilwar}
+		}
+		option = {
+			name = chinese_empire.6.b
+			hidden_effect = {
+				
+				CHI = {
+					add_state_core = 622
+					add_state_core = 744
+					add_state_core = 607
+					add_state_core = 1030
+					add_state_core = 1031
+				
+				}
+				QIN = {release = CHI }
+				transfer_units_fraction= {
+					target = CHI
+					size = QIN_opposition_support
+					stockpile_ratio = QIN_opposition_support
+					army_ratio = QIN_opposition_support
+					navy_ratio = QIN_opposition_support
+					air_ratio = QIN_opposition_support
+			
+				}
+				QIN = {
+					add_state_core = 622
+					add_state_core = 744
+					add_state_core = 607
+					add_state_core = 1030
+					add_state_core = 1031
+				}
+				declare_war_on = {
+					target = CHI
+					type = civil_war 
+					
+				}
+				every_state = { 
+					limit = { 
+						is_owned_by = QIN
+					}
+					add_core_of = CHI
+				}
+		
+			
+				set_country_flag = civil_war
+				
+				send_equipment = {
+					equipment = infantry_equipment
+					amount = num_smuggled_weapons
+					target = CHI
+				}
+				
+			}
+			CHI = {add_ideas = CHI_civilwar}
+			QIN = {add_ideas = CHI_civilwar}
+		
+		
+		}
+	}
+	country_event = {
+		trigger = {
+			QIN = {surrender_progress > 0.97}
+		}
+		id = chinese_empire.9
+		title = CHI_victory
+		
+		immediate = {
+			CHI = {
+				white_peace = {
+					target = QIN
+					message = 
+				}
+			}
+			
+			QIN = { release = CHI }
+			
+		
+		}
+	}
+	country_event = {
+		trigger = {
+			QIN = {surrender_progress > 0.97}
+		}
+		id = chinese_empire.10
+		title = QIN_victory
+		immediate = {
+			QIN = {
+				white_peace = {
+					target = CHI
+					message = 
+				}
+			}
+			
+			CHI = { release = QIN }
+			
+		
+		}
+	
+	
+	
+	}
