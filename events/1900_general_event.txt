@@ -27,7 +27,7 @@ add_namespace = chinese_empire
 		
 	
 	}
-	country_event = {
+	country_event = { #challenge the Bund
 		id = chinese_empire.2
 		title = chinese_empire.2.t
 		desc = chinese_empire.2.d
@@ -139,7 +139,7 @@ add_namespace = chinese_empire
 			}
 		}
 	}
-	country_event = {
+	country_event = { #Current situation
 		id = chinese_empire.3
 		title = chinese_empire.3.t
 		desc = chinese_empire.3.d
@@ -154,11 +154,14 @@ add_namespace = chinese_empire
 					date > 1901.9.7
 					date < 1901.12.1
 					NOT = {has_country_flag = civil_war}
+					NOT = {has_country_flag = revolution_started}
 				}
 				AND = {
+					tag = QIN
 					QIN = {surrender_progress > 0.3}
 					has_country_flag = ally_the_boxer 
 					NOT = {has_country_flag = civil_war}
+					NOT = {has_country_flag = revolution_started}
 				}
 			}
 		
@@ -256,7 +259,7 @@ add_namespace = chinese_empire
 	
 	}
 	
-	country_event = {
+	country_event = { # peace proposal
 		id = chinese_empire.4
 		title = chinese_empire.4.t
 		desc = chinese_empire.4.d
@@ -430,7 +433,7 @@ add_namespace = chinese_empire
 			
 		}
 	}
-	country_event = {
+	country_event = { #chinese civil war in case of BP
 		id = chinese_empire.6
 		title = chinese_empire.6.t
 		desc = chinese_empire.6.d
@@ -557,7 +560,7 @@ add_namespace = chinese_empire
 		
 		}
 	}
-	country_event = {
+	country_event = { #CHI victory
 		
 		id = chinese_empire.9
 		title = chinese_empire.9.t
@@ -588,7 +591,7 @@ add_namespace = chinese_empire
 		
 		}
 	}
-	country_event = {
+	country_event = { #QIN victory
 		id = chinese_empire.10
 		title = chinese_empire.10.t
 		desc = chinese_empire.10.d
@@ -620,7 +623,7 @@ add_namespace = chinese_empire
 	
 	
 	}
-	country_event = {
+	country_event = { #support rebellion
 		id = chinese_empire.11
 		desc = chinese_empire.11.d
 		title = chinese_empire.11.t
@@ -642,7 +645,7 @@ add_namespace = chinese_empire
 		name = chinese_empire.11.a
 		set_country_flag = support_uprising
 		QIN = {
-			set_variable = {
+			add_to_variable = {
 				var = uprising_strengh
 				value = 0.05
 		
@@ -651,18 +654,13 @@ add_namespace = chinese_empire
 	}
 	option = {
 		name = chinese_empire.11.b
-		QIN = {
-			set_variable = {
-				var = uprising_strengh	
-				value = 0
-			}
-		}
-	}
-
 	
 	}
+}
 	
-	country_event = {
+	
+	
+	country_event = { #uprising Rumors
 		id = chinese_empire.12
 		desc = chinese_empire.12.d
 		title = chinese_empire.12.t
@@ -684,7 +682,6 @@ add_namespace = chinese_empire
 			value = 0.5
 		
 		}
-		
 	
 	}
 	option = {
@@ -696,8 +693,192 @@ add_namespace = chinese_empire
 		QIN = {set_country_flag = side_with_CHI}
 	}
 	
+}
+
+	country_event = { #in case regular war :QIN wins
+		id = chinese_empire.13
+		title = chinese_empire.13.t
+		desc = chinese_empire.13.d
+		trigger = {
+			tag = QIN
+			QIN = {has_country_flag = revolution_started}
+			CHI = {surrender_progress > 0.98}
+		
+		}
+	
+	
+	immediate = {
+		QIN = {
+			annex_country = {
+				target = CHI}
+		}
+		QIN = {clr_country_flag = revolution_started}
+	
+	}
+	option = {
+		#give some autonomy
 		
 	
+	}
+	option = {
+		#no, the empire should keep everything
 	
 	
+	}
 }
+	
+	country_event = { #in case regular war :CHI wins
+		id = chinese_empire.14
+		title = chinese_empire.14.t
+		desc = chinese_empire.14.d
+		fire_only_once = yes
+		
+		trigger = {
+			tag = CHI
+			QIN = {has_country_flag = revolution_started}
+			QIN = {surrender_progress > 0.8}
+			QIN = {has_country_flag = revolution_started}
+		}
+		
+		immediate = {
+			CHI = {
+				annex_country = {
+					target = QIN
+				}
+			}
+			QIN = {clr_country_flag = revolution_started} 
+		}
+		option = {
+			# Proclaim the republic
+			
+		}
+		option = {
+			#we need to find another system
+		}
+	}
+	country_event = { #Officer proposes help
+		id = chinese_empire.15
+		title = chinese_empire.15.t
+		desc = chinese_empire.15.d
+		fire_only_once = yes
+		trigger = {
+			tag = CHI
+			QIN = {has_country_flag = revolution_started}
+			QIN = {surrender_progress > 0.05}
+		
+		}
+		immediate = { 
+		QIN = {
+			country_event = {
+				id = chinese_empire.16 days = 10
+			}
+		}
+		option = {	#ask for help
+			QIN = {
+				transfer_units_fraction ={
+					target = CHI
+					size = 0.2
+					stockpile_ratio = 0.2
+					army_ratio = 0.2
+					navy_ratio = 0
+					air_ratio = 0
+				}
+				
+			}
+			CHI = {
+				create_country_leader = {
+					name = "Yuan Shikai"
+					picture = "Portrait_China_Yuan_Shikai.dds"
+					expire = "1965.1.1"
+					ideology = despotism
+					
+	
+				}
+				
+				
+			}
+			QIN = {
+				country_event = {
+					id = chinese_empire.14 days = 30
+				}
+			}
+			ai_chance = { base = 10 }
+			CHI = {
+			
+				country_event = {chinese_empire.17 days = 40}
+			}
+		}
+		option = { #renounce help
+		
+		}
+	}
+	country_event = { #MON and TIB indep
+		id = chinese_empire.16
+		title = chinese_empire.16.t
+		desc = chinese_empire.16.d
+		is_triggered_only = yes
+		
+		immediate = {
+			QIN = {release = MON}
+			QIN = {release = TIB}
+			QIN = {
+				transfer_units_fraction ={
+					target = TIB
+					size = 0.2
+					stockpile_ratio = 0.02
+					army_ratio = 0.2
+					navy_ratio = 0
+					air_ratio = 0
+				}
+			}
+			QIN = {
+				transfer_units_fraction ={
+					target = MON
+					size = 0.2
+					stockpile_ratio = 0.02
+					army_ratio = 0.2
+					navy_ratio = 0
+					air_ratio = 0
+				}
+			}
+			CHI = {
+				country_event = { 
+					id = chinese_empire.14
+					days = 5
+				}
+			}
+			
+		}
+	}
+	country_event = { #Dictatorship 
+		id = chinese_empire.17
+		title = chinese_empire.17.t
+		desc = chinese_empire.17.d
+		is_triggered_only = yes
+	
+		option = {
+			#cecede
+			ai_chance = { base = 10 }
+			country_event = {id = chinese_empire.18 days = 10}
+		}
+		option = {
+			#keep the system
+		}
+	
+	}
+	country_event = { #Dictator's death
+		id = chinese_empire.18
+		title = chinese_empire.18.t
+		desc = chinese_empire.18.d
+		is_triggered_only = yes
+		
+		immediate = {
+			CHI = {kill_country_leader = yes}
+			
+		}
+		
+		option = {}
+	
+	}
+	
+	
