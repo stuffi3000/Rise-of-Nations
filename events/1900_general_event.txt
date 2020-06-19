@@ -699,28 +699,38 @@ add_namespace = chinese_empire
 		id = chinese_empire.13
 		title = chinese_empire.13.t
 		desc = chinese_empire.13.d
+		fire_only_once = yes
 		trigger = {
 			tag = QIN
 			QIN = {has_country_flag = revolution_started}
 			CHI = {surrender_progress > 0.98}
+			NOT = {CHI = {has_country_flag = cecede}}
+			country_exists = QIN
+			country_exists = CHI
 		
 		}
 	
 	
 	immediate = {
-		QIN = {
-			annex_country = {
-				target = CHI}
+		hidden_effect = {
+			QIN = {
+				annex_country = {
+					target = CHI
+				}
+			}
 		}
 		QIN = {clr_country_flag = revolution_started}
 	
 	}
 	option = {
+		name = chinese_empire.13.a
 		#give some autonomy
+		ai_chance = {base = 1000}
 		
 	
 	}
 	option = {
+		name = chinese_empire.13.b
 		#no, the empire should keep everything
 	
 	
@@ -738,22 +748,32 @@ add_namespace = chinese_empire
 			QIN = {has_country_flag = revolution_started}
 			QIN = {surrender_progress > 0.8}
 			QIN = {has_country_flag = revolution_started}
+			NOT = {CHI = {has_country_flag = cecede}}
+			country_exists = CHI
+			country_exists = QIN
 		}
 		
 		immediate = {
-			CHI = {
-				annex_country = {
-					target = QIN
+			QIN = {clr_country_flag = revolution_started} 
+			hidden_effect = {
+				CHI = {
+					annex_country = {
+						target = QIN
+					}
+				}
+				every_state = {
+					limit = {
+						is_owned_by = CHI
+					}
+					add_core_of = CHI
 				}
 			}
-			QIN = {clr_country_flag = revolution_started} 
 		}
+		
+		
 		option = {
+		name = chinese_empire.14.a
 			# Proclaim the republic
-			
-		}
-		option = {
-			#we need to find another system
 		}
 	}
 	country_event = { #Officer proposes help
@@ -765,15 +785,22 @@ add_namespace = chinese_empire
 			tag = CHI
 			QIN = {has_country_flag = revolution_started}
 			QIN = {surrender_progress > 0.05}
+			NOT = {CHI = {has_country_flag = cecede}}
 		
 		}
 		immediate = { 
-		QIN = {
-			country_event = {
-				id = chinese_empire.16 days = 10
+			hidden_effect = {
+				QIN = {
+					country_event = {
+						id = chinese_empire.16 days = 10
+					}
+				}
 			}
 		}
+		
 		option = {	#ask for help
+			ai_chance = {base = 1000}
+			name = chinese_empire.15.a
 			QIN = {
 				transfer_units_fraction ={
 					target = CHI
@@ -790,14 +817,26 @@ add_namespace = chinese_empire
 					name = "Yuan Shikai"
 					picture = "Portrait_China_Yuan_Shikai.dds"
 					expire = "1965.1.1"
-					ideology = despotism
+					ideology = nazism
 					
 	
 				}
 				
 				
 			}
-			QIN = {
+			CHI = {
+				create_country_leader = {
+					name = "Yuan Shikai"
+					picture = "Portrait_China_Yuan_Shikai.dds"
+					expire = "1965.1.1"
+					ideology = chinese_nationalism
+					
+	
+				}
+				
+				
+			}
+			CHI = {
 				country_event = {
 					id = chinese_empire.14 days = 30
 				}
@@ -805,7 +844,7 @@ add_namespace = chinese_empire
 			ai_chance = { base = 10 }
 			CHI = {
 			
-				country_event = {chinese_empire.17 days = 40}
+				country_event = { id = chinese_empire.17 days = 40}
 			}
 		}
 		option = { #renounce help
@@ -818,36 +857,43 @@ add_namespace = chinese_empire
 		desc = chinese_empire.16.d
 		is_triggered_only = yes
 		
+		
 		immediate = {
-			QIN = {release = MON}
-			QIN = {release = TIB}
-			QIN = {
-				transfer_units_fraction ={
-					target = TIB
-					size = 0.2
-					stockpile_ratio = 0.02
-					army_ratio = 0.2
-					navy_ratio = 0
-					air_ratio = 0
+			hidden_effect = {
+				QIN = {release = MON}
+				QIN = {release = TIB}
+				QIN = {
+					transfer_units_fraction ={
+						target = TIB
+						size = 0.2
+						stockpile_ratio = 0.02
+						army_ratio = 0.2
+						navy_ratio = 0
+						air_ratio = 0
+					}
 				}
-			}
-			QIN = {
-				transfer_units_fraction ={
-					target = MON
-					size = 0.2
-					stockpile_ratio = 0.02
-					army_ratio = 0.2
-					navy_ratio = 0
-					air_ratio = 0
+				QIN = {
+					transfer_units_fraction ={
+						target = MON
+						size = 0.2
+						stockpile_ratio = 0.02
+						army_ratio = 0.2
+						navy_ratio = 0
+						air_ratio = 0
+					}
 				}
-			}
-			CHI = {
-				country_event = { 
-					id = chinese_empire.14
-					days = 5
+			
+				CHI = {
+					country_event = { 
+						id = chinese_empire.14
+						days = 5
+					}
 				}
 			}
 			
+		}
+		option = {
+			name = chinese_empire.16.a
 		}
 	}
 	country_event = { #Dictatorship 
@@ -856,28 +902,82 @@ add_namespace = chinese_empire
 		desc = chinese_empire.17.d
 		is_triggered_only = yes
 	
+		immediate = {
+			hidden_effect = {
+			CHI = {set_country_flag = cecede}
+			start_civil_war = {
+				ruling_party = fascism
+				ideology = fascism
+				size = 0.3
+				capital = 608
+				states = { 
+					619 617 618 287 759 760 604 616 755 756 283 753 754 761 714 715 717 1024 1022 1023 716 1025 1026 328 610 612 611 608 609 621 614 622 746 1029 607 744 595 
+				}
+   
+			}
+			CHI = {retire_country_leader = yes}
+			country_event = {id = chinese_empire.18 days = 100}
+			}
+		}
+	
 		option = {
 			#cecede
 			ai_chance = { base = 10 }
-			country_event = {id = chinese_empire.18 days = 10}
+			#country_event = {id = chinese_empire.18 days = 20}
 		}
-		option = {
+		#option = {
+		#	name = chinese_empire.17.a
 			#keep the system
-		}
+		#}
 	
 	}
-	country_event = { #Dictator's death
+	country_event = { #Dictator's death and rise of Warlords
 		id = chinese_empire.18
 		title = chinese_empire.18.t
 		desc = chinese_empire.18.d
 		is_triggered_only = yes
 		
 		immediate = {
-			CHI = {kill_country_leader = yes}
+			hidden_effect = {
+				CHI = {retire_country_leader = yes}
+				every_country = {
+					limit = {
+						has_war_with = CHI
+					}
+					CHI = {annex_country = {target = PREV}}
+				}
+				593 = {add_core_of = GXC}
+				602 = {add_core_of = GXC}
+				release = YUN
+				release = XSM
+				release = SIK
+				release = FEN
+				release = ANH
+				release = GUI
+				release = SHX
+				release = GXC
+				release = ZHI
+				release = TAN
+			#CHI = {
+			#	create_country_leader = {
+			#		name = "Chiang Kai Shek"
+			#		picture = "Portrait_China_Chiang_Kai_Shek.dds"
+			#		expire = "1965.1.1"
+			#		ideology = despotism
+			#		
+	#
+	#			}
+	#			
+	#			
+	#		}
+				CHI = {set_capital = 592}
 			
+			
+			}
 		}
-		
-		option = {}
+		option = {
+			name = chinese_empire.18.a
+		}
 	
 	}
 	
