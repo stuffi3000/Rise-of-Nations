@@ -82,7 +82,6 @@ EAI_upgrade_economy_law = {
 				if = {
 					limit = {
 						tag = USA
-						#has_completed_focus  = USA_limited_intervention
 						has_defensive_war = no
 					}
 					USA_congress_large_opposition = yes
@@ -102,7 +101,6 @@ EAI_upgrade_economy_law = {
 				if = {
 					limit = {
 						tag = USA
-						#has_completed_focus  = USA_limited_intervention
 						has_defensive_war = no
 					}
 					USA_congress_large_opposition = yes
@@ -115,6 +113,11 @@ EAI_upgrade_economy_law = {
 
 			else_if = { limit = { EAI_can_take_war_economy = yes } 
 
+				if = { limit = { has_idea = tot_economic_mobilisation }
+					set_temp_variable = { rec_pop_change = 3.0 }
+					EAI_calculate_mobilization_duration = yes
+				}
+           
                 add_ideas = war_economy
 
 				### on_add
@@ -122,7 +125,6 @@ EAI_upgrade_economy_law = {
 				if = {
 					limit = {
 						tag = USA
-						#has_completed_focus  = USA_limited_intervention
 						has_defensive_war = no
 					}
 					USA_congress_large_opposition = yes
@@ -142,7 +144,6 @@ EAI_upgrade_economy_law = {
 				if = {
 					limit = {
 						tag = USA
-						#has_completed_focus  = USA_limited_intervention
 						has_defensive_war = no
 					}
 					USA_congress_large_opposition = yes
@@ -190,12 +191,20 @@ EAI_upgrade_conscription_law = {
             
                 add_ideas = volunteer_only
 
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 0.5 }
+				EAI_calculate_mobilization_duration = yes
+
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: volunteer_only (script) mobilization time: [?rec_pop_change]" } 
             }
 
 			else_if = { limit = { EAI_can_take_limited_conscription = yes } 
                 
                 add_ideas = limited_conscription
+
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 1.0 }
+				EAI_calculate_mobilization_duration = yes
 
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: limited_conscription (script) mobilization time: [?rec_pop_change]" } 
             }
@@ -204,12 +213,20 @@ EAI_upgrade_conscription_law = {
            
                 add_ideas = extensive_conscription
 
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 2.5 }
+				EAI_calculate_mobilization_duration = yes
+
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: extensive_conscription (script) mobilization time: [?rec_pop_change]" } 
             }
 
 			else_if = { limit = { EAI_can_take_service_by_requirement = yes } 
             
                 add_ideas = service_by_requirement
+
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 5.0 }
+				EAI_calculate_mobilization_duration = yes
 
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: service_by_requirement (script) mobilization time: [?rec_pop_change]" } 
             }
@@ -218,12 +235,20 @@ EAI_upgrade_conscription_law = {
             
                 add_ideas = all_adults_serve
 
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 10.0 }
+				EAI_calculate_mobilization_duration = yes
+
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: all_adults_serve (script) mobilization time: [?rec_pop_change]" } 
             }
 
             else_if = { limit = { EAI_can_take_scraping_the_barrel = yes } 
             
                 add_ideas = scraping_the_barrel
+
+				# calculate the time it takes to mobilize this mp
+				set_temp_variable = { rec_pop_change = 5.0 }
+				EAI_calculate_mobilization_duration = yes
 
 				if = { limit = { has_country_flag = EAI_logging } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSCRIPTION LAW: scraping_the_barrel (script) mobilization time: [?rec_pop_change]" } 
             }
@@ -282,6 +307,41 @@ EAI_upgrade_trade_law = {
 
 			set_country_flag = { flag = EAI_trade_law_recently_changed value = 1 days = 365 } # limits the AI from changing trade law due to minor fluctuations
 		}
+	}
+}
+###
+
+EAI_calculate_mobilization_duration = {
+
+	# close enough to the actual value...
+	if = { limit = { has_war_support < 0.5 }
+
+		set_temp_variable = { t1 = has_war_support }
+		divide_temp_variable = { t1 = 0.5 }
+		set_temp_variable = { t2 = 0.666 }
+		multiply_temp_variable = { t1 = t2 }
+		add_to_temp_variable = { t1 = 0.333 }
+		multiply_temp_variable = { t1 = 9 }
+		round_temp_variable = t1
+		divide_temp_variable = { t1 = 1000 }
+	}
+	else = {
+
+		set_temp_variable = { t1 = has_war_support }
+		subtract_from_temp_variable = { t1 = 0.5 }
+		divide_temp_variable = { t1 = 0.5 }
+		multiply_temp_variable = { t1 = 0.333 }
+		add_to_temp_variable = { t1 = 1.0 }
+		multiply_temp_variable = { t1 = 9 }
+		# round_temp_variable = t1
+		divide_temp_variable = { t1 = 1000 }
+	}
+
+	divide_temp_variable = { rec_pop_change = t1 }
+
+	meta_effect = { # wait for mobilization before upgrading 
+		text = { set_country_flag = { flag = EAI_mobilizing_manpower value = 1 days = [x] } }
+		x = "[?rec_pop_change|.0]"
 	}
 }
 
