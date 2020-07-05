@@ -2,30 +2,53 @@ GER_military_staff_decision_category = {
 	
 	GER_military_planning_timer = {
 		
-		allowed = {
-			tag = GER
-			
+		available = {
+			tag = GER	
 		}
 		visible = {
-			always = yes
-			
+			NOT = {has_country_flag = military_preparation_finished}	
 		}
-		days_remove = 100
+		days_remove = 10
 		remove_effect = {
 			set_country_flag = military_preparation_finished
 		}
+		fire_only_once = yes
 		
 	
 	}
 	
 	GER_schlieffen_plan_BEL = {
-		allowed = {
+		custom_cost_trigger = {
+			if = { limit = {GER = {is_ai = no}}
+				command_power > 10
+			}
+		}
+		custom_cost_text = command_power_more_than_10
+		available = {
 			tag = GER
+			command_power > 10
 		}
 		visible = {
 			has_country_flag = military_preparation_finished
 		}
+		days_remove = 365
+		targeted_modifier = {
+			tag = BEL
+			attack_bonus_against = 0.2
+		}
+		war_with_on_complete = BEL
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 1000
+				has_war_with = FRA
+			}
+		}
 		complete_effect = {
+			if = {
+				limit = {GER = {is_ai = no}}
+				add_command_power = -10
+			}
 			create_wargoal = {
 				target = BEL
 				type = annex_everything
@@ -35,17 +58,67 @@ GER_military_staff_decision_category = {
 	
 	}
 	GER_schlieffen_plan_HOL = {
-		allowed = {
+		available = {
 			tag = GER
+			command_power > 10
 		}
+		custom_cost_trigger = {
+			if = { limit = {GER = {is_ai = no}}
+				command_power > 10
+			}
+		}
+		custom_cost_text = command_power_more_than_10
 		visible = {
 			has_country_flag = military_preparation_finished
 		}
+		days_remove = 365
+		targeted_modifier = {
+			tag = HOL
+			attack_bonus_against = 0.2
+		}
+		war_with_on_complete = HOL
 		complete_effect = {
+			add_command_power = -10
 			create_wargoal = {
 				target = HOL
 				type = annex_everything
 			}
+		}
+	}
+	entrench = {
+		available = {
+			tag = GER
+			has_tech = trench_warfare
+			has_war_with = FRA
+		}
+		ai_will_do = {
+			base = 1000
+		}
+		days_re_enable = 100
+		days_remove = 15
+		remove_effect = {
+			if = {
+				limit = {tag = GER}
+				every_state = {
+					limit = {
+						any_neighbor_state = { is_controlled_by = FRA }
+						is_controlled_by = GER 
+					}
+					add_building_construction = {
+						type = trench
+						level = 1
+						instant_build = yes
+						province = {
+							all_provinces = yes
+							limit_to_border = yes
+						}
+					}
+					
+				
+				}	
+				
+			}
+		
 		}
 	}
 }
