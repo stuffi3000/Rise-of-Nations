@@ -1064,6 +1064,22 @@ news_event = {
 				is_in_faction_with = SOV
 			}
 		}
+		if = {
+			limit = {
+				original_tag = ENG
+				has_government = communism
+			}
+			create_country_leader = {
+				name = "Rajani Palme Dutt"
+				desc = "POLITICS_PALME_DUTT_DESC"
+				picture = "Portrait_Britain_Palme_Dutt.dds"
+				expire = "1965.1.1"
+				ideology = leninism
+				traits = {
+					comintern_workhorse
+				}
+			}
+		}
 	}
 	option = {
 		name = news.32.b
@@ -1636,7 +1652,6 @@ news_event = {
 	}
 }
 
-#btm
 # Trotsky Trigger (HIDDEN)
 news_event = {
 	id = news.50
@@ -1649,8 +1664,9 @@ news_event = {
 		country_exists = SOV
 		SOV = {
 			has_government = communism
-			NOT = { has_completed_focus = SOV_Trotskyite_Coup }
+			NOT = { has_country_flag = counter_purge }
 		}
+		NOT = { has_global_flag = flag_mexico_invited_trotsky_to_government } # This saves the Trotsky
 	}
 
 	mean_time_to_happen = {
@@ -1658,11 +1674,10 @@ news_event = {
 	}
 	
 	immediate = {
-		SOV = { news_event = { id = news.37 } }
-		#random_list = {
-		#	50 = { SOV = { news_event = { id = news.37 } } }
-		#	50 = { SOV = { news_event = { id = news.38 } } }
-		#}
+		random_list = {
+			50 = { SOV = { news_event = { id = news.37 } } }
+			50 = { SOV = { news_event = { id = news.38 } } }
+		}
 	}
 	
 	option = {
@@ -1695,7 +1710,13 @@ news_event = {
 	
 	immediate = {
 		random_list = {
-			70 = { USA = { news_event = { id = news.42 } } }
+			70 = {
+				modifier = {
+					factor = 0
+					has_global_flag = GER_air_safety_regulations_flag
+				}
+				USA = { news_event = { id = news.42 } }
+			}
 			30 = { USA = { news_event = { id = news.43 } } }
 		}
 	}
@@ -1712,7 +1733,36 @@ news_event = {
 	
 	fire_only_once = yes
 	
-	is_triggered_only = yes
+	trigger = {
+		country_exists = ENG
+		country_exists = GER
+		country_exists = SOV
+		GER = { 
+			has_war_with = ENG 
+			NOT = { has_war_with = SOV }
+			has_government = fascism
+			has_country_leader = { ruling_only = yes name = "Adolf Hitler" }
+		}
+		has_global_flag = fall_of_france
+		NOT = { has_global_flag = hindenburg_survives }
+		ENG = { # No Sea Lion
+			controls_state = 127
+			controls_state = 123
+			controls_state = 126
+			controls_state = 338
+			controls_state = 125
+			controls_state = 129
+			controls_state = 128
+			controls_state = 122
+			controls_state = 132
+			controls_state = 130
+			controls_state = 131
+			controls_state = 121
+			controls_state = 133
+			controls_state = 136
+			controls_state = 120
+		}
+	}
 	
 	mean_time_to_happen = {
 		days = 30
@@ -1743,7 +1793,35 @@ news_event = {
 	
 	fire_only_once = yes
 	
-	is_triggered_only = yes
+	trigger = {
+		country_exists = ENG
+		country_exists = GER
+		country_exists = SOV
+		GER = { 
+			has_war_with = ENG 
+			NOT = { has_war_with = SOV }
+			has_government = fascism
+		}
+		has_global_flag = fall_of_france
+		has_global_flag = hindenburg_survives
+		ENG = { # No Sea Lion
+			controls_state = 127
+			controls_state = 123
+			controls_state = 126
+			controls_state = 338
+			controls_state = 125
+			controls_state = 129
+			controls_state = 128
+			controls_state = 122
+			controls_state = 132
+			controls_state = 130
+			controls_state = 131
+			controls_state = 121
+			controls_state = 133
+			controls_state = 136
+			controls_state = 120
+		}
+	}
 	
 	mean_time_to_happen = {
 		days = 30
@@ -3473,7 +3551,7 @@ news_event = {
 	trigger = {
 		408 = { is_controlled_by = JAP }
 		408 = { is_owned_by = SOV }
-		JAP = { has_war_with = JAP }
+		JAP = { has_war_with = SOV }
 		NOT = { has_global_flag = fall_of_vladivostok }
 	}
 	
@@ -4330,6 +4408,7 @@ news_event = {
 	
 	immediate = {
 		set_global_flag = fall_of_berlin_sov
+		play_victory_parade_effect = yes
 	}
 	
 	mean_time_to_happen = {
@@ -4716,7 +4795,13 @@ news_event = {
 		}
 		118 = { is_owned_by = ENG }
 		NOT = {
-			SPR = { has_civil_war = yes }
+			OR = {
+				SPR = { has_civil_war = yes }
+				AND = {
+					has_global_flag = spanish_civil_war
+					NOT = { has_global_flag = scw_over }
+				}
+			}
 		}
 		NOT = { has_global_flag = fall_of_gibraltar_spa }
 	}
@@ -4899,6 +4984,26 @@ news_event = {
 				TAG = GER
 				TAG = SOV
 				is_in_faction_with = SOV
+			}
+		}
+		if = {
+			limit = {
+				original_tag = ENG
+				has_government = communism
+				has_country_leader = {
+					name = "Rajani Palme Dutt"
+					ruling_only = yes
+				}
+			}
+			create_country_leader = {
+				name = "Harry Pollitt"
+				desc = "POLITICS_HARRY_POLLITT_DESC"
+				picture = "portrait_eng_harry_pollitt.dds"
+				expire = "1965.1.1"
+				ideology = leninism
+				traits = {
+					staunch_stalinist
+				}
 			}
 		}
 	}
@@ -8362,7 +8467,7 @@ news_event = {
 	}
 
 	mean_time_to_happen = {
-		months = 160
+		months = 16
 	}
 
 	fire_only_once = yes
@@ -12734,6 +12839,158 @@ news_event = {
 		trigger = {
 			NOT = { is_in_faction_with = ENG }
 			NOT = { is_in_faction_with = GER }
+		}
+	}
+}
+news_event = { #Panay Incident - initial incident
+	id = news.334
+	title = news.334.t
+	desc = news.334.d
+	picture = GFX_news_event_panay_incident
+
+	trigger = {
+		NOT = { tag = USA }
+	}
+	
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = news.334.a
+		trigger = {
+			NOT = {
+				OR = {
+					TAG = JAP
+					TAG = ENG
+				}
+			}
+		}
+	}
+	option = {
+		name = news.334.b
+		trigger = { TAG = JAP }
+	}
+	option = {
+		name = news.334.c
+		trigger = { TAG = ENG }
+		ENG = {
+			add_opinion_modifier = { target = JAP modifier = panay_inc2_opinion_modifier }
+		}
+	}
+}
+
+news_event = { #Panay Incident - US declares war on Japan
+	id = news.335
+	title = news.335.t
+	desc = news.335.d
+	picture = GFX_news_event_usa_japan_at_war
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = news.335.a
+		trigger = {
+			NOT = {
+				OR = {
+					tag = USA
+					tag = JAP
+					AND = {
+						has_war_with = JAP
+						NOT = { has_war_with = USA }
+					}
+					AND = {
+						has_war_with = CHI
+						NOT = { has_war_with = JAP }
+					}
+				}
+			}
+		}
+	}
+	option = {
+		name = news.335.b
+		trigger = {
+			tag = USA
+		}
+	}
+	option = {
+		name = news.335.c
+		trigger = {
+			tag = JAP
+		}
+	}
+	option = {
+		name = news.335.e
+		trigger = {
+			has_war_with = JAP
+			NOT = { has_war_with = USA }
+			NOT = { tag = USA }
+		}
+	}
+	option = {
+		name = news.335.f
+		trigger = {
+			has_war_with = CHI
+			NOT = { has_war_with = JAP }
+			NOT = { tag = JAP }
+		}
+	}
+}
+
+# Mexico occupies Texas - Remember the Alamo
+news_event = {
+	id = news.336
+	title = news.336.title
+	desc = news.336.desc
+	picture = GFX_news_event_047
+	
+	major = yes
+	
+	trigger = {
+		375 = { is_fully_controlled_by = MEX }
+		MEX = { has_war_with = USA }
+		NOT = { has_global_flag = remember_the_alamo }
+	}
+	
+	immediate = {
+		set_global_flag = remember_the_alamo
+	}
+	
+	mean_time_to_happen = {
+		days = 2
+	}
+	
+	option = {
+		name = news.336.a
+		trigger = {
+			OR = {
+				TAG = MEX
+				is_in_faction_with = MEX
+			}
+		}
+	}
+	option = {
+		name = news.336.b
+		trigger = {
+			OR = {
+				TAG = USA
+				is_in_faction_with = USA
+			}
+		}
+	}
+	option = {
+		name = news.336.c
+		trigger = {
+			NOT = {
+				OR = {
+					TAG = MEX
+					is_in_faction_with = MEX
+					TAG = USA
+					is_in_faction_with = USA
+				}
+			}
 		}
 	}
 }
