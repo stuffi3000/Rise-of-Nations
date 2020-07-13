@@ -635,6 +635,21 @@ on_actions = {
 					clr_country_flag = league_of_nations_opinion_set_for_@ROOT
 				}
 			}
+
+			# Members guarantee the LON country
+			if = {
+				limit = {
+					has_country_flag = member_of_league_of_nations
+					NOT = { has_country_flag = league_of_nations_guarantee_set }
+					NOT = { tag = LON }
+				}
+				diplomatic_relation = {
+					country = LON
+					relation = guarantee
+					active = yes
+				}
+				set_country_flag = league_of_nations_guarantee_set
+			}
 			
 			# Set weekly threat change value
 			set_variable = { league_of_nations_threat_from_war_peace = 0 }
@@ -944,10 +959,6 @@ on_actions = {
 									tag = XSM
 									tag = SIK
 								}
-							}
-							OR = {
-								has_completed_focus = PRC_confrontation_with_the_warlords
-								has_completed_focus = CHI_subjugate_the_warlords
 							}
 							NOT = { has_country_flag = we_already_warlord_annexed_@FROM }
 						}
@@ -1410,6 +1421,67 @@ on_actions = {
 			set_country_flag = last_league_of_nations_threat_static_change
 			set_variable = { last_league_of_nations_threat_static_change = 13 }
 			sort_array_high_to_low_global_threat_countries_array = yes
+		}
+	}
+
+	# During justifying wargoals
+	# triggered daily, so make sure there is a sink somewhere not firing events
+	# country, FROM = target nation
+	on_justifying_wargoal_pulse = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						tag = LON
+					}
+				}
+				every_country = {
+					limit = {
+						has_country_flag = member_of_league_of_nations
+						NOT = { 
+							tag = FROM
+							has_country_flag = LON_being_attacked
+						}
+					}
+					country_event = league_of_nations_news_events.26
+				}
+			}
+		}
+	}
+
+	on_wargoal_expire = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						tag = LON
+					}
+				}
+				clr_global_flag = LON_being_attacked
+			}
+		}
+	}
+
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						Second_World_War_Axis_Victory = yes
+						Second_World_War_Allied_Victory = yes
+					}
+					NOT = { has_global_flag = ww2_over }
+					date > 1940.1.1
+					date < 1949.1.1
+				}
+				set_global_flag = ww2_over
+				every_country = {
+					limit = {
+						has_country_flag = leader_of_league_of_nations
+					}
+					country_event = league_of_nations_events.27
+				}
+			}
 		}
 	}
 }
