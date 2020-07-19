@@ -1,0 +1,155 @@
+scripted_gui = {
+
+	open_unsc_window_button = {
+		context_type = player_context
+
+		window_name = "open_unsc_window_button_container"
+		
+		visible = {
+			ROOT = {
+				OR = {
+					has_idea = RON_United_Nations_Security_Council
+					has_idea = RON_United_Nations_Security_Council_NP
+				}
+			}
+			any_country = {
+				OR = {
+					has_country_flag = united_nations_non_permanent_unsc_seat
+					has_country_flag = united_nations_permanent_unsc_seat
+				}
+			}
+		}
+		
+		effects = {	
+			open_unsc_window_click = {
+				set_temp_variable = { show = 1 }
+				subtract_from_temp_variable = { show = show_unsc }
+				set_variable = { show_unsc = show }
+			}
+		}
+	}
+
+	open_un_window_button = {
+		context_type = player_context
+
+		window_name = "open_un_window_button_container"
+		
+		visible = {
+			ROOT = {
+				OR = {
+					has_idea = RON_United_Nations_Security_Council
+					has_idea = RON_United_Nations_Security_Council_NP
+					has_country_flag = member_of_united_nations
+				}
+			}
+			any_country = {
+				OR = {
+					has_country_flag = united_nations_non_permanent_unsc_seat
+					has_country_flag = united_nations_permanent_unsc_seat
+				}
+			}
+		}
+		
+		effects = {	
+			open_un_window_click = {
+				set_temp_variable = { show = 1 }
+				subtract_from_temp_variable = { show = show_un }
+				set_variable = { show_un = show }
+			}
+		}
+	}
+	
+	unsc_window = {
+		context_type = player_context
+
+		window_name = "unsc_window_container"
+		
+		visible = {
+			ROOT = {
+				OR = {
+					AND = {
+						is_ai = yes
+						has_country_flag = member_of_united_nations
+					}
+					check_variable = { show_unsc > 0 }
+				}
+			}
+			any_country = {
+				OR = {
+					has_country_flag = united_nations_non_permanent_unsc_seat
+					has_country_flag = united_nations_permanent_unsc_seat
+				}
+			}
+		}
+		
+		effects = {
+			close_button_click = {
+				set_variable = { show_unsc = 0 }
+			}
+		}
+	}
+
+	unsc_sanctions_country_window = {
+		context_type = player_context
+
+		window_name = "unsc_sactions_country_window_container"
+		
+		visible = {
+			ROOT = {
+				check_variable = { show_unsc_sanctions > 0 }
+			}
+		}
+
+		effects = {
+			trade_sanctions_button_click = {
+				ROOT = {
+					set_country_flag = apply_for_trade_sanctions
+					country_event = unsc.2
+				}
+			}
+			security_risk_button_click = {
+				ROOT = {
+					set_country_flag = apply_for_security_risk
+					country_event = unsc.2
+				}
+			}
+			close_button_click = {
+				ROOT = {
+					set_variable = { show_unsc_sanctions = 0 }
+				}
+			}
+		}
+
+		triggers = {
+			trade_sanctions_button_click_enabled = {
+				NOT = { has_global_flag = UNSC_sanction_voting_ongoing }
+			}
+		}
+	}
+
+	unsc_open_sanctions_country_window_button = {
+		context_type = selected_country_context
+		parent_window_token = selected_country_view
+
+		window_name = "unsc_open_sanctions_country_window_button_container"
+		
+		visible = {
+			ROOT = {
+				OR = {
+					has_idea = RON_United_Nations_Security_Council
+					has_idea = RON_United_Nations_Security_Council_NP
+				}
+			}
+			NOT = { tag = ROOT }
+		}
+		
+		effects = {	
+			open_unsc_sanction_window_click = {
+				ROOT = {
+					set_variable = { show_unsc_sanctions = 1 }
+				}
+				country_event = unsc.1
+			}
+		}
+	}
+}
