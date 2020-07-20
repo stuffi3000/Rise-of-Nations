@@ -6,6 +6,10 @@ focus_tree = {
 			add = 10
 			tag = FRA
 		}
+		#modifier = {
+		#	add = 10
+		#	original_tag = FRA
+		#}
 	}
 	default = no
 
@@ -332,7 +336,9 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = anti-socialism
-		
+			hidden_effect = {
+				country_event = { id = ww1_france.63 days = 35}
+			}
 		}
 	}
 
@@ -363,6 +369,11 @@ focus_tree = {
 		y = 9
 		cost = 10
 		available_if_capitulated = yes
+		available = {
+			MOR = {
+				has_war_with = WSH
+			}
+		}
 		prerequisite = { 
 			focus = FRA1_deal_with_the_strikes 
 			focus = FRA1_a_better_government 
@@ -379,12 +390,8 @@ focus_tree = {
 				modifier = RI_friendly_foreign_policy
 			}
 			hidden_effect = {
-				FRA = {release = MOR}
 				GER = {
-					create_wargoal = {
-						target = MOR
-						type = annex_everything
-					}
+					country_event = { id = ww1_france.64 days = 2}
 				}
 			}
 		}
@@ -401,6 +408,11 @@ focus_tree = {
 		prerequisite = { focus = FRA1_french_protectorate_in_morocco }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ww1_france.65
+			}
 		}
 	}
 
@@ -574,6 +586,9 @@ focus_tree = {
 				is_historical_focus_on = yes
 			}
 		}
+		completion_reward = {
+			add_political_power = -50
+		}
 	}
 
 	#Focus for Socialist Victory
@@ -602,6 +617,9 @@ focus_tree = {
 			add_popularity = {
 				ideology = communism
 				popularity = 0.02
+			}
+			hidden_effect = {
+				country_event = { id = ww1_france.63 days = 35}
 			}
 		
 		}
@@ -697,6 +715,25 @@ focus_tree = {
 		available_if_capitulated = yes
 		prerequisite = { focus = FRA1_indignat }
 		mutually_exclusive = { focus = FRA1_non_interventionism }
+		available = {
+			MOR = {
+				has_war_with = WSH
+			}
+		}
+		bypass = {
+			OR = {
+				NOT = {country_exists = MOR}
+				AND = {
+					MOR = {is_subject_of = GER}
+					MOR = {
+						NOT = { 
+							has_war_with = WSH
+						}
+					}
+				}
+			}
+		
+		}
 		ai_will_do = {
 			base = 1
 			modifier = {
@@ -708,6 +745,10 @@ focus_tree = {
 			add_opinion_modifier = {
 				target  = GER
 				modifier = RI_hostile_foreign_policy
+			}
+			create_wargoal = {
+				target = WSH
+				type = civil_war
 			}
 		}
 	}
@@ -725,15 +766,24 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		bypass = {
+			MOR = {is_subject_of = GER}
+		}
 		completion_reward = {
-		
-			hidden_effect = {
-				FRA = {
-					release = MOR
-				}
-			}
 			GER = {
-				annex_country = {target = MOR}
+				create_wargoal = {
+					target = MOR
+					type = puppet_wargoal_focus
+				}
+				if = {
+					limit = {
+						country_exists = WSH
+					}
+					create_wargoal = {
+						target = WSH
+						type = annex_everything
+					}
+				}
 			}
 		}
 	}
@@ -762,10 +812,21 @@ focus_tree = {
 		x = 17
 		y = 12
 		cost = 10
+		available = {
+			NOT = { country_exists = WSH }
+		}
 		available_if_capitulated = yes
 		prerequisite = { focus = FRA1_frenchgerman_convention }
 		ai_will_do = {
 			factor = 1
+		}
+		complete_tooltip = {puppet = MOR}
+		completion_reward = {
+			add_political_power = 50
+			hidden_effect = {
+				country_event = {id = ww1_france.62 }
+			}
+			
 		}
 	}
 
@@ -804,6 +865,9 @@ focus_tree = {
 		prerequisite = { focus = FRA1_the_german_threat }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			ENG = {country_event = {id = generic.5 days = 5}}
 		}
 	}
 
@@ -852,6 +916,9 @@ focus_tree = {
 				is_historical_focus_on = yes
 			}
 		}
+		completion_reward = {
+			add_ideas = Barthou_law
+		}
 	}
 
 	#Focus for Better workforce
@@ -866,6 +933,9 @@ focus_tree = {
 		mutually_exclusive = { focus = FRA1_barthou_law }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_ideas = better_workforce
 		}
 	}
 
@@ -1043,6 +1113,9 @@ focus_tree = {
 		y = 17
 		cost = 10
 		available_if_capitulated = yes
+		available = {
+			BEL = {has_war_with = GER}
+		}
 		prerequisite = { 
 			focus = FRA1_mobilize 
 			focus = FRA1_claim_alsace_lorraine 
@@ -1271,12 +1344,26 @@ focus_tree = {
 		y = 23
 		cost = 10
 		available_if_capitulated = yes
+		bypass = {
+			has_global_flag = versailles
+		}
+		available = {
+			date > 1919.4.20
+		}
 		prerequisite = { 
 			focus = FRA1_armistice_proposal 
 			focus = FRA1_until_the_end 
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = ww2_germany.13
+				}
+			}
+		
 		}
 	}
 

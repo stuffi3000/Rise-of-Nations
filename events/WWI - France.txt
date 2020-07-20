@@ -1324,10 +1324,18 @@ country_event = {
 	
 	is_triggered_only = yes
 	fire_only_once = yes
+	immediate = {
+		add_ideas = FRA_factory_strikes
+		set_party_name = { 
+			ideology = communism 
+			long_name = "Parti Syndicaliste Revolutionnaire" 
+			name = "PSR" 
+		}
+	}
 	
 	option = {
 		#side with the commies
-		name = "For the revolution!"
+		name = "For the Workers!"
 		start_civil_war = {
 			ruling_party = communism
 			ideology = neutrality
@@ -1335,7 +1343,11 @@ country_event = {
 		}
 		random_country = {
 			limit = { original_tag = FRA has_government = neutrality }
-				set_country_flag = FRA_napoleonist_france_flag
+			set_country_flag = FRA_napoleonist_france_flag
+			load_focus_tree = {
+				tree = french_focus
+				keep_completed = no
+			}
 		}	
 		random_country = {
 			limit = { original_tag = FRA has_government = communism }
@@ -1359,12 +1371,13 @@ country_event = {
 	}
 	option = {
 		#side with AF
-		name = "For Order!"
+		name = "For France!"
 		start_civil_war = {
 			ruling_party = neutrality
 			ideology = communism
 			size = 0.5
 		}
+		
 		ai_chance = {
 			base = 100
 		}
@@ -1375,6 +1388,10 @@ country_event = {
 		random_country = {
 			limit = { original_tag = FRA has_government = communism }
 				set_country_flag = FRA_communist_france_flag
+				load_focus_tree = {
+				tree = french_focus
+				keep_completed = no
+			}
 		}
 		hidden_effect = {country_event = {id = ww1_france.61 days = 10}}
 		NFR = {
@@ -1484,4 +1501,189 @@ country_event = {
 	
 	}
 	option = {}
+}
+country_event = {
+#Puppet transfer between FRA and SPR 
+	id = ww1_france.62
+	desc = ww1_france.62.d
+	title = ww1_france.62.t
+	is_triggered_only = yes
+	hidden = yes
+	immediate = {
+		puppet = MOR
+		set_autonomy = {
+			target = MOR
+			autonomous_state = autonomy_protectorate
+			freedom_level = 0.35
+		}
+		MOR = {
+			add_popularity = {
+				ideology = neutrality 
+				popularity = 0.5
+			}
+		}
+		MOR = {
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
+		}
+	}
+
+}
+country_event = {
+	id = ww1_france.63
+	desc = ww1_france.63.d
+	title = ww1_france.63.t
+	hidden = yes
+	fire_only_once = yes
+	is_triggered_only = yes
+	immediate = {
+		every_state = {
+			limit = {
+				is_core_of = MOR
+			}
+			add_core_of = WSH
+		}
+		
+		set_autonomy = {
+			target = MOR
+			autonomy_state = autonomy_free
+		}
+		MOR = {
+			drop_cosmetic_tag = yes
+			leave_faction = yes
+		}
+		WSH = {
+			transfer_state = 1118
+			transfer_state = 462
+			declare_war_on = {
+				type = civil_war
+				target = MOR
+			}
+		}
+		MOR = {
+			transfer_units_fraction= {
+				target = WSH
+				size = 0.5
+				stockpile_ratio = 0.5
+				army_ratio = 0.5
+				navy_ratio = 0.5
+				air_ratio = 0.5
+			} 
+		}
+		
+		
+	
+	}
+
+}
+country_event = { #German intervention in case of French Non-intervention
+	id = ww1_france.64
+	title = ww1_france.64.t
+	desc = ww1_france.64.d
+	fire_only_once = yes
+	trigger = {
+		tag = GER
+		date > 1910.1.1
+		date < 1912.1.1
+		MOR = {
+			surrender_progress > 0.75
+		}
+	}
+	option = {
+		name = ww1_france.64.a
+		create_wargoal = {
+			target = WSH
+			type = annex_everything
+		}
+	}
+	option = {
+		name = ww1_france.64.b
+	}
+	
+
+}
+
+country_event = {
+	id = ww1_france.65
+	title = ww1_france.65.t
+	desc = ww1_france.65.d
+	is_triggered_only = yes
+	
+	option = {
+		#split morroco
+		name = ww1_france.65.a
+		SPR = {
+			transfer_state = 290
+			transfer_state = 1043
+			transfer_state = 1118
+			transfer_state = 699
+		}
+		FRA = {
+			transfer_state = 461
+			transfer_state = 462
+			transfer_state = 783
+			transfer_state = 1106
+		}
+		1050 = {
+			add_core_of = TGR
+		}
+		MOR = {
+			release = TGR
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+	#option = {
+	#	#keep the protectorat system
+	#	name = ww1_france.65.b
+	#	ai_chance = {
+	#		base = 0
+	#		modifier = {
+	#			add = 100
+	#			MOR = {is_ai = no}
+	#		}
+	#	}
+	#	country_event = {id = }
+	#}
+}
+country_event = {
+	#discussion about the ownership
+	id = ww1_france.66
+	title = ww1_france.66.t
+	desc = ww1_france.66.d
+	is_triggered_only = yes
+	
+	option = {
+	name = ww1_france.66.a
+		#FRA ownership
+		SPR = {
+			country_event = { id = }
+		}
+		FRA = {
+			country_event = { id = ww1_france.62}
+		}
+	}
+	
+	option = {
+		name = ww1_france.66.b
+		#SPR Ownership
+		SPR = {
+			country_event = { id = ww1_france.62}
+		}
+	}
+}
+
+country_event = {
+	#Proposition refused
+	id = ww1_france.67
+	title = ww1_france.67.t
+	desc = ww1_france.67.d
+	is_triggered_only = yes
+	
+	option = {
+		country_event = 
+	}
 }
