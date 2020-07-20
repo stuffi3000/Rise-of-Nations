@@ -23,6 +23,14 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_stability = -0.05
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			
+			}
+		}
 	}
 
 	#Focus for Reclaim Switzerland
@@ -83,6 +91,14 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			RUE = {
+				country_event = {
+					id = ww1_kuk.62
+					days = 5
+				}
+			}
+		}
 	}
 
 	#Focus for The political State of Austria-Hungary
@@ -112,6 +128,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.05
+			}
+		}
 	}
 
 	#Focus for Fate of Bosnia and Herzegovina
@@ -126,6 +149,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			country_event = {
+				id = ww1_kuk.63
+			}
+		}
 	}
 
 	#Focus for Military annexation
@@ -134,12 +162,23 @@ focus_tree = {
 		icon = GFX_goal_unknown
 		x = 12
 		y = 3
-		cost = 10
+		cost = 5
 		available_if_capitulated = yes
 		prerequisite = { focus = AUH1_fate_of_bosnia_and_herzegovina }
 		mutually_exclusive = { focus = AUH1_promulgate_a_constitution }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = military_annexation_tt		
+				has_country_flag = annex_BOS
+			}
+		}
+		
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_stability = -0.1
+			custom_effect_tooltip = increase_BOS_discontent_tt
 		}
 	}
 
@@ -153,8 +192,18 @@ focus_tree = {
 		available_if_capitulated = yes
 		prerequisite = { focus = AUH1_fate_of_bosnia_and_herzegovina }
 		mutually_exclusive = { focus = AUH1_military_annexation }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = promulgate_const_tt		
+				has_country_flag = constitute_BOS
+			}
+		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			custom_effect_tooltip = decrease_BOS_discontent_tt
+			add_stability = 0.05
 		}
 	}
 
@@ -187,6 +236,16 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			
+		}
 	}
 
 	#Focus for Build Military Supply Lines
@@ -204,6 +263,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
 	}
 
 	#Focus for Industrial Development
@@ -218,6 +286,29 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			if = {
+				limit = {
+					AUH = {
+						has_government = democratic
+					}
+				}
+				random_owned_state = {
+					add_building_construction = {
+						type = industrial_complex
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
 	}
 
 	#Focus for Steyr Arms
@@ -231,6 +322,30 @@ focus_tree = {
 		prerequisite = { focus = AUH1_build_military_supply_lines }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				
+			}
+			if = {
+				limit = {
+					AUH = {
+						has_government = neutrality
+					}
+				}
+				random_owned_state = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
 		}
 	}
 
@@ -341,6 +456,9 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			army_experience = 20
 		}
 	}
 
@@ -497,6 +615,27 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		mutually_exclusive = { focus = AUH1_enforce_germanization }
+		completion_reward = {
+			random_list = {
+				50 = {
+					hidden_effect = {release = BOS}
+					BOS = {
+						declare_war_on = {
+							target = AUH
+							type = civil_war
+						}
+					}
+				}
+				50 = {
+					custom_effect_tooltip = bosnia_hungarized_tt
+					hidden_effect = {
+						set_global_flag = BOS_hungarized
+					}
+				}
+			
+			}
+		}
 	}
 
 	#Focus for The Kaiser Question
@@ -523,6 +662,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		
 	}
 
 	#Focus for The Dual Alliance Issue
@@ -556,6 +696,12 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = GER
+				type = annex_everything
+			}
 		}
 	}
 
@@ -920,11 +1066,32 @@ focus_tree = {
 		mutually_exclusive = { 
 			focus = AUH1_status_quo_in_bosnia 
 		}
+		mutually_exclusive = { focus = AUH1_enforce_magyarization }
 		mutually_exclusive = { 
 			focus = AUH1_register_bosnian_as_customary_language 
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			random_list = {
+				50 = {
+					hidden_effect = {release = BOS}
+					BOS = {
+						declare_war_on = {
+							target = AUH
+							type = civil_war
+						}
+					}
+				}
+				50 = {
+					custom_effect_tooltip = bosnia_germanized_tt
+					hidden_effect = {
+						set_global_flag = BOS_germanized
+					}
+				}
+			
+			}
 		}
 	}
 
@@ -946,6 +1113,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			custom_effect_tooltip = political_stalemate_tt
+			hidden_effect = {
+				set_country_flag = status_quo_BOS
+			}
+		}
 	}
 
 	#Focus for Register Bosnian as Customary Language
@@ -966,6 +1139,16 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_political_power = -100
+			HUN = {
+				add_opinion_modifier = {
+					target = AUH
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+		
+		}
 	}
 
 	#Focus for Official Integration
@@ -985,6 +1168,14 @@ focus_tree = {
 			focus = AUH1_status_quo_in_bosnia
 			focus = AUH1_register_bosnian_as_customary_language
 		}
+		completion_reward = {
+			every_state = {
+				limit = {
+					is_core_of = BOS
+				}
+				add_core_of = AUH
+			}
+		}
 		
 	}
 
@@ -1001,6 +1192,31 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		bypass = {
+			ITA = {
+				NOT = {is_in_faction_with = AUH}
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					ITA = {
+						is_in_faction_with = AUH
+					}
+					
+				}
+				random_list = {
+					80 = {
+						ITA = {
+							leave_faction = yes
+						}
+					}
+					20 = {
+					}
+				}
+			}
+		
+		}
 	}
 
 	#Focus for Grant Italy its Promised Irrendentia
@@ -1015,6 +1231,27 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH1_ignore_italian_claims }
 		ai_will_do = {
 			factor = 1
+		}
+		
+		completion_reward = {
+			custom_effect_tooltip = Irrendentia_tt
+			hidden_effect = {
+				every_state = {
+					limit = {
+						is_controlled_by = AUH
+						is_core_of = ITA
+					}
+					ITA = {transfer_state = PREV}
+				}
+				ITA = {
+					transfer_state = 940
+					transfer_state = 103
+					transfer_state = 1104
+					transfer_state = 163
+					transfer_state = 939
+					transfer_state = 938
+				}
+			}
 		}
 	}
 
@@ -1032,8 +1269,16 @@ focus_tree = {
 		prerequisite = { 
 			focus = AUH1_the_dual_alliance_issue 
 		}
+		available = {
+			NOT = {is_in_faction_with = GER}
+		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ww1_kuk.64
+			}
 		}
 	}
 
@@ -1045,9 +1290,19 @@ focus_tree = {
 		y = 8
 		cost = 10
 		available_if_capitulated = yes
+		available = {
+			any_state = { 
+				is_core_of = GER
+				is_controlled_by = ROOT
+			}
+			NOT = {country_exists = GER}
+		}
 		prerequisite = { focus = AUH1_give_our_subjects_a_lesson }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			custom_effect_tooltip = tension_eased_tt
 		}
 	}
 
