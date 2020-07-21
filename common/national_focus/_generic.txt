@@ -20,11 +20,14 @@ focus_tree = {
 		allow_branch = {
 			date < 1910.1.1
 			ROOT = {
-				is_puppet = no
+				is_subject = no
+				NOT = {
+					has_country_flag = subject
+				}
 			}
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -4435,12 +4438,24 @@ focus_tree = {
 		allow_branch = {
 			date > 1909.12.31
 			date < 1919.1.1
-			ROOT = {
-				is_puppet = no
+			OR = {
+				AND = {
+					ROOT = {
+						is_subject = no
+						NOT = {has_country_flag = subject}
+					}
+				}
+				AND = {
+					ROOT = {
+						is_subject = no
+						has_country_flag = subject
+						has_completed_focus = WW1_our_new_country
+					}
+				}
 			}
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -10131,11 +10146,14 @@ focus_tree = {
 			date > 1918.12.31
 			date < 1933.1.1
 			ROOT = {
-				is_puppet = no
+				is_subject = no
+				NOT = {
+					has_country_flag = subject
+				}
 			}
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -14438,11 +14456,14 @@ focus_tree = {
 			date > 1932.12.31
 			date < 1949.1.1
 			ROOT = {
-				is_puppet = no
+				is_subject = no
+				NOT = {
+					has_country_flag = subject
+				}
 			}
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -21919,11 +21940,15 @@ focus_tree = {
 			date > 1948.12.31
 			date < 2000.1.1
 			ROOT = {
-				is_puppet = no
+				is_subject = no
+				NOT = {
+					has_country_flag = subject
+				}
 			}
+			
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -28774,11 +28799,14 @@ focus_tree = {
 		allow_branch = {
 			date > 1999.12.31
 			ROOT = {
-				is_puppet = no
+				is_subject = no
+				NOT = {
+					has_country_flag = subject
+				}
 			}
 		}
 		available = {
-			is_puppet = no
+			is_subject = no
 		}
 		ai_will_do = {
 			factor = 10
@@ -36019,13 +36047,18 @@ focus_tree = {
 			}
 		}
 	}
-	#Focus for Our Political Situation
+	#Focus for Our Political Situation 
 	focus = {
 		allow_branch = {
-			date > 1909.12.31
-			date < 1919.1.1
-			ROOT = {
-				is_puppet = yes
+			AND = {
+				date > 1909.12.31
+				date < 1919.1.1
+				ROOT = {
+					OR = {
+						is_subject = yes
+						has_country_flag = subject
+					}
+				}
 			}
 		}
 		id = WW1_our_political_situation
@@ -36036,6 +36069,11 @@ focus_tree = {
 		available_if_capitulated = yes
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			ROOT = {
+				set_country_flag = subject
+			}
 		}
 	}
 
@@ -36057,7 +36095,7 @@ focus_tree = {
 			focus = WW1_side_with_enemy_faction 
 		}
 		mutually_exclusive = { 
-			focus = WW1_stay_neutral 
+			focus = WW1_stay_alone 
 		}
 		mutually_exclusive = { 
 			focus = WW1_ 
@@ -36069,7 +36107,7 @@ focus_tree = {
 
 	#Focus for Stay Neutral
 	focus = {
-		id = WW1_stay_neutral
+		id = WW1_stay_alone
 		icon = GFX_goal_generic_neutrality_focus
 		x = 8
 		y = 5
@@ -36132,6 +36170,14 @@ focus_tree = {
 		prerequisite = { focus = WW1_start_talks }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			OVERLORD = {
+				set_autonomy = {
+					target = ROOT
+					autonomy_state = autonomy_free
+				}
+			}
 		}
 	}
 
@@ -36269,6 +36315,10 @@ focus_tree = {
 		mutually_exclusive = { focus = WW1_a_path_of_our_own }
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				has_historical_focus = yes
+			}
 		}
 	}
 
@@ -36347,12 +36397,16 @@ focus_tree = {
 			date > 1920.1.1
 			date < 1932.12.1
 			ROOT = {
-				is_puppet = yes
+				is_subject = yes
+				has_country_flag = subject
 			}
 		}
 		available_if_capitulated = yes
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = subject
 		}
 	}
 
@@ -36374,7 +36428,7 @@ focus_tree = {
 			focus = INT_side_with_enemy_faction 
 		}
 		mutually_exclusive = { 
-			focus = INT_stay_neutral 
+			focus = INT_stay_alone
 		}
 		mutually_exclusive = { 
 			focus = INT_ 
@@ -36386,7 +36440,7 @@ focus_tree = {
 
 	#Focus for Stay Neutral
 	focus = {
-		id = INT_stay_neutral
+		id = INT_stay_alone
 		icon = GFX_goal_generic_neutrality_focus
 		x = 8
 		y = 5
@@ -36586,7 +36640,12 @@ focus_tree = {
 		mutually_exclusive = { focus = INT_a_path_of_our_own }
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				has_historical_focus = yes
+			}
 		}
+		
 	}
 
 	#Focus for A Path of our Own
@@ -36659,7 +36718,8 @@ focus_tree = {
 			date > 1932.12.31
 			date < 1949.1.1
 			ROOT = {
-				is_puppet = yes
+				is_subject = yes
+				has_country_flag = subject
 			}
 		}
 		id = WW2_our_political_situation
@@ -36670,6 +36730,9 @@ focus_tree = {
 		available_if_capitulated = yes
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = subject
 		}
 	}
 
@@ -36691,7 +36754,7 @@ focus_tree = {
 			focus = WW2_side_with_enemy_faction 
 		}
 		mutually_exclusive = { 
-			focus = WW2_stay_neutral 
+			focus = WW2_stay_alone 
 		}
 		mutually_exclusive = { 
 			focus = WW2_ 
@@ -36703,7 +36766,7 @@ focus_tree = {
 
 	#Focus for Stay Neutral
 	focus = {
-		id = WW2_stay_neutral
+		id = WW2_stay_alone
 		icon = GFX_goal_generic_neutrality_focus
 		x = 8
 		y = 5
@@ -36903,6 +36966,10 @@ focus_tree = {
 		mutually_exclusive = { focus = WW2_a_path_of_our_own }
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				has_historical_focus = yes
+			}
 		}
 	}
 
@@ -36981,12 +37048,16 @@ focus_tree = {
 			date > 1948.12.31
 			date < 2000.1.1
 			ROOT = {
-				is_puppet = yes
+				is_subject = yes
+				has_country_flag = subject
 			}
 		}
 		available_if_capitulated = yes
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = subject
 		}
 	}
 
@@ -37008,7 +37079,7 @@ focus_tree = {
 			focus = CW_side_with_enemy_faction 
 		}
 		mutually_exclusive = { 
-			focus = CW_stay_neutral 
+			focus = CW_stay_alone
 		}
 		mutually_exclusive = { 
 			focus = CW_ 
@@ -37020,7 +37091,7 @@ focus_tree = {
 
 	#Focus for Stay Neutral
 	focus = {
-		id = CW_stay_neutral
+		id = CW_stay_alone
 		icon = GFX_goal_generic_neutrality_focus
 		x = 8
 		y = 5
@@ -37220,6 +37291,10 @@ focus_tree = {
 		mutually_exclusive = { focus = CW_a_path_of_our_own }
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				has_historical_focus = yes
+			}
 		}
 	}
 
@@ -37297,12 +37372,16 @@ focus_tree = {
 		allow_branch = {
 			date > 1999.12.31
 			ROOT = {
-				is_puppet = yes
+				is_subject = yes
+				has_country_flag = subject
 			}
 		}
 		available_if_capitulated = yes
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			set_country_flag = subject
 		}
 	}
 
@@ -37324,7 +37403,7 @@ focus_tree = {
 			focus = MD_side_with_enemy_faction 
 		}
 		mutually_exclusive = { 
-			focus = MD_stay_neutral 
+			focus = MD_stay_alone
 		}
 		mutually_exclusive = { 
 			focus = MD_ 
@@ -37336,7 +37415,7 @@ focus_tree = {
 
 	#Focus for Stay Neutral
 	focus = {
-		id = MD_stay_neutral
+		id = MD_stay_alone
 		icon = GFX_goal_generic_neutrality_focus
 		x = 8
 		y = 5
@@ -37536,6 +37615,10 @@ focus_tree = {
 		mutually_exclusive = { focus = MD_a_path_of_our_own }
 		ai_will_do = {
 			factor = 1
+			modifier = {
+				factor = 10
+				has_historical_focus = yes
+			}
 		}
 	}
 
@@ -37601,6 +37684,296 @@ focus_tree = {
 		mutually_exclusive = { focus = MD_a_democratic_system }
 		ai_will_do = {
 			factor = 1
+		}
+	}
+	#Focus for Our new country
+	focus = {
+		id = WW1_our_new_country
+		icon = GFX_goal_generic_special_forces
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = WW1_stay_in_the_faction 
+			focus = WW1_side_with_enemy_faction
+			focus = WW1_stay_alone
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			
+			ROOT = {
+				clr_country_flag = subject
+				
+				country_event = {
+					id = generic.100 days = 1
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW1_socialism_in_one_country
+				}
+				set_country_flag = c_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW1_explore_a_new_path
+				}
+				set_country_flag = n_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW1_a_democratic_system
+				}
+				set_country_flag = d_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW1_support_nationalist_ideals
+				}
+				set_country_flag = f_path
+			}
+			#if = {
+			#	limit = {
+			#		has_completed_focus = WW1_socialism_in_one_country
+			#	}
+			#	set_country_flag = c_path
+			#}
+			
+		}
+	}
+	#Focus for Our new country
+	focus = {
+		id = INT_our_new_country
+		icon = GFX_goal_generic_special_forces
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = INT_stay_in_the_faction 
+			focus = INT_side_with_enemy_faction
+			focus = INT_stay_alone
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			
+			ROOT = {
+				clr_country_flag = subject
+				
+				country_event = {
+					id = generic.100 days = 1
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = INT_socialism_in_one_country
+				}
+				set_country_flag = c_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = INT_explore_a_new_path
+				}
+				set_country_flag = n_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = INT_a_democratic_system
+				}
+				set_country_flag = d_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = INT_support_nationalist_ideals
+				}
+				set_country_flag = f_path
+			}
+			#if = {
+			#	limit = {
+			#		has_completed_focus = INT_socialism_in_one_country
+			#	}
+			#	set_country_flag = c_path
+			#}
+			
+		}
+	}
+	#Focus for Our new country
+	focus = {
+		id = WW2_our_new_country
+		icon = GFX_goal_generic_special_forces
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = WW2_stay_in_the_faction 
+			focus = WW2_side_with_enemy_faction
+			focus = WW2_stay_alone
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			
+			ROOT = {
+				clr_country_flag = subject
+				
+				country_event = {
+					id = generic.100 days = 1
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW2_socialism_in_one_country
+				}
+				set_country_flag = c_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW2_explore_a_new_path
+				}
+				set_country_flag = n_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW2_a_democratic_system
+				}
+				set_country_flag = d_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = WW2_support_nationalist_ideals
+				}
+				set_country_flag = f_path
+			}
+			#if = {
+			#	limit = {
+			#		has_completed_focus = WW2_socialism_in_one_country
+			#	}
+			#	set_country_flag = c_path
+			#}
+			
+		}
+	}
+	#Focus for Our new country
+	focus = {
+		id = CW_our_new_country
+		icon = GFX_goal_generic_special_forces
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = CW_stay_in_the_faction 
+			focus = CW_side_with_enemy_faction
+			focus = CW_stay_alone
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			
+			ROOT = {
+				clr_country_flag = subject
+				
+				country_event = {
+					id = generic.100 days = 1
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = CW_socialism_in_one_country
+				}
+				set_country_flag = c_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = CW_explore_a_new_path
+				}
+				set_country_flag = n_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = CW_a_democratic_system
+				}
+				set_country_flag = d_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = CW_support_nationalist_ideals
+				}
+				set_country_flag = f_path
+			}
+			#if = {
+			#	limit = {
+			#		has_completed_focus = CW_socialism_in_one_country
+			#	}
+			#	set_country_flag = c_path
+			#}
+			
+		}
+	}
+	#Focus for Our new country
+	focus = {
+		id = MD_our_new_country
+		icon = GFX_goal_generic_special_forces
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = MD_stay_in_the_faction 
+			focus = MD_side_with_enemy_faction
+			focus = MD_stay_alone
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			
+			ROOT = {
+				clr_country_flag = subject
+				
+				country_event = {
+					id = generic.100 days = 1
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = MD_socialism_in_one_country
+				}
+				set_country_flag = c_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = MD_explore_a_new_path
+				}
+				set_country_flag = n_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = MD_a_democratic_system
+				}
+				set_country_flag = d_path
+			}
+			if = {
+				limit = {
+					has_completed_focus = MD_support_nationalist_ideals
+				}
+				set_country_flag = f_path
+			}
+			#if = {
+			#	limit = {
+			#		has_completed_focus = MD_socialism_in_one_country
+			#	}
+			#	set_country_flag = c_path
+			#}
+			
 		}
 	}
 }
