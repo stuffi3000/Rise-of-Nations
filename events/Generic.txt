@@ -1684,3 +1684,178 @@ country_event = {
 	option = {}
 
 }
+#our neighbor is building defenses 
+country_event = {
+	id = generic.101
+	title = generic.101.t
+	desc = generic.101.d
+	is_triggered_only = yes
+	
+	option = {
+		name = generic.101.a
+	}
+}
+
+#[country] is requesting help for indep war 
+country_event = {
+	is_triggered_only = yes
+	id = generic.102
+	title = generic.102.t
+	desc = generic.102.d
+	
+	option = {
+		#send help
+		name = generic.102.a
+		FROM = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = RI_supports_own_politics
+			}
+			add_ai_strategy = {
+				type = send_volunteers_desire
+				id = FROM
+				value = 200
+			}
+				FROM = {
+					add_equipment_to_stockpile = {
+						type = infantry_equipment
+						amount = 500
+					}
+				}
+			
+		}
+	}
+	option = {
+		#stay neutral
+		name = generic.102.b
+		add_ai_strategy = {
+			type = ignore
+			value = 1000
+		}
+	}
+	option = {
+		#side with overlord
+		name = generic.102.c
+		FROM.OVERLORD = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = RI_supports_own_politics
+			}
+		}
+	}
+
+}
+
+#the [capital ] conference
+country_event = {
+	id = generic.103
+	title = generic.103.t
+	desc = generic.103.d
+
+	is_triggered_only = yes
+	
+	option = {
+		#accept indep
+		set_autonomy = {
+			target = FROM
+			autonomy_state = autonomy_free
+		}
+	
+	}
+	option = {
+		#refuse indep
+		FROM = {
+			country_event = {
+				id = generic.104
+				days = 5
+			}
+		}
+	}
+	
+}
+
+#refused autonomy
+
+country_event = {
+	id = generic.104
+	title = generic.104.t
+	desc = generic.104.d
+	
+	is_triggered_only = yes
+	
+	option = {
+		#step down
+		
+	}
+	option = {
+		#take autonomy by force
+		random_list = {
+			50 = {
+				OVERLORD = {
+					set_autonomy = {
+						target = FROM
+						autonomy_state = autonomy_free
+					}
+					create_wargoal = {
+						target = ROOT
+						type = puppet_wargoal_focus
+					}
+				}
+			}
+			5000 = {
+				if = {
+					limit = {
+						FROM = {
+							has_government = democratic
+						}
+					}
+					start_civil_war = {
+						ruling_party = neutrality
+						ideology = democratic
+						size = 0.1	
+					}
+				
+				}
+				
+				
+				if = {
+					limit = {
+						FROM = {
+							has_government = neutrality
+						}
+					}
+					start_civil_war = {
+						ruling_party = democratic
+						ideology = neutrality
+						size = 0.1	
+					}
+				}
+				
+				
+				else = {
+					
+					start_civil_war = {
+					ruling_party = communism
+					ideology = democratic
+					size = 0.1	
+					}
+				
+				}
+				every_country = {
+					limit = {
+						original_tag = ROOT
+						has_war_with = ROOT
+					}
+					OVERLORD = {
+						declare_war_on = {
+							target = ROOT
+							type = civil_war
+						}
+					}
+				}
+				set_cosmetic_tag = SEPARATISTS
+			}
+		}
+		
+	}
+}
