@@ -125,6 +125,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_political_power = 50
+		}
 	}
 
 	#Focus for Status-Quo
@@ -183,6 +186,10 @@ focus_tree = {
 				tooltip = military_annexation_tt		
 				has_country_flag = annex_BOS
 			}
+			add_to_variable = {
+				var = bosnian_discontent
+				value = 10
+			}
 		}
 		
 		ai_will_do = {
@@ -216,6 +223,10 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = decrease_BOS_discontent_tt
 			add_stability = 0.05
+			add_to_variable = {
+				var = bosnian_discontent
+				value = -10
+			}
 		}
 	}
 
@@ -230,6 +241,24 @@ focus_tree = {
 		prerequisite = { focus = AUH1_develop_the_triest_port }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_coastal = yes
+				}
+				add_building_construction = {
+					type = coastal_bunker
+					level = 1
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_naval_base = yes
+					}
+				}
+			}
+			
+		
 		}
 	}
 
@@ -378,6 +407,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_war_support = 0.05
+			add_stability = 0.05
+			add_political_power = 50
+		}
 	}
 
 	#Focus for Increase Conscription Laws
@@ -391,6 +425,51 @@ focus_tree = {
 		prerequisite = { focus = AUH1_a_new_beginning_for_austriahungary }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = disarmed_nation
+				}
+				add_ideas = volunteer_only
+			}
+			if = {
+				limit = {
+					has_idea = volunteer_only
+				}
+				add_ideas = limited_conscription
+			}
+			if = {
+				limit = {
+					has_idea = limited_conscription
+				}
+				add_ideas = extensive_conscription
+			}
+			if = {
+				limit = {
+					has_idea = extensive_conscription
+				}
+				add_ideas = service_by_requirement
+			}
+			if = {
+				limit = {
+					has_idea = service_by_requirement
+				}
+				add_ideas = all_adults_serve
+			}
+			if = {
+				limit = {
+					has_idea = all_adults_serve
+				}
+				add_ideas = scraping_the_barrel
+			}
+			if = {
+				limit = {
+					has_idea = scraping_the_barrel
+				}
+				add_manpower = 10000
+			}
+		
 		}
 	}
 
@@ -411,6 +490,16 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH1_the_dual_alliance_issue }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			GER = {
+				add_political_power = 50
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = RI_supports_own_country
+				}
+			}
+			
 		}
 	}
 
@@ -561,8 +650,10 @@ focus_tree = {
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
-			focus = AUH1_strengthen_hungarian_economic_ties 
 			focus = AUH1_czech_industrial_development 
+			focus = AUH1_strengthen_hungarian_economic_ties 
+			focus = AUH1_dismantle_germany 
+			focus = AUH1_declare_the_2nd_holy_roman_empire 
 		}
 		ai_will_do = {
 			factor = 1
@@ -578,8 +669,10 @@ focus_tree = {
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
-			focus = AUH1_strengthen_hungarian_economic_ties 
 			focus = AUH1_czech_industrial_development 
+			focus = AUH1_strengthen_hungarian_economic_ties 
+			focus = AUH1_dismantle_germany 
+			focus = AUH1_declare_the_2nd_holy_roman_empire 
 		}
 		ai_will_do = {
 			factor = 1
@@ -611,6 +704,9 @@ focus_tree = {
 				every_country = {
 					limit = {
 						is_in_faction_with = AUH
+						NOT = {
+							tag = AUH
+						}
 					}
 					add_offsite_building = { type = industrial_complex level = 1 }
 				}
@@ -647,6 +743,11 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			custom_effect_tooltip = will_cause_civil_conflict_tt
+			custom_effect_tooltip = no_nationalist_elections_tt
+			set_country_flag = nationalism_dissolved
 		}
 	}
 
@@ -714,6 +815,10 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_stability = 0.05
+			add_political_power = 20
+		}
 		
 	}
 
@@ -729,6 +834,18 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH1_strengthen_ties_with_germany }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			every_country = {
+				limit = {
+					is_in_faction_with = ROOT
+					is_faction_leader = yes
+				}
+				country_event = {
+					id = generic.23
+					days = 3
+				}
+			}
 		}
 	}
 
@@ -869,11 +986,10 @@ focus_tree = {
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
-			focus = AUH1_develop_our_allies 
-		}
-		prerequisite = { 
+			focus = AUH1_develop_our_allies
 			focus = AUH1_claim_lost_territories 
 		}
+		
 		ai_will_do = {
 			factor = 1
 		}
@@ -888,10 +1004,8 @@ focus_tree = {
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
-			focus = AUH1_develop_our_allies 
-		}
-		prerequisite = { 
-			focus = AUH1_claim_lost_territories 
+			focus = AUH1_develop_our_allies
+			focus = AUH1_claim_lost_territories
 		}
 		ai_will_do = {
 			factor = 1
@@ -1338,8 +1452,10 @@ focus_tree = {
 				}
 				random_list = {
 					80 = {
-						ITA = {
-							leave_faction = yes
+						ROOT = {
+							ITA = {
+								country_event = generic.23
+							}
 						}
 					}
 					20 = {
@@ -4105,7 +4221,11 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH2_communist_path }
 		mutually_exclusive = { focus = AUH2_democratic_path }
 		mutually_exclusive = { focus = AUH2_islamist_path }
-		
+		available = {
+			NOT = {
+				has_country_flag = nationalism_dissolved
+			}
+		}
 		ai_will_do = {
 			factor = 10
 			
@@ -10771,7 +10891,11 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH3_communist_path }
 		mutually_exclusive = { focus = AUH3_democratic_path }
 		mutually_exclusive = { focus = AUH3_islamist_path }
-		
+		available = {
+			NOT = {
+				has_country_flag = nationalism_dissolved
+			}
+		}
 		ai_will_do = {
 			factor = 10
 			
@@ -16930,7 +17054,11 @@ focus_tree = {
 		mutually_exclusive = { focus = AUH4_communist_path }
 		mutually_exclusive = { focus = AUH4_democratic_path }
 		mutually_exclusive = { focus = AUH4_islamist_path }
-		
+		available = {
+			NOT = {
+				has_country_flag = nationalism_dissolved
+			}
+		}
 		ai_will_do = {
 			factor = 10
 			
