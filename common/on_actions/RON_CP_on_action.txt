@@ -4,24 +4,30 @@ on_actions = {
 			if = {
 				limit = {
 					date < 1920.1.1
+					has_country_flag = ww1_famine_risk
 				}
-				every_country = {
-					limit = {
-						has_country_flag = ww1_famine_risk
-						#has_global_flag = ENG_blockade
-					}
 					#calculate the new consumption
-				
-					set_temp_variable = { num_manp = max_manpower_k }
-					multiply_temp_variable = { num_manp = 0.07} 
-					set_variable = { weekly_grain_consumption = num_manp}
-			
-					#calculate the new stockpile
-					set_temp_variable = { temp1 = weekly_grain_consumption }
-					substract_from_variable = { grain_stockpile = temp1 }
+					
+					set_temp_variable = { temp1 = max_manpower_k }
+					divide_temp_variable = { temp1 = 1000 }
+					multiply_temp_variable = { temp1 = ration_size?7 }
+					set_variable = {weekly_grain_consumption = temp1}
+					multiply_variable = { weekly_grain_consumption = 3 } #corrective nbr
+					
+					
+					
+					#grain consumption is in Mt
+					
+					subtract_from_variable = { grain_stockpile = weekly_grain_consumption}
+					
+					#days left 
+					
+					set_temp_variable = {temp2 = grain_stockpile}
+					divide_temp_variable = {temp2 = weekly_grain_consumption}
+					multiply_temp_variable = {temp2 = 7}
+					set_variable = {grain_stockpile_days_left = temp2}
 				}
 			}
 		}
 	}
 
-}
