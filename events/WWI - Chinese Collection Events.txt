@@ -411,7 +411,7 @@ country_event = {
 	}
 }
 
- Intermission QIN to CHI
+ #Intermission QIN to CHI
 country_event = {
 	id = ww1_china.28
 	title = ww1_china.28.t
@@ -520,6 +520,7 @@ country_event = {
 		NOT = { date > 1916.12.1 }
 		tag = CHI
 		date > 1915.11.19
+		has_global_flag = yuan_president
 		OR = {
 			has_global_flag = welcome_event_1914
 			has_global_flag = welcome_event_1910
@@ -732,4 +733,98 @@ country_event = {
 		name = ww1_china.26.a
 		add_political_power = 50
 	}
+}
+
+#choosing a side  
+
+country_event = {
+	id = ww1_china.29
+	title = ww1_china.29.t
+	desc = ww1_china.29.d
+	
+	trigger = {
+		GER = {
+			has_war_with = FRA
+		}
+		CHI = {
+			is_in_faction = no
+		}
+	
+	}
+	
+	option = {
+		#side with FRA
+		name = ww1_china.29.a
+		clr_country_flag = wait_n_see
+		FRA = {add_to_faction = ROOT}
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 1000
+				check_variable = {
+					var = ENT_influence_in_CHI
+					value = CP_influence_in_CHI
+					compare = greater_than
+				}
+			
+			}
+		}
+		if = {
+			limit = {
+				check_variable = {
+					var = CP_influence_in_CHI
+					value = ENT_influence_in_CHI
+					compare = greater_than
+				}
+				
+			
+			}
+			add_ideas = CHI_ww1_heavy_GER_inf
+		}
+	}
+	option = {
+		#side with GER
+		name = ww1_china.29.b
+		clr_country_flag = wait_n_see
+		GER = {add_to_faction = ROOT}
+		ai_chance = {
+			base = 10
+			modifier = {
+				add = 1000
+				check_variable = {
+					var = CP_influence_in_CHI
+					value = ENT_influence_in_CHI
+					compare = greater_than
+				}
+			
+			}
+		}
+		if = {
+			limit = {
+				check_variable = {
+					var = ENT_influence_in_CHI
+					value = CP_influence_in_CHI
+					compare = greater_than
+				}
+				
+			
+			}
+			add_ideas = CHI_ww1_heavy_FRA_inf
+		}
+	}
+	option = {
+		trigger = {
+			NOT = {
+				has_country_flag = wait_n_see
+			}
+		}
+		#wait a bit
+		name = ww1_china.29.c
+		set_country_flag = wait_n_see
+		country_event = {
+			id = ww1_china.29
+			days = 5
+		}
+	}
+	
 }
