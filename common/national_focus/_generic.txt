@@ -4319,8 +4319,12 @@ focus_tree = {
 		completion_reward = {
 			add_stability = 0.05
 			add_political_power = 15
-			#Gains "hired advisors" +20 standing with ENG
-			#+5 standing for current government
+			ENG = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier =  RI_hired_advisors
+			}
+			}
 		}
 	}
 	#Focus for Purchase British ships
@@ -4345,12 +4349,26 @@ focus_tree = {
 			#has no coastal provinces
 		}
 		available = {
-			#has coastal provinces
+			any_state = {
+				is_coastal = yes
+				is_controlled_by = ROOT
+			}
 		}
 		completion_reward = {
-			#Gives 15 convoys
-			#gives spirit "ordered ships" +5% consumer goods for 70 days
-			#ENG gains spirit "sold ships" -3% consumer goods for 70 days
+		add_equipment_to_stockpile = {
+				type = convoy_1
+				amount = 15
+			}
+			add_timed_idea = {
+				idea = RI_ordered_ships
+				days = 70
+			}
+			ENG = {
+			add_timed_idea = {
+				idea = RI_sold_ships
+				days = 70
+			}
+			}
 		}
 	}
 	#Focus for Ask for a British guarantee
@@ -4369,7 +4387,10 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			#Gains non-aggression pact with Britain(expires 1911)
+			diplomatic_relation = {
+				country = ENG
+				relation = non_aggression_pact
+			}
 			add_political_power = 25
 		}
 	}
@@ -4392,9 +4413,11 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			#Britain gains the power to freely base troops and ships inside the country territory(Until 1919 or the dissolution of Britain)
-			#Restricts recruitable population to 1% of total population until 1919
-		}
+			give_military_access = ENG
+			add_ideas = RI_restricted_military_GER_ww1
+			give_guarantee = ENG
+			ENG = { give_guarantee = ROOT }
+			}
 	}
 	#Focus for Take French investment
 	focus = {
@@ -4412,10 +4435,99 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			#Gains 2 infrastructure in 2 random states
-			#Gains a mil factory in a random state
-			#Gains a civ factory in a random state('traded' to france for 5 years)
-			#Gains "took investment" +20 standing with France
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = infrastructure
+										size > 0
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			FRA = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier =  RI_took_investment
+			}
+			}
 		}
 	}
 	#Focus for Join the Fraco-Russian treaty
@@ -4434,8 +4546,20 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			#country is guaranteed by France and Russia
-			#gains "Joined the Franco-Russian treaty" +35 #standing with France and Russia
+			FRA = { give_guarantee = ROOT }
+			RUE = { give_guarantee = ROOT }
+			FRA = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier =  RI_joined_frt
+			}
+			}
+			RUE = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier =  RI_joined_frt
+			}
+			}
 		}
 	}
 	#End of focuses 
