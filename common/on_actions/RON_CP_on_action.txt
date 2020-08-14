@@ -4,20 +4,26 @@ on_actions = {
 			if = {
 				limit = {
 					date < 1920.1.1
-					has_country_flag = ww1_famine_risk
+					ROOT = {
+						has_country_flag = ww1_famine_risk
+					}
+					
 				}
 					#calculate the new consumption
-					
-					set_temp_variable = { temp1 = max_manpower_k }
-					divide_temp_variable = { temp1 = 1000 }
+					set_variable = {debug = num_battalions}
+					set_temp_variable = { temp1 = num_battalions }
 					multiply_temp_variable = { temp1 = ration_size?7 }
+					divide_temp_variable = {temp1 = 1000}
 					set_variable = {weekly_grain_consumption = temp1}
-					multiply_variable = { weekly_grain_consumption = 3 } #corrective nbr
+					clamp_variable = {
+						var = weekly_grain_consumption
+						min = 0.01
+						max = 1000000
+					
+					}
 					
 					
-					
-					#grain consumption is in Mt
-					
+					#grain consumption is in kt
 					subtract_from_variable = { grain_stockpile = weekly_grain_consumption}
 					
 					#days left 
@@ -26,6 +32,154 @@ on_actions = {
 					divide_temp_variable = {temp2 = weekly_grain_consumption}
 					multiply_temp_variable = {temp2 = 7}
 					set_variable = {grain_stockpile_days_left = temp2}
+					
+					clamp_variable = {
+						var = grain_stockpile
+						min = 0
+					
+					}
+					clamp_variable = {
+						var = grain_stockpile_days_left
+						min = 0
+						max = 999999
+					}
+					
+					clamp_variable = {
+						var = ration_size
+						min = 3.5
+					
+					}
+					if = {
+						limit = {
+							check_variable = {grain_stockpile_days_left < 10}
+							
+						}
+						add_ideas = famine_3
+						if = {
+							limit = {has_idea = famine_2}
+							remove_ideas = famine_2
+						}
+						if = {
+							limit = {
+								has_idea = famine_1
+							}
+							remove_ideas = famine_1
+						}
+						if = {
+							limit = {
+								has_idea = famine_0
+							}
+							remove_ideas = famine_0
+						}
+						
+					}
+					else_if = {
+						limit = {
+							check_variable = {grain_stockpile_days_left > 9}
+							check_variable = {grain_stockpile_days_left < 30}
+						}
+						add_ideas = famine_2
+						if = {
+							limit = {
+								has_idea = famine_3
+							}
+							remove_ideas = famine_3
+						}
+						if = {
+							limit = {
+								has_idea = famine_1
+							}
+							remove_ideas = famine_1
+						}
+						if = {
+							limit = {
+								has_idea = famine_0
+							}
+							remove_ideas = famine_0
+						}
+					}
+					else_if = {
+						limit = {
+							check_variable = {grain_stockpile_days_left > 29}
+							check_variable = {grain_stockpile_days_left < 180}
+						
+						}
+						add_ideas = famine_1
+						
+						if = {
+							limit = {
+								has_idea = famine_3
+							}
+							remove_ideas = famine_3
+						}
+						if = {
+							limit = {
+								has_idea = famine_2
+							}
+							remove_ideas = famine_2
+						}
+						if = {
+							limit = {
+								has_idea = famine_0
+							}
+							remove_ideas = famine_0
+						}
+					}
+					else_if = {
+						limit = {
+							check_variable = {grain_stockpile_days_left > 179}
+							check_variable = {grain_stockpile_days_left < 365}
+						}
+						add_ideas = famine_0
+						if = {
+							limit = {
+								has_idea = famine_3
+							}
+							remove_ideas = famine_3
+						}
+						if = {
+							limit = {
+								has_idea = famine_2
+							}
+							remove_ideas = famine_2
+						}
+						if = {
+							limit = {
+								has_idea = famine_1
+							}
+							remove_ideas = famine_1
+						}
+						
+					
+					}
+					else = {
+						if = {
+							limit = {
+								has_idea = famine_3
+							}
+							remove_ideas = famine_3
+						}
+						if = {
+							limit = {
+								has_idea = famine_2
+							}
+							remove_ideas = famine_2
+						}
+						if = {
+							limit = {
+								has_idea = famine_1
+							}
+							remove_ideas = famine_1
+						}
+						if = {
+							limit = {
+								has_idea = famine_0
+							}
+							remove_ideas = famine_0
+						}
+					
+					
+					}
 				}
 			}
 		}
