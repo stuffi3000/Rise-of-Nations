@@ -933,87 +933,98 @@ on_actions = {
 					}
 				}					
 			}
-			
-			# add threat for annexation
-			if = {
-				limit = {
-					NOT = { has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing }
-				}
-				# base threat +15
-				set_temp_variable = { league_of_nations_threat_from_annexation_temp = 15 }
+			ROOT = {
 				if = {
 					limit = {
-						FROM = { has_country_flag = was_subject_of_@ROOT }
+						has_country_flag = army_desertion
 					}
-					FROM = { clr_country_flag = was_subject_of_@ROOT }
-					# only 10 threat for annexing subjects
-					subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+					clr_country_flag = army_desertion 
+				}
+			}
+			else_if ={
+				limit = {
+					NOT = {has_country_flag = army_desertion}
+				}
+				# add threat for annexation
+				if = {
+					limit = {
+						NOT = { has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing }
+					}
+					# base threat +15
+					set_temp_variable = { league_of_nations_threat_from_annexation_temp = 15 }
 					if = {
 						limit = {
-							FROM = {
-								OR = {
-									has_country_flag = CHI_integrate_the_administration
-									tag = GXC
-									tag = YUN
-									tag = SHX
-									tag = XSM
-									tag = SIK
-								}
-							}
-							NOT = { has_country_flag = we_already_warlord_annexed_@FROM }
+							FROM = { has_country_flag = was_subject_of_@ROOT }
 						}
-						set_country_flag = we_already_warlord_annexed_@FROM
-						# only 5 threat when annexing warlord subjects
+						FROM = { clr_country_flag = was_subject_of_@ROOT }
+						# only 10 threat for annexing subjects
 						subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+						if = {
+							limit = {
+								FROM = {
+									OR = {
+										has_country_flag = CHI_integrate_the_administration
+										tag = GXC
+										tag = YUN
+										tag = SHX
+										tag = XSM
+										tag = SIK
+									}
+								}
+								NOT = { has_country_flag = we_already_warlord_annexed_@FROM }
+							}
+							set_country_flag = we_already_warlord_annexed_@FROM
+							# only 5 threat when annexing warlord subjects
+							subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+						}
 					}
+					set_variable = { league_of_nations_threat_from_annexation = league_of_nations_threat_from_annexation_temp }
+					add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
+					if = {
+						limit = {
+							check_variable = { league_of_nations_generated_threat > 100 }
+						}
+						set_variable = { league_of_nations_generated_threat = 100 }
+					}
+					if = {
+						limit = {
+							check_variable = { league_of_nations_generated_threat < 0 }
+						}
+						set_variable = { league_of_nations_generated_threat = 0 }
+					}
+					clr_country_flag = last_league_of_nations_threat_static_change
+					set_country_flag = last_league_of_nations_threat_static_change
+					set_variable = { last_league_of_nations_threat_static_change = 2 }
+					sort_array_high_to_low_global_threat_countries_array = yes
+					set_variable = { last_annexed_country = FROM.id }
 				}
-				set_variable = { league_of_nations_threat_from_annexation = league_of_nations_threat_from_annexation_temp }
-				add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
-				if = {
+				else_if = {
 					limit = {
-						check_variable = { league_of_nations_generated_threat > 100 }
+						has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
 					}
-					set_variable = { league_of_nations_generated_threat = 100 }
-				}
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat < 0 }
+					clr_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
+					set_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+					add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
+					if = {
+						limit = {
+							check_variable = { league_of_nations_generated_threat > 100 }
+						}
+						set_variable = { league_of_nations_generated_threat = 100 }
 					}
-					set_variable = { league_of_nations_generated_threat = 0 }
-				}
-				clr_country_flag = last_league_of_nations_threat_static_change
-				set_country_flag = last_league_of_nations_threat_static_change
-				set_variable = { last_league_of_nations_threat_static_change = 2 }
-				sort_array_high_to_low_global_threat_countries_array = yes
-				set_variable = { last_annexed_country = FROM.id }
-			}
-			else_if = {
-				limit = {
-					has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
-				}
-				clr_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
-				set_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
-				add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat > 100 }
+					if = {
+						limit = {
+							check_variable = { league_of_nations_generated_threat < 0 }
+						}
+						set_variable = { league_of_nations_generated_threat = 0 }
 					}
-					set_variable = { league_of_nations_generated_threat = 100 }
+					clr_country_flag = last_league_of_nations_threat_static_change
+					set_country_flag = last_league_of_nations_threat_static_change
+					set_variable = { last_league_of_nations_threat_static_change = 7 }
+					sort_array_high_to_low_global_threat_countries_array = yes
 				}
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat < 0 }
-					}
-					set_variable = { league_of_nations_generated_threat = 0 }
-				}
-				clr_country_flag = last_league_of_nations_threat_static_change
-				set_country_flag = last_league_of_nations_threat_static_change
-				set_variable = { last_league_of_nations_threat_static_change = 7 }
-				sort_array_high_to_low_global_threat_countries_array = yes
 			}
 		}
 	}
-	
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
 		effect = {

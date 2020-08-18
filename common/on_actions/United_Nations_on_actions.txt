@@ -842,162 +842,162 @@ on_actions = {
 	}
 	
 	# ROOT is winner, FROM gets annexed - For civil wars on_civil_war_end is also fired
-	on_annex = {
-		effect = {
-			FROM = {
-				# effects for if LoN leader is annexed
-				if = {
-					limit = {
-						has_country_flag = leader_of_league_of_nations
-					}
-					clr_country_flag = leader_of_league_of_nations
-					clear_global_event_target = league_of_nations_leader
-					set_country_flag = was_leader_of_league_of_nations
-					if = {
-						limit = {
-							any_other_country = {
-								has_country_flag = member_of_league_of_nations
-								has_capitulated = no
-							}
-						}
-						random_other_country = {
-							limit = {
-								has_country_flag = member_of_league_of_nations
-								has_capitulated = no
-							}
-							country_event = { id = league_of_nations_events.10 }
-						}
-						set_variable = { global.days_til_next_league_of_nations_election = 1 }
-					}
-					else_if = {
-						limit = {
-							NOT = {
-								any_other_country = {
-									has_country_flag = member_of_league_of_nations
-									has_capitulated = no
-								}
-							}
-						}
-						set_global_flag = league_of_nations_dissolved
-						every_country = {
-							limit = {
-								has_country_flag = member_of_league_of_nations
-							}
-							leave_league_of_nations_effect = yes
-						}
-						ROOT = {
-							news_event = { id = league_of_nations_news_events.17 }
-						}
-					}
-				}
-				# leave LoN when annexed
-				if = {
-					limit = {
-						has_country_flag = member_of_league_of_nations
-					}						
-					leave_league_of_nations_effect = yes
-				}
-				clr_country_flag = was_leader_of_league_of_nations
-				
-				# Anschluss voting:
-				if = {
-					limit = {
-						original_tag = AUS
-						is_historical_focus_on = yes
-						ROOT = {
-							original_tag = GER
-							has_completed_focus = GER_anschluss
-						}
-						country_exists = MEX
-						MEX = { has_country_flag = member_of_league_of_nations }
-						NOT = { has_global_flag = GER_anschluss_voting_in_queue }
-						NOT = { has_global_flag = GER_anschluss_voting_started }
-					}
-					MEX = {
-						country_event = { id = league_of_nations_events.17 }
-					}
-				}					
-			}
-			
-			# add threat for annexation
-			if = {
-				limit = {
-					NOT = { has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing }
-				}
-				# base threat +15
-				set_temp_variable = { league_of_nations_threat_from_annexation_temp = 15 }
-				if = {
-					limit = {
-						FROM = { has_country_flag = was_subject_of_@ROOT }
-					}
-					FROM = { clr_country_flag = was_subject_of_@ROOT }
-					# only 10 threat for annexing subjects
-					subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
-					if = {
-						limit = {
-							FROM = {
-								OR = {
-									has_country_flag = CHI_integrate_the_administration
-									tag = GXC
-									tag = YUN
-									tag = SHX
-									tag = XSM
-									tag = SIK
-								}
-							}
-							NOT = { has_country_flag = we_already_warlord_annexed_@FROM }
-						}
-						set_country_flag = we_already_warlord_annexed_@FROM
-						# only 5 threat when annexing warlord subjects
-						subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
-					}
-				}
-				set_variable = { league_of_nations_threat_from_annexation = league_of_nations_threat_from_annexation_temp }
-				add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat > 100 }
-					}
-					set_variable = { league_of_nations_generated_threat = 100 }
-				}
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat < 0 }
-					}
-					set_variable = { league_of_nations_generated_threat = 0 }
-				}
-				clr_country_flag = last_league_of_nations_threat_static_change
-				set_country_flag = last_league_of_nations_threat_static_change
-				set_variable = { last_league_of_nations_threat_static_change = 2 }
-				sort_array_high_to_low_global_threat_countries_array = yes
-				set_variable = { last_annexed_country = FROM.id }
-			}
-			else_if = {
-				limit = {
-					has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
-				}
-				clr_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
-				set_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
-				add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat > 100 }
-					}
-					set_variable = { league_of_nations_generated_threat = 100 }
-				}
-				if = {
-					limit = {
-						check_variable = { league_of_nations_generated_threat < 0 }
-					}
-					set_variable = { league_of_nations_generated_threat = 0 }
-				}
-				clr_country_flag = last_league_of_nations_threat_static_change
-				set_country_flag = last_league_of_nations_threat_static_change
-				set_variable = { last_league_of_nations_threat_static_change = 7 }
-				sort_array_high_to_low_global_threat_countries_array = yes
-			}
-		}
-	}
+	#on_annex = {
+	#	effect = {
+	#		FROM = {
+	#			# effects for if LoN leader is annexed
+	#			if = {
+	#				limit = {
+	#					has_country_flag = leader_of_league_of_nations
+	#				}
+	#				clr_country_flag = leader_of_league_of_nations
+	#				clear_global_event_target = league_of_nations_leader
+	#				set_country_flag = was_leader_of_league_of_nations
+	#				if = {
+	#					limit = {
+	#						any_other_country = {
+	#							has_country_flag = member_of_league_of_nations
+	#							has_capitulated = no
+	#						}
+	#					}
+	#					random_other_country = {
+	#						limit = {
+	#							has_country_flag = member_of_league_of_nations
+	#							has_capitulated = no
+	#						}
+	#						country_event = { id = league_of_nations_events.10 }
+	#					}
+	#					set_variable = { global.days_til_next_league_of_nations_election = 1 }
+	#				}
+	#				else_if = {
+	#					limit = {
+	#						NOT = {
+	#							any_other_country = {
+	#								has_country_flag = member_of_league_of_nations
+	#								has_capitulated = no
+	#							}
+	#						}
+	#					}
+	#					set_global_flag = league_of_nations_dissolved
+	#					every_country = {
+	#						limit = {
+	#							has_country_flag = member_of_league_of_nations
+	#						}
+	#						leave_league_of_nations_effect = yes
+	#					}
+	#					ROOT = {
+	#						news_event = { id = league_of_nations_news_events.17 }
+	#					}
+	#				}
+	#			}
+	#			# leave LoN when annexed
+	#			if = {
+	#				limit = {
+	#					has_country_flag = member_of_league_of_nations
+	#				}						
+	#				leave_league_of_nations_effect = yes
+	#			}
+	#			clr_country_flag = was_leader_of_league_of_nations
+	#			
+	#			# Anschluss voting:
+	#			if = {
+	#				limit = {
+	#					original_tag = AUS
+	#					is_historical_focus_on = yes
+	#					ROOT = {
+	#						original_tag = GER
+	#						has_completed_focus = GER_anschluss
+	#					}
+	#					country_exists = MEX
+	#					MEX = { has_country_flag = member_of_league_of_nations }
+	#					NOT = { has_global_flag = GER_anschluss_voting_in_queue }
+	#					NOT = { has_global_flag = GER_anschluss_voting_started }
+	#				}
+	#				MEX = {
+	#					country_event = { id = league_of_nations_events.17 }
+	#				}
+	#			}					
+	#		}
+	#		
+	#		# add threat for annexation
+	#		if = {
+	#			limit = {
+	#				NOT = { has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing }
+	#			}
+	#			# base threat +15
+	#			set_temp_variable = { league_of_nations_threat_from_annexation_temp = 15 }
+	#			if = {
+	#				limit = {
+	#					FROM = { has_country_flag = was_subject_of_@ROOT }
+	#				}
+	#				FROM = { clr_country_flag = was_subject_of_@ROOT }
+	#				# only 10 threat for annexing subjects
+	#				subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+	#				if = {
+	#					limit = {
+	#						FROM = {
+	#							OR = {
+	#								has_country_flag = CHI_integrate_the_administration
+	#								tag = GXC
+	#								tag = YUN
+	#								tag = SHX
+	#								tag = XSM
+	#								tag = SIK
+	#							}
+	#						}
+	#						NOT = { has_country_flag = we_already_warlord_annexed_@FROM }
+	#					}
+	#					set_country_flag = we_already_warlord_annexed_@FROM
+	#					# only 5 threat when annexing warlord subjects
+	#					subtract_from_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+	#				}
+	#			}
+	#			set_variable = { league_of_nations_threat_from_annexation = league_of_nations_threat_from_annexation_temp }
+	#			add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
+	#			if = {
+	#				limit = {
+	#					check_variable = { league_of_nations_generated_threat > 100 }
+	#				}
+	#				set_variable = { league_of_nations_generated_threat = 100 }
+	#			}
+	#			if = {
+	#				limit = {
+	#					check_variable = { league_of_nations_generated_threat < 0 }
+	#				}
+	#				set_variable = { league_of_nations_generated_threat = 0 }
+	#			}
+	#			clr_country_flag = last_league_of_nations_threat_static_change
+	#			set_country_flag = last_league_of_nations_threat_static_change
+	#			set_variable = { last_league_of_nations_threat_static_change = 2 }
+	#			sort_array_high_to_low_global_threat_countries_array = yes
+	#			set_variable = { last_annexed_country = FROM.id }
+	#		}
+	#		else_if = {
+	#			limit = {
+	#				has_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
+	#			}
+	#			clr_country_flag = civil_war_small_aggressiveness_penalty_for_annexing
+	#			set_temp_variable = { league_of_nations_threat_from_annexation_temp = 5 }
+	#			add_to_variable = { league_of_nations_generated_threat = league_of_nations_threat_from_annexation_temp }
+	#			if = {
+	#				limit = {
+	#					check_variable = { league_of_nations_generated_threat > 100 }
+	#				}
+	#				set_variable = { league_of_nations_generated_threat = 100 }
+	#			}
+	#			if = {
+	#				limit = {
+	#					check_variable = { league_of_nations_generated_threat < 0 }
+	#				}
+	#				set_variable = { league_of_nations_generated_threat = 0 }
+	#			}
+	#			clr_country_flag = last_league_of_nations_threat_static_change
+	#			set_country_flag = last_league_of_nations_threat_static_change
+	#			set_variable = { last_league_of_nations_threat_static_change = 7 }
+	#			sort_array_high_to_low_global_threat_countries_array = yes
+	#		}
+	#	}
+	#}
 	
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
