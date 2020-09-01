@@ -1,0 +1,343 @@
+on_actions = {
+
+	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
+	on_state_control_changed = {
+		effect = {
+			# UKR gains ground
+			if = {
+				limit = {
+					ROOT = { tag = UKR }
+					OR = {
+						FROM = { has_country_flag = UKR_uprising }
+						any_country = {
+							is_in_faction_with = FROM
+							has_country_flag = UKR_uprising
+						}
+					}
+					FROM.FROM = { is_core_of = UKR }
+				}
+				UKR = { set_state_owner = FROM.FROM }
+				FROM.FROM = {
+					create_unit = {
+						division = "name = \"Ukrainian Rebel Division\" division_template = \"Ukrainian Rebel Division\" start_experience_factor = 0.7" 
+						owner = UKR
+					}
+					create_unit = {
+						division = "name = \"Ukrainian Rebel Division\" division_template = \"Ukrainian Rebel Division\" start_experience_factor = 0.7" 
+						owner = UKR
+					}
+					create_unit = {
+						division = "name = \"Ukrainian Rebel Division\" division_template = \"Ukrainian Rebel Division\" start_experience_factor = 0.7" 
+						owner = UKR
+					}
+				}
+			}
+			# ROS gains ground as troops march
+			if = {
+				limit = {
+					ROOT = { 
+						original_tag = SOV 
+						has_government = neutrality
+						has_country_flag = Rus_march
+					}
+					OR = {
+						FROM = { tag = GER }
+						FROM = { is_in_faction_with = GER }
+					}
+					FROM.FROM = { is_core_of = ROOT }
+				}
+				ROOT = { set_state_owner = FROM.FROM }
+				FROM.FROM = {
+					create_unit = {
+						division = "name = \"Russkiye Povstantsy\" division_template = \"Russkiye Povstantsy\" start_experience_factor = 0.1" 
+						owner = ROOT
+					}
+				}
+			}
+			# SOV loses important city
+			if = {
+				limit = {
+					FROM = { tag = SOV }
+					ROOT = {
+						OR = { 
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+					FROM.FROM = {
+						OR = {
+							state = 219
+							state = 195
+							state = 202
+							state = 217
+						}
+					}
+				}
+				SOV = {
+					add_stability = -0.10
+					add_war_support -0.20
+				}
+			}
+			# SOV regains important city
+			if = {
+				limit = {
+					ROOT = { tag = SOV }
+					FROM = {
+						OR = { 
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+					FROM.FROM = {
+						OR = {
+							state = 219
+							state = 195
+							state = 202
+							state = 217
+						}
+					}
+				}
+				SOV = {
+					add_stability = 0.10
+					add_war_support 0.20
+				}
+			}
+		}
+	}
+	
+	on_startup = {
+		effect = {
+				GER = { 
+					add_opinion_modifier = { target = POL modifier = POL_GER_border_issues } 
+				}
+				POL = { 
+					add_opinion_modifier = { target = GER modifier = POL_GER_border_issues } 
+				}
+				SOV = {
+					add_country_leader_trait = iron_grasp
+				}
+			}
+	}
+	
+	on_capitulation = {
+		effect = {
+			
+		}
+	}
+	
+	#FROM loser ROOT winner
+	on_peaceconference_ended = {
+		effect = {
+			if = { 
+				limit = { 
+					FROM = { tag = UKR }
+					ROOT = { has_country_flag = UKR_uprising }
+				}
+				every_state = {
+					limit = {
+						is_core_of = UKR
+						is_claimed_by = POL				
+					}
+					POL = {
+						transfer_state = PREV
+					}
+				}
+				POL = { 
+					clr_country_flag = UKR_uprising
+					set_country_flag = had_UKR_uprising
+					add_equipment_to_stockpile = {
+						type = infantry_equipment
+						amount = 5000
+					}
+				}
+				news_event = { id = newsmod.12 days = 1 }
+			}
+			if = {
+				limit = {
+					tag = SOV
+					has_government = neutrality
+				}
+				delete_unit_template_and_units = {
+					division_template = "Russkiye Povstantsy"
+				}
+			}
+		}
+	}
+
+	#ROOT is subject FROM is previous overlord
+	on_subject_free = {
+		effect = {
+			
+		}
+	}
+
+	#ROOT is subject FROM is overlord
+	on_subject_annexed = {
+		effect = {
+			
+		}
+	}
+
+
+	#used when puppeting in a peace conference
+	#ROOT = nation being puppeted, FROM = overlord
+	on_puppet = {
+		effect = {
+			
+		}
+	}
+
+	#used when puppeting through the occupied territories menu during peace time (or when releasing from non-core but owned territory, f.e. Britain releasing Egypt)
+	#ROOT = nation being released, FROM = overlord
+	on_release_as_puppet = {
+		effect = {
+			
+		}
+	}
+	
+	#FROM is war target
+	on_declare_war = {
+		effect = {
+			if = {
+				limit = {
+					FROM = { 
+						tag = SOV 
+						has_government = communism
+					}
+					ROOT = {
+						OR = {
+							tag = GER
+							tag = POL
+						}
+					}
+					has_global_flag = pol_ger_alliance
+				}
+				POL = {
+					activate_decision = POL_GER_attack_SOV
+				}
+			}
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							FROM = {
+								tag = POL
+								has_country_flag = extraterritorial_road_completed
+							}
+							ROOT = {
+								tag = GER
+								
+							}
+						}
+						AND = {
+							FROM = {
+								tag = GER
+							}
+							ROOT = {
+								tag = POL
+								has_country_flag = extraterritorial_road_completed
+							}
+						}
+					}
+				}
+				POL = {
+					clr_country_flag = extraterritorial_road_completed
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						OR = {
+							tag = GER
+							tag = POL
+						}
+					}
+					ROOT = { 
+						tag = SOV 
+						has_government = communism
+					}
+					has_global_flag = pol_ger_alliance
+				}
+				POL = {
+					activate_decision = POL_GER_attack_SOV
+				}
+			}
+		}
+	}
+
+	#ROOT is winner #FROM gets annexed - This will also fire on_annex
+	on_civil_war_end = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						original_tag = POL
+					}
+					ROOT = {
+						original_tag = POL	
+					}
+				}
+				set_capital = 10
+			}
+			if = { 
+				limit = { 
+					FROM = { tag = SOV }
+					ROOT = { has_government = neutrality }
+				}
+				ROOT = {
+					drop_cosmetic_tag = yes
+					set_cosmetic_tag = SOV_Russia 
+				}
+			}
+		}
+	}
+	
+	#ROOT is winner #FROM gets annexed - This fires just before FROM gets annexed, meaning the country and everything it owns still exists. It will also fire on_annex and on_civil_war_end
+	on_civil_war_end_before_annexation = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						original_tag = POL
+					}
+					ROOT = {
+						original_tag = POL	
+					}
+				}
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 5000
+				}
+				FROM = {
+					transfer_navy = { target = ROOT }
+				}
+			}
+		}
+	}
+	
+	on_leave_faction = {
+		effect = {
+			if = {
+				limit = {
+					tag = POL
+					has_global_flag = pol_ger_alliance
+					NOT = { 
+						has_non_aggression_pact_with = GER 
+						GER = { has_military_access_to = POL }
+					}
+				}
+				set_variable = {
+					var = global.POL_GER_relation
+					value = 0
+				}
+			}
+		}
+	}
+	
+	on_government_change = {
+		effect = {
+			
+		}
+	}
+
+}

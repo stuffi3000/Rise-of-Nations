@@ -1,0 +1,110 @@
+on_actions = {
+	on_new_term_election = {
+		random_events = {
+			100 = hungary_flavor_elections.1
+			100 = hungary_flavor_elections.2
+			100 = hungary_flavor_elections.3
+		}
+	}
+	#PREV is war target
+	on_declare_war = {
+		effect = {
+
+			## Hungarian war
+			if = {
+				limit = {
+					OR = {
+						PREV = { tag = HUN }
+						ROOT = { tag = HUN }
+					}
+					HUN = { NOT = { has_country_flag = HUN_had_war } }
+					HUN = { exists = yes }
+				}
+				HUN = { set_country_flag = HUN_had_war }
+			}
+		}
+	}
+	
+	# ROOT is capitulated country, FROM is winner
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = { HUN = { has_war = yes } }
+				HUN = { set_country_flag = HUN_had_war }
+			}
+		}
+	}
+	
+	on_leave_faction = {
+		effect = {
+			if = { limit = { has_country_flag = HUN_visegrad_group_member } 
+				country_event = { hours = 6 id = hungary_flavor_gen.8 }
+			}
+			if = { limit = { has_country_flag = HUN_danube_federation_member } 
+				country_event = { hours = 6 id = hungary_flavor_gen.22 }
+			}
+		}
+	}
+	
+	on_join_faction = {
+		effect = {
+			if = { limit = { FROM = { has_country_flag = HUN_visegrad_group_member } }
+				country_event = { hours = 6 id = hungary_flavor_gen.7 }
+			}
+			if = { limit = { FROM = { has_country_flag = HUN_danube_federation_member } }
+				country_event = { hours = 6 id = hungary_flavor_gen.21 }
+			}
+		}
+	}
+	
+	#Not run on a specific country.
+	on_startup = {
+		effect = {
+			HUN = { country_event = { id = hungary_flavor.1 } }			#Welcome event (decide between realistic and non-realistic version)
+			HUN = { country_event = { id = hun_news.26 days = 280 } }	#Event for the death of Gyula Gömbös
+			HUN = { country_event = { id = hun_news.22 days = 4457 } }	#Event for the 100th anniversary of the 1848 revolution (event checks whether HUN is not AHU before actually firing)
+			
+			# Set up some flags & variables at the start of the game
+			HUN = {
+				if = { 
+					limit = {
+						has_game_rule = {
+							rule = HUN_ai_behavior
+							option = RANDOM
+						}
+					}
+					random_list = {
+						15 = { set_country_flag = HUN_AI_RANDOM_HISTORICAL_HUN_FLAVOR }
+						10 = { set_country_flag = HUN_AI_RANDOM_REVISIONIST_HUN_FLAVOR }
+						10 = { set_country_flag = HUN_AI_RANDOM_REVISIONIST_GERMANY_HUN_FLAVOR }
+						10 = { set_country_flag = HUN_AI_RANDOM_AUSTRIA_HUNGARY_HUN_FLAVOR }
+						7 = { set_country_flag = HUN_AI_RANDOM_COMMUNIST_KADAR_HUN_FLAVOR }
+						8 = { set_country_flag = HUN_AI_RANDOM_COMMUNIST_RAKOSI_HUN_FLAVOR }
+						7 = { set_country_flag = HUN_AI_RANDOM_COMMUNIST_KUN_HUN_FLAVOR }
+						8 = { set_country_flag = HUN_AI_RANDOM_DEMOCRATIC_HUN_FLAVOR }
+						7 = { set_country_flag = HUN_AI_RANDOM_DEMOCRATIC_VISEGRAD_HUN_FLAVOR }
+						8 = { set_country_flag = HUN_AI_RANDOM_DEMOCRATIC_COALITION_HUN_FLAVOR }
+						10 = { set_country_flag = HUN_AI_RANDOM_HUNGARIST_HUN_FLAVOR }
+					}
+				}
+			}
+			
+			# United Kingdom starts out as the country responsible for curbing Hungary's expansion
+			ENG = {
+				set_country_flag = HUN_policing_expansion_of_hungary
+			}
+		}
+	}
+
+	on_government_exiled = {
+		effect = {
+			if = {
+				limit = {
+					original_tag = HUN
+					has_government = communism
+				}
+				create_politician_mihaly_karolyi = yes
+			}
+		}
+	}
+}

@@ -1,0 +1,1875 @@
+focus_tree = {
+	id = RON_Ethiopia
+	
+	country = {
+		factor = 0
+		
+		modifier = {
+			add = 10
+			tag = ETH
+		}
+	}
+
+	focus = {
+		id = plan_ITA_war
+		icon = GFX_goal_generic_major_war
+		x = 8
+		y = 0
+		cost = 5
+
+		completion_reward = {
+			add_war_support = 0.075
+			army_experience = 15
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 0.75
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = steal_ITA_arm1
+		icon = GFX_goal_generic_small_arms
+		prerequisite = { focus = plan_ITA_war }
+		relative_position_id = plan_ITA_war
+		x = -3
+		y = 1
+		cost = 5
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = infantry_artillery_bonus
+				bonus = 0.8
+				uses = 2
+				category = infantry_weapons
+				category = artillery
+			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+   				amount = 750
+   				producer = ITA
+			}
+		}
+	}
+
+	focus = {
+		id = focus_on_war
+		icon = GFX_goal_generic_political_pressure
+		prerequisite = { focus = plan_ITA_war }
+		relative_position_id = plan_ITA_war
+		x = 10
+		y = 1
+		cost = 5
+
+		available = {
+			has_war = yes
+		}
+
+		completion_reward = {
+			add_timed_idea = {
+				idea = mil_focus_1
+				days = 365
+			}
+		}
+	}
+
+	focus = {
+		id = GERaid
+		icon = GFX_focus_attack_germany
+		prerequisite = { focus = steal_ITA_arm1 }
+		mutually_exclusive = { focus = ENGaid }
+		mutually_exclusive = { focus = SOVaid }
+		mutually_exclusive = { focus = JAPaid }
+		relative_position_id = steal_ITA_arm1
+		x = -3
+		y = 2
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+			NOT = {
+				GER = {
+					is_in_faction_with = ITA
+				}
+			}
+			GER = {
+				has_completed_focus = GER_rhineland
+			}
+		}
+
+		completion_reward = {
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+   				amount = 10000
+   				producer = GER
+			}
+			add_opinion_modifier = { target = GER modifier = offered_support }
+			GER = {
+				add_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = ENGaid
+		icon = GFX_focus_attack_britain
+		prerequisite = { focus = steal_ITA_arm1 }
+		mutually_exclusive = { focus = SOVaid }
+		mutually_exclusive = { focus = GERaid }
+		mutually_exclusive = { focus = JAPaid }
+		relative_position_id = steal_ITA_arm1
+		x = 0
+		y = 2
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+			threat > 0.1
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = secret_bonus
+				bonus = 1
+				ahead_reduction = 1
+				uses = 1
+				category = electronics
+			}
+			add_stability = 0.025
+			add_opinion_modifier = { target = ENG modifier = offered_support }
+			ENG = {
+				add_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = SOVaid
+		icon = GFX_focus_attack_soviet
+		prerequisite = { focus = steal_ITA_arm1 }
+		mutually_exclusive = { focus = ENGaid }
+		mutually_exclusive = { focus = GERaid }
+		mutually_exclusive = { focus = JAPaid }
+		relative_position_id = steal_ITA_arm1
+		x = 3
+		y = 2
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 1
+				uses = 1
+				category = land_doctrine
+			}
+			add_political_power = 50
+			add_opinion_modifier = { target = SOV modifier = offered_support }
+			SOV = {
+				add_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = demo_inf_ENG
+		icon = GFX_goal_support_democracy
+		prerequisite = { focus = ENGaid }
+		relative_position_id = ENGaid
+		x = 0
+		y = 2
+		cost = 10
+
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.25
+			}
+			add_ideas = democRAT
+		}
+	}
+
+	focus = {
+		id = join_allys
+		icon = GFX_goal_generic_improve_relations
+		prerequisite = { focus = demo_inf_ENG focus = anti_SOV_sent }
+		relative_position_id = demo_inf_ENG
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			ENG = {
+				has_government = democratic
+				is_faction_leader = yes
+			}
+		}
+
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+			ENG = {
+				add_to_faction = ETH
+			}
+		}
+	}
+
+	focus = {
+		id = face_inf_GER
+		icon = GFX_goal_support_fascism
+		prerequisite = { focus = GERaid }
+		mutually_exclusive = { focus = stay_newt }
+		relative_position_id = GERaid
+		x = 0
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.2
+			}
+			add_ideas = face_it_GER
+		}
+	}
+
+	focus = {
+		id = stay_newt
+		icon = GFX_goal_generic_defence
+		prerequisite = { focus = GERaid }
+		mutually_exclusive = { focus = face_inf_GER }
+		relative_position_id = GERaid
+		x = -2
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_ideas = deterrence
+			add_ideas = neutrality_idea
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+			GER = {
+				remove_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = my
+		icon = GFX_goal_generic_more_territorial_claims
+		prerequisite = { focus = face_inf_GER }
+		x = 0
+		y = 1
+		relative_position_id = face_inf_GER
+		cost = 10
+	
+		search_filters = { FOCUS_FILTER_POLITICAL  }
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_ideas = military_youth_focus
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+		}
+	}
+
+	focus = {
+		id = join_axiss
+		icon = GFX_goal_generic_major_alliance
+		prerequisite = { focus = my }
+		relative_position_id = my
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			GER = {
+				has_government = fascism
+				is_faction_leader = yes
+			}
+			has_government = fascism
+		}
+
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+			add_war_support = 0.15
+			GER = {
+				add_to_faction = ETH
+			}
+		}
+	}
+
+	focus = {
+		id = attempt_newt
+		icon = GFX_goal_generic_defence
+		prerequisite = { focus = SOVaid }
+		mutually_exclusive = { focus = comm_inf_SOV }
+		relative_position_id = SOVaid
+		x = -1
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_ideas = deterrence
+			add_timed_idea = {
+				idea = communist_partisans_recruiting
+				days = 365
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			SOV = {
+				remove_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = comm_inf_SOV
+		icon = GFX_goal_support_communism
+		prerequisite = { focus = SOVaid }
+		mutually_exclusive = { focus = attempt_newt }
+		relative_position_id = SOVaid
+		x = 1
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_ideas = communal_bro
+			add_popularity = {
+				ideology = communism
+				popularity = 0.25
+			}
+			add_political_power = 50
+		}
+	}
+
+	focus = {
+		id = anti_SOV_sent
+		icon = GFX_goal_anti_comintern_pact
+		prerequisite = { focus = attempt_newt }
+		mutually_exclusive = { focus = pro_SOV_build }
+		relative_position_id = attempt_newt
+		x = 0
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_political_power = 75
+			add_popularity = {
+				ideology = communism
+				popularity = -0.1
+			}
+			add_ideas = no_commies_here_ETH
+			SOV = {
+				add_opinion_modifier = { target = ETH modifier = FRA_ban_communism }
+			}
+		}
+	}
+
+	focus = {
+		id = pro_SOV_build
+		icon = GFX_goal_generic_soviet_construction
+		prerequisite = { focus = attempt_newt focus = comm_inf_SOV }
+		mutually_exclusive = { focus = anti_SOV_sent }
+		relative_position_id = attempt_newt
+		x = 2
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.25
+			}
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = ENG_unsanction
+		icon = GFX_goal_generic_trade
+		prerequisite = { focus = ENGaid }
+		relative_position_id = ENGaid
+		x = -1
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_stability = 0.025
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.15
+			}
+			add_offsite_building = {
+				type = industrial_complex level = 1
+			}
+		}
+	}
+
+	focus = {
+		id = join_commies
+		icon = GFX_goal_generic_dangerous_deal
+		prerequisite = { focus = pro_SOV_build }
+		relative_position_id = pro_SOV_build
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			SOV = {
+				has_government = communism
+				is_faction_leader = yes
+			}
+			communism > 0.4
+		}
+
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			add_war_support = 0.05
+			add_stability = 0.05
+			SOV = {
+				add_to_faction = ETH
+			}
+		}
+	}
+
+	focus = {
+		id = join_axisss
+		icon = GFX_goal_generic_major_alliance
+		prerequisite = { focus = anti_SOV_sent }
+		relative_position_id = anti_SOV_sent
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			GER = {
+				has_government = fascism
+				is_faction_leader = yes
+			}
+		}
+
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+			add_war_support = 0.075
+			GER = {
+				add_to_faction = ETH
+			}
+		}
+	}
+
+	focus = {
+		id = fort_addis_ababa
+		icon = GFX_goal_generic_fortify_city
+		prerequisite = { focus = stay_newt }
+		relative_position_id = stay_newt
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			owns_state = 271
+		}
+
+		completion_reward = {
+			271 = {
+				add_building_construction = {
+					type = bunker
+					level = 5
+					province = 5010
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = offer_peace1
+		icon = GFX_goal_anschluss
+		prerequisite = { focus = focus_on_war }
+		relative_position_id = focus_on_war
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+			date > 1937.1.1
+		}
+
+		bypass = {
+			exists = yes
+			OR = {
+				NOT = {
+					has_war_with = ITA
+				}
+				ITA = {
+					exists = no
+				}
+			}
+		}
+
+		completion_reward = {
+			ITA = { 
+				country_event = ETH.1
+			}
+			add_political_power = 25
+			add_stability = 0.05
+		}
+	}
+
+	focus = {
+		id = offer_peace2
+		icon = GFX_goal_anschluss
+		prerequisite = { focus = offer_peace1 }
+		relative_position_id = offer_peace1
+		x = 0
+		y = 2
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+			date > 1938.1.1
+		}
+
+		bypass = {
+			exists = yes
+			OR = {
+				NOT = {
+					has_war_with = ITA
+				}
+				ITA = {
+					exists = no
+				}
+			}
+		}
+
+		completion_reward = {
+			ITA = { 
+				country_event = ETH.1
+			}
+			add_political_power = 25
+			add_stability = 0.05
+		}
+	}
+
+	focus = {
+		id = claim_horn
+		icon = GFX_goal_generic_position_armies
+		prerequisite = { focus = offer_peace1 }
+		relative_position_id = offer_peace1
+		x = -2
+		y = 1
+		cost = 10
+
+		available = {
+			exists = yes
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+			add_stability = 0.05
+			add_state_core = 268
+			add_state_core = 269
+			add_state_core = 550
+			add_state_core = 559
+		}
+	}
+
+	focus = {
+		id = take_DJI
+		icon = GFX_goal_generic_demand_territory
+		prerequisite = { focus = claim_horn }
+		relative_position_id = claim_horn
+		x = 1
+		y = 2
+		cost = 5
+
+		available = {
+			owns_state = 271
+			NOT = {
+				has_war_with = FRA
+			}
+		}
+
+		completion_reward = {
+			transfer_state = 268
+			268 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	focus = {
+		id = take_SOM
+		icon = GFX_goal_generic_demand_territory
+		prerequisite = { focus = claim_horn }
+		relative_position_id = claim_horn
+		x = -1
+		y = 2
+		cost = 5
+
+		available = {
+			owns_state = 271
+			NOT = {
+				has_war_with = ENG
+			}
+		}
+
+		completion_reward = {
+			transfer_state = 269
+			269 = {
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+	}
+
+	focus = {
+		id = take_horn
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = claim_horn }
+		relative_position_id = claim_horn
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			owns_state = 271
+			NOT = {
+				has_war_with = ITA
+			}
+			ITA = {
+				owns_state = 550
+				owns_state = 559
+			}
+		}
+
+		bypass = {
+			owns_state = 550
+			owns_state = 559
+		}
+
+		completion_reward = {
+			transfer_state = 559
+			559 = {
+				add_extra_state_shared_building_slots = 1
+			}
+			transfer_state = 550
+			550 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	focus = {
+		id = fort_vic
+		icon = GFX_goal_generic_construct_military
+		prerequisite = { focus = focus_on_war }
+		relative_position_id = focus_on_war
+		x = 2
+		y = 1
+		cost = 5
+
+		available = {
+			owns_state = 271
+		}
+
+		completion_reward = {
+			271 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 5010
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = bunker
+					level = 2
+					province = 7980
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = anti_air_building
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = peace_construct
+		icon = GFX_goal_generic_construct_civ_factory
+		prerequisite = { focus = offer_peace1 }
+		relative_position_id = offer_peace1
+		x = 2
+		y = 1
+		cost = 10
+
+		available = {
+			owns_state = 271
+			has_war = no
+		}
+
+		completion_reward = {
+			271 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = connenct
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = peace_construct }
+		relative_position_id = peace_construct
+		x = 0
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			271 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = cre_nav
+		icon = GFX_goal_generic_construct_naval_dockyard
+		prerequisite = { focus = take_horn focus = take_SOM focus = take_DJI }
+		relative_position_id = take_horn
+		x = 0
+		y = 2
+		cost = 10
+
+		available = {
+			NOT = {
+				has_war = yes
+			}
+			OR = {
+				owns_state = 550
+				owns_state = 559
+				owns_state = 268
+				owns_state = 269
+			}
+		}
+
+		completion_reward = {
+			navy_experience = 25
+			random_owned_controlled_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = dockyard
+					level = 3
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = prodder1
+		icon = GFX_goal_generic_construct_mil_factory
+		prerequisite = { focus = connenct }
+		relative_position_id = connenct
+		x = 1
+		y = 1
+		cost = 5
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = conner1
+		icon = GFX_goal_generic_construct_civ_factory
+		prerequisite = { focus = connenct }
+		relative_position_id = connenct
+		x = -1
+		y = 1
+		cost = 5
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = em1
+		icon = GFX_goal_generic_construction2
+		prerequisite = { focus = offer_peace1 }
+		relative_position_id = offer_peace1
+		x = 4
+		y = 1
+		cost = 5
+
+		available = {
+			owns_state = 271
+		}
+
+		completion_reward = {
+			add_resource = {
+				type = steel
+				amount = 8
+				state = 271
+			}
+		}
+	}
+
+	focus = {
+		id = em2
+		icon = GFX_goal_generic_construction2
+		prerequisite = { focus = em1 }
+		relative_position_id = em1
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			owns_state = 271
+		}
+
+		completion_reward = {
+			add_resource = {
+				type = steel
+				amount = 4
+				state = 271
+			}
+			add_resource = {
+				type = tungsten
+				amount = 6
+				state = 271
+			}
+			add_resource = {
+				type = aluminium
+				amount = 6
+				state = 271
+			}
+		}
+	}
+
+	focus = {
+		id = prodder2
+		icon = GFX_goal_generic_construct_mil_factory
+		prerequisite = { focus = prodder1 }
+		relative_position_id = connenct
+		x = 1
+		y = 2
+		cost = 10
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = conner2
+		icon = GFX_goal_generic_construct_civ_factory
+		prerequisite = { focus = conner1 }
+		relative_position_id = connenct
+		x = -1
+		y = 2
+		cost = 10
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = connenct2
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = conner2 }
+		prerequisite = { focus = prodder2 }
+		relative_position_id = connenct
+		x = 0
+		y = 3
+		cost = 10
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = unify_east_africa
+		icon = GFX_goal_generic_demand_territory
+		prerequisite = { focus = take_SOM }
+		relative_position_id = take_SOM
+		x = -1
+		y = 2
+		cost = 5
+
+		available = {
+			NOT = {
+				has_war_with = ENG
+			}
+		}
+
+		completion_reward = {
+			add_political_power = 75
+			transfer_state = 547
+			547 = {
+				add_extra_state_shared_building_slots = 1
+			}
+		}
+	}
+
+	focus = {
+		id = CAS_smuggling
+		icon = GFX_goal_generic_CAS
+		prerequisite = { focus = plan_ITA_war }
+		relative_position_id = steal_ITA_arm1
+		x = 3
+		y = 0
+		cost = 5
+
+		available = {
+			has_war = yes
+			NOT = {
+				has_war_with = ENG
+			}
+		}
+
+		completion_reward = {
+			add_equipment_to_stockpile = {
+    			type = CAS_equipment
+   				amount = 25
+   				producer = ENG
+			}
+			add_equipment_to_stockpile = {
+    			type = fighter_equipment
+   				amount = 25
+   				producer = ENG
+			}
+			add_tech_bonus = {
+				name = CAS_bonus
+				bonus = 0.75
+				uses = 3
+				category = cas_bomber
+				technology = early_fighter
+				technology = fighter1
+				technology = fighter2
+			}
+		}
+	}
+	
+	focus = {
+		id = african_brotherhood
+		icon = GFX_focus_generic_diplomatic_treaty
+		prerequisite = { focus = focus_on_war }
+		relative_position_id = focus_on_war
+		x = -2
+		y = 1
+		cost = 5
+
+		available = {
+			owns_state = 271
+			has_war = yes
+		}
+
+		completion_reward = {
+			add_stability = 0.05
+			add_war_support = 0.05
+			add_political_power = 25
+			hidden_effect = {
+				load_oob = Brothers
+				if = {
+					limit = { ITA = { controls_state = 550 } }
+					550 = {
+						add_resistance = 33
+					}
+				}
+				if = {
+					limit = { ITA = { controls_state = 550 } }
+					550 = {
+						add_resistance = 33
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = assure_peep1
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = plan_ITA_war }
+		relative_position_id = plan_ITA_war
+		x = 5
+		y = 1
+		cost = 5
+
+		available = {
+			exists = yes
+		}
+
+		completion_reward = {
+			add_political_power = 25
+			add_stability = 0.075
+		}
+	}
+
+	focus = {
+		id = assure_peep2
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = assure_peep1 }
+		relative_position_id = assure_peep1
+		x = 0
+		y = 1
+		cost = 5
+
+		available = {
+			exists = yes
+		}
+
+		completion_reward = {
+			add_political_power = 25
+			add_stability = 0.075
+		}
+	}
+
+	focus = {
+		id = industrialize_masses
+		icon = GFX_goal_generic_production
+		prerequisite = { focus = assure_peep1 }
+		relative_position_id = assure_peep1
+		x = 1
+		y = 2
+		cost = 5
+
+		available = {
+			exists = yes
+		}
+
+		completion_reward = {
+			add_ideas = indus_mass
+		}
+	}
+
+	focus = {
+		id = start_ship_doctrine
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		prerequisite = { focus = cre_nav }
+		relative_position_id = cre_nav
+		x = 0
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			navy_experience = 10
+			add_tech_bonus = {
+				name = USA_fund_the_navy
+				uses = 2
+				bonus = 0.75
+				category = naval_doctrine
+			}
+		}
+	}
+
+	focus = {
+		id = prepare_future
+		icon = GFX_focus_research
+		prerequisite = { focus = connenct2 }
+		x = 0
+		y = 1
+		relative_position_id = connenct2
+		cost = 10
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = steal_ITA_arm2
+		icon = GFX_goal_generic_army_artillery2
+		prerequisite = { focus = steal_ITA_arm1 }
+		relative_position_id = steal_ITA_arm1
+		x = -5
+		y = 1
+		cost = 5
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = infantry_artillery_bonus
+				bonus = 1.0
+				uses = 1
+				category = infantry_weapons
+				category = artillery
+			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+   				amount = 500
+   				producer = ITA
+			}
+		}
+	}
+
+	focus = {
+		id = reverse_engine_dept
+		icon = GFX_goal_generic_build_tank
+		prerequisite = { focus = steal_ITA_arm2 }
+		relative_position_id = steal_ITA_arm2
+		x = 0
+		y = 1
+		cost = 5
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = car_go_vroom1
+		icon = GFX_goal_generic_army_motorized
+		prerequisite = { focus = steal_ITA_arm1 }
+		x = -1
+		y = 1
+		relative_position_id = steal_ITA_arm1
+		cost = 5
+		
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = motorized_bonus
+				bonus = 1.5
+				technology = motorised_infantry
+			}
+		}
+	}
+
+	focus = {
+		id = steal_ITA_oil
+		icon = GFX_goal_generic_oil_refinery
+		prerequisite = { focus = steal_ITA_arm1 }
+		relative_position_id = steal_ITA_arm1
+		x = 2
+		y = 1
+		cost = 5
+
+		available = {
+			owns_state = 271
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_resource = {
+				type = oil
+				amount = 3
+				state = 271
+			}
+			ITA = {
+				add_political_power = -25
+			}
+		}
+	}
+
+	focus = {
+		id = subway_creation
+		icon = GFX_goal_generic_navy_submarine
+		prerequisite = { focus = start_ship_doctrine }
+		x = 0
+		y = 1
+		relative_position_id = start_ship_doctrine
+		cost = 10
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = ss_bonus
+				bonus = 1.0
+				uses = 2
+				category = ss_tech
+			}
+		}
+	}
+
+	focus = {
+		id = ddt
+		icon = GFX_goal_generic_wolf_pack
+		prerequisite = { focus = start_ship_doctrine }
+		x = 2
+		y = 1
+		relative_position_id = start_ship_doctrine
+		cost = 10
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = dd_bonus
+				bonus = 1.0
+				uses = 2
+				category = dd_tech
+			}
+		}
+	}
+
+	focus = {
+		id = cruise_missile_boat
+		icon = GFX_goal_generic_navy_cruiser
+		prerequisite = { focus = start_ship_doctrine }
+		x = -2
+		y = 1
+		relative_position_id = start_ship_doctrine
+		cost = 10
+		
+		available_if_capitulated = yes
+
+		completion_reward = {
+			random_owned_controlled_state = {
+				limit = { is_coastal = yes }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = cr_bonus
+				bonus = 1.0
+				uses = 3
+				category = cl_tech
+				category = ca_tech
+			}
+		}
+	}
+
+	focus = {
+		id = focus_on_war2
+		icon = GFX_goal_generic_political_pressure
+		prerequisite = { focus = offer_peace2 }
+		relative_position_id = offer_peace2
+		x = 0
+		y = 3
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+			NOT = {
+				has_idea = mil_focus_1
+			}
+		}
+
+		completion_reward = {
+			add_ideas = mil_focus_2
+		}
+	}
+
+	focus = {
+		id = idle_power
+		icon = GFX_goal_generic_demand_territory
+		prerequisite = { focus = fort_addis_ababa }
+		relative_position_id = fort_addis_ababa
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			has_war = no
+		}
+
+		completion_reward = {
+			add_political_power = 150
+			add_stability = 0.1
+			ENG = {
+				add_stability = -0.05
+			}
+			hidden_effect = {
+				551 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				549 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				548 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				546 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				771 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				770 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+				545 = {
+					add_resistance = 25
+					add_compliance = -25
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = JAPaid
+		icon = GFX_focus_attack_japan
+		prerequisite = { focus = steal_ITA_arm1 }
+		mutually_exclusive = { focus = SOVaid }
+		mutually_exclusive = { focus = GERaid }
+		mutually_exclusive = { focus = ENGaid }
+		relative_position_id = steal_ITA_arm1
+		x = 7
+		y = 2
+		cost = 10
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 1.5
+				uses = 1
+				category = land_doctrine
+			}
+			add_political_power = -25
+			add_opinion_modifier = { target = JAP modifier = offered_support }
+			JAP = {
+				add_opinion_modifier = { target = ETH modifier = offered_support }
+			}
+		}
+	}
+
+	focus = {
+		id = strength_emprah
+		icon = GFX_goal_demand_sudetenland
+		prerequisite = { focus = JAPaid }
+		relative_position_id = JAPaid
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			has_war = yes
+		}
+
+		completion_reward = {
+			add_political_power = 100
+			add_ideas = ancient_emperor_ETH
+			add_opinion_modifier = { target = JAP modifier = attache_sent }
+			JAP = {
+				add_opinion_modifier = { target = ETH modifier = attache_sent }
+			}
+		}
+	}
+
+	focus = {
+		id = defend_ancient_lands
+		icon = GFX_goal_generic_major_war
+		prerequisite = { focus = strength_emprah }
+		relative_position_id = strength_emprah
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			has_war = yes
+		}
+
+		completion_reward = {
+			if = {
+				limit = { has_war_support < 0.95 }
+				add_war_support = 0.1
+			}
+			add_ideas = defend_our_ancient_lands
+		}
+	}
+
+	focus = {
+		id = ETH_join_JAP
+		icon = GFX_goal_generic_alliance
+		prerequisite = { focus = defend_ancient_lands }
+		mutually_exclusive = { focus = ETH_stand_alone }
+		relative_position_id = defend_ancient_lands
+		x = 1
+		y = 1
+		cost = 10
+
+		available = {
+			JAP = {
+				is_faction_leader = yes
+			}
+		}
+
+		completion_reward = {
+			JAP = {
+				add_to_faction = ETH
+			}
+			add_political_power = 50
+		}
+	}
+
+	focus = {
+		id = ETH_stand_alone
+		icon = GFX_goal_generic_axis_build_infantry
+		prerequisite = { focus = defend_ancient_lands }
+		mutually_exclusive = { focus = ETH_join_JAP }
+		relative_position_id = defend_ancient_lands
+		x = -1
+		y = 1
+		cost = 10
+
+		completion_reward = {
+			add_political_power = 150
+		}
+	}
+
+	focus = {
+		id = steal_ITA_tanks
+		icon = GFX_goal_generic_army_tanks
+		prerequisite = { focus = steal_ITA_arm1 }
+		relative_position_id = CAS_smuggling
+		x = 2
+		y = 1
+		cost = 5
+
+		available = {
+			has_war_with = ITA
+		}
+
+		completion_reward = {
+			add_equipment_to_stockpile = {
+    			type = light_tank_equipment_1
+   				amount = 100
+   				producer = ITA
+			}
+			add_tech_bonus = {
+				name = armor_bonus
+				bonus = 0.75
+				uses = 2
+				category = armor
+			}
+		}
+	}
+
+	focus = {
+		id = strike_at_ITA
+		icon = GFX_focus_attack_italy
+		prerequisite = { focus = focus_on_war }
+		relative_position_id = focus_on_war
+		x = 8
+		y = 1
+		cost = 10
+
+		available = {
+			exists = yes
+			ITA = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+		}
+	}
+
+	focus = {
+		id = strike_ITA_sea1
+		icon = GFX_goal_generic_construct_naval_dockyard
+		prerequisite = { focus = strike_at_ITA }
+		relative_position_id = strike_at_ITA
+		x = -2
+		y = 1
+		cost = 10
+
+		available = {
+			exists = yes
+			controls_state = 550
+			ITA = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			550 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			add_state_core = 550
+			add_tech_bonus = {
+				name = USA_amphibious_operations
+				bonus = 1.0
+				uses = 1
+				technology = marines
+			}
+		}
+	}
+
+	focus = {
+		id = hop_EUR1
+		icon = GFX_focus_usa_escort_fighters
+		prerequisite = { focus = strike_at_ITA }
+		relative_position_id = strike_at_ITA
+		x = 2
+		y = 1
+		cost = 10
+
+		available = {
+			exists = yes
+			ITA = {
+				exists = yes
+			}
+			ENG = {
+				controls_state = 453
+				controls_state = 446
+			}
+		}
+
+		completion_reward = {
+			ENG = {
+				country_event = ETH.2
+			}
+			add_political_power = -25
+			add_war_support = 0.05
+		}
+	}
+
+	focus = {
+		id = ETH_take_YEM
+		icon = GFX_goal_generic_demand_territory
+		prerequisite = { focus = strike_at_ITA }
+		relative_position_id = strike_at_ITA
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			YEM = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+			add_state_core = 293
+			create_wargoal = {
+				type = annex_everything
+				target = YEM
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = ETH_take_SAU
+		icon = GFX_goal_generic_major_war
+		prerequisite = { focus = ETH_take_YEM }
+		relative_position_id = ETH_take_YEM
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			SAU = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			add_state_core = 679
+			add_state_core = 292
+			create_wargoal = {
+				type = annex_everything
+				target = SAU
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = ETH_take_IRQ
+		icon = GFX_focus_generic_combined_arms
+		prerequisite = { focus = ETH_take_SAU }
+		relative_position_id = ETH_take_SAU
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			IRQ = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			add_state_core = 676
+			add_state_core = 291
+			add_state_core = 675
+			create_wargoal = {
+				type = annex_everything
+				target = IRQ
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = ETH_take_TUR
+		icon = GFX_goal_generic_political_pressure
+		prerequisite = { focus = ETH_take_IRQ }
+		mutually_exclusive = { focus = hop_EUR2 }
+		relative_position_id = ETH_take_IRQ
+		x = 0
+		y = 1
+		cost = 10
+
+		available = {
+			TUR = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			add_state_core = 350
+			add_state_core = 352
+			add_state_core = 344
+			add_state_core = 348
+			add_state_core = 346
+			add_state_core = 345
+			add_state_core = 342
+			add_state_core = 339
+			add_state_core = 343
+			create_wargoal = {
+				type = annex_everything
+				target = TUR
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = hop_EUR2
+		icon = GFX_goal_generic_army_doctrines
+		prerequisite = { focus = hop_EUR1 }
+		mutually_exclusive = { focus = ETH_take_TUR }
+		relative_position_id = hop_EUR1
+		x = 0
+		y = 3
+		cost = 10
+
+		available = {
+			exists = yes
+			TUR = {
+				controls_state = 342
+			}
+			ITA = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			TUR = {
+				country_event = ETH.3
+			}
+			add_political_power = -25
+			add_war_support = 0.05
+		}
+	}
+
+	focus = {
+		id = strike_ITA_sea2
+		icon = GFX_goal_generic_amphibious_assault
+		prerequisite = { focus = strike_ITA_sea1 }
+		relative_position_id = strike_ITA_sea1
+		x = 0
+		y = 3
+		cost = 10
+
+		available = {
+			exists = yes
+			OR = {
+				controls_state = 342
+				controls_state = 453
+			}
+			ITA = {
+				exists = yes
+			}
+		}
+
+		completion_reward = {
+			if = {
+				limit = { owns_state = 342 }
+				342 = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			if = {
+				limit = { owns_state = 453 }
+				453 = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+			add_tech_bonus = {
+				name = USA_amphibious_operations
+				bonus = 1.0
+				uses = 3
+				technology = marines2
+				technology = marines3
+				category = tp_tech
+			}
+		}
+	}
+
+	focus = {
+		id = strike_at_ITA2
+		icon = GFX_focus_attack_italy
+		prerequisite = { focus = strike_ITA_sea2 }
+		prerequisite = { focus = hop_EUR2 focus = ETH_take_TUR }
+		relative_position_id = strike_at_ITA
+		x = 0
+		y = 5
+		cost = 10
+
+		available = {
+			NOT = {
+				has_war_with = ITA
+				ITA = {
+					exists = no
+				}
+				exists = no
+			}
+		}
+
+		completion_reward = {
+			add_war_support = 0.05
+			create_wargoal = {
+				type = annex_everything
+				target = ITA
+				expire = 0
+			}
+			add_state_core = 451
+			add_state_core = 663
+			add_state_core = 450
+			add_state_core = 662
+			add_state_core = 449
+			add_state_core = 448
+			add_state_core = 661
+			add_state_core = 273
+		}
+	}
