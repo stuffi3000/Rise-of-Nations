@@ -1,60 +1,617 @@
 ideas = {
 
 country = {
-	POL_social_discontent_2 = {
-				
-		allowed = {
-			always = no
-		}
 
-		allowed_civil_war = {
-			OR = {
-				has_government = communism
-				has_government = fascism
+
+
+	# Special ones that can be applied on other countries through focus system.
+	country = {
+	
+		unexpected_attack = {
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+			
+			removal_cost = -1
+			
+			cancel = {
+				OR = {
+					has_war = no
+					surrender_progress > 0.25
+				}
+			}
+
+			picture = generic_army_problems
+			
+			modifier = {
+				army_org_factor = -0.20
+				army_attack_factor = -0.3
+				army_defence_factor = -0.1
 			}
 		}
-			
-		cancel = {
-				has_country_flag = POL_succesful_defense
-		}
-				
-		removal_cost = -1
-
-		picture = great_depression
 		
-		modifier = {
-			stability_factor = -0.25
-			conscription_factor = -0.3
-			political_power_factor = -0.15
+		SOV_armistice = {
+		
+			allowed = {
+				tag = SOV
+				has_government = communism
+				has_capitulated = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+			
+			picture = generic_morale_bonus
+			
+			removal_cost = -1
+			
+			cancel = {
+				has_war = no
+			}
+			
+			modifier = {
+				surrender_limit = 1
+			}
 		}
+	
+		soft_occupation = {
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+			
+			removal_cost = -1
+			
+			cancel = {
+				NOT = { has_war_with = SOV }
+			}
+
+			picture = ast_classify_aliens
+			
+			modifier = {
+				resistance_growth = -0.1 
+				resistance_activity = -0.2
+				compliance_growth = 0.20
+				non_core_manpower = 0.20 
+				decryption_factor = 0.2
+				encryption_factor = -0.1
+				attrition = -0.1
+			}
+		}
+		
+		harsh_occupation = {
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+			
+			removal_cost = -1
+			
+			cancel = {
+				NOT = { has_war_with = SOV }
+			}
+
+			picture = generic_oppression 
+			
+			modifier = {
+				resistance_growth = -0.30
+				compliance_growth = -0.10
+				resistance_damage_to_garrison = -0.5
+				encryption_factor = 0.3
+				attrition = 0.1
+			}
+		}
+	
+		fragile_coalition = {
+		
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+			
+			removal_cost = -1
+			
+			cancel = {
+				not = { has_government = neutrality }
+			}
+
+			picture = generic_disjointed_gov
+
+			modifier = {
+				political_power_factor = -0.30
+				stability_factor = 0.10
+			}
+			
+		}
+
+		intermarial_influance = {
+
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = no
+			}
+
+			removal_cost = -1
+
+			cancel = {
+				has_government = neutrality
+			}
+
+			picture = generic_intel_bonus
+
+			modifier = {
+				neutrality_drift = 0.15
+				fascism_acceptance = -40
+				communism_acceptance = -40
+				democratic_acceptance = -40
+			}
+		}
+
+		POL_soviet_influence = {
+			
+			allowed = {
+				original_tag = POL
+				NOT = { has_government = communism }
+			}
+
+			allowed_civil_war = {
+				has_government = neutrality
+			}
+			
+			cancel = { 
+				has_government = communism
+			}
+			
+			removal_cost = -1
+
+			picture = saf_soviet_advisers
+		
+			modifier = {
+				communism_drift = 0.10 
+				political_power_factor = -0.2
+				stability_factor = -0.1
+			}
+		}
+
+		POL_GER_border_issues = {
+			allowed = {
+				original_tag = POL
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			cancel = {
+				OR = {
+					is_subject_of = GER
+					has_war_with = GER
+				}	
+			}
+				
+			removal_cost = -1
+				
+			picture = idea_POL_GER_border_issues
+			
+			modifier = {
+				stability_factor = -0.1
+				opinion_gain_monthly_factor = -0.1
+			}
+			
+		}
+		
+		POL_hate_bolshevism = {
+			allowed = {
+				original_tag = POL
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			cancel = {
+				OR = {	
+					has_government = communism
+					has_capitulated = yes
+				}
+			}
+				
+			removal_cost = -1
+				
+			picture = idea_POL_hate_bolshevism
+		
+			targeted_modifier = {
+				tag = SOV
+				defense_bonus_against = 0.2
+				attack_bonus_against = 0.1
+			}
+			
+			modifier = {
+				communism_acceptance = -40
+			}
+			
+		}
+
+		POL_between_two_powers = {
+				
+			allowed = {
+				original_tag = POL
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			cancel = {
+					OR = {	has_war_with = SOV
+							has_war_with = GER
+							has_war_with = ENG
+						}
+			}
+				
+			removal_cost = -1
+				
+			picture = idea_POL_between_two_powers
+		
+			modifier = {
+				join_faction_tension = 1.0
+				guarantee_tension = 1.0
+				send_volunteers_tension = 0.2
+				political_power_factor = 0.20
+			}
+		}
+		
+		POL_between_two_powers_2 = {
+				
+			allowed = {
+				original_tag = POL
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			#cancel = {
+			#		OR = {	has_war_with = SOV
+			#				has_war_with = GER
+			#				has_war_with = ENG
+			#			}
+			#}
+				
+			removal_cost = -1
+				
+			picture = idea_POL_between_two_powers_2
+		
+			modifier = {
+				join_faction_tension = 1.0
+				guarantee_tension = 1.0
+				send_volunteers_tension = 0.2
+				political_power_factor = 0.3
+				army_morale_factor = 0.2
+				stability_factor  = 0.1
+				army_core_defence_factor = 0.2
+				army_core_attack_factor = 0.2
+				defensive_war_stability_factor = 0.33 
+			}
+		}
+		
+		POL_great_depression = {
+			picture = usa_great_depression
+			
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			cancel = {
+				num_of_civilian_factories  > 40
+				num_of_military_factories > 25
+			}
+
+			removal_cost = -1
+			
+			modifier = {
+				consumer_goods_factor = 0.20
+				production_speed_buildings_factor = -0.15
+				stability_factor = -0.1
+			}
+		}
+		
+		POL_cult_of_bierut = {
+		
+			allowed = {
+				has_government = communism
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+			
+			cancel = {
+				NOT = { has_country_leader = { ruling_only = yes name = "Bolesław Bierut" } }
+			}
+				
+			removal_cost = -1
+
+			picture = generic_infantry_bonus
+		
+			modifier = {
+				stability_factor  = 0.05
+				army_morale_factor = 0.1
+				conscription_factor = 0.1
+				conscription = 0.01
+			}
+			
+		}
+		
+		POL_the_cult_of_the_marshal = {
+				
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+				
+			removal_cost = -1
+
+			picture = idea_POL_the_cult_of_the_marshal
+		
+			modifier = {
+				stability_factor  = 0.05
+				army_core_defence_factor = 0.1
+				army_core_attack_factor = 0.1
+			}
+		}
+		
+		POL_social_discontent = {
+				
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+			
+			cancel = {
+					has_country_flag = POL_succesful_defense
+			}
+				
+			removal_cost = -1
+
+			picture = great_depression
+		
+			modifier = {
+				stability_factor = -0.1
+				conscription_factor = -0.15
+				political_power_factor = -0.05
+			}
+		}
+		
+		POL_social_discontent_2 = {
+				
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+			
+			cancel = {
+					has_country_flag = POL_succesful_defense
+			}
+				
+			removal_cost = -1
+
+			picture = great_depression
+		
+			modifier = {
+				stability_factor = -0.25
+				conscription_factor = -0.3
+				political_power_factor = -0.15
+			}
+		}
+		
+		POL_industry_progression = {
+				
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+				
+			removal_cost = -1
+
+			picture = generic_production_bonus
+		
+			research_bonus = {
+				industry = 0.1
+			}
+		
+		}
+		
+		POL_peoples_army_idea = {
+			
+			allowed = {
+				original_tag = POL
+				has_government = communism
+			}
+
+			allowed_civil_war = {
+				has_government = neutrality
+			}
+			
+			cancel = {
+				NOT = { has_government = communism }
+			}
+			
+			removal_cost = -1
+
+			picture = generic_communist_army
+		
+			modifier = {
+				army_morale_factor = -0.1
+				conscription_factor = 0.1
+				conscription = 0.05
+			}
+		}
+		
+		POL_commonwetlh_is_back = {
+				
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = communism
+					has_government = fascism
+				}
+			}
+				
+			removal_cost = -1
+
+			picture = FRA_national_mobilization_focus
+		
+			modifier = {
+				stability_factor = 0.2
+				conscription = 0.015
+				war_support_factor = 0.05
+				resistance_damage_to_garrison = -0.2
+			}
+		
+		}
+		
+		POL_death_of_dmowski = {
+		
+			allowed = {
+				original_tag = POL
+				NOT = { 
+					has_country_leader = {
+						name = "Roman Dmowski" 
+						ruling_only = yes
+					} 
+				}
+			}
+
+			allowed_civil_war = {
+				OR = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			
+			cancel = {
+				
+			}
+				
+			removal_cost = -1
+
+			picture = ENG_the_war_to_end_all_wars
+		
+			modifier = {
+				stability_factor = -0.2
+				fascism_drift = 0.1
+				neutrality_drift = -0.1
+				war_support_factor = -0.1
+				political_power_factor = -0.2
+			}
+		
+		}
+		
+		POL_standardisation_of_equipment = {
+		
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+			
+			removal_cost = -1
+
+			picture = generic_war_preparation
+			
+			equipment_bonus = {
+				infantry_equipment = {
+					build_cost_ic = -0.1
+					instant = yes
+				}
+			}
+			
+			modifier = {
+				
+			}
+		}
+		
+		POL_eastern_revitalization = {
+			allowed = {
+				always = no
+			}
+
+			allowed_civil_war = {
+				always = yes
+			}
+
+			removal_cost = -1
+
+			picture = generic_production_bonus
+
+			modifier = {
+				industry_repair_factor = 0.20
+			}
+		}
+		
+
 	}
-	POL_social_discontent = {
-				
-		allowed = {
-			always = no
-		}
 
-		allowed_civil_war = {
-			OR = {
-				has_government = communism
-				has_government = fascism
-			}
-		}
-			
-		cancel = {
-				has_country_flag = POL_succesful_defense
-		}
-				
-		removal_cost = -1
 
-		picture = great_depression
-		
-		modifier = {
-			stability_factor = -0.1
-			conscription_factor = -0.15
-			political_power_factor = -0.05
-		}
-	}	
+
 	POL_ideological_fanaticism = {
 		
 		
