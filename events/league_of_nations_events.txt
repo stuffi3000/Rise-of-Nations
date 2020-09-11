@@ -2998,9 +2998,37 @@ country_event = {
 	title = "Dissolve the League of Nations after WW2?"
 	desc = "As the current leader of the League of Nations we are tasked to decide whenever the League should be disbanded for its incapability of preventing the Second World War."
 	picture = GFX_lon_event_picture
-	
-	fire_only_once = yes
-	is_triggered_only = yes
+
+	trigger = {
+		OR = {
+			AND = {
+				OR = {
+					Second_World_War_Axis_Victory = yes
+					Second_World_War_Allied_Victory = yes
+				}
+				NOT = { has_global_flag = league_of_nations_dissolved_question }
+				NOT = { has_global_flag = league_of_nations_dissolved }
+				date > 1940.1.1
+				date < 1949.1.1
+			}
+			AND = {
+				country_exists = UNA
+				date > 1946.1.1
+				date < 1950.1.1
+				NOT = { has_global_flag = league_of_nations_dissolved_question }
+				NOT = { has_global_flag = league_of_nations_dissolved }
+			}
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	immediate = {
+		set_global_flag = ww2_over
+		set_global_flag = league_of_nations_dissolved_question
+	}
 
 	# Yes
 	option = {
@@ -3031,7 +3059,7 @@ country_event = {
 		}
 		set_global_flag = league_of_nations_dissolved
 
-		news_event = league_of_nations_news_events.17
+		news_event = roncw_news.3
 	}
 
 	# No

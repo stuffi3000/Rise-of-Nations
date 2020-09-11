@@ -45,7 +45,7 @@ country_event = {
 	}
 }
 
-# United Nations is created on startup
+# United Nations Debug event 1
 country_event = {
 	id = united_nations_debug_events.1
 	title = "UN Debug Event 1"
@@ -105,18 +105,44 @@ country_event = {
 
 	option = {
 		name = "Yes"
-		add_political_power = -25
+		add_political_power = -150
 		custom_effect_tooltip = "UNSC_SANCTION_OPTION_TT"
 		set_global_flag = UNSC_sanction_voting_ongoing
 		event_target:sanctions_country = {
 			save_global_event_target_as = sanctions_country_target
+			set_variable = {
+				sanctions_country_target_var = THIS.id
+			}
+			set_country_flag = sanctions_country_target_flag
 		}
 		ROOT = {
 			save_global_event_target_as = sanctions_country_starter
+			set_variable = {
+				sanctions_country_starter_var = THIS.id
+			}
+			set_country_flag = sanctions_country_starter_flag
 		}
 		hidden_effect = {
+			set_variable = { show_unsc_sanctions = 0 }
+			set_variable = {
+				global.UNSC_sanction_days_left = 21
+			}
 			start_sanctions_effect = yes
-			USA = { country_event = { id = unsc.31 days = 1 } }
+			every_country = {
+				limit = {
+					has_country_flag = member_of_united_nations_sc
+				}
+				set_variable = { show_unsc_alert = 1 }
+			}
+			random_country = {
+				limit = {
+					has_country_flag = member_of_united_nations_sc
+				}
+				country_event = { id = unsc.4 days = 22 }
+			}
+			random_country = {
+				country_event = { id = unsc.31 days = 1 }
+			}
 		}
 	}
 
@@ -142,459 +168,6 @@ country_event = {
 }
 
 country_event = {
-	id = unsc.3
-	title = UNSC_SANCTIONS_VOTING_TITLE
-	desc = {
-		text = UNSC_SANCTIONS_VOTING_DESC_PERM
-		trigger = {
-			has_idea = RON_United_Nations_Security_Council
-		}
-	}
-	desc = {
-		text = UNSC_SANCTIONS_VOTING_DESC_TEMP
-		trigger = {
-			has_idea = RON_United_Nations_Security_Council_NP
-		}
-	}
-
-	is_triggered_only = yes
-	picture = GFX_report_event_united_nations_crazy
-
-	immediate = {
-		hidden_effect = {
-			set_variable = {
-				var = global.UNSC_sanction_days_left
-				value = 7
-			}
-			if = {
-				limit = {
-					tag = USA
-				}
-				country_event = { id = unsc.4 days = 8 }
-			}
-		}
-	}
-
-	option = {
-		name = "For"
-		add_to_variable = {
-			var = global.UNSC_positive_votes
-			value = 1
-		}
-		ai_chance = {
-			factor = 1
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_war = yes
-				}
-				add = 10
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_war_with = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_in_faction_with = ROOT
-				}
-				add = -75
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_non_aggression_pact_with = ROOT
-				}
-				add = -25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_guaranteed_by = ROOT
-				}
-				add = -25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_subject_of = ROOT
-				}
-				add = -100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value = 100
-					}
-				}
-				add = -100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 75
-					}
-				}
-				add = -75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 50
-					}
-				}
-				add = -50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 25
-					}
-				}
-				add = -25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 0
-					}
-				}
-				add = 1
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < -24
-					}
-				}
-				add = 25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 49
-					}
-				}
-				add = 50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 74
-					}
-				}
-				add = 75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 99
-					}
-				}
-				add = 100
-			}
-		}
-		trigger = {
-			NOT = {
-				ROOT = {
-					has_country_flag = sanctions_country_flag
-				}
-			}
-		}
-	}
-	
-	option = {
-		name = "Against"
-		trigger = {
-			has_idea = RON_United_Nations_Security_Council_NP
-			NOT = {
-				ROOT = {
-					has_country_flag = sanctions_country_flag
-				}
-			}
-		}
-		add_to_variable = {
-			var = global.UNSC_negative_votes
-			value = 1
-		}
-		ai_chance = {
-			factor = 1
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_in_faction_with = ROOT
-				}
-				add = 75
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_war_with = ROOT
-				}
-				add = -100
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_non_aggression_pact_with = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_guaranteed_by = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_subject_of = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value = 100
-					}
-				}
-				add = 100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 75
-					}
-				}
-				add = 75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 50
-					}
-				}
-				add = 50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 25
-					}
-				}
-				add = 25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 0
-					}
-				}
-				add = -1
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < -24
-					}
-				}
-				add = -25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 49
-					}
-				}
-				add = -50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 74
-					}
-				}
-				add = -75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 99
-					}
-				}
-				add = -100
-			}
-		}
-
-	}
-
-	option = {
-		name = "Veto"
-		add_political_power = -50
-		trigger = {
-			has_idea = RON_United_Nations_Security_Council
-			NOT = {
-				ROOT = {
-					has_country_flag = sanctions_country_flag
-				}
-			}
-		}
-		add_to_variable = {
-			var = global.UNSC_vetos
-			value = 1
-		}
-		ai_chance = {
-			factor = 1
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_in_faction_with = ROOT
-				}
-				add = 75
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_war_with = ROOT
-				}
-				add = -100
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					has_non_aggression_pact_with = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_guaranteed_by = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				event_target:sanctions_country_target = {
-					is_subject_of = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value = 100
-					}
-				}
-				add = 100
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 75
-					}
-				}
-				add = 75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 50
-					}
-				}
-				add = 50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 25
-					}
-				}
-				add = 25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value > 0
-					}
-				}
-				add = -1
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < -24
-					}
-				}
-				add = -25
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 49
-					}
-				}
-				add = -50
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 74
-					}
-				}
-				add = -75
-			}
-			modifier = {
-				ROOT = {
-					has_opinion = {
-						target = event_target:sanctions_country_target
-						value < 99
-					}
-				}
-				add = -100
-			}
-		}
-	}
-	
-	option = {
-		name = "Forced Abstain"
-		custom_effect_tooltip = "We have to abstain because we are the target of the vote."
-		trigger = {
-			ROOT = {
-				has_country_flag = sanctions_country_flag
-			}
-		}
-	}
-	
-	option = {
-		name = "Abstain"
-		trigger = {
-			NOT = {
-				ROOT = {
-					has_country_flag = sanctions_country_flag
-				}
-			}
-		}
-	}
-}
-
-country_event = {
 	id = unsc.31
 	hidden = yes
 
@@ -612,10 +185,16 @@ country_event = {
 			subtract_from_variable = {
 				global.UNSC_sanction_days_left = 1
 			}
-			USA = { country_event = { id = unsc.31 days = 1 } }
+			random_country = { 
+				limit = {
+					has_country_flag = member_of_united_nations_sc
+				}
+				country_event = { id = unsc.31 days = 1 } 
+			}
 		}
 	}
 }
+
 
 country_event = {
 	id = unsc.4
@@ -752,7 +331,7 @@ country_event = {
 				limit = {
 					tag = USA
 				}
-				USA = { country_event = { id = unsc.6 hours = 8 } }
+				random_country = { country_event = { id = unsc.6 hours = 8 } }
 			}
 		}
 	}
