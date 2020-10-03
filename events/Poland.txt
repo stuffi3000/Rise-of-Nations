@@ -703,3 +703,773 @@ country_event = {
 	}
 
 }
+
+
+add_namespace = polishinti
+
+##Event: Poland asks for our help with the Polish - USSR War
+country_event = {
+	id = polishinti.1
+	title = polishinti.1.title
+	desc = polishinti.1.desc
+	picture = GFX_report_event_romania_poland_visit
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.1.a
+		ai_chance = { factor = 1}
+		SOV = { 
+			country_event = {
+				days = 1 
+				id = polishinti.2
+			} 	
+		}
+	}
+	option = {
+		name = polishinti.1.b
+		ai_chance = { factor = 1}
+		POL = { 
+			country_event= {
+				days = 1 
+				id = polishinti.3
+			} 
+		}
+		send_equipment= {
+			target = POL 
+			type = infantry_equipment amount = 600
+		}
+	}
+	option = {
+		name = polishinti.1.c
+		ai_chance = { factor = 1}
+		send_equipment= {
+			target = POL 
+			type = infantry_equipment amount = 1500
+		}
+
+		POL = { 
+			country_event= {
+				days = 1 
+				id = polishinti.3
+			}
+
+		}
+	}
+	option = {
+		name = polishinti.1.d
+		ai_chance = { factor = 1}
+	}
+}
+##Event: [From.GetName] Sends a diplomatic protest
+country_event = {
+	id = polishinti.2
+	title = polishinti.2.title
+	desc = polishinti.2.desc
+	picture = GFX_report_event_finnish_letter
+	is_triggered_only = yes
+	option = {
+		name = polishinti.2.a
+		ai_chance = { factor = 1}
+		add_stability= -0.02
+		add_war_support= 0.2
+	}
+}
+##Event: Weapon shipments have arrived from [From.GetName]
+country_event = {
+	id = polishinti.3
+	title = polishinti.3.title
+	desc = polishinti.3.desc
+	picture = GFX_report_event_merchant_ship_01
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = {
+		865 = { is_controlled_by= POL }
+	}
+	option = {
+		name = polishinti.3.a
+		ai_chance = { factor = 1}
+		add_opinion_modifier= { 
+target = From
+modifier = medium_increase
+}
+	}
+}
+##Event: Poland asks us for our support
+country_event = {
+	id = polishinti.4
+	title = polishinti.4.title
+	desc = polishinti.4.desc
+	picture = GFX_report_event_romania_poland_visit
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.4.a
+		ai_chance = { factor = 1}
+		declare_war_on= { 
+target = SOV
+type = annex_everything 
+}
+set_country_flag= polhelp
+	}
+	option = {
+		name = polishinti.4.b
+		ai_chance = { factor = 1}
+	}
+}
+##Event: Poland has won the war!
+country_event = {
+	id = polishinti.5
+	title = polishinti.5.title
+	desc = polishinti.5.desc
+	picture = GFX_report_event_france_victory_syria
+	fire_only_once = yes
+	trigger = {
+		NOT = { POL = { has_war_with= SOV } }
+LAT = { has_country_flag= polhelp}
+tag = lat
+	}
+	option = {
+		name = polishinti.5.a
+		ai_chance = { factor = 1}
+		white_peace= SOV
+	}
+}
+##Event: The Polish - Soviet War Begins
+news_event = {
+	id = polishinti.6
+	title = polishinti.6.title
+	desc = polishinti.6.desc
+	picture = GFX_news_event_spr_francoist_civil_war_victory
+	fire_only_once = yes
+	trigger = {
+		date < 1920.1.1
+
+POL = { has_war_with= SOV }
+
+tag = POL
+	}
+	option = {
+		name = polishinti.6.a
+		ai_chance = { factor = 1}
+		complete_national_focus= POL_independence_day
+complete_national_focus= POL_issue_mobilization_laws
+complete_national_focus= POL_test_the_soviets
+complete_national_focus= POL_send_the_soviets_our_demands
+complete_national_focus= POL_polish_soviet_war
+	}
+}
+##Event: The Industrialization of Poland
+country_event = {
+	id = polishinti.7
+	title = polishinti.7.title
+	desc = polishinti.7.desc
+	picture = GFX_report_event_hol_polderen
+	is_triggered_only = yes
+	option = {
+		name = polishinti.7.a
+		ai_chance = { factor = 1}
+		add_timed_idea= { 
+idea = civi_focus
+days = 15
+}
+random_list = {
+    50 = {
+if = {
+            limit = {
+                check_variable = { POL_PEASENT_SUPPORT > 95 }
+            }
+            set_variable = { POL_MIDDLE_SUPPORT =  0 }
+            set_variable = { POL_PEASENT_SUPPORT = 100 }
+            else = {
+                add_to_variable = { POL_MIDDLE_SUPPORT = -5 }
+                add_to_variable = { POL_PEASENT_SUPPORT = 5 }
+            }
+        }
+    }
+    50 = {
+if = {
+            limit = {
+                check_variable = { POL_PEASENT_SUPPORT > 99 }
+            }
+            set_variable = { POL_MIDDLE_SUPPORT =  0 }
+            set_variable = { POL_PEASENT_SUPPORT = 100 }
+            else = {
+                add_to_variable = { POL_MIDDLE_SUPPORT = -1 }
+                add_to_variable = { POL_PEASENT_SUPPORT = 1 }
+            }
+        }
+    }
+	}
+	}
+	option = {
+		name = polishinti.7.b
+		ai_chance = { factor = 1}
+		add_timed_idea= { 
+idea = industrial_focus
+days = 15
+}
+random_list = {
+    50 = {
+if = {
+            limit = {
+                check_variable = { POL_MIDDLE_SUPPORT > 95 }
+            }
+            set_variable = { POL_PEASENT_SUPPORT=  0 }
+            set_variable = { POL_MIDDLE_SUPPORT = 100 }
+            else = {
+                add_to_variable = { POL_PEASENT_SUPPORT = -5 }
+                add_to_variable = { POL_MIDDLE_SUPPORT = 5 }
+            }
+        }
+    }
+    50 = {
+if = {
+            limit = {
+                check_variable = { POL_MIDDLE_SUPPORT > 99 }
+            }
+            set_variable = { POL_PEASENT_SUPPORT=  0 }
+            set_variable = { POL_MIDDLE_SUPPORT = 100 }
+            else = {
+                add_to_variable = { POL_PEASENT_SUPPORT = -1 }
+                add_to_variable = { POL_MIDDLE_SUPPORT = 1 }
+            }
+        }
+    }
+}
+	}
+}
+##Event: Lack of industrial focus
+country_event = {
+	id = polishinti.8
+	title = polishinti.8.title
+	desc = polishinti.8.desc
+	picture = GFX_report_event_airplane_factory
+	trigger = {
+		NOT = { has_idea= lackofindustrial }
+check_variable = { POL_PEASENT_SUPPORT > 60 }
+tag = POL
+	}
+	option = {
+		name = polishinti.8.a
+		ai_chance = { factor = 1}
+		add_ideas= lackofindustrial
+remove_ideas = balancegreat
+remove_ideas = lackofcivi
+	}
+}
+##Event: Lack of Agricultural Focus
+country_event = {
+	id = polishinti.9
+	title = polishinti.9.title
+	desc = polishinti.9.desc
+	picture = GFX_report_event_generic_army
+	trigger = {
+		NOT = { has_idea= lackofcivi }
+check_variable = { POL_MIDDLE_SUPPORT > 60}
+tag = POL
+	}
+	option = {
+		name = polishinti.9.a
+		ai_chance = { factor = 1}
+		add_ideas= lackofcivi
+remove_ideas = lackofindustrial
+remove_ideas = balancegreat
+	}
+}
+##Event: Balance achieved between industrial and Agricultural
+country_event = {
+	id = polishinti.10
+	title = polishinti.10.title
+	desc = polishinti.10.desc
+	picture = GFX_report_event_vienna_award_negotiations
+	trigger = {
+		tag = POL
+NOT = { has_idea= balancegreat }
+check_variable = { POL_MIDDLE_SUPPORT > 50 }
+check_variable = { POL_MIDDLE_SUPPORT < 55 }
+check_variable = { POL_PEASENT_SUPPORT > 50 }
+check_variable = { POL_PEASENT_SUPPORT < 55 }
+	}
+	option = {
+		name = polishinti.10.a
+		ai_chance = { factor = 1}
+		remove_ideas = lackofcivi
+remove_ideas = lackofindustrial
+	}
+}
+##Event: Industrial focus back on track
+country_event = {
+	id = polishinti.11
+	title = polishinti.11.title
+	desc = polishinti.11.desc
+	picture = GFX_event_test
+	trigger = {
+		check_variable = { POL_MIDDLE_SUPPORT < 60 }
+has_idea= lackofindustrial
+tag = POL
+	}
+	option = {
+		name = polishinti.11.a
+		ai_chance = { factor = 1}
+		remove_ideas= lackofindustrial
+	}
+}
+##Event: Agricultural focus back on track
+country_event = {
+	id = polishinti.12
+	title = polishinti.12.title
+	desc = polishinti.12.desc
+	picture = GFX_event_test
+	trigger = {
+		check_variable = { PEASENT_SUPPORT < 60 }
+has_idea= lackofcivi
+tag = POL
+	}
+	option = {
+		name = polishinti.12.a
+		ai_chance = { factor = 1}
+		remove_ideas= lackofcivi
+	}
+}
+##Event: May Coup
+country_event = {
+	id = polishinti.13
+	title = polishinti.13.title
+	desc = polishinti.13.desc
+	fire_only_once = yes
+	trigger = {
+		date > 1926.5.12
+tag = pol
+	}
+	option = {
+		name = polishinti.13.a
+		ai_chance = { factor = 1}
+		complete_national_focus= POL_may_coup
+add_timed_idea= { 
+idea = Recent_coup 
+days = 130 
+}
+	}
+}
+##Event: Poland offers ceasefire - small victory
+country_event = {
+	id = polishinti.14
+	title = polishinti.14.title
+	desc = polishinti.14.desc
+	picture = GFX_event_test
+	fire_only_once = yes
+	trigger = {
+		SOV = { has_war_with= POL }
+784 = { is_controlled_by= POL }
+96 = { is_controlled_by= POL }
+206 = { is_controlled_by= POL }
+194 = { is_controlled_by= POL }
+784 = { is_controlled_by= POL }
+tag = sov
+	}
+	option = {
+		name = polishinti.14.a
+		ai_chance = { factor = 1}
+		white_peace= POL
+	}
+	option = {
+		name = polishinti.14.b
+		ai_chance = { factor = 1}
+		add_stability= -0.05
+add_war_support= 10
+	}
+}
+##Event: Poland demands surrender - medium victory
+country_event = {
+	id = polishinti.15
+	title = polishinti.15.title
+	desc = polishinti.15.desc
+	picture = GFX_event_test
+	trigger = {
+		SOV = { has_war_with= POL }
+784 = { is_controlled_by= POL }
+96 = { is_controlled_by= POL }
+206 = { is_controlled_by= POL }
+194 = { is_controlled_by= POL }
+784 = { is_controlled_by= POL }
+204 = { is_controlled_by= POL }
+207 = { is_controlled_by= POL }
+202 = { is_controlled_by= POL }
+242 = { is_controlled_by= POL }
+tag = sov
+	}
+	option = {
+		name = polishinti.15.a
+		ai_chance = { factor = 1}
+		POL = { set_state_owner= 206 }
+POL = { set_state_owner= 204 }
+POL = { set_state_owner= 194 }
+	}
+	option = {
+		name = polishinti.15.b
+		ai_chance = { factor = 1}
+		add_stability= -0.10
+add_war_support= 15
+	}
+}
+##Event: Poland demands surrender - large victory
+country_event = {
+	id = polishinti.16
+	title = polishinti.16.title
+	desc = polishinti.16.desc
+	picture = GFX_event_test
+	fire_only_once = yes
+	trigger = {
+		219 = { is_controlled_by= POL }
+tag = sov
+	}
+	option = {
+		name = polishinti.16.a
+		ai_chance = { factor = 1}
+		set_state_owner= 207
+set_state_owner= 241
+set_state_owner= 927
+	}
+}
+##Event: Polish ceasefire?
+country_event = {
+	id = polishinti.17
+	title = polishinti.17.title
+	desc = polishinti.17.desc
+	picture = GFX_event_test
+	fire_only_once = yes
+	trigger = {
+		SOV = { is_core_of= UKR }
+NOT = { has_war_with= UKR }
+tag = sov
+	}
+	option = {
+		name = polishinti.17.a
+		ai_chance = { factor = 1}
+		white_peace= POL
+	}
+	option = {
+		name = polishinti.17.b
+		ai_chance = { factor = 1}
+	}
+}
+##Event: Stalemate with Soviets
+country_event = {
+	id = polishinti.18
+	title = polishinti.18.title
+	desc = polishinti.18.desc
+	picture = GFX_event_test
+	fire_only_once = yes
+	trigger = {
+		date > 1937.1.1
+tag = pol
+	}
+	option = {
+		name = polishinti.18.a
+		ai_chance = { factor = 1}
+	}
+}
+##Event: Polish - French trade deal
+country_event = {
+	id = polishinti.19
+	title = polishinti.19.title
+	desc = polishinti.19.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.19.a
+		ai_chance = { factor = 1}
+		country_event= {
+days = 1 
+id = polishinti.22 
+}
+	}
+	option = {
+		name = polishinti.19.b
+		ai_chance = { factor = 1}
+		FRA = { country_event= {
+days = 5
+id = polishinti.20
+} }
+	}
+}
+##Event: French - Polish trade deal negations
+country_event = {
+	id = polishinti.20
+	title = polishinti.20.title
+	desc = polishinti.20.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	option = {
+		name = polishinti.20.a
+		ai_chance = { factor = 1}
+		add_political_power= -25
+add_tech_bonus= {
+bonus = 1
+uses = 1
+category = artillery
+}
+POL = { add_tech_bonus= {
+bonus = 1
+uses = 1
+category = artillery
+} }
+	}
+	option = {
+		name = polishinti.20.b
+		ai_chance = { factor = 1}
+		POL = { country_event= {
+days = 5 
+id = polishinti.21
+} }
+	}
+	option = {
+		name = polishinti.20.c
+		ai_chance = { factor = 1}
+		POL = { country_event= {
+days = 1 
+id = polishinti.29
+} }
+	}
+}
+##Event: France offers a compromise
+country_event = {
+	id = polishinti.21
+	title = polishinti.21.title
+	desc = polishinti.21.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	option = {
+		name = polishinti.21.a
+		ai_chance = { factor = 1}
+		add_political_power= -12
+FRA = { add_political_power= -12 }
+add_tech_bonus= {
+bonus = 1
+uses = 1
+category = artillery
+}
+add_political_power= -25
+POL = { add_tech_bonus= {
+bonus = 1
+uses = 1
+category = artillery
+} }
+	}
+	option = {
+		name = polishinti.21.b
+		ai_chance = { factor = 1}
+		POL = { country_event= {
+days = 1 
+id = polishinti.29
+} }
+	}
+}
+##Event: French - Polish trade deal negations
+country_event = {
+	id = polishinti.22
+	title = polishinti.22.title
+	desc = polishinti.22.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	option = {
+		name = polishinti.22.a
+		ai_chance = { factor = 1}
+		add_political_power= -30
+add_tech_bonus= {
+bonus = 1
+uses = 1
+category = armor
+}
+POL = { add_tech_bonus= {
+bonus = 1
+uses = 1
+category = armor
+} }
+	}
+	option = {
+		name = polishinti.22.b
+		ai_chance = { factor = 1}
+		country_event= {
+days = 1 
+id = polishinti.23
+}
+	}
+	option = {
+		name = polishinti.22.c
+		ai_chance = { factor = 1}
+		POL = { country_event= {
+days = 1 
+id = polishinti.29
+} }
+	}
+}
+##Event: France offers a compromise
+country_event = {
+	id = polishinti.23
+	title = polishinti.23.title
+	desc = polishinti.23.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	option = {
+		name = polishinti.23.a
+		ai_chance = { factor = 1}
+		add_political_power= -15
+FRA = { add_political_power= -15 }
+add_tech_bonus= {
+bonus = 1
+uses = 1
+category = armor
+}
+add_political_power= -25
+POL = { add_tech_bonus= {
+bonus = 1
+uses = 1
+category = armor
+} }
+	}
+	option = {
+		name = polishinti.23.b
+		ai_chance = { factor = 1}
+		FRA = { country_event= {
+days = 1 
+id = polishinti.30 
+} }
+	}
+}
+##Event: German - Polish Summit
+news_event = {
+	id = polishinti.24
+	title = polishinti.24.title
+	desc = polishinti.24.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+}
+##Event: What should the Germans give us in exchange for the province of danzig?
+country_event = {
+	id = polishinti.25
+	title = polishinti.25.title
+	desc = polishinti.25.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.25.a
+		ai_chance = { factor = 1}
+	}
+	option = {
+		name = polishinti.25.b
+		ai_chance = { factor = 1}
+	}
+	option = {
+		name = polishinti.25.c
+		ai_chance = { factor = 1}
+		country_event= {
+days = 1 
+id = polishinti.28
+}
+	}
+}
+##Event: Poland offers danzig
+country_event = {
+	id = polishinti.26
+	title = polishinti.26.title
+	desc = polishinti.26.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+}
+##Event: Poland offers us danzig
+country_event = {
+	id = polishinti.27
+	title = polishinti.27.title
+	desc = polishinti.27.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+}
+##Event: Poland offers us danzig
+country_event = {
+	id = polishinti.28
+	title = polishinti.28.title
+	desc = polishinti.28.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.28.a
+		ai_chance = { factor = 1}
+		country_event= {
+days = 1 
+id = polishinti.33
+}
+	}
+	option = {
+		name = polishinti.28.b
+		ai_chance = { factor = 1}
+	}
+}
+##Event: France rejects the deal
+country_event = {
+	id = polishinti.29
+	title = polishinti.29.title
+	desc = polishinti.29.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+}
+##Event: Poland rejects the deal
+country_event = {
+	id = polishinti.30
+	title = polishinti.30.title
+	desc = polishinti.30.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.30.a
+		ai_chance = { factor = 1}
+	}
+}
+##Event: Germany accepts our offer
+country_event = {
+	id = polishinti.31
+	title = polishinti.31.title
+	desc = polishinti.31.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.31.a
+		ai_chance = { factor = 1}
+		GER = { annex_country= {
+ target = DAN
+} }
+	}
+}
+##Event: Germany accepts our manpower offer
+country_event = {
+	id = polishinti.32
+	title = polishinti.32.title
+	desc = polishinti.32.desc
+	picture = GFX_event_test
+	option = {
+		name = polishinti.32.a
+		ai_chance = { factor = 1}
+	}
+}
+##Event: Germany accepts our research speed deal
+country_event = {
+	id = polishinti.33
+	title = polishinti.33.title
+	desc = polishinti.33.desc
+	picture = GFX_event_test
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = polishinti.33.a
+		ai_chance = { factor = 1}
+	}
+}
