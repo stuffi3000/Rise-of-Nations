@@ -2099,4 +2099,156 @@ country_event = {
 		}
 	}
 }
+add_namespace = kr.political
+# Check after a war whether we should be demobilizing
+country_event = {
+	id = kr.political.120
+	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.120" }
 
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_ai = yes
+		has_war = no
+		OR = {
+			has_unsupported_economic_law_ai = yes
+			has_unsupported_manpower_law_ai = yes
+		}
+		NOT = {
+			has_global_flag = KR_no_demob
+			any_other_country = {
+				OR = {
+					is_justifying_wargoal_against = ROOT
+					has_wargoal_against = ROOT
+					ROOT = { is_justifying_wargoal_against = PREV }
+					ROOT = { has_wargoal_against = PREV }
+				}
+			}
+		}
+	}
+
+	immediate = {
+		clr_country_flag = has_demobilization_check
+
+		if = {
+			limit = {
+				NOT = { has_country_flag = has_reduce_units_check }
+			}
+			set_country_flag = has_reduce_units_check
+			country_event = { id = kr.political.121 days = 4 random = 96 }
+		}
+	}
+}
+
+country_event = {
+	id = kr.political.121
+	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.121" }
+
+	hidden = yes
+	is_triggered_only = yes
+
+	immediate = {
+		calculate_maximum_divisions = yes
+		if = {
+			limit = {
+				is_ai = yes
+				has_war = no
+				num_divisions > 4
+				OR = {
+					has_excessive_army_size = yes
+					needs_army_reduction_for_manpower = yes
+					AND = {
+						has_reached_maximum_divisions = yes
+						NOT = { has_global_flag = KR_no_unit_limits }
+					}
+				}
+				NOT = {
+					any_other_country = {
+						OR = {
+							is_justifying_wargoal_against = ROOT
+							has_wargoal_against = ROOT
+							ROOT = { is_justifying_wargoal_against = PREV }
+							ROOT = { has_wargoal_against = PREV }
+						}
+					}
+				}
+			}
+			log = "               [Root.GetName]: is disbanding 20% of its units due to demobilization"
+			disband_twenty_percent_units = yes
+			country_event = { id = kr.political.121 days = 7 random = 72 }
+		}
+		else = {
+			clr_country_flag = has_reduce_units_check
+		}
+	}
+}
+
+# Check whether a player should have mobilisation penalties
+country_event = {
+	id = kr.political.122
+	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.122" }
+
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		is_ai = no
+		has_reached_maximum_divisions = yes
+		NOT = {
+			has_global_flag = KR_no_unit_limits
+			has_global_flag = KR_unit_limits_ai_only
+			has_dynamic_modifier = { modifier = mobilisation_penalty_modifier }
+		}
+	}
+
+	option = {
+		calculate_mobilisation_penalty = yes
+		add_dynamic_modifier = { modifier = mobilisation_penalty_modifier }
+		country_event = { id = kr.political.123 days = 7 }
+	}
+}
+
+# Check whether a player should still have mobilisation penalties
+country_event = {
+	id = kr.political.123
+	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.123" }
+
+	hidden = yes
+	is_triggered_only = yes
+
+	trigger = {
+		has_dynamic_modifier = { modifier = mobilisation_penalty_modifier }
+	}
+
+	immediate = {
+		country_event = { id = kr.political.123 days = 7 }
+	}
+
+	option = {
+		if = {
+			limit = {
+				OR = {
+					is_ai = yes
+					has_reached_maximum_divisions = no
+				}
+			}
+			clear_variable = mobilisation_penalty_var
+			clear_variable = mobilisation_penalty_var_positive
+			remove_dynamic_modifier = { modifier = mobilisation_penalty_modifier }
+		}
+		else = {
+			calculate_maximum_divisions = yes
+			calculate_mobilisation_penalty = yes
+		}
+	}
+}
+country_event = {
+	id = kr.political.124
+	is_triggered_only = yes
+	immediate = {
+		BEL = {
+			country_event = kr.political.121
+		}
+	}
+}
