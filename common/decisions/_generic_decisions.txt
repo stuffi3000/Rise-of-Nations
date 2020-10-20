@@ -1,5 +1,84 @@
-political_actions = {
+demobilization_stuff = {
+	public_asks_for_demob = {
+		days_mission_timeout = 2
 	
+		activation = {
+			
+			has_war = no
+			num_divisions > 4
+			NOT = {
+				has_country_flag = is_rearming
+			}
+			OR = {
+				has_excessive_army_size = yes
+				needs_army_reduction_for_manpower = yes
+				AND = {
+					has_reached_maximum_divisions = yes
+				}
+			}
+			NOT = {
+				any_other_country = {
+					OR = {
+						is_justifying_wargoal_against = ROOT
+						has_wargoal_against = ROOT
+						ROOT = { is_justifying_wargoal_against = PREV }
+						ROOT = { has_wargoal_against = PREV }
+					}
+				}
+			}
+		}
+		available = {
+			has_reached_maximum_divisions = no
+		}
+		is_good = no
+		timeout_effect = {
+			if = {
+				limit = {
+					is_ai = yes
+				}
+				country_event = kr.political.121
+			}
+			else = {
+				increase_strikes = yes
+			}
+		}
+	}
+}
+
+
+political_actions = {
+	ask_for_more_divisions = {
+		allowed = {
+			has_reached_maximum_divisions = yes
+		}
+		visible = {
+			has_war = yes
+		}
+		cost = 20
+		ai_will_do = {
+			
+			modifier = {
+				factor = 1000
+				has_reached_maximum_divisions = yes
+				surrender_progress > 0.8
+				
+			}
+		}
+		complete_effect = {
+			add_war_support = -0.02
+			add_to_variable = {
+				ROOT.added_max_divisions = 10
+			}
+			hidden_effect = {
+				add_dynamic_modifier = { modifier = adding_more_units_dynamic_modifier}
+				add_ideas = {
+					RI_a_total_war
+				}
+			}
+			
+			custom_effect_tooltip = icrease_division_by_10_tt
+		}
+	}
 	targeted_race_for_the_bomb = {
 
 		icon = generic_research
