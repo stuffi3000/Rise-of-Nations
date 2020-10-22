@@ -3961,22 +3961,109 @@ option = {
 	 
 }
 
-# 
+# Coups In The Baltics
 country_event = {
 id = ron_coupscountry.46
 title = ron_coupscountry.46.t
 desc = ron_coupscountry.46.d
 picture = GFX_report_event_generic_modern_coup
 
-is_triggered_only = yes
+trigger = {
+	NOT = { has_country_flag = baltic_coups_1940 }
+	
+	OR = { 
+	original_tag = LAT
+	original_tag = LIT
+	original_tag = EST
+	}
+	
+	SOV = { has_government = communism }
+	has_global_flag = sov_yes_pact
+	
+	date > 1940.1.1
+	date < 1941.1.1
+	
+	NOT = { has_government = fascism }
+	
+}
+	
+immediate = {
+set_country_flag = baltic_coups_1940
+}
 
-option = {
-	name = ron_coupscountry.46.a	 
+mean_time_to_happen = {
+	days = 30
 }
 
 option = {
-	name = ron_coupscountry.46.b	 
+	name = ron_coupscountry.46.a	
+	
+	ai_chance = {
+		factor = 40
+		modifier = {
+			factor = 0.1
+			is_in_faction_with = ENG
+		}
+		modifier = {
+			factor = 0.1
+			is_in_faction_with = GER
+		}
+	}
+	
+	news_event = { id = ron_coupnews.1 hours = 6 }
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.4 hours = 6 } }
+	
+	if = {
+		limit = {
+		NOT = { has_government = communism }
+		}
+		set_politics = {
+		ruling_party = communism
+		last_election = "1940.1.1"
+		election_frequency = 48
+		elections_allowed = no
+		}
+		
+		set_popularities = {
+		communism = 100
+		}
+	}
+	
+	
+	
+	
 }
+
+
+option = {
+	name = ron_coupscountry.46.b
+
+	ai_chance = {
+		factor = 10
+		modifier = {
+			factor = 0
+			is_historical_focus_on = yes
+		}
+	}
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.3 hours = 6 } }
+
+random_list = {
+    50 = {
+		start_civil_war = {
+			ruling_party = ROOT
+			ideology = communism
+			size = 0.5
+		}
+	}
+    50 = { 
+		news_event = { id = ron_coupnews.6 hours = 6 } 
+	}
+}
+	
+}
+
 	 
 }
 
