@@ -4551,22 +4551,186 @@ random_list = {
 	 
 }
 
-# 
+# King Michael's Coup
 country_event = {
 id = ron_coupscountry.50
 title = ron_coupscountry.50.t
 desc = ron_coupscountry.50.d
 picture = GFX_report_event_generic_modern_coup
 
-is_triggered_only = yes
+trigger = {
+	NOT = { has_country_flag = romania_coup_1944 }
+	original_tag = ROM
+	date > 1944.7.23
+	date < 1944.9.23
+	
+	is_in_faction_with = GER
+	
+	AND = {
+	
+	OR = {
+	has_war_with = ENG
+	has_war_with = USA
+	}
+	
+	has_war_with = SOV
+	
+	}
+	
+	SOV = { controls_state = 217 }
+	SOV = { controls_state = 219 }
+	SOV = { controls_state = 195 }
+	
+	has_government = fascism
+	
+}
 
-option = {
-	name = ron_coupscountry.50.a	 
+immediate = {
+set_country_flag = romania_coup_1944
+}
+
+mean_time_to_happen = {
+	days = 3
 }
 
 option = {
-	name = ron_coupscountry.50.b	 
+	name = ron_coupscountry.50.a	
+	
+	ai_chance = {
+		factor = 20
+	}
+	
+	every_country = {
+ 			if = {
+ 				limit = { is_in_faction_with = SOV  has_war_with = ROM }
+ 				white_peace = ROM
+ 			}
+		}
+		
+		every_country = {
+ 			if = {
+ 				limit = { is_in_faction_with = ENG  has_war_with = ROM }
+ 				white_peace = ROM
+ 			}
+		}
+	
+	GER = { end_puppet = ROM }
+		
+	leave_faction = yes
+	
+	SOV = { add_to_faction = ROM }
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.16 hours = 6 } }
+	
+	
+	add_stability = -0.1
+	
+	create_country_leader = {
+	name = "King Michael"
+	picture = "King_Michael.dds"
+	expire = "1965.1.1"
+	ideology = despotism
+	}
+	
+	set_politics = {
+		ruling_party = neutrality
+		last_election = "1944.7.20"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	
+	set_popularities = {
+		neutrality = 60
+		communism = 40
+	}
+	
+	if = {
+		limit = {
+		is_historical_focus_on = no
+		}
+	random_list = {
+    30 = {
+		start_civil_war = {
+			ruling_party = neutrality
+			ideology = fascism
+			size = 0.3
+			only_own_territory = no
+			capital = 46
+		}
+		random_other_country = {
+			limit = {
+				original_tag = ROM
+				has_government = fascism
+			}
+	
+	create_country_leader = {
+		name = "Ion Antonescu"
+		desc = "POLITICS_ION_ANTONESCU_DESC"
+		picture = "Portrait_Romania_Ion_Antonescu.dds"
+		expire = "1965.1.1"
+		ideology = legionnairism
+		traits = { dictator }
+	}
+	}
+	}
+    70 = { 
+	news_event = { id = ron_coupnews.1 hours = 6 }
+	}
+	}
+	}
+	else = {
+		news_event = { id = ron_coupnews.1 hours = 6 }
+	}
+	
+	
 }
+
+
+option = {
+	name = ron_coupscountry.50.b
+	
+	ai_chance = {
+		factor = 10
+		modifier = {
+			factor = 0
+			is_historical_focus_on = yes
+		}
+	}
+
+random_list = {
+    30 = {
+		start_civil_war = {
+			ruling_party = fascism
+			ideology = neutrality
+			size = 0.3
+			only_own_territory = no
+			capital = 46
+		}
+		random_other_country = {
+			limit = {
+				original_tag = ROM
+				has_government = neutrality
+			}
+	
+	create_country_leader = {
+	name = "King Michael"
+	picture = "King_Michael.dds"
+	expire = "1965.1.1"
+	ideology = despotism
+	}
+	
+	SOV = { add_to_faction = PREV }
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.16 hours = 6 } }
+	
+	}
+	}
+    70 = { 
+		news_event = { id = ron_coupnews.6 hours = 6 } 
+	}
+}
+}
+
 	 
 }
 
