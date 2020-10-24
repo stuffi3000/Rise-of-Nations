@@ -4562,7 +4562,7 @@ trigger = {
 	NOT = { has_country_flag = romania_coup_1944 }
 	original_tag = ROM
 	date > 1944.7.23
-	date < 1944.9.23
+	date < 1944.12.31
 	
 	is_in_faction_with = GER
 	
@@ -4581,7 +4581,7 @@ trigger = {
 	SOV = { controls_state = 219 }
 	SOV = { controls_state = 195 }
 	
-	has_government = fascism
+	NOT = { has_government = communism }
 	
 }
 
@@ -4734,22 +4734,184 @@ random_list = {
 	 
 }
 
-# 
+# 1944 Bulgarian coup d'état
 country_event = {
 id = ron_coupscountry.51
 title = ron_coupscountry.51.t
 desc = ron_coupscountry.51.d
 picture = GFX_report_event_generic_modern_coup
 
-is_triggered_only = yes
+trigger = {
+	NOT = { has_country_flag = bulgaria_coup_1944 }
+	original_tag = BUL
+	date > 1944.8.9
+	date < 1944.12.31
+	
+	is_in_faction_with = GER
+	
+	AND = {
+	
+	OR = {
+	has_war_with = ENG
+	has_war_with = USA
+	}
+	
+	has_war_with = SOV
+	
+	}
+	
+	SOV = { controls_state = 217 }
+	SOV = { controls_state = 219 }
+	SOV = { controls_state = 195 }
+	
+	NOT = { has_government = communism }
+	
+}
 
-option = {
-	name = ron_coupscountry.51.a	 
+immediate = {
+set_country_flag = bulgaria_coup_1944
+}
+
+mean_time_to_happen = {
+	days = 3
 }
 
 option = {
-	name = ron_coupscountry.51.b	 
+	name = ron_coupscountry.51.a	
+	
+	ai_chance = {
+		factor = 20
+	}
+	
+	every_country = {
+ 			if = {
+ 				limit = { is_in_faction_with = SOV  has_war_with = BUL }
+ 				white_peace = BUL
+ 			}
+		}
+		
+		every_country = {
+ 			if = {
+ 				limit = { is_in_faction_with = ENG  has_war_with = BUL }
+ 				white_peace = BUL
+ 			}
+		}
+	
+	GER = { end_puppet = BUL }
+		
+	leave_faction = yes
+	
+	SOV = { add_to_faction = BUL }
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.16 hours = 6 } }
+	
+	
+	add_stability = -0.1
+	
+	create_country_leader = {
+	name = "Kimon Georgiev"
+	picture = "Kimon_Georgiev.dds"
+	expire = "1965.1.1"
+	ideology = marxism
+	}
+	
+	set_politics = {
+		ruling_party = communism
+		last_election = "1944.1.1"
+		election_frequency = 48
+		elections_allowed = no
+	}
+	
+	set_popularities = {
+		communism = 100
+	}
+	
+	if = {
+		limit = {
+		is_historical_focus_on = no
+		}
+	random_list = {
+    30 = {
+		start_civil_war = {
+			ruling_party = ROOT
+			ideology = fascism
+			size = 0.3
+			only_own_territory = no
+			capital = 48
+		}
+		random_other_country = {
+			limit = {
+				original_tag = BUL
+				has_government = fascism
+			}
+	
+	create_country_leader = {
+		name = "Hristo Lukov"
+		desc = "POLITICS_HRISTO_LUKOV_DESC"
+		picture = "Portrait_bulgaria_hristo_lukov.dds"
+		expire = "1965.1.1"
+		ideology = legionnairism
+	}
+	}
+	}
+    70 = { 
+	news_event = { id = ron_coupnews.1 hours = 6 }
+	}
+	}
+	}
+	else = {
+		news_event = { id = ron_coupnews.1 hours = 6 }
+	}
+	
+	
 }
+
+
+option = {
+	name = ron_coupscountry.51.b
+	
+	ai_chance = {
+		factor = 10
+		modifier = {
+			factor = 0
+			is_historical_focus_on = yes
+		}
+	}
+
+random_list = {
+    30 = {
+		start_civil_war = {
+			ruling_party = ROOT
+			ideology = communism
+			size = 0.3
+			only_own_territory = no
+			capital = 48
+		}
+		random_other_country = {
+			limit = {
+				original_tag = BUL
+				has_government = communism
+			}
+	
+	create_country_leader = {
+	name = "Kimon Georgiev"
+	picture = "Kimon_Georgiev.dds"
+	expire = "1965.1.1"
+	ideology = marxism
+	}
+	
+	SOV = { add_to_faction = PREV }
+	
+	SOV = { country_event = { id = ron_decolonizationdiplo.16 hours = 6 } }
+	
+	}
+	}
+    70 = { 
+		news_event = { id = ron_coupnews.6 hours = 6 } 
+	}
+}
+}
+
 	 
 }
 
