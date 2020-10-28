@@ -1040,12 +1040,19 @@ id = ron_coupscountry.11
 title = ron_coupscountry.11.t
 desc = ron_coupscountry.11.d
 picture = GFX_report_event_generic_early_coup
+
 trigger = {
 	NOT = { has_country_flag = reza_khan_coup_1921 }
 	original_tag = PER
 	date > 1921.2.21
 	date < 1922.2.21
-	has_government = neutrality
+	
+	NOT = {
+	has_country_leader = {
+    name = "Reza Shah Pahlavi"
+    ruling_only = yes
+	}
+	}
 }
 	
 immediate = {
@@ -1057,17 +1064,26 @@ mean_time_to_happen = {
 }
 
 option = {
-	name = ron_coupscountry.11.a	
+	name = ron_coupscountry.x.a	
 	
 	ai_chance = {
-		factor = 40
+		factor = 10
 	}
 	
-	news_event = { id = ron_coupnews.1 hours = 6 }
+	if = {
+		limit = {
+		NOT = { has_government = neutrality }
+		}
+		set_politics = {
+		ruling_party = neutrality
+		elections_allowed = no
+	}
+	set_popularities = {
+		neutrality = 100
+	}
+	}
 	
 	kill_ideology_leader = neutrality
-	
-	add_stability = -0.1
 	
 	create_country_leader = {
 		name = "Reza Shah Pahlavi"
@@ -1077,6 +1093,49 @@ option = {
 		ideology = despotism
 	}
 	
+	news_event = { id = ron_coupnews.1 hours = 6 }
+	
+}
+
+option = {
+	name = ron_coupscountry.x.b	
+	
+	trigger = { NOT = { has_government = neutrality } }
+
+	ai_chance = {
+		factor = 10
+		modifier = {
+			factor = 0
+			is_historical_focus_on = yes
+		}
+	}
+
+random_list = {
+    50 = {
+		start_civil_war = {
+			ruling_party = ROOT
+			ideology = neutrality
+			size = 0.5
+		}
+		random_other_country = {
+			limit = {
+				original_tag = PER
+				has_government = neutrality
+			}
+	
+	create_country_leader = {
+		name = "Reza Shah Pahlavi"
+		desc = "POLITICS_REZA_SHAH_PAHLAVI_DESC"
+		picture = "Portrait_Iran_Reza_Shah_Pahlavi.dds"
+		expire = "1965.1.1"
+		ideology = despotism
+	}
+	}
+	}
+    50 = {
+		news_event = { id = ron_coupnews.6 hours = 6 } 
+	}
+}
 	
 }
 	 
