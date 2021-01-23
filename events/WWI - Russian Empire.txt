@@ -1338,6 +1338,185 @@ country_event = {
 		}
 	}
 }
+#Surrender No Lenin
+
+# Treaty of Brest-Litovsk
+country_event = {
+	id = ww1_russia.400
+	title = ww1_russia.43.t
+	desc = ww1_russia.43.d
+	picture = GFX_report_event_treaty_of_brest_litovsk
+
+	fire_only_once = yes
+
+	trigger = {
+
+				NOT = { date > 1919.1.1 }
+				NOT = { has_global_flag = player_wants_custom_peacedeals }
+				tag = RUE
+				RUE = { surrender_progress > 0.55} #Russia has surrendered
+			}
+		
+	
+	immediate = {
+		every_country = {
+			limit = {
+				has_war_with = RUE
+			}
+			white_peace = RUE
+		}
+		leave_faction = yes
+	}
+	mean_time_to_happen = { days = 10 }
+
+	option = {
+		name = ww1_russia.43.a
+		news_event = { hours = 6 id = endsieg_news.225 }
+		set_global_flag = treaty_of_brest_litovsk
+		hidden_effect = {
+			190 = {
+				add_core_of = UBD
+			}
+			12 = {
+				add_core_of = UBD
+			}
+			881 = {
+				add_core_of = UBD
+			}
+			882 = {
+				add_core_of = UBD
+			}
+			13 = {
+				add_core_of = UBD
+			}
+			191 = {
+				add_core_of = UBD
+			}
+			880 = {
+				add_core_of = UBD
+			}
+			891 = {
+				add_core_of = UBD
+			}
+			890 = {
+				add_core_of = UBD
+			}
+			release = UBD
+			release = LIT
+			release = BLR
+			release = UKR
+			release = TRA
+			GER = {transfer_state = 137} #Crimea
+			if = {
+				limit = {
+					NOT = { country_exists = FNN } #Finland cannot into existence
+				}
+				RUE = { end_puppet = FNN }
+				release = FNN #can into existence. also more clay via Petsamo, I'm sure that the Germans would've wanted it.
+			}
+			if = {
+				limit = {
+					NOT = {
+						country_exists = POL #Poland cannot into existence
+					}
+				}
+				release = POL #can into existence
+			}
+			every_state = {
+				limit = {
+					OR = {
+						is_controlled_by = UBD
+						is_controlled_by = BLR
+						is_controlled_by = UKR
+						is_controlled_by = LIT
+						is_controlled_by = GER
+					}
+				}
+				set_demilitarized_zone = no
+			}
+
+			if = {
+				limit = {
+					ROM = {is_in_faction_with = GER} #Romania is in the CP
+				}
+				ROM = {transfer_state = 78}
+				ROM = {transfer_state = 192} #Vinnytsia
+				ROM = {transfer_state = 198}
+				ROM = {transfer_state = 1100}
+				ROM = {transfer_state = 829}
+				ROM = {transfer_state = 766}
+				ROM = {transfer_state = 925}
+				UKR = {transfer_state = 3407}
+				#Odessa, ie transnistria. Gives reason for Romanian player to side with CP.
+				78 = {  #Besserabia
+					remove_claim_by = ROM
+					add_core_of = ROM
+				}
+				137 = { add_core_of = CRI }
+				198 = { add_core_of = ROM }
+				192 = { add_core_of = ROM }
+				198 = { set_demilitarized_zone = no }
+				192 = { set_demilitarized_zone = no }
+			}
+			else = {
+				78 = { add_core_of = MOL }
+				766 = { add_core_of = MOL }
+				release = MOL
+				ROM = { puppet = MOL}
+			}
+		}
+		GER = {
+			puppet = UBD
+			puppet = LIT
+			puppet = BLR
+			puppet = UKR
+			if = {
+				limit = {
+					POL = { is_puppet = no }
+					country_exists = POL
+				}
+				puppet = POL
+				if = {
+					limit = { 97 = { NOT = { is_owned_and_controlled_by = POL } } }
+					POL = { transfer_state = 97 }
+				}
+			}
+			add_to_faction = UBD
+			add_to_faction = LIT
+			add_to_faction = BLR
+			add_to_faction = UKR
+			add_to_faction = POL
+		}
+		if = {
+			limit = {
+				OTT = { is_in_faction_with = GER }
+			}
+			OTT = { transfer_state = 1001 } #Kars
+		}
+		else = {
+			TRA = { transfer_state = 1001}
+			TRA = { add_state_core = 1001}
+		}
+		hidden_effect = {
+			UKR = {
+				set_politics = {
+					ruling_party = democratic
+					last_election = "1907.1.12"
+					election_frequency = 60
+					elections_allowed = yes
+            }
+
+                set_popularities = {
+                    neutrality = 26
+                    democratic = 34
+                    communism = 40
+                }
+		RUE = { add_stability = -0.05 }
+			}
+		}
+	}
+}
+
 
 
 # Russian Mobilization
