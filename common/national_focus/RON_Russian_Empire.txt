@@ -11,6 +11,4566 @@ focus_tree = {
 		x = 200
 		y = 3000
 	}
+	
+	### Start of DNC
+	
+	##Focus for Question of Mongolia
+	focus = {
+		id = RUE0_question_of_mongolia
+		icon = attack_mongolia
+		x = 28
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_french_correspondence
+			focus = RUE0_claim_south_sakhalin
+			focus = RUE0_improve_ties_with_the_kaiser
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			MON = {
+				exists = yes
+				is_puppet = no
+			}
+			threat > 0.05
+		}
+		completion_reward = {
+			MON = {
+				country_event = ww1russia.1
+			}
+		}
+	}
+	#Focus for Stabilise Russia
+	focus = {
+		id = RUE0_stabilise_russia
+		icon = GFX_goal_generic_neutrality_focus
+		x = 26
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_the_sleeping_bear
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				has_idea = strike_movement_1
+			}
+			modifier = {
+				factor = 0
+				has_idea = strike_movement_2
+			}
+			modifier = {
+				factor = 0
+				has_idea = strike_movement_3
+			}
+			modifier = {
+				factor = 0
+				has_idea = strike_movement_4
+			}
+		}
+		completion_reward = {
+			remove_ideas = RUE_civil_unrest
+			add_ideas = RUE_stable_russia
+		}
+	}
+	#Focus for The Tsar Compromise
+	focus = {
+		id = RUE0_the_tsar_compromise
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 5
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_conservative_duma
+		}
+		prerequisite = {
+			focus = RUE0_constitutionalism
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			add_ideas = nicholas_ii
+			add_political_power = 50
+		}
+	}
+	#Focus for Force Abdication of the Tsar
+	focus = {
+		id = RUE0_force_abdication_of_the_tsar
+		icon = GFX_goal_tfv_sever_ties_with_uk
+		x = 1
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_revolutionary_duma
+		}
+		prerequisite = {
+			focus = RUE0_constitutionalism
+		}
+		bypass = {
+			NOT = {
+				has_government = neutrality
+			}
+		}
+		mutually_exclusive = {
+			focus = RUE0_the_tsar_compromise
+		}
+		ai_will_do = {
+			factor = 12
+			modifier = {
+				#EAI
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_country_leader = {
+						name = "Nicholas II"
+						ruling_only = yes
+					}
+				}
+				retire_country_leader = yes
+			}
+			create_country_leader = {
+				name = "Interregnum"
+				ideology = despotism
+				expire = 1933.1.1
+			}
+		}
+	}
+	#Focus for Ally Our Brothers
+	focus = {
+		id = RUE0_ally_our_brothers
+		icon = GFX_goal_generic_military_deal
+		x = 21
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_frenchrusso_army_training
+		}
+		ai_will_do = {
+			factor = 5
+			modifier = {
+				factor = 150
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					country_exists = SER
+				}
+				SER = {
+					country_event = generic.5
+				}
+			}
+			if = {
+				limit = {
+					country_exists = BUL
+				}
+				BUL = {
+					country_event = generic.5
+				}
+			}
+			if = {
+				limit = {
+					country_exists = GRE
+				}
+				GRE = {
+					country_event = generic.5
+				}
+			}
+		}
+	}
+	##Focus for Claims in Turkey
+	focus = {
+		id = RUE0_claims_in_turkey
+		icon = attack_turkey
+		x = 27
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_frenchrusso_army_training
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 150
+				date > 1915.1.1
+			}
+		}
+		completion_reward = {
+			add_state_claim = 353
+			add_state_claim = 354
+			add_state_claim = 1001
+			
+			_wargoal = {
+						type = take_claimed_state
+						target = OTT
+					}
+			add_political_power = 25
+		}
+	}
+	#Focus for LIberate Slavs in Austria-Hungary
+	focus = {
+		id = RUE0_liberate_slavs_in_austriahungary
+		icon = GFX_focus_proclaim_the_restauration_of_Austria_Hungary
+		x = 25
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_frenchrusso_army_training
+		}
+		ai_will_do = {
+			factor = 14
+			modifier = {
+				date < 1914.1.1
+				factor = 0
+			}
+		}
+		completion_reward = {
+			#if limit not owns galicia add_state_claim = galicia if rus at war with AUH 
+			add_state_claim = 91
+			add_state_claim = 89
+			add_state_claim = 996
+			add_state_claim = 88
+			add_state_claim = 863
+			if = {
+				limit = {
+					has_war_with = AUH
+				}
+				add_to_faction = CZE
+				else = {
+					create_wargoal = {
+						type = take_claimed_state
+						target = AUH
+					}
+					add_state_claim = 73
+					add_state_claim = 71
+					add_state_claim = 70
+					add_state_claim = 889
+					add_state_claim = 75
+					add_state_claim = 74
+					add_state_claim = 885
+					add_state_claim = 9
+					add_state_claim = 887
+					add_state_claim = 69					#nice
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction_with = SER
+				}
+				SER = {
+					set_cosmetic_tag = yugoslavia
+					add_state_core = 764
+					add_state_core = 45
+					add_state_core = 869
+					add_state_core = 868
+					add_state_core = 109
+					add_state_core = 934
+					add_state_core = 102
+					add_state_core = 937
+					add_state_core = 939
+					add_state_core = 1048
+					add_state_core = 163
+					add_state_core = 1104
+					add_state_core = 103
+					add_state_core = 938
+					add_state_core = 1046
+					add_state_core = 1047
+					add_state_core = 1041
+					add_state_core = 940
+					add_state_core = 105
+					add_state_core = 106
+					add_state_core = 878
+					add_state_core = 876
+					add_state_core = 44
+				}
+			}
+		}
+	}
+	#Focus for Liberate Slavs in Germany
+	focus = {
+		id = RUE0_liberate_slavs_in_germany
+		icon = attack_germany
+		x = 23
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_frenchrusso_army_training
+		}
+		ai_will_do = {
+			factor = 14
+			modifier = {
+				date < 1914.1.1
+				factor = 0
+			}
+		}
+		completion_reward = {
+			add_state_claim = 63
+			add_state_claim = 68
+			add_state_claim = 66
+			add_state_claim = 802
+			add_state_claim = 803
+			add_state_claim = 762
+			add_state_claim = 67
+			add_state_claim = 801
+			add_state_claim = 86
+			add_state_claim = 67
+			add_state_claim = 865
+			add_state_claim = 85
+			add_state_claim = 5
+			add_state_claim = 763
+			add_state_claim = 188
+			if = {
+				limit = {
+					NOT = {
+						has_war_with = GER
+					}
+				}
+				create_wargoal = {
+					type = take_claimed_state
+					target = GER
+				}
+			}
+		}
+	}
+	#Focus for German High Command
+	focus = {
+		id = RUE0_german_high_command
+		icon = GFX_goal_rhineland
+		x = 34
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_ask_to_join_central_powers
+		}
+		ai_will_do = {
+			factor = 8
+			modifier = {
+				factor = 1000
+				has_war = yes
+			}
+		}
+		available = {
+			is_in_faction_with = GER
+		}
+		completion_reward = {
+			add_ideas = german_high_command
+		}
+	}
+	#Focus for German Industrialisation Tech
+	focus = {
+		id = RUE0_german_industrialisation_tech
+		icon = GFX_goal_continuous_non_factory_construct
+		x = 30
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_german_investors
+		}
+		ai_will_do = {
+			factor = 16
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 0.5
+				uses = 4
+				category = industry
+			}
+		}
+	}
+	#Focus for Improve ties with the Kaiser
+	focus = {
+		id = RUE0_improve_ties_with_the_kaiser
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 30
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_secure_international_position
+		}
+		mutually_exclusive = {
+			focus = RUE0_french_correspondence
+		}
+		mutually_exclusive = {
+			focus = RUE0_slavic_league
+		}
+		ai_will_do = {
+			factor = 16
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			add_opinion_modifier = {
+				target = FRA
+				modifier = medium_decrease
+			}
+			add_opinion_modifier = {
+				target = GER
+				modifier = medium_increase
+			}
+			GER = {
+				add_opinion_modifier = {
+					target = RUE
+					modifier = medium_increase
+				}
+			}
+			FRA = {
+				add_opinion_modifier = {
+					target = RUE
+					modifier = medium_decrease
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction_with = FRA
+				}
+				leave_faction = yes
+			}
+		}
+	}
+	#Focus for Get rid of the Duma
+	focus = {
+		id = RUE0_get_rid_of_the_duma
+		icon = GFX_goal_demand_sudetenland
+		x = 15
+		y = 1
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_reorganise_the_duma
+		}
+		mutually_exclusive = {
+			focus = RUE0_empower_the_duma
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 1
+			}
+			set_temp_variable = {
+				var = discredit_duma_var
+				value = party_popularity@democratic
+			}
+			add_to_temp_variable = {
+				var = discredit_duma_var
+				value = party_popularity@fascism
+			}
+			add_to_temp_variable = {
+				var = discredit_duma_var
+				value = party_popularity@communism
+			}
+			add_to_temp_variable = {
+				var = discredit_duma_var
+				value = party_popularity@islamism
+			}
+			multiply_temp_variable = {
+				var = discredit_duma_var
+				value = -0.5
+			}
+			add_stability = discredit_duma_var
+		}
+	}
+	#Focus for Focus on Europe
+	focus = {
+		id = RUE0_focus_on_europe
+		icon = GFX_focus_usa_focus_on_europe
+		x = 36
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_ultimatum_to_persia
+			focus = RUE0_chinese_intervention
+			focus = RUE0_reclaim_alaska
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						is_in_faction_with = ROM
+					}
+				}
+				add_state_claim = 79
+				add_state_claim = 831
+			}
+			if = {
+				limit = {
+					NOT = {
+						is_in_faction_with = AUH
+					}
+				}
+				add_state_claim = 91
+				add_state_claim = 89
+				add_state_claim = 996
+				add_state_claim = 88
+				add_state_claim = 863
+			}
+		}
+	}
+	#Focus for Reclaim Alaska
+	focus = {
+		id = RUE0_reclaim_alaska
+		icon = attack_america
+		x = 38
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_intervene_in_the_war
+		}
+		ai_will_do = {
+			factor = 16
+		}
+		available = {
+			has_war_with = USA
+		}
+		completion_reward = {
+			add_state_claim = 650
+			add_state_claim = 463
+			add_state_claim = 739
+		}
+	}
+	#Focus for Chinese Intervention 
+	focus = {
+		id = RUE0_chinese_intervention
+		icon = GFX_focus_attack_china
+		x = 36
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_intervene_in_the_war
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		available = {
+			CHI = {
+				has_war_with = QIN
+			}
+		}
+		completion_reward = {
+			
+			add_state_claim = 761
+			add_state_claim = 714
+			add_state_claim = 328
+			add_state_claim = 1024
+			add_state_claim = 739
+			add_state_claim = 617
+			add_state_claim = 618
+			add_state_claim = 619
+			create_wargoal = {
+				type = take_claimed_state
+				target = QIN
+			}
+			GER = {
+				add_state_claim = 594
+				add_state_claim = 591
+				add_state_claim = 592
+				add_state_claim = 728
+			}
+		}
+	}
+	#Focus for Ultimatum to Persia
+	focus = {
+		id = RUE0_ultimatum_to_persia
+		icon = attack_iran
+		x = 34
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_intervene_in_the_war
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			PER = {
+				country_event = ww1russia.2
+			}
+		}
+	}
+	#Focus for German Investors
+	focus = {
+		id = RUE0_german_investors
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 30
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_denounce_french_military_alliance
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			add_ideas = german_investors
+		}
+	}
+	#Focus for Intervene in the War
+	focus = {
+		id = RUE0_intervene_in_the_war
+		icon = GFX_goal_generic_major_war
+		x = 36
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_improve_ties_with_the_kaiser
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				GER = {
+					has_war_with = FRA
+				}
+				factor = 100
+			}
+		}
+		bypass = {
+			has_war_with = FRA
+		}
+		available = {
+			GER = {
+				has_war_with = FRA
+			}
+			NOT = {
+				has_completed_focus = RUE0_the_sleeping_bear
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_war_with = FRA
+					}
+				}
+				declare_war_on = {
+					target = FRA
+				}
+			}
+			add_timed_idea = {
+				days = 90
+				idea = war_with_france
+			}
+		}
+	}
+	#Focus for Slavic League
+	focus = {
+		id = RUE0_slavic_league
+		icon = GFX_goal_generic_national_unity
+		x = 19
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_protector_of_orthodoxy
+		}
+		mutually_exclusive = {
+			focus = RUE0_french_correspondence
+		}
+		mutually_exclusive = {
+			focus = RUE0_improve_ties_with_the_kaiser
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				date > 1913.1.1
+				factor = 20
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faction = yes
+			}
+			set_rule = {
+				can_create_factions = yes
+			}
+			create_faction = "Slavic League"
+		}
+	}
+	#Focus for Ask to join Central Powers
+	focus = {
+		id = RUE0_ask_to_join_central_powers
+		icon = GFX_goal_generic_forceful_treaty
+		x = 33
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_denounce_french_military_alliance
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			NOT = {
+				has_completed_focus = RUE0_the_sleeping_bear
+			}
+		}
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = generic.2
+					days = 1
+				}
+			}
+		}
+	}
+	#Focus for Empower the Duma
+	focus = {
+		id = RUE0_empower_the_duma
+		icon = GFX_goal_generic_military_deal
+		x = 3
+		y = 1
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_reorganise_the_duma
+		}
+		mutually_exclusive = {
+			focus = RUE0_get_rid_of_the_duma
+		}
+		ai_will_do = {
+			base = 20
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+		}
+	}
+	#Focus for Union of the Russian People
+	focus = {
+		id = RUE0_union_of_the_russian_people
+		icon = GFX_focus_generic_support_the_left_right
+		x = 15
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_ban_syndicates
+		}
+		ai_will_do = {
+			factor = 15
+		}
+		completion_reward = {
+			add_political_power = 120
+			add_timed_idea = {
+				idea = political_violence
+				days = 365
+			}
+		}
+	}
+	#Focus for Ban Syndicates
+	focus = {
+		id = RUE0_ban_syndicates
+		icon = GFX_goal_anti_comintern_pact
+		x = 14
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_counteract_strikes
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			has_stability > 0.5
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			}
+			add_political_power = 50
+			add_stability = -0.05
+		}
+	}
+	#Focus for Introduce Social Service Duty
+	focus = {
+		id = RUE0_introduce_social_service_duty
+		icon = GFX_focus_eng_special_air_service
+		x = 10
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_introduce_martial_law
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			}
+			add_stability = -0.1
+		}
+	}
+	#Focus for Introduce Martial Law
+	focus = {
+		id = RUE0_introduce_martial_law
+		icon = GFX_focus_usa_honor_the_confederacy
+		x = 10
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_centralise_government
+		}
+		prerequisite = {
+			focus = RUE0_counteract_strikes
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_political_power = -100
+			add_popularity = {
+				ideology = communism
+				popularity = 0.2
+			}
+			add_timed_idea = {
+				idea = martial_law
+				days = 365
+			}
+			add_stability = -0.15
+		}
+	}
+	#Focus for Organise Syndicates
+	focus = {
+		id = RUE0_organise_syndicates
+		icon = GFX_focus_generic_industry_1
+		x = 7
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_negotiate_with_labourers
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = {
+				days = 180
+				idea = organise_syndicates
+			}
+			add_ideas = organise_syndicates_p
+		}
+	}
+	#Focus for Dual Power
+	focus = {
+		id = RUE0_dual_power
+		icon = GFX_goal_generic_military_deal
+		x = 1
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_force_abdication_of_the_tsar
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_timed_idea = {
+				idea = internationalism
+				days = 180
+			}
+		}
+	}
+	#Focus for Fate of the Tsar Family
+	focus = {
+		id = RUE0_fate_of_the_tsar_family
+		icon = GFX_focus_generic_monarchy_1
+		x = 0
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_force_abdication_of_the_tsar
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		mutually_exclusive = {
+			focus = RUE0_force_abdication_of_the_tsar
+		}
+		completion_reward = {
+			country_event = {
+				id = ww1russia.3
+				hours = 6
+			}
+		}
+	}
+	#Focus for A New Government
+	focus = {
+		id = RUE0_a_new_government
+		icon = GFX_goal_tripartite_pact
+		x = 4
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_provisional_comittee_of_the_state_duma
+		}
+		prerequisite = {
+			focus = RUE0_the_tsar_compromise
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = {
+				id = ww1russia.4
+			}
+		}
+	}
+	#Focus for Counteract Strikes
+	focus = {
+		id = RUE0_counteract_strikes
+		icon = GFX_focus_spr_masters_of_our_own_fate
+		x = 15
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_get_rid_of_the_duma
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = counteract_strikes
+				days = 180
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			}
+			add_stability = -0.1
+		}
+	}
+	#Focus for Reorganise the Duma
+	focus = {
+		allow_branch = {
+			date < 1910.1.1
+		}
+		id = RUE0_reorganise_the_duma
+		icon = GFX_focus_generic_self_management
+		x = 9
+		y = 0
+		cost = 5
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				#EAI
+				factor = 0
+				is_historical_focus_on = yes
+				date < 1916.1.1
+			}
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	#Focus for Secure International Position
+	focus = {
+		id = RUE0_secure_international_position
+		icon = GFX_focus_generic_diplomatic_treaty
+		x = 28
+		y = 1
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_reorganise_the_duma
+		}
+		ai_will_do = {
+			factor = 25
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = secure_intl_position
+				days = 365
+			}
+		}
+	}
+	#Focus for Revolutionary Duma
+	focus = {
+		id = RUE0_revolutionary_duma
+		icon = GFX_goal_generic_demand_territory
+		x = 1
+		y = 2
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_empower_the_duma
+		}
+		mutually_exclusive = {
+			focus = RUE0_conservative_duma
+		}
+		ai_will_do = {
+			base = 16
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = rev_duma
+				days = 180
+			}
+		}
+	}
+	#Focus for Centralise Government
+	focus = {
+		id = RUE0_centralise_government
+		icon = GFX_goal_generic_dangerous_deal
+		x = 9
+		y = 3
+		cost = 5
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_empower_the_duma
+			focus = RUE0_get_rid_of_the_duma
+		}
+		ai_will_do = {
+			factor = 24
+		}
+		completion_reward = {
+			add_stability = -0.1
+			add_timed_idea = {
+				idea = central_govt
+				days = 180
+			}
+		}
+	}
+	#Focus for Conservative Duma
+	focus = {
+		id = RUE0_conservative_duma
+		icon = GFX_goal_generic_major_alliance
+		x = 5
+		y = 2
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_empower_the_duma
+		}
+		mutually_exclusive = {
+			focus = RUE0_revolutionary_duma
+		}
+		ai_will_do = {
+			factor = 16
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		available = {
+			NOT = {
+				has_government = communism
+			}
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_war_support = 0.05
+		}
+	}
+	#Focus for Protector of Orthodoxy
+	focus = {
+		id = RUE0_protector_of_orthodoxy
+		icon = GFX_focus_mex_restore_the_army_of_christ
+		x = 18
+		y = 2
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_secure_international_position
+		}
+		prerequisite = {
+			focus = RUE0_get_rid_of_the_duma
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			add_ideas = guardian_of_orthodoxy
+		}
+	}
+	#Focus for French Correspondence
+	focus = {
+		id = RUE0_french_correspondence
+		icon = GFX_focus_chi_reach_out_to_france
+		x = 26
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_secure_international_position
+		}
+		mutually_exclusive = {
+			focus = RUE0_improve_ties_with_the_kaiser
+		}
+		mutually_exclusive = {
+			focus = RUE0_slavic_league
+		}
+		ai_will_do = {
+			factor = 16
+		}
+		completion_reward = {
+			add_opinion_modifier = {
+				target = GER
+				modifier = medium_decrease
+			}
+			add_opinion_modifier = {
+				target = FRA
+				modifier = medium_increase
+			}
+			GER = {
+				add_opinion_modifier = {
+					target = RUE
+					modifier = medium_decrease
+				}
+			}
+			FRA = {
+				add_opinion_modifier = {
+					target = RUE
+					modifier = medium_increase
+				}
+			}
+		}
+	}
+	#Focus for Claim South Sakhalin
+	focus = {
+		id = RUE0_claim_south_sakhalin
+		icon = GFX_focus_jap_pacific_guardian
+		x = 28
+		y = 2
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_secure_international_position
+		}
+		ai_will_do = {
+			factor = 15
+		}
+		completion_reward = {
+			add_state_claim = 537
+			add_state_claim = 555
+		}
+	}
+	#Focus for Constitutionalism
+	focus = {
+		id = RUE0_constitutionalism
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 3
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_revolutionary_duma
+			focus = RUE0_conservative_duma
+		}
+		ai_will_do = {
+			base = 4
+			modifier = {
+				factor = 100
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			create_country_leader = {
+				name = "Aleksandr Kerenski"
+				#desc = 
+				picture = gfx/leaders/SOV/Portrait_Portrait_Alexander_Kerensky.dds
+				expire = 1933.1.1
+				ideology = despotism
+			}
+			set_politics = {
+				ruling_party = neutrality
+			}
+		}
+	}
+	#Focus for Provisional Comittee of the State Duma
+	focus = {
+		id = RUE0_provisional_comittee_of_the_state_duma
+		icon = GFX_goal_anschluss
+		x = 3
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_force_abdication_of_the_tsar
+			focus = RUE0_the_tsar_compromise
+		}
+		prerequisite = {
+			focus = RUE0_constitutionalism
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 120
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			set_politics = {
+				ruling_party = neutrality
+			}
+			set_party_name = {
+				ideology = neutrality
+				long_name = "Provisional Government"
+				name = "Provisional Government"
+			}
+			create_country_leader = {
+				name = "Provisional Government"
+				desc = ""
+				picture = "gfx/leaders/RUE/WW1/Provisional_Government.dds"
+				expire = 1933.1.1
+				ideology = despotism
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+			add_stability = 0.05
+		}
+	}
+	#Focus for Protect Othodox States
+	focus = {
+		id = RUE0_protect_othodox_states
+		icon = GFX_goal_generic_alliance
+		x = 17
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_protector_of_orthodoxy
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 20
+				date > 1912.1.1
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					country_exists = ROM
+				}
+				give_guarantee = ROM
+			}
+			if = {
+				limit = {
+					country_exists = BUL
+				}
+				give_guarantee = BUL
+			}
+			if = {
+				limit = {
+					country_exists = GRE
+				}
+				give_guarantee = GRE
+			}
+			if = {
+				limit = {
+					country_exists = SER
+				}
+				give_guarantee = SER
+			}
+			if = {
+				limit = {
+					country_exists = MNT
+				}
+				give_guarantee = MNT
+			}
+		}
+	}
+	#Focus for Strengthen the Tsardom
+	focus = {
+		id = RUE0_strengthen_the_tsardom
+		icon = GFX_focus_generic_support_the_left_right
+		x = 16
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_his_imperial_majesty
+		}
+		prerequisite = {
+			focus = RUE0_union_of_the_russian_people
+		}
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_civil_war = no
+		}
+		completion_reward = {
+			add_stability = 0.05
+		}
+	}
+	#Focus for His Imperial Majesty
+	focus = {
+		id = RUE0_his_imperial_majesty
+		icon = GFX_focus_hun_elect_a_king
+		x = 16
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_protect_othodox_states
+		}
+		ai_will_do = {
+			factor = 0			#nicholas ii cries on the inside
+		}
+		available = {
+			NOT = {
+				has_country_flag = ruscivilwar
+			}
+		}
+		completion_reward = {
+			set_cosmetic_tag = RUE_absolute_tsardom
+			complete_national_focus = RUE0_in_name_of_the_tsar
+			complete_national_focus = RUE0_whites
+			country_event = {
+				id = ww1russia.5
+			}
+		}
+	}
+	#Focus for Closer ties with Britain
+	focus = {
+		id = RUE0_closer_ties_with_britain
+		icon = GFX_focus_chi_british_cooperation
+		x = 24
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_french_correspondence
+		}
+		ai_will_do = {
+			factor = 30
+		}
+		available = {
+			has_opinion = {
+				target = ENG
+				value > 24
+			}
+		}
+		completion_reward = {
+			add_political_power = -50
+			ENG = {
+				country_event = {
+					id = ww1russia.6
+				}
+			}
+		}
+	}
+	#Focus for The Sleeping Bear
+	focus = {
+		id = RUE0_the_sleeping_bear
+		icon = GFX_the_russian_bear
+		x = 26
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_closer_ties_with_britain
+			focus = RUE0_question_of_mongolia
+		}
+		mutually_exclusive = {
+			focus = RUE0_prepare_for_the_next_war
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		bypass = {
+			is_in_faction = no
+		}
+		available = {
+			has_government = democratic
+		}
+		completion_reward = {
+			add_named_threat = {
+				threat = -5
+				name = "The Sleeping Bear"
+			}
+			if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faction = yes
+			}
+		}
+	}
+	#Focus for The Ottoman Issue
+	focus = {
+		id = RUE0_the_ottoman_issue
+		icon = attack_turkey
+		x = 19
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_invite_serbia
+		}
+		prerequisite = {
+			focus = RUE0_invite_bulgaria
+		}
+		ai_will_do = {
+			factor = 16
+			modifier = {
+				date < 1911.6.6
+				factor = 0
+			}
+		}
+		bypass = {
+			OTT = {
+				NOT = {
+					owns_state = 211
+					owns_state = 212
+					owns_state = 184
+					owns_state = 1103
+					owns_state = 1063
+					owns_state = 731
+					owns_state = 976
+					owns_state = 1045
+					owns_state = 44
+					owns_state = 878
+					owns_state = 106
+					owns_state = 871
+				}
+			}
+			is_in_faction_with = TUR
+		}
+		available = {
+			has_stability > 0.6
+			is_in_faction_with = BUL
+			is_in_faction_with = SER
+		}
+		completion_reward = {
+			create_wargoal = {
+				type = take_claimed_state
+				target = OTT
+			}
+			add_state_claim = 1001
+			add_state_claim = 353
+			add_state_claim = 354
+			SER = {
+				add_state_core = 44
+			}
+			GRE = {
+				add_state_core = 1045
+			}
+		}
+	}
+	#Focus for Aid Serbia
+	focus = {
+		id = RUE0_aid_serbia
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 18
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_invite_serbia
+		}
+		available = {
+			is_in_faction_with = SER
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			SER = {
+				add_timed_idea = {
+					idea = foreign_aid
+					days = 365
+				}
+			}
+		}
+	}
+	#Focus for Prepare for the next war
+	focus = {
+		id = RUE0_prepare_for_the_next_war
+		icon = GFX_goal_generic_major_war
+		x = 28
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_question_of_mongolia
+		}
+		mutually_exclusive = {
+			focus = RUE0_the_sleeping_bear
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				date > 1912.6.6
+				factor = 150
+			}
+		}
+		completion_reward = {
+			add_war_support = 0.05
+		}
+	}
+	#Focus for Invite Serbia
+	focus = {
+		id = RUE0_invite_serbia
+		icon = GFX_goal_generic_improve_relations
+		x = 18
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_slavic_league
+		}
+		prerequisite = {
+			focus = RUE0_protect_othodox_states
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			SER = {
+				add_opinion_modifier = {
+					target = RUS
+					modifier = large_increase
+				}
+				country_event = {
+					id = generic.5
+					days = 1
+				}
+			}
+		}
+	}
+	#Focus for Invite Bulgaria
+	focus = {
+		id = RUE0_invite_bulgaria
+		icon = GFX_goal_generic_improve_relations
+		x = 20
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_slavic_league
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			BUL = {
+				add_opinion_modifier = {
+					target = RUS
+					modifier = large_increase
+				}
+				country_event = {
+					id = generic.5
+					days = 1
+				}
+			}
+		}
+	}
+	#Focus for Liberate Southern Slavs
+	focus = {
+		id = RUE0_liberate_southern_slavs
+		icon = GFX_goal_generic_major_war
+		x = 17
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_invite_serbia
+			focus = RUE0_invite_bulgaria
+		}
+		ai_will_do = {
+			factor = 6
+			modifier = {
+				factor = 12
+				has_war_with = AUS
+			}
+		}
+		available = {
+			NOT = {
+				has_completed_focus = RUE0_the_sleeping_bear
+			}
+			has_stability > 0.6
+			OR = {
+				is_in_faction_with = BUL
+				is_in_faction_with = SER
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					is_in_faction_with = BUL
+				}
+				BUL = {
+					add_state_core = 184
+					add_state_core = 1063
+					add_state_core = 7
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction_with = SER
+				}
+				SER = {
+					set_cosmetic_tag = yugoslavia
+					add_state_core = 764
+					add_state_core = 45
+					add_state_core = 869
+					add_state_core = 868
+					add_state_core = 109
+					add_state_core = 934
+					add_state_core = 102
+					add_state_core = 937
+					add_state_core = 939
+					add_state_core = 1048
+					add_state_core = 163
+					add_state_core = 1104
+					add_state_core = 103
+					add_state_core = 938
+					add_state_core = 1046
+					add_state_core = 1047
+					add_state_core = 1041
+					add_state_core = 940
+					add_state_core = 105
+					add_state_core = 106
+					add_state_core = 878
+					add_state_core = 876
+					add_state_core = 44
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_war_with = AUH
+					}
+				}
+				create_wargoal = {
+					target = AUH
+					type = take_claimed_state
+				}
+			}
+		}
+	}
+	#Focus for Liberate Ruthenia
+	focus = {
+		id = RUE0_liberate_ruthenia
+		icon = GFX_goal_generic_major_war
+		x = 21
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_invite_serbia
+			focus = RUE0_invite_bulgaria
+			focus = RUE0_closer_ties_with_britain
+		}
+		ai_will_do = {
+			factor = 16
+			modifier = {
+				date < 1912.6.6
+				factor = 0
+			}
+		}
+		available = {
+			NOT = {
+				has_completed_focus = RUE0_the_sleeping_bear
+			}
+			has_stability > 0.6
+		}
+		completion_reward = {
+			declare_war_on = {
+				target = AUH
+				type = take_claimed_state
+			}
+			if = {
+				limit = {
+					has_dlc = "Together for Victory"
+				}
+				set_autonomy = {
+					target = GAL
+					autonomous_state = autonomy_integrated_puppet
+				}
+				else = {
+					puppet = GAL
+				}
+			}
+			if = {
+				limit = {
+					has_dlc = "Together for Victory"
+				}
+				set_autonomy = {
+					target = CZE
+					autonomous_state = autonomy_integrated_puppet
+				}
+				else = {
+					puppet = CZE
+				}
+			}
+		}
+	}
+	#Focus for Continue Willy-Nicky Telegrams
+	focus = {
+		id = RUE0_continue_willynicky_telegrams
+		icon = GFX_goal_molotov_ribbentrop_pact
+		x = 30
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_improve_ties_with_the_kaiser
+		}
+		ai_will_do = {
+			factor = 12
+			modifier = {
+				#EAI
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = ww1russia.7
+				}
+			}
+		}
+	}
+	#Focus for Aid Bulgaria
+	focus = {
+		id = RUE0_aid_bulgaria
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 20
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		available = {
+			is_in_faction_with = BUL
+		}
+		prerequisite = {
+			focus = RUE0_invite_bulgaria
+		}
+		ai_will_do = {
+			factor = 8
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		completion_reward = {
+			BUL = {
+				add_timed_idea = {
+					idea = foreign_aid
+					days = 365
+				}
+			}
+		}
+	}
+	#Focus for French-Russo Army Training
+	focus = {
+		id = RUE0_frenchrusso_army_training
+		icon = GFX_focus_fra_french_union
+		x = 24
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_closer_ties_with_britain
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		available = {
+			NOT = {
+				has_completed_focus = RUE0_the_sleeping_bear
+			}
+			is_in_faction_with = FRA
+		}
+		completion_reward = {
+			air_experience = 10
+			army_experience = 30
+			navy_experience = 20
+			FRA = {
+				air_experience = 10
+				army_experience = 30
+				navy_experience = 20
+			}
+		}
+	}
+	#Focus for Collaborate with British Oil Companies
+	focus = {
+		id = RUE0_collaborate_with_british_oil_companies
+		icon = GFX_goal_generic_oil_refinery
+		x = 23
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_closer_ties_with_britain
+		}
+		ai_will_do = {
+			factor = 6
+		}
+		completion_reward = {
+			ENG = {
+				country_event = {
+					id = ww1russia.8
+				}
+			}
+		}
+	}
+	#Focus for Denounce French Military Alliance
+	focus = {
+		id = RUE0_denounce_french_military_alliance
+		icon = GFX_focus_attack_france
+		x = 30
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_continue_willynicky_telegrams
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		bypass = {
+			NOT = {
+				is_in_faction_with = FRA
+			}
+		}
+		available = {
+			is_in_faction_with = FRA
+		}
+		completion_reward = {
+			leave_faction = yes
+		}
+	}
+	#Focus for Destabilise France
+	focus = {
+		id = RUE0_destabilise_france
+		icon = GFX_goal_continuous_suppression
+		x = 32
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_intervene_in_the_war
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			FRA = {
+				add_timed_idea = {
+					days = 365
+					idea = russian_influence
+				}
+			}
+		}
+	}
+	#Focus for Get our Brotherfolks on our side
+	focus = {
+		id = RUE0_get_our_brotherfolks_on_our_side
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_focus_on_europe
+		}
+		ai_will_do = {
+			factor = 4
+			modifier = {
+				has_war = yes
+				factor = 30
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					SER = {
+						exists = yes
+					}
+				}
+				SER = {
+					country_event = generic.5
+				}
+			}
+			if = {
+				limit = {
+					BUL = {
+						exists = yes
+					}
+				}
+				BUL = {
+					country_event = generic.5
+				}
+			}
+			if = {
+				limit = {
+					GRE = {
+						exists = yes
+					}
+				}
+				GRE = {
+					country_event = generic.5
+				}
+			}
+		}
+	}
+	#Focus for Train Competent Officers
+	focus = {
+		id = RUE0_train_competent_officers
+		icon = GFX_focus_generic_strike_at_democracy1
+		x = 28
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_prepare_for_the_next_war
+		}
+		ai_will_do = {
+			factor = 6
+		}
+		completion_reward = {
+			remove_ideas = russia_sucks
+		}
+	}
+	#Focus for Joint Research Center
+	focus = {
+		id = RUE0_joint_research_center
+		icon = GFX_goal_generic_scientific_exchange
+		x = 32
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_german_investors
+		}
+		prerequisite = {
+			focus = RUE0_ask_to_join_central_powers
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			is_in_faction_with = GER
+		}
+		completion_reward = {
+			add_to_tech_sharing_group = RUE_joint_research_center
+			GER = {
+				add_to_tech_sharing_group = RUE_joint_research_center
+			}
+		}
+	}
+	#Focus for Incorporate the territories
+	focus = {
+		id = RUE0_incorporate_the_territories
+		icon = GFX_goal_generic_national_unity
+		x = 24
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_liberate_slavs_in_austriahungary
+		}
+		prerequisite = {
+			focus = RUE0_liberate_slavs_in_germany
+		}
+		available = {
+			#owns prerequisite add_state_claim
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					owns_state = 91
+				}
+				add_state_core = 91
+			}
+			if = {
+				limit = {
+					owns_state = 89
+				}
+				add_state_core = 89
+			}
+			if = {
+				limit = {
+					owns_state = 996
+				}
+				add_state_core = 996
+			}
+			if = {
+				limit = {
+					owns_state = 88
+				}
+				add_state_core = 88
+			}
+			if = {
+				limit = {
+					owns_state = 863
+				}
+				add_state_core = 863
+			}
+			if = {
+				limit = {
+					owns_state = 73
+				}
+				add_state_core = 73
+			}
+			if = {
+				limit = {
+					owns_state = 71
+				}
+				add_state_core = 71
+			}
+			if = {
+				limit = {
+					owns_state = 70
+				}
+				add_state_core = 70
+			}
+			if = {
+				limit = {
+					owns_state = 889
+				}
+				add_state_core = 889
+			}
+			if = {
+				limit = {
+					owns_state = 75
+				}
+				add_state_core = 75
+			}
+			if = {
+				limit = {
+					owns_state = 74
+				}
+				add_state_core = 74
+			}
+			if = {
+				limit = {
+					owns_state = 885
+				}
+				add_state_core = 885
+			}
+			if = {
+				limit = {
+					owns_state = 9
+				}
+				add_state_core = 9
+			}
+			if = {
+				limit = {
+					owns_state = 887
+				}
+				add_state_core = 887
+			}
+			if = {
+				limit = {
+					owns_state = 69
+				}
+				add_state_core = 69
+			}
+			if = {
+				limit = {
+					owns_state = 63
+				}
+				add_state_core = 63
+			}
+			if = {
+				limit = {
+					owns_state = 68
+				}
+				add_state_core = 68
+			}
+			if = {
+				limit = {
+					owns_state = 66
+				}
+				add_state_core = 66
+			}
+			if = {
+				limit = {
+					owns_state = 802
+				}
+				add_state_core = 802
+			}
+			if = {
+				limit = {
+					owns_state = 803
+				}
+				add_state_core = 803
+			}
+			if = {
+				limit = {
+					owns_state = 762
+				}
+				add_state_core = 762
+			}
+			if = {
+				limit = {
+					owns_state = 67
+				}
+				add_state_core = 67
+			}
+			if = {
+				limit = {
+					owns_state = 801
+				}
+				add_state_core = 801
+			}
+			if = {
+				limit = {
+					owns_state = 86
+				}
+				add_state_core = 86
+			}
+			if = {
+				limit = {
+					owns_state = 67
+				}
+				add_state_core = 67
+			}
+			if = {
+				limit = {
+					owns_state = 801
+				}
+				add_state_core = 801
+			}
+			if = {
+				limit = {
+					owns_state = 86
+				}
+				add_state_core = 86
+			}
+			if = {
+				limit = {
+					owns_state = 67
+				}
+				add_state_core = 67
+			}
+			if = {
+				limit = {
+					owns_state = 865
+				}
+				add_state_core = 865
+			}
+			if = {
+				limit = {
+					owns_state = 85
+				}
+				add_state_core = 85
+			}
+			if = {
+				limit = {
+					owns_state = 5
+				}
+				add_state_core = 5
+			}
+			if = {
+				limit = {
+					owns_state = 763
+				}
+				add_state_core = 763
+			}
+			if = {
+				limit = {
+					owns_state = 188
+				}
+				add_state_core = 188
+			}
+		}
+	}
+	#Focus for Pan Slavism
+	focus = {
+		id = RUE0_pan_slavism
+		icon = GFX_goal_generic_attack_allies
+		x = 5
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_the_tsar_compromise
+		}
+		ai_will_do = {
+			factor = 6
+		}
+		completion_reward = {
+			add_stability = 0.1
+		}
+	}
+	#Focus for Fuse the two Committees
+	focus = {
+		id = RUE0_fuse_the_two_committees
+		icon = GFX_goal_generic_improve_relations
+		x = 2
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_dual_power
+		}
+		prerequisite = {
+			focus = RUE0_provisional_comittee_of_the_state_duma
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			country_event = {
+				id = ww1russia.9
+			}
+		}
+	}
+	#Focus for United and Ready
+	focus = {
+		id = RUE0_united_and_ready
+		icon = GFX_goal_generic_territory_or_war
+		x = 6
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_the_tsar_compromise
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_stability = 0.1
+			add_war_support = 0.1
+		}
+	}
+	#Focus for Russian State University
+	focus = {
+		id = RUE0_russian_state_university
+		icon = GFX_focus_research2
+		x = 3
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_provisional_comittee_of_the_state_duma
+			focus = RUE0_strengthen_the_tsardom
+		}
+		ai_will_do = {
+			factor = 4
+			modifier = {
+				date > 1917.1.1
+				factor = 20
+			}
+		}
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+	#Focus for Negotiate with Labourers
+	focus = {
+		id = RUE0_negotiate_with_labourers
+		icon = GFX_focus_generic_treaty
+		x = 8
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_constitutionalism
+		}
+		prerequisite = {
+			focus = RUE0_centralise_government
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			add_ideas = workers_compromise
+			add_stability = 0.2
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			} 
+		}
+	}
+	#Focus for Social Welfare
+	focus = {
+		id = RUE0_social_welfare
+		icon = GFX_goal_anschluss
+		x = 8
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_negotiate_with_labourers
+		}
+		ai_will_do = {
+			factor = 16
+			modifier = {
+				factor = 0
+				date < 1915.1.1
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			}
+			add_stability = 0.1
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+		}
+	}
+	#Focus for Better Worker Conditions
+	focus = {
+		id = RUE0_better_worker_conditions
+		icon = GFX_focus_generic_the_giant_wakes
+		x = 11
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_introduce_martial_law
+		}
+		ai_will_do = {
+			factor = 12
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			} 
+			add_stability = 0.05
+		} 
+	}
+	#Focus for The Land Issue
+	focus = {
+		id = RUE0_the_land_issue
+		icon = GFX_goal_generic_forceful_treaty
+		x = 13
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = RUE0_ban_syndicates
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = strike_movement_1
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_1
+					add_idea = strike_movement_2
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_2
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_2
+					add_idea = strike_movement_3
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_3
+				}
+				swap_ideas = {
+					remove_idea = strike_movement_3
+					add_idea = strike_movement_4
+				}
+			}
+			if = {
+				limit = {
+					has_idea = strike_movement_4
+				}
+				remove_ideas = strike_movement_4
+			} 
+			add_stability = 0.05
+		} 
+	}
+	#End of focuses
+	
+	
+## Generic Branches
+
+
+	focus = {
+		id = RUE0_free_market
+		icon = GFX_focus_generic_the_giant_wakes
+		x = 16
+		y = 0
+		cost = 10
+		allow_branch = {
+			date < 1910.1.1
+		}
+		available = {
+			has_completed_focus = RUE0_new_cabinet
+		}
+		mutually_exclusive = {
+			focus = RUE0_planned_economy
+		}
+		completion_reward = {
+			add_ideas = {
+				free_trade
+			}
+			add_ideas = {
+				RI_free_economy
+			}
+		}
+	}
+	focus = {
+		id = RUE0_support_middle_class
+		icon = GFX_focus_generic_self_management
+		x = -1
+		y = 1
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_free_market
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_political_power = 50
+		}
+	}
+	focus = {
+		id = RUE0_minimum_wage
+		icon = GFX_focus_mex_privatisation
+		x = -2
+		y = 2
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_support_middle_class
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_more_payment
+			}
+		}
+	}
+	focus = {
+		id = RUE0_invite_foreign_investors
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 0
+		y = 2
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_free_market
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_fiscal_reforms
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = -1
+		y = 3
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_invite_foreign_investors
+		}
+		prerequisite = {
+			focus = RUE0_minimum_wage
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_better_taxes
+			}
+		}
+	}
+	focus = {
+		id = RUE0_planned_economy
+		icon = GFX_goal_generic_position_armies
+		x = 4
+		y = 0
+		relative_position_id = RUE0_free_market
+		cost = 10
+		allow_branch = {
+			date < 1910.1.1
+		}
+		available = {
+			OR = {
+				has_completed_focus = RUE0_successful_revolution
+				has_completed_focus = RUE0_stability
+				has_completed_focus = RUE0_law_of_dictator
+				has_completed_focus = RUE0_law_of_dictator
+			}
+		}
+		mutually_exclusive = {
+			focus = RUE0_free_market
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_no_free_economy
+			}
+		}
+	}
+	focus = {
+		id = RUE0_liquidate_unprofital_business
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 5
+		y = 1
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_planned_economy
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			#add_timed_idea = { idea = less_businesses days = 160 }
+		}
+	}
+	focus = {
+		id = RUE0_buy_out_dissident_farms
+		icon = GFX_goal_generic_forceful_treaty
+		x = 6
+		y = 2
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_liquidate_unprofital_business
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+			}
+			add_political_power = 50
+			add_stability = 0.025
+		}
+	}
+	focus = {
+		id = RUE0_rations
+		icon = GFX_goal_generic_construct_civilian
+		x = 4
+		y = 2
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_planned_economy
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_loosen_restrictions
+		icon = GFX_goal_continuous_reduce_training_time
+		x = 5
+		y = 3
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_rations
+		}
+		prerequisite = {
+			focus = RUE0_buy_out_dissident_farms
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_no_production_laws
+			}
+		}
+	}
+	focus = {
+		id = RUE0_coal_mines
+		icon = GFX_focus_generic_steel
+		x = 1
+		y = 1
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_planned_economy
+			focus = RUE0_free_market
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_resource = {
+					type = steel
+					amount = 15
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_tungsten_mines
+		icon = GFX_focus_generic_tungsten
+		x = 3
+		y = 1
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_planned_economy
+			focus = RUE0_free_market
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_resource = {
+					type = tungsten
+					amount = 15
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_optimise_profit
+		icon = GFX_goal_continuous_non_factory_construct
+		x = 2
+		y = 2
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_tungsten_mines
+		}
+		prerequisite = {
+			focus = RUE0_coal_mines
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_more_resources
+			}
+		}
+	}
+	focus = {
+		id = RUE0_full_speed_ahead
+		icon = GFX_goal_continuous_research
+		x = 2
+		y = 3
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_invite_foreign_investors
+			focus = RUE0_rations
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = electronics_bonus
+				bonus = 1
+				uses = 1
+				category = electronics
+			}
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 1
+				uses = 1
+				category = industry
+			}
+			add_ideas = {
+				RI_better_research
+			}
+		}
+	}
+	focus = {
+		id = RUE0_build_railroads
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 0
+		y = 4
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_fiscal_reforms
+			focus = RUE0_loosen_restrictions
+		}
+		prerequisite = {
+			focus = RUE0_full_speed_ahead
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = infrastructure
+										size > 0
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 1
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = infrastructure
+										size > 1
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = infrastructure
+										size > 0
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 1
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = infrastructure
+										size > 1
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_mass_urbanisation
+		icon = GFX_focus_generic_industry_3
+		x = 2
+		y = 4
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_fiscal_reforms
+			focus = RUE0_loosen_restrictions
+		}
+		prerequisite = {
+			focus = RUE0_full_speed_ahead
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+				set_state_category = city
+				add_manpower = 100000
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_war_economy
+		icon = GFX_goal_generic_construct_mil_factory
+		x = 4
+		y = 4
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_fiscal_reforms
+			focus = RUE0_loosen_restrictions
+		}
+		prerequisite = {
+			focus = RUE0_full_speed_ahead
+		}
+		completion_reward = {
+			add_ideas = {
+				war_economy
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = RUE0_university
+		icon = GFX_focus_research
+		x = 2
+		y = 5
+		relative_position_id = RUE0_free_market
+		cost = 10
+		prerequisite = {
+			focus = RUE0_war_economy
+		}
+		prerequisite = {
+			focus = RUE0_build_railroads
+		}
+		prerequisite = {
+			focus = RUE0_mass_urbanisation
+		}
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+	focus = {
+		id = RUE0_army_efforts
+		icon = GFX_goal_generic_axis_build_infantry
+		x = 30
+		y = 0
+		cost = 10
+		allow_branch = {
+			date < 1910.1.1
+		}
+		completion_reward = {
+			army_experience = 25
+		}
+	}
+	focus = {
+		id = RUE0_offensive_army
+		icon = GFX_goal_generic_major_war
+		x = -3
+		y = 1
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_army_efforts
+		}
+		mutually_exclusive = {
+			focus = RUE0_defensive_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_army_for_offense
+			}
+		}
+	}
+	focus = {
+		id = RUE0_armoured_cars
+		icon = GFX_goal_generic_army_motorized
+		x = -5
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_offensive_army
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = motorized_bonus
+				bonus = 1
+				uses = 1
+				category = motorized_equipment
+			}
+		}
+	}
+	focus = {
+		id = RUE0_tanks
+		icon = GFX_goal_generic_army_tanks
+		x = -5
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_armoured_cars
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = armor_bonus
+				bonus = 1
+				uses = 2
+				category = armor
+			}
+		}
+	}
+	focus = {
+		id = RUE0_decentralised_army
+		icon = GFX_focus_generic_military_mission
+		x = -3
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_offensive_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_decentralisation_of_army
+			}
+		}
+	}
+	focus = {
+		id = RUE0_independent_officers
+		icon = GFX_focus_mex_support_general_cedillo
+		x = -4
+		y = 3
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_decentralised_army
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RI_decentralisation_of_army
+				add_idea = RI_decentralisation_of_army2
+			}
+		}
+	}
+	focus = {
+		id = RUE0_esprit_de_corps
+		icon = GFX_focus_hol_liberation
+		x = -2
+		y = 3
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_decentralised_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_esprit_de_corps_idea
+			}
+		}
+	}
+	focus = {
+		id = RUE0_improve_doctrine
+		icon = GFX_goal_generic_army_doctrines
+		x = -3
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_independent_officers
+		}
+		prerequisite = {
+			focus = RUE0_esprit_de_corps
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = land_doc_bonus
+				bonus = 1
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+	focus = {
+		id = RUE0_offensive_artillery
+		icon = GFX_goal_generic_army_artillery2
+		x = -1
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_offensive_army
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = artillery_bonus
+				bonus = 1
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+	focus = {
+		id = RUE0_light_artillery
+		icon = GFX_goal_generic_army_artillery
+		x = -1
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_offensive_artillery
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = artillery_bonus
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
+	}
+	focus = {
+		id = RUE0_assault_rifle
+		icon = GFX_focus_prc_infiltration
+		x = -4
+		y = 5
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_tanks
+		}
+		prerequisite = {
+			focus = RUE0_improve_doctrine
+		}
+		prerequisite = {
+			focus = RUE0_light_artillery
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = infantry_bonus
+				bonus = 1
+				uses = 2
+				category = infantry_weapons
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1250
+			}
+		}
+	}
+	focus = {
+		id = RUE0_auxilliary_corps
+		icon = GFX_goal_generic_construction2
+		x = -2
+		y = 5
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_light_artillery
+		}
+		prerequisite = {
+			focus = RUE0_improve_doctrine
+		}
+		prerequisite = {
+			focus = RUE0_tanks
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = infantry_bonus
+				bonus = 1
+				uses = 2
+				category = support_tech
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment_1
+				amount = 250
+				#				producer = GRF
+			}
+		}
+	}
+	focus = {
+		id = RUE0_endless_advance
+		icon = GFX_goal_generic_major_war
+		x = -3
+		y = 6
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_auxilliary_corps
+		}
+		prerequisite = {
+			focus = RUE0_assault_rifle
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RI_army_for_offense
+				add_idea = RI_army_for_offense2
+			}
+		}
+	}
+	focus = {
+		id = RUE0_chemicals
+		icon = GFX_focus_generic_provoke_border_clashes
+		x = 0
+		y = 3
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_offensive_army
+			focus = RUE0_defensive_army
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				category = electronics
+			}
+		}
+	}
+	focus = {
+		id = RUE0_improve_gas_masks
+		icon = GFX_goal_generic_CAS
+		x = 0
+		y = 5
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_chemicals
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				category = electronics
+			}
+		}
+	}
+	focus = {
+		id = RUE0_defensive_army
+		icon = GFX_goal_generic_defence
+		x = 3
+		y = 1
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_army_efforts
+		}
+		mutually_exclusive = {
+			focus = RUE0_offensive_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_army_for_defense
+			}
+		}
+	}
+	focus = {
+		id = RUE0_never_ending_barrage
+		icon = GFX_goal_generic_occupy_start_war
+		x = 1
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_defensive_army
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+	focus = {
+		id = RUE0_heavy_artillery
+		icon = GFX_goal_generic_army_artillery2
+		x = 1
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_never_ending_barrage
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = artillery
+			}
+		}
+	}
+	focus = {
+		id = RUE0_centralised_army
+		icon = GFX_goal_generic_small_arms
+		x = 3
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_defensive_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_centralisation_of_army
+			}
+		}
+	}
+	focus = {
+		id = RUE0_order_and_discipline
+		icon = GFX_focus_generic_little_entente
+		x = 2
+		y = 3
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_centralised_army
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_OrDeR
+			}
+		}
+	}
+	focus = {
+		id = RUE0_chain_of_command
+		icon = GFX_focus_generic_military_mission
+		x = 4
+		y = 3
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_centralised_army
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RI_centralisation_of_army
+				add_idea = RI_centralisation_of_army2
+			}
+		}
+	}
+	focus = {
+		id = RUE0_better_doctrine
+		icon = GFX_goal_generic_army_doctrines
+		x = 3
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_order_and_discipline
+		}
+		prerequisite = {
+			focus = RUE0_chain_of_command
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+	focus = {
+		id = RUE0_dig_in_and_pray
+		icon = GFX_goal_generic_construction2
+		x = 5
+		y = 2
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_defensive_army
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = support_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_impenetrable_fortress
+		icon = GFX_goal_generic_construct_military
+		x = 5
+		y = 4
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_dig_in_and_pray
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_you_shall_not_pass
+			}
+		}
+	}
+	focus = {
+		id = RUE0_no_antiquities
+		icon = GFX_goal_generic_small_arms
+		x = 2
+		y = 5
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_heavy_artillery
+		}
+		prerequisite = {
+			focus = RUE0_better_doctrine
+		}
+		prerequisite = {
+			focus = RUE0_impenetrable_fortress
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1250
+			}
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = infantry_weapons
+			}
+		}
+	}
+	focus = {
+		id = RUE0_shovel_for_every_soldier
+		icon = GFX_goal_generic_construction2
+		x = 4
+		y = 5
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_impenetrable_fortress
+		}
+		prerequisite = {
+			focus = RUE0_better_doctrine
+		}
+		prerequisite = {
+			focus = RUE0_heavy_artillery
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = support_tech
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment_1
+				amount = 250
+				#				producer = GRF
+			}
+		}
+	}
+	focus = {
+		id = RUE0_endless_defense
+		icon = GFX_focus_generic_coastal_fort
+		x = 3
+		y = 6
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_shovel_for_every_soldier
+		}
+		prerequisite = {
+			focus = RUE0_no_antiquities
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = RI_army_for_defense
+				add_idea = RI_army_for_defense2
+			}
+		}
+	}
+	focus = {
+		id = RUE0_standardise_designs
+		icon = GFX_focus_generic_combined_arms
+		x = -1
+		y = 7
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_endless_advance
+			focus = RUE0_endless_defense
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = {
+				RI_standards
+			}
+		}
+	}
+	focus = {
+		id = RUE0_streamlined_production
+		icon = GFX_focus_generic_tank_production
+		x = 1
+		y = 7
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_endless_advance
+			focus = RUE0_endless_defense
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_ideas = {
+				RI_optimised_production
+			}
+		}
+	}
+	focus = {
+		id = RUE0_military_academy
+		icon = GFX_focus_generic_military_academy
+		x = 0
+		y = 8
+		relative_position_id = RUE0_army_efforts
+		cost = 10
+		prerequisite = {
+			focus = RUE0_standardise_designs
+		}
+		prerequisite = {
+			focus = RUE0_streamlined_production
+		}
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+	
+	focus = {
+		id = RUE0_new_navy
+		icon = GFX_goal_generic_build_navy
+		x = 43
+		y = 0
+		cost = 10
+		allow_branch = {
+			date < 1910.1.1
+		}
+		available = {
+			any_state = {
+				is_coastal = yes
+				is_controlled_by = ROOT
+			}
+		}
+		completion_reward = {
+			navy_experience = 25
+		}
+	}
+	focus = {
+		id = RUE0_battlecruisers
+		icon = GFX_focus_generic_navy_battleship2
+		x = -3
+		y = 1
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_navy
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = bc_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_patrol_boats
+		icon = GFX_focus_generic_destroyer
+		x = -1
+		y = 1
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_navy
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = dd_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_new_cruisers
+		icon = GFX_focus_generic_cruiser2
+		x = 1
+		y = 1
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_navy
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = cl_tech
+				category = ca_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_grandest_ships
+		icon = GFX_goal_generic_navy_battleship
+		x = 3
+		y = 1
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_navy
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = bb_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_dockyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -4
+		y = 2
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_battlecruisers
+			focus = RUE0_patrol_boats
+			focus = RUE0_new_cruisers
+			focus = RUE0_grandest_ships
+		}
+		complete_tooltip = {
+			navy_experience = 25
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+		completion_reward = {
+			navy_experience = 25
+			if = {
+				limit = {
+					NOT = {
+						any_owned_state = {
+							dockyard > 0
+							free_building_slots = {
+								building = dockyard
+								size > 2
+								include_locked = yes
+							}
+						}
+					}
+					any_owned_state = {
+						is_coastal = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						is_coastal = yes
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = naval_effort_built
+					}
+					any_owned_state = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+				}
+				random_owned_state = {
+					limit = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+		}
+	}
+	focus = {
+		id = RUE0_cheap_fleet
+		icon = GFX_goal_continuous_naval_production
+		x = -5
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_dockyards
+		}
+		mutually_exclusive = {
+			focus = RUE0_expensive_fleet
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_cheap_fleet_idea
+			}
+		}
+	}
+	focus = {
+		id = RUE0_expensive_fleet
+		icon = GFX_goal_generic_navy_battleship
+		x = -3
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_dockyards
+		}
+		mutually_exclusive = {
+			focus = RUE0_cheap_fleet
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_big_fleet
+			}
+		}
+	}
+	focus = {
+		id = RUE0_more_dockyards
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = -4
+		y = 4
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_cheap_fleet
+			focus = RUE0_expensive_fleet
+		}
+		complete_tooltip = {
+			navy_experience = 25
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+		}
+		completion_reward = {
+			navy_experience = 25
+			if = {
+				limit = {
+					NOT = {
+						any_owned_state = {
+							dockyard > 0
+							free_building_slots = {
+								building = dockyard
+								size > 2
+								include_locked = yes
+							}
+						}
+					}
+					any_owned_state = {
+						is_coastal = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						is_coastal = yes
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = naval_effort_built
+					}
+					any_owned_state = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+				}
+				random_owned_state = {
+					limit = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = naval_effort_built
+					}
+					any_owned_state = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+				}
+				random_owned_state = {
+					limit = {
+						dockyard > 0
+						free_building_slots = {
+							building = dockyard
+							size > 2
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+						type = dockyard
+						level = 2
+						instant_build = yes
+					}
+				}
+				set_country_flag = naval_effort_built
+			}
+		}
+	}
+	focus = {
+		id = RUE0_trade
+		icon = GFX_generic_free_trade
+		x = 0
+		y = 2
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_battlecruisers
+			focus = RUE0_patrol_boats
+			focus = RUE0_new_cruisers
+			focus = RUE0_grandest_ships
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_more_convoys
+			}
+		}
+	}
+	focus = {
+		id = RUE0_escorts
+		icon = GFX_goal_generic_navy_cruiser
+		x = -1
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_trade
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 2
+				category = dd_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_intercept_enemies
+		icon = GFX_goal_generic_wolf_pack
+		x = 1
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_trade
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				ahead_reduction = 2
+				uses = 1
+				category = ss_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_coastal_defense
+		icon = GFX_focus_generic_coastal_fort
+		x = 0
+		y = 4
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_intercept_enemies
+		}
+		prerequisite = {
+			focus = RUE0_escorts
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_coastal_forts
+			}
+		}
+	}
+	focus = {
+		id = RUE0_new_admirality
+		icon = GFX_goal_generic_navy_doctrines_tactics
+		x = 4
+		y = 2
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_battlecruisers
+			focus = RUE0_patrol_boats
+			focus = RUE0_new_cruisers
+			focus = RUE0_grandest_ships
+		}
+		completion_reward = {
+			navy_experience = 50
+			add_ideas = {
+				RI_admirality
+			}
+		}
+	}
+	focus = {
+		id = RUE0_raider_doctrine
+		icon = GFX_goal_generic_navy_submarine
+		x = 3
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_admirality
+		}
+		mutually_exclusive = {
+			focus = RUE0_old_doctrine
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				ahead_reduction = 2
+				uses = 2
+				category = ss_tech
+			}
+			#			add_tech_bonus = {
+			#				bonus = 1.0
+			#				uses = 2
+			#				category = navy_doctrine
+			#			}
+		}
+	}
+	focus = {
+		id = RUE0_old_doctrine
+		icon = GFX_goal_generic_navy_battleship
+		x = 5
+		y = 3
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_new_admirality
+		}
+		mutually_exclusive = {
+			focus = RUE0_raider_doctrine
+		}
+		completion_reward = {
+			#			add_tech_bonus = {
+			#				bonus = 1.0
+			#				uses = 2
+			#				category = navy_doctrine
+			#			}
+			add_tech_bonus = {
+				name = dd_bonus
+				bonus = 1
+				uses = 2
+				category = dd_tech
+				category = bc_tech
+				category = bb_tech
+				category = cl_tech
+				category = ca_tech
+			}
+		}
+	}
+	focus = {
+		id = RUE0_marine_infantry
+		icon = GFX_goal_generic_amphibious_assault
+		x = 4
+		y = 4
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_raider_doctrine
+			focus = RUE0_old_doctrine
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				technology = marines
+				technology = marines2
+				technology = marines3
+			}
+		}
+	}
+	focus = {
+		id = RUE0_pride_of_the_fleet
+		icon = GFX_goal_generic_navy_battleship
+		x = -1
+		y = 5
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_marine_infantry
+		}
+		prerequisite = {
+			focus = RUE0_coastal_defense
+		}
+		prerequisite = {
+			focus = RUE0_more_dockyards
+		}
+		completion_reward = {
+			custom_effect_tooltip = RI_battleship_tp
+			hidden_effect = {
+				load_oob = "ww1_pride_of_fleet_2"
+			}
+		}
+	}
+	focus = {
+		id = RUE0_naval_academy
+		icon = GFX_goal_generic_build_navy
+		x = 1
+		y = 5
+		relative_position_id = RUE0_new_navy
+		cost = 10
+		prerequisite = {
+			focus = RUE0_marine_infantry
+		}
+		prerequisite = {
+			focus = RUE0_coastal_defense
+		}
+		prerequisite = {
+			focus = RUE0_more_dockyards
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_naval_academy
+			}
+		}
+	}
+	
+	### End of DNC
+	
 	##Focus for Question of Mongolia
 	focus = {
 		id = RUE1_question_of_mongolia
