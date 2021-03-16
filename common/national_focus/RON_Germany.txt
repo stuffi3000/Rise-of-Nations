@@ -18989,6 +18989,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			declare_war_on	= { target = FRA type = annex_everything }
+
+		}
+		
 	}
 	#Focus for Blitz the East
 	focus = {
@@ -19001,6 +19006,10 @@ focus_tree = {
 		prerequisite = { focus = GER3_revenge_for_stalingrad }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_timed_idea = { idea = war_of_annihilation days = 200 }
+			add_timed_idea = { idea = SOV_great_patriotic_war days = 150 }
 		}
 	}
 	#Focus for Former Lands for Cooperation
@@ -19248,7 +19257,7 @@ focus_tree = {
 		}
 	}
 	#Focus for Destroy Anglo-French Power in Europe
-	focus = {
+	focus = { 
 		id = GER3_destroy_anglofrench_power_in_europe
 		icon = GFX_focus_ger_break_anglo_french_colonial_hegemony
 		x = 24
@@ -19264,7 +19273,153 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-	}
+		available = {
+			OR = { 
+			FRA = { surrender_progress > 0.9  }
+			ENG = { surrender_progress > 0.9  }
+			AND = {
+				FRA  = { is_puppet_of= GER }
+				ENG  = { is_puppet_of= GER }
+			}
+			ENG = { exists = no }
+			FRA = { exists = no }
+			}
+		}
+		completion_reward = {
+			white_peace= ENG  
+			white_peace= FRA  
+			
+			hidden_effect = {
+			release = ENG
+			release = FRA
+			ENG = {
+				release =  SCO 
+				release =  WLS 
+				release =  NIR
+				release =  KEN
+				release =  CAR
+				release =  SEN
+				release =  GAM
+				release =  GNA
+				release =  SIE
+				release =  IVO
+				release =  CAN
+				release =  GHA
+				release =  VOL
+				release =  TOG
+				release =  DAH
+				release =  NGA
+				release =  ZAM
+				release =  MLW
+				release =  ZIM
+				release =  LBA
+				}
+				
+			
+
+				 WLS = { declare_war_on	= { target = ENG type = annex_everything } }
+				 WLS = { declare_war_on	= { target = SCO type = annex_everything } }
+				 WLS = { declare_war_on	= { target = NIR type = annex_everything } }
+			
+				 
+				 SCO = { declare_war_on	= { target = ENG type = annex_everything } }
+				 SCO = { declare_war_on	= { target = WLS type = annex_everything } }
+				 SCO = { declare_war_on	= { target = NIR type = annex_everything } }
+		
+				 NIR = { declare_war_on	= { target = ENG type = annex_everything } }
+				 NIR = { declare_war_on	= { target = SCO type = annex_everything } }
+				 NIR = { declare_war_on	= { target = WLS type = annex_everything } }
+				
+			
+				 FRA = {
+					release =  OCC
+					release =  BRT
+					release =  ALG
+					release =  MOR
+					release =  MLI
+					release =  MRT
+					release =  NGR
+					release =  CHA
+					release =  CAR
+					release =  CMR
+					release =  LBA
+					}
+				
+
+					BRT = { declare_war_on	= { target = FRA type = annex_everything } }
+					BRT = { declare_war_on	= { target = OCC type = annex_everything } }
+					OCC = { declare_war_on	= { target = FRA type = annex_everything } }
+					
+					
+					FRA = { leave_faction = USA }
+					ENG = { leave_faction = USA }
+					BRT = { load_oob =  "GER_default" }
+					OCC = { load_oob =  "GER_default" }
+					NIR = { load_oob =  "GER_default" }
+					WLS = { load_oob =  "GER_default" }
+					SCO = { load_oob =  "GER_default" }
+
+					SAF = {
+						transfer_state= 153  
+					}
+
+				 
+				 diplomatic_relation= { 
+					country = FRA 
+					relation = non_aggression_pact 
+					}
+					  diplomatic_relation= { 
+					country = ENG 
+					relation = non_aggression_pact 
+					}
+					diplomatic_relation= { 
+						country = ENG 
+						relation = military_access 
+						atcive = yes
+						}
+						diplomatic_relation= { 
+							country = FRA 
+							relation = military_access 
+							atcive = yes
+							}
+			}
+							ENG = { 
+								start_civil_war = { ideology = fascism size = 0.6 }
+							}
+							FRA = { 
+								start_civil_war = { ideology = fascism size = 0.6 }
+							}
+						
+					transfer_state= 153  
+					transfer_state= 806
+					transfer_state= 152
+					transfer_state= 1107
+					transfer_state= 28
+			   		transfer_state= 295
+			        transfer_state = 538
+			        transfer_state = 718
+			        transfer_state = 548
+			        transfer_state = 769
+			        transfer_state = 768
+			        transfer_state = 546
+			        transfer_state = 574
+			        transfer_state = 772
+			        transfer_state = 895
+			        transfer_state = 896
+			        transfer_state = 539
+			        transfer_state = 897
+			        transfer_state = 297
+					transfer_state = 331
+			   	} 
+		}
+	
+
+
+			
+		
+		
+			
+	
 	#Focus for Pardon Former Nazis
 	focus = {
 		id = GER3_pardon_former_nazis
@@ -19401,7 +19556,30 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-	}
+		available = {
+			NOT = { has_war_with = SOV }
+
+		}
+		completion_reward = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					custom_effect_tooltip = ger_sov_buddies_tooltip_2
+				}
+				custom_effect_tooltip = ger_sov_buddies_tooltip
+				add_ideas = soviet_german_friendship
+				SOV = {
+					add_opinion_modifier = {
+						target = GER
+						modifier = ger_sov_alliance_focus
+					}
+					add_ideas = soviet_german_friendship
+					country_event = germany.89
+				}
+			}
+		}
+	
 	#Focus for Revenge for Stalingrad
 	focus = {
 		id = GER3_revenge_for_stalingrad
@@ -19419,6 +19597,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+
+		completion_reward = {
+			create_wargoal = { type = annex_everything target = SOV }
+
+		}
 	}
 	#Focus for Dismantle NATO
 	focus = {
@@ -19432,6 +19615,26 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			FRA = { add_timed_idea= { 
+				idea = ger_natoscepticism 
+				days = 100 
+				} }		
+			USA = { add_timed_idea= { 
+				idea = ger_natoscepticism 
+				days = 100 
+				} }
+			ITA = { add_timed_idea= { 
+					idea = ger_natoscepticism 
+					days = 100 
+					} }
+			ENG = { add_timed_idea= { 
+						idea = ger_natoscepticism 
+						days = 100 
+						} }
+
+
+					}
 	}
 	#Focus for Intervene in the Italian Civil War
 	focus = {
@@ -19461,6 +19664,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			DDR = {  exists = no }
+		}
 		completion_reward = {
 			create_faction = "Neo-Axis"
 
@@ -19477,6 +19683,17 @@ focus_tree = {
 		prerequisite = { focus = GER3_negotiate_for_polish_lands }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			DDR = { add_ideas= no_ally_callinga  }
+			GER = { add_ideas= no_ally_callinga  }
+			release_puppet= POL
+			set_autonomy = {
+					target = POL
+						autonomy_state = autonomy_free
+					}
+					declare_war_on = { target = POL type = annex_everything }
+
 		}
 	}
 	#Focus for Meet with Franco
@@ -19688,6 +19905,8 @@ add_equipment_to_stockpile= {
 			ruling_party = fascism
 				elections_allowed = no
 }
+add_timed_idea = { idea = facism_rise days = 200 }
+
 
 
 		}
@@ -19722,6 +19941,9 @@ add_equipment_to_stockpile= {
 		prerequisite = { focus = GER3_consolidate_power }
 		ai_will_do = {
 			factor = 1
+		}
+		available = {
+			DDR = {  exists = no }
 		}
 		completion_reward = {
 			add_ideas = { country_event = { days = 1 id = GER_new_kulturkampf4 }
@@ -19789,7 +20011,7 @@ completion_reward = {
 			factor = 1
 		}
 		completion_reward = {
-			
+		POL = {	country_event	= { days = 1 id = germany.80  } }
 		}
 	}
 	#Focus for Arm the Workers
@@ -19979,7 +20201,7 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
-		allowed = {
+		available = {
 			has_country_flag= hitlerisback  
 		}
 		completion_reward = {
@@ -20030,7 +20252,7 @@ popularity = 15
 			add_state_core = 1105
 			add_state_core = 64
 			add_state_core = 795
-
+			remove_ideas =  no_ally_callinga 
 		}
 	}
 	#Focus for Claim Former German Lands
@@ -20067,6 +20289,9 @@ popularity = 15
 		mutually_exclusive = { focus = GER3_search_for_the_fuhrer }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			country_event = { days = 1 id = germanycoldwar.7 }
 		}
 
 	}
@@ -20561,6 +20786,107 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_controlled_state={
+				limit = {
+				free_building_slots = {
+				building = dockyard
+				size > 0
+				include_locked = yes
+				}
+			   
+				}
+			   
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+				}
+			   
+				set_state_flag = REPLACE_ME_WITH_UNIQUE_IDENTIFIER
+				}
+				random_owned_controlled_state={
+					limit = {
+					free_building_slots = {
+					building = dockyard
+					size > 0
+					include_locked = yes
+					}
+				   
+					}
+				   
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+					}
+				   
+					set_state_flag = REPLACE_ME_WITH_UNIQUE_IDENTIFIER
+					}
+							  
+			random_owned_controlled_state={
+				limit = {
+				free_building_slots = {
+				building = dockyard
+				size > 0
+				include_locked = yes
+				}
+			   
+				}
+			   
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+				}
+			   
+				set_state_flag = REPLACE_ME_WITH_UNIQUE_IDENTIFIER
+				}
+				 
+		
+		random_owned_controlled_state={
+			limit = {
+			free_building_slots = {
+			building = dockyard
+			size > 0
+			include_locked = yes
+			}
+		   
+			}
+		   
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+			type = dockyard
+			level = 1
+			instant_build = yes
+			}
+		   
+			set_state_flag = REPLACE_ME_WITH_UNIQUE_IDENTIFIER
+			}
+			random_owned_controlled_state={
+				limit = {
+				free_building_slots = {
+				building = dockyard
+				size > 0
+				include_locked = yes
+				}
+			   
+				}
+			   
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+				}
+			   
+				set_state_flag = REPLACE_ME_WITH_UNIQUE_IDENTIFIER
+				}
+			}
+					  
 	}
 	#Focus for Through the Benelux Once More
 	focus = {
@@ -20573,6 +20899,15 @@ popularity = 15
 		prerequisite = { focus = GER3_modern_blitzkrieg }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			declare_war_on	= { target = BEL type = annex_everything }
+			declare_war_on	= { target = HOL type = annex_everything }
+			declare_war_on	= { target = SAR type = annex_everything }
+			declare_war_on	= { target = LUX type = annex_everything }
+
+
+
 		}
 	}
 	#Focus for Modern Blitzkrieg
@@ -20587,6 +20922,12 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = { add_tech_bonus = {
+			name = GER_blitzkreig_tactics
+			bonus = 2
+			uses = 2
+			category = land_doctrine
+		}}
 	}
 	#Focus for Demand the Return of Imprisoned Nazis
 	focus = {
@@ -20603,6 +20944,9 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_manpower = 280000
+		}	
 	}
 	#Focus for The 4th Reich
 	focus = {
@@ -20632,6 +20976,9 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			ENG = { add_timed_idea = { add_ideas = facism_rise } }
+		}
 	}
 	#Focus for Over the Channel
 	focus = {
@@ -20644,6 +20991,9 @@ popularity = 15
 		prerequisite = { focus = GER3_prepare_to_land_in_britain }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_ideas = RI_best_pilots
 		}
 	}
 	#Focus for Operation Adlersturm
@@ -20661,6 +21011,10 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			declare_war_on = { target = ENG type = annex_everything }
+
+		}
 	}
 	#Focus for Deal with the United States
 	focus = {
@@ -20673,6 +21027,10 @@ popularity = 15
 		prerequisite = { focus = GER3_dismantle_nato }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_war_support = .3
+
 		}
 	}
 	#Focus for Treaty of Non-Interference
@@ -20688,6 +21046,17 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			USA = {			
+country_event= {
+	days = 1 
+	id = generictree.2
+	
+	
+	} 
+			}
+		}
+
 	}
 	#Focus for Prepare Invasion Plans
 	focus = {
@@ -20702,6 +21071,11 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			every_army_leader = {add_attack= 3  add_defense= 2   }
+
+
+		}
 	}
 	#Focus for Puppet America
 	focus = {
@@ -20715,6 +21089,36 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			OR = {
+			USA = { surrender_progress > 0.9  }
+			AND = {
+			NOT = { USA = { controls_state = 386}}
+			NOT = { USA = { controls_state = 847}}
+			NOT = { USA = { controls_state = 378}}
+
+			}
+			USA  = { is_puppet_of= GER }
+		}
+	}
+		completion_reward = {
+				white_peace= USA
+				puppet = USA
+				hidden_effect = {
+				add_ideas = defcon1
+				add_ideas = the_other_way
+				add_ideas = nuremberg_laws
+				USA = { add_ideas = nuremberg_laws }
+				add_ideas = persecute_scientists
+				add_ideas = GER_pride
+				USA = { 	add_ideas = fascist_influence		}
+				USA = { add_ideas = political_disagreement_idea			}
+				USA = { add_ideas = RI_political_resistance	}
+				USA = { add_ideas =  RI_military_resistance	}
+				}
+
+		}
+
 	}
 	#Focus for NATO is No More
 	focus = {
@@ -20731,6 +21135,23 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_political_power= 3000
+			add_war_support= .5  
+
+			IND = { add_popularity= { 
+				ideology = fascism 
+				popularity = 0.3 
+			} }
+			PRC = { add_popularity= { 
+				ideology = fascism 
+				popularity = 0.3 
+			} }
+			AST = { add_popularity= { 
+				ideology = fascism 
+				popularity = 0.4 
+			} }
+		}
 	}
 	#Focus for Purchase American Oil
 	focus = {
@@ -20744,6 +21165,9 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_resource = { type = oil amount = 8 state = 790 }
+		}
 	}
 	#Focus for Long Range Transports
 	focus = {
@@ -20756,6 +21180,10 @@ popularity = 15
 		prerequisite = { focus = GER3_prepare_invasion_plans }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_ace = { name = "Rudoff Hess II" surname = 'Earhart' callsign = 'Revenant' type = fighter_genius is_female = yes }
+
 		}
 	}
 	#Focus for Pierce the Heart
@@ -20837,6 +21265,11 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_resource = { type = oil amount = 8 state = 52 }
+			create_wargoal = { type = annex_everything target = ROM }
+
+		}
 	}
 	#Focus for Inspire Rebellion in Hungary
 	focus = {
@@ -20849,6 +21282,12 @@ popularity = 15
 		prerequisite = { focus = GER3_distract_the_soviets }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = { type = infantry_equipment_2 amount = -5000 producer = GER }
+			HUN = {
+				start_civil_war = { ideology = fascism size = 0.4 }
+			}
 		}
 	}
 	#Focus for Distract the Soviets
@@ -20863,6 +21302,9 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_timed_idea = { idea = GER_secret_operations days = 50 }
+		}
 	}
 	#Focus for The Fall of the Red Menace
 	focus = {
@@ -20875,6 +21317,67 @@ popularity = 15
 		prerequisite = { focus = GER3_blitz_the_east }
 		ai_will_do = {
 			factor = 1
+		}
+		available = {
+			OR = {
+			SOV = { surrender_progress > 0.9  }
+			AND = {
+			NOT = { SOV = { controls_state = 219}}
+			}
+			SOV = { is_puppet_of = GER }
+		}
+	}
+		completion_reward = {
+			country_event= {
+				days = 1 
+				id = BP_germany.508
+				}
+				hidden_effect = {
+				puppet = SOV
+				puppet = LIT
+
+				add_ideas = { add_ideas = GER_logistic_costs3 }
+				annex_country = { target = POL }
+				annex_country = { target = CZE }
+				annex_country = { target = HUN }
+				annex_country = { target = ROM  }
+				annex_country = { target = DDR  }
+
+				transfer_state =  704 
+				transfer_state = 807 
+				transfer_state =  810  
+				transfer_state = 78  
+				transfer_state =  925
+				transfer_state =  80
+				transfer_state =  73
+				transfer_state =  137
+				transfer_state =  763
+				transfer_state =  188
+				transfer_state =  784
+				transfer_state =  879
+				transfer_state =  4
+
+
+				SOV = {
+					release = UKR
+					release = LIT
+					release = LAT
+					release = EST
+					release = YAK
+				 declare_war_on = { target = YAK type = annex_everything }
+
+
+
+				}
+				annex_country = { target = UKR  }
+`				annex_country = { target = BLR  }
+				YAK = { 
+					transfer_state =  637
+					transfer_state =  562
+				}
+
+				}
+				SOV = { start_civil_war = { ideology = communism size = 0.5 } }
 		}
 	}
 	#Focus for Endsieg
@@ -20894,6 +21397,13 @@ popularity = 15
 		ai_will_do = {
 			factor = 1
 		}
+
+		completion_reward = {
+			add_ideas =  SOV_weapons
+			add_ideas = GER_spoils_from_east
+			add_ideas = sov_war_reparations_focus	
+			add_threat = 40
+			}
 	}
 	#Focus for The New Order
 	focus = {
@@ -20906,6 +21416,9 @@ popularity = 15
 		prerequisite = { focus = GER3_endsieg }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_ideas = SOV_victor_great_patriotic_war		
 		}
 	}
 	#Focus for Join East Germany
@@ -21127,6 +21640,9 @@ popularity = 15
 		prerequisite = { focus = GER3_support_restoration_of_the_austrian_monarchy }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward ={
+			
 		}
 	}
 	#Focus for Non-Interference with NATO
@@ -22055,6 +22571,23 @@ popularity = 15
 		prerequisite = { focus = GER3_distract_the_soviets }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = { type = infantry_equipment_2 amount = -5000 producer = GER }
+			add_equipment_to_stockpile = { type = infantry_equipment_2 amount = -5000 producer = GER }
+			add_equipment_to_stockpile = { type = infantry_equipment_2 amount = -5000 producer = GER }
+			hidden_effect = {
+		SOV = {	release = EST }
+		SOV = {	release = LAT }
+		SOV = {	release = LIT }
+		EST = { declare_war_on = { target = SOV type = annex_everything } }
+		LIT = { declare_war_on = { target = SOV type = annex_everything } }
+		LAT = {declare_war_on = { target = SOV type = annex_everything } }
+			}
+
+
+
+
 		}
 	}
 	#Focus for Expand Our Industry
