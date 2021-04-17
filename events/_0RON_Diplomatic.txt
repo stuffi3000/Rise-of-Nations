@@ -3,17 +3,214 @@
 ######################################
 add_namespace = ron_diplomatic
 
-# Rebellion Crushed
+# Sign The Balkan Pact?
 country_event = {
 	id = ron_diplomatic.1
 	title = ron_diplomatic.1.t
 	desc = ron_diplomatic.1.d
-	picture = GFX_report_event_generic_cabinet_meeting_6
+	picture = GFX_report_event_preww2_country40
+	is_triggered_only = yes
+	option = {
+		#Yes
+		ai_chance = {
+			factor = 10
+		}
+		name = ron_diplomatic.1.a
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.2
+				hours = 1
+			}
+		}
+		set_country_flag = balkan_pact_yes
+	}
+	option = {
+		#No
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				factor = 0
+				has_government = communism
+			}
+		}
+		name = ron_diplomatic.1.b
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.3
+				hours = 1
+			}
+		}
+		set_country_flag = balkan_pact_no
+	}
+}
+
+# BALKAN PACT YES
+country_event = {
+	id = ron_diplomatic.2
+	title = ron_diplomatic.2.t
+	desc = ron_diplomatic.2.d
+	picture = GFX_report_event_preww2_country40
 	is_triggered_only = yes
 	option = {
 		ai_chance = {
 			factor = 10
 		}
-		name = ron_diplomatic.1.a
+		name = ron_diplomatic.2.a
+		
+		FROM = {
+		add_opinion_modifier = {
+			modifier = RI_friendly_foreign_policy
+			target = ROOT
+		}
+		}
+		
+		add_opinion_modifier = {
+			modifier = RI_friendly_foreign_policy
+			target = FROM
+		}
+		
 	}
+}
+
+# BALKAN PACT NO
+country_event = {
+	id = ron_diplomatic.3
+	title = ron_diplomatic.3.t
+	desc = ron_diplomatic.3.d
+	picture = GFX_report_event_preww2_country40
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = ron_diplomatic.3.a
+		
+		FROM = {
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = ROOT
+		}
+		}
+		
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+	}
+}
+
+#Balkan Pact Success
+country_event = {
+	id = ron_diplomatic.4
+	title = ron_diplomatic.4.t
+	desc = ron_diplomatic.4.d
+	picture = GFX_report_event_preww2_country40
+	fire_only_once = yes
+	
+    trigger = {
+		tag = GRE
+		date > 1934.1.1
+		date < 1935.1.1
+		OR = {
+			AND = {
+				has_country_flag = balkan_pact_mutual_defense
+				ROM = { has_country_flag = balkan_pact_yes }
+				YUG = { has_country_flag = balkan_pact_yes }
+				TUR = { has_country_flag = balkan_pact_yes }
+			}
+			AND = {
+				has_country_flag = balkan_pact_faction
+				is_in_faction_with = TUR
+				is_in_faction_with = ROM
+				is_in_faction_with = YUG
+			}
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 7
+	}
+	
+	option = {
+		#Form The Pact
+		name = ron_diplomatic.4.a
+		
+		ai_chance = {
+			factor = 10
+		}
+		
+		if = {
+		limit = {
+		has_country_flag = balkan_pact_mutual_defense
+		}
+		GRE = {
+		give_guarantee = ROM
+		give_guarantee = TUR
+		give_guarantee = YUG
+		}
+		
+		ROM = {
+		give_guarantee = GRE
+		give_guarantee = TUR
+		give_guarantee = YUG
+		}
+		
+		YUG = {
+		give_guarantee = ROM
+		give_guarantee = TUR
+		give_guarantee = GRE
+		}
+		
+		TUR = {
+		give_guarantee = ROM
+		give_guarantee = TUR
+		give_guarantee = GRE
+		}
+		}
+		
+		add_political_power = 100
+		
+    }
+}
+
+#Balkan Pact Failure
+country_event = {
+	id = ron_diplomatic.5
+	title = ron_diplomatic.5.t
+	desc = ron_diplomatic.5.d
+	picture = GFX_report_event_preww2_country40
+	fire_only_once = yes
+	
+    trigger = {
+		tag = GRE
+		date > 1934.2.9
+		date < 1935.1.1
+		has_country_flag = balkan_pact_mutual_defense
+		OR = {
+		ROM = { has_country_flag = balkan_pact_no }
+		YUG = { has_country_flag = balkan_pact_no }
+		TUR = { has_country_flag = balkan_pact_no }
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 7
+	}
+	
+	option = {
+		#Form The Pact
+		name = ron_diplomatic.5.a
+		
+		ai_chance = {
+			factor = 10
+		}
+		
+		add_political_power = -100
+		
+    }
 }
