@@ -1619,6 +1619,7 @@ country_event = {
 		tag = USA
 		date > 1934.3.3
 		date < 1934.4.3
+		NOT = { has_country_flag = dillinger_dead }
 	}
 	
 	mean_time_to_happen = {
@@ -1656,6 +1657,7 @@ country_event = {
 		date > 1934.3.13
 		date < 1934.4.13
 		has_country_flag = dillinger_escapes
+		NOT = { has_country_flag = dillinger_dead }
 	}
 	
 	mean_time_to_happen = {
@@ -1668,6 +1670,8 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
+		
+		set_country_flag = dillinger_robs_national_bank
 		
 		add_stability = -0.05
 		
@@ -1759,19 +1763,16 @@ country_event = {
     }
 }
 
-#Event_Name
+#Fuhrer Reichstag Speech
 country_event = {
 	id = preww2_country.48
 	title = preww2_country.48.t
 	desc = preww2_country.48.d
-	picture = GFX_report_event_preww2_country48
+	picture = GFX_report_event_preww2_country9
 	fire_only_once = yes
 	
+	#Is Triggered By Knight Of The Long Knives Event
     is_triggered_only = yes
-	
-	mean_time_to_happen = {
-		days = 7
-	}
 	
 	option = {
 		name = preww2_country.48.a
@@ -1780,6 +1781,8 @@ country_event = {
 			factor = 10
 		}
 		
+		add_stability = 0.05
+		
 		news_event = {
 			id = preww2_news.48
 			hours = 6
@@ -1787,7 +1790,7 @@ country_event = {
     }
 }
 
-#Event_Name
+#John Dillinger Shot Dead
 country_event = {
 	id = preww2_country.49
 	title = preww2_country.49.t
@@ -1795,7 +1798,12 @@ country_event = {
 	picture = GFX_report_event_preww2_country49
 	fire_only_once = yes
 	
-    is_triggered_only = yes
+    trigger = {
+		tag = USA
+		date > 1934.7.22
+		date < 1934.8.22
+		has_country_flag = dillinger_robs_national_bank
+	}
 	
 	mean_time_to_happen = {
 		days = 7
@@ -1808,6 +1816,10 @@ country_event = {
 			factor = 10
 		}
 		
+		set_country_flag = dillinger_dead
+		
+		add_stability = 0.05
+		
 		news_event = {
 			id = preww2_news.49
 			hours = 6
@@ -1815,36 +1827,7 @@ country_event = {
     }
 }
 
-#Event_Name
-country_event = {
-	id = preww2_country.50
-	title = preww2_country.50.t
-	desc = preww2_country.50.d
-	picture = GFX_report_event_preww2_country50
-	fire_only_once = yes
-	
-    is_triggered_only = yes
-	
-	mean_time_to_happen = {
-		days = 7
-	}
-	
-	option = {
-		name = preww2_country.50.a
-		
-		ai_chance = {
-			factor = 10
-		}
-		
-		news_event = {
-			id = preww2_news.50
-			hours = 6
-		}
-    }
-}
-
-
-#Event_Name
+#President Paul Von Hindenburg Dies
 country_event = {
 	id = preww2_country.51
 	title = preww2_country.51.t
@@ -1852,7 +1835,12 @@ country_event = {
 	picture = GFX_report_event_preww2_country51
 	fire_only_once = yes
 	
-    is_triggered_only = yes
+    trigger = {
+		tag = GER
+		has_government = fascism
+		date > 1934.8.2
+		date < 1934.9.2
+	}
 	
 	mean_time_to_happen = {
 		days = 7
@@ -1865,6 +1853,13 @@ country_event = {
 			factor = 10
 		}
 		
+		add_stability = -0.10
+		
+		country_event = {
+			id = preww2_country.53
+			days = 13
+		}
+		
 		news_event = {
 			id = preww2_news.51
 			hours = 6
@@ -1872,35 +1867,80 @@ country_event = {
     }
 }
 
-#Event_Name
+#USA Marines Leave Haiti
 country_event = {
 	id = preww2_country.52
 	title = preww2_country.52.t
 	desc = preww2_country.52.d
 	picture = GFX_report_event_preww2_country52
 	fire_only_once = yes
-	
-    is_triggered_only = yes
-	
-	mean_time_to_happen = {
-		days = 7
+	trigger = {
+		original_tag = USA
+		date > 1934.8.15
+		date < 1934.9.15
+		OR = {
+			owns_state = 318
+			HAI = {
+				is_subject_of = USA
+			}
+		}
 	}
-	
+	mean_time_to_happen = {
+		days = 3
+	}
 	option = {
 		name = preww2_country.52.a
-		
 		ai_chance = {
 			factor = 10
 		}
-		
+		release = HAI
+		end_puppet = HAI
 		news_event = {
 			id = preww2_news.52
 			hours = 6
 		}
-    }
+	}
+	option = {
+		name = preww2_country.52.b
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		add_political_power = -200
+		
+		random_list = {
+			50 = {
+			release = HAI
+			end_puppet = HAI
+			HAI = {
+				news_event = {
+					id = ron_decolonizationnews.1
+					hours = 6
+				}
+				country_event = {
+					id = ron_decolonizationdiplo.24
+					hours = 6
+				}
+			}
+			}
+			50 = {
+			HAI = {
+				news_event = {
+					id = ron_decolonizationnews.7
+					hours = 6
+				}
+			}
+			annex_country = { target = HAI transfer_troops = yes }
+			}
+		}
+		
+	}
 }
 
-#Event_Name
+#1934 German Referendum
 country_event = {
 	id = preww2_country.53
 	title = preww2_country.53.t
@@ -1910,16 +1950,14 @@ country_event = {
 	
     is_triggered_only = yes
 	
-	mean_time_to_happen = {
-		days = 7
-	}
-	
 	option = {
 		name = preww2_country.53.a
 		
 		ai_chance = {
 			factor = 10
 		}
+		
+		add_political_power = 100
 		
 		news_event = {
 			id = preww2_news.53
@@ -3541,12 +3579,12 @@ news_event = {
 	}
 }
 
-# Event Name
+# Fuhrer Speech
 news_event = {
 	id = preww2_news.48
 	title = preww2_news.48.t
 	desc = preww2_news.48.d
-	picture = GFX_news_event_preww2_news48
+	picture = GFX_news_event_preww2_news9
 	
 	major = yes
 	
