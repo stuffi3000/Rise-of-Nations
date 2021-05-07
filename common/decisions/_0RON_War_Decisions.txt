@@ -1,10 +1,255 @@
 RON_Wars_Early = {
+	
+	jap_victory_in_russojapan_war = {
+
+		icon = generic_industry
+
+		available = {
+			tag = JAP
+			controls_state = 408
+			controls_state = 537
+			controls_state = 574
+		}
+
+		visible = {
+			date < 1920.1.1
+			has_war_with = RUE
+			tag = JAP
+		}
+
+		fire_only_once = yes
+
+
+		cost = 15
+
+		complete_effect = {
+			white_peace= QIN
+			white_peace= FRA
+			white_peace= ENG
+			white_peace= USA
+			white_peace= JAP  
+			white_peace= RUE  
+			RUE = { release = MAN end_puppet = MAN}
+			QIN = { annex_country = { target = MAN }
+			JAP = { release = QIN end_puppet = QIN }
+			JAP = { transfer_state= 745}
+			JAP = { transfer_state= 537}
+		}
+		ai_will_do = {
+			factor = 100
+		}
+	}
+}
+
+koreasueforpeace = {
+	allowed = { tag = RUE }              
+	available = {
+		OR = {
+		KOR = {exists = no }	
+		KOR = { is_puppet_of = RUE }
+		}
+	}
+	activation = {                       
+		 has_war_with = KOR      
+		NOT = { KOR = { is_puppet_of = JAP }     }          
+	}
+	is_good = no                          
+	selectable_mission = no            
+	days_mission_timeout = 100             
+	timeout_effect = {                  
+	white_peace = KOR          
+	}
+	complete_effect = {                  
+	annex_country = { target = KOR }         
+	}
+}
+
+
+
+		russo_victory_in_russojapan_war = {
+
+			icon = generic_industry
+	
+			available = {
+				tag = RUE
+				controls_state = 525   
+				controls_state = 905
+			}
+	
+			visible = {
+				tag = RUE
+				date < 1920.1.1
+				has_war_with = JAP
+			}
+	
+			fire_only_once = yes
+	
+	
+			cost = 15
+	
+			complete_effect = {
+				white_peace= QIN
+white_peace= FRA
+white_peace= ENG
+white_peace= USA
+white_peace= JAP  
+white_peace= RUE  
+JAP = { release = KOR end_puppet = KOR }
+RUE = { puppet = KOR }
+RUE = { transfer_state= 555 } 
+RUE = { transfer_state= 971}
+RUE = { transfer_state= 716}
+RUE = { transfer_state= 1023}
+RUE = { transfer_state= 1022}
+RUE = { transfer_state= 1024}
+RUE = { transfer_state= 745}
+RUE = { transfer_state= 962}
+set_global_flag = russo_victory_japrusowar
+hidden_effect = {
+QIN = { add_ideas = { RUE_civil_unrest strike_movement_3}} 
+JAP = { add_ideas = { closed_economy }}
+JAP = { add_country_leader_trait =  Isolationist }
+country_event = { days = 10 id = russianempire.9 }
+JAP = { country_event = { days = 10 id = russianempire.10 } }
+JAP = { add_stability = -45}
+JAP = { add_political_power = -300 }
+JAP = { add_popularity = { ideology = fascism popularity = 0.4 }}
+}
+
+			}
+			ai_will_do = {
+				factor = 100
+			}
+	}
+
+		#early decentralization because russia won russo-japanese war
+		decentalizationofchina = {
+
+			icon = generic_industry
+	
+			available = {
+				NOT = {	has_global_flag = chinaisfine1}
+		has_global_flag = russo_victory_japrusowar          
+		NOT = {has_global_flag = doingdeofchina	}      
+		NOT = {has_global_flag = chinadecentalizedearly	}      
+
+			}
+	
+			visible = {
+				tag = QIN
+				has_global_flag = russo_victory_japrusowar
+				NOT = {has_global_flag = chinadecentalizedearly	}      
+			}
+	
+			fire_only_once = yes
+	
+	
+			cost = 50
+			days_remove = 50
+
+	
+			remove_effect  = {
+				set_global_flag = chinaisfine1
+				add_stability = 0.05
+
+			}
+			ai_will_do = {
+				factor = 50
+			}
+		}
+		decentalizationofchina2 = {
+
+			icon = generic_industry
+	
+			available = {
+				NOT = {	has_global_flag = chinaisfine2 }
+		has_global_flag = russo_victory_japrusowar        
+		             
+			}
+	
+			visible = {
+				tag = QIN
+				NOT = {has_global_flag = chinadecentalizedearly	}      
+
+				has_global_flag = russo_victory_japrusowar
+			}
+	
+			fire_only_once = yes
+	
+	
+			cost = 25
+			days_remove = 35
+			complete_effect = {
+				set_global_flag = doingdeofchina
+			}
+	
+			remove_effect  = {
+				set_global_flag = chinaisfine2
+				remove_global_flag = doingdeofchina
+				add_stability = 0.05
+
+			}
+			ai_will_do = {
+				factor = 50
+			}
+		}
+		
+collapseofchina = {
+	allowed = { tag = QIN }              
+	available = {
+		has_global_flag = chinaisfine1
+		has_global_flag = chinaisfine2
+
+	}
+
+	activation = {      
+		NOT = {has_global_flag = chinadecentalizedearly	}      
+		NOT = {country_exists = XSM }                 
+		has_global_flag = russo_victory_japrusowar                     
+	}
+	is_good = no                          
+	selectable_mission = no            
+	days_mission_timeout = 100             
+	timeout_effect = {                  
+		remove_ideas = { RUE_civil_unrest strike_movement_3}
+		add_country_leader_trait =  dictator 
+		QIN = { release = MON end_puppet = MON }
+		QIN = { release = MAN end_puppet = MAN }
+		create_faction= "Chinese Empire"
+		QIN = { release_puppet = TIB end_puppet = TIB }
+		QIN = { release_puppet = XSM end_puppet = XSM }
+		QIN = { release_puppet = ETR end_puppet = ETR }
+		QIN = { release_puppet = YUN end_puppet = YUN }
+		QIN = { release_puppet = GUI end_puppet = GUI }
+		QIN = { release_puppet = TAN end_puppet = TAN }
+		TAN = { leave_faction = QIN }
+		GXC = { transfer_state= 594 }  
+		GXC = { transfer_state= 591 }  
+		GXC = { transfer_state= 592 }  
+		GXC = { transfer_state= 559 }  
+		YUN = { transfer_state= 751 }
+	set_global_flag = chinadecentalizedearly
+	start_civil_war	= { ideology = democratic size = 0.3 }
+	
+	}
+
+	
+	complete_effect = {                  
+		remove_ideas = { RUE_civil_unrest strike_movement_3}
+		add_country_leader_trait =  popular_figurehead2 
+		add_political_power = 300
+		}
+}
+	
 	russian_invasion_of_MAN = {
 		fire_only_once = yes
 		days_remove = 7
 		war_with_on_remove = MAN
 		allowed = {
 			original_tag = RUE
+		}
+		visible = {
+			country_exists = MAN
 		}
 		available = {
 			original_tag = RUE
