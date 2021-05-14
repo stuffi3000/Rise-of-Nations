@@ -1001,6 +1001,7 @@ country_event = {
 			transfer_state = 577
 			transfer_state = 516
 			transfer_state = 576
+			set_politics = { ruling_party = neutrality elections_allowed = no }
 			if = {
 				limit = {
 					ROOT = {is_ai = no}
@@ -1178,10 +1179,14 @@ country_event = {
 			}
 			AND = {
 				tag = RUE
-				has_capitulated = yes #Russia has surrendered
-			}
+				has_global_flag = october_revolution 
+				OR = {
+				RUE = { surrender_progress > 0.45}
+				RUE = { casualties > 1000000 }
+				}
 		}
 	}
+}
 	immediate = {
 		every_country = {
 			limit = {
@@ -1267,6 +1272,7 @@ country_event = {
 				ROM = {transfer_state = 192} #Vinnytsia
 				ROM = {transfer_state = 198}
 				ROM = {transfer_state = 1100}
+				ROM = {transfer_state = 925}
 				ROM = {transfer_state = 829}
 				ROM = {transfer_state = 766}
 				ROM = {transfer_state = 925}
@@ -1338,6 +1344,310 @@ country_event = {
 		}
 	}
 }
+#Surrender No Lenin
+
+# Treaty of Brest-Litovsk
+country_event = {
+	id = ww1_russia.400
+	title = ww1_russia.43.t
+	desc = ww1_russia.43.d
+	picture = GFX_report_event_treaty_of_brest_litovsk
+
+	fire_only_once = yes
+
+	trigger = {
+
+				NOT = { date > 1919.1.1 }
+				NOT = { has_global_flag = player_wants_custom_peacedeals }
+				tag = RUE
+			NOT = {	has_global_flag = october_revolution }
+			OR = {
+				RUE = { surrender_progress > 0.55} #Russia has surrendered
+					RUE = { casualties > 1000000 }
+			}
+				
+			}
+		
+	
+	immediate = {
+		every_country = {
+			limit = {
+				has_war_with = RUE
+			}
+			white_peace = RUE
+		}
+		leave_faction = yes
+	}
+	mean_time_to_happen = { days = 10 }
+
+	option = {
+		name = ww1_russia.43.a
+		news_event = { hours = 6 id = endsieg_news.225 }
+		set_global_flag = treaty_of_brest_litovsk
+		hidden_effect = {
+
+
+			190 = {
+				add_core_of = UBD
+			}
+			12 = {
+				add_core_of = UBD
+			}
+			881 = {
+				add_core_of = UBD
+			}
+			882 = {
+				add_core_of = UBD
+			}
+			13 = {
+				add_core_of = UBD
+			}
+			191 = {
+				add_core_of = UBD
+			}
+			880 = {
+				add_core_of = UBD
+			}
+			891 = {
+				add_core_of = UBD
+			}
+			890 = {
+				add_core_of = UBD
+			}
+			release = UBD
+			release = LIT
+			release = BLR
+			release = UKR
+			release = TRA
+			GER = {transfer_state = 137} #Crimea
+			if = {
+				limit = {
+					NOT = { country_exists = FNN } #Finland cannot into existence
+				}
+				RUE = { end_puppet = FNN }
+				release = FNN #can into existence. also more clay via Petsamo, I'm sure that the Germans would've wanted it.
+			}
+			if = {
+				limit = {
+					NOT = {
+						country_exists = POL #Poland cannot into existence
+					}
+				}
+				release = POL #can into existence
+			}
+			every_state = {
+				limit = {
+					OR = {
+						is_controlled_by = UBD
+						is_controlled_by = BLR
+						is_controlled_by = UKR
+						is_controlled_by = LIT
+						is_controlled_by = GER
+					}
+				}
+				set_demilitarized_zone = no
+			}
+
+			if = {
+				limit = {
+					ROM = {is_in_faction_with = GER} #Romania is in the CP
+				}
+				ROM = {transfer_state = 78}
+				ROM = {transfer_state = 192} #Vinnytsia
+				ROM = {transfer_state = 198}
+				ROM = {transfer_state = 1100}
+				ROM = {transfer_state = 829}
+				ROM = {transfer_state = 766}
+				ROM = {transfer_state = 925}
+				UKR = {transfer_state = 3407}
+				#Odessa, ie transnistria. Gives reason for Romanian player to side with CP.
+				78 = {  #Besserabia
+					remove_claim_by = ROM
+					add_core_of = ROM
+				}
+				137 = { add_core_of = CRI }
+				198 = { add_core_of = ROM }
+				192 = { add_core_of = ROM }
+				198 = { set_demilitarized_zone = no }
+				192 = { set_demilitarized_zone = no }
+			}
+			else = {
+				78 = { add_core_of = MOL }
+				766 = { add_core_of = MOL }
+				release = MOL
+				ROM = { puppet = MOL}
+			}
+		}
+		GER = {
+			puppet = UBD
+			puppet = LIT
+			puppet = BLR
+			puppet = UKR
+			if = {
+				limit = {
+					POL = { is_puppet = no }
+					country_exists = POL
+				}
+				puppet = POL
+				if = {
+					limit = { 97 = { NOT = { is_owned_and_controlled_by = POL } } }
+					POL = { transfer_state = 97 }
+				}
+			}
+			add_to_faction = UBD
+			add_to_faction = LIT
+			add_to_faction = BLR
+			add_to_faction = UKR
+			add_to_faction = POL
+		}
+		if = {
+			limit = {
+				OTT = { is_in_faction_with = GER }
+			}
+			OTT = { transfer_state = 1001 } #Kars
+		}
+		else = {
+			TRA = { transfer_state = 1001}
+			TRA = { add_state_core = 1001}
+		}
+		hidden_effect = {
+			UKR = {
+				set_politics = {
+					ruling_party = democratic
+					last_election = "1907.1.12"
+					election_frequency = 60
+					elections_allowed = yes
+            } }
+
+                set_popularities = {
+                    neutrality = 26
+                    democratic = 40
+                    communism = 34
+                }
+		RUE = { add_stability = -0.05 }
+
+		RUE = {add_ideas ={ FRA_disjointed_government } }
+		KUB = {
+			transfer_state = 245
+			transfer_state = 218
+			load_oob = KUB_1918
+			set_politics = { ruling_party = communism elections_allowed = no }
+			set_popularities = {
+				communism = 100
+			}
+		}
+		WHR = {
+			transfer_state = 251
+			transfer_state = 590
+			transfer_state = 215
+			transfer_state = 585
+			transfer_state = 652
+			transfer_state = 403
+			transfer_state = 213
+			transfer_state = 584
+			transfer_state = 407
+			transfer_state = 582
+			transfer_state = 580
+			transfer_state = 722
+			transfer_state = 402
+			transfer_state = 406
+			transfer_state = 583
+			transfer_state = 579
+			transfer_state = 587
+			transfer_state = 405
+			transfer_state = 742
+			transfer_state = 589
+			transfer_state = 40
+			transfer_state = 329
+			transfer_state = 565
+			transfer_state = 561
+			transfer_state = 732
+			transfer_state = 588
+			transfer_state = 570
+			transfer_state = 568
+			transfer_state = 564
+			transfer_state = 562
+			transfer_state = 586
+			transfer_state = 571
+			transfer_state = 578
+			transfer_state = 567
+			transfer_state = 563
+			transfer_state = 637
+			transfer_state = 404
+			transfer_state = 654
+			transfer_state = 569
+			transfer_state = 566
+			transfer_state = 574
+			transfer_state = 560
+			transfer_state = 657
+			transfer_state = 409
+			transfer_state = 408
+			transfer_state = 655
+			transfer_state = 644
+			transfer_state = 575
+			transfer_state = 577
+			transfer_state = 516
+			transfer_state = 576	
+			set_popularities = {
+				neutrality = 26
+				communism = 24
+				fascism = 50
+			}
+		}
+		SOV = { change_tag_from = RUE }
+		SOV = {
+				load_oob = SOV_1918
+				remove_ideas = idea_socialism_in_one_country 
+				set_province_controller = 9391
+				set_province_controller = 9243
+				set_province_controller = 9365
+				set_province_controller = 6275
+				set_province_controller = 339
+				set_province_controller = 6404
+				set_province_controller = 9271
+				set_province_controller = 9299
+				set_province_controller = 298
+				set_province_controller = 11256
+				set_province_controller = 11281
+				set_province_controller = 227
+				set_province_controller = 3265
+				set_province_controller = 4324
+				set_province_controller = 7343
+				set_province_controller = 1350
+				set_province_controller = 12242
+				set_province_controller = 12270
+				set_province_controller = 11457
+				set_province_controller = 6525
+				set_province_controller = 545
+				set_province_controller = 11538
+				set_province_controller = 3406
+				set_province_controller = 4791
+				annex_country = { target = RUE transfer_troops = no }
+				set_politics = { ruling_party = democratic elections_allowed = no }
+				set_popularities = {
+					neutrality = 26
+					communism = 24
+					democratic = 50
+				}
+				
+			}
+			WHR = { load_oob = WHR_1918 }
+			SOV = { load_oob = SOV_1918 }
+			SOV = { country_event = { days = 1 id = kaiserslachtinterwar.2 }}
+		WHR = {	
+			declare_war_on = { target = sov type = annex_everything }
+		}
+		KUB = {
+		declare_war_on = { target = WHR type = annex_everything }
+		declare_war_on = { target = sov type = annex_everything }
+		country_event = { days = 1 id = ww1_russia.45 } 
+		}
+
+		}
+	}
+}
+
+
 
 
 # Russian Mobilization
