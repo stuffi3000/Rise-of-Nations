@@ -1,239 +1,146 @@
 RON_Wars_Early = {
 	
-	jap_victory_in_russojapan_war = {
-
-		icon = generic_industry
-		
-		allowed = { tag = JAP }   
-		available = {
-			tag = JAP
-			controls_state = 408
-			controls_state = 537
-			controls_state = 564
-		}
-
-		visible = {
-			date < 1920.1.1
-			has_war_with = RUE
-			tag = JAP
-		}
-
-		fire_only_once = yes
-
-		cost = 15
-
-		complete_effect = {
-			white_peace= QIN
-			white_peace= FRA
-			white_peace= ENG
-			white_peace= USA
-			white_peace= JAP  
-			white_peace= RUE  
-			RUE = { release = MAN end_puppet = MAN}
-			QIN = { annex_country = { target = MAN } }
-			JAP = { release = QIN end_puppet = QIN }
-			JAP = { transfer_state= 745}
-			JAP = { transfer_state= 537}
-		}
-		ai_will_do = {
-			factor = 100
-		}
-	}
-
-	koreasueforpeace = {
-		allowed = { tag = RUE }              
-		available = {
-			OR = {
-				KOR = { exists = no }	
-				KOR = { is_subject_of = RUE }
-			}
-		}
-		activation = {                       
-			has_war_with = KOR      
-			NOT = { KOR = { is_subject_of = JAP } }          
-		}
-		is_good = no                          
-		selectable_mission = no            
-		days_mission_timeout = 150       
-		timeout_effect = {                  
-			white_peace = KOR          
-		}
-		complete_effect = {                  
-			annex_country = { target = KOR }         
-		}
-	}
-
-
-	russo_victory_in_russojapan_war = {
-
-		icon = generic_industry
-		
-		allowed = { tag = RUE }   
-	
-		available = {
-			tag = RUE
-			controls_state = 525   
-			controls_state = 527
-		}
-	
-		visible = {
-			tag = RUE
-			date < 1920.1.1
-			has_war_with = JAP
-		}
-	
-		fire_only_once = yes
-	
-		cost = 15
-	
-		complete_effect = {
-			white_peace= QIN
-			white_peace= FRA
-			white_peace= ENG
-			white_peace= USA
-			white_peace= JAP  
-			white_peace= RUE  
-			JAP = { release = KOR end_puppet = KOR }
-			RUE = { puppet = KOR }
-			RUE = { transfer_state= 555 } 
-			RUE = { transfer_state= 971}
-			RUE = { transfer_state= 716}
-			RUE = { transfer_state= 1023}
-			RUE = { transfer_state= 1022}
-			RUE = { transfer_state= 1024}
-			RUE = { transfer_state= 745}
-			RUE = { transfer_state= 962}
-			set_global_flag = russo_victory_japrusowar
-			hidden_effect = {
-				QIN = { add_ideas = { RUE_civil_unrest strike_movement_3}} 
-				JAP = { add_ideas = { closed_economy }}
-				JAP = { add_country_leader_trait =  Isolationist }
-				country_event = { days = 10 id = russianempire.9 }
-				JAP = { country_event = { days = 10 id = russianempire.10 } }
-				JAP = { add_stability = -45}
-				JAP = { add_political_power = -300 }
-				JAP = { add_popularity = { ideology = fascism popularity = 0.4 }}
-			}
-		}
-		ai_will_do = {
-				factor = 100
-		}
-	}
-
-	#early decentralization because russia won russo-japanese war
-	decentalizationofchina = {
-
-		icon = generic_industry
-		
-		allowed = { tag = QIN }   
-	
-		available = {
-			NOT = {	has_global_flag = chinaisfine1}
-			has_global_flag = russo_victory_japrusowar          
-			NOT = {has_global_flag = chinadecentalizedearly	}      
-		}
-	
-		visible = {
-			tag = QIN
-			has_global_flag = russo_victory_japrusowar
-			NOT = {has_global_flag = chinadecentalizedearly	}   
-			date < 1920.1.1   
-		}
-	
-		fire_only_once = yes
-	
-	
-		cost = 50
-		days_remove = 50
-
-	
-		remove_effect  = {
-			set_global_flag = chinaisfine1
-			add_stability = 0.05
-		}
-		ai_will_do = {
-			factor = 50
-		}
-	}
-	
-	decentalizationofchina2 = {
-
-		icon = generic_industry
-		
-		allowed = { tag = QIN }   
-	
-		available = {
-			NOT = {	has_global_flag = chinaisfine2 }
-			has_global_flag = russo_victory_japrusowar                
-		}
-	
-		visible = {
-			tag = QIN
-			NOT = { has_global_flag = chinadecentalizedearly }      
-			date < 1920.1.1
-			has_global_flag = russo_victory_japrusowar
-		}
-	
-		fire_only_once = yes
-	
-	
-		cost = 25
+	RON_disband_eight_nation = {
+		icon = generic_democracy
 		days_remove = 35
-		complete_effect = {
-
+		allowed = {
+		OR = {
+		tag = FRA
+		AND = {
+		is_ai = yes
+		is_in_faction_with = FRA
 		}
-	
-		remove_effect  = {
-			set_global_flag = chinaisfine2
-			add_stability = 0.05
 		}
+		}
+		available = {
+		OR = {
+		date > 1901.9.7
+		NOT = { country_exists = BOX }
+		}
+		date < 1910.1.1
+		has_start_date < 1905.01.01
+		NOT = { FRA = { has_war_with = BOX } }
+		NOT = { has_global_flag = eight_nation_alliance_disbanded }
+		NOT = { has_global_flag = DNC_Create_TE }
+		FRA = { is_in_faction = yes }
+		country_exists = FRA
+		}
+		cost = 50
 		ai_will_do = {
-		factor = 50
+			factor = 1000
+		}
+		fire_only_once = yes
+		visible = {
+		OR = {
+		is_ai = yes
+		tag = FRA
+		}
+		has_start_date < 1905.01.01
+		NOT = { has_global_flag = eight_nation_alliance_disbanded }
+		NOT = { has_global_flag = DNC_Create_TE }
+		FRA = { is_in_faction = yes }
+		}
+		complete_effect = {
+			set_global_flag = eight_nation_alliance_disbanded
+		}
+		remove_effect = {
+			FRA = { country_event = { id = dnctree.19 }	}
 		}
 	}
-		
-	collapseofchina = {
-		allowed = { tag = QIN }              
-		available = {
-			has_global_flag = chinaisfine1
-			has_global_flag = chinaisfine2
-		}
-
-		activation = {      
-			NOT = {has_global_flag = chinadecentalizedearly	}      
-			NOT = {country_exists = XSM }                 
-			has_global_flag = russo_victory_japrusowar     
-			date < 1920.1.1                
-		}
-		is_good = no                          
-		selectable_mission = no            
-		days_mission_timeout = 100             
-		timeout_effect = {                  
-			remove_ideas = { RUE_civil_unrest strike_movement_3}
-			add_country_leader_trait =  dictator 
-			QIN = { release = MON end_puppet = MON }
-			QIN = { release = MAN end_puppet = MAN }
-			create_faction= "Chinese Empire"
-			QIN = { release_puppet = TIB end_puppet = TIB }
-			QIN = { release_puppet = XSM end_puppet = XSM }
-			QIN = { release_puppet = ETR end_puppet = ETR }
-			QIN = { release_puppet = YUN end_puppet = YUN }
-			QIN = { release_puppet = GUI end_puppet = GUI }
-			QIN = { release_puppet = TAN end_puppet = TAN }
-			TAN = { leave_faction = yes }
-			GXC = { transfer_state= 594 }  
-			GXC = { transfer_state= 591 }  
-			GXC = { transfer_state= 592 }  
-			GXC = { transfer_state= 559 }  
-			YUN = { transfer_state= 751 }
-			set_global_flag = chinadecentalizedearly
-		}
-
 	
-		complete_effect = {                  
-			remove_ideas = { RUE_civil_unrest strike_movement_3}
-			add_country_leader_trait =  popular_figurehead2 
-			add_political_power = 300
+		RON_Create_Triple_Entente = {
+		icon = generic_democracy
+		days_remove = 70
+		allowed = {
+		tag = FRA
+		}
+		available = {
+		date < 1910.1.1
+		has_start_date < 1905.01.01
+		tag = FRA
+		has_government = democratic
+		FRA = { is_in_faction = no }
+		NOT = { is_in_faction_with = RUE }
+		NOT = { has_global_flag = DNC_Create_TE }
+		NOT = { has_war_with = RUE }
+		country_exists = RUE
+		is_subject = no
+		has_global_flag = eight_nation_alliance_disbanded
+		}
+		cost = 100
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				OR = {
+					RUE = { exists = no }
+					RUE = { has_capitulated = yes }
+					RUE = { is_puppet = yes }
+					NOT = { RUE = { has_government = neutrality } }
+				}
+			}
+		}
+		fire_only_once = yes
+		visible = {
+		has_start_date < 1905.01.01
+		has_global_flag = eight_nation_alliance_disbanded
+		NOT = { has_global_flag = DNC_Create_TE }
+		FRA = { is_in_faction = no }
+		country_exists = RUE
+		}
+		complete_effect = {
+			set_global_flag = DNC_Create_TE
+		}
+		remove_effect = {
+			country_event = { id = dnctree.20 }	
+		}
+	}
+	
+	RON_Create_Central_Powers = {
+		icon = generic_monarchism
+		days_remove = 70
+		allowed = {
+		tag = GER
+		}
+		available = {
+		date < 1910.1.1
+		has_start_date < 1905.01.01
+		tag = GER
+		has_government = neutrality
+		GER = { is_in_faction = no }
+		NOT = { is_in_faction_with = AUH }
+		NOT = { has_global_flag = DNC_Create_CP }
+		NOT = { has_war_with = AUH }
+		country_exists = AUH
+		is_subject = no
+		has_global_flag = eight_nation_alliance_disbanded
+		}
+		cost = 100
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				OR = {
+					AUH = { exists = no }
+					AUH = { has_capitulated = yes }
+					AUH = { is_puppet = yes }
+					NOT = { AUH = { has_government = neutrality } }
+				}
+			}
+		}
+		fire_only_once = yes
+		visible = {
+		has_start_date < 1905.01.01
+		has_global_flag = eight_nation_alliance_disbanded
+		NOT = { has_global_flag = DNC_Create_CP }
+		GER = { is_in_faction = no }
+		country_exists = AUH
+		}
+		complete_effect = {
+			set_global_flag = DNC_Create_CP
+		}
+		remove_effect = {
+			country_event = { id = dnctree.21 }	
 		}
 	}
 	
@@ -373,6 +280,61 @@ RON_Wars_Early = {
 			country_event = DNC_Expansion_country.17
 		}
 	}
+	
+	ENG_USA_Demand_Panama_Canal = {
+		fire_only_once = yes
+		days_remove = 70
+		war_with_on_remove = USA
+		cost = 100
+		allowed = {
+			original_tag = ENG
+		}
+		visible = {
+			has_global_flag = DNC_Britain_Rejects_American_Panama
+		}
+		available = {
+			original_tag = ENG
+			country_exists = USA
+			USA = { controls_state = 385 }
+			NOT = { is_in_faction_with = USA }
+			NOT = { has_war_with = USA }
+			date > 1900.1.1
+			date < 1910.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#Not worth the risk if America's Army Is Large
+				USA = { has_army_size = { size > 99 } }
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if Britain's Army Is Small
+				ENG = { has_army_size = { size < 50 } }
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if Britain is already at War with a Great Power
+				any_country = {
+					is_major = yes
+					has_war_with = ENG
+				}
+			}
+			modifier = {
+				#Not worth the risk if Britain is losing a war
+				ENG = { surrender_progress > 0.05 }
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 2
+		}
+		remove_effect = {
+			USA = { country_event = ron_diplomatic.46 }
+		}
+	}
+	
 }
 
 RON_Wars_WW2 = {
