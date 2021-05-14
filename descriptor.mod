@@ -2,7 +2,7 @@ version="1"
 tags={
 	"Gameplay"
 }
-name="Rise of Nations - GITHUB VERSION"
+name="Rise of Nations"
 picture="Rise_of_Nations.gif"
 replace_path="history/countries"
 replace_path="history/states"
