@@ -327,7 +327,6 @@ country_event = {
 		}
 		SOV = { country_event = { id = poland.6 } }
 	}
-
 	option = {
 		name = poland.5.b
 		ai_chance = { factor = 60 }
@@ -439,7 +438,7 @@ country_event = {
 	title = poland.8.t
 	desc = poland.8.d
 	picture = GFX_report_event_polish_tanks_01
-	
+	fire_only_once = yes
 	trigger = {
 		date > 1933.1.1
 		date < 1949.1.1
@@ -459,15 +458,10 @@ country_event = {
 			}
 		}
 	}
+	mean_time_to_happen = {	days = 7 }
 
 	immediate = {
 		clr_country_flag = POL_accepted_soviet_protection
-	}
-
-	fire_only_once = yes
-
-	mean_time_to_happen = {
-		days = 1
 	}
 	
 	option = {
@@ -648,7 +642,7 @@ country_event = {
 	title = poland.12.t
 	desc = poland.12.d
 	picture = GFX_report_event_polish_tanks_01
-	
+	fire_only_once = yes
 	trigger = {
 		date > 1933.1.1
 		date < 1949.1.1
@@ -681,12 +675,7 @@ country_event = {
 			}
 		}
 	}
-
-	mean_time_to_happen = {
-		days = 1
-	}
-
-	fire_only_once = yes
+	mean_time_to_happen = {	days = 7 }
 
 	option = {
 		name = poland.12.a
@@ -746,7 +735,6 @@ country_event = {
 			target = POL 
 			type = infantry_equipment amount = 1500
 		}
-
 		POL = { 
 			country_event= {
 				days = 1 
@@ -791,9 +779,9 @@ country_event = {
 		name = polishinti.3.a
 		ai_chance = { factor = 1}
 		add_opinion_modifier= { 
-target = From
-modifier = medium_increase
-}
+			target = FROM
+			modifier = medium_increase
+		}
 	}
 }
 ##Event: Poland asks us for our support
@@ -808,10 +796,10 @@ country_event = {
 		name = polishinti.4.a
 		ai_chance = { factor = 1}
 		declare_war_on= { 
-target = SOV
-type = annex_everything 
-}
-set_country_flag= polhelp
+			target = SOV
+			type = annex_everything 
+		}
+		set_country_flag= polhelp
 	}
 	option = {
 		name = polishinti.4.b
@@ -828,17 +816,20 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		NOT = { POL = { has_war_with= SOV } }
-LAT = { has_country_flag= polhelp}
-tag = lat
+		NOT = { POL = { has_war_with = SOV } }
+		LAT = { has_country_flag = polhelp}
+		tag = LAT
 	}
+	mean_time_to_happen = { days = 7 }
 	option = {
 		name = polishinti.5.a
 		ai_chance = { factor = 1}
-		white_peace= SOV
+		white_peace = SOV
 	}
 }
-##Event: The Polish - Soviet War Begins
+
+#this is a bad way to implement this. if its a decision style event, then make it a decision
+##Event: The Polish - Soviet War Begins 
 news_event = {
 	id = polishinti.6
 	title = polishinti.6.title
@@ -846,13 +837,12 @@ news_event = {
 	picture = GFX_news_event_spr_francoist_civil_war_victory
 	fire_only_once = yes
 	trigger = {
-	date > 1919.1.1
+		date > 1919.1.1
 		date < 1920.1.1
-
-POL = { has_war_with= SOV }
-
-tag = POL
+		POL = { has_war_with = SOV }
+		tag = POL
 	}
+	mean_time_to_happen = { days = 7 }
 	option = {
 		name = polishinti.6.a
 		ai_chance = { factor = 1}
@@ -863,6 +853,7 @@ tag = POL
 		complete_national_focus= POL_polish_soviet_war
 	}
 }
+
 ##Event: The Industrialization of Poland
 country_event = {
 	id = polishinti.7
@@ -874,75 +865,76 @@ country_event = {
 		name = polishinti.7.a
 		ai_chance = { factor = 1}
 		add_timed_idea= { 
-idea = civi_focus
-days = 15
-}
-random_list = {
-    50 = {
-if = {
-            limit = {
-                check_variable = { POL_PEASENT_SUPPORT > 95 }
-            }
-            set_variable = { POL_MIDDLE_SUPPORT =  0 }
-            set_variable = { POL_PEASENT_SUPPORT = 100 }
-            else = {
-                add_to_variable = { POL_MIDDLE_SUPPORT = -5 }
-                add_to_variable = { POL_PEASENT_SUPPORT = 5 }
-            }
-        }
-    }
-    50 = {
-if = {
-            limit = {
-                check_variable = { POL_PEASENT_SUPPORT > 99 }
-            }
-            set_variable = { POL_MIDDLE_SUPPORT =  0 }
-            set_variable = { POL_PEASENT_SUPPORT = 100 }
-            else = {
-                add_to_variable = { POL_MIDDLE_SUPPORT = -1 }
-                add_to_variable = { POL_PEASENT_SUPPORT = 1 }
-            }
-        }
-    }
-	}
+			idea = civi_focus
+			days = 15
+		}
+		random_list = {
+    		50 = {
+				if = {
+					limit = {
+						check_variable = { POL_PEASENT_SUPPORT > 95 }
+					}
+					set_variable = { POL_MIDDLE_SUPPORT =  0 }
+					set_variable = { POL_PEASENT_SUPPORT = 100 }
+				}
+				else = {
+					add_to_variable = { POL_MIDDLE_SUPPORT = -5 }
+					add_to_variable = { POL_PEASENT_SUPPORT = 5 }
+				}
+    		}
+    		50 = {
+				if = {
+					limit = {
+						check_variable = { POL_PEASENT_SUPPORT > 99 }
+					}
+					set_variable = { POL_MIDDLE_SUPPORT =  0 }
+					set_variable = { POL_PEASENT_SUPPORT = 100 }
+				}
+				else = {
+						add_to_variable = { POL_MIDDLE_SUPPORT = -1 }
+						add_to_variable = { POL_PEASENT_SUPPORT = 1 }
+				}
+			}
+		}
 	}
 	option = {
 		name = polishinti.7.b
 		ai_chance = { factor = 1}
-		add_timed_idea= { 
-idea = industrial_focus
-days = 15
-}
-random_list = {
-    50 = {
-if = {
-            limit = {
-                check_variable = { POL_MIDDLE_SUPPORT > 95 }
-            }
-            set_variable = { POL_PEASENT_SUPPORT=  0 }
-            set_variable = { POL_MIDDLE_SUPPORT = 100 }
-            else = {
-                add_to_variable = { POL_PEASENT_SUPPORT = -5 }
-                add_to_variable = { POL_MIDDLE_SUPPORT = 5 }
-            }
-        }
-    }
-    50 = {
-if = {
-            limit = {
-                check_variable = { POL_MIDDLE_SUPPORT > 99 }
-            }
-            set_variable = { POL_PEASENT_SUPPORT=  0 }
-            set_variable = { POL_MIDDLE_SUPPORT = 100 }
-            else = {
-                add_to_variable = { POL_PEASENT_SUPPORT = -1 }
-                add_to_variable = { POL_MIDDLE_SUPPORT = 1 }
-            }
-        }
-    }
-}
+		add_timed_idea = { 
+			idea = industrial_focus
+			days = 15
+		}
+		random_list = {
+   			50 = {
+				if = {
+					limit = {
+						check_variable = { POL_MIDDLE_SUPPORT > 95 }
+					}
+					set_variable = { POL_PEASENT_SUPPORT=  0 }
+					set_variable = { POL_MIDDLE_SUPPORT = 100 }
+				}
+				else = {
+						add_to_variable = { POL_PEASENT_SUPPORT = -5 }
+						add_to_variable = { POL_MIDDLE_SUPPORT = 5 }
+        		}
+    		}
+    		50 = {
+				if = {
+					limit = {
+						check_variable = { POL_MIDDLE_SUPPORT > 99 }
+					}
+					set_variable = { POL_PEASENT_SUPPORT=  0 }
+					set_variable = { POL_MIDDLE_SUPPORT = 100 }
+				}
+				else = {
+						add_to_variable = { POL_PEASENT_SUPPORT = -1 }
+						add_to_variable = { POL_MIDDLE_SUPPORT = 1 }
+        		}
+    		}
+		}
 	}
 }
+
 ##Event: Lack of industrial focus
 country_event = {
 	id = polishinti.8
@@ -952,16 +944,17 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		NOT = { has_idea= lackofindustrial }
-check_variable = { POL_PEASENT_SUPPORT > 60 }
-tag = POL
+		NOT = { has_idea = lackofindustrial }
+		check_variable = { POL_PEASENT_SUPPORT > 60 }
+		tag = POL
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.8.a
 		ai_chance = { factor = 1}
 		add_ideas= lackofindustrial
-remove_ideas = balancegreat
-remove_ideas = lackofcivi
+		remove_ideas = balancegreat
+		remove_ideas = lackofcivi
 	}
 }
 ##Event: Lack of Agricultural Focus
@@ -974,15 +967,16 @@ country_event = {
 		date > 1919.1.1
 		date < 1933.1.1
 		NOT = { has_idea= lackofcivi }
-check_variable = { POL_MIDDLE_SUPPORT > 60}
-tag = POL
+		check_variable = { POL_MIDDLE_SUPPORT > 60}
+		tag = POL
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.9.a
 		ai_chance = { factor = 1}
 		add_ideas= lackofcivi
-remove_ideas = lackofindustrial
-remove_ideas = balancegreat
+		remove_ideas = lackofindustrial
+		remove_ideas = balancegreat
 	}
 }
 ##Event: Balance achieved between industrial and Agricultural
@@ -995,17 +989,18 @@ country_event = {
 		date > 1919.1.1
 		date < 1933.1.1
 		tag = POL
-NOT = { has_idea= balancegreat }
-check_variable = { POL_MIDDLE_SUPPORT > 50 }
-check_variable = { POL_MIDDLE_SUPPORT < 55 }
-check_variable = { POL_PEASENT_SUPPORT > 50 }
-check_variable = { POL_PEASENT_SUPPORT < 55 }
+		NOT = { has_idea = balancegreat }
+		check_variable = { POL_MIDDLE_SUPPORT > 50 }
+		check_variable = { POL_MIDDLE_SUPPORT < 55 }
+		check_variable = { POL_PEASENT_SUPPORT > 50 }
+		check_variable = { POL_PEASENT_SUPPORT < 55 }
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.10.a
 		ai_chance = { factor = 1}
 		remove_ideas = lackofcivi
-remove_ideas = lackofindustrial
+		remove_ideas = lackofindustrial
 	}
 }
 ##Event: Industrial focus back on track
@@ -1018,13 +1013,14 @@ country_event = {
 		date > 1919.1.1
 		date < 1933.1.1
 		check_variable = { POL_MIDDLE_SUPPORT < 60 }
-has_idea= lackofindustrial
-tag = POL
+		has_idea= lackofindustrial
+		tag = POL
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.11.a
 		ai_chance = { factor = 1}
-		remove_ideas= lackofindustrial
+		remove_ideas = lackofindustrial
 	}
 }
 ##Event: Agricultural focus back on track
@@ -1037,9 +1033,10 @@ country_event = {
 		date > 1919.1.1
 		date < 1933.1.1
 		check_variable = { PEASENT_SUPPORT < 60 }
-has_idea= lackofcivi
-tag = POL
+		has_idea = lackofcivi
+		tag = POL
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.12.a
 		ai_chance = { factor = 1}
@@ -1055,16 +1052,17 @@ country_event = {
 	trigger = {
 		date < 1933.1.1
 		date > 1926.5.12
-tag = pol
+		tag = pol
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.13.a
 		ai_chance = { factor = 1}
 		complete_national_focus= POL_may_coup
-add_timed_idea= { 
-idea = Recent_coup 
-days = 130 
-}
+		add_timed_idea= { 
+			idea = Recent_coup 
+			days = 130 
+		}
 	}
 }
 ##Event: Poland offers ceasefire - small victory
@@ -1077,24 +1075,25 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		SOV = { has_war_with= POL }
-784 = { is_controlled_by= POL }
-96 = { is_controlled_by= POL }
-206 = { is_controlled_by= POL }
-194 = { is_controlled_by= POL }
-784 = { is_controlled_by= POL }
-tag = sov
+		SOV = { has_war_with = POL }
+		784 = { is_controlled_by= POL }
+		96 = { is_controlled_by= POL }
+		206 = { is_controlled_by= POL }
+		194 = { is_controlled_by= POL }
+		784 = { is_controlled_by= POL }
+		tag = SOV
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.14.a
 		ai_chance = { factor = 1}
-		white_peace= POL
+		white_peace = POL
 	}
 	option = {
 		name = polishinti.14.b
 		ai_chance = { factor = 1}
-		add_stability= -0.05
-add_war_support= 10
+		add_stability = -0.05
+		add_war_support = 10
 	}
 }
 ##Event: Poland demands surrender - medium victory
@@ -1106,30 +1105,31 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		SOV = { has_war_with= POL }
-784 = { is_controlled_by= POL }
-96 = { is_controlled_by= POL }
-206 = { is_controlled_by= POL }
-194 = { is_controlled_by= POL }
-784 = { is_controlled_by= POL }
-204 = { is_controlled_by= POL }
-207 = { is_controlled_by= POL }
-202 = { is_controlled_by= POL }
-242 = { is_controlled_by= POL }
-tag = sov
+		SOV = { has_war_with = POL }
+		784 = { is_controlled_by= POL }
+		96  = { is_controlled_by= POL }
+		206 = { is_controlled_by= POL }
+		194 = { is_controlled_by= POL }
+		784 = { is_controlled_by= POL }
+		204 = { is_controlled_by= POL }
+		207 = { is_controlled_by= POL }
+		202 = { is_controlled_by= POL }
+		242 = { is_controlled_by= POL }
+		tag = SOV
 	}
+	mean_time_to_happen = { days = 7 }
 	option = {
 		name = polishinti.15.a
 		ai_chance = { factor = 1}
 		POL = { set_state_owner= 206 }
-POL = { set_state_owner= 204 }
-POL = { set_state_owner= 194 }
+		POL = { set_state_owner= 204 }
+		POL = { set_state_owner= 194 }
 	}
 	option = {
 		name = polishinti.15.b
 		ai_chance = { factor = 1}
-		add_stability= -0.10
-add_war_support= 15
+		add_stability = -0.10
+		add_war_support = 15
 	}
 }
 ##Event: Poland demands surrender - large victory
@@ -1142,15 +1142,16 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		219 = { is_controlled_by= POL }
-tag = sov
+		219 = { is_controlled_by = POL }
+		tag = sov
 	}
+	mean_time_to_happen = { days = 7 }
 	option = {
 		name = polishinti.16.a
 		ai_chance = { factor = 1}
-		set_state_owner= 207
-set_state_owner= 241
-set_state_owner= 927
+		set_state_owner = 207
+		set_state_owner = 241
+		set_state_owner = 927
 	}
 }
 ##Event: Polish ceasefire?
@@ -1163,10 +1164,11 @@ country_event = {
 	trigger = {
 		date > 1919.1.1
 		date < 1933.1.1
-		SOV = { is_core_of= UKR }
-NOT = { has_war_with= UKR }
-tag = sov
+		#SOV = { is_core_of = UKR } is_core_of doesnt work
+		NOT = { has_war_with = UKR }
+		tag = sov
 	}
+	mean_time_to_happen = { days = 7 }
 	option = {
 		name = polishinti.17.a
 		ai_chance = { factor = 1}
@@ -1187,8 +1189,9 @@ country_event = {
 	trigger = {
 		date > 1937.1.1
 		date < 1949.1.1
-tag = pol
+		tag = pol
 	}
+	mean_time_to_happen = { days = 30 }
 	option = {
 		name = polishinti.18.a
 		ai_chance = { factor = 1}
@@ -1206,17 +1209,19 @@ country_event = {
 		name = polishinti.19.a
 		ai_chance = { factor = 1}
 		country_event= {
-days = 1 
-id = polishinti.22 
-}
+			days = 1 
+		id = polishinti.22 
+		}
 	}
 	option = {
 		name = polishinti.19.b
 		ai_chance = { factor = 1}
-		FRA = { country_event= {
-days = 5
-id = polishinti.20
-} }
+		FRA = {
+			country_event= {
+				days = 5
+				id = polishinti.20
+			} 
+		}
 	}
 }
 ##Event: French - Polish trade deal negations
@@ -1230,32 +1235,38 @@ country_event = {
 		name = polishinti.20.a
 		ai_chance = { factor = 1}
 		add_political_power= -25
-add_tech_bonus= {
-bonus = 1
-uses = 1
-category = artillery
-}
-POL = { add_tech_bonus= {
-bonus = 1
-uses = 1
-category = artillery
-} }
+		add_tech_bonus= {
+			bonus = 1
+			uses = 1
+			category = artillery
+		}
+		POL = { 
+			add_tech_bonus= {
+				bonus = 1
+				uses = 1
+				category = artillery
+			} 
+		}
 	}
 	option = {
 		name = polishinti.20.b
 		ai_chance = { factor = 1}
-		POL = { country_event= {
-days = 5 
-id = polishinti.21
-} }
+		POL = { 
+			country_event = {
+				days = 5 
+				id = polishinti.21
+			}
+		}
 	}
 	option = {
 		name = polishinti.20.c
 		ai_chance = { factor = 1}
-		POL = { country_event= {
-days = 1 
-id = polishinti.29
-} }
+		POL = { 
+			country_event = {
+				days = 1 
+				id = polishinti.29
+			}
+		}
 	}
 }
 ##Event: France offers a compromise
@@ -1269,26 +1280,30 @@ country_event = {
 		name = polishinti.21.a
 		ai_chance = { factor = 1}
 		add_political_power= -12
-FRA = { add_political_power= -12 }
-add_tech_bonus= {
-bonus = 1
-uses = 1
-category = artillery
-}
-add_political_power= -25
-POL = { add_tech_bonus= {
-bonus = 1
-uses = 1
-category = artillery
-} }
+		FRA = { add_political_power= -12 }
+		add_tech_bonus= {
+			bonus = 1
+			uses = 1
+			category = artillery
+		}
+		add_political_power= -25
+		POL = { 
+			add_tech_bonus= {
+				bonus = 1
+				uses = 1
+				category = artillery
+			}
+		}
 	}
 	option = {
 		name = polishinti.21.b
 		ai_chance = { factor = 1}
-		POL = { country_event= {
-days = 1 
-id = polishinti.29
-} }
+		POL = { 
+			country_event= {
+				days = 1 
+				id = polishinti.29
+			}
+		}
 	}
 }
 ##Event: French - Polish trade deal negations
@@ -1302,32 +1317,36 @@ country_event = {
 		name = polishinti.22.a
 		ai_chance = { factor = 1}
 		add_political_power= -30
-add_tech_bonus= {
-bonus = 1
-uses = 1
-category = armor
-}
-POL = { add_tech_bonus= {
-bonus = 1
-uses = 1
-category = armor
-} }
+		add_tech_bonus= {
+			bonus = 1
+			uses = 1
+			category = armor
+		}
+		POL = { 
+			add_tech_bonus= {
+				bonus = 1
+				uses = 1
+				category = armor
+			}
+		}
 	}
 	option = {
 		name = polishinti.22.b
 		ai_chance = { factor = 1}
 		country_event= {
-days = 1 
-id = polishinti.23
-}
+			days = 1 
+			id = polishinti.23
+		}
 	}
 	option = {
 		name = polishinti.22.c
 		ai_chance = { factor = 1}
-		POL = { country_event= {
-days = 1 
-id = polishinti.29
-} }
+		POL = { 
+			country_event= {
+				days = 1 
+				id = polishinti.29
+			}
+		}
 	}
 }
 ##Event: France offers a compromise
@@ -1341,26 +1360,30 @@ country_event = {
 		name = polishinti.23.a
 		ai_chance = { factor = 1}
 		add_political_power= -15
-FRA = { add_political_power= -15 }
-add_tech_bonus= {
-bonus = 1
-uses = 1
-category = armor
-}
-add_political_power= -25
-POL = { add_tech_bonus= {
-bonus = 1
-uses = 1
-category = armor
-} }
+		FRA = { add_political_power= -15 }
+		add_tech_bonus= {
+			bonus = 1
+			uses = 1
+			category = armor
+		}
+		add_political_power= -25
+		POL = { 
+			add_tech_bonus= {
+				bonus = 1
+				uses = 1
+				category = armor
+			}
+		}
 	}
 	option = {
 		name = polishinti.23.b
 		ai_chance = { factor = 1}
-		FRA = { country_event= {
-days = 1 
-id = polishinti.30 
-} }
+		FRA = { 
+			country_event= {
+				days = 1 
+				id = polishinti.30 
+			}
+		}
 	}
 }
 ##Event: German - Polish Summit
@@ -1392,9 +1415,9 @@ country_event = {
 		name = polishinti.25.c
 		ai_chance = { factor = 1}
 		country_event= {
-days = 1 
-id = polishinti.28
-}
+			days = 1 
+			id = polishinti.28
+		}
 	}
 }
 ##Event: Poland offers danzig
@@ -1427,9 +1450,9 @@ country_event = {
 		name = polishinti.28.a
 		ai_chance = { factor = 1}
 		country_event= {
-days = 1 
-id = polishinti.33
-}
+			days = 1 
+			id = polishinti.33
+		}
 	}
 	option = {
 		name = polishinti.28.b
@@ -1469,9 +1492,11 @@ country_event = {
 	option = {
 		name = polishinti.31.a
 		ai_chance = { factor = 1}
-		GER = { annex_country= {
- target = DAN
-} }
+		GER = { 
+			annex_country= {
+				target = DAN
+		 	}
+		}
 	}
 }
 ##Event: Germany accepts our manpower offer
