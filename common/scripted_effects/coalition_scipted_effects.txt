@@ -136,6 +136,135 @@ cleanup_coalition = {
 # and are used to setup the seats inside the parliament
 
 quickset_parliament = {
+
+	# If no values have been predefined in the history files
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					has_variable = communist_popularity
+					has_variable = democratic_socialist_popularity
+					has_variable = progressive_popularity
+					has_variable = social_democrat_popularity
+					has_variable = social_liberal_popularity
+					has_variable = market_liberal_popularity
+					has_variable = conservative_popularity
+					has_variable = reactionary_popularity
+					has_variable = monarchist_popularity
+					has_variable = nationalist_popularity
+					has_variable = fascist_popularity
+					has_variable = islamist_popularity
+				}
+			}
+		}
+		# First Era (there is a difference between eras because there were no progressive people in 1900 for example)
+		if = {
+			limit = {
+				date > 1899.12.1
+				date < 1901.1.1
+				OR = {
+					has_government = democratic # Because who needs a parliament in a non-democratic country?
+					has_country_flag = has_parliament # Because there are exceptions
+				}
+				democratic > 0
+			}
+			log = "Test"
+			set_temp_variable = { democratic_support = party_popularity@democratic }
+			multiply_temp_variable = { democratic_support = 100 }
+			random_list = {
+				1 = {
+					divide_temp_variable = { democratic_support = 4 }
+					set_variable = { democratic_socialist_popularity = democratic_support }
+					set_variable = { social_democrat_popularity = democratic_support }
+					set_variable = { market_liberal_popularity = democratic_support }
+					set_variable = { conservative_popularity = democratic_support }
+					random_list = {
+						1 = {
+							set_country_flag = government_democratic_socialist
+						}
+						1 = {
+							set_country_flag = government_social_democrat
+						}
+						1 = {
+							set_country_flag = government_market_liberal
+						}
+						1 = {
+							set_country_flag = government_conservative
+						}
+					}
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { democratic_socialist_popularity = democratic_support_1 }
+					set_temp_variable = { democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_democratic_socialist
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { social_democrat_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_social_democrat
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { market_liberal_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_market_liberal
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { conservative_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_country_flag = government_conservative
+				}
+			}
+			# The residue is composed of the other ideologies and will be accordingly distributed
+			# Communism
+			set_temp_variable = { communist_support = party_popularity_100@communism }
+			set_variable = { communist_popularity = communist_support }
+			# Fascism
+			set_temp_variable = { fascist_support = party_popularity_100@fascism }
+			set_variable = { fascist_popularity = fascist_support }
+			# Reactionary
+			set_temp_variable = { reactionary_support = party_popularity_100@neutrality }
+			set_variable = { reactionary_popularity = reactionary_support }
+			# Islamism
+			set_temp_variable = { islamist_support = party_popularity_100@islamism }
+			set_variable = { islamist_popularity = islamist_support }
+
+			# Problem: for countries like Germany, there is a parliament in 1900, composed of different parties. However,
+			# the major ruling force in the country is the House of Hohenzollern, who isn't a party in the parliament, but has
+			# all the power. This means we cannot use this random system up here and we HAVE to define historical values!!
+		}
+	}
 	set_variable = { communist_seats = communist_popularity }
 	set_variable = { democratic_socialist_seats = democratic_socialist_popularity }
 	set_variable = { progressive_seats = progressive_popularity }
@@ -245,7 +374,7 @@ set_parliament_graphics = {
 
 ## CLARIFICATION
 # Every ideology has a number from 1 to 12.
-# There will be a parliament array with 25 entries of numbers reaching from 1 to 12, each defining a seat for a certain ideology.
+# There will be a parliament array with 50 entries of numbers reaching from 1 to 12, each defining a seat for a certain ideology.
 #
 ## Step 1 : Create new variables to work with
 	set_variable = { communist_seats_parliament = communist_seats }
