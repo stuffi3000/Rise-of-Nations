@@ -24,19 +24,19 @@ EAI_get_building_values = {
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_INFRASTRUCTURE }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_infrastructure_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 2 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_AIRBASE }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_air_base_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 3 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_ANTIAIR }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_anti_air_building_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 4 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_RADAR }
@@ -48,19 +48,19 @@ EAI_get_building_values = {
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_MILITARY_FACTORY }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_arms_factory_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 6 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_CIVILIAN_FACTORY }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_industrial_complex_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 7 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_DOCKYARD }
 		add_to_temp_variable = { EAI_construction_speed = modifier@production_speed_dockyard_factor }
 	}
-	
+
 	else_if = { limit = { check_variable = { EAI_building_type_selected = 8 } }
 
 		set_temp_variable = { EAI_building_cost = @BUILD_COST_REFINERY }
@@ -129,7 +129,7 @@ EAI_start_priority_construction = {
 		### active project building type
 
 		set_variable = { EAI_active_project_building_type = EAI_building_type_selected }
-		
+
 		### start construction
 
 		set_country_flag = EAI_construction_project_active
@@ -140,7 +140,7 @@ EAI_start_priority_construction = {
 		}
 	}
 
-	if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | PRIORITY CONSTRUCTION: building type [?Root.EAI_active_project_building_type] at [This.GetName]" } 
+	if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | PRIORITY CONSTRUCTION: building type [?Root.EAI_active_project_building_type] at [This.GetName]" }
 }
 
 EAI_end_construction = {
@@ -221,9 +221,9 @@ EAI_priority_constructions = {
 
 EAI_important_radar_constructions = {
 
-	if = { 
-		limit = { 
-			NOT = { has_country_flag = EAI_construction_project_active } 
+	if = {
+		limit = {
+			NOT = { has_country_flag = EAI_construction_project_active }
 			threat > 0.3
 			num_of_civilian_factories_available_for_projects > 15
 			any_of_scopes = { array = controlled_states EAI_radar_location_2 = yes EAI_available_RADAR = yes }
@@ -240,20 +240,20 @@ EAI_important_radar_constructions = {
 
 EAI_improve_north_africa_infrastructure = {
 
-	if = { 
-		limit = { 
-			NOT = { has_country_flag = EAI_construction_project_active } 
-			has_war = yes 
+	if = {
+		limit = {
+			NOT = { has_country_flag = EAI_construction_project_active }
+			has_war = yes
 			num_of_civilian_factories_available_for_projects > 15
 			any_enemy_country = {
 				any_of_scopes = { array = controlled_states
-					OR = { region = 126 region = 128 } 
+					OR = { region = 126 region = 128 }
 				}
 			}
 			any_of_scopes = { array = controlled_states
-				OR = { region = 126 state = 452 state = 447 state = 446 } 
-				is_coastal = yes 
-				free_building_slots = { building = infrastructure size > 0 include_locked = no } 
+				OR = { region = 126 state = 452 state = 447 state = 446 }
+				is_coastal = yes
+				free_building_slots = { building = infrastructure size > 0 include_locked = no }
 				infrastructure < 8
 			}
 		}
@@ -264,14 +264,14 @@ EAI_improve_north_africa_infrastructure = {
 		set_temp_variable = { EAI_best_target_score = 0 }
 
 		# find the best target
-		for_each_scope_loop = { array = controlled_states 
-		
+		for_each_scope_loop = { array = controlled_states
+
 			if = {
-				limit = { 
-					OR = { region = 126 state = 452 state = 447 state = 446 } 
-					is_coastal = yes 
-					free_building_slots = { building = infrastructure size > 0 include_locked = no } 
-					infrastructure < 8 
+				limit = {
+					OR = { region = 126 state = 452 state = 447 state = 446 }
+					is_coastal = yes
+					free_building_slots = { building = infrastructure size > 0 include_locked = no }
+					infrastructure < 8
 				}
 
 				# get score
@@ -280,10 +280,10 @@ EAI_improve_north_africa_infrastructure = {
 				if = { limit = { NOT = { EAI_no_enemy_border = yes } } multiply_variable = { EAI_score = 1.5 } }
 
 				# compare with best score
-				if = { limit = { check_variable = { EAI_score > EAI_best_target_score } } 
+				if = { limit = { check_variable = { EAI_score > EAI_best_target_score } }
 
-					set_temp_variable = { EAI_best_target = THIS.id } 
-					set_temp_variable = { EAI_best_target_score = EAI_score } 
+					set_temp_variable = { EAI_best_target = THIS.id }
+					set_temp_variable = { EAI_best_target_score = EAI_score }
 				}
 			}
 		}
@@ -297,7 +297,7 @@ EAI_improve_north_africa_infrastructure = {
 }
 
 EAI_resource_extraction = {
-	
+
 	if = {
 		limit = {
 			num_of_civilian_factories_available_for_projects > 45
@@ -329,7 +329,7 @@ EAI_convert_factories_to_civ = {
 		limit = {
 			# there is a steel deficit
 			check_variable = { resource@steel < 0 }
-			
+
 			# total steel needed for production
 			set_temp_variable = { steel_needed = resource_consumed@steel }
 			multiply_temp_variable = { steel_needed = -1 }
@@ -410,7 +410,7 @@ EAI_get_shared_slot_scores = {
 	set_temp_variable = { EAI_has_shared_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_SHARED = yes }
 
 			EAI_get_shared_slot_score = yes
@@ -427,7 +427,7 @@ EAI_get_shared_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_shared_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -462,7 +462,7 @@ EAI_get_infrastructure_slot_scores = {
 	set_temp_variable = { EAI_has_infrastructure_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_INF = yes }
 
 			EAI_get_infrastructure_slot_score = yes
@@ -479,7 +479,7 @@ EAI_get_infrastructure_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_infrastructure_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -487,7 +487,7 @@ EAI_get_infrastructure_slot_scores = {
 	}
 
 	if = { limit = { has_country_flag = EAI_construction_logging }
-	
+
 		log = "======= PRINTING EAI_infrastructure_slot_scores ======="
 		for_each_scope_loop = { array = EAI_infrastructure_slot_scores
 			log = "[?EAI_infrastructure_slot_score] - [This.GetName]"
@@ -496,7 +496,7 @@ EAI_get_infrastructure_slot_scores = {
 	}
 }
 EAI_get_infrastructure_slot_score = {
-	
+
 	set_variable = { EAI_infrastructure_slot_score = 11 }
 	set_temp_variable = { t1 = building_level@infrastructure }
 	multiply_temp_variable = { t1 = 1.5 }
@@ -518,7 +518,7 @@ EAI_get_resource_slot_scores = {
 	set_temp_variable = { EAI_has_resource_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_INF = yes check_variable = { EAI_total_resources > 30 } }
 
 			EAI_get_resource_slot_score = yes
@@ -535,7 +535,7 @@ EAI_get_resource_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_resource_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -578,7 +578,7 @@ EAI_get_resource_slot_score = {
 	set_temp_variable = { t2 = EAI_chromium }
 	if = { limit = { OR = { check_variable = { ROOT.resource@chromium < -4 } check_variable = { ROOT.resource_imported@chromium > 4 } } } multiply_temp_variable = { t2 = 4 } }
 	add_to_temp_variable = { t3 = t2 }
-	
+
 	set_variable = { EAI_resource_slot_score = t3 }
 
 	if = { limit = { EAI_no_border = yes } multiply_variable = { EAI_resource_slot_score = 1.1 } }
@@ -595,7 +595,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = oil amount > [x] } } } }
@@ -614,7 +614,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = aluminium amount > [x] } } } }
@@ -633,7 +633,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = rubber amount > [x] } } } }
@@ -652,7 +652,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = tungsten amount > [x] } } } }
@@ -671,7 +671,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = steel amount > [x] } } } }
@@ -690,7 +690,7 @@ EAI_set_resource_variables = {
 
 		while_loop_effect = { limit = { check_variable = { t3 < 200 } }
 
-			if = { 
+			if = {
 				limit = {
 					meta_trigger = {
 						text = { PREV = { NOT = { has_resources_amount = { resource = chromium amount > [x] } } } }
@@ -705,7 +705,7 @@ EAI_set_resource_variables = {
 			add_to_temp_variable = { t3 = 1 }
 		}
 	}
-	
+
 	set_variable = { EAI_total_resources = EAI_oil }
 	add_to_variable = { EAI_total_resources = EAI_aluminium }
 	add_to_variable = { EAI_total_resources = EAI_rubber }
@@ -720,7 +720,7 @@ EAI_get_radar_slot_scores = {
 	set_temp_variable = { EAI_has_radar_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_RADAR = yes }
 
 			EAI_get_radar_slot_score = yes
@@ -737,7 +737,7 @@ EAI_get_radar_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_radar_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -768,12 +768,12 @@ EAI_get_radar_slot_score = {
 				any_neighbor_state = {
 					OR = {
 						AND = {
-							OR = { has_state_flag = EAI_radar_site radar_station > 0 } 
+							OR = { has_state_flag = EAI_radar_site radar_station > 0 }
 							check_variable = { PREV.distance_to@THIS < 400 }
 						}
 						any_neighbor_state = {
 							NOT = { check_variable = { THIS.id = PREV.PREV.id } }
-							OR = { has_state_flag = EAI_radar_site radar_station > 0 } 
+							OR = { has_state_flag = EAI_radar_site radar_station > 0 }
 							check_variable = { PREV.PREV.distance_to@THIS < 400 }
 						}
 					}
@@ -791,7 +791,7 @@ EAI_get_airbase_slot_scores = {
 	set_temp_variable = { EAI_has_airbase_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_AIR = yes }
 
 			EAI_get_airbase_slot_score = yes
@@ -808,7 +808,7 @@ EAI_get_airbase_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_airbase_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -825,26 +825,26 @@ EAI_get_airbase_slot_scores = {
 	}
 }
 EAI_get_airbase_slot_score = {
-	
+
 	set_variable = { EAI_airbase_slot_score = 10 }
 	subtract_from_variable = { EAI_airbase_slot_score = building_level@air_base }
 
 	if = { limit = { EAI_airbase_priority = yes } multiply_variable = { EAI_airbase_slot_score = 4 } }
 
 	if = { limit = { any_neighbor_state = { CONTROLLER = { has_war_with = ROOT } } } multiply_variable = { EAI_airbase_slot_score = 1.5 } }
-	
+
 	if = { limit = { air_base > 0 } multiply_variable = { EAI_airbase_slot_score = 1.25 } }
 
 	if = {
-		limit = { 
-			any_of_scopes = { array = ROOT.enemies 
-				any_of_scopes = { array = controlled_states 
-					check_variable = { PREV.PREV.distance_to@THIS < 400 } 
-				} 
-			} 
-		} 
-		
-		multiply_variable = { EAI_airbase_slot_score = 2 } 
+		limit = {
+			any_of_scopes = { array = ROOT.enemies
+				any_of_scopes = { array = controlled_states
+					check_variable = { PREV.PREV.distance_to@THIS < 400 }
+				}
+			}
+		}
+
+		multiply_variable = { EAI_airbase_slot_score = 2 }
 	}
 }
 
@@ -854,7 +854,7 @@ EAI_get_antiair_slot_scores = {
 	set_temp_variable = { EAI_has_antiair_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { EAI_available_AA = yes }
 
 			EAI_get_antiair_slot_score = yes
@@ -871,7 +871,7 @@ EAI_get_antiair_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_antiair_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -888,7 +888,7 @@ EAI_get_antiair_slot_scores = {
 	}
 }
 EAI_get_antiair_slot_score = {
-	
+
 	set_variable = { EAI_antiair_slot_score = 5 }
 	subtract_from_variable = { EAI_antiair_slot_score = building_level@anti_air_building }
 
@@ -923,7 +923,7 @@ EAI_get_mil_to_civ_conversion_slot_scores = {
 	set_temp_variable = { EAI_has_mil_to_civ_conversion_slot_scores = 1 }
 
 	for_each_scope_loop = { array = controlled_states
-		
+
 		if = { limit = { check_variable = { building_level@arms_factory > 0 } }
 
 			EAI_get_mil_to_civ_conversion_slot_score = yes
@@ -940,7 +940,7 @@ EAI_get_mil_to_civ_conversion_slot_scores = {
 			}
 
 			if = { limit = { check_variable = { break = 0 } }
-				
+
 				add_to_temp_array = { array = EAI_mil_to_civ_conversion_slot_scores value = THIS.id }
 			}
 			else = { set_temp_variable = { break = 0 } }
@@ -983,7 +983,7 @@ EAI_queue_CIC = {
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
+		if = {
 			limit = {
 				EAI_available_SHARED = yes
 				infrastructure > 3
@@ -1002,13 +1002,13 @@ EAI_queue_CIC = {
 EAI_queue_CIC_2 = {
 
 	if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 		EAI_get_shared_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
+		if = {
 			limit = {
 				EAI_available_SHARED = yes
 			}
@@ -1023,14 +1023,14 @@ EAI_queue_CIC_2 = {
 EAI_queue_MIC = {
 
 	if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 		EAI_get_shared_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
-			limit = { 
+		if = {
+			limit = {
 				EAI_available_SHARED = yes
 				infrastructure > 3
 			}
@@ -1048,14 +1048,14 @@ EAI_queue_MIC = {
 EAI_queue_MIC_2 = {
 
 	if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 		EAI_get_shared_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
-			limit = { 
+		if = {
+			limit = {
 				EAI_available_SHARED = yes
 			}
 
@@ -1069,15 +1069,15 @@ EAI_queue_MIC_2 = {
 EAI_queue_NIC = {
 
 	if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 		EAI_get_shared_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
-			limit = { 
-				is_coastal = yes 
+		if = {
+			limit = {
+				is_coastal = yes
 				EAI_available_SHARED = yes
 			}
 
@@ -1096,15 +1096,15 @@ EAI_queue_NIC = {
 EAI_queue_REF = {
 
 	if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 		EAI_get_shared_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_shared_slot_scores
 
-		if = { 
-			limit = { 
-				is_core_of = ROOT 
+		if = {
+			limit = {
+				is_core_of = ROOT
 				EAI_available_REF = yes
 				EAI_available_SHARED = yes
 			}
@@ -1115,20 +1115,20 @@ EAI_queue_REF = {
 	}
 
 	if = { # replace MIC if slots are maxed out
-		limit = { 
+		limit = {
 			check_variable = { break = 0 }
-			OR = { has_tech = concentrated_industry5 has_tech = dispersed_industry5 } 
+			OR = { has_tech = concentrated_industry5 has_tech = dispersed_industry5 }
 		}
 
 		for_each_scope_loop = { array = EAI_shared_slot_scores
 
-			if = { 
-				limit = { 
-					is_core_of = ROOT 
+			if = {
+				limit = {
+					is_core_of = ROOT
 					arms_factory > 0
 					synthetic_refinery < 3
 					NOT = { has_state_flag = EAI_mic_replaced_with_ref }
-					ROOT = { has_full_control_of_state = PREV } 
+					ROOT = { has_full_control_of_state = PREV }
 				}
 
 				remove_building = { type = arms_factory level = 1 }
@@ -1137,7 +1137,7 @@ EAI_queue_REF = {
 					EAI_add_REF = yes
 					set_temp_variable = { break = 1 }
 
-					if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSTRUCTION: replacing MIC with REF in [This.GetName]" } 
+					if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | CONSTRUCTION: replacing MIC with REF in [This.GetName]" }
 				}
 				else = { add_building_construction = { type = arms_factory level = 1 instant_build = yes } }
 			}
@@ -1151,15 +1151,15 @@ EAI_queue_SILO = {
 	if = { limit = { has_tech = fuel_silos }
 
 		if = { limit = { check_variable = { EAI_has_shared_slot_scores = 0 } }
-	
+
 			EAI_get_shared_slot_scores = yes
 		}
 
 		for_each_scope_loop = { array = EAI_shared_slot_scores
 
-			if = { 
-				limit = { 
-					is_core_of = ROOT 
+			if = {
+				limit = {
+					is_core_of = ROOT
 					EAI_available_SILO = yes
 					EAI_available_SHARED = yes
 				}
@@ -1175,13 +1175,13 @@ EAI_queue_SILO = {
 EAI_queue_INF = {
 
 	if = { limit = { check_variable = { EAI_has_infrastructure_slot_scores = 0 } }
-	
+
 		EAI_get_infrastructure_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_infrastructure_slot_scores
 
-		if = { 
+		if = {
 			limit = {
 				EAI_available_INF = yes
 				NOT = { has_state_flag = EAI_inf_queued }
@@ -1198,15 +1198,15 @@ EAI_queue_INF = {
 EAI_queue_INF_resource = {
 
 	if = { limit = { check_variable = { EAI_has_resource_slot_scores = 0 } }
-	
+
 		EAI_get_resource_slot_scores = yes
 	}
 
 	if = { limit = { has_country_flag = EAI_construction_project_active }
-	
+
 		for_each_scope_loop = { array = EAI_resource_slot_scores
 
-			if = { 
+			if = {
 				limit = {
 					EAI_available_INF = yes
 				}
@@ -1233,7 +1233,7 @@ EAI_priority_queue_INF_resource = {
 
 		for_each_scope_loop = { array = EAI_resource_slot_scores
 
-			if = { 
+			if = {
 				limit = {
 					EAI_available_INF = yes
 				}
@@ -1257,7 +1257,7 @@ EAI_queue_RADAR = {
 
 		for_each_scope_loop = { array = EAI_radar_slot_scores
 
-			if = { 
+			if = {
 				limit = {
 					EAI_available_RADAR = yes
 					NOT = { has_state_flag = EAI_radar_queued }
@@ -1275,13 +1275,13 @@ EAI_queue_RADAR = {
 EAI_queue_AIR = {
 
 	if = { limit = { check_variable = { EAI_has_airbase_slot_scores = 0 } }
-	
+
 		EAI_get_airbase_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_airbase_slot_scores
 
-		if = { 
+		if = {
 			limit = {
 				EAI_available_AIR = yes
 			}
@@ -1296,13 +1296,13 @@ EAI_queue_AIR = {
 EAI_queue_AA = {
 
 	if = { limit = { check_variable = { EAI_has_antiair_slot_scores = 0 } }
-	
+
 		EAI_get_antiair_slot_scores = yes
 	}
 
 	for_each_scope_loop = { array = EAI_antiair_slot_scores
 
-		if = { 
+		if = {
 			limit = {
 				EAI_available_AA = yes
 				NOT = { has_state_flag = EAI_aa_queued }
@@ -1321,7 +1321,7 @@ EAI_priority_convert_MIC_to_CIC = {
 	if = { limit = { NOT = { has_country_flag = EAI_construction_project_active } }
 
 		if = { limit = { check_variable = { EAI_has_mil_to_civ_conversion_slot_scores = 0 } }
-		
+
 			EAI_get_mil_to_civ_conversion_slot_scores = yes
 		}
 
@@ -1329,7 +1329,7 @@ EAI_priority_convert_MIC_to_CIC = {
 
 		for_each_scope_loop = { array = EAI_mil_to_civ_conversion_slot_scores
 
-			if = { 
+			if = {
 				limit = {
 					check_variable = { building_level@arms_factory > 0 }
 				}
@@ -1345,7 +1345,7 @@ EAI_priority_convert_MIC_to_CIC = {
 ######################################################
 
 # for building INF to increase supply
-EAI_queue_INF_supply = { 
+EAI_queue_INF_supply = {
 	if = {
 		limit = {
 			any_of_scopes = { array = controlled_states
@@ -1389,15 +1389,15 @@ EAI_queue_INF_supply = {
 
 # build forts on victory points in a state
 EAI_queue_FORT_CITIES = {
-	
+
 	random_scope_in_array = { array = controlled_states
 		limit = {
-			is_in_home_area = yes 
-			EAI_has_city = yes 
+			is_in_home_area = yes
+			EAI_has_city = yes
 			check_variable = { EAI_forts_constructed_on_cities_@ROOT < 3 }
-		} 
-		
-		EAI_add_FORT_CITY = yes 
+		}
+
+		EAI_add_FORT_CITY = yes
 	}
 }
 
@@ -1405,14 +1405,14 @@ EAI_queue_FORT_CITIES = {
 EAI_queue_FORT_BORDER = {
 
 	random_scope_in_array = { array = controlled_states
-		limit = { 
-			is_controlled_by = ROOT 
-			NOT = { EAI_no_border = yes } 
-			is_in_home_area = yes 
+		limit = {
+			is_controlled_by = ROOT
+			NOT = { EAI_no_border = yes }
+			is_in_home_area = yes
 			check_variable = { EAI_forts_constructed_on_border_@ROOT < 3 }
-		} 
-		
-		EAI_add_FORT_BORDER = yes 
+		}
+
+		EAI_add_FORT_BORDER = yes
 	}
 }
 
@@ -1420,15 +1420,15 @@ EAI_queue_FORT_BORDER = {
 EAI_queue_CFORT_BASES = {
 
 	random_scope_in_array = { array = controlled_states
-		limit = { 
-			is_controlled_by = ROOT 
-			is_coastal = yes 
-			is_in_home_area = yes 
-			EAI_has_naval_base = yes 
+		limit = {
+			is_controlled_by = ROOT
+			is_coastal = yes
+			is_in_home_area = yes
+			EAI_has_naval_base = yes
 			check_variable = { EAI_forts_constructed_on_bases_@ROOT < 3 }
-		} 
-			
-		EAI_add_CFORT_BASE = yes 
+		}
+
+		EAI_add_CFORT_BASE = yes
 	}
 }
 
@@ -1436,14 +1436,14 @@ EAI_queue_CFORT_BASES = {
 EAI_queue_CFORT_COAST = {
 
 	random_scope_in_array = { array = controlled_states
-		limit = { 
-			is_controlled_by = ROOT 
-			is_coastal = yes 
-			is_in_home_area = yes 
+		limit = {
+			is_controlled_by = ROOT
+			is_coastal = yes
+			is_in_home_area = yes
 			check_variable = { EAI_forts_constructed_on_coast_@ROOT < 3 }
-		} 
-			
-		EAI_add_CFORT_COAST = yes 
+		}
+
+		EAI_add_CFORT_COAST = yes
 	}
 }
 

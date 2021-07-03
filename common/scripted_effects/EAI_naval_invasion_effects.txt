@@ -5,10 +5,10 @@
 ### manages creating, cancelling, coordinating the AI's naval invasions
 
 EAI_update_naval_invasion_target = {
-	
-	if = { 
-		limit = { 
-			has_war = yes 
+
+	if = {
+		limit = {
+			has_war = yes
 
 			NOT = { # diplo decisions that blocks ally invasions
 				any_country = {
@@ -19,63 +19,63 @@ EAI_update_naval_invasion_target = {
 			}
 		}
 
-		every_country = { limit = { EAI_naval_invade = yes } 
-		
+		every_country = { limit = { EAI_naval_invade = yes }
+
 			add_to_temp_array = { array = updated_naval_invasion_targets value = THIS.id }
 		}
 
 		###################################################################
 		#	cancel any invalid invasions
 		###################################################################
-		
-		if = { 
-			limit = { 
-				has_variable = EAI_naval_invasion_target 
+
+		if = {
+			limit = {
+				has_variable = EAI_naval_invasion_target
 				NOT = { # dont cancel player coordinated invasion targets
-					var:EAI_coordinated_naval_invasion_iniatiator = { 
-						var:EAI_coordinated_naval_invasion_target = { check_variable = { THIS.id = PREV.PREV.EAI_naval_invasion_target } } 
-					} 
+					var:EAI_coordinated_naval_invasion_iniatiator = {
+						var:EAI_coordinated_naval_invasion_target = { check_variable = { THIS.id = PREV.PREV.EAI_naval_invasion_target } }
+					}
 				}
 				var:EAI_naval_invasion_target = { EAI_stop_naval_invasion = yes }
 			}
-			
+
 			if = {
 				limit = {
-					any_enemy_country = { 
+					any_enemy_country = {
 						is_in_array = { array = updated_naval_invasion_targets value = THIS.id }
 						NOT = { has_country_flag = EAI_naval_invasion_from_@ROOT }
 					}
-				} 
-				
+				}
+
 				var:EAI_naval_invasion_target = {
 					set_country_flag = { flag = EAI_stop_invasions_@ROOT value = 1 days = 90 }
-					if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: stopping invasion against [This.GetName]" } 
+					if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: stopping invasion against [This.GetName]" }
 				}
 			}
-			
+
 			EAI_clear_naval_invasion_operation = yes
 		}
-		
+
 		###################################################################
 		#	find a target to invade
 		###################################################################
-		
+
 		if = {
 			limit = { # basic requirements for invasions
 				NOT = { surrender_progress > 0.2 }
 				OR = { has_tech = transport has_tech = mtg_transport }
 				has_manpower > 50000
 
-				OR = { 
+				OR = {
 					NOT = { # safe at home
 						any_of_scopes = { array = owned_states
-						
+
 							is_controlled_by = ROOT
 							is_in_home_area = yes
-							
+
 							OR = {
 								NOT = { is_fully_controlled_by = ROOT }
-								
+
 								any_neighbor_state = {
 
 									CONTROLLER = { has_war_with = ROOT }
@@ -88,7 +88,7 @@ EAI_update_naval_invasion_target = {
 						alliance_naval_strength_ratio > 2
 						alliance_strength_ratio > 2
 					}
-					
+
 					# exception for historical invasions
 					any_of_scopes = { array = updated_naval_invasion_targets EAI_historical_invasion = yes }
 				}
@@ -97,16 +97,16 @@ EAI_update_naval_invasion_target = {
 			###################################################################
 			#	a player has initiated a coordinated invasion - support it
 			###################################################################
-		
-			if = { 
-				limit = { 
+
+			if = {
+				limit = {
 					any_other_country = {
 						EAI_PREV_on_same_side_with_THIS = yes
 						has_country_flag = EAI_coordinated_naval_invasion
 						set_temp_variable = { coordinated_naval_invasion_iniatiator = THIS.id }
 					}
 				}
-				
+
 				var:coordinated_naval_invasion_iniatiator = {
 
 					var:EAI_coordinated_naval_invasion_target = {
@@ -118,20 +118,20 @@ EAI_update_naval_invasion_target = {
 								EAI_create_naval_invasion_operation = yes
 							}
 
-							if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (player initiated)" } 
+							if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (player initiated)" }
 						}
 					}
 				}
 			}
-			
+
 			###################################################################
 			#	a faction leader AI is currently invading somewhere - support it
 			###################################################################
-			
+
 			else_if = {
 				limit = {
 					NOT = { is_faction_leader = yes }
-					
+
 					any_enemy_country = {
 
 						any_enemy_country = {
@@ -145,7 +145,7 @@ EAI_update_naval_invasion_target = {
 							}
 							PREV = { has_country_flag = EAI_naval_invasion_from_@PREV }
 						}
-						
+
 						NOT = { has_country_flag = EAI_stop_invasions_@ROOT }
 
 						is_major = yes
@@ -158,33 +158,33 @@ EAI_update_naval_invasion_target = {
 
 					if = { limit = { NOT = { has_country_flag = EAI_naval_invasion_from_@ROOT } }
 
-						ROOT = { 
+						ROOT = {
 							EAI_clear_naval_invasion_operation  = yes
 							EAI_create_naval_invasion_operation = yes
 						}
 
-						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (faction leader)" } 
+						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (faction leader)" }
 					}
 				}
 			}
-			
+
 			###################################################################
 			#	the strongest faction member is currently invading somewhere - support it
 			###################################################################
-			
+
 			else_if = {
 				limit = {
 					has_army_manpower = { size > 250000 }
-				
+
 					OR = {
 						is_faction_leader = no
 						has_capitulated = yes
 					}
-				
+
 					any_enemy_country = {
 
 						any_enemy_country = {
-							
+
 							is_ai = yes
 							NOT = { tag = ROOT }
 							is_in_faction_with = ROOT
@@ -195,7 +195,7 @@ EAI_update_naval_invasion_target = {
 							}
 							PREV = { has_country_flag = EAI_naval_invasion_from_@PREV }
 						}
-						
+
 						NOT = { has_country_flag = EAI_stop_invasions_@ROOT }
 
 						set_temp_variable = { strongest_member_invasion_target = THIS.id }
@@ -206,31 +206,31 @@ EAI_update_naval_invasion_target = {
 
 					if = { limit = { NOT = { has_country_flag = EAI_naval_invasion_from_@ROOT } }
 
-						ROOT = { 
+						ROOT = {
 							EAI_clear_naval_invasion_operation  = yes
 							EAI_create_naval_invasion_operation = yes
 						}
 
-						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (strongest faction leader)" } 
+						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (strongest faction leader)" }
 					}
 				}
 			}
-			
+
 			###################################################################
 			#	no invasion underway - see if anything can be invaded
 			###################################################################
-		
+
 			else_if = { limit = { NOT = { has_variable = EAI_naval_invasion_target } }
-	
+
 				### historical invasions
 
 				if = { limit = { any_of_scopes = { array = updated_naval_invasion_targets EAI_historical_invasion = yes  } }
-					
+
 					random_scope_in_array = { array = updated_naval_invasion_targets limit = { EAI_historical_invasion = yes }
-						
+
 						ROOT = { EAI_create_naval_invasion_operation = yes }
-						
-						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (historical)" } 
+
+						if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (historical)" }
 					}
 				}
 
@@ -242,11 +242,11 @@ EAI_update_naval_invasion_target = {
 
 					for_each_scope_loop = { array = updated_naval_invasion_targets
 
-						for_each_scope_loop = { array = core_states 
-						
+						for_each_scope_loop = { array = core_states
+
 							if = { limit = { is_controlled_by = PREV }
 
-								for_each_scope_loop = { array = ROOT.core_states 
+								for_each_scope_loop = { array = ROOT.core_states
 
 									if = { limit = { is_controlled_by = ROOT check_variable = { EAI_invasion_min_distance > distance_to@PREV } }
 
@@ -260,11 +260,11 @@ EAI_update_naval_invasion_target = {
 
 					if = { limit = { NOT = { check_variable = { EAI_invasion_target_country = 0 } } }
 
-						var:EAI_invasion_target_country = { 
+						var:EAI_invasion_target_country = {
 
 							ROOT = { EAI_create_naval_invasion_operation = yes }
 
-							if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (nearest)" } 
+							if = { limit = { ROOT = { has_country_flag = EAI_logging } } log = "[GetYear] [GetMonth] | AI | [Root.GetName] | INVASION: invading [This.GetName] (nearest)" }
 						}
 					}
 				}
@@ -281,17 +281,17 @@ EAI_update_naval_invasion_target = {
 
 EAI_create_naval_invasion_operation = { # THIS = INVADER, PREV = TARGET
 
-	set_country_flag = { flag = EAI_naval_invasion_min_duration value = 1 days = 60 }	
+	set_country_flag = { flag = EAI_naval_invasion_min_duration value = 1 days = 60 }
 	set_variable = { EAI_naval_invasion_target = PREV.id }
 
 	for_each_scope_loop = { array = PREV.controlled_states
-	
+
 		if = { limit = { is_coastal = yes }
-		
+
 			add_to_array = { array = PREV.EAI_naval_invasion_target_states value = THIS.id }
 		}
 	}
-	
+
 	PREV = { set_country_flag = { flag = EAI_naval_invasion_from_@PREV value = 1 days = 180 } }
 }
 
@@ -300,10 +300,10 @@ EAI_clear_naval_invasion_operation = { # THIS = INVADER
 	if = { limit = { has_variable = EAI_naval_invasion_target }
 
 		var:EAI_naval_invasion_target = {
-		
-			clr_country_flag = EAI_naval_invasion_from_@PREV 
+
+			clr_country_flag = EAI_naval_invasion_from_@PREV
 		}
-		
+
 		clear_array = EAI_naval_invasion_target_states
 		clr_country_flag = EAI_naval_invasion_min_duration
 		clear_variable = EAI_naval_invasion_target
