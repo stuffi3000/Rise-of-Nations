@@ -29,36 +29,36 @@ united_nations_reset_all_votes = {
 	clr_global_flag = active_un_resolution_approvals
 	clr_global_flag = active_un_resolution_refusals
 	clr_global_flag = active_un_resolution_vetoes
-	
+
 	united_nations_count_council_members = yes
-	
+
 	#Used by both P and NP members to keep track of given votes.
 	set_global_flag = {
 		flag = active_un_resolution_approvals
 		value = 0
 	}
-	
+
 	#Yes!
 	#Used by both P and NP members.
 	set_global_flag = {
 		flag = active_un_resolution_approvals
 		value = 0
 	}
-	
+
 	#Abstention
 	#Used by both P and NP members.
 	set_global_flag = {
 		flag = active_un_resolution_abstentions
 		value = 0
 	}
-	
+
 	#No!
 	#Used only by NP members.
 	set_global_flag = {
 		flag = active_un_resolution_refusals
 		value = 0
 	}
-	
+
 	#No! Go fuck yourself! Veto!
 	#Used only by P members.
 	set_global_flag = {
@@ -78,21 +78,21 @@ united_nations_resolution_preparation = {
 
 	#Make sure to clean up all votes.
 	united_nations_reset_all_votes = yes
-	
+
 	#Make sure to clean up all resolutions that might be active for some reason.
 	#DONT FORGET TO SET THE ACTIVE RESOLUTION AFTER THE resolution_preparation STEP! NOT BEFORE!
 	united_nations_clear_all_resolutions = yes
-	
+
 	#Tell the game that the UN dont get another resolution right now.
 	set_global_flag = united_nations_has_active_resolution
-	
+
 }
 
 united_nations_determine_resolution_results = {
 	clr_global_flag = active_un_resolution_approvals_has_succeeded
 	clr_global_flag = active_un_resolution_approvals_has_failed
 	clr_global_flag = active_un_resolution_approvals_has_been_vetoed
-	
+
 	if = {
 		limit = {
 			#If there is even 1 veto, cancel this right now.
@@ -100,15 +100,15 @@ united_nations_determine_resolution_results = {
 				flag = active_un_resolution_vetoes value > 0
 			}
 		}
-		
+
 		set_global_flag = active_un_resolution_approvals_has_been_vetoed
-		
+
 		else = {
 			if = {
 				#This value can sadly not be edited for now. So 9 or more always means victory.
 				limit = { has_global_flag = { flag = active_un_resolution_approvals value > 8 } }
 				set_global_flag = active_un_resolution_approvals_has_succeeded
-				
+
 				#If the resolution didnt get vetoed but was also not successful, it did fail.
 				else = {
 					set_global_flag = active_un_resolution_approvals_has_failed
@@ -116,69 +116,69 @@ united_nations_determine_resolution_results = {
 			}
 		}
 	}
-	
+
 	#Now that that is determined (all votes given and result determined), we can go for the results.
-	
+
 	#Success Effects
 	if = {
 		limit = {
 			has_global_flag = active_un_resolution_approvals_has_succeeded
 		}
-		
+
 		every_country = {
 			limit = { is_ai = no }
 			news_event = news.106
 		}
-		
+
 		if = {
 			limit = { has_global_flag = united_nations_AR_un_resolution_1368 }
 		}
 	}
-	
+
 	#Failure Effects
 	if = {
 		limit = {
 			has_global_flag = active_un_resolution_approvals_has_failed
 		}
-		
+
 		every_country = {
 			limit = { is_ai = no }
 			news_event = news.107
 		}
-		
+
 		if = {
 			limit = { has_global_flag = united_nations_AR_un_resolution_1368 }
 		}
 	}
-	
+
 	#Veto Effects
 	if = {
 		limit = {
 			has_global_flag = active_un_resolution_approvals_has_been_vetoed
 		}
-		
+
 		every_country = {
 			limit = { is_ai = no }
 			news_event = news.108
 		}
-		
-		if = { 
+
+		if = {
 			limit = { has_global_flag = united_nations_AR_un_resolution_1368 }
 		}
 	}
-	
+
 	#And we are finally done.
 	clr_global_flag = united_nations_has_active_resolution
 }
 
 united_nations_finish_up_vote_if_necessary = {
-	
+
 	#Check if active_un_resolution_overall_votes is greater than active_un_resolution_number_of_voters by increasing active_un_resolution_overall_votes by 1 temporarily.
 	modify_global_flag = {
 		flag = active_un_resolution_overall_votes
 		value = 1
 	}
-	
+
 	#See if it is true. If the number of active_un_resolution_number_of_voters is lower than the threshold indicated in the line of active_un_resolution_number_of_voters
 	#and the temporarily increased active_un_resolution_votes at least equal to said threshold (~higher than active_un_resolution_number_of_voters), they were previously
 	#equal in number, meaning that all eligible voters cast their votes.
@@ -270,7 +270,7 @@ united_nations_finish_up_vote_if_necessary = {
 		}
 		united_nations_determine_resolution_results = yes
 	}
-		
+
 	#Reverse the previously applied change to make sure the increase of the integer stays temporary.
 	modify_global_flag = {
 		flag = active_un_resolution_overall_votes
@@ -503,7 +503,7 @@ UNSC_cleanup_effect = {
 
 create_united_nations_effect = {
 	set_global_flag = united_nations_created
-	
+
 	if = {
 		limit = {
 			has_game_rule = {
@@ -1703,7 +1703,7 @@ create_united_nations_effect = {
 							has_idea = RON_United_Nations
 						}
 					}
-					CHI = { 
+					CHI = {
 						remove_ideas = RON_United_Nations
 						clr_country_flag = member_of_united_nations
 					}
@@ -1754,7 +1754,7 @@ create_united_nations_effect = {
 				if = {
 					limit = {
 						country_exists = GER
-						NOT = { 
+						NOT = {
 							country_exists = FRG
 							country_exists = WGR
 							country_exists = DDR
@@ -2409,12 +2409,12 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council
 					#if = {
-					#	limit = {
-					#		has_global_flag = league_of_nations_map_mode_active
-					#	}
-					#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
-					#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
-					#}
+						#	limit = {
+							#		has_global_flag = league_of_nations_map_mode_active
+							#	}
+						#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
+						#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
+						#}
 				}
 				SOV = {
 					set_country_flag = united_nations_permanent_unsc_seat
@@ -2447,12 +2447,12 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council
 					#if = {
-					#	limit = {
-					#		has_global_flag = league_of_nations_map_mode_active
-					#	}
-					#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
-					#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
-					#}
+						#	limit = {
+							#		has_global_flag = league_of_nations_map_mode_active
+							#	}
+						#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
+						#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
+						#}
 				}
 				SOV = {
 					set_country_flag = united_nations_permanent_unsc_seat
@@ -2491,12 +2491,12 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council_NP
 					#if = {
-					#	limit = {
-					#		has_global_flag = league_of_nations_map_mode_active
-					#	}
-					#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
-					#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
-					#}
+						#	limit = {
+							#		has_global_flag = league_of_nations_map_mode_active
+							#	}
+						#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
+						#	set_cosmetic_tag = LEAGUE_OF_NATIONS_LEADER_CT
+						#}
 				}
 				MEX = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
@@ -6458,7 +6458,7 @@ create_united_nations_effect = {
 					}
 				}
 			}
-			
+
 			set_variable = { global.days_til_next_united_nations_half_seat_election = 365 }
 			set_variable = { global.last_unsc_election_year = global.year }
 			if = {
@@ -6616,28 +6616,28 @@ create_united_nations_effect = {
 					set_country_flag = united_nations_opinion_set_for_@PREV
 				}
 			}
-		
+
 			# Set Focus at start:
 			#if = {
-			#	limit = {
-			#		date > 1939.08.13
-			#	}
-			#	set_global_flag = league_of_nations_focus_1_selected
-			#	set_global_flag = league_of_nations_focus_1_completed
-			#	set_variable = { global.frame_of_focus_links_1 = 1 }
-			#	random_country = {
-			#		limit = {
-			#			has_country_flag = leader_of_league_of_nations
-			#		}
-			#		add_political_power = 75
-			#	}
-			#	every_country = {
-			#		limit = {
-			#			has_country_flag = member_of_league_of_nations
-			#		}
-			#		add_ideas = league_of_nations_focus_idea_1
-			#	}
-			#}
+				#	limit = {
+					#		date > 1939.08.13
+					#	}
+				#	set_global_flag = league_of_nations_focus_1_selected
+				#	set_global_flag = league_of_nations_focus_1_completed
+				#	set_variable = { global.frame_of_focus_links_1 = 1 }
+				#	random_country = {
+					#		limit = {
+						#			has_country_flag = leader_of_league_of_nations
+						#		}
+					#		add_political_power = 75
+					#	}
+				#	every_country = {
+					#		limit = {
+						#			has_country_flag = member_of_league_of_nations
+						#		}
+					#		add_ideas = league_of_nations_focus_idea_1
+					#	}
+				#}
 		}
 	}
 }
@@ -6660,132 +6660,132 @@ join_united_nations_effect = {
 			active = yes
 		}
 		#if = {
-		#	limit = {
-		#		has_global_flag = league_of_nations_focus_1_completed
-		#	}
-		#	add_ideas = league_of_nations_focus_idea_1
-		#}
+			#	limit = {
+				#		has_global_flag = league_of_nations_focus_1_completed
+				#	}
+			#	add_ideas = league_of_nations_focus_idea_1
+			#}
 		#if = {
-		#	limit = {
-		#		has_global_flag = league_of_nations_focus_2_completed
-		#	}
-		#	add_ideas = league_of_nations_focus_idea_2
-		#}
+			#	limit = {
+				#		has_global_flag = league_of_nations_focus_2_completed
+				#	}
+			#	add_ideas = league_of_nations_focus_idea_2
+			#}
 		#if = {
-		#	limit = {
-		#		has_global_flag = league_of_nations_focus_3_completed
-		#	}
-		#	add_ideas = league_of_nations_focus_idea_3
-		#}
+			#	limit = {
+				#		has_global_flag = league_of_nations_focus_3_completed
+				#	}
+			#	add_ideas = league_of_nations_focus_idea_3
+			#}
 		#if = {
-		#	limit = {
-		#		any_other_country = {
-		#			check_variable = { num_of_active_league_of_nations_trade_sanctions > 0 }
-		#		}
-		#	}
-		#	every_other_country = {
-		#		limit = {
-		#			check_variable = { num_of_active_league_of_nations_trade_sanctions > 0 }
-		#		}
-		#		if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 1 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_1
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 2 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_2
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 3 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_3
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 4 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_4
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 5 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_5
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 6 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_6
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 7 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_7
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 8 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_8
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 9 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_9
-		#			}
-		#		}
-		#		else_if = {
-		#			limit = {
-		#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 10 }
-		#			}
-		#			reverse_add_opinion_modifier = {
-		#				target = PREV
-		#				modifier = league_of_nations_trade_sanction_modifier_10
-		#			}
-		#		}
-		#	}
-		#}
+			#	limit = {
+				#		any_other_country = {
+					#			check_variable = { num_of_active_league_of_nations_trade_sanctions > 0 }
+					#		}
+				#	}
+			#	every_other_country = {
+				#		limit = {
+					#			check_variable = { num_of_active_league_of_nations_trade_sanctions > 0 }
+					#		}
+				#		if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 1 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_1
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 2 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_2
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 3 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_3
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 4 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_4
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 5 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_5
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 6 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_6
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 7 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_7
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 8 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_8
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 9 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_9
+						#			}
+					#		}
+				#		else_if = {
+					#			limit = {
+						#				check_variable = { num_of_active_league_of_nations_trade_sanctions = 10 }
+						#			}
+					#			reverse_add_opinion_modifier = {
+						#				target = PREV
+						#				modifier = league_of_nations_trade_sanction_modifier_10
+						#			}
+					#		}
+				#	}
+			#}
 		#if = {
-		#	limit = {
-		#		has_global_flag = league_of_nations_map_mode_active
-		#	}
-		#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
-		#	set_cosmetic_tag = LEAGUE_OF_NATIONS_MEMBER_CT
-		#}
+			#	limit = {
+				#		has_global_flag = league_of_nations_map_mode_active
+				#	}
+			#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
+			#	set_cosmetic_tag = LEAGUE_OF_NATIONS_MEMBER_CT
+			#}
 	}
 }
 
@@ -6803,107 +6803,107 @@ leave_united_nations_effect = {
 		remove_from_array = { global.members_of_united_nations_array = THIS.id }
 		remove_ideas = RON_United_Nations
 		#if = {
-		#	limit = {
-		#		has_idea = league_of_nations_focus_idea_1
-		#	}
-		#	remove_ideas = league_of_nations_focus_idea_1
-		#}
+			#	limit = {
+				#		has_idea = league_of_nations_focus_idea_1
+				#	}
+			#	remove_ideas = league_of_nations_focus_idea_1
+			#}
 		#if = {
-		#	limit = {
-		#		has_idea = league_of_nations_focus_idea_2
-		#	}
-		#	remove_ideas = league_of_nations_focus_idea_2
-		#}
+			#	limit = {
+				#		has_idea = league_of_nations_focus_idea_2
+				#	}
+			#	remove_ideas = league_of_nations_focus_idea_2
+			#}
 		#if = {
-		#	limit = {
-		#		has_idea = league_of_nations_focus_idea_3
-		#	}
-		#	remove_ideas = league_of_nations_focus_idea_3
-		#}
+			#	limit = {
+				#		has_idea = league_of_nations_focus_idea_3
+				#	}
+			#	remove_ideas = league_of_nations_focus_idea_3
+			#}
 		#if = {
-		#	limit = {
-		#		has_country_flag = voted_in_noconfidence_vote
-		#	}
-		#	clr_country_flag = voted_in_noconfidence_vote
-		#	subtract_from_variable = { global.num_of_league_of_nations_noconfidence_votes = 1 }
-		#}
+			#	limit = {
+				#		has_country_flag = voted_in_noconfidence_vote
+				#	}
+			#	clr_country_flag = voted_in_noconfidence_vote
+			#	subtract_from_variable = { global.num_of_league_of_nations_noconfidence_votes = 1 }
+			#}
 		#if = {
-		#	limit = {
-		#		has_country_flag = league_of_nations_voted_yes
-		#	}
-		#	clr_country_flag = league_of_nations_voted_yes
-		#	subtract_from_variable = { global.num_of_yes_votes_in_league_of_nations_voting = 1 }
-		#	if = {
-		#		limit = {
-		#			OR = {
-		#				has_country_flag = leader_of_league_of_nations
-		#				has_country_flag = was_leader_of_league_of_nations
-		#			}
-		#		}
-		#		subtract_from_variable = { global.num_of_yes_votes_in_league_of_nations_voting = 2 }
-		#	}
-		#	if = {
-		#		limit = {
-		#			has_country_flag = league_of_nations_voted_sanction_type_trade
-		#		}
-		#		clr_country_flag = league_of_nations_voted_sanction_type_trade
-		#		subtract_from_variable = { global.num_of_trade_sanction_votes_in_league_of_nations_voting = 1 }
-		#	}
-		#	if = {
-		#		limit = {
-		#			has_country_flag = league_of_nations_voted_sanction_type_war
-		#		}
-		#		clr_country_flag = league_of_nations_voted_sanction_type_war
-		#		subtract_from_variable = { global.num_of_war_votes_in_league_of_nations_voting = 1 }
-		#	}
-		#	if = {
-		#		limit = {
-		#			has_country_flag = league_of_nations_voted_sanction_type_kick_out_of_league_of_nations
-		#		}
-		#		clr_country_flag = league_of_nations_voted_sanction_type_kick_out_of_league_of_nations
-		#		subtract_from_variable = { global.num_of_kick_out_of_league_of_nations_votes_in_league_of_nations_voting = 1 }
-		#	}
-		#	if = {
-		#		limit = {
-		#			has_country_flag = league_of_nations_voted_sanction_type_form_coalition
-		#		}
-		#		clr_country_flag = league_of_nations_voted_sanction_type_form_coalition
-		#		subtract_from_variable = { global.num_of_form_coalition_votes_in_league_of_nations_voting = 1 }
-		#	}
-		#}
+			#	limit = {
+				#		has_country_flag = league_of_nations_voted_yes
+				#	}
+			#	clr_country_flag = league_of_nations_voted_yes
+			#	subtract_from_variable = { global.num_of_yes_votes_in_league_of_nations_voting = 1 }
+			#	if = {
+				#		limit = {
+					#			OR = {
+						#				has_country_flag = leader_of_league_of_nations
+						#				has_country_flag = was_leader_of_league_of_nations
+						#			}
+					#		}
+				#		subtract_from_variable = { global.num_of_yes_votes_in_league_of_nations_voting = 2 }
+				#	}
+			#	if = {
+				#		limit = {
+					#			has_country_flag = league_of_nations_voted_sanction_type_trade
+					#		}
+				#		clr_country_flag = league_of_nations_voted_sanction_type_trade
+				#		subtract_from_variable = { global.num_of_trade_sanction_votes_in_league_of_nations_voting = 1 }
+				#	}
+			#	if = {
+				#		limit = {
+					#			has_country_flag = league_of_nations_voted_sanction_type_war
+					#		}
+				#		clr_country_flag = league_of_nations_voted_sanction_type_war
+				#		subtract_from_variable = { global.num_of_war_votes_in_league_of_nations_voting = 1 }
+				#	}
+			#	if = {
+				#		limit = {
+					#			has_country_flag = league_of_nations_voted_sanction_type_kick_out_of_league_of_nations
+					#		}
+				#		clr_country_flag = league_of_nations_voted_sanction_type_kick_out_of_league_of_nations
+				#		subtract_from_variable = { global.num_of_kick_out_of_league_of_nations_votes_in_league_of_nations_voting = 1 }
+				#	}
+			#	if = {
+				#		limit = {
+					#			has_country_flag = league_of_nations_voted_sanction_type_form_coalition
+					#		}
+				#		clr_country_flag = league_of_nations_voted_sanction_type_form_coalition
+				#		subtract_from_variable = { global.num_of_form_coalition_votes_in_league_of_nations_voting = 1 }
+				#	}
+			#}
 		#if = {
-		#	limit = {
-		#		has_country_flag = league_of_nations_voted_no
-		#	}
-		#	clr_country_flag = league_of_nations_voted_no
-		#	subtract_from_variable = { global.num_of_no_votes_in_league_of_nations_voting = 1 }
-		#	if = {
-		#		limit = {
-		#			OR = {
-		#				has_country_flag = leader_of_league_of_nations
-		#				has_country_flag = was_leader_of_league_of_nations
-		#			}
-		#		}
-		#		subtract_from_variable = { global.num_of_no_votes_in_league_of_nations_voting = 2 }
-		#	}
-		#}
+			#	limit = {
+				#		has_country_flag = league_of_nations_voted_no
+				#	}
+			#	clr_country_flag = league_of_nations_voted_no
+			#	subtract_from_variable = { global.num_of_no_votes_in_league_of_nations_voting = 1 }
+			#	if = {
+				#		limit = {
+					#			OR = {
+						#				has_country_flag = leader_of_league_of_nations
+						#				has_country_flag = was_leader_of_league_of_nations
+						#			}
+					#		}
+				#		subtract_from_variable = { global.num_of_no_votes_in_league_of_nations_voting = 2 }
+				#	}
+			#}
 		#if = {
-		#	limit = {
-		#		OR = {
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_1
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_2
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_3
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_4
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_5
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_6
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_7
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_8
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_9
-		#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_10
-		#		}
-		#	}
-		#	country_event = { id = league_of_nations_events.20 }
-		#}
+			#	limit = {
+				#		OR = {
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_1
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_2
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_3
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_4
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_5
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_6
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_7
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_8
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_9
+					#			has_opinion_modifier = league_of_nations_trade_sanction_modifier_10
+					#		}
+				#	}
+			#	country_event = { id = league_of_nations_events.20 }
+			#}
 		if = {
 			limit = {
 				has_country_flag = united_nations_security_council_NP
@@ -6919,38 +6919,38 @@ leave_united_nations_effect = {
 			remove_ideas = RON_United_Nations_Security_Council
 		}
 		#if = {
-		#	limit = {
-		#		has_global_flag = league_of_nations_map_mode_active
-		#	}
-		#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
-		#	set_cosmetic_tag = NOT_LEAGUE_OF_NATIONS_MEMBER_CT
-		#}
+			#	limit = {
+				#		has_global_flag = league_of_nations_map_mode_active
+				#	}
+			#	save_cosmetic_tag_before_league_of_nations_map_mode = yes
+			#	set_cosmetic_tag = NOT_LEAGUE_OF_NATIONS_MEMBER_CT
+			#}
 		#if = {
-		#	limit = {
-		#		has_variable = elected_country_for_lon_leader
-		#	}
-		#	var:elected_country_for_lon_leader = {
-		#		subtract_from_variable = { num_of_votes_for_lon_election = 1 }
-		#	}
-		#	clear_variable = elected_country_for_lon_leader
-		#}
+			#	limit = {
+				#		has_variable = elected_country_for_lon_leader
+				#	}
+			#	var:elected_country_for_lon_leader = {
+				#		subtract_from_variable = { num_of_votes_for_lon_election = 1 }
+				#	}
+			#	clear_variable = elected_country_for_lon_leader
+			#}
 		#if = {
-		#	limit = {
-		#		any_other_country = {
-		#			has_variable = elected_country_for_lon_leader
-		#			check_variable = { elected_country_for_lon_leader = PREV.id }
-		#		}
-		#	}
-		#	every_other_country = {
-		#		limit = {
-		#			has_variable = elected_country_for_lon_leader
-		#			check_variable = { elected_country_for_lon_leader = PREV.id }
-		#		}
-		#		PREV = {
-		#			subtract_from_variable = { num_of_votes_for_lon_election = 1 }
-		#		}
-		#		clear_variable = elected_country_for_lon_leader
-		#	}
-		#}
+			#	limit = {
+				#		any_other_country = {
+					#			has_variable = elected_country_for_lon_leader
+					#			check_variable = { elected_country_for_lon_leader = PREV.id }
+					#		}
+				#	}
+			#	every_other_country = {
+				#		limit = {
+					#			has_variable = elected_country_for_lon_leader
+					#			check_variable = { elected_country_for_lon_leader = PREV.id }
+					#		}
+				#		PREV = {
+					#			subtract_from_variable = { num_of_votes_for_lon_election = 1 }
+					#		}
+				#		clear_variable = elected_country_for_lon_leader
+				#	}
+			#}
 	}
 }

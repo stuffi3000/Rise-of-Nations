@@ -1,19 +1,19 @@
 # this one is called for nightly tests
 ai_test_startup_effect = {
 	# if = {
-	# 	limit = { is_major = yes } 
-	# 	#enable crypto agency in ~2.5 years
-	# 	country_event = { id = generic_debug.42 days = 900 }
-	# }
+		# 	limit = { is_major = yes }
+		# 	#enable crypto agency in ~2.5 years
+		# 	country_event = { id = generic_debug.42 days = 900 }
+		# }
 	# if = {
-	# 	limit = { 
-	# 		OR = {
-	# 			tag = ENG
-	# 		}
-	# 	} 
-	# 	#give usa access to france & england in ~4 year
-	# 	country_event = { id = generic_debug.43 days = 1500 }
-	# }
+		# 	limit = {
+			# 		OR = {
+				# 			tag = ENG
+				# 		}
+			# 	}
+		# 	#give usa access to france & england in ~4 year
+		# 	country_event = { id = generic_debug.43 days = 1500 }
+		# }
 }
 
 # effects that starts with name d_ will be available as console command
@@ -29,11 +29,11 @@ d_collaboration = {
 	}
 	else = {
 		FROM = {
-			add_collaboration = { 
-				target = PREV 
-				value = args^0?0.1				
+			add_collaboration = {
+				target = PREV
+				value = args^0?0.1
 			}
-			
+
 			log = "Added [?args^0?0.1|H%] collaboration for [PREV.GetName]"
 		}
 	}
@@ -49,7 +49,7 @@ d_add_fake_armies = {
 		}
 		division_template = {
 			name = "Fake Intel Division"
-			
+
 			is_fake_intel_division = yes
 			is_locked = yes
 			regiments = {
@@ -58,7 +58,7 @@ d_add_fake_armies = {
 		}
 		set_country_flag = fake_intel_template_created
 	}
-	
+
 	# give it an id and store id & current date so it can be deleted later
 	if = {
 		limit = { NOT = { has_variable = fake_intel_id } }
@@ -70,7 +70,7 @@ d_add_fake_armies = {
 		fake_intel_ids_to_delete = id_to_set
 	}
 	set_variable = { num_days_for_fake_intel_id@var:id_to_set = global.num_days }
-	
+
 	# minimum of 0.25 of current armies or 24
 	set_temp_variable = { num_to_create = num_armies }
 	multiply_temp_variable = { num_to_create = 0.25 }
@@ -80,19 +80,19 @@ d_add_fake_armies = {
 		var = num_to_create
 		min = 24
 	}
-	
+
 	# create actual units
 	capital_scope = {
 		create_unit = {
-			division = "division_template = \"Fake Intel Division\" start_experience_factor = 0.5" 
+			division = "division_template = \"Fake Intel Division\" start_experience_factor = 0.5"
 			owner = PREV
 			count = num_to_create
 			id = id_to_set
 		}
 	}
-	
+
 	# will delete them after 90 days
 	country_event = { id = lar_fake_intel_units.1 days = 90 }
-	
+
 	log = "Done"
 }
