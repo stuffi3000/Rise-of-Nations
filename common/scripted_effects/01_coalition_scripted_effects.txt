@@ -4,13 +4,14 @@
 # 3. Social Democrat
 # 4. Progressive
 # 5. Social Liberal
-# 6. Market Liberal
-# 7. Conservative
-# 8. Islamist
-# 9. Monarchist
-# 10. Reactionary
-# 11. Nationalist
-# 12. Fascist
+# 6. Christian Democratic
+# 7. Market Liberal
+# 8. Conservative
+# 9. Islamist
+# 10. Monarchist
+# 11. Reactionary
+# 12. Nationalist
+# 13. Fascist
 
 # TO DO LIST:
 # - What to do with political parties in the list (ban, support, de-support)
@@ -20,8 +21,9 @@
 # - Figure out how elections will work
 # - Take the election events over from TIA
 # - USA Congress GUI
-# - Rework all elements to be in the correct order
 # - Add a Christian Democratic Ideology
+# -> REWORK THE COALITION GUI!
+# - Considering election: create a custom pie chart with the current popular popularity of all ideologies, which the election events will base themselves on
 
 # THINGS TO KEEP IN MIND:
 # - We will probably need leader pics for the leaders of each party
@@ -39,6 +41,7 @@ break_coalition = {
 	clr_country_flag = coalition_social_democrat
 	clr_country_flag = coalition_progressive
 	clr_country_flag = coalition_social_liberal
+	clr_country_flag = coalition_christian_democratic
 	clr_country_flag = coalition_market_liberal
 	clr_country_flag = coalition_conservative
 	clr_country_flag = coalition_islamist
@@ -83,6 +86,12 @@ update_coalition = {
 			has_country_flag = coalition_social_liberal
 		}
 		add_to_variable = { ROOT.Coalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_christian_democratic
+		}
+		add_to_variable = { ROOT.Coalition = christian_democratic_seats }
 	}
 	if = {
 		limit = {
@@ -155,6 +164,7 @@ quickset_parliament = {
 					has_variable = social_democrat_popularity
 					has_variable = progressive_popularity
 					has_variable = social_liberal_popularity
+					has_variable = christian_democratic_popularity
 					has_variable = market_liberal_popularity
 					has_variable = conservative_popularity
 					has_variable = islamist_popularity
@@ -177,8 +187,7 @@ quickset_parliament = {
 				democratic > 0
 			}
 			log = "First Era Random Parliament setup"
-			set_temp_variable = { democratic_support = party_popularity@democratic }
-			multiply_temp_variable = { democratic_support = 100 }
+			set_temp_variable = { democratic_support = party_popularity_100@democratic }
 			random_list = {
 				1 = {
 					divide_temp_variable = { democratic_support = 4 }
@@ -278,6 +287,7 @@ quickset_parliament = {
 	set_variable = { social_democrat_seats = social_democrat_popularity }
 	set_variable = { progressive_seats = progressive_popularity }
 	set_variable = { social_liberal_seats = social_liberal_popularity }
+	set_variable = { christian_democratic_seats = christian_democratic_popularity }
 	set_variable = { market_liberal_seats = market_liberal_popularity }
 	set_variable = { conservative_seats = conservative_popularity }
 	set_variable = { islamist_seats = islamist_popularity }
@@ -325,6 +335,13 @@ quickset_coalition = {
 		}
 		set_country_flag = coalition_social_liberal
 		set_variable = { ROOT.Coalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_christian_democratic
+		}
+		set_country_flag = coalition_christian_democratic
+		set_variable = { ROOT.Coalition = christian_democratic_seats }
 	}
 	if = {
 		limit = {
@@ -390,6 +407,7 @@ set_parliament_graphics = {
 	set_variable = { social_democrat_seats_parliament = social_democrat_seats }
 	set_variable = { progressive_seats_parliament = progressive_seats }
 	set_variable = { social_liberal_seats_parliament = social_liberal_seats }
+	set_variable = { christian_democratic_seats_parliament = christian_democratic_seats }
 	set_variable = { market_liberal_seats_parliament = market_liberal_seats }
 	set_variable = { conservative_seats_parliament = conservative_seats }
 	set_variable = { islamist_seats_parliament = islamist_seats }
@@ -405,6 +423,7 @@ set_parliament_graphics = {
 	round_variable = social_democrat_seats_parliament
 	round_variable = progressive_seats_parliament
 	round_variable = social_liberal_seats_parliament
+	round_variable = christian_democratic_seats_parliament
 	round_variable = market_liberal_seats_parliament
 	round_variable = conservative_seats_parliament
 	round_variable = islamist_seats_parliament
@@ -420,6 +439,7 @@ set_parliament_graphics = {
 	divide_variable = { social_democrat_seats_parliament = 2 }
 	divide_variable = { progressive_seats_parliament = 2 }
 	divide_variable = { social_liberal_seats_parliament = 2 }
+	divide_variable = { christian_democratic_seats_parliament = 2 }
 	divide_variable = { market_liberal_seats_parliament = 2 }
 	divide_variable = { conservative_seats_parliament = 2 }
 	divide_variable = { islamist_seats_parliament = 2 }
@@ -435,6 +455,7 @@ set_parliament_graphics = {
 	round_variable = social_democrat_seats_parliament
 	round_variable = progressive_seats_parliament
 	round_variable = social_liberal_seats_parliament
+	round_variable = christian_democratic_seats_parliament
 	round_variable = market_liberal_seats_parliament
 	round_variable = conservative_seats_parliament
 	round_variable = islamist_seats_parliament
@@ -452,6 +473,7 @@ set_parliament_graphics = {
 	add_to_array = { ideology_seats_array = social_democrat_seats_parliament }
 	add_to_array = { ideology_seats_array = progressive_seats_parliament }
 	add_to_array = { ideology_seats_array = social_liberal_seats_parliament }
+	add_to_array = { ideology_seats_array = christian_democratic_seats_parliament }
 	add_to_array = { ideology_seats_array = market_liberal_seats_parliament }
 	add_to_array = { ideology_seats_array = conservative_seats_parliament }
 	add_to_array = { ideology_seats_array = islamist_seats_parliament }
@@ -794,41 +816,47 @@ set_coalition_to_array = {
 		limit = {
 			has_country_flag = coalition_fascist
 		}
-		add_to_array = { member_parties_array = 12 }
+		add_to_array = { member_parties_array = 13 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_nationalist
 		}
-		add_to_array = { member_parties_array = 11 }
+		add_to_array = { member_parties_array = 12 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_reactionary
 		}
-		add_to_array = { member_parties_array = 10 }
+		add_to_array = { member_parties_array = 11 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_monarchist
 		}
-		add_to_array = { member_parties_array = 9 }
+		add_to_array = { member_parties_array = 10 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_islamist
 		}
-		add_to_array = { member_parties_array = 8 }
+		add_to_array = { member_parties_array = 9 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_conservative
 		}
-		add_to_array = { member_parties_array = 7 }
+		add_to_array = { member_parties_array = 8 }
 	}
 	if = {
 		limit = {
 			has_country_flag = coalition_market_liberal
+		}
+		add_to_array = { member_parties_array = 7 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_christian_democratic
 		}
 		add_to_array = { member_parties_array = 6 }
 	}
@@ -907,7 +935,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { market_liberal_seats_parliament > 0 }
+			check_variable = { christian_democratic_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 6
@@ -915,7 +943,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { conservative_seats_parliament > 0 }
+			check_variable = { market_liberal_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 7
@@ -923,7 +951,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { islamist_seats_parliament > 0 }
+			check_variable = { conservative_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 8
@@ -931,7 +959,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { monarchist_seats_parliament > 0 }
+			check_variable = { islamist_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 9
@@ -939,7 +967,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { reactionary_seats_parliament > 0 }
+			check_variable = { monarchist_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 10
@@ -947,7 +975,7 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { nationalist_seats_parliament > 0 }
+			check_variable = { reactionary_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 11
@@ -955,10 +983,18 @@ setup_active_parties_list = {
 	}
 	if = {
 		limit = {
-			check_variable = { fascist_seats_parliament > 0 }
+			check_variable = { nationalist_seats_parliament > 0 }
 		}
 		add_to_array = {
 			active_parties_array = 12
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { fascist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 13
 		}
 	}
 	for_each_loop = {
@@ -998,6 +1034,12 @@ add_ruling_party_popularity = {
 			has_country_flag = government_social_liberal
 		}
 		add_to_variable = { ROOT.NewCoalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_christian_democratic
+		}
+		add_to_variable = { ROOT.NewCoalition = christian_democratic_seats }
 	}
 	if = {
 		limit = {
