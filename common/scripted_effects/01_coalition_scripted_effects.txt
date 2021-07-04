@@ -20,24 +20,32 @@
 # - Figure out how elections will work
 # - Take the election events over from TIA
 # - USA Congress GUI
+# - Rework all elements to be in the correct order
+# - Add a Christian Democratic Ideology
 
 # THINGS TO KEEP IN MIND:
 # - We will probably need leader pics for the leaders of each party
 
+#################################################################
+#																#
+# 				General Parliamentarty System					#
+#																#
+#################################################################
+
 break_coalition = {
 	clr_country_flag = has_coalition
-	clr_country_flag = coalition_islamist
-	clr_country_flag = coalition_fascist
-	clr_country_flag = coalition_nationalist
-	clr_country_flag = coalition_monarchist
-	clr_country_flag = coalition_reactionary
-	clr_country_flag = coalition_conservative
-	clr_country_flag = coalition_market_liberal
-	clr_country_flag = coalition_social_liberal
+	clr_country_flag = coalition_communist
+	clr_country_flag = coalition_democratic_socialist
 	clr_country_flag = coalition_social_democrat
 	clr_country_flag = coalition_progressive
-	clr_country_flag = coalition_democratic_socialist
-	clr_country_flag = coalition_communist
+	clr_country_flag = coalition_social_liberal
+	clr_country_flag = coalition_market_liberal
+	clr_country_flag = coalition_conservative
+	clr_country_flag = coalition_islamist
+	clr_country_flag = coalition_monarchist
+	clr_country_flag = coalition_reactionary
+	clr_country_flag = coalition_nationalist
+	clr_country_flag = coalition_fascist
 	clear_variable = ROOT.Coalition
 }
 
@@ -48,51 +56,15 @@ update_coalition = {
 	}
 	if = {
 		limit = {
-			has_country_flag = coalition_islamist
+			has_country_flag = coalition_communist
 		}
-		add_to_variable = { ROOT.Coalition = islamist_seats }
+		add_to_variable = { ROOT.Coalition = communist_seats }
 	}
 	if = {
 		limit = {
-			has_country_flag = coalition_fascist
+			has_country_flag = coalition_democratic_socialist
 		}
-		add_to_variable = { ROOT.Coalition = fascist_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_nationalist
-		}
-		add_to_variable = { ROOT.Coalition = nationalist_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_monarchist
-		}
-		add_to_variable = { ROOT.Coalition = monarchist_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_reactionary
-		}
-		add_to_variable = { ROOT.Coalition = reactionary_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_conservative
-		}
-		add_to_variable = { ROOT.Coalition = conservative_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_market_liberal
-		}
-		add_to_variable = { ROOT.Coalition = market_liberal_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = coalition_social_liberal
-		}
-		add_to_variable = { ROOT.Coalition = social_liberal_seats }
+		add_to_variable = { ROOT.Coalition = democratic_socialist_seats }
 	}
 	if = {
 		limit = {
@@ -108,15 +80,51 @@ update_coalition = {
 	}
 	if = {
 		limit = {
-			has_country_flag = coalition_democratic_socialist
+			has_country_flag = coalition_social_liberal
 		}
-		add_to_variable = { ROOT.Coalition = democratic_socialist_seats }
+		add_to_variable = { ROOT.Coalition = social_liberal_seats }
 	}
 	if = {
 		limit = {
-			has_country_flag = coalition_communist
+			has_country_flag = coalition_market_liberal
 		}
-		add_to_variable = { ROOT.Coalition = communist_seats }
+		add_to_variable = { ROOT.Coalition = market_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_conservative
+		}
+		add_to_variable = { ROOT.Coalition = conservative_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_islamist
+		}
+		add_to_variable = { ROOT.Coalition = islamist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_monarchist
+		}
+		add_to_variable = { ROOT.Coalition = monarchist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_reactionary
+		}
+		add_to_variable = { ROOT.Coalition = reactionary_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_nationalist
+		}
+		add_to_variable = { ROOT.Coalition = nationalist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_fascist
+		}
+		add_to_variable = { ROOT.Coalition = fascist_seats }
 	}
 	if = {
 		limit = {
@@ -136,7 +144,6 @@ cleanup_coalition = {
 # and are used to setup the seats inside the parliament
 
 quickset_parliament = {
-
 	# If no values have been predefined in the history files
 	if = {
 		limit = {
@@ -145,16 +152,16 @@ quickset_parliament = {
 					original_tag = USA
 					has_variable = communist_popularity
 					has_variable = democratic_socialist_popularity
-					has_variable = progressive_popularity
 					has_variable = social_democrat_popularity
+					has_variable = progressive_popularity
 					has_variable = social_liberal_popularity
 					has_variable = market_liberal_popularity
 					has_variable = conservative_popularity
-					has_variable = reactionary_popularity
+					has_variable = islamist_popularity
 					has_variable = monarchist_popularity
+					has_variable = reactionary_popularity
 					has_variable = nationalist_popularity
 					has_variable = fascist_popularity
-					has_variable = islamist_popularity
 				}
 			}
 		}
@@ -169,7 +176,7 @@ quickset_parliament = {
 				}
 				democratic > 0
 			}
-			log = "Test"
+			log = "First Era Random Parliament setup"
 			set_temp_variable = { democratic_support = party_popularity@democratic }
 			multiply_temp_variable = { democratic_support = 100 }
 			random_list = {
@@ -268,16 +275,16 @@ quickset_parliament = {
 	}
 	set_variable = { communist_seats = communist_popularity }
 	set_variable = { democratic_socialist_seats = democratic_socialist_popularity }
-	set_variable = { progressive_seats = progressive_popularity }
 	set_variable = { social_democrat_seats = social_democrat_popularity }
+	set_variable = { progressive_seats = progressive_popularity }
 	set_variable = { social_liberal_seats = social_liberal_popularity }
 	set_variable = { market_liberal_seats = market_liberal_popularity }
 	set_variable = { conservative_seats = conservative_popularity }
-	set_variable = { reactionary_seats = reactionary_popularity }
+	set_variable = { islamist_seats = islamist_popularity }
 	set_variable = { monarchist_seats = monarchist_popularity }
+	set_variable = { reactionary_seats = reactionary_popularity }
 	set_variable = { nationalist_seats = nationalist_popularity }
 	set_variable = { fascist_seats = fascist_popularity }
-	set_variable = { islamist_seats = islamist_popularity }
 	set_parliament_graphics = yes
 }
 
@@ -300,17 +307,17 @@ quickset_coalition = {
 	}
 	if = {
 		limit = {
-			has_country_flag = government_progressive
-		}
-		set_country_flag = coalition_progressive
-		set_variable = { ROOT.Coalition = progressive_seats }
-	}
-	if = {
-		limit = {
 			has_country_flag = government_social_democrat
 		}
 		set_country_flag = coalition_social_democrat
 		set_variable = { ROOT.Coalition = social_democrat_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_progressive
+		}
+		set_country_flag = coalition_progressive
+		set_variable = { ROOT.Coalition = progressive_seats }
 	}
 	if = {
 		limit = {
@@ -335,10 +342,10 @@ quickset_coalition = {
 	}
 	if = {
 		limit = {
-			has_country_flag = government_reactionary
+			has_country_flag = government_islamist
 		}
-		set_country_flag = coalition_reactionary
-		set_variable = { ROOT.Coalition = reactionary_seats }
+		set_country_flag = coalition_islamist
+		set_variable = { ROOT.Coalition = islamist_seats }
 	}
 	if = {
 		limit = {
@@ -346,6 +353,13 @@ quickset_coalition = {
 		}
 		set_country_flag = coalition_monarchist
 		set_variable = { ROOT.Coalition = monarchist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_reactionary
+		}
+		set_country_flag = coalition_reactionary
+		set_variable = { ROOT.Coalition = reactionary_seats }
 	}
 	if = {
 		limit = {
@@ -360,13 +374,6 @@ quickset_coalition = {
 		}
 		set_country_flag = coalition_fascist
 		set_variable = { ROOT.Coalition = fascist_seats }
-	}
-	if = {
-		limit = {
-			has_country_flag = government_islamist
-		}
-		set_country_flag = coalition_islamist
-		set_variable = { ROOT.Coalition = islamist_seats }
 	}
 	set_parliament_graphics_2 = yes
 }
