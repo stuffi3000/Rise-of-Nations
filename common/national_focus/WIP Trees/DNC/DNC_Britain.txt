@@ -1,3 +1,5 @@
+#focus_tree = {
+#	id = eng
 
 	#Focus for Negotiations With New Zealand
 	focus = {
@@ -22,10 +24,13 @@
 		available_if_capitulated = yes
 		
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 50
 		}
 	}
 	#Focus for Support The Boxers
@@ -46,6 +51,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			BOX = {
+				add_opinion_modifier = {
+					target = ENG
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+		}
 	}
 	#Focus for Proclaim Neutrality
 	focus = {
@@ -64,6 +77,11 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_stability = 0.05
+			add_war_support = -0.1
 		}
 	}
 	#Focus for Condemn The Boxers
@@ -84,6 +102,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			BOX = {
+				add_opinion_modifier = {
+					target = ENG
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+		}
 	}
 	#Focus for Arm The Boxers
 	focus = {
@@ -96,6 +122,13 @@
 		prerequisite = { focus = ENGDNC_support_the_boxers }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			send_equipment = {
+				type = infantry_equipment
+				amount = 5000
+				target = BOX
+			}
 		}
 	}
 	#Focus for Military Advisors To Qing
@@ -110,6 +143,13 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			completion_reward = {
+				QIN = {
+					army_exp = 20
+				}
+			}
+		}
 	}
 	#Focus for Arms Embargo To Both Sides
 	focus = {
@@ -123,6 +163,17 @@
 		mutually_exclusive = { focus = ENGDNC_sell_weapons_to_both_sides }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_opinion_modifier = {
+				modifier = RI_sanctions
+				target = QIN
+			}
+			add_opinion_modifier = {
+				modifier = RI_sanctions
+				target = BOX
+			} 
+	
 		}
 	}
 	#Focus for Allow Volunteers
@@ -140,6 +191,22 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			army_exp = 10
+			set_rule = {
+				can_send_volunteers = yes
+			}
+			add_ai_strategy = {
+				type = send_volunteers_desire
+				id = QIN
+				value = 200
+			}
+			add_ai_strategy = {
+				type = send_volunteers_desire
+				id = BOX
+				value = 200
+			}
+		}
 	}
 	#Focus for Smuggle Military Advisors To Legations
 	focus = {
@@ -152,6 +219,11 @@
 		prerequisite = { focus = ENGDNC_condemn_the_boxers }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			DEL = {
+				army_exp = 20
+			}
 		}
 	}
 	#Focus for Boxer Rebellion Comes To An End
@@ -170,6 +242,10 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_political_power = 25
+			add_war_support = -0.1
+		}
 	}
 	#Focus for Our Empire
 	focus = {
@@ -186,6 +262,15 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_political_power = 25
+			every_state = {
+				limit = {
+					is_controlled_by = ENG
+				}
+				add_compliance = 2
+			}
+		}
 	}
 	#Focus for Our Island
 	focus = {
@@ -198,6 +283,10 @@
 		prerequisite = { focus = ENGDNC_hold_the_khaki_election }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_stability = 0.05
 		}
 	}
 	#Focus for Intervene in the Moroccan Crisis
@@ -215,6 +304,9 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			#Event Chain to France: Britain proposes help in Morocco
 		}
 	}
 	#Focus for Claim Protectorates In The South Pacific
@@ -242,6 +334,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			release_puppet = NIG
+		}
 	}
 	#Focus for Sign The Anglo-Japanese Pact
 	focus = {
@@ -254,6 +349,11 @@
 		prerequisite = { focus = ENGDNC_steady_as_she_goes }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			JAP= {
+				country_event = dnc_eng.1
+			}
 		}
 	}
 	#Focus for Sign The Anglo-Siamese Treaty
@@ -268,6 +368,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			SIA = {
+				country_event = dnc_eng.4
+			}
+		}
 	}
 	#Focus for End The Boer War
 	focus = {
@@ -281,6 +386,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_ideas = ENG_end_boer_war
+		}
 	}
 	#Focus for Sign The Treaty of Vereeniging
 	focus = {
@@ -289,10 +397,52 @@
 		x = 21
 		y = 10
 		cost = 10
+		available = {
+			OR = {
+				NOT = {
+					country_exists = OFR
+					country_exists = SRE
+				}
+				AND = {
+					OFR = {
+						is_subject_of = ENG
+
+					}
+					SRE = {
+						is_subject_of = ENG
+					}
+				}
+			}
+		}
 		available_if_capitulated = yes
 		prerequisite = { focus = ENGDNC_end_the_boer_war }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					country_exists = SRE
+				}
+				annex_country = {target = SRE}
+			}
+			if = {
+				limit = {
+					country_exists = OFR
+				}
+				annex_country = {
+					target = OFR
+				}
+			}
+			every_state = {
+				limit = {
+					OR = {
+						is_core_of = SRE
+						is_core_of = OFR
+					}
+				}
+				add_compliance = 5
+			}
 		}
 	}
 	#Focus for The Federated Malay States
@@ -307,6 +457,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			release_puppet = MAL
+		}
 	}
 	#Focus for Grant New Zealand Dominion Status
 	focus = {
@@ -319,6 +472,9 @@
 		prerequisite = { focus = ENGDNC_grant_australia_dominion_status }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			release_puppet = NZL
 		}
 	}
 	#Focus for Grant South Africa Dominion Status
@@ -333,6 +489,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			release_puppet = SAF
+		}
 	}
 	#Focus for Grant Australia Dominion Status
 	focus = {
@@ -345,6 +504,9 @@
 		prerequisite = { focus = ENGDNC_the_federated_malay_states }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			release_puppet = AST
 		}
 	}
 	#Focus for Royal Society I
@@ -359,6 +521,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_ideas = ENGDNC_roy_soc1
+		}
 	}
 	#Focus for Establish The Territorial Army
 	focus = {
@@ -371,6 +536,9 @@
 		prerequisite = { focus = ENGDNC_provision_of_education_act }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_manpower = 50000
 		}
 	}
 	#Focus for Provision of Education Act
@@ -398,6 +566,15 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
 	}
 	#Focus for Pass The Mines Act
 	focus = {
@@ -410,6 +587,9 @@
 		prerequisite = { focus = ENGDNC_our_island }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_ideas = ENGDNC_mines_act
 		}
 	}
 	#Focus for Unite Behind House Windsor
@@ -424,6 +604,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.05
+			}
+			add_political_power = 50
+		}
 	}
 	#Focus for Monarchist Politicians
 	focus = {
@@ -436,6 +624,28 @@
 		prerequisite = { focus = ENGDNC_the_rightful_rule }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_monarchist_politics
+				}
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_ideas = {
+					RI_monarchist_politics1
+				}
+			}
 		}
 	}
 	#Focus for Controlled Opposition
@@ -458,6 +668,32 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_monarchist_opposition
+				}
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_ideas = {
+					RI_monarchist_opposition1
+				}
+			}
+			add_popularity = {
+				popularity = 0.1
+				ideology = neutrality
+			}
+		}
 	}
 	#Focus for Monarchist Officers
 	focus = {
@@ -471,6 +707,28 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_disloyal_military
+				}
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_ideas = {
+					RI_loyal_military
+				}
+			}
+		}
 	}
 	#Focus for The Noble Birthright
 	focus = {
@@ -483,6 +741,28 @@
 		prerequisite = { focus = ENGDNC_dieu_et_mon_droit }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_popularity = {
+				popularity = 0.1
+				ideology = neutrality
+			}
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_stability = -0.1
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_stability = 0.1
+			}
 		}
 	}
 	#Focus for Encourage Patriotism
@@ -501,6 +781,28 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_disloyal_people
+				}
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_ideas = {
+					RI_loyal_people
+				}
+			}
 		}
 	}
 	#Focus for Hold The Khaki Election
@@ -527,6 +829,11 @@
 		prerequisite = { focus = ENGDNC_british_democratic_tradition }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = { 
+			add_ideas = {
+				RI_free_speech
+			}
 		}
 	}
 	#Focus for The British Parliament
@@ -562,6 +869,12 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+		}
 	}
 	#Focus for Freedom of The Press
 	focus = {
@@ -580,6 +893,13 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			remove_ideas = RI_free_speech
+			add_ideas = {
+				RI_free_press
+				press_free
+			}
+		}
 	}
 	#Focus for Worker's Rights Movement
 	focus = {
@@ -593,6 +913,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_ideas = {
+				RI_democratic_workers
+			}
+		}
 	}
 	#Focus for Open The Political Sphere
 	focus = {
@@ -603,10 +928,13 @@
 		cost = 10
 		available_if_capitulated = yes
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_political_power = 100
 		}
 	}
 
@@ -622,6 +950,28 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = neutrality
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_democrat_factories
+				}
+			}
+			if = {
+				limit = {
+					has_government = democratic
+				}
+				add_ideas = {
+					RI_democrat_factories1
+				}
+			}
+		}
 	}
 	#Focus for Dieu Et Mon Droit
 	focus = {
@@ -635,6 +985,14 @@
 		mutually_exclusive = { focus = ENGDNC_british_democratic_tradition }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = {
+				ideology = neutrality 
+				popularity = 0.05
+			}
+			add_political_power = 25
 		}
 	}
 	#Focus for Hold A Census
@@ -662,6 +1020,15 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
 	}
 	#Focus for Monarchist Sentiment In France
 	focus = {
@@ -674,6 +1041,14 @@
 		prerequisite = { focus = ENGDNC_draw_up_plans_for_a_british_faction }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			FRA = {
+				add_popularity = {
+					ideology = neutrality
+					popularity = 0.05
+				}
+			}
 		}
 	}
 	#Focus for Modern Industrial Processes
@@ -691,6 +1066,13 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				category = industry
+			}
 		}
 	}
 	#Focus for British Imperialism
@@ -710,6 +1092,15 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_ideas = ENGDNC_imperialism
+			if = {
+				limit = {
+					has_idea = DNC_splendid_isolation
+				}
+				remove_ideas = DNC_splendid_isolation
+			}
+		}
 	}
 	#Focus for Revise Splendid Isolation
 	focus = {
@@ -723,6 +1114,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_ideas = DNC_splendid_isolation
+		}
 	}
 	#Focus for Our New Continental Policy
 	focus = {
@@ -735,6 +1129,10 @@
 		prerequisite = { focus = ENGDNC_for_king_and_country }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_war_support = 0.05
+			add_political_power = 25
 		}
 	}
 	#Focus for Guide The Colonies
@@ -754,6 +1152,18 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			every_country = {
+				limit = {
+					is_subject_of = ENG
+				}
+				add_political_power = 25
+				add_popularity = {
+					popularity = 0.05
+					ideology = neutrality
+				}
+			}
 		}
 	}
 	#Focus for Negotiations With Australia
@@ -782,6 +1192,12 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+		}
 	}
 	#Focus for The Rightful Rule
 	focus = {
@@ -794,6 +1210,29 @@
 		prerequisite = { focus = ENGDNC_dieu_et_mon_droit }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_popularity = {
+				popularity = 0.1
+				ideology = neutrality
+			}
+			if = {
+				limit = {
+					OR = {
+						has_government = democratic
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_war_support = -0.1
+			}
+			if = {
+				limit = {
+					has_government = neutrality
+				}
+				add_war_support = 0.1
+			}
+		
 		}
 	}
 	#Focus for Hold A New Election
@@ -811,6 +1250,9 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			hold_election = ENG 
 		}
 	}
 	#Focus for King's College I
@@ -847,6 +1289,10 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_stability = 0.1
+			add_political_power = 50
+		}
 	}
 	#Focus for Expand Railways
 	focus = {
@@ -859,6 +1305,22 @@
 		prerequisite = { focus = ENGDNC_industrial_focus }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 	#Focus for Towards Dominion Independence
@@ -873,6 +1335,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+
+		}
 	}
 	#Focus for Withdraw From Contested Territories
 	focus = {
@@ -885,6 +1350,10 @@
 		prerequisite = { focus = ENGDNC_guide_the_colonies }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			QIN = { transfer_state = 326 }
+			SPR = { transfer_state = 118 }
 		}
 	}
 	#Focus for Foundations For An Indian State
@@ -899,6 +1368,13 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			RAJ = {
+				add_political_power = 50
+				add_stability = 0.05
+			}
+		}
+
 	}
 	#Focus for Towards Indian Independence
 	focus = {
@@ -916,6 +1392,13 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			RAJ = {
+					add_autonomy_score = {
+					value = 10
+				}
+			}
 		}
 	}
 	#Focus for Three Nation Solution
@@ -948,6 +1431,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			release = EGY
+			release = CYP
+			release = MLT
+		}
 	}
 	#Focus for Self-Government For The Middle East
 	focus = {
@@ -961,6 +1449,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			release = YEM
+			release = KUW
+			release = UAE
+		}
 	}
 	#Focus for Self-Government For The Americas
 	focus = {
@@ -973,6 +1466,14 @@
 		prerequisite = { focus = ENGDNC_selfgovernment_for_the_middle_east }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			release = BLZ
+			release = JAM
+			release = GYA
+			release = BAH
+			release = ANT
+			release = DMN
 		}
 	}
 	#Focus for Self-Government For Asia
@@ -991,6 +1492,17 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					MAL = {
+						is_subject_of = ENG
+					}
+					end_puppet = MAL
+				}
+			}
+			release = MAL
 		}
 	}
 	#Focus for Self-Government For Africa
@@ -1042,6 +1554,17 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			every_state = {
+				limit = {
+					is_controlled_by = ENG
+					NOT = {
+						is_core_of = ENG
+					}
+				}
+				add_resistance = 10
+			}
+		}
 	}
 	#Focus for Economic Focus
 	focus = {
@@ -1069,6 +1592,15 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			every_state = {
+				limit =  {
+					is_controlled_by = ENG
+					is_core_of = AST
+				}
+				add_compliance = 5
+			}
+		}
 	}
 	#Focus for Industrial Focus
 	focus = {
@@ -1082,6 +1614,15 @@
 		mutually_exclusive = { focus = ENGDNC_economic_focus }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
 		}
 	}
 	#Focus for Empower Colonial Governors
@@ -1292,6 +1833,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			every_state = {
+				limit = {
+					is_core_of = IRE
+				}
+				add_compliance = 3
+			}
+		}
 	}
 	#Focus for Demand Canadian Submission
 	focus = {
@@ -1342,7 +1891,7 @@
 		cost = 10
 		available_if_capitulated = yes
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		ai_will_do = {
 			factor = 1
@@ -1436,6 +1985,7 @@
 		available_if_capitulated = yes
 		prerequisite = { focus = ENGDNC_the_dominions_of_cnut_the_great }
 		mutually_exclusive = { focus = ENGDNC_purchase_danish_colonies }
+		will_lead_to_war_with = DEN
 		ai_will_do = {
 			factor = 1
 		}
@@ -1462,12 +2012,19 @@
 		y = 8
 		cost = 10
 		available_if_capitulated = yes
+		will_lead_to_war_with = DEN
 		prerequisite = { 
 			focus = ENGDNC_ultimatum_to_denmark 
 			focus = ENGDNC_purchase_danish_colonies 
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = DEN
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for Annex Norway
@@ -1484,6 +2041,13 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		will_lead_to_war_with = NOR
+		completion_reward = {
+			create_wargoal = {
+				target = NOR
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for A Windsor-Bourbon Marriage
@@ -1524,6 +2088,13 @@
 		prerequisite = { focus = ENGDNC_ultimatum_to_the_french }
 		ai_will_do = {
 			factor = 1
+		}
+		will_lead_to_war_with = FRA
+		completion_reward = {
+			create_wargoal = {
+				target = FRA
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for The Angevin Empire
@@ -1599,6 +2170,18 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			random_state = {
+				limit = {
+					is_core_of = CAN
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
 	}
 	#Focus for Negotiations With Ireland
 	focus = {
@@ -1663,6 +2246,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			MEX = {
+				add_opinion_modifier = {
+					modifier = RI_friendly_foreign_policy
+					target = ENG
+				}
+			}
+		}
 	}
 	#Focus for Secure Mexico
 	focus = {
@@ -1721,6 +2312,15 @@
 		}
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			every_controlled_state = {
+				limit = {
+					is_core_of = FRA
+					
+				}
+				add_compliance = 10
+			}
 		}
 	}
 	#Focus for Our Two Official Languages
@@ -1789,6 +2389,7 @@
 		ai_will_do = {
 			factor = 1
 		}
+		will_lead_to_war_with = SWE
 	}
 	#Focus for Middle Eastern Expansion
 	focus = {
@@ -1816,6 +2417,13 @@
 		ai_will_do = {
 			factor = 1
 		}
+		will_lead_to_war_with = PER
+		completion_reward = {
+			create_wargoal = {
+				target = PER
+				type = annex_everything
+			}
+		}
 	}
 	#Focus for Annex Afghanistan
 	focus = {
@@ -1829,9 +2437,16 @@
 			focus = ENGDNC_annex_persia 
 			focus = ENGDNC_a_persian_protectorate 
 		}
+		will_lead_to_war_with = AFG
 		mutually_exclusive = { focus = ENGDNC_an_afghan_protectorate }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = AFG
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for Secure Arab Peninsula
@@ -1849,6 +2464,24 @@
 		mutually_exclusive = { focus = ENGDNC_demand_arab_submission }
 		ai_will_do = {
 			factor = 1
+		}
+		will_lead_to_war_with = OMA
+		will_lead_to_war_with = SAU
+		will_lead_to_war_with = JBS
+		completion_reward = {
+			create_wargoal = {
+				target = JBS
+				type = annex_everything
+			}
+			create_wargoal = {
+				target = SAU
+				type = annex_everything
+
+			}
+			create_wargoal = {
+				target = OMA
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for Demand Arab Submission
@@ -1881,6 +2514,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		available = {
+			NOT = {
+				country_exists = PER
+			}
+		}
+		completion_reward = {
+			release_puppet = PER
+		}
 	}
 	#Focus for An Afghan Protectorate
 	focus = {
@@ -1894,9 +2535,17 @@
 			focus = ENGDNC_annex_persia 
 			focus = ENGDNC_a_persian_protectorate 
 		}
+		available = {
+			NOT = {
+				country_exists = AFG
+			}
+		}
 		mutually_exclusive = { focus = ENGDNC_annex_afghanistan }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			release_puppet = AFG
 		}
 	}
 	#Focus for Fate of The Ottoman Empire
@@ -1911,9 +2560,16 @@
 			focus = ENGDNC_demand_arab_submission 
 			focus = ENGDNC_secure_arab_peninsula 
 		}
+		will_lead_to_war_with = OTT
 		mutually_exclusive = { focus = ENGDNC_european_crusade_against_islam }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			create_wargoal = {
+				target = OTT
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for European Crusade Against Islam
@@ -1932,6 +2588,7 @@
 		ai_will_do = {
 			factor = 1
 		}
+		will_lead_to_war_with = OTT
 	}
 	#Focus for Hannover or War
 	focus = {
@@ -1945,6 +2602,7 @@
 			focus = ENGDNC_friendship_with_the_netherlands 
 			focus = ENGDNC_secure_the_netherlands 
 		}
+		will_lead_to_war_with = GER
 		mutually_exclusive = { focus = ENGDNC_hannover_for_guarantees }
 		ai_will_do = {
 			factor = 1
@@ -1998,6 +2656,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			59 = {
+				add_compliance = 5
+			}
+		}
 	}
 	#Focus for Integrate Kingdom of Hannover
 	focus = {
@@ -2016,6 +2679,9 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_state_core = 59
+		}
 	}
 	#Focus for Friendship With The Netherlands
 	focus = {
@@ -2030,6 +2696,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			HOL = {
+				add_opinion_modifier = {
+					modifier = RI_friendly_foreign_policy
+					target = ENG
+				}
+			}
+		}
 	}
 	#Focus for Secure The Netherlands
 	focus = {
@@ -2043,6 +2717,13 @@
 		mutually_exclusive = { focus = ENGDNC_friendship_with_the_netherlands }
 		ai_will_do = {
 			factor = 1
+		}
+		will_lead_to_war_with = HOL
+		completion_reward = {
+			create_wargoal = {
+				target = HOL
+				type = annex_everything
+			}
 		}
 	}
 	#Focus for The Kingdom of Hannover
@@ -2096,6 +2777,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			add_war_support = 0.1
+			add_political_power = 55
+			add_stability = 0.03
+		}
 	}
 	#Focus for Support Chinese Foreign Policy
 	focus = {
@@ -2112,6 +2798,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			BOX = {
+				add_opinion_modifier = {
+					target = ENG
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+		}
 	}
 	#Focus for Sell Weapons To Both Sides
 	focus = {
@@ -2126,6 +2820,19 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			send_equipment = {
+				type = infantry_equipment
+				amount = 500
+				target = QIN
+			}
+			send_equipment = {
+				type = infantry_equipment
+				amount = 500
+				target = BOX
+			}
+
+		}
 	}
 	#Focus for Smuggle Weapons To Legations
 	focus = {
@@ -2138,6 +2845,13 @@
 		prerequisite = { focus = ENGDNC_condemn_the_boxers }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			send_equipment = {
+				type = infantry_equipment
+				amount = 500
+				target = DEL
+			}
 		}
 	}
 	#Focus for Sanction China
@@ -2155,6 +2869,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			QIN = {
+				add_opinion_modifier = {
+					modifier = RI_hostile_foreign_policy
+					target = AUH
+				}
+			}
+		}
 	}
 	#Focus for European Affairs
 	focus = {
@@ -2168,6 +2890,32 @@
 		mutually_exclusive = { focus = ENGDNC_stay_neutral }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			FRA = {
+				add_opinion_modifier = {
+					modifier = RI_support_own_politics
+					target = ENG
+				}
+			}
+			GER = {
+				add_opinion_modifier = {
+					modifier = RI_support_own_politics
+					target = ENG
+				}
+			}
+			AUH = {
+				add_opinion_modifier = {
+					modifier = RI_support_own_politics
+					target = ENG
+				}
+			}
+			ITA = {
+				add_opinion_modifier = {
+					modifier = RI_support_own_politics
+					target = ENG
+				}
+			}
 		}
 	}
 	#Focus for Support The Central Powers
@@ -2188,6 +2936,17 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			every_country = {
+				limit = {
+					is_in_faction_with = GER
+				}
+				add_opinion_modifier = {
+					modifier = RI_support_own_politics
+					target = ENG
+				}
+			}
+		}
 	}
 	#Focus for Support The Kaisers Foreign Policy
 	focus = {
@@ -2201,6 +2960,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			GER = {
+				add_opinion_modifier = {
+					modifier = RI_friendly_foreign_policy
+					target = ENG
+				}
+			}
+		}
 	}
 	#Focus for Condemn French Foreign Policy
 	focus = {
@@ -2213,6 +2980,12 @@
 		prerequisite = { focus = ENGDNC_support_germany }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = AUH
+			}
 		}
 	}
 	#Focus for The Kaiser Visits Us
@@ -2232,6 +3005,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			GER = {
+				add_opinion_modifier = {
+					modifier = RI_visited_capital
+					target = AUH
+				}
+			}
+		}
 	}
 	#Focus for Support Germany
 	focus = {
@@ -2245,6 +3026,14 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			GER = {
+				add_opinion_modifier = {
+					modifier = RI_friendly_foreign_policy
+					target = ENG
+				}
+			}
+		}
 	}
 	#Focus for Support Austria-Hungary
 	focus = {
@@ -2257,6 +3046,14 @@
 		prerequisite = { focus = ENGDNC_support_the_central_powers }
 		ai_will_do = {
 			factor = 1
+		}
+		completion_reward = {
+			AUH = {
+				add_opinion_modifier = {
+					modifier = RI_friendly_foreign_policy
+					target = ENG
+				}
+			}
 		}
 	}
 	#Focus for Support The Emperor's Foreign Policy
@@ -3002,6 +3799,11 @@
 		ai_will_do = {
 			factor = 1
 		}
+		completion_reward = {
+			set_rule = {
+				can_create_factions = yes
+			}
+		}
 	}
 #End of focuses 
 
@@ -3013,7 +3815,7 @@
 		y = 1
 		cost = 10
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		available = {
 		}
@@ -3196,7 +3998,7 @@
 		relative_position_id = ENG_DNC_free_market
 		cost = 10
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		available = {
 		}
@@ -3734,7 +4536,7 @@
 		relative_position_id = ENG_DNC_free_market
 		cost = 10
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		completion_reward = {
 			army_experience = 25
@@ -4377,7 +5179,7 @@
 		relative_position_id = ENG_DNC_free_market
 		cost = 10
 		allow_branch = {
-			date < 1910.1.1
+			#date < 1910.1.1
 		}
 		available = {
 			any_state = {
@@ -4934,3 +5736,4 @@
 		}
 	}
 
+#}
