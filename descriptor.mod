@@ -1,6 +1,16 @@
 version="1"
 tags={
 	"Gameplay"
+	"Alternative History"
+	"Balance"
+	"Events"
+	"Fixes"
+	"Historical"
+	"Ideologies"
+	"Map"
+	"Military"
+	"National Focuses"
+	"Technologies"
 }
 name="Rise of Nations"
 picture="Rise_of_Nations.gif"
