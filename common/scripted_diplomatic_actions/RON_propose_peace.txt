@@ -15,6 +15,29 @@ scripted_diplomatic_actions =  {
 					}
 				}
 				tooltip = is_on_peace_cooldown_tt
+				
+			}
+			hidden_trigger = {
+				if = {
+					limit = {
+						ROOT = {
+							peace_stab_cost = 0
+						}
+					}
+					AND = {
+						has_stability > 0.05
+						has_war_support > 0.05
+					}
+
+				}
+				else = {
+					set_temp_variable = { peace_stab_cost_temp = peace_stab_cost }
+					divide_temp_variable = { peace_stab_cost_temp = 100 }
+					AND = {
+						has_stability > peace_stab_cost_temp
+						has_war_support > peace_stab_cost_temp
+					}
+				}
 			}
 		}
 		requires_acceptance = yes
@@ -255,8 +278,8 @@ scripted_diplomatic_actions =  {
 							peace_stab_cost = 0
 						}
 					}
-					set_variable = { peace_stab_cost = -5 }
-					set_variable = { peace_ws_cost = -5 }
+					set_variable = { peace_stab_cost = 5 }
+					set_variable = { peace_ws_cost = 5 }
 				}
 				else = {
 					# multiplying by 2 everytime there's a peace request
@@ -265,8 +288,11 @@ scripted_diplomatic_actions =  {
 				}
 
 				# actual cost
-				add_stability = peace_stab_cost 
-				add_war_support = peace_ws_cost
+				set_temp_variable = { peace_stab_cost_temp = peace_stab_cost }
+				divide_temp_variable = { peace_stab_cost_temp = 100 }
+				multiply_temp_variable = { peace_stab_cost_temp = -1 }
+				add_stability = peace_stab_cost_temp
+				add_war_support = peace_stab_cost_temp
 				set_country_flag = {
 					flag = sent_peace_request
 					days = 60
