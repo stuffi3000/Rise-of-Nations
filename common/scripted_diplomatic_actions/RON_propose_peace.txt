@@ -21,7 +21,7 @@ scripted_diplomatic_actions =  {
 				if = {
 					limit = {
 						ROOT = {
-							peace_stab_cost = 0
+							check_variable = {peace_stab_cost = 0}
 						}
 					}
 					AND = {
@@ -53,28 +53,28 @@ scripted_diplomatic_actions =  {
 					ROOT = {
 						surrender_progress > 0.3
 					}
+				}
+				every_country = {
+					limit = {
+						OR = {
+							is_in_faction_with = ROOT
+							tag = ROOT
+						}
+					}
 					every_country = {
 						limit = {
 							OR = {
-								is_in_faction_with = ROOT
-								tag = ROOT
+								is_in_faction_with = PREV.PREV
+								is_subject_of = PREV.PREV
+								tag = PREV.PREV
 							}
 						}
-						every_country = {
+						every_controlled_state = {
 							limit = {
-								OR = {
-									is_in_faction_with = PREV.PREV
-									is_subject_of = PREV.PREV
-									tag = PREV.PREV
-								}
+								is_owned_by = PREV
 							}
-							every_controlled_state = {
-								limit = {
-									is_owned_by = PREV
-								}
-								PREV.PREV = {
-									transfer_state = PREV
-								}
+							PREV.PREV = {
+								transfer_state = PREV
 							}
 						}
 					}
@@ -133,6 +133,7 @@ scripted_diplomatic_actions =  {
 					}
 				}
 			}
+			
 			#We are winning (Good Ending)
 			else_if = {
 				limit = {
@@ -165,8 +166,6 @@ scripted_diplomatic_actions =  {
 						}
 					}
 				}
-
-
 				if = {
 					# THIS is leader  of  the faction, all countries wp
 					limit = {
@@ -219,10 +218,17 @@ scripted_diplomatic_actions =  {
 						}
 					}
 				}
-
 			}
 			#Just a standard wp (Neutral Ending)
-			else = {
+			else_if = {
+				limit = {
+					ROOT = {
+						surrender_progress > 0.3
+					}
+					THIS = {
+						surrender_progress > 0.3
+					}
+				}
 				if = {
 					# ROOT is leader  of  the faction, all countries wp
 					limit = {
@@ -333,11 +339,13 @@ scripted_diplomatic_actions =  {
 		#AI 
 
 		ai_acceptance = {
+			
 			base_desire = {
 				modifier = {
 					add = -10
 				}
 			}
+			
 			assured_victory = {
 				modifier = {
 					add = 10
