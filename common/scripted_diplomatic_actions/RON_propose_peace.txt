@@ -53,19 +53,29 @@ scripted_diplomatic_actions =  {
 					ROOT = {
 						surrender_progress > 0.3
 					}
-					THIS = {
+					every_country = {
+						limit = {
+							OR = {
+								is_in_faction_with = ROOT
+								tag = ROOT
+							}
+						}
 						every_country = {
 							limit = {
-								is_in_faction_with = ROOT
+								OR = {
+									is_in_faction_with = PREV.PREV
+									is_subject_of = PREV.PREV
+									tag = PREV.PREV
+								}
 							}
-						every_owned_state = {
-							limit = {is_controlled_by = PREV.PREV}
-							set_state_flag = changing_owner
-						}	
-					}
-					every_state = {limit = {has_state_flag = changing_owner }
-							PREV = {transfer_state = PREV}
-							clr_state_flag = changing_owner
+							every_controlled_state = {
+								limit = {
+									is_owned_by = PREV
+								}
+								PREV.PREV = {
+									transfer_state = PREV
+								}
+							}
 						}
 					}
 				}
@@ -158,26 +168,26 @@ scripted_diplomatic_actions =  {
 
 
 				if = {
-					# ROOT is leader  of  the faction, all countries wp
+					# THIS is leader  of  the faction, all countries wp
 					limit = {
-						ROOT = {
+						THIS = {
 							is_faction_leader = yes
 						}
 					}
 					every_country = {
 						limit = {
 							OR = {
-								is_in_faction_with = FROM
-								is_subject_of = FROM
-								tag = FROM
+								is_in_faction_with = ROOT
+								is_subject_of = ROOT
+								tag = ROOT
 							}
 						}
 						every_country = {
 							limit = {
 								OR = {
-								is_in_faction_with = ROOT
-								is_subject_of = ROOT
-								tag = ROOT
+								is_in_faction_with = PREV.PREV
+								is_subject_of = PREV.PREV
+								tag = PREV.PREV
 								}
 							}
 							white_peace = {
@@ -187,13 +197,13 @@ scripted_diplomatic_actions =  {
 					}
 				}
 				else = {
-					# FROM is not faction leader, in that case only wp with him
+					# THIS is not faction leader, in that case only wp with him
 					every_country = {
 						limit = {
 							OR = {
-								is_in_faction_with = FROM
-								is_subject_of = FROM
-								tag = FROM
+								is_in_faction_with = PREV
+								is_subject_of = PREV
+								tag = PREV
 							}
 						}
 					
