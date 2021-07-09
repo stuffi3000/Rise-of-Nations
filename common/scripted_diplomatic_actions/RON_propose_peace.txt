@@ -54,31 +54,32 @@ scripted_diplomatic_actions =  {
 						surrender_progress > 0.3
 					}
 				}
-				every_country = {
-					limit = {
-						OR = {
-							is_in_faction_with = ROOT
-							tag = ROOT
-						}
-					}
+
+				THIS = {
 					every_country = {
 						limit = {
-							OR = {
-								is_in_faction_with = PREV.PREV
-								is_subject_of = PREV.PREV
-								tag = PREV.PREV
-							}
+							is_in_faction_with = ROOT
 						}
-						every_controlled_state = {
+						every_owned_state = {
 							limit = {
-								is_owned_by = PREV
-							}
-							PREV.PREV = {
-								transfer_state = PREV
+								limi = {
+									is_controlled_by = PREV.PREV
+									set_state_flag = state_to_be_transfered
+								}
 							}
 						}
 					}
 				}
+				every_state = {
+					limit = {
+						has_state_flag = state_to_be_transfered
+					}
+					PREV = {
+						transfer_state = PREV
+					}
+					clr_state_flag = state_to_be_transfered
+				}
+
 				if = {
 					# ROOT is leader  of  the faction, all countries wp
 					limit = {
