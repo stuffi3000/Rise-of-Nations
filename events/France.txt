@@ -815,6 +815,9 @@ country_event = {
 		BEL = {
 			country_event = { days = 1 id = france.136 }
 		}
+		FLA = {
+			country_event = { days = 1 id = france.236 }
+		}
 		HOL = {
 			country_event = { days = 1 id = france.139 }
 		}
@@ -1257,7 +1260,7 @@ country_event = {
 	
 	option = {
 		name = france.137.a
-		FRA = { puppet = BEL }
+		annex_country = { target = BEL }
 	}
 }
 
@@ -1357,8 +1360,15 @@ country_event = {
 	
 	option = {
 		name = france.140.a
-		FRA = { puppet = HOL }
-		FRA = { puppet = INS }
+		
+		if = {
+			limit = {
+			INS = { is_subject_of = HOL }
+			}
+			puppet = INS
+		}
+		
+		annex_country = { target = HOL }
 	}
 }
 
@@ -1458,7 +1468,7 @@ country_event = {
 	
 	option = {
 		name = france.143.a
-		FRA = { puppet = HAI }
+		puppet = HAI
 	}
 }
 
@@ -3725,7 +3735,105 @@ FRA = { 		add_political_power = 100 }
 	}
 }
 
+# French Ultimatum (Belgium)
+country_event = {
+	id = france.236
+	title = france.236.t
+	desc = france.236.d
+	picture = GFX_report_event_soviet_soldiers
+	
+	is_triggered_only = yes
+	
+	option = { # Accept demands
+		name = france.236.a
+		ai_chance = {
+			base = 50
+			modifier = { # Don't accept if in a faction that can protect them
+				factor = 0
+				OR = {
+					any_other_country = {
+						is_major = yes
+						OR = {
+							is_in_faction_with = FLA
+							has_guaranteed = FLA
+						}
+					}
+					FRA = { surrender_progress > 0.5 }
+				}
+			}
+		}
+		FRA = {
+			country_event = { days = 5 id = france.237 }
+		}
+	}
+	option = { # Refuse
+		name = france.236.b
+		ai_chance = {
+			base = 50
+			modifier = {
+				add = 1
+				OR = {
+					is_historical_focus_on = no
+					any_other_country = {
+						is_major = yes
+						is_in_faction_with = FLA
+					}
+				}
+			}
+			modifier = {
+				add = 5
+				any_other_country = {
+					is_major = yes
+					has_guaranteed = FLA
+				}
+			}
+		}
 
+		FRA = {
+			country_event = { days = 5 id = france.238 }
+			effect_tooltip = {
+				create_wargoal = {
+					type = annex_everything
+					target = FLA
+				}	
+			}
+		}
+	}
+}
+
+
+# Belgium Surrenders
+country_event = {
+	id = france.237
+	title = france.237.t
+	desc = france.237.d
+	picture = GFX_report_event_soviet_invasion_map
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = france.237.a
+		annex_country = { target = FLA }
+	}
+}
+
+# Belgium Refuses
+country_event = {
+	id = france.238
+	title = france.238.t
+	desc = france.238.d
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = france.238.a
+		create_wargoal = {
+			type = annex_everything
+			target = FLA
+		}		
+	}
+}
 
 
 
