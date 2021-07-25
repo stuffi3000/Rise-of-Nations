@@ -1,0 +1,248 @@
+﻿######################################
+#####Decolonization Diplo Events#######
+######################################
+add_namespace = DNC_Diplomacy
+add_namespace = DNC_DiplomacyNews
+
+# PROPOSES A ROYAL WEDDING
+country_event = {
+	id = DNC_Diplomacy.1
+	title = DNC_Diplomacy.1.t
+	desc = DNC_Diplomacy.1.d
+	picture = GFX_report_event_DNC_Wedding_country2
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Accept and Get Annexed
+		name = DNC_Diplomacy.1.a
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.2
+				hours = 1
+			}
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Accept and Get Puppeted
+		name = DNC_Diplomacy.1.b
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.3
+				hours = 1
+			}
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Accept An Alliance Only
+		name = DNC_Diplomacy.1.c
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.4
+				hours = 1
+			}
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Decline Offer
+		name = DNC_Diplomacy.1.e
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.5
+				hours = 1
+			}
+		}
+	}
+}
+
+#Accept and Get Annexed
+country_event = {
+	id = DNC_Diplomacy.2
+	title = DNC_Diplomacy.2.t
+	desc = DNC_Diplomacy.2.d
+	picture = GFX_report_event_DNC_Wedding_country2
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.2.a
+		
+		ROOT = {
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.1
+			hours = 6
+		}
+		
+	}
+}
+
+#Accept and Get Puppeted
+country_event = {
+	id = DNC_Diplomacy.3
+	title = DNC_Diplomacy.3.t
+	desc = DNC_Diplomacy.3.d
+	picture = GFX_report_event_DNC_Wedding_country2
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.3.a
+		
+		ROOT = {
+			if = {
+				limit = {
+					OR = {
+						has_dlc = "Together for Victory"
+						has_dlc = "Man the Guns"
+					}
+				}
+				set_autonomy = {
+					target = FROM
+					autonomous_state = autonomy_dominion
+					freedom_level = 0.1
+				}
+			}
+			else = {
+				puppet = FROM
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.1
+			hours = 6
+		}
+		
+	}
+}
+
+#Accept An Alliance Only
+country_event = {
+	id = DNC_Diplomacy.4
+	title = DNC_Diplomacy.4.t
+	desc = DNC_Diplomacy.4.d
+	picture = GFX_report_event_DNC_Wedding_country2
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.4.a
+		
+		ROOT = {
+			if = {
+				limit = {
+					is_in_faction = yes
+					is_faction_leader = yes
+				}
+				add_to_faction = FROM
+			}
+			else = {
+				give_guarantee = FROM
+				FROM = { give_guarantee = ROOT }
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.1
+			hours = 6
+		}
+		
+	}
+}
+
+#Decline Offer
+country_event = {
+	id = DNC_Diplomacy.5
+	title = DNC_Diplomacy.5.t
+	desc = DNC_Diplomacy.5.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.5.a
+		
+		ROOT = {
+			create_wargoal = {
+				type = annex_everything
+				target = FROM
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+		
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.5.b
+		
+		FROM = {
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = ROOT
+		}
+		}
+		
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+		
+	}
+}
+
+# Royal Wedding
+news_event = {
+	id = DNC_DiplomacyNews.1
+	title = DNC_DiplomacyNews.1.t
+	desc = DNC_DiplomacyNews.1.d
+	picture = GFX_news_event_DNC_Wedding_news2
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.1.a
+	}
+}
+
+# Wedding Negotiations Break Down
+news_event = {
+	id = DNC_DiplomacyNews.2
+	title = DNC_DiplomacyNews.2.t
+	desc = DNC_DiplomacyNews.2.d
+	picture = GFX_news_event_DNC_Conference_news1
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.2.a
+	}
+}
