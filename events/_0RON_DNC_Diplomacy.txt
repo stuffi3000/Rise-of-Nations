@@ -221,6 +221,174 @@ country_event = {
 	}
 }
 
+# INVITATION TO JOIN CONFEDERATION
+country_event = {
+	id = DNC_Diplomacy.6
+	title = DNC_Diplomacy.6.t
+	desc = DNC_Diplomacy.6.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Accept and Get Annexed
+		name = DNC_Diplomacy.6.a
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.7
+				hours = 1
+			}
+		}
+		news_event = {
+			id = DNC_DiplomacyNews.3
+			hours = 1
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Accept and Get Puppeted
+		name = DNC_Diplomacy.6.b
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.8
+				hours = 1
+			}
+		}
+		news_event = {
+			id = DNC_DiplomacyNews.3
+			hours = 1
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Decline Offer
+		name = DNC_Diplomacy.6.c
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.9
+				hours = 1
+			}
+		}
+	}
+}
+
+#Accept and Get Annexed
+country_event = {
+	id = DNC_Diplomacy.7
+	title = DNC_Diplomacy.7.t
+	desc = DNC_Diplomacy.7.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.7.a
+		
+		ROOT = {
+			annex_country = {
+				target = FROM
+				transfer_troops = yes
+			}
+		}
+		
+	}
+}
+
+#Accept and Get Puppeted
+country_event = {
+	id = DNC_Diplomacy.8
+	title = DNC_Diplomacy.8.t
+	desc = DNC_Diplomacy.8.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.8.a
+		
+		ROOT = {
+			if = {
+				limit = {
+					OR = {
+						has_dlc = "Together for Victory"
+						has_dlc = "Man the Guns"
+					}
+				}
+				set_autonomy = {
+					target = FROM
+					autonomous_state = autonomy_dominion
+					freedom_level = 0.1
+				}
+			}
+			else = {
+				puppet = FROM
+			}
+		}
+		
+	}
+}
+
+#Decline Offer
+country_event = {
+	id = DNC_Diplomacy.9
+	title = DNC_Diplomacy.9.t
+	desc = DNC_Diplomacy.9.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.9.a
+		
+		ROOT = {
+			create_wargoal = {
+				type = annex_everything
+				target = FROM
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+		
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.9.b
+		
+		FROM = {
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = ROOT
+		}
+		}
+		
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+		
+	}
+}
+
+
 # Royal Wedding
 news_event = {
 	id = DNC_DiplomacyNews.1
@@ -234,7 +402,7 @@ news_event = {
 	}
 }
 
-# Wedding Negotiations Break Down
+# Negotiations Break Down
 news_event = {
 	id = DNC_DiplomacyNews.2
 	title = DNC_DiplomacyNews.2.t
@@ -244,5 +412,19 @@ news_event = {
 	is_triggered_only = yes
 	option = {
 		name = DNC_DiplomacyNews.2.a
+	}
+}
+
+
+# Conference Success
+news_event = {
+	id = DNC_DiplomacyNews.3
+	title = DNC_DiplomacyNews.3.t
+	desc = DNC_DiplomacyNews.3.d
+	picture = GFX_news_event_DNC_Conference_news1
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.3.a
 	}
 }
