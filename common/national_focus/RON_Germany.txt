@@ -62,7 +62,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		completion_reward = {
+		completion_reward = { 
 			random_owned_state = {
 				limit = {
 					is_core_of = GER
@@ -550,6 +550,10 @@ focus_tree = {
 				add_idea = RI_free_press
 				remove_idea = RI_free_speech
 			}
+			custom_effect_tooltip = soften_press_law_tt
+			hidden_effect = {
+				add_ideas = { press_free }
+			}
 		}
 	}
 
@@ -575,8 +579,14 @@ focus_tree = {
 				popularity = -0.1
 				ideology = neutrality
 			}
+			if = { #THE CHECK IS BECAUSE IT WILL SHOW UP EVEN IF THERES NO IDEA 
+				limit = {
+					has_idea = RI_military_resistance
+				}
+			
 			remove_ideas = {
 				RI_military_resistance
+				}
 			}
 		}
 	}
@@ -621,7 +631,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			hold_election = GER
+			country_event = { id = ww1_kuk.81 }
 		}
 	}
 
@@ -924,7 +934,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			add_ideas = { WW1_general_staff }
+			add_ideas = { GER_generalstaff }
 		}
 	}
 
@@ -1071,8 +1081,12 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			add_political_power = 100
-			add_stability = 0.05
+			add_political_power = 25
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
 		}
 	}
 
@@ -1557,8 +1571,8 @@ focus_tree = {
 		completion_reward = {
 			MOR = {
 				add_to_variable = { MOR_GER_influence = 5 }
-				custom_effect_tooltip = MOR_increase_GER_influence_tt
 			}
+			custom_effect_tooltip = MOR_increase_GER_influence_tt1
 			set_global_flag = tangier_crisis_happened
 			country_event = DNC_Expansion_country.138
 		}
@@ -1822,7 +1836,7 @@ focus_tree = {
 		}
 	}
 
-	#Focus for Execute Russian Breakup
+	##Focus for Execute Russian Breakup
 	focus = {
 		id = GERDNC_execute_russian_breakup
 		icon = GFX_goal_generic_major_war
@@ -1966,8 +1980,15 @@ focus_tree = {
 					}
 				}
 				release = UBD
-				AUH = {
+				GER = {
 					puppet = UKR
+					puppet = UBD
+					puppet = LIT
+					puppet = POL
+					puppet = FIN
+					puppet = BLR
+					puppet = YAK
+					end_puppet = YAK
 				}
 				every_state = {
 					limit = {
@@ -1981,11 +2002,27 @@ focus_tree = {
 				every_state = {
 					limit = {
 						is_controlled_by = GER
+						is_core_of = POL
+						NOT = { is_core_of = GER }
+					}
+					POL = {
+						transfer_state = PREV
+					}
+				}
+				every_state = {
+					limit = {
+						is_controlled_by = GER
 						is_core_of = RUE
 					}
 					RUE = {
 						transfer_state = PREV
 					}
+				}
+				GER = {
+					transfer_state = 87
+					transfer_state = 98
+					transfer_state = 997
+					transfer_state = 97
 				}
 			}
 
@@ -2112,7 +2149,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			create_wargoal = {
-				target = GER
+				target = AUH
 				type = annex_everything
 			}
 		}
@@ -2214,51 +2251,31 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			every_state = {
-				limit = {
-					is_core_of = AUS
-				}
-				add_core_of = GER
-			}
-			CZE = {
 
-				every_state = {
-					limit = {
-						is_core_of = CZE
-					}
-					CZE = { transfer_state = PREV }
-				}
-			}
-			puppet = CZE
-			HUN = {
-
-				every_state = {
-					limit = {
-						is_core_of = HUN
-					}
-					HUN = { transfer_state = PREV }
-				}
-			}
-			YUG = {
-				annex_country = {
-					target = SER
-					transfer_troops = yes
-				}
-
-				every_state = {
-					limit = { is_core_of = YUG }
-					YUG = { transfer_state = PREV }
-				}
-
-				load_oob = YUG_1918
-				change_tag_from = SER
-			}
 
 			ALB = {
 
 				every_state = {
-					limit = { is_core_of = ALB }
+					limit = { is_core_of = ALB is_owned_by = GER }
 					ALB = { transfer_state = PREV }
+				}
+
+			}
+			
+			MNT = {
+
+				every_state = {
+					limit = { is_core_of = MNT is_owned_by = GER }
+					MNT = { transfer_state = PREV }
+				}
+
+			}
+			
+			SER = {
+
+				every_state = {
+					limit = { is_core_of = SER is_owned_by = GER }
+					SER = { transfer_state = PREV }
 				}
 
 			}
@@ -2291,7 +2308,28 @@ focus_tree = {
 			}
 			if = {
 				limit = {
+					country_exists = POL
+				}
+				POL = {
+					transfer_state = 91
+					transfer_state = 89
+				}
+			}
+			if = {
+				limit = {
+					country_exists = UKR
+					NOT = { country_exists = POL }
+				}
+				UKR = {
+					transfer_state = 91
+					transfer_state = 89
+				}
+			}
+			if = {
+				limit = {
+					NOT = { country_exists = UKR }
 					NOT = { country_exists = WUK }
+					NOT = { country_exists = POL }
 				}
 				WUK = {
 					transfer_state = 91
@@ -2303,7 +2341,7 @@ focus_tree = {
 			ROM = {
 
 				every_state = {
-					limit = { is_core_of = ROM NOT = { is_core_of = RUE } }
+					limit = { is_core_of = ROM is_owned_by = GER }
 					ROM = { transfer_state = PREV }
 				}
 
@@ -2312,40 +2350,111 @@ focus_tree = {
 				}
 				add_popularity = { ideology = democratic popularity = 0.30 }
 			}
+			release = AUH
 			AUS = {
-
-				every_state = {
-					limit = { is_core_of = AUS }
-					AUS = { transfer_state = PREV }
-				}
-
+			
 				annex_country = { target = AUH transfer_troops = no }
 
-				give_military_access = GER
-				change_tag_from = AUH
-			}
-
-			if = {
-				limit = {
-					country_exists = ITA
+				every_state = {
+					limit = { is_owned_by = AUH }
+					AUS = { transfer_state = PREV }
 				}
-				ITA = {
-					transfer_state = 39
-					transfer_state = 867
-					transfer_state = 736
-					transfer_state = 866
+				
+				activate_decision = RON_Formable_Decision107
+
+				give_military_access = GER
+			}
+			
+				HUN = {
+					every_state = {
+						limit = {
+							is_core_of = SLO
+						}
+						HUN = {
+							transfer_state = PREV
+						}
+					}
+					every_state = {
+						limit = {
+							is_core_of = TRA
+						}
+						HUN = {
+							transfer_state = PREV
+						}
+					}
+					every_state = {
+						limit = {
+							is_core_of = HUN
+						}
+						HUN = {
+							transfer_state = PREV
+						}
+					}
+					#Give Cores on Greater Hungary
+					RON_Formable_Country18_effects = yes
+					transfer_state = 868
+					transfer_state = 45
+					transfer_state = 764
+				}
+				CRO = {
+					every_state = {
+						limit = {
+							is_core_of = CRO
+						}
+						CRO = {
+							transfer_state = PREV
+						}
+					}
+					every_state = {
+						limit = {
+							is_core_of = BOS
+						}
+						CRO = {
+							transfer_state = PREV
+						}
+					}
+					transfer_state = 1104
 					transfer_state = 163
+					#Give Cores on Greater Croatia
+					RON_Formable_Country60_effects = yes
+				}
+				
+				AUS = {
+					transfer_state = 736
 					transfer_state = 1066
 				}
+			
+			every_state = {
+				limit = {
+					is_core_of = AUS
+				}
+				add_core_of = GER
+			}
+			
+			CZR = {
+
+				every_state = {
+					limit = { is_core_of = CZR is_owned_by = GER }
+					CZR = { transfer_state = PREV }
+				}
+				
+				every_state = {
+					limit = { is_core_of = CZR is_owned_by = AUS }
+					CZR = { transfer_state = PREV }
+				}
+
+			}
+			
+			puppet = AUS
+			puppet = CZR
+			hidden_effect = {
+				puppet = HUN
+				puppet = CRO
+				end_puppet = HUN
+				end_puppet = CRO
 			}
 
-			BNT = {
-				transfer_state = 82
-				transfer_state = 764
-				add_state_core = 82
-				add_state_core = 764
-			}
-			puppet = AUH
+
 		}
 	}
 
@@ -2543,17 +2652,8 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			GER = {
-				add_opinion_modifier = {
-					target = AUH
-					modifier = RI_friendly_foreign_policy
-				}
-			}
 			AUH = {
-				add_opinion_modifier = {
-					target = GER
-					modifier = RI_friendly_foreign_policy
-				}
+				country_event = DNC_Diplomacy.1
 			}
 			set_global_flag = GER_AUH_personnal_union
 		}
@@ -2692,13 +2792,18 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_state = {
+			activate_decision = RON_Formable_Decision0
+
+			if = {
 				limit = {
-					is_core_of = AUH
+					GER = {
+						is_in_faction = no
+					}
 				}
-				add_core_of = GER
+				GER = {
+					create_faction = "German Confederation"
+				}
 			}
-			set_cosmetic_tag = AUH_DEUTSCHERBUND
 		}
 	}
 
@@ -2724,13 +2829,19 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			every_state = {
+			activate_decision = RON_Formable_Decision97
+
+			if = {
 				limit = {
-					is_core_of = AUH
+					GER = {
+						is_in_faction = no
+					}
 				}
-				add_core_of = GER
+				GER = {
+					create_faction = "Erfurt Union"
+				}
 			}
-			set_cosmetic_tag = AUH_ERFURT_UNION
+			
 		}
 	}
 
@@ -2754,6 +2865,18 @@ focus_tree = {
 		}
 		completion_reward = {
 			activate_decision = RON_Formable_Decision9
+			
+			if = {
+				limit = {
+					GER = {
+						is_in_faction = no
+					}
+				}
+				GER = {
+					create_faction = "Holy Roman Empire"
+				}
+			}
+			
 		}
 	}
 
@@ -2772,8 +2895,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			add_political_power = 100
-			add_stability = 0.05
+			activate_decision = RON_Formable_Decision74
 		}
 	}
 
@@ -2928,8 +3050,8 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			add_political_power = 55
-			add_stability = 0.03
+			add_stability = 0.20
+			set_cosmetic_tag = PRS
 		}
 	}
 
@@ -3334,7 +3456,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			LUX = {
-				country_event = generic.5
+				country_event = DNC_Diplomacy.6
 			}
 		}
 	}
@@ -3359,7 +3481,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			BEL = {
-				country_event = generic.5
+				country_event = DNC_Diplomacy.6
 			}
 		}
 	}
@@ -3407,7 +3529,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			HOL = {
-				country_event = generic.5
+				country_event = DNC_Diplomacy.6
 			}
 		}
 	}
@@ -3480,7 +3602,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			SWI = {
-				country_event = generic.5
+				country_event = DNC_Diplomacy.6
 			}
 		}
 	}
@@ -5209,7 +5331,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			ITA = {
-				country_event = dnc_germany.14
+				country_event = DNC_Diplomacy.1
 			}
 		}
 	}
