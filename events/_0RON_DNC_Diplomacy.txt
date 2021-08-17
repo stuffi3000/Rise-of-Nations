@@ -1647,9 +1647,62 @@ country_event = {
 	option = {
 		ai_chance = {
 			factor = 10
+			modifier = {
+				factor = 2
+				FROM = { has_government = neutrality }
+				ROOT = { has_government = neutrality }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 49 }
+			}
+			modifier = {
+				factor = 2
+				tag = JAP
+				OR = {
+					has_war_with = USA
+					has_war_with = ENG
+					has_war_with = HOL
+					has_war_with = MAL
+					has_war_with = INS
+				}
+			}
+			modifier = {
+				factor = 2
+				tag = ENG
+				OR = {
+					has_war_with = USA
+					has_war_with = HAI
+					has_war_with = CUB
+					has_war_with = DOM
+				}
+			}
+			modifier = {
+				factor = 2
+				tag = USA
+				OR = {
+					has_war_with = CAN
+					has_war_with = ENG
+					has_war_with = HAI
+					has_war_with = CUB
+					has_war_with = DOM
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
 		}
 		#Accept and Join Faction
 		name = DNC_Diplomacy.24.a
+		
+		RON_negotiations_austria_expansion_remove_guarantees = yes
+		RON_negotiations_austria_expansion_add_claims = yes
+		
 		FROM = {
 			country_event = {
 				id = DNC_Diplomacy.25
@@ -1661,8 +1714,29 @@ country_event = {
 	option = {
 		ai_chance = {
 			factor = 10
+			modifier = {
+				factor = 2
+				has_government = democratic
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 2
+				tag = JAP
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
 		}
-		#Decline
+		#Politely Decline
 		name = DNC_Diplomacy.24.b
 		FROM = {
 			country_event = {
@@ -1671,6 +1745,119 @@ country_event = {
 			}
 		}
 	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = communism
+			}
+			modifier = {
+				factor = 2
+				has_government = fascism
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 49 }
+			}
+			modifier = {
+				factor = 2
+				tag = ENG
+			}
+		}
+		#Decline And Insult
+		name = DNC_Diplomacy.24.c
+		
+		RON_negotiations_austria_expansion_add_guarantees = yes
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.27
+				hours = 1
+			}
+		}
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = neutrality
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 25 }
+			}
+			modifier = {
+				factor = 0.5
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				tag = USA
+			}
+			
+		}
+		#Proclaim Neutrality
+		name = DNC_Diplomacy.24.e
+		
+		RON_negotiations_austria_expansion_remove_guarantees = yes
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.30
+				hours = 1
+			}
+		}
+		
+		if = {
+			limit = {
+				ROOT = { is_faction_leader = yes }
+			}
+			dismantle_faction = yes
+		}
+		
+		if = {
+			limit = {
+				ROOT = { is_in_faction = yes }
+			}
+			leave_faction = yes
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+	
 }
 
 #Negotiations Accepted
@@ -1698,6 +1885,27 @@ country_event = {
 			target = FROM
 		}
 		
+		if = {
+			limit = {
+				OR = {
+					FROM = { is_in_faction = yes }
+					ROOT = { is_faction_leader = no }
+				}
+			}
+			give_guarantee = FROM
+			FROM = { give_guarantee = ROOT }
+		}
+		
+		if = {
+			limit = {
+				AND = {
+					FROM = { is_in_faction = no }
+					ROOT = { is_faction_leader = yes }
+				}
+			}
+			ROOT = { add_to_faction = FROM }
+		}
+		
 		FROM = {
 		news_event = {
 			id = DNC_DiplomacyNews.8
@@ -1708,7 +1916,7 @@ country_event = {
 	}
 }
 
-#Negotiations Rejected
+#Negotiations Politely Rejected
 country_event = {
 	id = DNC_Diplomacy.26
 	title = DNC_Diplomacy.26.t
@@ -1720,7 +1928,7 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
-		name = DNC_Diplomacy.26.b
+		name = DNC_Diplomacy.26.a
 		
 		FROM = {
 			add_opinion_modifier = {
@@ -1742,6 +1950,341 @@ country_event = {
 	}
 }
 
+#Negotiations Rejected
+country_event = {
+	id = DNC_Diplomacy.27
+	title = DNC_Diplomacy.27.t
+	desc = DNC_Diplomacy.27.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.27.a
+		
+		create_wargoal = { type = annex_everything target = FROM }
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.27.b
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+}
+
+#Austria Warns Us
+country_event = {
+	id = DNC_Diplomacy.28
+	title = DNC_Diplomacy.28.t
+	desc = DNC_Diplomacy.28.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = neutrality
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 49 }
+			}
+			modifier = {
+				factor = 2
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 2
+				tag = JAP
+			}
+			
+		}
+		name = DNC_Diplomacy.28.a
+		
+		create_wargoal = { type = annex_everything target = FROM }
+		
+		RON_negotiations_austria_expansion_add_guarantees = yes
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.29
+				hours = 1
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+	
+	option = {
+		modifier = {
+				factor = 2
+				has_government = democratic
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 2
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				tag = ENG
+			}
+		name = DNC_Diplomacy.28.b
+		#Oppose Them Anyway
+		
+		RON_negotiations_austria_expansion_add_guarantees = yes
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.27
+				hours = 1
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = neutrality
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 0.5
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 0.5
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				tag = USA
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 25 }
+			}
+			
+			
+		}
+		name = DNC_Diplomacy.28.c
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+		
+		RON_negotiations_austria_expansion_remove_guarantees = yes
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.30
+				hours = 1
+			}
+		}
+		
+		if = {
+			limit = {
+				ROOT = { is_faction_leader = yes }
+			}
+			dismantle_faction = yes
+		}
+		
+		if = {
+			limit = {
+				ROOT = { is_in_faction = yes }
+			}
+			leave_faction = yes
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+}
+
+#Negotiations Rejected
+country_event = {
+	id = DNC_Diplomacy.29
+	title = DNC_Diplomacy.29.t
+	desc = DNC_Diplomacy.29.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.29.a
+		
+		create_wargoal = { type = annex_everything target = FROM }
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.29.b
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+}
+
+#Promises Neutrality
+country_event = {
+	id = DNC_Diplomacy.30
+	title = DNC_Diplomacy.30.t
+	desc = DNC_Diplomacy.30.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.30.a
+		
+		diplomatic_relation = {
+			country = FROM
+			relation = non_aggression_pact
+			active = yes
+		}
+
+	}
+}
 
 # Royal Wedding
 news_event = {
