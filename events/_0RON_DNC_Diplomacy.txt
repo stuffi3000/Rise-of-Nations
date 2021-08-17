@@ -1650,6 +1650,7 @@ country_event = {
 		}
 		#Accept and Join Faction
 		name = DNC_Diplomacy.24.a
+		
 		FROM = {
 			country_event = {
 				id = DNC_Diplomacy.25
@@ -1667,6 +1668,20 @@ country_event = {
 		FROM = {
 			country_event = {
 				id = DNC_Diplomacy.26
+				hours = 1
+			}
+		}
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		#Decline
+		name = DNC_Diplomacy.24.c
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.27
 				hours = 1
 			}
 		}
@@ -1698,6 +1713,27 @@ country_event = {
 			target = FROM
 		}
 		
+		if = {
+			limit = {
+				OR = {
+					FROM = { is_in_faction = yes }
+					ROOT = { is_faction_leader = no }
+				}
+			}
+			give_guarantee = FROM
+			FROM = { give_guarantee = ROOT }
+		}
+		
+		if = {
+			limit = {
+				AND = {
+					FROM = { is_in_faction = no }
+					ROOT = { is_faction_leader = yes }
+				}
+			}
+			ROOT = { add_to_faction = FROM }
+		}
+		
 		FROM = {
 		news_event = {
 			id = DNC_DiplomacyNews.8
@@ -1720,7 +1756,68 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
-		name = DNC_Diplomacy.26.b
+		name = DNC_Diplomacy.26.a
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+}
+
+#Negotiations Rejected
+country_event = {
+	id = DNC_Diplomacy.27
+	title = DNC_Diplomacy.27.t
+	desc = DNC_Diplomacy.27.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.27.a
+		
+		create_wargoal = { type = annex_everything target = FROM }
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.27.b
 		
 		FROM = {
 			add_opinion_modifier = {
