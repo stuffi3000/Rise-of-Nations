@@ -256,10 +256,9 @@ country_event = {
 		HNN = {
 			transfer_state = 602
 			transfer_state = 750
-		}
-		HBE = {
 			transfer_state = 620
-			transfer_state = 824
+			transfer_state = 1031
+			transfer_state = 1030
 		}
 		ANH = {
 			create_faction = Southeastern_Provinces_Defense_faction
@@ -296,59 +295,25 @@ country_event = {
 
 	option = {
         name = dnc_china.9.a
-		country_event = dnc_china.10
+		#country_event = dnc_china.10
 		CHI = {
-			remove_ideas = CHI_foreign_concessions
+			
 			transfer_state = 326
 			transfer_state = 745
 			transfer_state = 743
 			transfer_state = 811
 			transfer_state = 728
-			white_peace = {
-    			tag = GER
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
+			every_country = {
+				limit = {
+					has_war_with = QIN
+				}
+
+				white_peace = {
+					tag = QIN
+					message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
+				}
 			}
-			white_peace = {
-    			tag = ENG
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = SOV
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = USA
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = JAP
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = FRA
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = BEL
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = HOL
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = SPR
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = ITA
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = AUS
-    			message = "The Qing & the Boxers have defeated the 8 Nation Alliance."
-			}
-			set_country_flag = CHI_1900_boxers_won
+			set_country_flag = DNC_QIN_boxers_won
 			
 		}
 	}
@@ -364,7 +329,7 @@ country_event = {
 	option = {
 		name = dnc_china.11.a
 		CHI = {
-			set_country_flag = CHI_1900_boxers_lost
+			set_country_flag = DNC_QIN_boxers_lost
 		}
 		MAN = {
 			set_cosmetic_tag = MAN_RUS_autocracy
@@ -374,50 +339,16 @@ country_event = {
 			transfer_state = 714
 			transfer_state = 761
 		}
-			white_peace = {
-    			tag = GER
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
+		every_country = {
+			limit = {
+				has_war_with = QIN
 			}
+
 			white_peace = {
-    			tag = ENG
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
+				tag = QIN
+				message = "The Qing & the Boxers lost against the 8 Nation Alliance."
 			}
-			white_peace = {
-    			tag = SOV
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = USA
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = JAP
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = FRA
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = BEL
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = HOL
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = SPR
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = ITA
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
-			white_peace = {
-    			tag = AUS
-    			message = "The Qing & the Boxers have lost to the 8 Nation Alliance."
-			}
+		}
 		country_event = dnc_china.13
 	}
 }
@@ -435,9 +366,204 @@ country_event = {
 		
 	}
 }
+#China proposes peace
+country_event = {
+	id = dnc_china.13
+	title = dnc_china.13.t
+	desc = dnc_china.13.d
+	picture = GFX_report_event_imperial_conference
+	fire_only_once = yes
 
+	trigger = {
+		date > 1903.12.31
+		date < 1904.1.31
+		tag = FRA
+		QIN = {
+			surrender_progress < 0.2  
+		}
+		NOT = {
+			BOX = {
+				has_capitulated = yes
+			}
+		}
+		FRA = {
+			has_war_with = QIN
+		}
+		NOT = {
+			has_global_flag = DNC_Boxer_Rebellion_Defeated
+		}
+	}
 
+	option = {
+		name = dnc_china.13.a
+		set_global_flag = DNC_Boxer_Rebellion_Successed
+		every_country = {
+			limit = {
+				has_war_with = QIN
+			}
+			white_peace = {
+				tag = QIN
+			}
+		}
+		QIN = {
+			annex_country = {
+				target = BOX
+			}
+		}
+		hidden_effect = {
+			if = {
+				limit = {
+					has_global_flag = eight_nation_alliance_created
+				}
+				FRA = {
+					country_event = { id = dnctree.19 days = 3 }
+				}
+			}
+		}
+	}
+}
 
+country_event = {
+	id = dnc_china.14
+	desc = dnc_china.14.d
+	title = dnc_china.14.t
+
+	is_triggered_only = yes
+	picture = GFX_report_event_imperial_conference
+
+	option = {
+		name = dnc_china.14.a
+		if = {
+			limit = {
+				728 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 728 
+			}
+		}
+		if = {
+			limit = {
+				745 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 745 
+			}
+		}
+		if = {
+			limit = {
+				743 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 743
+			}
+		}
+		if = {
+			limit = {
+				902 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 902 
+			}
+		}
+		if = {
+			limit = {
+				729 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 729 
+			}
+		}
+		if = {
+			limit = {
+				326 = {
+					is_controlled_by = ROOT
+				}
+			}
+			QIN = {
+				transfer_state = 326 
+			}
+		}
+	}
+	option = {
+		name = dnc_china.14.b
+		add_stability = -0.02
+		add_political_power = -100
+	}
+}
+
+country_event = {
+	id = dnc_china.15
+	title = dnc_china.15.t
+	desc = dnc_china.15.d
+
+	picture = GFX_report_event_imperial_conference
+
+	is_triggered_only = yes
+
+	option = {
+		name = dnc_china.15.a
+		QIN = {
+			annex_country = {
+				target = ROOT
+			}
+		}
+		ai_chance = {
+			factor = 100
+		}
+	}
+
+	option = {
+		name = dnc_china.15.b
+		effect_tooltip = {
+			QIN = {
+				create_wargoal = {
+					target = ROOT
+					type = annex_everything
+				}
+			}
+		}
+		QIN = {
+			country_event = {
+				id = dnc_china.16 days = 3
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 100
+				is_historical_focus_on = no
+			}
+		}
+	}
+}
+
+country_event = {
+	id = dnc_china.16
+	title = dnc_china.16.t
+	desc = dnc_china.16.d
+	picture = GFX_report_event_imperial_conference
+
+	is_triggered_only = yes
+
+	option = {
+		name = dnc_china.16.a
+		create_wargoal = {
+			target = FROM
+			type = annex_everything
+		}
+	}
+
+}
 
 # country_event = {
 # 	id = chinese_empire.1
