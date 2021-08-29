@@ -2213,6 +2213,8 @@ country_event = {
 		
 		ROOT = { every_state = { limit = { is_core_of = ICE OR = { DEN = { controls_state = PREV } any_other_country = { is_subject_of = DEN controls_state = PREV } } } ROOT = { transfer_state = PREV } } }
 		
+		transfer_state = 337
+		
 		
 		FROM = {
 			add_opinion_modifier = {
@@ -2256,6 +2258,171 @@ country_event = {
 		ROOT = { every_state = { limit = { is_core_of = GRL OR = { DEN = { controls_state = PREV } any_other_country = { is_subject_of = DEN controls_state = PREV } } } ROOT = { add_state_claim = PREV } } }
 		
 		ROOT = { every_state = { limit = { is_core_of = ICE OR = { DEN = { controls_state = PREV } any_other_country = { is_subject_of = DEN controls_state = PREV } } } ROOT = { add_state_claim = PREV } } }
+		
+		add_state_claim = 337
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+}
+
+#Southern Sweden For Guarantees
+country_event = {
+	id = dnc_eng.37
+	title = dnc_eng.37.t
+	desc = dnc_eng.37.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 8
+				surrender_progress > 0.1
+			}
+			modifier = {
+				factor = 2
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		#Accept
+		name = dnc_eng.37.a
+		
+		FROM = {
+			country_event = {
+				id = dnc_eng.38
+				hours = 1
+			}
+		}
+
+	}
+
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_in_faction_with = GER
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 50 }
+			}
+		}
+		#Decline
+		name = dnc_eng.37.b
+		
+		FROM = {
+			country_event = {
+				id = dnc_eng.39
+				hours = 1
+			}
+		}
+
+	}
+}
+
+#Sweden Accepts
+country_event = {
+	id = dnc_eng.38
+	title = dnc_eng.38.t
+	desc = dnc_eng.38.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = dnc_eng.38.a		
+		
+		#Transfer States to Britain
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_friendly_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_friendly_foreign_policy
+			target = FROM
+		}
+		
+		if = {
+			limit = {
+				OR = {
+					FROM = { is_in_faction = yes }
+					ROOT = { is_faction_leader = no }
+				}
+			}
+			give_guarantee = FROM
+			FROM = { give_guarantee = ROOT }
+		}
+		
+		if = {
+			limit = {
+				AND = {
+					FROM = { is_in_faction = no }
+					ROOT = { is_faction_leader = yes }
+				}
+			}
+			ROOT = { add_to_faction = FROM }
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.5
+			hours = 6
+		}
+
+	}
+}
+
+#Sweden Declines
+country_event = {
+	id = dnc_eng.39
+	title = dnc_eng.39.t
+	desc = dnc_eng.39.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = dnc_eng.39.a
+		
+		#Add Claims To Southern Sweden
 		
 		FROM = {
 			add_opinion_modifier = {
