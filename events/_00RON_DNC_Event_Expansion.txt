@@ -1868,14 +1868,16 @@ country_event = {
 	title = DNC_Expansion_country.35.t
 	desc = DNC_Expansion_country.35.d
 	picture = GFX_report_event_DNC_Expansion_country35
-	fire_only_once = yes
-
-	trigger = {
-		tag = ENG
-		date > 1901.1.1
-		date < 1901.2.1
-		owns_state = 285
-	}
+	
+	is_triggered_only = yes
+	
+#	fire_only_once = yes
+#	trigger = {
+#		tag = ENG
+#		date > 1901.1.1
+#		date < 1901.2.1
+#		owns_state = 285
+#	}
 
 	option = {
 		name = DNC_Expansion_country.35.a
@@ -1917,6 +1919,11 @@ country_event = {
 
 	option = {
 		name = DNC_Expansion_country.35.b
+		
+		trigger = {
+			#Disabled Temporarily
+			always = no
+		}
 
 		ai_chance = {
 			factor = 10
@@ -10941,17 +10948,24 @@ country_event = {
 	title = DNC_Expansion_country.203.t
 	desc = DNC_Expansion_country.203.d
 	picture = GFX_report_event_DNC_Expansion_country203
-	fire_only_once = yes
+	is_triggered_only = yes
+	
+#	fire_only_once = yes
 
-
-	trigger = {
-		tag = ENG
-		date > 1907.9.1
-		date < 1907.10.1
-	}
+#	trigger = {
+#		tag = ENG
+#		date > 1907.9.1
+#		date < 1907.10.1
+#	}
 
 	option = {
 		name = DNC_Expansion_country.203.a
+
+		ai_chance = {
+			factor = 10
+		}
+
+		release = NZL
 
 		if = {
 			limit = {
@@ -10962,23 +10976,18 @@ country_event = {
 			}
 			set_autonomy = {
 				target = NZL
-				autonomy_state = autonomy_dominion
+				autonomous_state = autonomy_dominion
 				freedom_level = 0.2
 			}
 		}
 		else = {
-			release = NZL
-			hidden_effect = {
-				puppet = NZL
-			}
+			puppet = NZL
 		}
+
 		hidden_effect = {
 			NZL = {
 				load_oob = "NZL_1900"
 			}
-		}
-		ai_chance = {
-			factor = 10
 		}
 
 		news_event = {
@@ -10987,7 +10996,12 @@ country_event = {
 		}
 	}
 	option = {
-		name = DNC_Expansion_country.35.b
+		name = DNC_Expansion_country.203.b
+		
+		trigger = {
+			#Disabled Temporarily
+			always = no
+		}
 
 		ai_chance = {
 			factor = 10
@@ -11020,7 +11034,10 @@ country_event = {
 				}
 			}
 			50 = {
-				add_political_power = 50
+				country_event = {
+					id = ron_diplomatic.43
+					hours = 1
+				}
 			}
 		}
 
@@ -13330,15 +13347,21 @@ news_event = {
 	}
 }
 
-# Event Name
+# South Africa Is Born
 country_event = {
 	id = DNC_Expansion_country.246
 	title = DNC_Expansion_country.246.t
 	desc = DNC_Expansion_country.246.d
 	picture = GFX_report_event_DNC_Expansion_country246
-	fire_only_once = yes
-
+	
 	is_triggered_only = yes
+	
+#	fire_only_once = yes
+#	trigger = {
+#		tag = ENG
+#		date > 1909.09.20
+#		date < 1909.10.20
+#	}
 
 	option = {
 		name = DNC_Expansion_country.246.a
@@ -13347,10 +13370,96 @@ country_event = {
 			factor = 10
 		}
 
+		release = SAF
+		
+		#Give Lesotho to South Africa
+		SAF = { every_state = { limit = { is_core_of = LES OR = { ENG = { controls_state = PREV } any_other_country = { is_subject_of = ENG controls_state = PREV } } } SAF = { transfer_state = PREV } } }
+		
+		#Give Swaziland to South Africa
+		SAF = { every_state = { limit = { is_core_of = SWA OR = { ENG = { controls_state = PREV } any_other_country = { is_subject_of = ENG controls_state = PREV } } } SAF = { transfer_state = PREV } } }
+
+		if = {
+			limit = {
+				OR = {
+					has_dlc = "Together for Victory"
+					has_dlc = "Man the Guns"
+				}
+			}
+			set_autonomy = {
+				target = SAF
+				autonomous_state = autonomy_dominion
+				freedom_level = 0.2
+			}
+		}
+		else = {
+			puppet = SAF
+		}
+
+		hidden_effect = {
+			SAF = {
+				load_oob = "SAF_1900"
+			}
+		}
+
 		news_event = {
 			id = DNC_Expansion_news.246
 			hours = 6
 		}
+	}
+
+	option = {
+		name = DNC_Expansion_country.246.b
+		
+		trigger = {
+			#Disabled Temporarily
+			always = no
+		}
+
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+
+		random_list = {
+			50 = {
+				release = SAF
+				end_puppet = SAF
+				
+				#Give Lesotho to South Africa
+				SAF = { every_state = { limit = { is_core_of = LES OR = { ENG = { controls_state = PREV } any_other_country = { is_subject_of = ENG controls_state = PREV } } } SAF = { transfer_state = PREV } } }
+				
+				#Give Swaziland to South Africa
+				SAF = { every_state = { limit = { is_core_of = SWA OR = { ENG = { controls_state = PREV } any_other_country = { is_subject_of = ENG controls_state = PREV } } } SAF = { transfer_state = PREV } } }
+
+				hidden_effect = {
+					SAF = {
+						load_oob = "SAF_1900"
+					}
+				}
+
+				SAF = {
+					news_event = {
+						id = ron_decolonizationnews.1
+						hours = 6
+					}
+					country_event = {
+						id = ron_decolonizationdiplo.2
+						hours = 1
+					}
+				}
+			}
+			50 = {
+				country_event = {
+					id = ron_diplomatic.43
+					hours = 1
+				}
+			}
+		}
+
+
 	}
 }
 
