@@ -15,12 +15,16 @@ country_event = {
 		ai_chance = {
 			factor = 10
 			modifier = {
-				factor = 0
+				factor = 0.5
 				tag = MEX
 			}
 			modifier = {
-				factor = 2
+				factor = 0.5
 				tag = GER
+			}
+			modifier = {
+				factor = 0.5
+				tag = FRA
 			}
 			modifier = {
 				factor = 2
@@ -31,7 +35,7 @@ country_event = {
 				tag = POR
 			}
 			modifier = {
-				factor = 0
+				factor = 0.5
 				is_major = yes
 			}
 		}
@@ -72,6 +76,10 @@ country_event = {
 			modifier = {
 				factor = 4
 				tag = GER
+			}
+			modifier = {
+				factor = 4
+				tag = FRA
 			}
 			modifier = {
 				factor = 4
@@ -133,6 +141,10 @@ country_event = {
 				tag = POR
 			}
 			modifier = {
+				factor = 8
+				tag = FRA
+			}
+			modifier = {
 				factor = 4
 				tag = MEX
 			}
@@ -188,12 +200,16 @@ country_event = {
 		ai_chance = {
 			factor = 10
 			modifier = {
-				factor = 2
+				factor = 8
 				has_government = communism
 			}
 			modifier = {
-				factor = 2
+				factor = 8
 				has_government = fascism
+			}
+			modifier = {
+				factor = 4
+				has_government = democratic
 			}
 			modifier = {
 				factor = 16
@@ -236,6 +252,12 @@ country_event = {
 			factor = 10
 		}
 		name = DNC_Diplomacy.2.a
+		
+		FROM = {
+			every_unit_leader = {
+				set_nationality = ROOT
+			}
+		}
 
 		ROOT = {
 			annex_country = {
@@ -395,6 +417,10 @@ country_event = {
 				tag = LUX
 			}
 			modifier = {
+				factor = 4
+				tag = LIE
+			}
+			modifier = {
 				factor = 2
 				tag = BEL
 			}
@@ -411,7 +437,7 @@ country_event = {
 				has_army_size = { size < 20 }
 			}
 			modifier = {
-				factor = 0
+				factor = 0.5
 				is_major = yes
 			}
 			modifier = {
@@ -454,6 +480,10 @@ country_event = {
 			modifier = {
 				factor = 2
 				tag = LUX
+			}
+			modifier = {
+				factor = 2
+				tag = LIE
 			}
 			modifier = {
 				factor = 4
@@ -566,6 +596,34 @@ country_event = {
 			factor = 10
 		}
 		name = DNC_Diplomacy.7.a
+		
+		if = {
+			limit = {
+				FROM = { 
+					tag = BEL 
+				}
+				COG = {
+					country_event = ron_decolonizationdiplo.2
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				FROM = { 
+					tag = HOL
+				}
+				INS = {
+					country_event = ron_decolonizationdiplo.2
+				}
+			}
+		}
+		
+		FROM = {
+			every_unit_leader = {
+				set_nationality = ROOT
+			}
+		}
 
 		ROOT = {
 			annex_country = {
@@ -589,6 +647,29 @@ country_event = {
 			factor = 10
 		}
 		name = DNC_Diplomacy.8.a
+		
+		if = {
+			limit = {
+				FROM = { 
+					tag = BEL 
+				}
+				COG = {
+					country_event = ron_decolonizationdiplo.2
+				}
+			}
+		}
+
+		if = {
+			limit = {
+				FROM = { 
+					tag = HOL
+				}
+				INS = {
+					country_event = ron_decolonizationdiplo.2
+				}
+			}
+		}
+
 
 		ROOT = {
 			if = {
@@ -1546,7 +1627,6 @@ country_event = {
 	picture = GFX_report_event_DNC_Conference_country1
 
 	is_triggered_only = yes
-	fire_only_once = yes
 
 	option = {
 		# AUH are the true christians
@@ -1607,7 +1687,6 @@ country_event = {
 	picture = GFX_report_event_DNC_Conference_country1
 
 	is_triggered_only = yes
-	fire_only_once = yes
 
 	option = {
 		name = DNC_Diplomacy.22.a
@@ -1627,7 +1706,6 @@ country_event = {
 	picture = GFX_report_event_DNC_Conference_country1
 
 	is_triggered_only = yes
-	fire_only_once = yes
 
 	option = {
 		name = DNC_Diplomacy.23.a
@@ -2370,6 +2448,148 @@ country_event = {
 	}
 }
 
+#China Decides to Crush Boxer Rebellion if it Drags for too long
+country_event = {
+	id = DNC_Diplomacy.31
+	title = DNC_Diplomacy.31.t
+	desc = DNC_Diplomacy.31.d
+	picture = GFX_report_event_DNC_Expansion_country17
+	fire_only_once = yes
+	trigger = {
+		tag = QIN
+		date > 1901.9.7
+		date < 1910.1.1
+		NOT = { has_war_with = FRA }
+		NOT = { has_war_with = ENG }
+		NOT = { is_in_faction_with = BOX }
+		country_exists = BOX
+		
+		OR = {
+			BOX = { has_war_with = FRA }
+			BOX = { has_war_with = ENG }
+		}
+	}
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = neutrality
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 49 }
+			}
+			modifier = {
+				factor = 2
+				NOT = {
+					any_country = {
+						is_major = yes
+						has_war_with = ROOT
+					}
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = no
+			}
+		}
+		name = DNC_Diplomacy.31.a
+		
+		add_war_support = 0.05
+		
+		create_wargoal = { type = annex_everything target = BOX }
+		
+		every_other_country = {
+			limit = {
+				has_war_with = BOX
+				NOT = { has_war_with = QIN }
+			}
+			country_event = { id = DNC_Diplomacy.32 hours = 1 }
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				has_government = democratic
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 2
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+		}
+		name = DNC_Diplomacy.31.b
+		
+		add_war_support = -0.05
+		
+		every_other_country = {
+			limit = {
+				has_war_with = BOX
+				NOT = { has_war_with = QIN }
+			}
+			country_event = { id = DNC_Diplomacy.33 hours = 1 }
+		}
+
+	}
+}
+
+##Qing Crushers Boxers
+country_event = {
+	id = DNC_Diplomacy.32
+	title = DNC_Diplomacy.32.t
+	desc = DNC_Diplomacy.32.d
+	picture = GFX_report_event_DNC_Expansion_country17
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.32.a
+		
+		add_opinion_modifier = {
+			modifier = RI_friendly_foreign_policy
+			target = QIN
+		}
+
+	}
+}
+
+##QING Remains with Crossed Arms
+country_event = {
+	id = DNC_Diplomacy.33
+	title = DNC_Diplomacy.33.t
+	desc = DNC_Diplomacy.33.d
+	picture = GFX_report_event_DNC_Expansion_country17
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.33.a
+		
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = QIN
+		}
+
+	}
+}
+
 # Royal Wedding
 news_event = {
 	id = DNC_DiplomacyNews.1
@@ -2475,3 +2695,100 @@ news_event = {
 	}
 }
 
+#Imperial Conference Held
+news_event = {
+	id = DNC_DiplomacyNews.9
+	title = DNC_DiplomacyNews.9.t
+	desc = DNC_DiplomacyNews.9.d
+	picture = GFX_news_event_DNC_British_Imperial_Conference_News
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.9.a
+	}
+}
+
+#10th Crusade Forms
+news_event = {
+	id = DNC_DiplomacyNews.10
+	title = DNC_DiplomacyNews.10.t
+	desc = DNC_DiplomacyNews.10.d
+	picture = GFX_news_event_DNC_British_Crusade_News
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.10.a
+		trigger = {
+			is_in_faction_with = ENG
+		}
+	}
+	option = {
+		name = DNC_DiplomacyNews.10.b
+		trigger = {
+		NOT = { is_in_faction_with = ENG }
+		}
+		
+	}
+}
+
+#10th Crusade Succeeds
+news_event = {
+	id = DNC_DiplomacyNews.11
+	title = DNC_DiplomacyNews.11.t
+	desc = DNC_DiplomacyNews.11.d
+	picture = GFX_news_event_DNC_British_Holy_Land_News
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.11.a
+		trigger = {
+			has_idea = RON_Christianity
+		}
+	}
+	option = {
+		name = DNC_DiplomacyNews.11.b
+		trigger = {
+			has_idea = RON_Islam
+		}
+	}
+	option = {
+		name = DNC_DiplomacyNews.11.c
+		trigger = {
+			AND = {
+				NOT = { has_idea = RON_Christianity }
+				NOT = { has_idea = RON_Islam }
+			}	
+		}
+	}
+}
+
+#10th Crusade Fails
+news_event = {
+	id = DNC_DiplomacyNews.12
+	title = DNC_DiplomacyNews.12.t
+	desc = DNC_DiplomacyNews.12.d
+	picture = GFX_news_event_DNC_British_Holy_Land_News
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.12.a
+		trigger = {
+			has_idea = RON_Islam
+		}
+	}
+	option = {
+		name = DNC_DiplomacyNews.12.b
+		trigger = {
+			has_idea = RON_Christianity
+		}
+	}
+	option = {
+		name = DNC_DiplomacyNews.12.c
+		trigger = {
+			AND = {
+				NOT = { has_idea = RON_Christianity }
+				NOT = { has_idea = RON_Islam }
+			}	
+		}
+	}
+}

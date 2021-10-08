@@ -1,2152 +1,4224 @@
 focus_tree = {
-	id = QIN_DNC
-	#	country = {
-	#		factor = 0
-	#		modifier = {
-	#			add = 10
-	#			tag = QIN
-	#		}
-	#	}
-	#Focus for War plan Russia
-	focus = {
-		id = QIN_war_plan_russia
-		icon = GFX_goal_generic_attack_allies
-		x = 40
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_prepare_for_war }
-		ai_will_do = {
-			factor = 1
+    id = DNC_QIN
+
+    country = {
+		factor = 0
+		
+		modifier = {
+			add = 11
+			tag = QIN
 		}
-		completion_reward = {
-			create_wargoal = {
-				target = RUE
-				type = annex_everything
+	}
+    default = no
+
+    continuous_focus_position = { x = 50 y = 1500 }
+
+    focus = {
+		id = DNC_QIN_boxers
+		icon = GFX_QIN_focus_boxer_war_victory
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 7
+		y = 0
+
+		cost = 3
+
+		available = {
+			has_war_with = BOX
+		}
+
+		completion_reward = { 
+			add_political_power = 25
+            add_stability = 0.05
+		}
+	}
+    focus = {
+		id = DNC_QIN_empress_opinion
+		icon = GFX_RUE_focus_first_russian_election
+		x = 7
+		y = 1
+
+		prerequisite = {
+			focus = DNC_QIN_boxers
+		}
+
+		cost = 3
+
+		available = {
+            has_war_with = BOX
+            NOT = {
+                has_war_with = ENG
+                has_war_with = RUE
+            }
+		}
+
+		completion_reward = { 
+            country_event = ron_diplomatic.34
+            add_political_power = 15
+                
+		}
+	}
+    focus = {
+		id = DNC_QIN_ally_with_boxers
+		icon = GFX_QIN_focus_boxer_agreement
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 5
+		y = 2
+
+		prerequisite = {
+			focus = DNC_QIN_empress_opinion
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_against_boxers
+		}
+
+		cost = 5
+
+		available = {
+            has_country_flag = QIN_pro_boxers
+		}
+
+		completion_reward = { 
+			white_peace = BOX
+           	add_stability = 0.1
+			BOX = { country_event = { id = ron_diplomatic.35 hours = 1 } }
+           	add_manpower = 50000
+           	add_political_power = 100
+           	add_war_support = 0.1
+		}
+	}
+    focus = {
+		id = DNC_QIN_against_boxers
+		icon = GFX_QIN_focus_boxer_war
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 11
+		y = 2
+		prerequisite = {
+			focus = DNC_QIN_empress_opinion
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_ally_with_boxers
+		}
+
+		cost = 5
+
+		available = {
+            has_country_flag = QIN_anti_boxers
+		}
+
+		completion_reward = { 
+			BOX = { country_event = { id = ron_diplomatic.39 hours = 1 } }
+		}
+	}
+    focus = {
+		id = DNC_QIN_taku_forts
+		icon = GFX_QIN_focus_8_nation_war
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 5
+		y = 3
+        prerequisite = {
+			focus = DNC_QIN_ally_with_boxers
+		}
+        cost = 5
+
+        available = {
+            NOT = {
+                has_war_with = BOX
+            }
+        }
+        completion_reward = { 
+            add_manpower = 5000
+            add_war_support = 0.2
+			add_stability = 0.2
+			country_event = ron_diplomatic.36
+			activate_mission = QIN_seize_concessions
+			hidden_effect = {
+				country_event = dnc_china.7
+			}
+		}
+    }
+    focus = {
+		id = DNC_QIN_seymour_expedition
+		icon = GFX_RUE_focus_the_safe_option
+		x = 3
+		y = 4
+        prerequisite = {
+			focus = DNC_QIN_taku_forts
+		}
+        cost = 2
+
+        available = {
+            NOT = {
+                has_war_with = BOX
+            }
+			has_war_with = ENG
+			has_war_with = GER
+			has_war_with = JAP
+			has_war_with = ITA
+			has_war_with = AUH
+			has_war_with = RUE
+			has_war_with = FRA
+			
+			
+        }
+        completion_reward = { 
+            add_war_support = 0.05
+			add_stability = -0.05
+			ENG = {
+				activate_mission = ENG_DNC_Seymour_expedition
 			}
 		}
 	}
-
-	#Focus for Gain support through war
 	focus = {
-		id = QIN_gain_support_through_war
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		x = 32
+		id = DNC_QIN_supply_arms
+		icon = GFX_RUE_focus_the_safe_option
+		x = 7
+		y = 4
+    	prerequisite = {
+			focus = DNC_QIN_taku_forts
+		}
+            cost = 7
+
+        available = {
+           NOT = {
+                has_war_with = BOX
+            }
+			has_war_with = ENG
+			has_war_with = GER
+			has_war_with = JAP
+			has_war_with = ITA
+			has_war_with = AUH
+			has_war_with = RUE
+			has_war_with = FRA
+        }
+        completion_reward = { 
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 1000
+    			producer = BOX
+			}
+            
+		}
+    }
+	focus = {
+		id = DNC_QIN_seize_weapons
+		icon = GFX_generic_focus_seize_arsenal
+		x = 7
 		y = 5
-		cost = 10
-		available = {
-			has_war = yes
+        prerequisite = {
+			focus = DNC_QIN_supply_arms
 		}
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_lowsupported_king }
-		mutually_exclusive = { focus = QIN_gain_support_through_diplomacy }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			add_stability = 0.05
-			add_political_power = 50
-		}
-	}
+        cost = 7
 
-	#Focus for Gain support through diplomacy
-	focus = {
-		id = QIN_gain_support_through_diplomacy
-		icon = GFX_goal_tripartite_pact
-		x = 45
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_lowsupported_king }
-		mutually_exclusive = { focus = QIN_gain_support_through_war }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+        available = {
+            NOT = {
+                has_war_with = BOX
+            }
+			has_war_with = ENG
+			has_war_with = GER
+			has_war_with = JAP
+			has_war_with = ITA
+			has_war_with = AUH
+			has_war_with = RUE
+			has_war_with = FRA
+        }
+        completion_reward = { 
+			effect_tooltip = {
+				ENG = {
+					send_equipment = {
+    					equipment = infantry_equipment
+    					amount = 700
+    					target = QIN
+					}
 
-	#Focus for British trade deal
-	focus = {
-		id = QIN_british_trade_deal
-		icon = GFX_focus_eng_unite_the_anglosphere
-		x = 43
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_befriend_england }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			
-		}
-	}
-
-	#Focus for Befriend Germany
-	focus = {
-		id = QIN_befriend_germany
-		icon = GFX_focus_chi_mission_to_germany
-		x = 47
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_gain_support_through_diplomacy }
-		mutually_exclusive = { focus = QIN_befriend_england }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Secure our independence
-	focus = {
-		id = QIN_secure_our_independence
-		icon = GFX_focus_usa_focus_on_asia
-		x = 54
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_a_constitutional_moanrch }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Faction Research sharing
-	focus = {
-		id = QIN_faction_research_sharing
-		icon = GFX_goal_continuous_research
-		x = 45
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_sinoengland_pact
-			focus = QIN_sino__german_pact
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Prepare for war!
-	focus = {
-		id = QIN_prepare_for_war
-		icon = GFX_goal_generic_small_arms
-		x = 41
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_no_need_for_japan }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Air-naval tactics
-	focus = {
-		id = QIN_airnaval_tactics
-		icon = GFX_goal_generic_navy_carrier
-		x = 34
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_a_navy_to_rival_britian
-			focus = QIN_new_age_of_warfare
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for New age of warfare
-	focus = {
-		id = QIN_new_age_of_warfare
-		icon = GFX_focus_generic_commonwealth_build_infantry
-		x = 33
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_control_the_skys }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Control the skys
-	focus = {
-		id = QIN_control_the_skys
-		icon = GFX_goal_generic_air_fighter2
-		x = 34
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_no_need_for_japan }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for No need for japan
-	focus = {
-		id = QIN_no_need_for_japan
-		icon = GFX_goal_generic_attack_allies
-		x = 38
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_empower_the_war_industry }
-		mutually_exclusive = { focus = QIN_the_two_powers }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Empower the war industry
-	focus = {
-		id = QIN_empower_the_war_industry
-		icon = GFX_goal_generic_construct_mil_factory
-		x = 32
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_prepare_the_propaganda_campagin }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			random_owned_state = {
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
 				}
 			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 700
+				producer = ENG
+			}
+            
 		}
-	}
-
-	#Focus for Prepare the propaganda campagin
+    }
 	focus = {
-		id = QIN_prepare_the_propaganda_campagin
-		icon = GFX_goal_continuous_def_against_influence
-		x = 32
-		y = 6
+		id = DNC_QIN_mobilize_the_bannermen
+		icon = GFX_RUE_focus_the_safe_option
+		x = 3
+		y = 5
+        prerequisite = {
+			focus = DNC_QIN_seymour_expedition
+		}
+        cost = 10
+
+        available = {
+            NOT = {
+                has_war_with = BOX
+            }
+			has_war_with = ENG
+			has_war_with = GER
+			has_war_with = JAP
+			has_war_with = ITA
+			has_war_with = AUH
+			has_war_with = RUE
+			has_war_with = FRA
+        }
+        completion_reward = { 
+			add_manpower = 10000
+            
+		}
+    }
+	focus = {
+
+		id = DNC_QIN_stunning_victory
+		icon = GFX_RUE_focus_the_safe_option
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 3
+		y = 7
+        cost = 10
+
+		mutually_exclusive = {
+			focus = DNC_QIN_horrific_loss
+		}
+
+		prerequisite = {
+			focus = DNC_QIN_mobilize_the_bannermen
+			focus = DNC_QIN_seize_weapons
+		}
+
+        available = {
+            has_global_flag = DNC_Boxer_Rebellion_Successed
+        }
+        completion_reward = { 
+			unlock_decision_tooltip = request_foreign_depart_from_ZONE
+		}
+    }
+
+	focus = {
+		id = DNC_QIN_horrific_loss
+		icon = GFX_RUE_focus_the_safe_option
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 7
+		y = 7
+    	cost = 2
+
+		mutually_exclusive = {
+			focus = DNC_QIN_stunning_victory
+		}
+
+		prerequisite = {
+			focus = DNC_QIN_mobilize_the_bannermen
+			focus = DNC_QIN_seize_weapons
+		}
+
+        available = {
+			if = {
+				limit = {
+					NOT = {has_global_flag = player_wants_custom_peacedeals}
+				}	
+				has_global_flag = DNC_Boxer_Rebellion_Defeated	
+			}
+			else = {
+				AND = {
+					QIN = {
+						surrender_progress > 0.2
+					}
+					BOX = {
+						has_capitulated = yes
+					}
+				}
+			}
+        }
+        completion_reward = {
+			add_ideas = boxer_protocols_visible
+			hidden_effect = {
+				add_ideas = boxer_protocols
+				if = {
+					limit = {
+						NOT = {
+							has_global_flag = DNC_Boxer_Rebellion_Defeated
+						}
+						
+					}
+					set_global_flag = DNC_Boxer_Rebellion_Defeated
+				}
+			}
+			add_stability = -0.10
+		}
+    }
+	focus = {
+		id = DNC_QIN_new_age_for_china
+		icon = GFX_RUE_focus_the_safe_option
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 4
+		y = 8
+        prerequisite = {
+			focus = DNC_QIN_stunning_victory
+		}
+        cost = 10
+
+        available = {
+            NOT = {
+            has_war = yes
+			}
+        }
+        completion_reward = { 
+			add_stability = 0.2
+			add_political_power = 100
+            
+		}
+    }
+	focus = {
+		id = DNC_QIN_demand_macau
+		icon = GFX_RUE_focus_the_safe_option
+		x = 2
+		y = 8
+        prerequisite = {
+			focus = DNC_QIN_stunning_victory
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+	            has_war = yes
+			}
+        }
+        completion_reward = { 
+			if = {
+				limit = {
+					729 = {
+						NOT =  {
+							is_controlled_by = QIN
+						}
+					}
+				}
+				729.controller = {
+					country_event = dnc_china.14
+				}
+			}
+           
+		}
+    }
+	focus = {
+		id = DNC_QIN_begin_reintegration
+		icon = GFX_RUE_focus_the_safe_option
+		x = 6
+		y = 8
+        prerequisite = {
+			focus = DNC_QIN_horrific_loss
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+            has_war = yes
+			}
+        }
+        completion_reward = { 
+			SHA = {
+				country_event = dnc_china.15
+			}
+			ANH = {
+				country_event = dnc_china.15
+			}
+			FUJ = {
+				country_event = dnc_china.15
+			}
+			GUC = {
+				country_event = dnc_china.15
+			}
+			HNN = {
+				country_event = dnc_china.15
+			}
+
+            
+		}
+     
+	}
+	focus = {
+		id = DNC_QIN_power_to_governers
+		icon = GFX_RUE_focus_the_safe_option
+		x = 8
+		y = 8
+        prerequisite = {
+			focus = DNC_QIN_horrific_loss
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+            	has_war = yes
+			}
+        }
+        completion_reward = { 
+            unlock_decision_tooltip = Play_as_SHA
+			unlock_decision_tooltip = Play_as_ANH
+			unlock_decision_tooltip = Play_as_FUJ
+			unlock_decision_tooltip = Play_as_GUC
+			unlock_decision_tooltip = Play_as_HNN
+		}
+    }
+	focus = {
+		id = DNC_QIN_foreign_aid
+		icon = GFX_RUE_focus_the_safe_option
+		x = 12
+		y = 3
+        prerequisite = {
+			focus = DNC_QIN_against_boxers
+		}
+        cost = 7
+
+        available = {
+            has_war_with = BOX
+			NOT = {
+				has_war_with = ENG
+				has_war_with = RUE
+			}
+        }
+        completion_reward = { 
+
+        	add_equipment_to_stockpile = {
+    			type = infantry_equipment
+				amount = 150
+    			producer = ENG
+			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 150
+    			producer = RUE
+			}
+		}
+    }
+	focus = {
+		id = DNC_QIN_protect_christians
+		icon = GFX_focus_por_concordat
+		x = 10
+		y = 3
+        prerequisite = {
+			focus = DNC_QIN_against_boxers
+		}
+        cost = 7
+
+        available = {
+            has_war_with = BOX
+        }
+        completion_reward = { 
+			add_stability = 0.05
+			add_political_power = -20
+			add_opinion_modifier = { target = ENG modifier = allied_partners }
+			add_opinion_modifier = { target = GER modifier = allied_partners }
+        	add_opinion_modifier = { target = RUE modifier = allied_partners }
+			add_opinion_modifier = { target = FRA modifier = allied_partners }
+			add_opinion_modifier = { target = ITA modifier = allied_partners }
+		}
+    }
+	focus = {
+		id = DNC_QIN_change_foreign_policy
+		icon = GFX_generic_focus_treaty_sign
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 11
+		y = 4
+        prerequisite = {
+			focus = DNC_QIN_protect_christians
+		}
+		 prerequisite = {
+			focus = DNC_QIN_foreign_aid
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+    	        has_war = yes
+			}
+        }
+        completion_reward = { 
+			add_political_power = -25
+			add_opinion_modifier = { target = ENG modifier = large_increase }
+			add_opinion_modifier = { target = RUE modifier = large_increase }
+           	add_opinion_modifier = { target = FRA modifier = large_increase }
+		   	add_opinion_modifier = { target = GER modifier = large_increase }
+			add_opinion_modifier = { target = ITA modifier = large_increase }
+			add_opinion_modifier = { target = JAP modifier = large_increase }
+
+		}
+    }
+	focus = {
+		id = DNC_QIN_open_up_to_foreigners
+		icon = GFX_generic_focus_treaty_sign
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 10
+		y = 5
+        prerequisite = {
+			focus = DNC_QIN_change_foreign_policy
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+                has_war = yes
+				BOX = {
+					exists = yes
+				}
+			}
+        }
+        completion_reward = { 
+			custom_effect_tooltip = allow_more_foreign_influence_tt
+			add_stability = -0.1
+		}
+    }
+	focus = {
+		id = DNC_QIN_military_mission
+		icon = GFX_RUE_focus_the_safe_option
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 12
+		y = 5
+        prerequisite = {
+			focus = DNC_QIN_change_foreign_policy
+		}
+        cost = 7
+
+        available = {
+            NOT = {
+                has_war = yes
+				BOX = {
+					exists = yes
+				}
+			}
+        }
+        completion_reward = { 
+			army_experience = 20
+				
+		}
+    }
+	focus = {
+		id = DNC_QIN_chinese_politics
+		icon = GFX_QIN_focus_chinese_politics
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 25
+		y = 0
+
+		cost = 5
+
+		available = {
+			NOT = {
+				is_subject = yes
+			}
+			OR = {
+				has_global_flag = DNC_Boxer_Rebellion_Successed
+				has_global_flag = DNC_Boxer_Rebellion_Defeated
+			}
+		}
+
+			completion_reward = { 
+                add_political_power = 25
+                add_stability = 0.01
+				country_event = dnc_china.4
+				#event about political situation
+			}
+		}
+
+	focus = {
+		id = DNC_QIN_continue_imperial_china
+		icon = GFX_QIN_focus_continue_imperial_rule
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = -7
+		y = 1
+		relative_position_id = DNC_QIN_chinese_politics
+		prerequisite = {
+			focus = DNC_QIN_chinese_politics
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_end_imperial_rule
+		}
+
 		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_gain_support_through_war }
-		ai_will_do = {
-			factor = 1
+
+		available = {
+			NOT = {
+				BOX = {
+					exists = yes
+				}
+			}
+				
+		}
+
+		completion_reward = { 
+			add_political_power = 50
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			}
 		}
 	}
-
-	#Focus for A navy to rival Britian
 	focus = {
-		id = QIN_a_navy_to_rival_britian
-		icon = GFX_focus_generic_navy_battleship2
-		x = 35
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_control_the_skys }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for The immediate threat
-	focus = {
-		id = QIN_the_immediate_threat
-		icon = GFX_focus_jap_manchurian_project
-		x = 14
+		id = DNC_QIN_assassinate_Cixi
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_continue_imperial_china
+		x = 3
 		y = 1
 		cost = 10
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
+		prerequisite = {
+			focus = DNC_QIN_continue_imperial_china
 		}
-		completion_reward = {
-			add_war_support = 0.05
-			add_political_power = 50
-			country_event =  ron_diplomatic.34
+		mutually_exclusive = {
+			focus = DNC_QIN_full_power_to_Cixi
 		}
-	}
-
-	#Focus for Proclaim neutrality
-	focus = {
-		id = QIN_proclaim_neutrality
-		icon = GFX_goal_generic_neutrality_focus
-		x = 14
-		y = 2
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_immediate_threat }
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-			BOX = { exists = yes }
-			custom_trigger_tooltip = {
-				tooltip = unlock_with_event_tt
-				always = no
+		bypass = {
+			NOT = {
+				has_country_leader = {
+					name = "Dowager Cixi"
+					ruling_only = yes
+				}
 			}
 		}
 		completion_reward = {
-			add_war_support = -0.05
-		}
-	}
-
-	#Focus for Destroy the boxers
-	focus = {
-		id = QIN_destroy_the_boxers
-		icon = GFX_goal_poland_goal
-		x = 7
-		y = 2
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_immediate_threat }
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-			custom_trigger_tooltip = {
-				tooltip = unlock_with_event_tt
-				always = no
-			}
-		}
-		completion_reward = {
-			effect_tooltip = {
-				declare_war_on = {
-					target = BOX
-					type = annex_everything
+			if = {
+				limit = {
+					has_country_leader = {
+						name = "Dowager Cixi"
+						ruling_only = yes
+					}
+				}
+				kill_country_leader = yes
+				create_country_leader = {
+					name = "Military Government"
+					ideology = despotism
+					picture = "DNC/Military_gvt.dds"
+					expire = "2060.1.1"
 				}
 			}
 		}
 	}
-
-	#Focus for Destroy the west
 	focus = {
-		id = QIN_destroy_the_west
-		icon = GFX_focus_smiling_buddha
-		x = 26
-		y = 2
+		id = DNC_QIN_full_power_to_Cixi
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_continue_imperial_china
+		x = -3
+		y = 1
 		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_immediate_threat }
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-			country_exists = BOX
-			custom_trigger_tooltip = {
-				tooltip = unlock_with_event_tt
-				always = no
-			}
-		}
-		completion_reward = {
-<<<<<<< Updated upstream
-			BOX = {
-				country_event = dnc_chinese_empire.1
-=======
-			effect_tooltip = {
-				add_to_faction = BOX
-
->>>>>>> Stashed changes
-			}
-			custom_effect_tooltip = RON_Qing_War_Warning_tt
-		}
-	}
-
-	#Focus for Defensive efforts
-	focus = {
-		id = QIN_defensive_efforts
-		icon = GFX_goal_generic_military_sphere
-		x = 27
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_destroy_the_west }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			add_ideas = RI_army_for_defence
-		}
-	}
-
-	#Focus for Total Mobilization
-	focus = {
-		id = QIN_total_mobilization
-		icon = GFX_goal_generic_construct_mil_factory
-		x = 25
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_destroy_the_west }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Befriend the Russians
-	focus = {
-		id = QIN_befriend_the_russians
-		icon = GFX_focus_generic_befriend_cyprus
-		x = 23
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_free_india
-			focus = QIN_expel_the_french
+			focus = DNC_QIN_continue_imperial_china
 		}
-		mutually_exclusive = { focus = QIN_press_our_demands_on_russia }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			RUE = {
-				add_opinion_modifier = {
-					modifier = RI_friendly_foreign_policy
-					target = QIN
-				}
-			}
-		}
-	}
-
-	#Focus for Joint naval training
-	focus = {
-		id = QIN_joint_naval_training
-		icon = GFX_goal_generic_navy_submarine
-		x = 31
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_joint_war_planning }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Infrastructure modernization
-	focus = {
-		id = QIN_infrastructure_modernization
-		icon = GFX_goal_generic_construct_infrastructure
-		x = 11
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_rebuilding_our_country }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			random_owned_state = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	#Focus for Standardized army training
-	focus = {
-		id = QIN_standardized_army_training
-		icon = GFX_goal_generic_axis_build_infantry
-		x = 13
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_rebuilding_our_country }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Joint war planning
-	focus = {
-		id = QIN_joint_war_planning
-		icon = GFX_goal_generic_position_armies
-		x = 31
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_prepare_for_a_oppertunity }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Operation jìhuà sān
-	focus = {
-		id = QIN_operation_jhu_sn
-		icon = GFX_focus_spa_the_war_of_vengeance
-		x = 29
-		y = 12
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_protectors_of_asia
-			focus = QIN_the_philippines_will_be_secured
-			focus = QIN_joint_naval_training
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Anti-Western Aim
-	focus = {
-		id = QIN_antiwestern_aim
-		icon = GFX_goal_generic_more_territorial_claims
-		x = 14
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_begin_the_embargo
-			focus = QIN_ask_for_help
-			focus = QIN_wait_for_help
-			focus = QIN_empire_in_chaos
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for The Philippines will be secured
-	focus = {
-		id = QIN_the_philippines_will_be_secured
-		icon = GFX_goal_generic_amphibious_assault
-		x = 27
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_stratagic_invasions_of_colonies }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Minuet man
-	focus = {
-		id = QIN_minuet_man
-		icon = GFX_goal_generic_axis_build_infantry
-		x = 7
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_destroy_the_boxers }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Empire in Chaos
-	focus = {
-		id = QIN_empire_in_chaos
-		icon = GFX_goal_generic_occupy_states_ongoing_war
-		x = 14
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_great_powers_intervene }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for We can't be neutral forever
-	focus = {
-		id = QIN_we_cant_be_neutral_forever
-		icon = GFX_goal_generic_consumer_goods
-		x = 14
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_proclaim_neutrality }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for debug
-	focus = {
-		id = QIN_debug
-		icon = GFX_goal_unknown
-		x = 87
-		y = 20
-		cost = 10
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Great powers intervene
-	focus = {
-		id = QIN_great_powers_intervene
-		icon = GFX_focus_chi_one_china_policy
-		x = 14
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_we_cant_be_neutral_forever }
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-			BOX = { has_war = yes }
+		mutually_exclusive = {
+			focus = DNC_QIN_assassinate_Cixi
 		}
 		completion_reward = {
 			add_stability = -0.05
-
+			add_country_leader_trait = autocratic_imperialist 	
 		}
 	}
-
-	#Focus for Claims in india.
 	focus = {
-		id = QIN_claims_in_india
-		icon = GFX_focus_renounce_the_treaty_of_trianon
-		x = 25
-		y = 4
+		id = DNC_QIN_purge_traitors
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_continue_imperial_china
+		x = -3
+		y = 3
 		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_total_mobilization }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			every_state = {
-				limit = {
-					is_core_of = RAJ
-				}
-				add_claim_by = QIN
-			}
-		}
-	}
-
-	#Focus for Claims on Russia
-	focus = {
-		id = QIN_claims_on_russia
-		icon = GFX_focus_renounce_the_treaty_of_trianon
-		x = 27
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_defensive_efforts }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			add_state_claim = 566
-			add_state_claim = 564
-			add_state_claim = 563
-		}
-	}
-
-	#Focus for Begin the embargo
-	focus = {
-		id = QIN_begin_the_embargo
-		icon = GFX_goal_generic_trade
-		x = 26
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_claims_in_india
-			focus = QIN_claims_on_russia
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Address the supply shortages
-	focus = {
-		id = QIN_address_the_supply_shortages
-		icon = GFX_goal_generic_position_armies
-		x = 7
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_minuet_man }
-		ai_will_do = {
-			factor = 1
+			focus = DNC_QIN_full_power_to_Cixi
 		}
 		completion_reward = {
-			random_owned_state = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			random_owned_state = {
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
+			add_timed_idea = {
+				days = 180
+				idea = QIN_great_purge
 			}
 		}
 	}
-
-	#Focus for Ask for help
 	focus = {
-		id = QIN_ask_for_help
-		icon = GFX_goal_generic_forceful_treaty
-		x = 6
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_address_the_supply_shortages }
-		mutually_exclusive = { focus = QIN_wait_for_help }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Wait for help
-	focus = {
-		id = QIN_wait_for_help
-		icon = GFX_goal_generic_position_armies
-		x = 8
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_address_the_supply_shortages }
-		mutually_exclusive = { focus = QIN_ask_for_help }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Continue the humiliation...
-	focus = {
-		id = QIN_continue_the_humiliation
-		icon = GFX_focus_prc_infiltration
-		x = 7
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
+		id = DNC_QIN_get_rid_influence_on_borders
+		icon = GFX_unknown
+		cost = 7
+		relative_position_id = DNC_QIN_purge_traitors
+		x = 0
+		y = 2
 		prerequisite = {
-			focus = QIN_ask_for_help
-			focus = QIN_wait_for_help
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Victory at last
-	focus = {
-		id = QIN_victory_at_last
-		icon = GFX_goal_generic_territory_or_war
-		x = 26
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_begin_the_embargo }
-		ai_will_do = {
-			factor = 1
-		}
-		available = {
-			728 = { is_controlled_by_ROOT_or_ally = yes }
-			729 = { is_controlled_by_ROOT_or_ally = yes }
-			326 = { is_controlled_by_ROOT_or_ally = yes }
-			743 = { is_controlled_by_ROOT_or_ally = yes }
-			745 = { is_controlled_by_ROOT_or_ally = yes }
-			1126 = { is_controlled_by_ROOT_or_ally = yes }
-			903 = { is_controlled_by_ROOT_or_ally = yes }
+			focus = DNC_QIN_purge_traitors
 		}
 		completion_reward = {
-			every_country = {
-				limit = {
-					has_war_with = QIN
-				}
-				white_peace = QIN
-			}
-			add_political_power = 200
-			transfer_state = 728
-			transfer_state = 729
-			transfer_state = 326
-			transfer_state = 743
-			transfer_state = 745
-			transfer_state = 1126
-			transfer_state = 903 
+			add_threat = 5
+			add_war_support = 0.1
+			add_political_power = 50
 		}
 	}
-
-	#Focus for Mandate of Heaven
 	focus = {
-		id = QIN_mandate_of_heaven
-		icon = GFX_focus_man_claim_the_mandate_of_heaven
-		x = 44
+		id = DNC_QIN_get_rid_of_france
+		cost = 3
+		icon = GFX_unknown
+		relative_position_id = DNC_QIN_get_rid_influence_on_borders
+		x = 0
 		y = 1
-		cost = 10
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Rebuilding our country
-	focus = {
-		id = QIN_rebuilding_our_country
-		icon = GFX_goal_generic_construct_mil_factory
-		x = 12
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_antiwestern_aim }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for increase food production
-	focus = {
-		id = QIN_increase_food_production
-		icon = GFX_focus_hol_abandon_the_gold_standard
-		x = 4
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_modernization_efttort }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Modernization efttort
-	focus = {
-		id = QIN_modernization_efttort
-		icon = GFX_goal_generic_production
-		x = 5
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_continue_the_humiliation }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for The golden standard
-	focus = {
-		id = QIN_the_golden_standard
-		icon = GFX_focus_usa_reestablish_the_gold_standard
-		x = 6
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_modernization_efttort }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Co-operative research
-	focus = {
-		id = QIN_cooperative_research
-		icon = GFX_focus_research2
-		x = 16
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_antiwestern_aim }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Focus on internal stablity
-	focus = {
-		id = QIN_focus_on_internal_stablity
-		icon = GFX_goal_generic_neutrality_focus
-		x = 9
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_continue_the_humiliation }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Modernize Imperial examination
-	focus = {
-		id = QIN_modernize_imperial_examination
-		icon = GFX_focus_renounce_the_treaty_of_trianon
-		x = 5
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_increase_food_production
+			focus = DNC_QIN_get_rid_influence_on_borders
+		}
+		will_lead_to_war_with = FRA
+		completion_reward = {
+			# TODO Indochinese Ultimatum
+		}
+
+	}
+
+	focus = {
+		id = DNC_QIN_get_rid_of_the_brits
+		icon = GFX_unknown
+		cost = 3
+		relative_position_id = DNC_QIN_get_rid_influence_on_borders
+		x = 2
+		y = 1
+		prerequisite = {
+			focus = DNC_QIN_get_rid_influence_on_borders
+		}
+		will_lead_to_war_with = ENG
+		completion_reward = {
+			#TODO Tibetan/Northern India Ultimatum
+		}
+	}
+	focus = {
+		id = DNC_QIN_get_rid_of_the_japs
+		icon = GFX_Unknown
+		cost = 3
+		relative_position_id = DNC_QIN_get_rid_influence_on_borders
+		x = -2
+		y = 1
+		prerequisite = {
+			focus = DNC_QIN_get_rid_influence_on_borders
+		}
+		will_lead_to_war_with = JAP
+		completion_reward = {
+			#TODO Ultimatum for Korea
+		}
+	}
+	focus = {
+		id = DNC_QIN_calm_the_masses
+		icon = GFX_generic_focus_treaty_sign
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		cost = 5
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_assassinate_Cixi
+		prerequisite = {
+			focus = DNC_QIN_assassinate_Cixi
+			focus = DNC_QIN_full_power_to_Cixi
+		}
+		completion_reward = {
+			add_stability = 0.1
+			add_political_power = 50
+		}
+	}
+	focus = {
+		id = DNC_QIN_power_recentralisation
+		icon = GFX_generic_focus_treaty_sign
+		cost = 4
+		x = -2
+		y = 0
+		relative_position_id = DNC_QIN_calm_the_masses
+		prerequisite = {
+			focus = DNC_QIN_assassinate_Cixi
+			focus = DNC_QIN_full_power_to_Cixi
+		}
+		completion_reward = {
+			add_political_power = 100
+			add_stability = 0.05
+		}
+	}
+	focus = {
+		id = DNC_QIN_get_rid_of_the_boxers
+		icon = GFX_generic_focus_treaty_sign
+		cost = 2
+		relative_position_id = DNC_QIN_assassinate_Cixi
+		x = -5
+		y = 1
+		prerequisite = {
+			focus = DNC_QIN_assassinate_Cixi
+			focus = DNC_QIN_full_power_to_Cixi
+		}
+		completion_reward = {
+			add_manpower = -15000
+			add_stability = 0.025
+			add_war_support = -0.5
+		}
+
+	}
+
+	focus = {
+		id = DNC_QIN_discussion_with_foreign_powers
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_get_rid_of_the_boxers
+		cost = 3
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = DNC_QIN_get_rid_of_the_boxers
+			
 		}
 		prerequisite = {
-			focus = QIN_the_golden_standard
+			focus = DNC_QIN_power_recentralisation
 		}
-		ai_will_do = {
-			factor = 1
+		completion_reward = {
+			add_opinion_modifier = {
+				target = FRA
+				modifier = small_increase
+			}
+			add_opinion_modifier = {
+				target = ENG
+				modifier = small_increase
+			}
+			add_opinion_modifier = {
+				target = GER
+				modifier = small_increase
+			}
+			add_opinion_modifier = {
+				target = JAP
+				modifier = small_increase
+			}
 		}
 	}
 
-	#Focus for Increase our authority
 	focus = {
-		id = QIN_increase_our_authority
-		icon = GFX_focus_usa_voter_registration_act
-		x = 26
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_victory_at_last }
-		ai_will_do = {
-			factor = 1
+		id = DNC_QIN_send_garrison
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_power_recentralisation
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = DNC_QIN_power_recentralisation
+		}
+		prerequisite = {
+			focus = DNC_QIN_calm_the_masses
+		}
+		completion_reward = {
+			add_manpower = 5000
 		}
 	}
 
-	#Focus for Invite korea
 	focus = {
-		id = QIN_invite_korea
-		icon = GFX_goal_generic_scientific_exchange
-		x = 15
-		y = 8
+		id = DNC_QIN_new_emperor
+		icon = GFX_generic_focus_treaty_sign
+		relative_position_id = DNC_QIN_assassinate_Cixi
+		cost = 3
+		x = 0
+		y = 2
+		prerequisite = {
+			focus = DNC_QIN_assassinate_Cixi
+		}
+		completion_reward = {
+			retire_country_leader = yes
+			create_country_leader = {
+				name = "Prince Chun"
+				ideology = despotism
+				picture = "WW1/Portrait_Qing_Prince_Chun.dds"
+				expire = 1951.2.3
+			}
+		}
+
+	}
+	focus = {
+		id = DNC_QIN_reclaim_mandate_of_heaven
+		icon = GFX_generic_focus_treaty_sign
+		cost = 7
+		relative_position_id = DNC_QIN_power_recentralisation
+		x = 0
+		y = 2
+
+		prerequisite = {
+			focus = DNC_QIN_discussion_with_foreign_powers
+		}
+		prerequisite = {
+			focus = DNC_QIN_send_garrison
+		}
+		completion_reward = {
+			set_cosmetic_tag = QIN_heavenly_kingdom
+		}
+	}
+	focus = {
+		id = DNC_QIN_end_imperial_rule
+		icon = GFX_QIN_focus_end_imperial_rule
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 7
+		y = 1
+		relative_position_id = DNC_QIN_chinese_politics
+		prerequisite = {
+			focus = DNC_QIN_chinese_politics
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_continue_imperial_china
+		}
+
 		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_cooperative_research }
-		ai_will_do = {
-			factor = 1
+
+		available = {
+			NOT = {
+				BOX = {
+					exists = yes
+				}
+			}
+				
+		}
+
+		completion_reward = { 
+            add_political_power = -50
+			add_popularity = {
+				ideology = neutrality
+				popularity = -0.1
+			}
+			retire_country_leader = yes
+			create_country_leader = {
+				name = "Military Government"
+				ideology = despotism
+				picture = "DNC/Military_gvt.dds"
+				expire = "2060.1.1"
+			}
+		}
+	}
+	focus = {
+		id = DNC_QIN_legacy_1898_coup
+		icon = GFX_QIN_focus_1898_coup
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = -5
+		y = 1
+		relative_position_id = DNC_QIN_end_imperial_rule
+		prerequisite = {
+			focus = DNC_QIN_end_imperial_rule
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_sun_yat_sen
+		}
+		cost = 10
+
+		available = {
+			
+		}
+
+		completion_reward = { 
+            add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+		}
+	}
+	focus = {
+		id = DNC_QIN_sun_yat_sen
+		icon = GFX_QIN_focus_go_with_sun_yat_sen
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 5
+		y = 1
+		relative_position_id = DNC_QIN_end_imperial_rule
+		prerequisite = {
+			focus = DNC_QIN_end_imperial_rule
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_legacy_1898_coup
+		}
+
+		cost = 10
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            retire_country_leader = yes
+			create_country_leader = {
+				ideology = despotism
+				picture = "WW1/China_Conservatism_SunYat-sen.dds"
+				name = "Sun Yat Sen"
+				expire = "1925.3.12"
+			}
+		}
+	}
+	focus = {
+		id = DNC_QIN_remember_hundred_days_reform
+		icon = GFX_RUE_focus_state_duma
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_legacy_1898_coup
+		prerequisite = {
+			focus = DNC_QIN_legacy_1898_coup
+		}
+
+		cost = 10
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            unlock_decision_category_tooltip = QIN_reformist_decision_category
+		}
+	}
+	focus = {
+		id = DNC_QIN_the_position_of_the_party
+		icon = GFX_RUE_focus_state_duma
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_remember_hundred_days_reform
+		prerequisite = {
+			focus = DNC_QIN_remember_hundred_days_reform
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            add_political_power = 50
+		}
+	}
+	focus = {
+		id = DNC_QIN_japanese_style
+		icon = GFX_RUE_focus_state_duma
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_the_position_of_the_party
+		prerequisite = {
+			focus = DNC_QIN_the_position_of_the_party
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_british_style
+		}
+
+		cost = 7
+
+		available = {
+			
+		}
+
+		completion_reward = { 
+            JAP = {
+				add_opinion_modifier = {
+					modifier = large_increase target = QIN
+				}
+			}
+		}
+	}
+	focus = {
+		id = DNC_QIN_british_style
+		icon = GFX_RUE_focus_state_duma
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_the_position_of_the_party
+		prerequisite = {
+			focus = DNC_QIN_the_position_of_the_party
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_japanese_style
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            ENG = {
+				add_opinion_modifier = {
+					modifier = large_increase target = QIN
+				}
+			}
+		}
+	}
+		
+	focus = {
+		id = DNC_QIN_policy_other_parties_reformist
+		icon = GFX_RUE_focus_state_duma
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_japanese_style
+		prerequisite = {
+			focus = DNC_QIN_japanese_style
+			focus = DNC_QIN_british_style
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_independent_party
+		icon = GFX_RUE_focus_state_duma
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_policy_other_parties_reformist
+		prerequisite = {
+			focus = DNC_QIN_policy_other_parties_reformist
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_coalition_reformist
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_coalition_reformist
+		icon = GFX_RUE_focus_state_duma
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_policy_other_parties_reformist
+		prerequisite = {
+			focus = DNC_QIN_policy_other_parties_reformist
+		}
+		mutually_exclusive = {
+			focus = DNC_QIN_independent_party
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_against_rep_reformist
+		icon = GFX_RUE_focus_state_duma
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_independent_party
+		prerequisite = {
+			focus = DNC_QIN_independent_party
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_agreement_with_rep
+		icon = GFX_RUE_focus_state_duma
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_coalition_reformist 
+		prerequisite = {
+			focus = DNC_QIN_coalition_reformist
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_launch_coup_reformist
+		icon = GFX_RUE_focus_state_duma
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_agreement_with_rep
+		prerequisite = {
+			focus = DNC_QIN_agreement_with_rep
+			focus = DNC_QIN_against_rep_reformist
+		}
+
+		prerequisite = {
+			focus = DNC_QIN_support_governers
+		}
+		prerequisite = {
+			focus = DNC_QIN_minority_guarantees
+		}
+		prerequisite = {
+			focus = DNC_QIN_make_army_reformist
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+
+	focus = {
+		id = DNC_QIN_fight_warlords
+		icon = GFX_RUE_focus_state_duma
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_launch_coup_reformist
+		prerequisite = {
+			focus = DNC_QIN_launch_coup_reformist
+		}
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+			unlock_decision_category_tooltip = QIN_fight_warlords
+		}
+	}
+
+	focus = {
+		id = DNC_QIN_foreign_recognition
+		icon = GFX_RUE_focus_state_duma
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_launch_coup_reformist
+		prerequisite = {
+			focus = DNC_QIN_launch_coup_reformist
+		}
+
+		cost = 7
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            
+		}
+	}
+	focus = {
+		id = DNC_QIN_a_united_china_reformist
+		icon = GFX_RUE_focus_state_duma
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_foreign_recognition
+		prerequisite = {
+			focus = DNC_QIN_foreign_recognition
+		}
+		prerequisite = {
+			focus = DNC_QIN_fight_warlords
+		}
+
+		cost = 10
+
+		available = {
+				
+		}
+
+		completion_reward = { 
+            set_cosmetic_tag = QIN_reformist_China
+		}
+	}
+
+		# END OF REFORMIST PATH
+
+		focus = {
+			id = DNC_QIN_protecting_our_empire
+			icon = GFX_QIN_focus_protecting_empire
+			x = 57
+			y = 0
+
+			cost = 10
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+				OR = {
+					has_global_flag = DNC_Boxer_Rebellion_Defeated
+					has_global_flag = DNC_Boxer_Rebellion_Successed
+				}
+			}
+
+			completion_reward = { 
+				add_political_power = 50
+			}
+		}
+		focus = {
+			id = DNC_QIN_westernization_movement
+			icon = GFX_RUE_focus_state_duma
+			
+			relative_position_id = DNC_QIN_protecting_our_empire
+			x = 0
+			y = 1
+			
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_protecting_our_empire
+			}
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_qing_army
+			icon = GFX_QIN_focus_Qing_Army
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_westernization_movement
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_westernization_movement
+			}
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_boxer_war_xp
+			icon = GFX_QIN_focus_boxer_war_victory
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_qing_army
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_qing_army
+			}
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+				has_war_with = BOX
+				OR = {
+					NOT = {
+						BOX = {
+							exists = yes
+						}
+					}
+				}
+			}
+
+			completion_reward = { 
+				army_experience = 25
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_our_soldiers_and_tactics
+			icon = GFX_ENG_focus_briish_ppl
+			x = -4
+			y = 1
+			relative_position_id = DNC_QIN_qing_army
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_qing_army
+			}
+			available = {
+
+			}
+
+			completion_reward  ={
+				add_tech_bonus = {
+					name = land_doc_bonus
+					bonus = 0.5
+					uses = 2
+					category = land_doctrine
+				}
+			}
+		}
+		focus = {
+			id = DNC_QIN_mass_conscription
+			icon = GFX_GER_focus_mass_conscription
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_our_soldiers_and_tactics
+			cost = 10
+
+			mutually_exclusive = {
+				focus = DNC_QIN_german_style_units
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_our_soldiers_and_tactics
+			}
+			available = {
+
+			}
+
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_mass_infantry_attacks
+			icon = GFX_GER_focus_mass_conscription
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_mass_conscription
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_mass_conscription
+			}
+			available = {
+
+			}
+
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_german_style_units
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_our_soldiers_and_tactics
+			cost = 10
+
+			mutually_exclusive = {
+				focus = DNC_QIN_mass_conscription
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_our_soldiers_and_tactics
+			}
+			available = {
+
+			}
+
+			completion_reward = {
+				add_tech_bonus = {
+					uses = 1
+					bonus = 0.5
+					category = artillery
+				}
+			}
+		}
+		focus = {
+			id = DNC_QIN_light_unit_tactics
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_german_style_units
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_german_style_units
+			}
+			available = {
+
+			}
+
+			completion_reward = {
+
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_rebuild_armies
+			icon = GFX_RUE_focus_state_duma
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_boxer_war_xp
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_boxer_war_xp
+			}
+
+			available = {
+			}
+			completion_reward = {
+				add_manpower = 10000
+				add_war_support = 0.15
+			}
+		}
+		focus = {
+			id = DNC_QIN_resupply_arsenals
+			icon = GFX_generic_focus_seize_arsenal
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_boxer_war_xp
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_boxer_war_xp
+			}
+
+			available = {
+			}
+			completion_reward = {}
+		}
+		focus = {
+			id = DNC_QIN_yuan_become_beiyang_leader
+			icon = GFX_QIN_focus_yuan_beiyang_army_leader
+			x = 4
+			y = 1
+
+			cost = 2
+			relative_position_id = DNC_QIN_qing_army
+			prerequisite = {
+				focus = DNC_QIN_qing_army
+			}
+
+			available = {
+				has_country_flag = DNC_QIN_yuan_in_charge
+			}
+			completion_reward = {
+
+			}
+		}
+	focus = {
+		id = DNC_QIN_appoint_yuan_governer_of_peking
+		icon = GFX_QIN_focus_yuan_governer
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_yuan_become_beiyang_leader
+		cost = 10
+
+		prerequisite = {
+			focus = DNC_QIN_yuan_become_beiyang_leader
+		}
+
+		available = {
+		}
+		completion_reward = {
+			add_war_support = 0.05
+			add_stability = 0.05
+			army_experience = 30
+			add_political_power = -25
+		}
+	}
+	focus = {
+		id = DNC_QIN_smaller_regional_armies
+		icon = GFX_RUE_focus_state_duma
+		x = -2
+		y = 1
+		relative_position_id = DNC_QIN_put_out_boxers
+		cost = 10
+
+		prerequisite = {
+			focus = DNC_QIN_put_out_boxers
+		}
+		prerequisite = {
+			focus = DNC_QIN_light_unit_tactics
+			focus = DNC_QIN_mass_infantry_attacks
+		}
+
+		available = {
+
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = DNC_QIN_put_out_boxers
+		icon = GFX_QIN_end_imperial_rule
+		x = 1
+		y = 1
+
+		cost = 10
+		relative_position_id = DNC_QIN_rebuild_armies
+		prerequisite = {
+			focus = DNC_QIN_rebuild_armies
+	#After boxer protocols happen, Qing will have events about Boxer resistance that damage buildings, to combat this, Qing have to do focuses to fight them
+		}
+		prerequisite = {
+			focus = DNC_QIN_resupply_arsenals
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = DNC_QIN_continue_8_banners_system
+		icon = GFX_QIN_focus_end_imperial_rule
+		x = -2
+		y = 0
+		relative_position_id = DNC_QIN_smaller_regional_armies
+		cost = 10
+
+		mutually_exclusive = {
+			focus = DNC_QIN_get_foriegn_training
+		}
+
+		prerequisite = {
+			focus = DNC_QIN_smaller_regional_armies
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_war_support = 0.15
+			add_political_power = 30
+			add_manpower = 5000
+			army_experience = -70
+			swap_ideas = {
+    			remove_idea = QIN_outdated_army
+    			add_idea = QIN_outdated_army_2
+			}
+
+		}
+	}
+	focus = {
+		id = DNC_QIN_get_foriegn_training
+		icon = GFX_RUE_focus_state_duma
+		x = 2
+		y = 0
+		relative_position_id = DNC_QIN_smaller_regional_armies
+		cost = 10
+
+		mutually_exclusive = {
+			focus = DNC_QIN_continue_8_banners_system
+		}
+
+		prerequisite = {
+			focus = DNC_QIN_smaller_regional_armies
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+
+		}
+	}
+	focus = {
+		id = DNC_QIN_replace_spears_with_rifles
+		icon = GFX_RUE_focus_state_duma
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_get_foriegn_training
+		cost = 10
+
+		prerequisite = {
+			focus = DNC_QIN_get_foriegn_training
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+			add_political_power = -20
+			add_war_support = 0.05
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 250
+    			producer = GER
+				}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 250
+    			producer = RUE
+			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 250
+    			producer = ENG
+			}
+			add_equipment_to_stockpile = {
+    			type = infantry_equipment
+    			amount = 250
+    			producer = JAP
+			}
+			hidden_effect = {
+				GER = {
+					add_political_power = 10
+				}
+				RUE = {
+					add_political_power = 10
+				}
+				ENG = {
+					add_political_power = 10
+				}
+			}
+
+		}
+	}
+	focus = {
+		id = DNC_QIN_traditional_sytems
+		icon = GFX_RUE_focus_state_duma
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_continue_8_banners_system
+		cost = 10
+
+		prerequisite = {
+			focus = DNC_QIN_continue_8_banners_system
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = DNC_QIN_expand_regionalism
+		icon = GFX_RUE_focus_state_duma
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_smaller_regional_armies
+		cost = 10
+		prerequisite = {
+			focus = DNC_QIN_smaller_regional_armies
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+
+		}
+	}
+
+	focus = {
+		id = DNC_QIN_manchu_spirit
+		icon = GFX_RUE_focus_state_duma
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_traditional_sytems
+		cost = 10
+
+		prerequisite = {
+			focus = DNC_QIN_traditional_sytems
+		}
+		prerequisite = {
+			focus = DNC_QIN_expand_regionalism
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+
+		}
+	}
+		focus = {
+			id = DNC_QIN_finish_regional_program
+			icon = GFX_RUE_focus_state_duma
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_replace_spears_with_rifles
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_replace_spears_with_rifles
+			}
+			prerequisite = {
+				focus = DNC_QIN_expand_regionalism
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_modernizing_the_beiyang_army
+			icon = GFX_QIN_focus_modern_beiyang_army
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_appoint_yuan_governer_of_peking
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_appoint_yuan_governer_of_peking
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+				add_ideas = QIN_beiyang_army_modern
+
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_modernize_qing_equipment
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_peking_factories
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_peking_factories
+			}
+			available = {
+
+			}
+
+			completion_reward  ={
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_purchase_krupp_guns
+			icon = GFX_GER_focus_artillery
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_modernize_qing_equipment
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_modernize_qing_equipment
+			}
+			available = {
+				NOT ={
+					has_war_with = GER
+				}
+
+			}
+
+			completion_reward = {
+				add_political_power = -10
+				GER ={
+					country_event = germany.15
+				}
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_buy_modern_carbines
+			icon = GFX_generic_focus_gun_license
+			x = 1
+			y = 1
+
+			cost = 10
+			relative_position_id = DNC_QIN_modernize_qing_equipment
+			prerequisite = {
+				focus = DNC_QIN_modernize_qing_equipment
+			}
+			available = {
+				NOT = {
+					has_war_with = GER
+				}
+
+			}
+
+			completion_reward  ={
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_construct_military_factories_modernize
+			icon = GFX_GER_focus_artillery
+			x = 1
+			y = 1
+
+			cost = 7
+			relative_position_id = DNC_QIN_purchase_krupp_guns
+			prerequisite = {
+				focus = DNC_QIN_purchase_krupp_guns
+			}
+			prerequisite = {
+				focus =  DNC_QIN_buy_modern_carbines
+			}
+			available = {
+
+			}
+
+			completion_reward  ={
+				random_owned_state  ={
+					add_extra_state_shared_building_slots = 2
+				    add_building_construction = { type = arms_factory level = 2 instant_build = yes }
+
+				}
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_appoint_german_and_japanese_officers
+			icon = GFX_generic_focus_better_officers
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_modernizing_the_beiyang_army
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_modernizing_the_beiyang_army
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_found_baoding_military_academy
+			icon = GFX_generic_focus_academy_military
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_modernizing_the_beiyang_army
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_modernizing_the_beiyang_army
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_continue_army_expansion_beiyang
+			icon = GFX_QIN_focus_beiyang_expand
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_appoint_german_and_japanese_officers
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_found_baoding_military_academy
+			}
+			prerequisite = {
+				focus = DNC_QIN_appoint_german_and_japanese_officers
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_engineers
+			icon = GFX_QIN_focus_beiyang_engineer
+			x = -2
+			y = 1
+			relative_position_id = DNC_QIN_continue_army_expansion_beiyang
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_continue_army_expansion_beiyang
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_lay_telegraph_lines
+			icon = GFX_QIN_focus_beiyang_telegraph
+			x = 2
+			y = 1
+			relative_position_id = DNC_QIN_continue_army_expansion_beiyang
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_continue_army_expansion_beiyang
+			}
+
+			available = {
+				owns_state = 608
+			}
+
+			completion_reward = {
+					608  ={
+					add_extra_state_shared_building_slots = 3
+				    add_building_construction = { type = infrastructure level = 4 instant_build = yes }
+
+				}
+			}
+		}
+		focus = {
+			id = DNC_QIN_most_modern_army_china_beiyang_army
+			icon = GFX_QIN_focus_beiyang_modern_china
+			x = 2
+			y = 1
+
+			cost = 10
+			relative_position_id = DNC_QIN_engineers
+			prerequisite = {
+				focus = DNC_QIN_engineers
+				focus = DNC_QIN_lay_telegraph_lines
+			}
+
+			available = {
+				
+			}
+			completion_reward = {
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_arming_soldiers
+			icon = GFX_generic_focus_seize_arsenal
+			x = -8
+			y = 1
+			relative_position_id = DNC_QIN_westernization_movement
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_westernization_movement
+			}
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+			}
+
+			completion_reward = { 
+				random_owned_state  ={
+					add_building_construction = {
+                        type = arms_factory
+                        level = 1
+                        instant_build = yes
+                    }
+				add_extra_state_shared_building_slots = 1
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_arms_factories_shanghai
+			icon = GFX_goal_generic_construct_mil_factory
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_arming_soldiers
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_arming_soldiers
+			}
+
+			available = {
+				owns_state = 613
+			}
+
+			completion_reward = { 
+				613 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+                        type = arms_factory
+                        level = 2
+                        instant_build = yes
+                    }
+
+			}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_use_arsenals
+			icon = GFX_generic_focus_seize_arsenal
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_arming_soldiers
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_arming_soldiers
+			}
+
+			available = {
+			}
+
+			completion_reward = { 
+				add_political_power = -10
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_peking_factories
+			icon = GFX_goal_generic_construct_mil_factory
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_arms_factories_shanghai
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_arms_factories_shanghai
+			}
+			prerequisite = {
+				focus = DNC_QIN_use_arsenals
+			}
+
+			available = {
+				owns_state = 608
+			}
+
+			completion_reward = { 
+				608 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+                        type = arms_factory
+                        level = 3
+                        instant_build = yes
+                    }
+
+			}
+            
+			}
+		}
+
+		#END OF ARMY TREE
+
+		focus = {
+			id = DNC_QIN_qing_navy
+			icon = GFX_QIN_focus_qing_navy
+			x = 8
+			y = 1
+			relative_position_id = DNC_QIN_westernization_movement
+
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_westernization_movement
+			}
+
+			available = {
+
+			}
+
+			completion_reward = { 
+
+				add_political_power = 15
+				navy_experience = 10
+
+			}
+		}
+		
+		focus = {
+			id = DNC_QIN_navies_condition
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_qing_navy
+			cost = 7
+
+			prerequisite = {
+				focus = DNC_QIN_qing_navy
+			}
+
+			available = {
+
+			}
+
+			completion_reward = { 
+				
+				navy_experience = 10
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_root_out_corruption
+			icon = GFX_RUE_focus_state_duma
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_navies_condition
+
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_navies_condition
+			}
+
+			available = {
+
+			}
+
+			completion_reward = { 
+				country_event = dnc_china.12
+				navy_experience = 10
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_train_commanders
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_navies_condition
+
+			cost = 7
+
+			prerequisite = {
+				focus = DNC_QIN_navies_condition
+			}
+
+			available = {
+
+			}
+
+			completion_reward = { 
+				
+				navy_experience = 25
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_shipbuilding_policy
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_root_out_corruption
+
+			cost = 6
+
+			prerequisite = {
+				focus = DNC_QIN_root_out_corruption
+			}
+			prerequisite = {
+				focus = DNC_QIN_train_commanders
+			}
+
+			available = {
+
+			}
+
+			completion_reward = { 
+				
+				navy_experience = 10
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_power_in_cruisers
+			icon = GFX_GER_focus_new_cruisers
+			x = -1
+			y = 1
+
+			cost = 5
+			relative_position_id = DNC_QIN_shipbuilding_policy
+			mutually_exclusive = {
+				focus = DNC_QIN_a_smaller_fleet
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_shipbuilding_policy
+			}
+
+			available = {
+
+				owns_state = 593
+
+			}
+
+			completion_reward = { 
+
+				593 = {
+					add_extra_state_shared_building_slots = 3
+				    add_building_construction = { type = dockyard level = 3 instant_build = yes }
+				}
+				
+				navy_experience = 10
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_a_smaller_fleet
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_shipbuilding_policy
+			cost = 5
+
+			mutually_exclusive = {
+				focus = DNC_QIN_power_in_cruisers
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_shipbuilding_policy
+			}
+
+			available = {
+				owns_state = 609
+
+			}
+
+			completion_reward = { 
+
+				609  ={
+					add_extra_state_shared_building_slots = 3
+				    add_building_construction = { type = dockyard level = 3 instant_build = yes }
+
+				}
+				
+				navy_experience = 10
+
+			}
+		}
+		focus = {
+			id = DNC_QIN_unify_the_fleets
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_power_in_cruisers
+			cost = 6
+
+			prerequisite = {
+				focus = DNC_QIN_power_in_cruisers
+				focus = DNC_QIN_a_smaller_fleet
+			}
+			available = {
+
+			}
+
+			completion_reward = { 
+				
+				navy_experience = 10
+
+			}
+		}
+
+		#INDUSTRY TREE
+
+		focus = {
+			id = DNC_QIN_the_chinese_industry
+			icon = GFX_RUE_focus_state_duma
+			x = 57
+			y = 15
+
+			cost = 10
+
+			available = {
+				OR = {
+					has_global_flag = DNC_Boxer_Rebellion_Successed
+					has_global_flag = DNC_Boxer_Rebellion_Defeated
+				}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_the_industrial_north
+			icon = GFX_RUE_focus_state_duma
+			x = -6
+			y = 1
+			relative_position_id = DNC_QIN_the_chinese_industry
+			prerequisite = {
+				focus = DNC_QIN_the_chinese_industry
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_the_agricultural_south
+			icon = GFX_RUE_focus_state_duma
+			x = 6
+			y = 1
+			relative_position_id = DNC_QIN_the_chinese_industry
+			prerequisite = {
+				focus = DNC_QIN_the_chinese_industry
+			}
+
+			cost = 7
+
+			available = {
+				owns_state = 605
+				owns_state = 325
+				owns_state = 747
+				owns_state = 603
+				owns_state = 591
+				owns_state = 751
+				
+			}
+
+			completion_reward = { 
+				add_political_power = 25
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_zhili_railway
+			icon = GFX_RUE_focus_state_duma
+			x = -3
+			y = 1
+			relative_position_id = DNC_QIN_the_industrial_north
+			prerequisite = {
+				focus = DNC_QIN_the_industrial_north
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_kaiping_railway_maintain
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_zhili_railway
+			prerequisite = {
+				focus = DNC_QIN_zhili_railway
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_kaiping_railway_expand
+			icon = GFX_RUE_focus_state_duma
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_zhili_railway
+			prerequisite = {
+				focus = DNC_QIN_zhili_railway
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_get_engineers
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_kaiping_railway_expand
+			prerequisite = {
+				focus = DNC_QIN_kaiping_railway_expand
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_employ_zhan_tianyu
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_kaiping_railway_maintain
+			prerequisite = {
+				focus = DNC_QIN_kaiping_railway_maintain
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_begin_jingzhang_railway
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_get_engineers
+			prerequisite = {
+				focus = DNC_QIN_employ_zhan_tianyu
+			}
+			prerequisite = {
+				focus = DNC_QIN_get_engineers
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				activate_decision = QIN_jingzhang_railway
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_standard_gauge
+			icon = GFX_RUE_focus_state_duma
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_begin_jingzhang_railway
+			prerequisite = {
+				focus = DNC_QIN_begin_jingzhang_railway
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_construct_fengtai
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_begin_jingzhang_railway
+			prerequisite = {
+				focus = DNC_QIN_begin_jingzhang_railway
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_chinas_first_nationalized_railway
+			icon = GFX_GER_focus_develop_colonies
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_standard_gauge
+			prerequisite = {
+				focus = DNC_QIN_standard_gauge
+			}
+			prerequisite = {
+				focus = DNC_QIN_construct_fengtai
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_foreign_owned_railways
+			icon = GFX_RUE_focus_state_duma
+			x = 3
+			y = 1
+			relative_position_id = DNC_QIN_the_industrial_north
+			prerequisite = {
+				focus = DNC_QIN_the_industrial_north
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_opening_east_china_railway
+			icon = GFX_QIN_focus_russian_manchuria
+			x = 2
+			y = 1
+			relative_position_id = DNC_QIN_foreign_owned_railways
+			prerequisite = {
+				focus = DNC_QIN_foreign_owned_railways
+			}
+
+			cost = 3
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_allow_anglo_german_companies
+			icon = GFX_GER_focus_european_investment
+			x = -2
+			y = 1
+			relative_position_id = DNC_QIN_foreign_owned_railways
+			prerequisite = {
+				focus = DNC_QIN_foreign_owned_railways
+			}
+
+			cost = 8
+
+			available = {
+				owns_state = 613
+				
+			}
+
+			completion_reward = { 
+            	add_political_power = -20
+				add_stability = -0.05
+				613 = {
+				add_building_construction = {
+                        type = industrial_complex
+                        level = 3
+                        instant_build = yes
+                    }
+
+			}
+		}
+	}
+		focus = {
+			id = DNC_QIN_canton_railway
+			icon = GFX_generic_focus_rail_construction
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_allow_anglo_german_companies
+			prerequisite = {
+				focus = DNC_QIN_allow_anglo_german_companies
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				593 ={
+					add_building_construction = {
+						type = infrastructure
+						level = 5
+					}
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_qingdao_jinan_railway
+			icon = GFX_generic_focus_rail_construction
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_allow_anglo_german_companies
+			prerequisite = {
+				focus = DNC_QIN_allow_anglo_german_companies
+			}
+
+			cost = 10
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				GER = {
+					country_event = germany.16
+				}
+				597 ={
+					add_building_construction = {
+						type = infrastructure
+						level = 5
+					}
+				}
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_protest_russian_deployment
+			icon = GFX_QIN_focus_russian_war
+			search_filters = { FOCUS_FILTER_POLITICAL }
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_manchuria_crisis
+			mutually_exclusive = {
+				focus = DNC_QIN_support_russia
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_manchuria_crisis
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_support_russia
+			icon = GFX_QIN_focus_russian_agreement
+			search_filters = { FOCUS_FILTER_POLITICAL }
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_manchuria_crisis
+			mutually_exclusive = {
+				focus = DNC_QIN_protest_russian_deployment
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_manchuria_crisis
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_manchuria_crisis
+			icon = GFX_JAP_focus_the_manchurian_crisis
+			search_filters = { FOCUS_FILTER_POLITICAL }
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_opening_east_china_railway
+			prerequisite = {
+				focus = DNC_QIN_opening_east_china_railway
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_limited_industrialization_south_china
+			icon = GFX_RUE_focus_state_duma
+			x = -3
+			y = 1
+			relative_position_id = DNC_QIN_the_agricultural_south
+			mutually_exclusive = {
+				focus = DNC_QIN_edit_agricultural_system
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_the_agricultural_south
+			}
+
+			cost = 10
+
+			available = {
+				owns_state = 605
+				owns_state = 325
+				owns_state = 747
+				owns_state = 603
+				owns_state = 591
+				
+			}
+
+			completion_reward = { 
+				add_stability = -0.05
+				add_political_power = -15
+				591 = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+                        type = infrastructure
+                        level = 2
+                        instant_build = yes
+                    	}
+
+				}
+				
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_edit_agricultural_system
+			icon = GFX_RUE_focus_state_duma
+			x = 3
+			y = 1
+			relative_position_id = DNC_QIN_the_agricultural_south
+			mutually_exclusive = {
+				focus = DNC_QIN_limited_industrialization_south_china
+			}
+
+			prerequisite = {
+				focus = DNC_QIN_the_agricultural_south
+			}
+
+			cost = 10
+
+			available = {
+				owns_state = 605
+				owns_state = 325
+				owns_state = 747
+				owns_state = 603
+				owns_state = 591
+				
+			}
+
+			completion_reward = { 
+				add_stability = 0.05
+				591 = {
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+                        type = industrial_complex
+                        level = 1
+                        instant_build = yes
+                    	}
+
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_introduce_farming_equipment
+			icon = GFX_QIN_focus_tractor
+			x = -2
+			y = 1
+			relative_position_id = DNC_QIN_edit_agricultural_system
+			prerequisite = {
+				focus = DNC_QIN_edit_agricultural_system
+			}
+
+			cost = 8
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				add_tech_bonus = {
+    				bonus = 0.5
+   					uses = 1
+    				category = industry
+					}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_guarantee_farmers
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_edit_agricultural_system
+			prerequisite = {
+				focus = DNC_QIN_edit_agricultural_system
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				add_stability = 0.05
+				add_political_power = 25
+				add_war_support = 0.05
+        
+			}
+		}
+		focus = {
+			id = DNC_QIN_larger_farms
+			icon = GFX_RUE_focus_state_duma
+			x = 2
+			y = 1
+			relative_position_id = DNC_QIN_edit_agricultural_system
+			prerequisite = {
+				focus = DNC_QIN_edit_agricultural_system
+			}
+
+			cost = 10
+
+			available = {
+				owns_state = 751
+				
+			}
+
+			completion_reward = { 
+				751 = {
+					add_extra_state_shared_building_slots = 3
+					add_building_construction = {
+                        type = industrial_complex
+                        level = 3
+                        instant_build = yes
+                    	}
+					}
+				}
+            
+			}
+		focus = {
+			id = DNC_QIN_maintain_society
+			icon = GFX_QIN_focus_agriculture
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_guarantee_farmers
+			prerequisite = {
+				focus = DNC_QIN_introduce_farming_equipment
+			}
+			prerequisite = {
+				focus = DNC_QIN_guarantee_farmers
+			}
+			prerequisite = {
+				focus = DNC_QIN_larger_farms
+			}
+
+			cost = 7
+
+			available = {
+				
+			}
+
+			completion_reward = { 
+				add_stability = 0.1
+				add_political_power = 25
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_allow_french_and_british_companies
+			icon = GFX_RUE_focus_state_duma
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_limited_industrialization_south_china
+			prerequisite = {
+				focus = DNC_QIN_limited_industrialization_south_china
+			}
+
+			cost = 8
+
+			available = {
+				owns_state = 605
+				owns_state = 750
+				owns_state = 593
+				
+			}
+
+			completion_reward = { 
+				add_stability = -0.05
+				add_political_power = -30
+				750 = {
+					add_extra_state_shared_building_slots = 2
+					add_building_construction = {
+                        type = industrial_complex
+                        level = 2
+                        instant_build = yes
+                    }
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_begin_mining_sichuan
+			icon = GFX_goal_generic_construction2
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_allow_french_and_british_companies
+			prerequisite = {
+				focus = DNC_QIN_allow_french_and_british_companies
+			}
+
+			cost = 8
+
+			available = {
+				owns_state = 605
+				
+			}
+
+			completion_reward = { 
+				605 = {
+					add_resource = {
+    					type = steel
+    					amount = 10
+						}
+					add_resource = {
+    					type = oil
+    					amount = 5
+					}
+				}
+			}
+		}
+		focus = {
+			id = DNC_QIN_standard_gauge_south_china
+			icon = GFX_RUE_focus_state_duma
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_allow_french_and_british_companies
+			prerequisite = {
+				focus = DNC_QIN_allow_french_and_british_companies
+			}
+
+			cost = 8
+
+			available = {
+				owns_state = 605
+				owns_state = 325
+				owns_state = 747
+				owns_state = 603
+				
+			}
+
+			completion_reward = { 
+				605 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+					}
+				}
+				603 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+					}
+				}
+				
+				325 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+					}
+				}
+				747 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+					}
+				}
+				
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_chao_shan_railway
+			icon = GFX_generic_focus_rail_construction
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_begin_mining_sichuan
+			prerequisite = {
+				focus = DNC_QIN_begin_mining_sichuan
+			}
+			prerequisite = {
+				focus = DNC_QIN_standard_gauge_south_china
+			}
+
+			cost = 10
+
+			available = {
+				owns_state = 593
+				
+			}
+
+			completion_reward = { 
+				593 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 5
+					}
+					add_resource = {
+    					type = tungsten
+    					amount = 8
+						}
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_kunming_haiphong_railway
+			icon = GFX_generic_focus_rail_construction
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_standard_gauge_south_china
+			prerequisite = {
+				focus = DNC_QIN_begin_mining_sichuan
+			}
+			prerequisite = {
+				focus = DNC_QIN_standard_gauge_south_china
+			}
+
+			cost = 10
+
+			available = {
+				owns_state = 325
+				
+			}
+
+			completion_reward = { 
+				325 = {
+					add_building_construction = {
+						type = infrastructure
+						level = 5
+					}
+					add_resource = {
+    					type = steel
+    					amount = 8
+						}
+					
+				}
+            
+			}
+		}
+
+		#PAN-ASIANIST
+
+
+	focus = {
+			id = DNC_QIN_contact_asian_minorities
+			icon = GFX_QIN_focus_pan_asianism
+			x = 17
+			y = 11
+
+			cost = 10
+
+			available = {
+				has_government = democratic
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+				}
+
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	# focus = {
+	# 	id = DNC_QIN_ally_japanese
+	# 	icon = GFX_QIN_focus_japanese_agreement
+	# 	x = 7
+	# 	y = 12
+	# 	cost = 10
+
+	# 	mutually_exclusive = {
+	# 		focus = DNC_QIN_chinese_pan_asianism
+	# 	}
+
+	# 	prerequisite = {
+	# 		focus = DNC_QIN_contact_asian_minorities
+	# 	}
+
+	# 	available = {
+	# 		has_government = democratic
+	# 		has_stability > 0.5
+	# 		has_country_leader = {
+    # 			name = "Sun Yat Sen"
+    # 			ruling_only = yes
+	# 			}
+	# 		NOT = {
+	# 			has_war_with = JAP
+	# 		}
+	# 	}
+
+	# 	completion_reward = { 
+            
+	# 	}
+	# }
+	# focus = {
+	# 	id = DNC_QIN_chna_jap_agreements
+	# 	icon = GFX_Unkown
+	# 	relative_position_id = DNC_QIN_ally_japanese
+	# 	x = 0
+	# 	y = 1
+
+	# 	prerequisite = {
+	# 		focus = DNC_QIN_ally_japanese
+	# 	}
+		
+	# }
+		focus = {
+			id = DNC_QIN_chinese_pan_asianism
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 17
+			y = 12
+
+			cost = 10
+
+			# mutually_exclusive = {
+			# 	focus = DNC_QIN_ally_japanese
+			# }
+
+			prerequisite = {
+				focus = DNC_QIN_contact_asian_minorities
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_support_chinese_nationalists_taiwan
+			icon = GFX_QIN_focus_support_taiwan_resistance
+			x = 15
+			y = 13
+
+			cost = 7
+
+			prerequisite = {
+				focus = DNC_QIN_chinese_pan_asianism
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+				JAP = {
+					owns_state = 524
+				}
+				NOT = {
+					has_war_with = JAP
+				}
+			}
+
+			completion_reward = { 
+				add_manpower = -200
+				add_political_power = 40
+				add_war_support = 0.05
+
+				524 = {
+					add_resistance = 35
+					add_compliance = -30
+					damage_building = {
+    					type = infrastructure
+    					damage = 3
+						}
+					damage_building = {
+    					type = arms_factory
+    					damage = 3
+						}
+				}
+				JAP = {
+					country_event = dnc_japan.10
+				}
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_5_races_one_flag_pan_asianist
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 17
+			y = 13
+
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_chinese_pan_asianism
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_unity_through_diversity
+			icon = GFX_RUE_focus_state_duma
+			x = 17
+			y = 14
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_5_races_one_flag_pan_asianist
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_government_representation_minorities
+			icon = GFX_RUE_focus_state_duma
+			x = 17
+			y = 15
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_unity_through_diversity
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_autonomy_mongols
+			icon = GFX_RUE_focus_state_duma
+			x = 15
+			y = 16
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_government_representation_minorities
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_dalai_lama_agreement
+			icon = GFX_RUE_focus_state_duma
+			x = 17
+			y = 16
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_government_representation_minorities
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+		
+	focus = {
+			id = DNC_QIN_autonomy_xinjiang_huis
+			icon = GFX_RUE_focus_state_duma
+			x = 19
+			y = 16
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_government_representation_minorities
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	
+	focus = {
+			id = DNC_QIN_talks_with_manchus
+			icon = GFX_RUE_focus_state_duma
+			x = 17
+			y = 17
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_autonomy_mongols
+			}
+			prerequisite = {
+				focus = DNC_QIN_autonomy_xinjiang_huis
+			}
+			prerequisite = {
+				focus = DNC_QIN_dalai_lama_agreement
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_unified_china_5_races_one_flag
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 17
+			y = 18
+
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_talks_with_manchus
+			}
+
+			available = {
+				has_government = social_egalitarianism
+				has_stability > 0.5
+				has_country_leader = {
+    				name = "Sun Yat Sen"
+    				ruling_only = yes
+					}
+			}
+
+			completion_reward = { 
+				add_stability = 0.3
+				add_war_support = 0.3
+				add_political_power = 100
+            
+			}
+		}
+
+	focus = {
+			id = DNC_QIN_form_tongmenghui
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = -3
+			y = 1
+			relative_position_id = DNC_QIN_sun_yat_sen
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_sun_yat_sen
+			}
+
+			available = {
+				date > 1905.20.8
+
+			}
+
+			completion_reward = { 
+				add_stability = -0.05
+				add_political_power = 25
+				add_popularity = {
+    				ideology = social_egalitarianism
+    				popularity = 0.1
+				}
+				add_popularity = {
+    				ideology = social_liberalism
+    				popularity = 0.1
+				}
+				#Social liberal party leader becomes Sun Yat Sen & both the social egalitarianism & liberal parties renamed 2 Tongmenghui
+				
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_recruit_members_liberal_societies
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 3
+			y = 1
+			relative_position_id = DNC_QIN_sun_yat_sen
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_sun_yat_sen
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+				add_stability = -0.05
+				add_political_power = -25
+				add_popularity = {
+    				ideology = social_egalitarianism
+    				popularity = 0.05
+				}
+				add_popularity = {
+    				ideology = social_liberalism
+    				popularity = -0.05
+				}
+				
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_promote_unity_five_races
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_form_tongmenghui
+			cost = 7
+
+
+			prerequisite = {
+				focus = DNC_QIN_form_tongmenghui
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_begin_operations_in_more_china
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_form_tongmenghui
+			cost = 7
+
+
+			prerequisite = {
+				focus = DNC_QIN_form_tongmenghui
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_expand_rep_journalism
+			icon = GFX_QIN_focus_press_democratic
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_recruit_members_liberal_societies
+			cost = 5
+
+
+			prerequisite = {
+				focus = DNC_QIN_recruit_members_liberal_societies
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_expand_rep_soldiers
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_recruit_members_liberal_societies
+			cost = 5
+
+
+			prerequisite = {
+				focus = DNC_QIN_recruit_members_liberal_societies
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+
+		focus = {
+			id = DNC_QIN_international_support
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_sun_yat_sen
+			cost = 7
+
+
+			prerequisite = {
+				focus = DNC_QIN_sun_yat_sen
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_unite_provincial_societies_rep
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_international_support
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_international_support
+			}
+
+			available = {
+				has_completed_focus = DNC_QIN_most_modern_army_china_beiyang_army
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+	focus = {
+		id = DNC_QIN_the_fire_of_revolution_burns
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = 0
+		y = 1
+		relative_position_id = DNC_QIN_unite_provincial_societies_rep
+		cost = 3
+
+
+		prerequisite = {
+			focus = DNC_QIN_unite_provincial_societies_rep
+		}
+		prerequisite = {
+			focus = DNC_QIN_begin_operations_in_more_china
+		}
+		prerequisite = {
+			focus = DNC_QIN_promote_unity_five_races
+		}
+		prerequisite = {
+			focus = DNC_QIN_expand_rep_journalism
+		}
+		prerequisite = {
+			focus = DNC_QIN_expand_rep_soldiers
+		}
+
+		available = {
+			
+
+		}
+
+		completion_reward = {
+			
+				custom_effect_tooltip = "QIN_ROC_REVOLUTION"
+				hidden_effect = {
+					set_global_flag = QIN_REVOLUTION
+					set_country_flag = side_with_CHI
+					country_event = {
+    					id = ww1_china.3
+    					days = 10
+					}
+				
+					country_event = {
+						id = ww1_china.4
+						days = 22
+					}
+					country_event = {
+						id = ww1_china.5
+						days = 22
+					}
+					country_event = {
+						id = ww1_china.6
+						days = 23
+					}
+					country_event = {
+						id = ww1_china.7
+						days = 29
+					}
+					country_event = {
+						id = ww1_china.8
+						
+						days = 30
+					}
+					country_event = {
+						id = ww1_china.9
+						
+						days = 106
+					}
+					country_event = {
+						id = ww1_china.10
+						
+						days = 34
+					}
+					country_event = {
+						id = ww1_china.11
+						days = 35
+					}
+					country_event = {
+						id = ww1_china.12
+						days = 36
+					}
+					country_event = {
+						id = ww1_china.13
+						days = 38
+					}
+					country_event = {
+						id = ww1_china.14
+						days = 42
+					}
+					country_event = {
+						id = ww1_china.15
+						days = 40
+					}
+					country_event = {
+						id = ww1_china.16
+						days = 42
+					}
+					country_event = {
+						id = ww1_china.17
+						days = 48
+					}
+					country_event = {
+						id = ww1_china.18
+						days = 52
+					}
+				}
+			}
+		}
+
+		
+	focus = {
+		id = DNC_QIN_form_fed_of_provincial_governors_representatives
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = 0
+		y = 3
+			
+		relative_position_id = DNC_QIN_the_fire_of_revolution_burns
+		cost = 7
+
+		allow_branch = {
+			has_completed_focus = DNC_QIN_the_fire_of_revolution_burns
 		}
 		available = {
-			KOR = { exists = yes }
+			
+		}
+
+		completion_reward = { 
+		
+           
 		}
 	}
-
-	#Focus for Invite japan
 	focus = {
-		id = QIN_invite_japan
-		icon = GFX_goal_continuous_research
-		x = 17
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_cooperative_research }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Invite the RAJ
-	focus = {
-		id = QIN_invite_the_raj
-		icon = GFX_focus_research2
-		x = 16
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_invite_korea
-		}
-		prerequisite = {
-			focus = QIN_invite_japan
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Crack down on disadance
-	focus = {
-		id = QIN_crack_down_on_disadance
-		icon = GFX_focus_smiling_buddha
-		x = 9
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_focus_on_internal_stablity }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Propaganda Campaign
-	focus = {
-		id = QIN_propaganda_campaign
-		icon = GFX_goal_generic_propaganda
-		x = 9
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_crack_down_on_disadance }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Circumvent the treaty
-	focus = {
-		id = QIN_circumvent_the_treaty
-		icon = GFX_goal_continuous_boost_freedom
-		x = 7
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_modernize_imperial_examination
-			focus = QIN_propaganda_campaign
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Million man army
-	focus = {
-		id = QIN_million_man_army
-		icon = GFX_focus_chi_army_reform
-		x = 12
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_create_a_modern_navy }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Create a modern navy
-	focus = {
-		id = QIN_create_a_modern_navy
-		icon = GFX_focus_generic_navy_battleship2
-		x = 12
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_infrastructure_modernization
-		}
-		prerequisite = {
-			focus = QIN_standardized_army_training
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Early Fighter Plane design
-	focus = {
-		id = QIN_early_fighter_plane_design
-		icon = GFX_goal_generic_air_fighter2
-		x = 14
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_million_man_army
-		}
-		prerequisite = {
-			focus = QIN_steal_western_designs
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Steal western designs
-	focus = {
-		id = QIN_steal_western_designs
-		icon = GFX_focus_usa_focus_on_europe
-		x = 16
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_invite_the_raj }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Draft the treaty
-	focus = {
-		id = QIN_draft_the_treaty
-		icon = GFX_goal_generic_forceful_treaty
-		x = 24
-		y = 8
-		cost = 5
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_increase_our_authority }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Begin the embargos
-	focus = {
-		id = QIN_begin_the_embargos
-		icon = GFX_goal_generic_trade
-		x = 19
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_antiwestern_aim }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Free India
-	focus = {
-		id = QIN_free_india
-		icon = GFX_focus_RAJ_all_india_forward_bloc
-		x = 23
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_draft_the_treaty }
-		mutually_exclusive = { focus = QIN_expel_the_french }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			#this is not meant to be a wargoal this is part of drafting the treaty meaning that this is focuses for AFTER they won the war this just releases the nations as a independent country
-		}
-	}
-
-	#Focus for Expel the French
-	focus = {
-		id = QIN_expel_the_french
-		icon = GFX_focus_fra_le_deluge
-		x = 25
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_draft_the_treaty }
-		mutually_exclusive = { focus = QIN_free_india }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			#this is not meant to be a wargoal this is part of drafting the treaty meaning that this is focuses for AFTER they won the war this just releases the nations as puppets
-		}
-	}
-
-	#Focus for Prepare for a oppertunity
-	focus = {
-		id = QIN_prepare_for_a_oppertunity
-		icon = GFX_focus_AST_war_japan
-		x = 31
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_two_powers }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Anti-British Embargo
-	focus = {
-		id = QIN_antibritish_embargo
-		icon = GFX_focus_attack_britain
-		x = 19
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_begin_the_embargos }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Anti-French Aim
-	focus = {
-		id = QIN_antifrench_aim
-		icon = GFX_focus_attack_france
-		x = 19
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_antibritish_embargo }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Closer ties to Asia
-	focus = {
-		id = QIN_closer_ties_to_asia
-		icon = GFX_goal_molotov_ribbentrop_pact
-		x = 19
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_antifrench_aim }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Press our demands on russia
-	focus = {
-		id = QIN_press_our_demands_on_russia
-		icon = GFX_focus_generic_attack_cyprus
-		x = 25
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_expel_the_french
-			focus = QIN_free_india
-		}
-		mutually_exclusive = { focus = QIN_befriend_the_russians }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for A common enemy
-	focus = {
-		id = QIN_a_common_enemy
-		icon = GFX_goal_generic_major_war
-		x = 21
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_closer_ties_to_asia
-			focus = QIN_befriend_the_russians
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Protectors of Asia
-	focus = {
-		id = QIN_protectors_of_asia
-		icon = GFX_focus_attack_japan
-		x = 25
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_press_our_demands_on_russia }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			give_guarantee = KOR
-		}
-	}
-
-	#Focus for The two powers
-	focus = {
-		id = QIN_the_two_powers
-		icon = GFX_focus_jap_pacific_guardian
-		x = 29
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_increase_our_authority
-			focus = QIN_empower_the_war_industry
-		}
-		mutually_exclusive = { focus = QIN_no_need_for_japan }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Ask for a alliance
-	focus = {
-		id = QIN_ask_for_a_alliance
-		icon = GFX_focus_chi_collaboration_with_the_japanese
-		x = 27
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_two_powers }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Secoure Siam
-	focus = {
-		id = QIN_secoure_siam
-		icon = GFX_goal_generic_territory_or_war
-		x = 29
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_two_powers }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Stratagic invasions of colonies
-	focus = {
-		id = QIN_stratagic_invasions_of_colonies
-		icon = GFX_focus_jap_strike_south
-		x = 27
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_ask_for_a_alliance
-			focus = QIN_secoure_siam
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Draw our borders
-	focus = {
-		id = QIN_draw_our_borders
-		icon = GFX_goal_generic_navy_battleship
-		x = 29
-		y = 13
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_operation_jhu_sn }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Empower the king
-	focus = {
-		id = QIN_empower_the_king
-		icon = GFX_focus_generic_monarchy_2
-		x = 38
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_keep_the_mandate }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Revoke the mandate
-	focus = {
-		id = QIN_revoke_the_mandate
-		icon = GFX_goal_tfv_sever_ties_with_uk
-		x = 52
-		y = 2
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_mandate_of_heaven }
-		mutually_exclusive = { focus = QIN_keep_the_mandate }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Keep the mandate
-	focus = {
-		id = QIN_keep_the_mandate
-		icon = GFX_goal_tfv_strengthen_commonwealth_ties
-		x = 38
-		y = 2
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_mandate_of_heaven }
-		mutually_exclusive = { focus = QIN_revoke_the_mandate }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for A leader chosen by the people
-	focus = {
-		id = QIN_a_leader_chosen_by_the_people
-		icon = GFX_goal_support_democracy
-		x = 57
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_revoke_the_mandate }
-		mutually_exclusive = { focus = QIN_anarchy }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Anarchy
-	focus = {
-		id = QIN_anarchy
-		icon = GFX_goal_support_communism
-		x = 48
-		y = 3
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_revoke_the_mandate }
-		mutually_exclusive = { focus = QIN_a_leader_chosen_by_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Supress the people
-	focus = {
-		id = QIN_supress_the_people
-		icon = GFX_focus_spr_the_anti_fascist_workers_revolution
-		x = 22
-		y = 12
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_protectors_of_asia
-			focus = QIN_befriend_the_russians
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Start decenteralizing
-	focus = {
-		id = QIN_start_decenteralizing
-		icon = GFX_goal_generic_war_with_comintern
-		x = 48
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_repeal_the_monarchy }
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			#release all releasable nations in china as puppets and form faction
-		}
-	}
-
-	#Focus for Repeal the monarchy
-	focus = {
-		id = QIN_repeal_the_monarchy
-		icon = GFX_focus_generic_monarchy_1
-		x = 48
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_anarchy }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for A constitutional moanrch
-	focus = {
-		id = QIN_a_constitutional_moanrch
-		icon = GFX_focus_generic_monarchy_1
-		x = 57
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_a_leader_chosen_by_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for A friendly approach to the British
-	focus = {
-		id = QIN_a_friendly_approach_to_the_british
-		icon = GFX_focus_eng_the_sun_never_sets
-		x = 52
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_secure_our_independence }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Secure our underside
-	focus = {
-		id = QIN_secure_our_underside
-		icon = GFX_focus_attack_france
-		x = 54
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_secure_our_independence }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for That single port.
-	focus = {
-		id = QIN_that_single_port
-		icon = GFX_focus_ger_return_of_the_kaiser
-		x = 56
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_secure_our_independence }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Mongolian resources for Hong Kong
-	focus = {
-		id = QIN_mongolian_resources_for_hong_kong
-		icon = GFX_focus_eng_concessions_to_the_trade_unions
-		x = 52
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_lift_the_embargo }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Weapons trade deal
-	focus = {
-		id = QIN_weapons_trade_deal
-		icon = GFX_focus_ger_oppose_hitler
-		x = 56
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_that_single_port }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Send resources to Indochina
-	focus = {
-		id = QIN_send_resources_to_indochina
-		icon = GFX_goal_generic_small_arms
-		x = 54
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_secure_our_underside }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Begin the revolt
-	focus = {
-		id = QIN_begin_the_revolt
-		icon = GFX_focus_generic_join_comintern
-		x = 54
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_send_resources_to_indochina }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Lift the embargo
-	focus = {
-		id = QIN_lift_the_embargo
-		icon = GFX_focus_eng_expose_the_belly_of_the_bear
-		x = 52
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_a_friendly_approach_to_the_british }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Draw the line
-	focus = {
-		id = QIN_draw_the_line
-		icon = GFX_focus_generic_provoke_border_clashes
-		x = 54
-		y = 9
-		cost = 5
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_begin_the_revolt }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Begin the invasion
-	focus = {
-		id = QIN_begin_the_invasion
-		icon = GFX_focus_generic_little_entente
-		x = 54
-		y = 10
+		id = DNC_QIN_make_outline_of_roc
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = -1
+		y = 1
+		relative_position_id = DNC_QIN_form_fed_of_provincial_governors_representatives
 		cost = 1
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_draw_the_line }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Researchers for Kiautschou Bay
-	focus = {
-		id = QIN_researchers_for_kiautschou_bay
-		icon = GFX_goal_generic_dangerous_deal
-		x = 56
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_weapons_trade_deal }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Curb inflation
-	focus = {
-		id = QIN_curb_inflation
-		icon = GFX_focus_mex_privatisation
-		x = 58
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_livelihood }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Empower the civilian industrry
-	focus = {
-		id = QIN_empower_the_civilian_industrry
-		icon = GFX_goal_generic_consumer_goods
-		x = 58
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_curb_inflation }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for China's First elections
-	focus = {
-		id = QIN_chinas_first_elections
-		icon = GFX_focus_generic_self_management
-		x = 60
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_democracy }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Education with Chinese characteristics
-	focus = {
-		id = QIN_education_with_chinese_characteristics
-		icon = GFX_goal_tfv_generic_tech_sharing
-		x = 62
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_nationalism }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Democracy
-	focus = {
-		id = QIN_democracy
-		icon = GFX_goal_support_democracy
-		x = 60
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_three_principles }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Nationalism
-	focus = {
-		id = QIN_nationalism
-		icon = GFX_focus_chi_cooperation_with_the_nationalists
-		x = 62
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_three_principles }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for The Three principles
-	focus = {
-		id = QIN_the_three_principles
-		icon = GFX_focus_chi_legislative_yuan
-		x = 60
-		y = 5
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_a_constitutional_moanrch }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Livelihood
-	focus = {
-		id = QIN_livelihood
-		icon = GFX_goal_molotov_ribbentrop_pact
-		x = 58
-		y = 6
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_three_principles }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for United Front For Democracy
-	focus = {
-		id = QIN_united_front_for_democracy
-		icon = GFX_focus_prc_social_democracy
-		x = 60
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_chinas_first_elections }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Glory to the republic!
-	focus = {
-		id = QIN_glory_to_the_republic
-		icon = GFX_focus_chi_cooperation_with_the_nationalists
-		x = 62
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_education_with_chinese_characteristics }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Fully modernized china!
-	focus = {
-		id = QIN_fully_modernized_china
-		icon = GFX_goal_generic_demand_territory
-		x = 60
-		y = 9
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_empower_the_civilian_industrry
-			focus = QIN_united_front_for_democracy
-			focus = QIN_glory_to_the_republic
+			focus = DNC_QIN_form_fed_of_provincial_governors_representatives
 		}
-		ai_will_do = {
-			factor = 1
+
+		available = {
+			
+
+		}
+
+		completion_reward = { 
+			
+            
 		}
 	}
 
-	#Focus for Low-Supported king
 	focus = {
-		id = QIN_lowsupported_king
-		icon = GFX_goal_generic_neutrality_focus
-		x = 38
-		y = 4
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_empower_the_king }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+		id = DNC_QIN_republican_elections
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_form_fed_of_provincial_governors_representatives
+		cost = 1
 
-	#Focus for War plan france
-	focus = {
-		id = QIN_war_plan_france
-		icon = GFX_focus_attack_france
-		x = 42
-		y = 10
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_prepare_for_war }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for War plan japan
-	focus = {
-		id = QIN_war_plan_japan
-		icon = GFX_focus_attack_japan
-		x = 41
-		y = 11
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_war_plan_russia
-			focus = QIN_war_plan_france
+			focus = DNC_QIN_form_fed_of_provincial_governors_representatives
 		}
-		ai_will_do = {
-			factor = 1
+
+		available = {
+			
+
+		}
+
+		completion_reward = { 
+			#TODO event for elections	
+            
 		}
 	}
 
-	#Focus for Attack Britian
 	focus = {
-		id = QIN_attack_britian
-		icon = GFX_focus_attack_britain
-		x = 38
-		y = 12
-		cost = 10
-		available_if_capitulated = yes
+		id = DNC_QIN_sun_yat_sen_inagurated
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = 1
+		y = 1
+		relative_position_id = DNC_QIN_make_outline_of_roc
+		cost = 1
+
+
 		prerequisite = {
-			focus = QIN_airnaval_tactics
+			focus = DNC_QIN_make_outline_of_roc
 		}
 		prerequisite = {
-			focus = QIN_war_plan_japan
+			focus = DNC_QIN_republican_elections
 		}
-		ai_will_do = {
-			factor = 1
+
+		available = {
+			
+
+		}
+
+		completion_reward = { 
+			
+            
 		}
 	}
-
-	#Focus for Befriend England
 	focus = {
-		id = QIN_befriend_england
-		icon = GFX_goal_generic_improve_relations
-		x = 43
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_gain_support_through_diplomacy }
-		mutually_exclusive = { focus = QIN_befriend_germany }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+		id = DNC_QIN_sun_stays_as_president
+		icon = GFX_QIN_focus_5_races_one_flag
+		x = -3
+		y = 1
+		relative_position_id = DNC_QIN_sun_yat_sen_inagurated
 
-	#Focus for Guarantee Germany
-	focus = {
-		id = QIN_guarantee_germany
-		icon = GFX_goal_generic_dangerous_deal
-		x = 47
-		y = 7
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_befriend_germany }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+		cost = 2
 
-	#Focus for Sino - German pact
-	focus = {
-		id = QIN_sino__german_pact
-		icon = GFX_focus_ger_accept_british_naval_dominance
-		x = 47
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_guarantee_germany }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Sino-England Pact
-	focus = {
-		id = QIN_sinoengland_pact
-		icon = GFX_focus_eng_the_sun_never_sets
-		x = 43
-		y = 8
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_befriend_england }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Claim the south china sea
-	focus = {
-		id = QIN_claim_the_south_china_sea
-		icon = GFX_goal_generic_amphibious_assault
-		x = 22
-		y = 13
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_supress_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Privatize our factory's
-	focus = {
-		id = QIN_privatize_our_factorys
-		icon = GFX_goal_generic_construct_civilian
-		x = 24
-		y = 13
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_supress_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
-
-	#Focus for Fortress China
-	focus = {
-		id = QIN_fortress_china
-		icon = GFX_goal_generic_fortify_city
-		x = 22
-		y = 15
-		cost = 10
-		available_if_capitulated = yes
 		prerequisite = {
-			focus = QIN_claim_the_south_china_sea
+			focus = DNC_QIN_sun_yat_sen_inagurated
 		}
-		prerequisite = {
-			focus = QIN_privatize_our_factorys
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Improve our spy network
-	focus = {
-		id = QIN_improve_our_spy_network
-		icon = GFX_goal_generic_radar
-		x = 24
-		y = 15
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_claim_the_south_china_sea
+		mutually_exclusive = {
+			focus = DNC_QIN_cave_to_yuan
 		}
-		prerequisite = {
-			focus = QIN_privatize_our_factorys
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Forced conscription
-	focus = {
-		id = QIN_forced_conscription
-		icon = GFX_goal_rhineland
-		x = 20
-		y = 13
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_supress_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+		available = {
+			
 
-	#Focus for Nationalize key industry's
-	focus = {
-		id = QIN_nationalize_key_industrys
-		icon = GFX_goal_generic_consumer_goods
-		x = 20
-		y = 15
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_forced_conscription
 		}
-		prerequisite = {
-			focus = QIN_claim_the_south_china_sea
-		}
-		prerequisite = {
-			focus = QIN_privatize_our_factorys
-		}
-		mutually_exclusive = { focus = QIN_nationalize_all }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Research Grants
-	focus = {
-		id = QIN_research_grants
-		icon = GFX_focus_renounce_the_treaty_of_trianon
-		x = 22
-		y = 16
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_nationalize_key_industrys
+			completion_reward = { 
+			
+            
+			}
 		}
-		prerequisite = {
-			focus = QIN_fortress_china
-			focus = QIN_improve_our_spy_network
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
+		focus = {
+			id = DNC_QIN_cave_to_yuan
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 3
+			y = 1
+			relative_position_id = DNC_QIN_sun_yat_sen_inagurated
+			cost = 2
 
-	#Focus for Thirteen Demands to japan
-	focus = {
-		id = QIN_thirteen_demands_to_japan
-		icon = GFX_focus_TUR_ratify_the_six_arrows
-		x = 20
-		y = 17
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_research_grants }
-		ai_will_do = {
-			factor = 1
-		}
-	}
 
-	#Focus for Upgraded divisions
-	focus = {
-		id = QIN_upgraded_divisions
-		icon = GFX_focus_chi_army_reform
-		x = 22
-		y = 17
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_research_grants }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+			prerequisite = {
+				focus = DNC_QIN_sun_yat_sen_inagurated
+			}
 
-	#Focus for Improved Artillery
-	focus = {
-		id = QIN_improved_artillery
-		icon = GFX_goal_generic_army_artillery2
-		x = 24
-		y = 17
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_research_grants }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+			mutually_exclusive = {
+				focus = DNC_QIN_sun_stays_as_president
+			}
 
-	#Focus for Ban all oppoistion
-	focus = {
-		id = QIN_ban_all_oppoistion
-		icon = GFX_focus_usa_voter_registration_act
-		x = 18
-		y = 18
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = {
-			focus = QIN_thirteen_demands_to_japan
-		}
-		prerequisite = {
-			focus = QIN_upgraded_divisions
-		}
-		prerequisite = {
-			focus = QIN_improved_artillery
-		}
-		prerequisite = {
-			focus = QIN_the_cash_flow_begins
-		}
-		ai_will_do = {
-			factor = 1
-		}
-	}
+			available = {
+			
 
-	#Focus for Repeal our consitution
-	focus = {
-		id = QIN_repeal_our_consitution
-		icon = GFX_goal_support_fascism
-		x = 17
-		y = 13
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_supress_the_people }
-		ai_will_do = {
-			factor = 1
-		}
-	}
+			}
 
-	#Focus for The new dynasty
-	focus = {
-		id = QIN_the_new_dynasty
-		icon = GFX_focus_hun_elect_a_king
-		x = 17
-		y = 14
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_repeal_our_consitution }
-		ai_will_do = {
-			factor = 1
+			completion_reward = { 
+			
+            
+			}
 		}
-	}
+		focus = {
+			id = DNC_QIN_japanese_support
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 0
+			y = 2
+			relative_position_id = DNC_QIN_sun_yat_sen_inagurated
+			cost = 2
 
-	#Focus for Nationalize all!
-	focus = {
-		id = QIN_nationalize_all
-		icon = GFX_goal_generic_intelligence_exchange
-		x = 17
-		y = 15
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_the_new_dynasty }
-		mutually_exclusive = { focus = QIN_nationalize_key_industrys }
-		ai_will_do = {
-			factor = 1
+
+			prerequisite = {
+				focus = DNC_QIN_sun_yat_sen_inagurated
+			}
+
+			available = {
+				NOT = {
+					has_war_with = JAP
+				}
+			
+
+			}
+
+			completion_reward = { 
+			JAP = {
+				country_event = dnc_japan.11
+			}
+            
+			}
 		}
-	}
+		focus = {
+			id = DNC_QIN_revolt_in_tianjin
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_japanese_support
+			cost = 4
 
-	#Focus for The cash flow begins
-	focus = {
-		id = QIN_the_cash_flow_begins
-		icon = GFX_focus_mex_privatisation
-		x = 17
-		y = 16
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_nationalize_all }
-		ai_will_do = {
-			factor = 1
+
+			prerequisite = {
+				focus = DNC_QIN_japanese_support
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
 		}
-	}
+		focus = {
+			id = DNC_QIN_dissolve_beiyang_army
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_sun_stays_as_president
+			cost = 5
 
-	#Focus for Core our new teriotry
-	focus = {
-		id = QIN_core_our_new_teriotry
-		icon = GFX_focus_generic_china1
-		x = 29
-		y = 14
-		cost = 10
-		available_if_capitulated = yes
-		prerequisite = { focus = QIN_draw_our_borders }
-		ai_will_do = {
-			factor = 1
+
+			prerequisite = {
+				focus = DNC_QIN_sun_stays_as_president
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
 		}
-	}
+		focus = {
+			id = DNC_QIN_imprision_provincial_dictators
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_sun_stays_as_president
+			cost = 5
 
-	#End of focuses
+
+			prerequisite = {
+				focus = DNC_QIN_sun_stays_as_president
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_implement_constitution_rep
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 1
+			y = 1
+
+			cost = 10
+			relative_position_id = DNC_QIN_dissolve_beiyang_army
+			prerequisite = {
+				focus = DNC_QIN_dissolve_beiyang_army
+			}
+			prerequisite = {
+				focus = DNC_QIN_imprision_provincial_dictators
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		focus = {
+			id = DNC_QIN_china_united_rep
+			icon = GFX_QIN_focus_5_races_one_flag
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_implement_constitution_rep
+			cost = 10
+
+
+			prerequisite = {
+				focus = DNC_QIN_implement_constitution_rep
+			}
+
+			available = {
+			
+
+			}
+
+			completion_reward = { 
+			
+            
+			}
+		}
+		
+	
+
+	
+
 }
+    
