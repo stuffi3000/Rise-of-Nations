@@ -996,6 +996,7 @@ focus_tree = {
 				ideology = democratic
 				popularity = 0.1
 			}
+			unlock_decision_category_tooltip = QIN_gather_support_for_republicans
 		}
 	}
 	focus = {
@@ -1019,12 +1020,9 @@ focus_tree = {
 		}
 
 		completion_reward = { 
-            retire_country_leader = yes
-			create_country_leader = {
-				ideology = despotism
-				picture = "WW1/China_Conservatism_SunYat-sen.dds"
-				name = "Sun Yat Sen"
-				expire = "1925.3.12"
+            add_popularity = {
+				ideology = democratic
+				popularity = 0.05
 			}
 		}
 	}
@@ -1167,7 +1165,10 @@ focus_tree = {
 		}
 
 		completion_reward = { 
-            
+            add_popularity = {
+				ideology = democratic
+				popularity = -0.05
+			}
 		}
 	}
 	focus = {
@@ -1190,7 +1191,10 @@ focus_tree = {
 		}
 
 		completion_reward = { 
-            
+            add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
 		}
 	}
 	focus = {
@@ -1267,7 +1271,7 @@ focus_tree = {
 		}
 
 		completion_reward = { 
-            
+            #TODO: Make a Coup event against the Cixi government
 		}
 	}
 
@@ -2143,6 +2147,12 @@ focus_tree = {
                     }
 				add_extra_state_shared_building_slots = 1
 				}
+				if = {
+					limit = {
+						has_idea = boxer_protocols
+					}
+					unlock_decision_category_tooltip = QIN_smuggling_weapons
+				}
             
 			}
 		}
@@ -2440,12 +2450,739 @@ focus_tree = {
 
 		#INDUSTRY TREE
 
+		### GENERIC ONE (WAITING FOR NO STEP BACK)
+		focus = {
+			id = QIN_DNC_free_market
+			icon = GFX_focus_generic_the_giant_wakes
+			x = 40
+			y = 10
+			cost = 10
+			allow_branch = {
+				date < 1910.1.1
+			}
+			available = {
+			}
+			mutually_exclusive = {
+				focus = QIN_DNC_planned_economy
+			}
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0.1
+					has_government = neutrality
+				}
+			}
+			completion_reward = {
+				add_ideas = {
+					free_trade
+				}
+				add_ideas = {
+					RI_free_economy
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_support_middle_class
+			icon = GFX_focus_generic_self_management
+			x = -1
+			y = 1
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_free_market
+			}
+			completion_reward = {
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = industrial_complex
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				add_political_power = 50
+			}
+		}
+		focus = {
+			id = QIN_DNC_minimum_wage
+			icon = GFX_focus_mex_privatisation
+			x = -2
+			y = 2
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_support_middle_class
+			}
+			completion_reward = {
+				add_ideas = {
+					RI_more_payment
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_invite_foreign_investors
+			icon = GFX_goal_generic_intelligence_exchange
+			x = 0
+			y = 2
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_free_market
+			}
+			completion_reward = {
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = industrial_complex
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = arms_factory
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							} 
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_fiscal_reforms
+			icon = GFX_focus_usa_reestablish_the_gold_standard
+			x = -1
+			y = 3
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_invite_foreign_investors
+			}
+			prerequisite = {
+				focus = QIN_DNC_minimum_wage
+			}
+			completion_reward = {
+				add_ideas = {
+					RI_better_taxes
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_planned_economy
+			icon = GFX_goal_generic_position_armies
+			x = 4
+			y = 0
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			allow_branch = {
+				date < 1910.1.1
+			}
+			available = {
+			}
+			mutually_exclusive = {
+				focus = QIN_DNC_free_market
+			}
+			ai_will_do = {
+				factor = 10
+				modifier = {
+					factor = 0.1
+					has_government = democratic
+				}
+			}
+			completion_reward = {
+				add_ideas = {
+					RI_no_free_economy
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_liquidate_unprofital_business
+			icon = GFX_goal_generic_construct_civ_factory
+			x = 5
+			y = 1
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_planned_economy
+			}
+			completion_reward = {
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				#add_timed_idea = { idea = less_businesses days = 160 }
+			}
+		}
+		focus = {
+			id = QIN_DNC_buy_out_dissident_farms
+			icon = GFX_goal_generic_forceful_treaty
+			x = 6
+			y = 2
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_liquidate_unprofital_business
+			}
+			completion_reward = {
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+				}
+				add_political_power = 50
+				add_stability = 0.025
+			}
+		}
+		focus = {
+			id = QIN_DNC_rations
+			icon = GFX_goal_generic_construct_civilian
+			x = 4
+			y = 2
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_planned_economy
+			}
+			completion_reward = {
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = arms_factory
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_loosen_restrictions
+			icon = GFX_goal_continuous_reduce_training_time
+			x = 5
+			y = 3
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_rations
+			}
+			prerequisite = {
+				focus = QIN_DNC_buy_out_dissident_farms
+			}
+			completion_reward = {
+				add_ideas = {
+					RI_no_production_laws
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_coal_mines
+			icon = GFX_focus_generic_steel
+			x = 1
+			y = 1
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_planned_economy
+				focus = QIN_DNC_free_market
+			}
+			completion_reward = {
+				random_owned_state = {
+					add_resource = {
+						type = steel
+						amount = 15
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_tungsten_mines
+			icon = GFX_focus_generic_tungsten
+			x = 3
+			y = 1
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_planned_economy
+				focus = QIN_DNC_free_market
+			}
+			completion_reward = {
+				random_owned_state = {
+					add_resource = {
+						type = tungsten
+						amount = 15
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_optimise_profit
+			icon = GFX_goal_continuous_non_factory_construct
+			x = 2
+			y = 2
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_tungsten_mines
+			}
+			prerequisite = {
+				focus = QIN_DNC_coal_mines
+			}
+			completion_reward = {
+				add_ideas = {
+					RI_more_resources
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_full_speed_ahead
+			icon = GFX_goal_continuous_research
+			x = 2
+			y = 3
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_invite_foreign_investors
+				focus = QIN_DNC_rations
+			}
+			completion_reward = {
+				add_tech_bonus = {
+					name = electronics_bonus
+					bonus = 0.5
+					uses = 1
+					category = electronics
+				}
+				add_tech_bonus = {
+					name = industrial_bonus
+					bonus = 0.5
+					uses = 1
+					category = industry
+				}
+				add_ideas = {
+					RI_better_research
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_build_railroads
+			icon = GFX_goal_generic_construct_infrastructure
+			x = 0
+			y = 4
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_fiscal_reforms
+				focus = QIN_DNC_loosen_restrictions
+			}
+			prerequisite = {
+				focus = QIN_DNC_full_speed_ahead
+			}
+			completion_reward = {
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = infrastructure
+							size > 0
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = infrastructure
+											size > 0
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = infrastructure
+							size > 1
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = infrastructure
+											size > 1
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = infrastructure
+							size > 0
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = infrastructure
+											size > 0
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = infrastructure
+							size > 1
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = infrastructure
+											size > 1
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_mass_urbanisation
+			icon = GFX_focus_generic_industry_3
+			x = 2
+			y = 4
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_fiscal_reforms
+				focus = QIN_DNC_loosen_restrictions
+			}
+			prerequisite = {
+				focus = QIN_DNC_full_speed_ahead
+			}
+			completion_reward = {
+				random_owned_state = {
+					add_extra_state_shared_building_slots = 1
+					set_state_category = city
+					add_manpower = 10000
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = industrial_complex
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = industrial_complex
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = industrial_complex
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = industrial_complex
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_war_economy
+			icon = GFX_goal_generic_construct_mil_factory
+			x = 4
+			y = 4
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_fiscal_reforms
+				focus = QIN_DNC_loosen_restrictions
+			}
+			prerequisite = {
+				focus = QIN_DNC_full_speed_ahead
+			}
+			completion_reward = {
+				add_ideas = {
+					war_economy
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = arms_factory
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = arms_factory
+							size > 0
+							include_locked = yes
+						}
+						OR = {
+							is_in_home_area = yes
+							NOT = {
+								owner = {
+									any_owned_state = {
+										free_building_slots = {
+											building = arms_factory
+											size > 0
+											include_locked = yes
+										}
+										is_in_home_area = yes
+									}
+								}
+							}
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = arms_factory
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
+		focus = {
+			id = QIN_DNC_university
+			icon = GFX_focus_research
+			x = 2
+			y = 5
+			relative_position_id = QIN_DNC_free_market
+			cost = 10
+			prerequisite = {
+				focus = QIN_DNC_war_economy
+			}
+			prerequisite = {
+				focus = QIN_DNC_build_railroads
+			}
+			prerequisite = {
+				focus = QIN_DNC_mass_urbanisation
+			}
+			completion_reward = {
+				add_research_slot = 1
+			}
+		}
+
+
+
+		### REAL ONE
 		focus = {
 			id = DNC_QIN_the_chinese_industry
 			icon = GFX_RUE_focus_state_duma
 			x = 57
 			y = 15
-
+			allow_branch = {
+				is_debug = yes
+			}
 			cost = 10
 
 			available = {
@@ -3082,7 +3819,7 @@ focus_tree = {
 		}
 		focus = {
 			id = DNC_QIN_allow_french_and_british_companies
-			icon = GFX_RUE_focus_state_duma
+			icon = GFX_RUE_focus_state_duma 
 			x = 0
 			y = 1
 			relative_position_id = DNC_QIN_limited_industrialization_south_china
@@ -3091,7 +3828,7 @@ focus_tree = {
 			}
 
 			cost = 8
-
+ 
 			available = {
 				owns_state = 605
 				owns_state = 750
@@ -3227,7 +3964,7 @@ focus_tree = {
             
 			}
 		}
-		focus = {
+		focus = { 
 			id = DNC_QIN_kunming_haiphong_railway
 			icon = GFX_generic_focus_rail_construction
 			x = 0
@@ -3652,11 +4389,11 @@ focus_tree = {
 				add_stability = -0.05
 				add_political_power = 25
 				add_popularity = {
-    				ideology = social_egalitarianism
+    				ideology = communism
     				popularity = 0.1
 				}
 				add_popularity = {
-    				ideology = social_liberalism
+    				ideology = democratic
     				popularity = 0.1
 				}
 				#Social liberal party leader becomes Sun Yat Sen & both the social egalitarianism & liberal parties renamed 2 Tongmenghui
@@ -3686,11 +4423,11 @@ focus_tree = {
 				add_stability = -0.05
 				add_political_power = -25
 				add_popularity = {
-    				ideology = social_egalitarianism
+    				ideology = democratic
     				popularity = 0.05
 				}
 				add_popularity = {
-    				ideology = social_liberalism
+    				ideology = communism
     				popularity = -0.05
 				}
 				
@@ -3718,7 +4455,7 @@ focus_tree = {
 
 			completion_reward = { 
 			
-            
+				custom_effect_tooltip = all_ethnic_groups_will_side_with_rep_tt
 			}
 		}
 		focus = {
@@ -3740,8 +4477,10 @@ focus_tree = {
 			}
 
 			completion_reward = { 
-			
-            
+				add_stability = -0.1
+				add_war_support = -0.2
+
+				
 			}
 		}
 		focus = {
@@ -3763,8 +4502,7 @@ focus_tree = {
 			}
 
 			completion_reward = { 
-			
-            
+				add_ideas = QIN_republican_journalism
 			}
 		}
 		focus = {
@@ -3786,7 +4524,7 @@ focus_tree = {
 			}
 
 			completion_reward = { 
-			
+				custom_effect_tooltip = soldiers_will_side_with_rep_tt
             
 			}
 		}
@@ -3810,7 +4548,7 @@ focus_tree = {
 			}
 
 			completion_reward = { 
-			
+				#TODO: Event about chinese republican looking for support
             
 			}
 		}
@@ -3841,7 +4579,7 @@ focus_tree = {
 	focus = {
 		id = DNC_QIN_the_fire_of_revolution_burns
 		icon = GFX_QIN_focus_5_races_one_flag
-		x = 0
+		x = 0 
 		y = 1
 		relative_position_id = DNC_QIN_unite_provincial_societies_rep
 		cost = 3
@@ -3864,8 +4602,7 @@ focus_tree = {
 		}
 
 		available = {
-			
-
+			date > 1911.9.19
 		}
 
 		completion_reward = {
@@ -3874,74 +4611,161 @@ focus_tree = {
 				hidden_effect = {
 					set_global_flag = QIN_REVOLUTION
 					set_country_flag = side_with_CHI
-					country_event = {
-    					id = ww1_china.3
-    					days = 10
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Wuchang_rep
+						}
+						country_event = {
+							id = ww1_china.3
+							days = 10
+						}
 					}
-				
-					country_event = {
-						id = ww1_china.4
-						days = 22
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Changsha_rep
+						}
+						country_event = {
+							id = ww1_china.4
+							days = 22
+						}
 					}
-					country_event = {
-						id = ww1_china.5
-						days = 22
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Shaanxi_rep
+						}
+						country_event = {
+							id = ww1_china.5
+							days = 22
+						}
 					}
-					country_event = {
-						id = ww1_china.6
-						days = 23
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Jiangxi_rep
+						}
+						country_event = {
+							id = ww1_china.6
+							days = 23
+						}
 					}
-					country_event = {
-						id = ww1_china.7
-						days = 29
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Shanxi_rep
+						}
+						country_event = {
+							id = ww1_china.7
+							days = 29
+						}
 					}
-					country_event = {
-						id = ww1_china.8
-						
-						days = 30
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Yunnan_rep
+						}
+						country_event = {
+							id = ww1_china.8
+							
+							days = 30
+						}
 					}
-					country_event = {
-						id = ww1_china.9
-						
-						days = 106
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Nagqu_rep
+						}
+						country_event = {
+							id = ww1_china.9
+							
+							days = 106
+						}
 					}
-					country_event = {
-						id = ww1_china.10
-						
-						days = 34
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Shanghai_rep
+						}
+						country_event = {
+							id = ww1_china.10
+							
+							days = 34
+						}
 					}
-					country_event = {
-						id = ww1_china.11
-						days = 35
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Zheihang-Guizhou_rep
+						}
+						country_event = {
+							id = ww1_china.11
+							days = 35
+						}
 					}
-					country_event = {
-						id = ww1_china.12
-						days = 36
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Jiangsu-Anhui_rep
+						}
+						country_event = {
+							id = ww1_china.12
+							days = 36
+						}
 					}
-					country_event = {
-						id = ww1_china.13
-						days = 38
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Guangxi_rep
+						}
+						country_event = {
+							id = ww1_china.13
+							days = 38
+						}
 					}
-					country_event = {
-						id = ww1_china.14
-						days = 42
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Fujian_rep
+						}
+						country_event = {
+							id = ww1_china.14
+							days = 42
+						}
 					}
-					country_event = {
-						id = ww1_china.15
-						days = 40
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Guangdong_rep
+						}
+						country_event = {
+							id = ww1_china.15
+							days = 40
+						}
 					}
-					country_event = {
-						id = ww1_china.16
-						days = 42
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Shandong_rep
+						}
+						country_event = {
+							id = ww1_china.16
+							days = 42
+						}
 					}
-					country_event = {
-						id = ww1_china.17
-						days = 48
+					
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Ningxia_rep
+						}
+						country_event = {
+							id = ww1_china.17
+							days = 48
+						}
 					}
-					country_event = {
-						id = ww1_china.18
-						days = 52
+					if = {
+						limit = {
+							has_country_flag = QIN_support_Sichuan_rep
+						}
+						country_event = {
+							id = ww1_china.18
+							days = 52
+						}
 					}
+					
+					
 				}
 			}
 		}
