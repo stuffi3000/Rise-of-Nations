@@ -548,6 +548,21 @@ NDefines_Graphics = {
 
         MAX_NUMBER_OF_TEXTURES = 10000, -- increase if you have more than this textures
 
+        
+        MIN_TRAIN_WAGON_COUNT = 3,
+	    MAX_TRAIN_WAGON_COUNT = 6,
+	    RAILWAY_BRIDGE_ENTITY = "bridge_railway_entity",
+	    RAILWAY_BRIDGE_LARGE_ENTITY = "bridge_railway_large_entity",
+	    RAILWAY_Y_OFFSET = 0.9,							-- Railways are offset by this amount vertically from the map
+	    RAILWAY_BRIDGE_Y_OFFSET = 0.6,					-- Railway bridges are offset by this amount vertically from the map
+	    RAILWAY_BRIDGE_WIDTH = 4.0,						-- Railways will have straight segments of this length for regular bridges
+	    RAILWAY_BRIDGE_LARGE_WIDTH = 4.5,				-- Railways will have straight segments of this length for large bridges
+	    RAILWAY_BRIDGE_GAP_WIDTH = 2.4,					-- Railways will have gaps of this length for regular bridges
+	    RAILWAY_BRIDGE_GAP_LARGE_WIDTH = 2.6,			-- Railways will have gaps of this length for large bridges
+	    TRAIN_MAP_SPEED = 3.0,							-- Trains will move at this relative speed. This has no gameplay implications. Changing this value (originally 4.0) may cause audio effects to lose sync with animation.
+	    TUNNELBANA_TIMETABLE = { 9200, 12000 },			-- Frequency range in milliseconds for regular train service. Adjust this if changing speed to avoid LONGTRAIN
+
+
         MAX_MESHES_LOADED_PER_FRAME = 10,
         MESH_POPUP_SCALE_UP_SPEED = 5.0,
         MESH_POPUP_SCALE_DOWN_SPEED = 2.1,
