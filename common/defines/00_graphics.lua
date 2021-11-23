@@ -887,6 +887,57 @@ NDefines_Graphics = {
 
         PRIDE_OF_THE_FLEET_MODULATE = { 1.0, 0.95, 0.0, 1.0 }, -- pride of the fleet color
 
+        RAILWAY_MAP_ARROW_THIN_LEVEL_THRESHOLD = 1, -- Railway level 1 uses thin map arrow in supply map mode
+    	RAILWAY_MAP_ARROW_MEDIUM_LEVEL_THRESHOLD = 3, -- Railway level 2-3 uses medium map arrow in supply map mode
+	    RAILWAY_MAP_ARROW_THICK_LEVEL_THRESHOLD = 5, -- Railway level 4-5 uses thick map arrow in supply map mode
+
+	    RAILWAY_MAP_ARROW_COLOR_DEFAULT = { 1.0, 1.0, 1.0, 1.0 }, -- white, default railway maparrow color
+	    RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION = { 1.0, 0.80, 0.0, 1.0 }, -- orange, railways that are currently under construction
+	    RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION_VALID = { 0.957, 0.871, 0.51, 1.0 }, -- yellow, in constructionmode, railways that are valid to build
+    	RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION_INVALID = { 1.0, 0.0, 0.0, 1.0 }, -- red, in constructionmode, railways that are invalid to build
+    	RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED = { 0.957, 0.871, 0.51, 1.0 }, -- yellow, highlighted railways, e.g when selecting a hub and showing the route back to the capital
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_DAMAGED = { 1.0, 1.0, 0.2, 1.0 }, -- color of highlighted railways which were damaged
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_ONCOOLDOWN = { 1.0, 0.2, 1.0, 1.0 }, -- color of highlighted railways which are on cooldown (captured recently)
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_CONSTRUCTION = { 0.957, 0.871, 0.51, 1.0 }, -- orange, shown for highlighted railways that are under construction
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_BOTTLENECK = { 0.902, 0.38, 0.4, 1.0 }, -- red, shown for railways that are the bottleneck when highlighting
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_BOTTLENECK_MAXLEVEL = { 0.761, 0.647, 0.812, 1.0 }, -- purple, shown for maxlevel railways that are the bottleneck when highlighting
+	    RAILWAY_MAP_ARROW_COLOR_DAMAGED = { 0.8, 0.8, 0.0, 1.0 }, -- color of railways which were damaged and gives penalty to move for railway guns
+	    RAILWAY_MAP_ARROW_COLOR_ONCOOLDOWN = { 0.5, 0.5, 0.5, 1.0 }, -- color of railways which are on cooldown (captured recently)
+
+	    RIVER_SUPPLY_MAP_ARROW_COLOR = { 0.8, 0.8, 1.0, 0.8 },
+	    FLOWING_RIVER_SUPPLY_MAP_ARROW_COLOR = { 0.8, 0.8, 1.0, 0.8 },
+
+	    SUPPLY_TO_CONSUMERS_MAP_ARROW_COLOR = { 1.0, 1.0, 1.0, 1.0 }, -- Currently overwritte in code...
+	    SUPPLY_TO_CONSUMERS_MAP_ARROW_TRANSPARENCY = 0.8,
+
+        NODE_FLOW_IN_CURRENT_RANGE_COLOR = { 0.68235, 0.0039, 0.4941, 0.55 }, -- At current motorization level
+        NODE_FLOW_IN_HALF_RANGE_COLOR = { 0.9686, 0.4078, 0.6314, 0.6 }, -- At Half Motorization, if currently set to less than that
+        NODE_FLOW_IN_FULL_RANGE_COLOR = { 0.9843, 0.7059, 0.7255, 0.4 }, -- At Full Motorization, if currently set to less than that
+
+        RAILWAY_ICON_SHIFT = { 0.0, 0.0, 0.0 },
+        SUPPLY_ICON_SHIFT = { 0.0, 0.0, 0.0 },
+        SUPPLY_ICON_SWITCH = 200,
+        SUPPLY_ICON_CUTOFF = 900.0,               -- total supply icon cutoff distance for all
+        SUPPLY_ICON_UNUSED_CUTOFF = 400.0,        -- where we stop showing unused nodes
+        SUPPLY_ICON_NUMBERS_CUTOFF = 400.0,       -- where we stop showing numbers on hubs (ignored for selected and problem hubs)
+        SUPPLY_ICON_OK_CUTOFF = 750.0,            -- where we stop showing nodes with no issues, e.g non-red
+        SUPPLY_ICON_DISCONNECTED_CUTOFF = 500.0,  -- where we stop showing disconnected nodes
+        SUPPLY_ICON_END_CUTOFF = 200.0,           -- where we stop showing line end icons
+        RAILWAY_ICON_CUTOFF = 900.0,
+        SUPPLY_SELECTED_NODE_COLOR = { 0.0, 1.0, 1.0, 1.0 },
+        SUPPLY_CAPITAL_COLOR = { 1.0, 0.7, 0.0, 1.0 },
+        SUPPLY_NAVAL_NODE_COLOR = { 0.1, 0.6, 0.8, 1.0},
+        SUPPLY_LAND_NODE_COLOR = { 0.5, 0.8, 0.5, 1.0 },
+
+        SUPPLY_CONSUMER_ARROW_HEIGHT_TO_LEN = 0.1,
+        SUPPLY_CONSUMER_ARROW_HEIGHT_MAX = 4.0,
+
+        SUPPLY_UNIT_COUNTER_SHOW_THRESHOLD = 0.75,  -- At what supply threshold will the normal crate be shown on unit counters
+        SUPPLY_UNIT_COUNTER_LOW_THRESHOLD = 0.50,  -- At what supply threshold will the orange crate be shown on unit counters
+        SUPPLY_UNIT_COUNTER_VERY_LOW_THRESHOLD = 0.25,  -- At what supply threshold will the red crate with ! will be shown on unit counters
+
+        COUP_GREEN = { 0.0, 1.0, 0.0, 1.0 },
+        COUP_RED = { 1.0, 0.0, 0.0, 1.0 },
 
         -- unit on-map interface modulate colors
         FRIEND_COLOR = { 0.7, 0.9, 0.7 },
