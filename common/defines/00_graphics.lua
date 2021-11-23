@@ -61,9 +61,34 @@ NDefines_Graphics = {
         MAP_MODE_INTEL_NETWORK_STRENGTH_QUIET_COLOR_LOW = { 0.1, 0.5, 0.1, 0.2 }, -- Color of a state with the lowest intel network strength in a quiet network
         MAP_MODE_INTEL_NETWORK_STRENGTH_QUIET_COLOR_HIGH = { 0.4, 0.9, 0.3, 1.0 }, -- Color of a state with the highest possible intel network strength in a quiet network
         MAP_MODE_INTEL_MAX_HORIZONTAL_STACK = 3, -- How many intel icons can be shown before the More icon appears for Operations
-
+        RAILWAY_GUN_RANGE_INDICATOR_DEFAULT_COLOR = { 1.0, 1.0, 1.0, 1.0 },				-- On map circle indicating the railway gun bombardment range.
+	    RAILWAY_GUN_RANGE_INDICATOR_ROTATION_SPEED = 0.001,								-- How fast the indicator is rotating.
+	    RAILWAY_GUN_RANGE_STRIPES_COLOR = { 1.0, 0.5, 0.0, 0.2 },		
         OCCUPATION_MAP_MODE_COUNTRY_STRIPE_ALPHA = 0.3, -- alpha of occupied country stripes in occupation map mode
         OPERATIVE_MAP_MODE_INVALID_COUNTRY_TARGET_TRANSPARENCY = 0.15, -- alpha of country which cannot be targeted by the selected operative mission
+
+        SUPPLY_MAP_MODE_COUNTRY_BORDER_CAMERA_DISTANCE = 1.0,
+    	SUPPLY_MAP_MODE_COUNTRY_BORDER_OUTLINE_CUTOFF = 0.973,
+	    GRADIENT_BORDERS_THICKNESS_SUPPLY_COUNTRY_BORDER = 10.0,
+        SUPPLY_MAP_MODE_REACH_COLOR = {
+            0.0,   0.6, 0.0, 0.4, 1.0, 			-- #990066 dark purple
+            0.02,  0.2, 0.17, 0.52, 1.0, 		-- #332B85 dark purple blue
+            0.12,  0.04, 0.17, 0.60, 1.0,		-- #0A2B99 dark blue
+            0.2,   0.13, 0.36, 0.65, 1.0,		-- #215CA6 blue
+            0.4,   0.11, 0.56, 0.75, 1.0,		-- #1C8FBF light blue
+            0.6,   0.25, 0.71, 0.76, 1.0,		-- #40B5C2 teal
+            0.8,   0.47, 0.8, 0.73, 1.0,		-- #78CCBA light teal
+            1.0,   0.6, 0.82, 0.6, 1.0,			-- #99D199 light green
+        }, -- (last shown when supply flow is >= SUPPLY_MAP_MODE_BEST_FLOW_DISPLAY)
+        SUPPLY_MAP_MODE_BEST_FLOW_DISPLAY = 12, -- Which supply cap availibility corresponds to best heatmap color
+        SUPPLY_MAP_MODE_STATUS_COLOR = {
+            0.0,   0.9, 0.0, 0.0, 1.0,			-- #E60000 red
+            0.7,   0.98, 0.4, 0.1, 1.0,			-- #FA661A orange
+            1.0,   0.8, 0.64, 0.2, 1.0,			-- #CCA333 mustard
+        },
+        SUPPLY_STATUS_DISPLAY_THRESHOLD = 0.90, -- at what average supply status we move to show status colors instead of flow
+        SUPPLY_HOVERED_STATE_COLOR_INDEX = 0, -- Border color of hovered state. Refers to the colors in BORDER_COLOR_CUSTOM_HIGHLIGHTS.
+        SUPPLY_HOVERED_PROVINCE_COLOR_INDEX = 4, -- Border color of hovered province. Refers to the colors in BORDER_COLOR_CUSTOM_HIGHLIGHTS.
     },
 
     NMapIcons = {
@@ -548,7 +573,7 @@ NDefines_Graphics = {
 
         MAX_NUMBER_OF_TEXTURES = 10000, -- increase if you have more than this textures
 
-        
+
         MIN_TRAIN_WAGON_COUNT = 3,
 	    MAX_TRAIN_WAGON_COUNT = 6,
 	    RAILWAY_BRIDGE_ENTITY = "bridge_railway_entity",
@@ -805,7 +830,12 @@ NDefines_Graphics = {
         INTEL_LEDGER_CIVILIAN_ICON_STATE_CUTOFF = 250.0,
         INTEL_LEDGER_CIVILIAN_ICON_REGION_CUTOFF = 700.0,
 
+        RAILWAY_CAMERA_CUTOFF = 200.0, -- railways are cut off above this camera height
+	    RAILWAY_CAMERA_CUTOFF_SPEED = 3.0, -- railways fade in/out speed
+
         DIVISION_NAMES_GROUP_MAX_TOOLTIP_ENTRIES = 15, -- Max entries to display the names in the tooltip, when mouse over the division-names-group in the division template designer.
+
+	    NAMES_GROUP_MAX_NAME_LIST_ENTRIES = 25,	-- Max example name entries in ship and railway gun name list in production menu
         SHIP_NAMES_GROUP_MAX_NAME_LIST_ENTRIES = 25, -- Max example name entries in ship name list in production meni
 
         WEATHER_DISTANCE_CUTOFF = 1500, -- At what distance weather effects are hidden
@@ -985,7 +1015,8 @@ NDefines_Graphics = {
         CAMERA_ZOOM_SPEED = 50,
         CAMERA_ZOOM_KEY_SCALE = 0.02,
         CAMERA_ZOOM_SPEED_DISTANCE_MULT = 6.0, -- Zoom speed multiplier. When camera is max zoome out, the zooming in speed will get 100% of CAMERA_ZOOM_SPEED_DISTANCE_MULT zooming speed.
-
+        TRADE_ROUTE_INTERSECT_DISTANCE_MULT = 10.0,			-- For balancing the collision distance with painted arrows and trade routes.
+    	RAILWAY_INTERSECT_DISTANCE_MULT = 3.0,				-- For balancing the collision distance with painted arrows and railways.
         ORDERS_MOUSE_INTERSECT_DISTANCE_MULT = 2.6, -- For balancing the collision distance with painted arrows and fronts.
         FRONTS_MOUSE_INTERSECT_DISTANCE_MULT = 6.6, -- For balancing the collision distance with painted arrows and fronts.
         MOVE_ORDERS_MOUSE_INTERSECT_DISTANCE_MULT = 0.5, -- For balancing the collision distance with painted arrows and fronts.
@@ -1052,6 +1083,25 @@ NDefines_Graphics = {
             1.0, 0.7, 0.2, 0.2, 0.5,
         },
 
+        TEMPERATURE_MAP_MODE_COLORS = {
+            -35.0, 	0.0, 0.0, 0.5, 1.0,
+            -25.0, 	0.0, 0.0, 1.0, 1.0,
+            -10.0, 	0.0, 0.7, 1.0, 1.0,
+            0.0, 	0.0, 1.0, 0.45, 0.45,
+            15.0,	1.0, 1.0, 0.0, 1.0,
+            25.0,	1.0, 0.65, 0.0, 1.0,
+            30.0,	1.0, 0.0, 0.0, 1.0,
+            35.0,	0.5, 0.0, 0.0, 1.0,
+        },
+    
+        RAILWAY_GUN_ASSIGNMENTS_MAP_MODE_COLORS = {
+            0.0,	1.0, 0.0, 0.0, 1.0,
+            0.25,	1.0, 0.65, 0.0, 1.0,
+            0.75,	1.0, 1.0, 0.0, 1.0,
+            1.0, 	0.0, 1.0, 0.45, 0.45,
+        },
+    
+
         INTEL_LEDGER_NAVY_REGION_COLOR_WITH_MISSION = { 0.7, 0.7, 0.7, 0.9 },
         INTEL_LEDGER_NAVY_REGION_COLOR_WITH_MISSION_AND_TASKFORCES_IN_REGION = { 0.8, 0.8, 0.4, 0.9 },
 
@@ -1059,6 +1109,8 @@ NDefines_Graphics = {
 
         INTEL_LEDGER_GRAPH_RED = { 1.0, 0.0, 0.0, 1.0 },
         INTEL_LEDGER_GRAPH_GREEN = { 0.0, 1.0, 0.0, 1.0 },
+
+        DEFAULT_NUDGE_FLOATING_HARBOR_DIST = 7.0,	-- Default distance of floating harbors from the coast in pixels, for nudger
     },
 
     NInterface = {
@@ -1193,6 +1245,12 @@ NDefines_Graphics = {
         GARRISON_STRENGTH_TO_SHOW_RED = 0.25, -- If the garrison strength is lower than that, we color the number of divisions in red.
 
         MAX_DECISIONS_IN_DECISION_ALERT_TOOLTIP = 5, -- Max number of available decisions we show in the alert tooltip
+        PIXEL_OFFSET = -3, 											-- Country army view tab pixel offset when clicking on division/navy/air tab or the army officer corp tab
+        ARMY_UNIT_LEADER_ICON_SPRITE_ID = 5,
+        NAVY_UNIT_LEADER_ICON_SPRITE_ID = 3,
+        POLITICAL_LEADER_ICON_SPRITE_ID = 13,
+    
+        EQUIPMENT_DESIGNER_SHOW_MODULE_FORBIDS_BASE_ROLE_ICON = 0, -- When selecting a module in the tank designer, for each role the module forbids a role icon will be displayed. If this is set to 0 no icon will be displayed if the main tank role is forbidden. If set to 1 the icon will be displayed as normal.
     },
 
 
