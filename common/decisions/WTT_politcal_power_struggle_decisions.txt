@@ -71,7 +71,7 @@ CHI_political_power_struggle = {
 	WTT_national_leadership = {
 		icon = generic_nationalism
 		visible = {
-
+			
 		}
 
 		available = {
@@ -110,7 +110,7 @@ CHI_political_power_struggle = {
 										always = no
 									}
 								}
-							}
+							}			
 						}
 					}
 				}
@@ -137,7 +137,7 @@ CHI_political_power_struggle = {
 				}
 				event_target:WTT_current_china_leader = {
 					WTT_political_struggle_remove_current_country = yes
-					set_global_flag = { flag = wtt_national_leadership_takeover_in_progress value = 1 days = 14 }
+					set_global_flag = { flag = wtt_national_leadership_takeover_in_progress value = 1 days =  14 }
 					country_event = wtt_take_national_leadership.1
 				}
 				custom_effect_tooltip = WTT_national_leadership_accept_tooltip
@@ -160,11 +160,11 @@ CHI_political_power_struggle = {
 	}
 
 
-	###  #  # ### #   ###       ## #  # ###  ###   ##  ###  ###     ### #  #      ## ###  ##  ### ###
-	#  # #  #  #  #   #  #     #   #  # #  # #  # #  # #  #  #       #  ## #     #    #  #  #  #  #
-	###  #  #  #  #   #  #      #  #  # ###  ###  #  # ###   #       #  # ##      #   #  ####  #  ##
-	#  # #  #  #  #   #  #       # #  # #    #    #  # #  #  #       #  #  #       #  #  #  #  #  #
-	###   ##  ### ### ###      ##   ##  #    #     ##  #  #  #      ### #  #     ##   #  #  #  #  ###
+###  #  # ### #   ###       ## #  # ###  ###   ##  ###  ###     ### #  #      ## ###  ##  ### ### 
+#  # #  #  #  #   #  #     #   #  # #  # #  # #  # #  #  #       #  ## #     #    #  #  #  #  #   
+###  #  #  #  #   #  #      #  #  # ###  ###  #  # ###   #       #  # ##      #   #  ####  #  ##  
+#  # #  #  #  #   #  #       # #  # #    #    #  # #  #  #       #  #  #       #  #  #  #  #  #   
+###   ##  ### ### ###      ##   ##  #    #     ##  #  #  #      ### #  #     ##   #  #  #  #  ### 
 
 	#Nat China
 
@@ -183,39 +183,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			595 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					595 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0	
+					NOT = {
+						595 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
-			state = 595
+		highlight_states = {
+			highlight_state_targets = {
+				state = 595
+			} 
 		}
-
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -253,7 +260,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					595 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -301,7 +308,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -343,8 +350,16 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess0 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
+
+
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -367,10 +382,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -392,39 +407,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			596 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					596 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						596 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
-			state = 596
-		}
-
+		highlight_states = {
+			highlight_state_targets = {
+				state = 596
+			} 
+		 }
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -462,7 +484,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					596 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -510,7 +532,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -552,8 +574,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess0 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -576,10 +604,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -601,39 +629,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			597 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					597 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						597 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 597
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -671,7 +706,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					597 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -719,7 +754,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -761,8 +796,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -785,10 +826,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -810,39 +851,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			598 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					598 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						598 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 598
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -880,7 +928,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					598 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -928,7 +976,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -970,8 +1018,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -994,10 +1048,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -1019,39 +1073,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			600 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					600 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						600 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 600
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -1089,7 +1150,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					600 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -1137,7 +1198,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -1179,8 +1240,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -1203,10 +1270,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -1228,39 +1295,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			601 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					601 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						601 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 601
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -1298,7 +1372,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					601 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -1346,7 +1420,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -1388,8 +1462,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -1412,10 +1492,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -1437,39 +1517,47 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			602 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					602 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						602 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
+				
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 602
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -1507,7 +1595,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					602 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -1555,7 +1643,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -1597,8 +1685,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -1621,10 +1715,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -1646,39 +1740,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			603 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					603 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						603 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 603
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -1716,7 +1817,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					603 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -1764,7 +1865,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -1806,8 +1907,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -1830,10 +1937,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -1855,39 +1962,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			605 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					605 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						605 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 605
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -1925,7 +2039,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					605 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -1973,7 +2087,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -2015,8 +2129,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -2039,10 +2159,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -2064,39 +2184,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			606 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					606 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						606 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 606
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -2134,7 +2261,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					606 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -2182,7 +2309,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -2224,8 +2351,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -2248,10 +2381,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -2273,39 +2406,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			607 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					607 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						607 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 607
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -2343,7 +2483,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					607 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -2391,7 +2531,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -2433,8 +2573,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -2457,10 +2603,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -2482,39 +2628,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			608 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					608 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						608 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 608
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -2552,7 +2705,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					608 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -2600,7 +2753,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -2642,8 +2795,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -2666,10 +2825,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -2691,39 +2850,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			613 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					613 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						613 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 613
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -2761,7 +2927,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					613 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -2809,7 +2975,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -2851,8 +3017,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -2875,10 +3047,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -2900,39 +3072,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			614 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					614 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						614 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 614
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -2970,7 +3149,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					614 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -3018,7 +3197,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -3060,8 +3239,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -3084,10 +3269,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -3109,39 +3294,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			620 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					620 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						620 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 620
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -3179,7 +3371,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					620 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -3227,7 +3419,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -3269,8 +3461,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -3293,10 +3491,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -3320,39 +3518,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			615 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					615 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						615 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 615
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -3390,7 +3595,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					615 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -3438,7 +3643,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -3480,8 +3685,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -3504,10 +3715,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -3529,7 +3740,7 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
 			621 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
@@ -3537,31 +3748,37 @@ CHI_political_power_struggle = {
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					621 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						621 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 621
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -3599,7 +3816,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					621 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -3647,7 +3864,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -3689,8 +3906,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -3713,10 +3936,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -3740,7 +3963,7 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
 			622 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
@@ -3748,31 +3971,37 @@ CHI_political_power_struggle = {
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					622 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						622 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 622
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -3810,7 +4039,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					622 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -3858,7 +4087,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -3900,8 +4129,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -3924,10 +4159,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -3951,7 +4186,7 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
 			283 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
@@ -3959,31 +4194,37 @@ CHI_political_power_struggle = {
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					283 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+		custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						283 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 283
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -4021,7 +4262,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					283 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -4069,7 +4310,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -4111,8 +4352,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -4135,10 +4382,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -4160,39 +4407,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			604 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					604 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						604 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 604
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -4230,7 +4484,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					604 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -4278,7 +4532,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -4320,8 +4574,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -4344,10 +4604,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -4369,39 +4629,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			616 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					616 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						616 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 616
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -4439,7 +4706,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					616 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -4487,7 +4754,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -4529,8 +4796,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -4553,10 +4826,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -4580,39 +4853,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			287 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					287 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						287 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 287
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -4650,7 +4930,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					287 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -4698,7 +4978,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -4740,8 +5020,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -4764,10 +5050,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -4789,39 +5075,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			617 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					617 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						617 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 617
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -4859,7 +5152,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					617 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -4907,7 +5200,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -4949,8 +5242,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -4973,10 +5272,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -4998,39 +5297,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			618 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					618 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						618 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 618
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -5068,7 +5374,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					618 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -5116,7 +5422,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -5158,8 +5464,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -5182,10 +5494,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -5207,39 +5519,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			619 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					619 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						619 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 619
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -5277,7 +5596,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					619 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -5325,7 +5644,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -5367,8 +5686,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -5391,10 +5716,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -5418,39 +5743,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			325 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					325 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						325 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 325
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -5488,7 +5820,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					325 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -5536,7 +5868,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -5578,8 +5910,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -5602,10 +5940,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -5629,39 +5967,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			591 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					591 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						591 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 591
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -5699,7 +6044,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					591 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -5747,7 +6092,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -5789,8 +6134,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -5813,10 +6164,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -5838,39 +6189,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			592 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					592 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						592 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 592
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -5908,7 +6266,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					592 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -5956,7 +6314,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -5998,8 +6356,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -6022,10 +6386,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -6047,39 +6411,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			593 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					593 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						593 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 593
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -6117,7 +6488,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					593 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -6165,7 +6536,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -6207,8 +6578,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -6231,10 +6608,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -6256,39 +6633,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			594 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					594 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						594 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 594
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -6326,7 +6710,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					594 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -6374,7 +6758,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -6416,8 +6800,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -6440,10 +6830,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -6465,39 +6855,46 @@ CHI_political_power_struggle = {
 			}
 			WTT_show_build_support_decisions = yes
 		}
-
+		
 		available = {
+			has_political_power > 0
 			599 = {
 				WTT_can_ROOT_select_state_support_decision_state = yes
 			}
 		}
 
 		cancel_trigger = {
-			hidden_trigger = {
-				NOT = {
-					599 = {
-						WTT_can_ROOT_select_state_support_decision_state = yes
+			custom_trigger_tooltip = {
+				tooltip = WTT_build_support_positive_pp
+				OR = {
+					has_political_power < 0
+					NOT = {
+						599 = {
+							WTT_can_ROOT_select_state_support_decision_state = yes
+						}
 					}
 				}
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_GAIN_SUPPORT
 		}
-
+	
 		days_remove = global.days_add_support?1337 #DAYS_UNTIL_SUPPORRT_IN_STATE_IS_ADDED
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
-			state = 599
+		highlight_states = {
+			highlight_state_targets = {
+				state = 599
+			} 
 		}
-
+		
 		fixed_random_seed = no
 
-		#BUILD_SUPPORT_AI_WIL_DO_START
+#BUILD_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -6535,7 +6932,7 @@ CHI_political_power_struggle = {
 
 			#Opponent is far ahead in state. Focus elsewhere first
 			modifier = {
-				add = -45
+				add = -45				
 				any_other_country = {
 					599 = {
 						has_state_flag = majority_political_platform_@PREV
@@ -6583,7 +6980,7 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { points_difference = majority_holder_points }
 				check_variable = { points_difference < 1 }
 			}
-
+			
 			#I am far enough ahead in this state
 			modifier = {
 				add = -50
@@ -6625,8 +7022,14 @@ CHI_political_power_struggle = {
 				subtract_from_temp_variable = { my_points_lead = closest_points }
 				check_variable = { my_points_lead < 2 }
 			}
+			# Don't if we risk running out of pp
+			modifier = {
+				factor = 0
+				has_political_power < 180 # We ca do if safe, I guess
+				political_power_growth < @PP_GAIN_PER_DAY_COST_TRIGGER
+			}
 		}
-		#BUILD_SUPPORT_AI_WIL_DO_END
+#BUILD_SUPPORT_AI_WIL_DO_END
 
 		complete_effect = {
 
@@ -6649,10 +7052,10 @@ CHI_political_power_struggle = {
 
 					#Update state support
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_add_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -6660,15 +7063,15 @@ CHI_political_power_struggle = {
 		}
 	}
 
-	## #  # ###  ###   ##  ###  ###     ### ###   ##  #   #     #   #  ##  ###  #    ##  ###  ###
-	#   #  # #  # #  # #  # #  #  #      #   #  # #  # ## ##     #   # #  # #  # #   #  # #  # #  #
-	#  #  # ###  ###  #  # ###   #      ##  ###  #  # # # #     # # # #### ###  #   #  # ###  #  #
-	# #  # #    #    #  # #  #  #      #   #  # #  # #   #     # # # #  # #  # #   #  # #  # #  #
-	##   ##  #    #     ##  #  #  #      #   #  #  ##  #   #      # #  #  # #  # ###  ##  #  # ###
+ ## #  # ###  ###   ##  ###  ###     ### ###   ##  #   #     #   #  ##  ###  #    ##  ###  ###  
+#   #  # #  # #  # #  # #  #  #      #   #  # #  # ## ##     #   # #  # #  # #   #  # #  # #  # 
+ #  #  # ###  ###  #  # ###   #      ##  ###  #  # # # #     # # # #### ###  #   #  # ###  #  # 
+  # #  # #    #    #  # #  #  #      #   #  # #  # #   #     # # # #  # #  # #   #  # #  # #  # 
+##   ##  #    #     ##  #  #  #      #   #  #  ##  #   #      # #  #  # #  # ###  ##  #  # ###  
 
-	@WARLORD_SUPPORT_NUM_STEPS_FROM_SAME_IDEOLOGY = 2
-	@WARLORD_SUPPORT_NUM_STEPS_FROM_OPINION = 6
-	@WARLORD_SUPPORT_MINIMUM_OPINION = -25
+@WARLORD_SUPPORT_NUM_STEPS_FROM_SAME_IDEOLOGY = 2
+@WARLORD_SUPPORT_NUM_STEPS_FROM_OPINION = 6
+@WARLORD_SUPPORT_MINIMUM_OPINION = -25
 
 	WTT_seek_support_from_warlord = {
 		icon = generic_civil_support
@@ -6683,7 +7086,7 @@ CHI_political_power_struggle = {
 			}
 			#Not subject of CHI, not support others.
 		}
-
+		
 		available = {
 			FROM = { has_opinion = { target = ROOT value > @WARLORD_SUPPORT_MINIMUM_OPINION } }
 			FROM = {
@@ -6731,14 +7134,14 @@ CHI_political_power_struggle = {
 				check_variable = { total_political_support_points > WTT_current_china_leader.total_political_support_points }
 			}
 		}
-
+	
 		days_remove = 0
 		days_re_enable = 0
 
 		fire_only_once = yes
-
+	
 		cost = 0
-
+		
 		fixed_random_seed = no
 
 		complete_effect = {
@@ -6746,12 +7149,12 @@ CHI_political_power_struggle = {
 
 			set_variable = { total_num_steps = @WARLORD_SUPPORT_NUM_STEPS_FROM_OPINION }
 			add_to_variable = { total_num_steps = @WARLORD_SUPPORT_NUM_STEPS_FROM_SAME_IDEOLOGY }
-
+			
 			set_variable = { same_ruling_party_steps = 0 }
 			if = {
 				limit = { has_government = FROM }
 				add_to_variable = { same_ruling_party_steps = @WARLORD_SUPPORT_NUM_STEPS_FROM_SAME_IDEOLOGY }
-			}
+			}			
 
 			set_variable = { var = opinion_of_us_steps value = FROM.opinion@ROOT }
 			set_temp_variable = { temp_opinion_range = 100 }
@@ -6804,14 +7207,14 @@ CHI_political_power_struggle = {
 				check_variable = { total_political_support_points > WTT_current_china_leader.total_political_support_points }
 			}
 		}
-
+	
 		days_remove = 0
 		days_re_enable = 0
 
 		fire_only_once = yes
-
+	
 		#cost = FROM.PP_amount_for_support_@ROOT #TODO_WTT_CODE cost does not take FROM scope
-
+		
 		fixed_random_seed = no
 
 		days_mission_timeout = 60
@@ -6862,14 +7265,14 @@ CHI_political_power_struggle = {
 		ai_will_do = {
 			base = 50
 			modifier = {
-				add = 75
+				add = 75				
 			}
 			modifier = {
 				factor = 0
 				check_variable = { total_political_support_points > WTT_current_china_leader.total_political_support_points }
 			}
 		}
-
+	
 		days_remove = 0
 		days_re_enable = 0
 
@@ -6882,9 +7285,9 @@ CHI_political_power_struggle = {
 		}
 
 		fire_only_once = yes
-
+	
 		#cost = FROM.equipment_amount_for_support_@ROOT #TODO_WTT_CODE cost does not take FROM scope
-
+		
 		fixed_random_seed = no
 
 		complete_effect = {
@@ -6931,19 +7334,19 @@ CHI_political_power_struggle = {
 		ai_will_do = {
 			base = 50
 			modifier = {
-				add = 75
+				add = 75				
 			}
 			modifier = {
 				factor = 0
 				check_variable = { total_political_support_points > WTT_current_china_leader.total_political_support_points }
 			}
 		}
-
+	
 		days_remove = 0
 		days_re_enable = 0
 
 		fire_only_once = yes
-
+	
 		days_mission_timeout = 60
 		selectable_mission = yes
 
@@ -6951,7 +7354,7 @@ CHI_political_power_struggle = {
 			custom_effect_tooltip = WTT_pay_for_support_from_warlord_PP_timeout
 			clr_country_flag = wtt_negotiating_support_with@ROOT
 		}
-
+		
 		fixed_random_seed = no
 
 		complete_effect = {
@@ -6978,11 +7381,11 @@ CHI_political_power_struggle = {
 	}
 
 
-	###  ### #   #  ##  #   # ###      ##  ###  ###   ##   ## ### ### ###  ##  #  #      ## #  # ###  ###   ##  ###  ###
-	#  # #   ## ## #  # #   # #       #  # #  # #  # #  # #    #   #   #  #  # ## #     #   #  # #  # #  # #  # #  #  #
-	###  ##  # # # #  #  # #  ##      #  # ###  ###  #  #  #   #   #   #  #  # # ##      #  #  # ###  ###  #  # ###   #
-	#  # #   #   # #  #  # #  #       #  # #    #    #  #   #  #   #   #  #  # #  #       # #  # #    #    #  # #  #  #
-	#  # ### #   #  ##    #   ###      ##  #    #     ##  ##  ###  #  ###  ##  #  #     ##   ##  #    #     ##  #  #  #
+###  ### #   #  ##  #   # ###      ##  ###  ###   ##   ## ### ### ###  ##  #  #      ## #  # ###  ###   ##  ###  ### 
+#  # #   ## ## #  # #   # #       #  # #  # #  # #  # #    #   #   #  #  # ## #     #   #  # #  # #  # #  # #  #  #  
+###  ##  # # # #  #  # #  ##      #  # ###  ###  #  #  #   #   #   #  #  # # ##      #  #  # ###  ###  #  # ###   #  
+#  # #   #   # #  #  # #  #       #  # #    #    #  #   #  #   #   #  #  # #  #       # #  # #    #    #  # #  #  #  
+#  # ### #   #  ##    #   ###      ##  #    #     ##  ##  ###  #  ###  ##  #  #     ##   ##  #    #     ##  #  #  #  
 
 	#Nat China
 	#595 "Fujian"
@@ -6994,7 +7397,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -7002,27 +7405,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			595 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 595
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -7181,8 +7586,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -7208,10 +7613,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -7228,7 +7633,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -7236,27 +7641,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			596 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 596
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -7415,8 +7822,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -7442,10 +7849,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -7462,7 +7869,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -7470,27 +7877,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			597 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 597
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -7649,8 +8058,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -7676,10 +8085,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -7696,7 +8105,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -7704,27 +8113,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			598 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 598
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -7883,8 +8294,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -7910,10 +8321,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -7930,7 +8341,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -7938,27 +8349,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			600 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 600
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -8117,8 +8530,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -8144,10 +8557,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -8164,7 +8577,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -8172,27 +8585,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			601 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 601
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -8351,8 +8766,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -8378,10 +8793,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -8398,7 +8813,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -8406,27 +8821,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			602 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 602
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -8585,8 +9002,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -8612,10 +9029,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -8632,7 +9049,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -8640,27 +9057,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			603 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 603
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -8819,8 +9238,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -8846,10 +9265,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -8866,7 +9285,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -8874,27 +9293,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			605 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 605
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -9053,8 +9474,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -9080,10 +9501,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -9100,7 +9521,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -9108,27 +9529,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			606 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 606
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -9287,8 +9710,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -9314,10 +9737,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -9334,7 +9757,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -9342,27 +9765,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			607 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 607
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -9521,8 +9946,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -9548,10 +9973,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -9568,7 +9993,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -9576,27 +10001,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			608 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 608
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -9755,8 +10182,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -9782,10 +10209,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -9802,7 +10229,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -9810,27 +10237,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			613 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 613
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -9989,8 +10418,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -10016,10 +10445,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -10036,7 +10465,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -10044,27 +10473,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			614 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 614
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -10223,8 +10654,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -10250,10 +10681,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -10270,7 +10701,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -10278,27 +10709,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			620 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 620
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -10457,8 +10890,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -10484,10 +10917,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -10506,7 +10939,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -10514,27 +10947,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			615 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 615
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -10693,8 +11128,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -10720,10 +11155,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -10740,7 +11175,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -10748,27 +11183,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			621 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 621
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -10927,8 +11364,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -10954,10 +11391,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -10976,7 +11413,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -10984,27 +11421,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			622 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 622
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -11163,8 +11602,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -11190,10 +11629,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -11212,7 +11651,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -11220,27 +11659,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			283 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 283
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -11399,8 +11840,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -11426,10 +11867,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -11446,7 +11887,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -11454,27 +11895,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			604 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 604
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -11633,8 +12076,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -11660,10 +12103,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -11680,7 +12123,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -11688,27 +12131,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			616 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 616
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -11867,8 +12312,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -11894,10 +12339,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -11916,7 +12361,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -11924,27 +12369,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			287 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 287
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -12103,8 +12550,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -12130,10 +12577,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -12150,7 +12597,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -12158,27 +12605,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			617 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 617
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -12337,8 +12786,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -12364,10 +12813,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -12384,7 +12833,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -12392,27 +12841,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			618 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 618
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -12571,8 +13022,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -12598,10 +13049,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -12618,7 +13069,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -12626,27 +13077,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			619 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 619
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -12805,8 +13258,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -12832,10 +13285,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -12854,7 +13307,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -12862,27 +13315,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			325 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 325
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -13041,8 +13496,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -13068,10 +13523,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -13090,7 +13545,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -13098,27 +13553,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			591 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 591
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -13277,8 +13734,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -13304,10 +13761,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -13324,7 +13781,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -13332,27 +13789,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			592 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 592
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -13511,8 +13970,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -13538,10 +13997,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -13558,7 +14017,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -13566,27 +14025,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			593 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 593
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -13745,8 +14206,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -13772,10 +14233,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -13792,7 +14253,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -13800,27 +14261,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			594 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 594
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -13979,8 +14442,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -14006,10 +14469,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
@@ -14026,7 +14489,7 @@ CHI_political_power_struggle = {
 				WTT_can_select_state_remove_support_state = yes
 			}
 		}
-
+		
 		custom_cost_trigger = {
 			political_power_growth > @PP_GAIN_PER_DAY_REMOVE_OPPOSITION_TRIGGER
 		}
@@ -14034,27 +14497,29 @@ CHI_political_power_struggle = {
 
 		available = {
 			599 = {
-				WTT_can_select_state_remove_support_state = yes
+				WTT_can_select_state_remove_support_state = yes				
 			}
 		}
-
+		
 		modifier = {
 			political_power_gain = @PP_COST_PER_DAY_REMOVE_OPPOSITION
 		}
 
-
+	
 		days_remove = global.days_remove_support?1337 #DAYS_UNTIL_REMOVE_SUPPORT
 		days_re_enable = 0
-
+	
 		cost = 0
 
-		highlight_state_targets = {
+		highlight_states = {
+ highlight_state_targets = {
 			state = 599
-		}
-
+		} 
+}
+		
 		fixed_random_seed = no
 
-		#REMOVE_SUPPORT_AI_WIL_DO_START
+#REMOVE_SUPPORT_AI_WIL_DO_START
 		ai_will_do = {
 			base = 0
 
@@ -14213,8 +14678,8 @@ CHI_political_power_struggle = {
 				check_variable = { my_points_lead < 2 }
 			}
 		}
-		#REMOVE_SUPPORT_AI_WIL_DO_END
-
+#REMOVE_SUPPORT_AI_WIL_DO_END
+		
 		complete_effect = {
 
 		}
@@ -14240,10 +14705,10 @@ CHI_political_power_struggle = {
 
 					#Update state support					
 					WTT_recalculate_state_support_for_ROOT = yes
-
+					
 					#Status events
 					WTT_fire_remove_support_status_events = yes
-
+					
 					#Recalc all support
 					WTT_political_struggle_recalculate_support = yes
 				}
