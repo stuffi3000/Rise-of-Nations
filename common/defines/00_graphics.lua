@@ -61,9 +61,34 @@ NDefines_Graphics = {
         MAP_MODE_INTEL_NETWORK_STRENGTH_QUIET_COLOR_LOW = { 0.1, 0.5, 0.1, 0.2 }, -- Color of a state with the lowest intel network strength in a quiet network
         MAP_MODE_INTEL_NETWORK_STRENGTH_QUIET_COLOR_HIGH = { 0.4, 0.9, 0.3, 1.0 }, -- Color of a state with the highest possible intel network strength in a quiet network
         MAP_MODE_INTEL_MAX_HORIZONTAL_STACK = 3, -- How many intel icons can be shown before the More icon appears for Operations
-
+        RAILWAY_GUN_RANGE_INDICATOR_DEFAULT_COLOR = { 1.0, 1.0, 1.0, 1.0 },				-- On map circle indicating the railway gun bombardment range.
+	    RAILWAY_GUN_RANGE_INDICATOR_ROTATION_SPEED = 0.001,								-- How fast the indicator is rotating.
+	    RAILWAY_GUN_RANGE_STRIPES_COLOR = { 1.0, 0.5, 0.0, 0.2 },		
         OCCUPATION_MAP_MODE_COUNTRY_STRIPE_ALPHA = 0.3, -- alpha of occupied country stripes in occupation map mode
         OPERATIVE_MAP_MODE_INVALID_COUNTRY_TARGET_TRANSPARENCY = 0.15, -- alpha of country which cannot be targeted by the selected operative mission
+
+        SUPPLY_MAP_MODE_COUNTRY_BORDER_CAMERA_DISTANCE = 1.0,
+    	SUPPLY_MAP_MODE_COUNTRY_BORDER_OUTLINE_CUTOFF = 0.973,
+	    GRADIENT_BORDERS_THICKNESS_SUPPLY_COUNTRY_BORDER = 10.0,
+        SUPPLY_MAP_MODE_REACH_COLOR = {
+            0.0,   0.6, 0.0, 0.4, 1.0, 			-- #990066 dark purple
+            0.02,  0.2, 0.17, 0.52, 1.0, 		-- #332B85 dark purple blue
+            0.12,  0.04, 0.17, 0.60, 1.0,		-- #0A2B99 dark blue
+            0.2,   0.13, 0.36, 0.65, 1.0,		-- #215CA6 blue
+            0.4,   0.11, 0.56, 0.75, 1.0,		-- #1C8FBF light blue
+            0.6,   0.25, 0.71, 0.76, 1.0,		-- #40B5C2 teal
+            0.8,   0.47, 0.8, 0.73, 1.0,		-- #78CCBA light teal
+            1.0,   0.6, 0.82, 0.6, 1.0,			-- #99D199 light green
+        }, -- (last shown when supply flow is >= SUPPLY_MAP_MODE_BEST_FLOW_DISPLAY)
+        SUPPLY_MAP_MODE_BEST_FLOW_DISPLAY = 12, -- Which supply cap availibility corresponds to best heatmap color
+        SUPPLY_MAP_MODE_STATUS_COLOR = {
+            0.0,   0.9, 0.0, 0.0, 1.0,			-- #E60000 red
+            0.7,   0.98, 0.4, 0.1, 1.0,			-- #FA661A orange
+            1.0,   0.8, 0.64, 0.2, 1.0,			-- #CCA333 mustard
+        },
+        SUPPLY_STATUS_DISPLAY_THRESHOLD = 0.90, -- at what average supply status we move to show status colors instead of flow
+        SUPPLY_HOVERED_STATE_COLOR_INDEX = 0, -- Border color of hovered state. Refers to the colors in BORDER_COLOR_CUSTOM_HIGHLIGHTS.
+        SUPPLY_HOVERED_PROVINCE_COLOR_INDEX = 4, -- Border color of hovered province. Refers to the colors in BORDER_COLOR_CUSTOM_HIGHLIGHTS.
     },
 
     NMapIcons = {
@@ -548,6 +573,21 @@ NDefines_Graphics = {
 
         MAX_NUMBER_OF_TEXTURES = 10000, -- increase if you have more than this textures
 
+
+        MIN_TRAIN_WAGON_COUNT = 3,
+	    MAX_TRAIN_WAGON_COUNT = 6,
+	    RAILWAY_BRIDGE_ENTITY = "bridge_railway_entity",
+	    RAILWAY_BRIDGE_LARGE_ENTITY = "bridge_railway_large_entity",
+	    RAILWAY_Y_OFFSET = 0.9,							-- Railways are offset by this amount vertically from the map
+	    RAILWAY_BRIDGE_Y_OFFSET = 0.6,					-- Railway bridges are offset by this amount vertically from the map
+	    RAILWAY_BRIDGE_WIDTH = 4.0,						-- Railways will have straight segments of this length for regular bridges
+	    RAILWAY_BRIDGE_LARGE_WIDTH = 4.5,				-- Railways will have straight segments of this length for large bridges
+	    RAILWAY_BRIDGE_GAP_WIDTH = 2.4,					-- Railways will have gaps of this length for regular bridges
+	    RAILWAY_BRIDGE_GAP_LARGE_WIDTH = 2.6,			-- Railways will have gaps of this length for large bridges
+	    TRAIN_MAP_SPEED = 3.0,							-- Trains will move at this relative speed. This has no gameplay implications. Changing this value (originally 4.0) may cause audio effects to lose sync with animation.
+	    TUNNELBANA_TIMETABLE = { 9200, 12000 },			-- Frequency range in milliseconds for regular train service. Adjust this if changing speed to avoid LONGTRAIN
+
+
         MAX_MESHES_LOADED_PER_FRAME = 10,
         MESH_POPUP_SCALE_UP_SPEED = 5.0,
         MESH_POPUP_SCALE_DOWN_SPEED = 2.1,
@@ -790,7 +830,12 @@ NDefines_Graphics = {
         INTEL_LEDGER_CIVILIAN_ICON_STATE_CUTOFF = 250.0,
         INTEL_LEDGER_CIVILIAN_ICON_REGION_CUTOFF = 700.0,
 
+        RAILWAY_CAMERA_CUTOFF = 200.0, -- railways are cut off above this camera height
+	    RAILWAY_CAMERA_CUTOFF_SPEED = 3.0, -- railways fade in/out speed
+
         DIVISION_NAMES_GROUP_MAX_TOOLTIP_ENTRIES = 15, -- Max entries to display the names in the tooltip, when mouse over the division-names-group in the division template designer.
+
+	    NAMES_GROUP_MAX_NAME_LIST_ENTRIES = 25,	-- Max example name entries in ship and railway gun name list in production menu
         SHIP_NAMES_GROUP_MAX_NAME_LIST_ENTRIES = 25, -- Max example name entries in ship name list in production meni
 
         WEATHER_DISTANCE_CUTOFF = 1500, -- At what distance weather effects are hidden
@@ -887,6 +932,57 @@ NDefines_Graphics = {
 
         PRIDE_OF_THE_FLEET_MODULATE = { 1.0, 0.95, 0.0, 1.0 }, -- pride of the fleet color
 
+        RAILWAY_MAP_ARROW_THIN_LEVEL_THRESHOLD = 1, -- Railway level 1 uses thin map arrow in supply map mode
+    	RAILWAY_MAP_ARROW_MEDIUM_LEVEL_THRESHOLD = 3, -- Railway level 2-3 uses medium map arrow in supply map mode
+	    RAILWAY_MAP_ARROW_THICK_LEVEL_THRESHOLD = 5, -- Railway level 4-5 uses thick map arrow in supply map mode
+
+	    RAILWAY_MAP_ARROW_COLOR_DEFAULT = { 1.0, 1.0, 1.0, 1.0 }, -- white, default railway maparrow color
+	    RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION = { 1.0, 0.80, 0.0, 1.0 }, -- orange, railways that are currently under construction
+	    RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION_VALID = { 0.957, 0.871, 0.51, 1.0 }, -- yellow, in constructionmode, railways that are valid to build
+    	RAILWAY_MAP_ARROW_COLOR_CONSTRUCTION_INVALID = { 1.0, 0.0, 0.0, 1.0 }, -- red, in constructionmode, railways that are invalid to build
+    	RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED = { 0.957, 0.871, 0.51, 1.0 }, -- yellow, highlighted railways, e.g when selecting a hub and showing the route back to the capital
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_DAMAGED = { 1.0, 1.0, 0.2, 1.0 }, -- color of highlighted railways which were damaged
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_ONCOOLDOWN = { 1.0, 0.2, 1.0, 1.0 }, -- color of highlighted railways which are on cooldown (captured recently)
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_CONSTRUCTION = { 0.957, 0.871, 0.51, 1.0 }, -- orange, shown for highlighted railways that are under construction
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_BOTTLENECK = { 0.902, 0.38, 0.4, 1.0 }, -- red, shown for railways that are the bottleneck when highlighting
+	    RAILWAY_MAP_ARROW_COLOR_HIGHLIGHTED_BOTTLENECK_MAXLEVEL = { 0.761, 0.647, 0.812, 1.0 }, -- purple, shown for maxlevel railways that are the bottleneck when highlighting
+	    RAILWAY_MAP_ARROW_COLOR_DAMAGED = { 0.8, 0.8, 0.0, 1.0 }, -- color of railways which were damaged and gives penalty to move for railway guns
+	    RAILWAY_MAP_ARROW_COLOR_ONCOOLDOWN = { 0.5, 0.5, 0.5, 1.0 }, -- color of railways which are on cooldown (captured recently)
+
+	    RIVER_SUPPLY_MAP_ARROW_COLOR = { 0.8, 0.8, 1.0, 0.8 },
+	    FLOWING_RIVER_SUPPLY_MAP_ARROW_COLOR = { 0.8, 0.8, 1.0, 0.8 },
+
+	    SUPPLY_TO_CONSUMERS_MAP_ARROW_COLOR = { 1.0, 1.0, 1.0, 1.0 }, -- Currently overwritte in code...
+	    SUPPLY_TO_CONSUMERS_MAP_ARROW_TRANSPARENCY = 0.8,
+
+        NODE_FLOW_IN_CURRENT_RANGE_COLOR = { 0.68235, 0.0039, 0.4941, 0.55 }, -- At current motorization level
+        NODE_FLOW_IN_HALF_RANGE_COLOR = { 0.9686, 0.4078, 0.6314, 0.6 }, -- At Half Motorization, if currently set to less than that
+        NODE_FLOW_IN_FULL_RANGE_COLOR = { 0.9843, 0.7059, 0.7255, 0.4 }, -- At Full Motorization, if currently set to less than that
+
+        RAILWAY_ICON_SHIFT = { 0.0, 0.0, 0.0 },
+        SUPPLY_ICON_SHIFT = { 0.0, 0.0, 0.0 },
+        SUPPLY_ICON_SWITCH = 200,
+        SUPPLY_ICON_CUTOFF = 900.0,               -- total supply icon cutoff distance for all
+        SUPPLY_ICON_UNUSED_CUTOFF = 400.0,        -- where we stop showing unused nodes
+        SUPPLY_ICON_NUMBERS_CUTOFF = 400.0,       -- where we stop showing numbers on hubs (ignored for selected and problem hubs)
+        SUPPLY_ICON_OK_CUTOFF = 750.0,            -- where we stop showing nodes with no issues, e.g non-red
+        SUPPLY_ICON_DISCONNECTED_CUTOFF = 500.0,  -- where we stop showing disconnected nodes
+        SUPPLY_ICON_END_CUTOFF = 200.0,           -- where we stop showing line end icons
+        RAILWAY_ICON_CUTOFF = 900.0,
+        SUPPLY_SELECTED_NODE_COLOR = { 0.0, 1.0, 1.0, 1.0 },
+        SUPPLY_CAPITAL_COLOR = { 1.0, 0.7, 0.0, 1.0 },
+        SUPPLY_NAVAL_NODE_COLOR = { 0.1, 0.6, 0.8, 1.0},
+        SUPPLY_LAND_NODE_COLOR = { 0.5, 0.8, 0.5, 1.0 },
+
+        SUPPLY_CONSUMER_ARROW_HEIGHT_TO_LEN = 0.1,
+        SUPPLY_CONSUMER_ARROW_HEIGHT_MAX = 4.0,
+
+        SUPPLY_UNIT_COUNTER_SHOW_THRESHOLD = 0.75,  -- At what supply threshold will the normal crate be shown on unit counters
+        SUPPLY_UNIT_COUNTER_LOW_THRESHOLD = 0.50,  -- At what supply threshold will the orange crate be shown on unit counters
+        SUPPLY_UNIT_COUNTER_VERY_LOW_THRESHOLD = 0.25,  -- At what supply threshold will the red crate with ! will be shown on unit counters
+
+        COUP_GREEN = { 0.0, 1.0, 0.0, 1.0 },
+        COUP_RED = { 1.0, 0.0, 0.0, 1.0 },
 
         -- unit on-map interface modulate colors
         FRIEND_COLOR = { 0.7, 0.9, 0.7 },
@@ -919,7 +1015,8 @@ NDefines_Graphics = {
         CAMERA_ZOOM_SPEED = 50,
         CAMERA_ZOOM_KEY_SCALE = 0.02,
         CAMERA_ZOOM_SPEED_DISTANCE_MULT = 6.0, -- Zoom speed multiplier. When camera is max zoome out, the zooming in speed will get 100% of CAMERA_ZOOM_SPEED_DISTANCE_MULT zooming speed.
-
+        TRADE_ROUTE_INTERSECT_DISTANCE_MULT = 10.0,			-- For balancing the collision distance with painted arrows and trade routes.
+    	RAILWAY_INTERSECT_DISTANCE_MULT = 3.0,				-- For balancing the collision distance with painted arrows and railways.
         ORDERS_MOUSE_INTERSECT_DISTANCE_MULT = 2.6, -- For balancing the collision distance with painted arrows and fronts.
         FRONTS_MOUSE_INTERSECT_DISTANCE_MULT = 6.6, -- For balancing the collision distance with painted arrows and fronts.
         MOVE_ORDERS_MOUSE_INTERSECT_DISTANCE_MULT = 0.5, -- For balancing the collision distance with painted arrows and fronts.
@@ -986,6 +1083,25 @@ NDefines_Graphics = {
             1.0, 0.7, 0.2, 0.2, 0.5,
         },
 
+        TEMPERATURE_MAP_MODE_COLORS = {
+            -35.0, 	0.0, 0.0, 0.5, 1.0,
+            -25.0, 	0.0, 0.0, 1.0, 1.0,
+            -10.0, 	0.0, 0.7, 1.0, 1.0,
+            0.0, 	0.0, 1.0, 0.45, 0.45,
+            15.0,	1.0, 1.0, 0.0, 1.0,
+            25.0,	1.0, 0.65, 0.0, 1.0,
+            30.0,	1.0, 0.0, 0.0, 1.0,
+            35.0,	0.5, 0.0, 0.0, 1.0,
+        },
+    
+        RAILWAY_GUN_ASSIGNMENTS_MAP_MODE_COLORS = {
+            0.0,	1.0, 0.0, 0.0, 1.0,
+            0.25,	1.0, 0.65, 0.0, 1.0,
+            0.75,	1.0, 1.0, 0.0, 1.0,
+            1.0, 	0.0, 1.0, 0.45, 0.45,
+        },
+    
+
         INTEL_LEDGER_NAVY_REGION_COLOR_WITH_MISSION = { 0.7, 0.7, 0.7, 0.9 },
         INTEL_LEDGER_NAVY_REGION_COLOR_WITH_MISSION_AND_TASKFORCES_IN_REGION = { 0.8, 0.8, 0.4, 0.9 },
 
@@ -993,6 +1109,8 @@ NDefines_Graphics = {
 
         INTEL_LEDGER_GRAPH_RED = { 1.0, 0.0, 0.0, 1.0 },
         INTEL_LEDGER_GRAPH_GREEN = { 0.0, 1.0, 0.0, 1.0 },
+
+        DEFAULT_NUDGE_FLOATING_HARBOR_DIST = 7.0,	-- Default distance of floating harbors from the coast in pixels, for nudger
     },
 
     NInterface = {
@@ -1127,6 +1245,12 @@ NDefines_Graphics = {
         GARRISON_STRENGTH_TO_SHOW_RED = 0.25, -- If the garrison strength is lower than that, we color the number of divisions in red.
 
         MAX_DECISIONS_IN_DECISION_ALERT_TOOLTIP = 5, -- Max number of available decisions we show in the alert tooltip
+        PIXEL_OFFSET = -3, 											-- Country army view tab pixel offset when clicking on division/navy/air tab or the army officer corp tab
+        ARMY_UNIT_LEADER_ICON_SPRITE_ID = 5,
+        NAVY_UNIT_LEADER_ICON_SPRITE_ID = 3,
+        POLITICAL_LEADER_ICON_SPRITE_ID = 13,
+    
+        EQUIPMENT_DESIGNER_SHOW_MODULE_FORBIDS_BASE_ROLE_ICON = 0, -- When selecting a module in the tank designer, for each role the module forbids a role icon will be displayed. If this is set to 0 no icon will be displayed if the main tank role is forbidden. If set to 1 the icon will be displayed as normal.
     },
 
 
