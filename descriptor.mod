@@ -14,6 +14,7 @@ tags={
 }
 name="Rise of Nations"
 picture="Rise_of_Nations.gif"
+
 replace_path="history/countries"
 replace_path="history/states"
 replace_path="history/units"
@@ -36,5 +37,5 @@ replace_path="common/occupation_laws"
 replace_path="common/characters"
 replace_path="common/generation"
 replace_path="history/general"
-supported_version="1.10.*"
+supported_version="1.11.*"
 remote_file_id="2026448968"
