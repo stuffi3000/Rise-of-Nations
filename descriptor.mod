@@ -1,10 +1,11 @@
 version="1"
 tags={
-	"Gameplay"
 	"Alternative History"
 	"Balance"
 	"Events"
 	"Fixes"
+	"Gameplay"
+	"Graphics"
 	"Historical"
 	"Ideologies"
 	"Map"
@@ -13,7 +14,7 @@ tags={
 	"Technologies"
 }
 name="Rise of Nations"
-picture="Rise_of_Nations.gif"
+supported_version="1.11.4"
 
 replace_path="history/countries"
 replace_path="history/states"
@@ -37,5 +38,3 @@ replace_path="common/occupation_laws"
 replace_path="common/characters"
 replace_path="common/generation"
 replace_path="history/general"
-supported_version="1.11.*"
-remote_file_id="2026448968"
