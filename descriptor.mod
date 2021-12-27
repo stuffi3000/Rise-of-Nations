@@ -16,6 +16,7 @@ tags={
 name="Rise of Nations"
 supported_version="1.11.4"
 
+picture="Rise_of_Nations.gif"
 replace_path="history/countries"
 replace_path="history/states"
 replace_path="history/units"
