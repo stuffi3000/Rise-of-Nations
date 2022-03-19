@@ -2590,6 +2590,204 @@ country_event = {
 	}
 }
 
+#USA Demands Colonies in the Americas
+country_event = {
+	id = DNC_Diplomacy.34
+	title = DNC_Diplomacy.34.t
+	desc = DNC_Diplomacy.34.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_in_faction_with = FROM
+			}
+			modifier = {
+				factor = 2
+				has_war = yes
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+			modifier = {
+				factor = 8
+				surrender_progress > 0.1
+			}
+			modifier = {
+				factor = 2
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		#Accept
+		name = DNC_Diplomacy.34.a
+		
+		FROM = { 
+			every_state = { 
+				limit = { 
+					OR = {
+						is_on_continent = north_america
+						is_on_continent = south_america
+					}
+					is_controlled_by_ROOT_or_subject = yes
+					} 
+				FROM = { transfer_state = PREV } 
+			} 
+		}
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.35
+				hours = 1
+			}
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.13
+			hours = 6
+		}
+
+	}
+
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_in_faction_with = FRA
+				NOT = { is_in_faction_with = FROM }
+			}
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 50 }
+			}
+		}
+		#Decline
+		name = DNC_Diplomacy.34.b
+		
+		FROM = {
+			country_event = {
+				id = DNC_Diplomacy.36
+				hours = 1
+			}
+		}
+
+	}
+}
+
+#European Power Accepts
+country_event = {
+	id = DNC_Diplomacy.35
+	title = DNC_Diplomacy.35.t
+	desc = DNC_Diplomacy.35.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = DNC_Diplomacy.35.a
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_friendly_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_friendly_foreign_policy
+			target = FROM
+		}
+
+	}
+}
+
+#European Power Declines
+country_event = {
+	id = DNC_Diplomacy.36
+	title = DNC_Diplomacy.36.t
+	desc = DNC_Diplomacy.36.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_major = yes
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size > 50 }
+			}
+		}
+		name = DNC_Diplomacy.36.a
+		
+		create_wargoal = { type = annex_everything target = FROM }
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 2
+				is_major = no
+			}
+			modifier = {
+				factor = 2
+				has_army_size = { size < 50 }
+			}
+		}
+		name = DNC_Diplomacy.36.b
+		
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+		
+		news_event = {
+			id = DNC_DiplomacyNews.2
+			hours = 6
+		}
+
+	}
+}
+
 # Royal Wedding
 news_event = {
 	id = DNC_DiplomacyNews.1
@@ -2790,5 +2988,18 @@ news_event = {
 				NOT = { has_idea = RON_Islam }
 			}	
 		}
+	}
+}
+
+# Annexes Holdings
+news_event = {
+	id = DNC_DiplomacyNews.13
+	title = DNC_DiplomacyNews.13.t
+	desc = DNC_DiplomacyNews.13.d
+	picture = GFX_news_event_DNC_Conference_news1
+	major = yes
+	is_triggered_only = yes
+	option = {
+		name = DNC_DiplomacyNews.13.a
 	}
 }
