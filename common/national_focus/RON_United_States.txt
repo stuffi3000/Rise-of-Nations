@@ -9768,6 +9768,12 @@ focus_tree = {
 			JAP = { is_faction_leader = yes }
 		}
 		completion_reward = {
+			JAP = {
+				add_opinion_modifier = {
+					target = USA
+					modifier = RI_friendly_foreign_policy
+				}
+			}
 		}
 	}
 
@@ -9795,6 +9801,14 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			GER = {
+				add_opinion_modifier = {
+					target = USA
+					modifier = RI_friendly_foreign_policy
+				}
+			}
 		}
 	}
 
@@ -9841,6 +9855,9 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			add_political_power = 150
 		}
 	}
 
@@ -11525,6 +11542,7 @@ focus_tree = {
 			every_country = {
 				limit = {
 					RON_is_North_American_Country = yes
+					NOT = { tag = USA }
 				}
 				if = {
 					limit = {
@@ -11587,6 +11605,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			add_political_power = 150
+		}
 	}
 
 	#Focus for Military Dictatorship
@@ -11632,6 +11653,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.3
+			}
+		}
 	}
 
 	#Focus for Purge The Sympathizers
@@ -11652,49 +11679,73 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
-			random_list = {
-				50 = {
-						hidden_effect = {
-			every_state = { 
-				limit = { 
-					is_core_of = USA 
-				} 
-				add_core_of = USC
-			}
-			
-			USC = {
-				transfer_state = 393
-				transfer_state = 856
-				transfer_state = 394
-				transfer_state = 395
-				transfer_state = 396
-				transfer_state = 261
-				transfer_state = 360
-				transfer_state = 359
-				transfer_state = 382
-				add_ideas = SOV_great_patriotic_war
-		}
-
-		
-		declare_war_on = {
-			target = USC
-			type = civil_war
-		}
-		USC = { country_event = {
-				id = RON_American_Alt_History.75
-			} 
-		}
-				}
-				50 = {
-					add_stability = -.5
-					add_war_support = -.5
-					add_popularity = {
-						ideology = neutrality
-						popularity = 100
+			#If Civil War hasn't ocurred, then Commie Uprising Happens
+			if = {
+				limit = {
+					USA = {
+						has_country_flag = RON_Roosevelt_Captured
 					}
 				}
+				random_list = {
+				50 = {
+					hidden_effect = {
+						every_state = { 
+							limit = { 
+								is_core_of = USA 
+							} 
+							add_core_of = USC
+						}
+					}	
+						USC = {
+							transfer_state = 393
+							transfer_state = 856
+							transfer_state = 394
+							transfer_state = 395
+							transfer_state = 396
+							transfer_state = 261
+							transfer_state = 360
+							transfer_state = 359
+							transfer_state = 382
+							hidden_effect = {
+								add_ideas = SOV_great_patriotic_war
+								country_event = {
+									id = RON_American_Alt_History.75
+								} 
+							} 
+						}
+					declare_war_on = {
+						target = USC
+						type = civil_war
+					}
+					}
+				
+				50 = {
+					add_stability = -0.05
+					add_war_support = -0.05
+					add_popularity = {
+						ideology = neutrality
+						popularity = 1
+					}
+				}
+			
 			}
-		}
+			}
+			
+			#If Civil War has ocurred, then another Civil War is too much
+			if = {
+				limit = {
+					USA = {
+						NOT = { has_country_flag = RON_Roosevelt_Captured }
+					}
+				}
+				add_stability = -0.05
+					add_war_support = -0.05
+					add_popularity = {
+						ideology = neutrality
+						popularity = 1
+					}
+			}
+			
 	}
 	}
 	
@@ -11827,7 +11878,7 @@ focus_tree = {
 		}
 	}
 
-	#Focus for Crack Down On Corporations
+	##Focus for Crack Down On Corporations
 	focus = {
 		id = USAAH_crack_down_on_corporations
 		icon = GFX_goal_generic_construct_civ_factory
@@ -11839,6 +11890,9 @@ focus_tree = {
 		prerequisite = { focus = USAAH_monarchy_triumphant }
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			RON_increase_nationalization_level = yes
 		}
 	}
 
@@ -11872,6 +11926,14 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			SOV = {
+				add_opinion_modifier = {
+					target = USA
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+		}
 	}
 
 	#Focus for Approach The British Empire
@@ -11898,6 +11960,14 @@ focus_tree = {
 		}
 		available = {
 			ENG = { is_faction_leader = yes }
+		}
+		completion_reward = {
+			ENG = {
+				add_opinion_modifier = {
+					target = USA
+					modifier = RI_friendly_foreign_policy
+				}
+			}
 		}
 	}
 
@@ -11960,24 +12030,7 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
-			start_border_war = {
-    change_state_after_war = yes
-    defender = {
-        state = 276
-        num_provinces = 6625
-        on_win = japan_border_conflict.2
-        on_lose = japan_border_conflict.3
-        on_cancel = japan_border_conflict.4
-    }
-				
-    attacker = {
-        state = 358
-        num_provinces = 598
-        on_win = japan_border_conflict.3
-        on_lose = japan_border_conflict.2
-        on_cancel = japan_border_conflict.4
-    }
-}
+			add_war_support = 0.1
 		}
 	}
 
@@ -12069,6 +12122,14 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			random_owned_state = {
+				add_resource = {
+					type = steel
+					amount = 15
+				}
+			}
+		}
 	}
 
 	#Focus for Imperial Alliance
@@ -12085,7 +12146,24 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
-		available =  {NOT = { has_government = communism } } 
+		available =  {
+			NOT = { 
+				has_government = communism 
+			} 
+		} 
+		completion_reward = {
+			if = {
+				limit = {
+					USA = {
+						is_in_faction = no
+					}
+				}
+				USA = {
+					create_faction = "Imperial Alliance"
+				}
+			}
+			
+		}
 	}
 
 	#Focus for Join The Allies
@@ -12231,11 +12309,11 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
-			any_state  = {
+			every_state  = {
 				limit = {
 				OR = {
-				is_core_of = MEX
-				is_core_of = CAN
+					is_core_of = MEX
+					is_core_of = CAN
 				}
 				}
 				add_core = USA
@@ -12255,6 +12333,9 @@ focus_tree = {
 		prerequisite = { focus = USAAH_protect_nature }
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			add_ideas = USA_Breadbasket_of_The_World
 		}
 	}
 
