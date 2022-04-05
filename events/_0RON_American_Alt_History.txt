@@ -6296,12 +6296,13 @@ country_event = {
 				add = 100
 				USA = { has_army_size = { size > 39 } }
 			}
+			modifier = {
+				add = 20
+				is_in_faction_with = USA
+			}
 		}
 		USA = {
-			annex_country = {
-    target = CAN
-    transfer_troops = yes
-}
+			country_event = { hours = 2 id = RON_American_Alt_History.94 }
 		}
 		custom_effect_tooltip = GAME_OVER_TT
 	}
@@ -6314,19 +6315,104 @@ country_event = {
 				factor = 0.5
 			}
 			modifier = {
+				add = 20
+				USA = { has_army_size = { size < 30 } }
+			}
+			modifier = {
+				factor = 2
+				is_in_faction = yes
+				NOT = { is_in_faction_with = USA }
+			}
+			modifier = {
+				any_other_country = {
+					has_guaranteed = CAN
+					NOT = { tag = USA }
+				}
+				factor = 5 #i've got friends
+			}
+			modifier = {
+				any_other_country = {
+					is_major = yes
+					has_guaranteed = CAN
+					NOT = { tag = USA }
+				}
+				factor = 5 #i've got big friends
+			}
+			modifier = {
 				add = 20 #ww2 is happening 
 				GER = { has_war = yes }
 			}
 		}
 		USA = {
 			add_opinion_modifier = { target = CAN modifier = USA_anschluss_rejected }
-			create_wargoal = {
-    type = annex_everything
-    target = CAN
-		}
+			country_event = { hours = 2 id = RON_American_Alt_History.95 }
 			if = { limit = { is_in_faction_with = CAN }
 				remove_from_faction = CAN
 			}
+		}
+	}
+}
+
+# Austrian Anschluss Completed
+country_event = {
+	id = RON_American_Alt_History.94
+	title = RON_American_Alt_History.94.t
+	desc = RON_American_Alt_History.94.d
+	picture = GFX_report_event_german_speech
+
+	is_triggered_only = yes
+
+ 	immediate = {
+ 		hidden_effect = {
+ 			add_named_threat = { threat = 10 name = RON_American_Alt_History.94.t }
+ 		}
+ 	}
+
+	option = {
+		name = RON_American_Alt_History.94.a
+		every_state = { 
+			limit = { 
+				is_core_of = CAN
+			} 
+			add_core_of = USA
+		}
+		CAN = {
+			every_unit_leader = {
+				set_nationality = USA
+			}
+		}
+		annex_country = { target = CAN transfer_troops = yes }
+		add_political_power = 75
+		set_country_flag = CAN_annexed
+		add_war_support = 0.1
+		add_stability = 0.05
+		hidden_effect = {
+			news_event = { hours = 6 id = RON_American_Alt_History_News.19 }
+		}
+	}
+}
+
+# Canada refuses Anschluss
+country_event = {
+	id = RON_American_Alt_History.95
+	title = RON_American_Alt_History.95.t
+	desc = RON_American_Alt_History.95.d
+	picture = GFX_report_event_german_troops
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.95.a
+
+		every_state = { 
+			limit = { 
+				is_core_of = CAN
+			} 
+			add_state_claim = PREV
+		}
+		create_wargoal = {
+			type = annex_everything
+			target = CAN
 		}
 	}
 }
@@ -6573,5 +6659,46 @@ news_event = {
 	is_triggered_only = yes
 	option = {
 		name = RON_American_Alt_History_News.18.a
+	}
+}
+
+# Anschluss of Canada
+news_event = {
+	id = RON_American_Alt_History_News.19
+	title = RON_American_Alt_History_News.19.t
+	desc = RON_American_Alt_History_News.19.d
+	picture = GFX_news_event_german_speech
+
+	major = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History_News.19.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = MEX
+				TAG = FRA
+				TAG = ENG
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.19.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.19.c
+		trigger = { TAG = MEX }
+	}
+	option = {
+		name = RON_American_Alt_History_News.19.e
+		trigger = {
+			OR = {
+				TAG = FRA
+				TAG = ENG
+			}
+		}
 	}
 }
