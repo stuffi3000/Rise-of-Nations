@@ -6470,6 +6470,920 @@ country_event = {
 	}
 }
 
+### DC Conference
+
+# Britain
+country_event = {
+	id = RON_American_Alt_History.140
+	title = RON_American_Alt_History.140.t
+	desc = {
+		text = RON_American_Alt_History.140.d
+		trigger = { NOT = { has_war_with = USA } }
+	}
+	desc = {
+		text = RON_American_Alt_History.140.d_2
+		trigger = { has_war_with = USA }
+	}
+	desc = {
+		text = RON_American_Alt_History.140.d_3
+		trigger = {
+			NOT = { has_war_with = USA }
+			tag = HOL
+		}
+	}
+	picture = GFX_report_event_german_politician_speech
+
+	is_triggered_only = yes
+
+	option = { # Abandon the Czechs
+		name = RON_American_Alt_History.140.a
+		ai_chance = {
+			factor = 90
+			modifier = {
+				factor = 0.3
+				has_government = communism
+				MEX = { has_government = communism }
+			}
+			modifier = {
+				has_global_flag = USA_has_started_war
+				NOT = { is_in_faction_with = USA }
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = {
+						rule = ENG_ai_behavior
+						option = DEMOCRATIC_HISTORICAL
+					}
+					has_game_rule = {
+						rule = ENG_ai_behavior
+						option = DEMOCRATIC_ALTERNATE
+					}
+					has_game_rule = {
+						rule = ENG_ai_behavior
+						option = FASCIST
+					}
+					has_war_with = USA
+					is_in_faction_with = MEX
+				}
+			}
+		}
+		trigger = {
+			NOT = { has_war_with = USA }
+			is_puppet = no # can't do anything if puppet
+		}
+		if = {
+			limit = {
+				has_completed_focus = ENG_no_further_appeasement
+			}
+			add_political_power = -200
+		}
+		if = {
+			limit = {
+				tag = HOL
+			}
+			ENG = { country_event = RON_American_Alt_History.140 }
+		}
+		if = {
+			limit = {
+				tag = ENG
+			}
+			FRA = { country_event = RON_American_Alt_History.141 }
+		}
+		MEX = {
+			add_opinion_modifier = { target = ROOT modifier = western_betrayal }
+		}
+		if = {
+			limit = {
+				tag = HOL
+				MEX = { is_guaranteed_by = HOL }
+			}
+			HOL = {
+				diplomatic_relation = {
+   					country = MEX
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "MEX"
+					value = -100
+				}
+			}
+		}
+		if = {
+			limit = {
+				tag = ENG
+				MEX = { is_guaranteed_by = ENG }
+			}
+			ENG = {
+				diplomatic_relation = {
+   					country = MEX
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "MEX"
+					value = -100
+				}
+			}
+		}
+		if = {
+			limit = {
+				MEX = { is_in_faction_with = ROOT }
+				is_faction_leader = yes
+			}
+			remove_from_faction = MEX
+		}
+	}
+	option = { # Support the Czechs
+		name = RON_American_Alt_History.140.b
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_in_faction_with = USA
+			}
+			modifier = {
+				factor = 0
+				ENG_is_on_historical_plan_trigger = yes
+				NOT = {
+					OR = {
+						is_in_faction_with = MEX
+						has_war_with = USA
+					}
+				}
+			}
+			modifier = {
+				factor = 3
+				has_government = communism
+				MEX = { has_government = communism }
+			}
+			modifier = {
+				factor = 0
+				AND = {
+					OR = {
+						has_game_rule = {
+							rule = ENG_ai_behavior
+							option = NEUTRALITY
+						}
+						has_game_rule = {
+							rule = ENG_ai_behavior
+							option = COMMUNIST
+						}
+					}
+					NOT = {
+						OR = {
+							is_in_faction_with = MEX
+							has_war_with = USA
+						}
+					}
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = USA
+				is_faction_leader = yes
+			}
+			remove_from_faction = USA
+		}
+		if = {
+			limit = {
+				is_in_faction_with = USA
+				is_faction_leader = no
+			}
+			USA = { remove_from_faction = ENG }
+		}
+		if = {
+			limit = {
+				NOT = { has_completed_focus = ENG_no_further_appeasement }
+			}
+			add_political_power = -200
+		}
+		add_opinion_modifier = { target = USA modifier = condemn_aggression }
+		effect_tooltip = {
+			USA = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				MEX = { is_in_faction = no }
+			}
+			random_country = {
+				limit = {
+					is_faction_leader = yes
+					is_in_faction_with = ROOT #this may in fact be ROOT, since countries are in a faction with themselves!
+				}
+				add_to_faction = MEX
+			}
+		}
+		if = {
+			limit = {
+				tag = HOL
+			}
+			MEX = {
+				add_ai_strategy = {
+					type = alliance
+					id = "HOL"
+					value = 200
+				}
+			}
+		}
+		if = {
+			limit = {
+				tag = HOL
+			}
+			MEX = {
+				add_ai_strategy = {
+					type = alliance
+					id = "ENG"
+					value = 200
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = { tag = HOL }
+				FRA = {
+					NOT = { has_war_with = MEX }
+				}
+			}
+			FRA = { country_event = RON_American_Alt_History.142 }
+		}
+		MEX = {
+			add_opinion_modifier = { target = ROOT modifier = offered_support }
+		}
+	}
+}
+
+# France (Britain Backs Down)
+country_event = {
+	id = RON_American_Alt_History.141
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.141.d
+	picture = GFX_report_event_chamberlain_announce
+
+	is_triggered_only = yes
+
+	option = { # Follow Britain's lead
+		name = RON_American_Alt_History.141.a
+		ai_chance = {
+			factor = 90
+			modifier = {
+				factor = 0
+				is_in_faction_with = MEX
+			}
+			modifier = {
+				factor = 0.3
+				has_government = communism
+				MEX = { has_government = communism }
+			}
+			modifier = {
+				has_global_flag = USA_has_started_war
+				factor = 0
+			}
+		}
+		MEX = {
+			country_event = germany.46
+			add_opinion_modifier = { target = FRA modifier = western_betrayal }
+		}
+		if = {
+			limit = {
+				is_in_faction_with = MEX
+				is_faction_leader = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						any_other_country = { #check if MEX and FRA are the only countries in this faction
+							NOT = { original_tag = MEX }
+							is_in_faction_with = ROOT
+						}
+					}
+				}
+				dismantle_faction = yes
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = MEX
+				is_faction_leader = no
+			}
+			random_other_country = {
+				limit = {
+					is_in_faction_with = FRA
+					is_faction_leader = yes
+				}
+				remove_from_faction = FRA
+			}
+		}
+		if = {
+			limit = {
+				MEX = { is_guaranteed_by = FRA }
+			}
+			FRA = {
+				diplomatic_relation = {
+   					country = MEX
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "MEX"
+					value = -100
+				}
+			}
+		}
+		if = {
+			limit = {
+				YUG = { is_guaranteed_by = FRA }
+			}
+			FRA = {
+				diplomatic_relation = {
+   					country = YUG
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "YUG"
+					value = -100
+				}
+			}
+			YUG = {
+				add_opinion_modifier = { target = FRA modifier = western_betrayal }
+			}
+		}
+	}
+	option = { # Support the Czechs alone
+		name = RON_American_Alt_History.141.b
+		trigger = { is_puppet = no }
+		ai_chance = {
+			factor = 5
+			modifier = {
+				factor = 0
+				is_in_faction_with = USA
+			}
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				NOT = {
+					is_in_faction_with = MEX
+				}
+			}
+			modifier = {
+				factor = 6
+				has_government = communism
+				MEX = { has_government = communism }
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = MEX
+				has_completed_focus = FRA_strengthen_the_little_entente
+			}
+			add_political_power = -100
+		}
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_completed_focus = FRA_strengthen_the_little_entente }
+					NOT = { is_in_faction_with = MEX }
+				}
+			}
+			add_political_power = -200
+		}
+		add_opinion_modifier = { target = USA modifier = condemn_aggression }
+		MEX = {
+			country_event = RON_American_Alt_History.145
+			add_opinion_modifier = { target = FRA modifier = offered_support }
+		}
+		USA = {
+			country_event = RON_American_Alt_History.148
+			effect_tooltip = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+		if = {
+			limit = { is_in_faction_with = ENG }
+			ENG = {
+				country_event = RON_American_Alt_History.143
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					remove_from_faction = FRA
+					else = {
+						FRA = { remove_from_faction = ENG }
+					}
+				}
+			}
+		}
+		if = {
+			limit = { is_in_faction_with = USA }
+			if = {
+				limit = { USA = { is_faction_leader = yes } }
+				USA = {
+					remove_from_faction = FRA
+				}
+				else = {
+					remove_from_faction = USA
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				is_faction_leader = yes
+				NOT = { is_in_faction_with = ENG }
+				NOT = { is_in_faction_with = USA }
+				NOT = { is_in_faction_with = MEX }
+				MEX = { is_in_faction = no }
+			}
+			add_to_faction = MEX
+			MEX = {
+				add_ai_strategy = {
+					type = alliance
+					id = "FRA"
+					value = 200
+				}
+			}
+		}
+		if = {
+			limit = {
+				OR = {
+					is_in_faction = no
+					AND = {
+						is_faction_leader = no
+						is_in_faction_with = ENG
+					}
+					is_in_faction_with = USA
+				}
+				MEX = { is_in_faction = no }
+			}
+			create_faction = "french_alliance"
+			set_rule = { can_create_factions = yes }
+			add_to_faction = MEX
+			MEX = {
+				add_ai_strategy = {
+					type = alliance
+					id = "FRA"
+					value = 200
+				}
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction = no
+				MEX = {
+					is_faction_leader = yes
+					has_completed_focus = MEX_an_entente_of_our_own
+				}
+			}
+			MEX = { add_to_faction = FRA }
+			FRA = {
+				add_ai_strategy = {
+					type = alliance
+					id = "MEX"
+					value = 200
+				}
+			}
+		}
+		if = {
+			limit = { NOT = { has_completed_focus = FRA_strengthen_the_little_entente } }
+			add_stability = 0.05
+		}
+	}
+}
+
+# France (Britain Supports the Czechs)
+country_event = {
+	id = RON_American_Alt_History.142
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.142.d
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	#Support
+	option = {
+		name = RON_American_Alt_History.142.a
+		trigger = {
+			is_subject = no
+		}
+		ai_chance = {
+			factor = 90
+			modifier = {
+				factor = 0
+				is_in_faction_with = USA
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction = yes
+				NOT = { is_in_faction_with = ENG }
+				NOT = { is_in_faction_with = MEX }
+				NOT = { has_guaranteed = MEX }
+			}
+			give_guarantee = MEX
+		}
+		if = {
+			limit = {
+				is_in_faction = no
+			}
+			ENG = { add_to_faction = FRA }
+			add_ai_strategy = {
+				type = alliance
+				id = "ENG"
+				value = 200
+			}
+		}
+		if = {
+			limit = {
+				is_in_faction_with = MEX
+				has_completed_focus = FRA_strengthen_the_little_entente
+				is_faction_leader = yes
+				NOT = { is_in_faction_with = ENG }
+			}
+			add_to_faction = ENG #Britain joins the little entente
+			every_other_country = {
+				limit = { is_subject_of = ENG }
+				ROOT = { add_to_faction = PREV }
+			}
+		}
+		add_opinion_modifier = { target = USA modifier = condemn_aggression }
+		MEX = {
+			country_event = RON_American_Alt_History.144
+			add_opinion_modifier = { target = FRA modifier = offered_support }
+		}
+		USA = {
+			country_event = RON_American_Alt_History.147
+			effect_tooltip = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+	}
+
+	#Abandon
+	option = {
+		name = RON_American_Alt_History.142.b
+		trigger = {
+			NOT = { is_in_faction_with = ENG }
+			NOT = { is_in_faction_with = MEX }
+		}
+		ai_chance = {
+			factor = 10
+			modifier = {
+				has_global_flag = USA_has_started_war
+				NOT = { is_in_faction_with = USA } #FRA doesn't care if in faction
+				factor = 0
+			}
+		}
+		if = {
+			limit = {
+				MEX = { is_guaranteed_by = FRA }
+			}
+			FRA = {
+				diplomatic_relation = {
+   					country = MEX
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "MEX"
+					value = -100
+				}
+			}
+		}
+		if = {
+			limit = {
+				YUG = { is_guaranteed_by = FRA }
+			}
+			FRA = {
+				diplomatic_relation = {
+   					country = YUG
+   					relation = guarantee
+   					active = no
+  				}
+  				add_ai_strategy = {
+					type = protect
+					id = "YUG"
+					value = -100
+				}
+			}
+			YUG = {
+				add_opinion_modifier = { target = FRA modifier = western_betrayal }
+			}
+		}
+		MEX = {
+			country_event = RON_American_Alt_History.144
+			add_opinion_modifier = { target = FRA modifier = western_betrayal }
+		}
+		USA = {
+			country_event = RON_American_Alt_History.147
+			effect_tooltip = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+	}
+}
+
+# France leaves the Allies
+country_event = {
+	id = RON_American_Alt_History.143
+	title = RON_American_Alt_History.143.t
+	desc = RON_American_Alt_History.143.d
+	picture = GFX_report_event_french_british_officers
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.143.a
+		FRA = {
+			add_opinion_modifier = { target = ENG modifier = abandoned_czechs }
+		}
+	}
+}
+
+# Czechoslovakia (British and (possibly) French Support)
+country_event = {
+	id = RON_American_Alt_History.144
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.144.d
+	picture = GFX_report_event_german_inspect_troops
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.144.a
+		effect_tooltip = {
+			USA = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+	}
+}
+
+# Czechoslovakia (French Support)
+country_event = {
+	id = RON_American_Alt_History.145
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.145.d
+	picture = GFX_report_event_chamberlain_announce
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.145.a
+		effect_tooltip = {
+			USA = {
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 69 }
+				}
+			}
+		}
+	}
+}
+
+
+# Mexico (Abandoned)
+country_event = {
+	id = RON_American_Alt_History.146
+	title = RON_American_Alt_History.146.t
+	desc = RON_American_Alt_History.146.d
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = { # Surrender the Sudetenland
+		name = RON_American_Alt_History.146.a
+		ai_chance = {
+			factor = 90
+			modifier = { # Decrease chance MEX resists if CAN isn't taken first
+				CAN = { exists = yes }
+				factor = 0.5
+			}
+			modifier = { # If they stand a chance they will fight
+				factor = 0
+				strength_ratio = {
+					tag = USA
+					ratio > 0.75
+				}
+				NOT = {
+					any_neighbor_country = {
+						NOT = { tag = USA }
+						is_in_faction_with = USA
+					}
+				}
+			}
+			modifier = {
+				factor = 0 #if you lead a faction, fight
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 0.5 #if you are in a faction, maybe fight
+				is_faction_leader = no
+				is_in_faction = yes
+			}
+			modifier = {
+				factor = 0.05 #if you are in a faction with a major, probably fight
+				is_faction_leader = no
+				is_in_faction = yes
+				any_allied_country = {
+					is_major = yes
+				}
+			}
+			modifier = {
+				factor = 0
+				is_puppet = yes
+				NOT = { is_puppet_of = USA } #puppeted MEX wouldn't surrender Sudetenland otherwise
+			}
+			modifier = { # Increase it again if other bordering nations are in Axis
+				any_neighbor_country = {
+					NOT = { tag = USA }
+					is_in_faction_with = USA
+				}
+				factor = 2.0
+			}
+		}
+		USA = { country_event = RON_American_Alt_History.150 }
+	}
+	option = { # Refuse anyway
+		name = RON_American_Alt_History.146.b
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = USA
+					ratio < 0.5
+				}
+			}
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		USA = {
+			add_opinion_modifier = { target = ROOT modifier = USA_demand_sinaloa_rejected }
+			set_global_flag = MEX_refused_sinaloa
+			country_event = RON_American_Alt_History.149
+			effect_tooltip = {
+				if = {
+					limit = {
+						MEX = {
+							is_in_faction_with = USA
+						}
+					}
+					USA = { remove_from_faction = MEX }
+				}
+				create_wargoal = {
+					type = take_state_focus
+					target = MEX
+					generator = { 482 483 484 }
+				}
+			}
+		}
+	}
+}
+
+# Germany (British and (possibly) French Support for Czechoslovakia)
+country_event = {
+	id = RON_American_Alt_History.147
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.147.d
+	picture = GFX_report_event_german_inspect_troops
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.147.a
+		create_wargoal = {
+			type = take_state_focus
+			target = MEX
+			generator = { 69 74 }
+		}
+		add_state_claim = 69
+		add_state_claim = 74
+		hidden_effect = {
+			news_event = { hours = 6 id = RON_American_Alt_History_News.157 }
+		}
+		set_country_flag = allies_support_czechs
+	}
+}
+
+# Germany (French Support for Czechoslovakia)
+country_event = {
+	id = RON_American_Alt_History.148
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.148.d
+	picture = GFX_report_event_chamberlain_announce
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.148.a
+		create_wargoal = {
+			type = take_state_focus
+			target = MEX
+			generator = { 69 74 }
+		}
+		add_state_claim = 69
+		add_state_claim = 74
+		hidden_effect = {
+			country_event = { hours = 6 id = RON_American_Alt_History_News.158 }
+		}
+	}
+}
+
+# USA (Mexico Refuses Demands)
+country_event = {
+	id = RON_American_Alt_History.149
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.149.d
+	picture = GFX_report_event_czech_soldiers_02
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.149.a
+		create_wargoal = {
+			type = take_state_focus
+			target = MEX
+			generator = { 482 483 484 }
+		}
+		add_state_claim = 482
+		add_state_claim = 483
+		add_state_claim = 484
+		if = {
+			limit = {
+				MEX = {
+					is_in_faction_with = USA
+				}
+			}
+			USA = { remove_from_faction = MEX }
+		}
+		hidden_effect = {
+			country_event = { hours = 6 id = RON_American_Alt_History_News.159 }
+		}
+	}
+}
+
+# USA (Mexico Surrenders Sinaloa)
+country_event = {
+	id = RON_American_Alt_History.150
+	title = RON_American_Alt_History.140.t
+	desc = RON_American_Alt_History.150.d
+	picture = GFX_report_event_german_politician_speech
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.150.a
+		482 = { add_core_of = USA }
+		USA = { transfer_state = 482 }
+		483 = { add_core_of = USA }
+		USA = { transfer_state = 483 }
+		484 = { add_core_of = USA }
+		USA = { transfer_state = 484 }
+		set_country_flag = sinaloa_acquired
+		add_war_support = 0.1
+		add_stability = 0.05
+		hidden_effect = {
+			country_event = { hours = 6 id = RON_American_Alt_History_News.156 }
+		}	
+	}
+}
+
+
 #Second American Civil War Begins
 news_event = {
 	id = RON_American_Alt_History_News.1
@@ -6753,5 +7667,151 @@ news_event = {
 				TAG = ENG
 			}
 		}
+	}
+}
+
+# Munich Agreement
+news_event = {
+	id = RON_American_Alt_History_News.156
+	title = RON_American_Alt_History_News.156.t
+	desc = RON_American_Alt_History_News.156.d
+	picture = GFX_news_event_019
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.156.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = ENG
+				TAG = MEX
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.156.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.156.c
+		trigger = { TAG = ENG }
+	}
+	option = {
+		name = RON_American_Alt_History_News.156.e
+		trigger = { TAG = MEX }
+	}
+}
+
+# Sudeten Crisis (French and British Support)
+news_event = {
+	id = RON_American_Alt_History_News.157
+	title = RON_American_Alt_History_News.157.t
+	desc = RON_American_Alt_History_News.157.d
+	picture = GFX_news_event_009
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.157.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = ENG
+				TAG = FRA
+				TAG = MEX
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.157.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.157.c
+		trigger = {
+			OR = {
+				TAG = ENG
+				TAG = FRA
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.157.e
+		trigger = { TAG = MEX }
+	}
+}
+
+# Sudeten Crisis (French Support)
+news_event = {
+	id = RON_American_Alt_History_News.158
+	title = RON_American_Alt_History_News.157.t
+	desc = RON_American_Alt_History_News.158.d
+	picture = GFX_news_event_009
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.157.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = ENG
+				TAG = FRA
+				TAG = MEX
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.158.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.158.c
+		trigger = { TAG = ENG }
+	}
+	option = {
+		name = RON_American_Alt_History_News.158.e
+		trigger = { TAG = MEX }
+	}
+	option = {
+		name = RON_American_Alt_History_News.158.f
+		trigger = { TAG = FRA }
+	}
+}
+
+# Munich Agreement (Czechs Resist)
+news_event = {
+	id = RON_American_Alt_History_News.159
+	title = RON_American_Alt_History_News.159.t
+	desc = RON_American_Alt_History_News.159.d
+	picture = GFX_news_event_009
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.159.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = MEX
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.159.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.159.c
+		trigger = { TAG = MEX }
 	}
 }
