@@ -7345,6 +7345,430 @@ country_event = {
 }
 
 
+# Czechoslovakia (The Fate of Czechoslovakia)
+country_event = {
+	id = RON_American_Alt_History.153
+	title = RON_American_Alt_History.153.t
+	desc = RON_American_Alt_History.153.d
+	picture = GFX_report_event_german_politician_speech
+
+	is_triggered_only = yes
+
+	option = { # Agree
+		name = RON_American_Alt_History.153.a
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				OR = {
+					is_in_faction_with = ENG
+					is_in_faction_with = FRA
+					is_puppet = yes
+					USA = {
+						AND = {
+							has_war_with = ENG
+							has_war_with = FRA
+						}
+					}
+					USA = {
+						AND = {
+							has_war_with = SOV
+							OR = {
+								has_war_with = ENG
+								has_war_with = FRA
+							}
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				USA = {
+					OR = {
+						AND = {
+							has_war_with = ENG
+							NOT = {
+								has_war_with = FRA
+							}
+						}
+						AND = {
+							has_war_with = FRA
+							NOT = {
+								has_war_with = ENG
+							}
+						}
+					}
+				}
+			}
+		}
+		USA = { country_event = RON_American_Alt_History.155 }
+		if = {
+			limit = {
+				ENG = {
+					NOT = {
+						is_in_faction_with = USA
+					}
+				}
+			}
+			ENG = {
+				add_war_support = 0.1
+			}
+		}
+		if = {
+			limit = {
+				FRA = {
+					NOT = {
+						is_in_faction_with = USA
+					}
+				}
+			}
+			FRA = {
+				add_war_support = 0.1
+			}
+		}
+		if = {
+			limit = {
+				has_DLC = "Death or Dishonor"
+				country_exists = YUG
+				YUG = { has_war = no }
+			}
+			USA = {
+				country_event = {
+					id = DOD_yugoslavia.32
+					hours = 6
+				}
+			}
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = { # Refuse
+		name = RON_American_Alt_History.153.b
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = { is_in_faction_with = ENG }
+				NOT = { is_in_faction_with = FRA }
+				is_puppet = no
+				NOT = {
+					USA = {
+						has_war_with = ENG
+						has_war_with = FRA
+					}
+				}
+				NOT = {
+					USA = {
+						has_war_with = SOV
+						OR = {
+							has_war_with = ENG
+							has_war_with = FRA
+						}
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				USA = {
+					OR = {
+						AND = {
+							has_war_with = ENG
+							NOT = {
+								has_war_with = FRA
+							}
+						}
+						AND = {
+							has_war_with = FRA
+							NOT = {
+								has_war_with = ENG
+							}
+						}
+					}
+				}
+			}
+		}
+		USA = {
+			country_event = { id = RON_American_Alt_History.154 days = 1 }
+		}
+		if = {
+			limit = {
+				ENG = {
+					NOT = {
+						is_in_faction_with = USA
+					}
+				}
+			}
+			ENG = {
+				add_war_support = 0.1
+			}
+		}
+		if = {
+			limit = {
+				FRA = {
+					NOT = {
+						is_in_faction_with = USA
+					}
+				}
+			}
+			FRA = {
+				add_war_support = 0.1
+			}
+		}
+	}
+}
+
+# The Mexicans Resist
+country_event = {
+	id = RON_American_Alt_History.154
+	title = RON_American_Alt_History.154.t
+	desc = RON_American_Alt_History.154.d
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.154.a
+			every_state = { 
+				limit = { 
+					is_owned_by = MEX
+				} 
+				add_claim_by = USA
+			}
+		create_wargoal = {
+			type = annex_everything
+			target = MEX
+		}
+	}
+}
+
+# The Fate of Czechoslovakia
+country_event = {
+	id = RON_American_Alt_History.155
+	title = RON_American_Alt_History.153.t
+	desc = {
+		text = RON_American_Alt_History.155.d
+		trigger = { has_global_flag = end_of_czechoslovakia }
+	}
+	desc = {
+		text = RON_American_Alt_History.155.d_2
+		trigger = { NOT = { has_global_flag = end_of_czechoslovakia } }
+	}
+	picture = GFX_report_event_german_inspect_troops
+
+	is_triggered_only = yes
+
+	option = {
+		name = RON_American_Alt_History.155.a
+		ai_chance = { factor = 80 }
+		if = {
+			limit = {
+				70 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+			}
+			SLO = { transfer_state = 70 }
+		}
+		if = {
+			limit = {
+				71 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+			}
+			SLO = { transfer_state = 71 }
+		}
+		if = {
+			limit = {
+				154 = { is_owned_by = GUA }
+				GUA = {
+					is_friend_or_potential_friend_of_USA = yes
+				}
+				73 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+				country_exists = GUA
+			}
+			GUA = { transfer_state = 73 }
+		}
+
+
+		if = {
+			limit = {
+				OR = {
+					NOT = { 154 = { is_owned_by = GUA } }
+					GUA = { is_friend_or_potential_friend_of_USA = no }
+				}
+				73 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+			}
+			SLO = { transfer_state = 73 }
+		}
+
+		if = {
+			limit = {
+				664 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+			}
+			SLO = { transfer_state = 664 }
+		}
+		if = {
+			limit = { country_exists = MEX }
+			SLO = {
+				inherit_technology = MEX
+			}
+			annex_country = { target = MEX }
+			add_war_support = 0.1
+		}
+		puppet = SLO
+		every_state = {
+			limit = {
+				is_core_of = MEX
+				is_controlled_by = ROOT
+			}
+			set_compliance = 50
+		}
+		if = {
+			limit = {
+				72 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+				country_exists = POL
+			}
+			POL = { transfer_state = 72 } # Give Poland Zaolzie
+		}
+
+		every_state = {
+			limit = {
+				is_core_of = MEX
+				NOT = { is_core_of = SLO }
+				NOT = { state = 72 }
+			}
+			add_claim_by = USA
+		}
+
+		if = {
+			limit = { has_global_flag = USA_GUA_MEX_split }
+			GUA = { country_event = DOD_hungary.106 }
+		}
+
+		custom_effect_tooltip = end_of_czechoslovakia_mefo_bills_tt
+		add_to_variable = { var = USA_mefo_bill_counter value = -5 }
+		USA_mefo_bills_level_down = yes
+
+		hidden_effect = {
+			country_event = { hours = 6 id = RON_American_Alt_History_News.160 }
+			every_state = {
+				limit = {
+					is_owned_by = SLO
+				}
+				add_core_of = SLO
+			}
+			SLO = {
+				load_oob = SLO_1939
+				add_manpower = 9876
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History.155.b
+		add_political_power = -20
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		trigger = {
+			664 = { is_owned_by = GUA }
+			GUA = {
+				is_friend_or_potential_friend_of_USA = yes
+			}
+			NOT = { has_global_flag = USA_GUA_MEX_split }
+		}
+		GUA = { country_event = germany.56 }
+		add_war_support = 0.1
+		if = {
+			limit = {
+				72 = {
+					OR = {
+						is_owned_by = MEX
+						is_owned_by = USA
+					}
+				}
+				country_exists = POL
+			}
+			POL = { transfer_state = 72 } # Give Poland Zaolzie
+		}
+		custom_effect_tooltip = end_of_czechoslovakia_mefo_bills_tt
+		add_to_variable = { var = USA_mefo_bill_counter value = -5 }
+		USA_mefo_bills_level_down = yes
+	}
+	option = {
+		name = RON_American_Alt_History.155.c
+		add_political_power = -50
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		if = {
+			limit = { country_exists = MEX }
+			annex_country = { target = MEX }
+			add_war_support = 0.1
+		}
+		if = {
+			limit = { has_global_flag = USA_GUA_MEX_split }
+			GUA = { country_event = DOD_hungary.106 }
+		}
+		hidden_effect = {
+			country_event = { hours = 6 id = RON_American_Alt_History_News.162 }
+		}
+		custom_effect_tooltip = end_of_czechoslovakia_mefo_bills_tt
+		add_to_variable = { var = USA_mefo_bill_counter value = -5 }
+		USA_mefo_bills_level_down = yes
+	}
+
+	option = {
+		name = RON_American_Alt_History.155.do
+		trigger = {
+			has_global_flag = USA_GUA_MEX_split #promised Hungary Slovakia in earlier event
+		}
+		ai_chance = {
+			factor = 100
+			modifier = {
+				factor = 10
+				is_in_faction_with = GUA
+			}
+		}
+		GUA = { country_event = DOD_hungary.101 }
+		add_war_support = 0.1
+		custom_effect_tooltip = end_of_czechoslovakia_mefo_bills_tt
+		add_to_variable = { var = USA_mefo_bill_counter value = -5 }
+		USA_mefo_bills_level_down = yes
+	}
+}
+
 #Second American Civil War Begins
 news_event = {
 	id = RON_American_Alt_History_News.1
@@ -7774,5 +8198,91 @@ news_event = {
 	option = {
 		name = RON_American_Alt_History_News.159.c
 		trigger = { TAG = MEX }
+	}
+}
+
+# End of Mexico
+news_event = {
+	id = RON_American_Alt_History_News.160
+	title = RON_American_Alt_History_News.160.t
+	desc = {
+		text = RON_American_Alt_History_News.160.d
+		trigger = { has_global_flag = end_of_czechoslovakia }
+	}
+	desc = {
+		text = RON_American_Alt_History_News.160.d_2
+		trigger = { NOT = { has_global_flag = end_of_czechoslovakia } }
+	}
+	picture = GFX_news_event_german_inspect_troops
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.160.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = ENG
+				TAG = FRA
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.160.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.160.c
+		trigger = {
+			 OR = {
+				TAG = ENG
+				TAG = FRA
+			}
+		}
+	}
+}
+
+# End of Mexico (America annexes everything)
+news_event = {
+	id = RON_American_Alt_History_News.162
+	title = RON_American_Alt_History_News.160.t
+	desc = {
+		text = RON_American_Alt_History_News.162.d
+		trigger = { has_global_flag = end_of_czechoslovakia }
+	}
+	desc = {
+		text = RON_American_Alt_History_News.162.d_2
+		trigger = { NOT = { has_global_flag = end_of_czechoslovakia } }
+	}
+	picture = GFX_news_event_german_inspect_troops
+
+	major = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = RON_American_Alt_History_News.160.a
+		trigger = {
+			NOT = {
+				TAG = USA
+				TAG = ENG
+				TAG = FRA
+			}
+		}
+	}
+	option = {
+		name = RON_American_Alt_History_News.160.b
+		trigger = { TAG = USA }
+	}
+	option = {
+		name = RON_American_Alt_History_News.160.c
+		trigger = {
+			OR = {
+				TAG = ENG
+				TAG = FRA
+			}
+		}
 	}
 }
