@@ -12370,10 +12370,6 @@ limit = {
 				ideology = fascism
 				popularity = 0.5
 			}
-			swap_ideas = {
-				add_idea = USA_jim_crow_laws2
-				remove_idea = USA_jim_crow_laws 
-			}
 		}
 	}
 
@@ -12690,6 +12686,12 @@ limit = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			swap_ideas = {
+				add_idea = USA_jim_crow_laws2
+				remove_idea = USA_jim_crow_laws 
+			}
+		}
 	}
 
 	#Focus for Arrest Communists
@@ -12710,8 +12712,74 @@ limit = {
 			factor = 10
 		}
 		completion_reward = {
+			#If Civil War hasn't ocurred, then Commie Uprising Happens
+			if = {
+				limit = {
+					USA = {
+						has_country_flag = RON_Roosevelt_Captured
+					}
+				}
+				random_list = {
+				50 = {
+					hidden_effect = {
+						every_state = { 
+							limit = { 
+								is_core_of = USA 
+							} 
+							add_core_of = USC
+						}
+					}	
+						USC = {
+							transfer_state = 393
+							transfer_state = 856
+							transfer_state = 394
+							transfer_state = 395
+							transfer_state = 396
+							transfer_state = 261
+							transfer_state = 360
+							transfer_state = 359
+							transfer_state = 382
+							hidden_effect = {
+								add_ideas = SOV_great_patriotic_war
+								country_event = {
+									id = RON_American_Alt_History.75
+								} 
+							} 
+						}
+					declare_war_on = {
+						target = USC
+						type = civil_war
+					}
+					}
+				
+				50 = {
+					add_stability = -0.05
+					add_war_support = -0.05
+					add_popularity = {
+						ideology = communism
+						popularity = -0.3
+					}
+				}
 			
-		}
+			}
+			}
+			
+			#If Civil War has ocurred, then another Civil War is too much
+			if = {
+				limit = {
+					USA = {
+						NOT = { has_country_flag = RON_Roosevelt_Captured }
+					}
+				}
+				add_stability = -0.05
+					add_war_support = -0.05
+					add_popularity = {
+						ideology = communism
+						popularity = -0.3
+					}
+			}
+			
+	}
 	}
 
 	#Focus for A Fascist State
@@ -12746,6 +12814,13 @@ limit = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			add_manpower = -10000
+			swap_ideas = {
+				add_idea = usa_segregation2
+				remove_idea = usa_segregation
+			}
+		}
 	}
 
 	#Focus for Strip Minority Rights
@@ -12761,6 +12836,9 @@ limit = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			add_manpower = -10000
+		}
 	}
 
 	#Focus for Expand Intelligence Sector
@@ -12775,6 +12853,9 @@ limit = {
 		prerequisite = { focus = USAAH_arrest_communists }
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			RON_increase_security_policy = yes
 		}
 	}
 
@@ -12825,6 +12906,10 @@ limit = {
 		}
 		ai_will_do = {
 			factor = 10
+		}
+		completion_reward = {
+			add_manpower = -10000
+			add_stability = -0.1
 		}
 	}
 
@@ -12887,6 +12972,33 @@ limit = {
 		
 		available = {
 			has_war = no
+		}
+		completion_reward = {
+			add_stability = 0.1
+			if = {
+				limit = {
+					has_idea = USA_the_two_party_system
+				}
+				swap_ideas = {
+					remove_idea = USA_the_two_party_system
+					add_idea = USA_white_christian_republic
+				}
+			}
+			else = {
+				add_ideas = USA_white_christian_republic
+			}
+			if = {
+				limit = {
+					has_idea = RI_political_resistance
+				}
+				remove_ideas = RI_political_resistance
+			}
+			if = {
+				limit = {
+					has_idea = RI_military_resistance
+				}
+				remove_ideas = RI_military_resistance
+			}
 		}
 	}
 
@@ -15294,7 +15406,7 @@ if = {
 	#Focus for Absolute Obedience
 	focus = {
 		id = USAAH_absolute_obedience
-		icon = GFX_focus_generic_military_mission
+		icon = GFX_focus_hun_elect_a_king
 		relative_position_id = USAAH_empower_the_military
 		x = -3
 		y = 13
@@ -15316,8 +15428,30 @@ if = {
 			has_war = no
 		}
 		completion_reward = {
-			add_ideas = {
-				RI_no_questions
+			add_stability = 0.1
+			if = {
+				limit = {
+					has_idea = USA_the_two_party_system
+				}
+				swap_ideas = {
+					remove_idea = USA_the_two_party_system
+					add_idea = USA_american_monarchy
+				}
+			}
+			else = {
+				add_ideas = USA_american_monarchy
+			}
+			if = {
+				limit = {
+					has_idea = RI_political_resistance
+				}
+				remove_ideas = RI_political_resistance
+			}
+			if = {
+				limit = {
+					has_idea = RI_military_resistance
+				}
+				remove_ideas = RI_military_resistance
 			}
 		}
 	}
@@ -15461,7 +15595,7 @@ if = {
 	#Focus for All-Powerful Military
 	focus = {
 		id = USAAH_allpowerful_military
-		icon = GFX_focus_usa_build_the_pentagon
+		icon = GFX_goal_generic_axis_build_infantry
 		relative_position_id = USAAH_empower_the_military
 		x = 3
 		y = 13
@@ -15484,7 +15618,31 @@ if = {
 			has_war = no
 		}
 		completion_reward = {
-			add_ideas = RI_military_dictator
+			add_stability = 0.1
+			if = {
+				limit = {
+					has_idea = USA_the_two_party_system
+				}
+				swap_ideas = {
+					remove_idea = USA_the_two_party_system
+					add_idea = USA_military_government
+				}
+			}
+			else = {
+				add_ideas = USA_military_government
+			}
+			if = {
+				limit = {
+					has_idea = RI_political_resistance
+				}
+				remove_ideas = RI_political_resistance
+			}
+			if = {
+				limit = {
+					has_idea = RI_military_resistance
+				}
+				remove_ideas = RI_military_resistance
+			}
 		}
 	}
 
