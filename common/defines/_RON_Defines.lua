@@ -11,6 +11,3 @@ NDefines.NCountry.POLITICAL_POWER_UPPER_CAP = 10000.0				-- Max amount of politi
 NDefines.NMilitary.MAX_ARMY_EXPERIENCE = 2500
 NDefines.NMilitary.MAX_NAVY_EXPERIENCE = 2500
 NDefines.NMilitary.MAX_AIR_EXPERIENCE = 2500
-
-NDefines.NCharacter.OFFICER_CORP_ADVISOR_ENTRIES_IN_MENU = { "high_command_x", "theorist_x", "army_chief_x", "air_chief_x", "navy_chief_x" }
-NDefines.NCharacter.OFFICER_CORP_HIGH_COMMAND_SLOTS_IN_MENU = 3 --For Alert manager to count the number of High Command Slots in the UI
