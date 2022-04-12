@@ -14,7 +14,7 @@ tags={
 	"Technologies"
 }
 name="Rise of Nations"
-supported_version="1.11.4"
+supported_version="1.11.10"
 
 picture="Rise_of_Nations.gif"
 replace_path="history/countries"
