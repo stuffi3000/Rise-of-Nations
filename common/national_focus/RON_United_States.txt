@@ -12544,6 +12544,13 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = USA_Breadbasket_of_The_World
+			remove_ideas = great_depression
+			if = {
+				limit = {
+					has_idea = usa_great_crash_of_1929
+				}
+				remove_ideas = usa_great_crash_of_1929
+			}
 		}
 	}
 
@@ -14416,26 +14423,51 @@ focus_tree = {
 		}
 	}
 
+	focus = {
+		id = USAAH_Polio_Research
+		icon = GFX_focus_generic_support_the_left_right
+		relative_position_id = USAAH_destroy_the_old_america
+		x = -1
+		y = 1
+		cost = 5
+		available = {
+			has_government = communism
+		}
+		prerequisite = {
+			focus = USAAH_gulag_labor
+		}
+		prerequisite = {
+			focus = USAAH_destroy_the_old_america
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#event start polio event chain
+			USA = { country_event = { id = usa.102 days = 1 } }
+			add_stability = 0.05
+		}
+
+	}
+
 	#Focus for The Communist States of America
 	focus = {
 		id = USAAH_the_communist_states_of_america
 		icon = GFX_goal_tfv_burn_the_royal_portraits
-		relative_position_id = USAAH_empower_the_military
-		x = -27
-		y = 19
-		cost = 5
+		relative_position_id = USAAH_Polio_Research
+		x = 0
+		y = 2
+		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
-			focus = USAAH_gulag_labor 
-		}
-		prerequisite = { 
-			focus = USAAH_destroy_the_old_america 
+			focus = USAAH_Polio_Research 
 		}
 		ai_will_do = {
 			factor = 10
 		}
 		completion_reward = {
 			remove_ideas = usa_great_crash_of_1929_3
+			remove_ideas = great_depression
 		}
 	}
 
@@ -14564,6 +14596,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			create_faction = USA_new_red_order 
+			remove_ideas = ra_saavedra_lamas_treaty_others
 		}
 	}
 
@@ -15430,6 +15463,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		available = {
+			has_war = no
+		}
+		completion_reward = {
+			set_rule = {
+				can_not_declare_war = yes
+			}
+			add_stability = 0.75
+			add_war_support = -1
+			add_political_power = 200
+		}
 	}
 
 	#Focus for There Can Only Be One
@@ -15547,6 +15591,26 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_idea = USA_perfect_designs_2
+					}
+				}
+				add_ideas = USA_perfect_designs_1
+			}
+			add_research_slot = 1
+			if = {
+				limit = {
+					has_idea = USA_perfect_designs_2
+				}
+				swap_ideas = {
+					remove_idea = USA_perfect_designs_2
+					add_idea = USA_perfect_designs_3
+				}
+			}
+		}
 	}
 
 	#Focus for Military Expansion
@@ -15564,6 +15628,25 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_idea = USA_perfect_designs_1
+					}
+				}
+				add_ideas = USA_perfect_designs_2
+			}
+			if = {
+				limit = {
+					has_idea = USA_perfect_designs_1
+				}
+				swap_ideas = {
+					remove_idea = USA_perfect_designs_1
+					add_idea = USA_perfect_designs_3
+				}
+			}
+		}
 	}
 
 	#Focus for Crush The Communist Pretenders
@@ -15573,7 +15656,7 @@ focus_tree = {
 		relative_position_id = USAAH_empower_the_military
 		x = -19
 		y = 23
-		cost = 5
+		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { 
 			focus = USAAH_mandatory_military_service 
@@ -15586,6 +15669,26 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 10
+		}
+		available = {
+			is_subject = no
+			has_government = communism
+			strength_ratio = {
+				tag = SOV
+				ratio > 0.75
+			}
+		}
+		completion_reward = {
+			if = {
+				SOV = {
+					exists = yes
+					is_subject = no
+				}
+				create_wargoal = {
+					type = annex_everything
+					target = SOV
+				}
+			}
 		}
 	}
 
