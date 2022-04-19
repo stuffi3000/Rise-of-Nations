@@ -804,30 +804,61 @@ country_event = {
 	desc = soviet.31.d
 	picture = GFX_report_event_stalin_propaganda
 
-	is_triggered_only = yes
+	fire_only_once = yes
 
 	trigger = {
-		date > 1933.1.1
-		date < 1949.1.1
 		tag = SOV
-		FROM = { tag = FIN }
+		has_global_flag = sov_yes_pact
+		date > 1939.9.1
+		date < 1940.3.1
 		NOT = { has_country_flag = karjala_demand }
-		146 = {
-			is_claimed_by = SOV
-			is_owned_by = FIN
-		}
+		NOT = { FIN = { has_country_flag = FIN_Recieved_Soviet_Ultimatum } }
 	}
 
 	immediate = { set_country_flag = karjala_demand }
 
 	option = {
 		name = soviet.31.a
+		ai_chance = { 
+			factor = 100 
+			modifier = {
+				factor = 2
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				factor = 2
+				GER = { has_war_with = POL }
+			}
+		}
 		FIN = { country_event = { days = 2 id = finland.1 } }
 	}
 	option = {
 		name = soviet.31.b
-		ai_chance = { factor = 0 }
-		#
+		ai_chance = { 
+			factor = 25
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = FIN
+				}
+				factor = 2
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 2
+			}
+			modifier = {
+				factor = 2
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
 	}
 }
 

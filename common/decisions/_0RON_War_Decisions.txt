@@ -2048,6 +2048,76 @@ GER_sudetenland_decision_ai_only = {
 			}
 		}
 	}
+	
+	#Soviet Wargoal on Finland
+	
+	SOV_karelia_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = FIN
+		allowed = {
+			original_tag = SOV
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			has_global_flag = sov_yes_pact
+			NOT = { has_country_flag = karjala_demand }
+			NOT = { FIN = { has_country_flag = FIN_Recieved_Soviet_Ultimatum } }
+			original_tag = SOV
+			is_historical_focus_on = yes
+			has_government = communism
+			country_exists = FIN
+			NOT = {
+				is_in_faction_with = FIN
+			}
+			NOT = {
+				has_war_with = FIN
+			}
+			date > 1939.1.1
+			date < 1940.6.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.6.1
+			}
+			modifier = {
+				factor = 0
+				NOT = { GER = { has_war_with = POL } }
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = FIN
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+			SOV = { set_country_flag = karjala_demand }
+		}
+		remove_effect = {
+				FIN = { country_event = { days = 2 id = finland.1 } }
+		}
+	}
 
 	SACW_Crush_Communists = {
 		cost = 50
