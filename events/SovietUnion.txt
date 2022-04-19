@@ -770,30 +770,61 @@ country_event = {
 	desc = soviet.30.d
 	picture = GFX_report_event_stalin_propaganda
 
-	is_triggered_only = yes
+	fire_only_once = yes
 
 	trigger = {
-		date > 1933.1.1
-		date < 1949.1.1
+		date > 1940.1.1
+		date < 1941.1.1
 		tag = SOV
 		FROM = { tag = ROM }
 		NOT = { has_country_flag = bessarabia_demand }
-		78 = {
-			is_claimed_by = SOV
-			is_owned_by = ROM
-		}
+		NOT = { ROM = { has_country_flag = ROM_Recieved_Soviet_Ultimatum } }
 	}
 
 	immediate = { set_country_flag = bessarabia_demand }
 
 	option = {
 		name = soviet.30.a
+		ai_chance = { 
+			factor = 100 
+			modifier = {
+				factor = 2
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				factor = 2
+				GER = { has_war_with = POL }
+			}
+		}
 		ROM = { country_event = { days = 2 id = romania.1 } }
 	}
 	option = {
 		name = soviet.30.b
-		ai_chance = { factor = 0 }
-		#
+		ai_chance = { 
+			factor = 25
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = ROM
+				}
+				factor = 2
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 2
+			}
+			modifier = {
+				factor = 2
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
 	}
 }
 
@@ -808,7 +839,6 @@ country_event = {
 
 	trigger = {
 		tag = SOV
-		has_global_flag = sov_yes_pact
 		date > 1939.9.1
 		date < 1940.3.1
 		NOT = { has_country_flag = karjala_demand }
