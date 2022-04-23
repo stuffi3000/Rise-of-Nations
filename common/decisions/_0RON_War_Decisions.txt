@@ -2068,6 +2068,7 @@ GER_sudetenland_decision_ai_only = {
 			is_historical_focus_on = yes
 			has_government = communism
 			country_exists = FIN
+			FIN = { owns_state = 146 }
 			NOT = {
 				is_in_faction_with = FIN
 			}
@@ -2133,6 +2134,8 @@ GER_sudetenland_decision_ai_only = {
 			is_historical_focus_on = yes
 			has_government = communism
 			country_exists = ROM
+			ROM = { owns_state = 78 }
+			ROM = { owns_state = 80 }
 			NOT = {
 				is_in_faction_with = ROM
 			}
@@ -2176,6 +2179,95 @@ GER_sudetenland_decision_ai_only = {
 		}
 		remove_effect = {
 				ROM = { country_event = { days = 2 id = romania.1 } }
+		}
+	}
+	
+	#Soviet Wargoal on Baltics
+	
+	SOV_baltic_wargoal_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = LIT
+		war_with_on_remove = LAT
+		war_with_on_remove = EST
+		allowed = {
+			original_tag = SOV
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			original_tag = SOV
+			is_historical_focus_on = yes
+			has_government = communism
+			OR = {
+				NOT = { LIT = { has_country_flag = baltic_coups_1940 } }
+				NOT = { LAT = { has_country_flag = baltic_coups_1940 } }
+				NOT = { EST = { has_country_flag = baltic_coups_1940 } }
+			}
+			OR = {
+				country_exists = LIT
+				country_exists = LAT
+				country_exists = EST
+			}
+			OR = {
+				NOT = { has_war_with = LIT }
+				NOT = { has_war_with = LAT }
+				NOT = { has_war_with = EST }
+			}
+			date > 1940.1.1
+			date < 1941.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1940.6.1
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					LIT = { exists = yes }
+					NOT = { LIT = { has_war_with = SOV } }
+					NOT = { LIT = { has_country_flag = baltic_coups_1940 } }
+				}
+				LIT = { country_event = { days = 2 id = ron_coupscountry.46 } }
+			}
+			if = {
+				limit = {
+					LAT = { exists = yes }
+					NOT = { LAT = { has_war_with = SOV } }
+					NOT = { LAT = { has_country_flag = baltic_coups_1940 } }
+				}
+				LAT = { country_event = { days = 2 id = ron_coupscountry.461 } }
+			}
+			if = {
+				limit = {
+					EST = { exists = yes }
+					NOT = { EST = { has_war_with = SOV } }
+					NOT = { EST = { has_country_flag = baltic_coups_1940 } }
+				}
+				EST = { country_event = { days = 2 id = ron_coupscountry.462 } }
+			}
+				
 		}
 	}
 
