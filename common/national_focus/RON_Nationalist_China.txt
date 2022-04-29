@@ -4839,6 +4839,138 @@ focus_tree = {
 			show_ideas_tooltip = Hanyang_armory
 		}
 	}
+focus = {
+		id = KMT_Choose_a_side
+		icon = GFX_goal_generic_demand_territory
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			RON_can_do_focuses_1936 = yes
+		}
+		prerequisite = {
+			focus = KMT_preemptive_preparation
+		}
+		x = 78
+		y = 1
+		cost = 50
+
+		completion_reward = {
+			SIK = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		}
+		
+		GUI = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		}
+		
+		YUN = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		}
+		
+		FEN = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		}
+	 
+		MAN = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		} 
+		ANH = { country_event = {
+				id = kmt.614
+				days = 1
+			}
+		} 
+		XSM = { country_event = {
+				id = kmt.614
+				days = 1
+			} 
+		} 
+	
+	}
+	
+}
+focus = {
+		id = KMT_westerweapons
+		icon = GFX_goal_generic_consumer_goods
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+
+		}
+		available = {
+			RON_can_do_focuses_1936 = yes
+		}
+		prerequisite = {
+			focus = KMT_Choose_a_side
+		}
+		x = 78
+		y = 2
+		cost = 50
+
+		completion_reward = {
+	add_timed_idea = {
+					idea = KMT_westernization_ns
+					days = 3650
+				}
+				
+			add_equipment_to_stockpile = {
+    type = infantry_equipment
+    amount = 1500
+    producer = TAG
+}
+	add_equipment_to_stockpile = {
+    type = infantry_equipment
+    amount = 1200
+    producer = FRA
+}
+	add_equipment_to_stockpile = {
+    type = infantry_equipment
+    amount = 1800
+    producer = ENG
+}
+		}
+	}	
+focus = {
+		id = KMT_restart_the_civil_war
+		icon = GFX_goal_generic_major_war
+		available = {
+			RON_can_do_focuses_1936 = yes
+			country_exists = PRC
+			NOT = {
+				has_war_with = PRC
+			}
+		}
+		prerequisite = {
+			focus = KMT_westerweapons
+			focus = KMT_development_of_taiwan
+		}
+		x = 77
+		y = 3
+		cost = 10
+		ai_will_do = {
+			factor = 1000
+		}
+		completion_reward = {
+			declare_war_on = {
+				target = PRC
+				type = civil_war
+			}
+			hidden_effect = {
+					set_global_flag = PRC_civil_war_started
+			}
+		}
+	}
 
 	focus = {
 		id = KMT_monetary_reform
@@ -4848,13 +4980,22 @@ focus_tree = {
 			date < 1949.1.1
 
 		}
+		bypass = {
+			NOT = {
+			has_idea = KMT_jinyuanquan_inflation
+			}
+		}
+		
 		available = {
 			RON_can_do_focuses_1936 = yes
 			has_war = no
 			has_idea = KMT_jinyuanquan_inflation
 		}
-		x = 75
-		y = 0
+		prerequisite = {
+			focus = KMT_warlord_after_civil_war
+		}
+		x = 80
+		y = 1
 		cost = 50
 
 		completion_reward = {
@@ -4876,7 +5017,47 @@ focus_tree = {
 			}
 		}
 	}
+focus = {
+		id = KMT_into_isolation
+		icon = GFX_goal_generic_consumer_goods
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			RON_can_do_focuses_1936 = yes
+			has_war = no
+		}
+		prerequisite = {
+			focus = KMT_monetary_reform
+		}
+		x = 80
+		y = 2
+		cost = 50
 
+		completion_reward = {
+		swap_ideas = {	
+			remove_idea =  KMT_westernization_ns
+			add_idea = foreign_isolationism
+		}
+		hidden_effect = {
+		add_ideas = { 
+			civilian_economy
+			tariffs_extreme
+			fdi_banned
+			limited_exports
+			socialsecurity_budget4
+			foreign_none
+			service_by_requirement
+			press_state
+			security_major_restrictions
+		}
+		}
+		remove_ideas = {
+			CHI_ineffective_bureaucracy 
+		}
+	}
+}
 	focus = {
 		id = KMT_preemptive_preparation
 		icon = GFX_goal_generic_construction2
@@ -4926,7 +5107,7 @@ focus_tree = {
 			GXC = { leave_faction = yes }
 			YUN = { leave_faction = yes }
 			XSM = { leave_faction = yes }
-
+			add_threat = -100
 			custom_effect_tooltip = KMT_prep_2_tt
 			hidden_effect = {
 				every_owned_state = {
@@ -4962,11 +5143,9 @@ focus_tree = {
 			}
 		}
 		prerequisite = { focus = KMT_preemptive_preparation }
-		x = 78
+		x = 76
 		y = 1
 		cost = 10
-		bypass = {}
-
 		completion_reward = {
 			custom_effect_tooltip = kmt_taiwan_bastion_tt
 			hidden_effect = {
@@ -5452,7 +5631,7 @@ focus_tree = {
 			}
 		}
 		prerequisite = { focus = KMT_taiwan_bastion }
-		x = 78
+		x = 76
 		y = 2
 		cost = 10
 
@@ -5549,26 +5728,16 @@ focus_tree = {
 				country_exists = MAN
 				country_exists = ANH
 				country_exists = XSM
-				country_exists = MON
+			}
+			OR = {
+			KOR = { exists = yes }
+			DPK = { exists = yes }
 			}
 			owns_state = 608
-
-			has_completed_focus = KMT_preemptive_preparation
-			OR = {
-				custom_trigger_tooltip = {
-					tooltip = KMT_jap_no_longer_a_threat_tt
-					has_global_flag = KMT_jap_no_longer_a_threat
-				}
-				custom_trigger_tooltip = {
-					tooltip = CHI_warred_with_JAP
-					NOT = {
-						has_war_with = JAP
-					}
-					KOR = { exists = yes }
-				}
-			}
+			has_war = no
+			has_completed_focus = KMT_restart_the_civil_war
 		}
-		x = 79
+		x = 80
 		y = 0
 		cost = 10
 
@@ -5578,18 +5747,11 @@ focus_tree = {
 
 		search_filters = { FOCUS_FILTER_ANNEXATION }
 		completion_reward = {
-			every_other_country = {
-				limit = {
-					is_valid_power_struggle_participant = yes
-					NOT = { tag = SIK }
-					NOT = { tag = PRC }
-					exists = yes
-				}
-				country_event = { id = kmt.74 hours = 2 }
-			}
-			set_global_flag = KMT_MEN_trigger_by_unify_focus
-			set_country_flag = CHI_hostile_against_warlords
+			country_event = {
+				id = RON_Formable_Country.86
+				days = 1
 		}
+	}
 	}
 
 	focus = {
