@@ -194,7 +194,8 @@ WW2_operations_decisions = {
 	GER_operation_weserubung = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = GER
 			date > 1939.1.1
 			date < 1941.1.1
@@ -203,8 +204,6 @@ WW2_operations_decisions = {
 				has_war_with = DEN
 				has_war_with = NOR
 			}
-
-
 		}
 
 		cost = 0
@@ -212,32 +211,53 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
 			modifier = {
-				factor = 4000
-				has_war_with = NOR
+				factor = 0
 				OR = {
-					DEN = { has_capitulated = yes }
-					DEN = { is_subject = yes }
-					DEN = { exists = no }
+					DEN = { has_capitulated = no }
+					DEN = { exists = yes }
+					NOT = { DEN = { is_subject_of = GER } }
+					NOT = { RPD = { is_subject_of = GER } }
 				}
 			}
+			modifier = {
+				factor = 0
+				NOT = { has_war_with = NOR }
+			}
 		}
+		
+		days_remove = 61
 
 		visible = {
+			is_ai = yes
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		complete_effect = {
-			country_event = { id = ww2operations.0 }
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = blitzkrieg_1940
+				days = 61
+			}
+			add_timed_idea = {
+				idea = luftwaffe_1940
+				days = 61
+			}
+			load_oob = GER_WESERUBUNG
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
 	GER_fall_gelb = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = GER
 			date > 1939.1.1
 			date < 1941.1.1
@@ -259,22 +279,31 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		visible = {
+			is_ai = yes
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 4000
-				has_war_with = HOL
-				has_war_with = BEL
-				has_war_with = LUX
-			}
+			factor = 1000
 		}
+		
+		days_remove = 46
 
 		complete_effect = {
-			country_event = { id = ww2operations.17 }
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = blitzkrieg_1940
+				days = 46
+			}
+			add_timed_idea = {
+				idea = luftwaffe_1940
+				days = 46
+			}
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -283,25 +312,25 @@ WW2_operations_decisions = {
 	GER_operation_sealion = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = GER
 			date > 1940.1.1
 			date < 1950.1.1
 
 			has_war_with = ENG
-
-			16 = { is_controlled_by_ROOT_or_ally = yes }
-
-			NOT = {
-				has_war_with = SOV
-			}
+			
+			RON_POL_Defeated = yes
+			RON_FRA_Defeated = yes
+			RON_SOV_Defeated = yes
 
 
 		}
 
 		visible = {
+			is_ai = yes
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -309,14 +338,10 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
 			modifier = {
-				factor = 4000
-				OR = {
-					SOV = { has_capitulated = yes }
-					SOV = { is_subject = yes }
-					SOV = { exists = no }
-				}
+				factor = 0
+				has_war_with = SOV
 			}
 			modifier = {
 				factor = 0
@@ -324,8 +349,23 @@ WW2_operations_decisions = {
 			}
 		}
 
+		days_remove = 84
+
 		complete_effect = {
-			country_event = { id = ww2operations.1 }
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = operation_sealion
+				days = 84
+			}
+			country_event = {
+				hours = 6
+				id = ww2operations.9
+			}
+			load_oob = GER_SEALION
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -346,7 +386,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -354,7 +394,11 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1941.6.1
+			}
 		}
 
 		complete_effect = {
@@ -376,7 +420,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -384,12 +428,47 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1941.5.1
+			}
 		}
 
-		complete_effect = {
+		days_remove = 210
 
+		complete_effect = {
+			set_country_flag = ww2_operation
+			activate_mission = GER_barbarossa_mission
 			country_event = { id = ww2operations.14 }
+			
+			add_timed_idea = {
+				idea = blitzkrieg_1941
+				days = 160
+			}
+			add_timed_idea = {
+				idea = luftwaffe_1941
+				days = 210
+			}
+			
+			SOV = {
+				add_timed_idea = {
+					idea = shattered_retreat
+					days = 160
+				}
+				add_timed_idea = {
+					idea = soviet_air_forces_1941
+					days = 129
+				}
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 49
+				}
+			}
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -406,8 +485,6 @@ WW2_operations_decisions = {
 		}
 
 		visible = {
-			tag = GER
-			#NOT = { has_idea = ww2_operation }
 			OR = {
 				has_idea = blitzkrieg_1941
 				has_idea = luftwaffe_1941
@@ -419,13 +496,27 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1941.10.1
+			}
 		}
+		
+		days_remove = 95
 
 		complete_effect = {
+			set_country_flag = ww2_operation
 			remove_ideas = blitzkrieg_1941
-
+			add_timed_idea = {
+				idea = operation_typhoon
+				days = 95
+			}
 			country_event = { id = ww2operations.11 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -443,7 +534,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -451,13 +542,26 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1942.7.1
+			}
 		}
 
+		days_remove = 143
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = fall_blau
+				days = 143
+			}
 			country_event = { id = ww2operations.2 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -475,7 +579,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -483,13 +587,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1943.6.1
+			}
 		}
 
+		days_remove = 12
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = operation_citadel
+				days = 12
+			}
+			SOV = {
+				add_timed_idea = {
+					idea = SOV_operation_citadel
+					days = 12
+				}
+			}
 			country_event = { id = ww2operations.12 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -510,7 +633,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = GER
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -518,13 +641,46 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 4000
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1944.12.1
+			}
 		}
 
+		days_remove = 42
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = battle_of_the_bulge
+				days = 42
+			}
+			USA = {
+				add_timed_idea = {
+					idea = grounded_usaaf_1944
+					days = 21
+				}
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 14
+				}
+			}
+			ENG = {
+				add_timed_idea = {
+					idea = grounded_usaaf_1944
+					days = 21
+				}
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 14
+				}
+			}
 			country_event = { id = ww2operations.3 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -550,7 +706,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -558,13 +714,22 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
 		}
 
+		days_remove = 150
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = sov_soviet_winter
+				days = 150
+			}
 			country_event = { id = ww2operations.24 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -583,7 +748,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -591,13 +756,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1942.11.1
+			}
 		}
 
+		days_remove = 4
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 4
+			}
+			GER = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 4
+				}
+			}
 			country_event = { id = ww2operations.23 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -616,7 +800,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -624,13 +808,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1942.11.25
+			}
 		}
 
+		days_remove = 25
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 25
+			}
+			GER = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 8
+				}
+			}
 			country_event = { id = ww2operations.22 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -652,7 +855,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -660,13 +863,26 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1943.8.24
+			}
 		}
 
+		days_remove = 117
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 117
+			}
 			country_event = { id = ww2operations.20 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -691,7 +907,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -699,13 +915,26 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1943.12.24
+			}
 		}
 
+		days_remove = 113
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 113
+			}
 			country_event = { id = ww2operations.21 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -730,7 +959,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -738,13 +967,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1944.6.22
+			}
 		}
 
+		days_remove = 56
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 56
+			}
+			GER = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 18
+				}
+			}
 			country_event = { id = ww2operations.8 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -767,7 +1015,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -775,13 +1023,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1945.1.12
+			}
 		}
 
+		days_remove = 20
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 20
+			}
+			GER = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 7
+				}
+			}
 			country_event = { id = ww2operations.19 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -804,7 +1071,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -812,13 +1079,32 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1945.3.16
+			}
 		}
 
+		days_remove = 11
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 11
+			}
+			GER = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 4
+				}
+			}
 			country_event = { id = ww2operations.18 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
@@ -835,7 +1121,7 @@ WW2_operations_decisions = {
 
 		visible = {
 			tag = SOV
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -843,20 +1129,40 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1945.8.9
+			}
 		}
 
+		days_remove = 11
+
 		complete_effect = {
-
-
+			set_country_flag = ww2_operation
+			add_timed_idea = {
+				idea = soviet_steamroller
+				days = 11
+			}
+			JAP = {
+				add_timed_idea = {
+					idea = army_destroyed
+					days = 4
+				}
+			}
 			country_event = { id = ww2operations.16 }
+		}
+		
+		remove_effect = {
+			clr_country_flag = ww2_operation
 		}
 	}
 
 	USA_operation_torch = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = USA
 			date > 1942.1.1
 			date < 1943.1.1
@@ -872,8 +1178,9 @@ WW2_operations_decisions = {
 		}
 
 		visible = {
+			is_ai = yes
 			tag = USA
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -881,7 +1188,11 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1942.11.8
+			}
 		}
 
 		complete_effect = {
@@ -894,7 +1205,8 @@ WW2_operations_decisions = {
 	USA_operation_husky = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = USA
 			date > 1943.1.1
 			date < 1944.1.1
@@ -910,8 +1222,9 @@ WW2_operations_decisions = {
 		}
 
 		visible = {
+			is_ai = yes
 			tag = USA
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -919,8 +1232,13 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1943.7.9
+			}
 		}
+
 
 		complete_effect = {
 
@@ -929,79 +1247,91 @@ WW2_operations_decisions = {
 		}
 	}
 
-	#USA_operation_overlord = {
-	#		icon = generic_army_support
-	#
-	#		available = { is_ai = yes
-	#		tag = USA
-	#		date > 1944.1.1
-	#		date < 1950.1.1
-	#		has_war_with = GER
-	#		surrender_progress < 0.1
-	#		126 = { is_controlled_by_ROOT_or_ally = yes }
-	#		15 = { is_controlled_by_ROOT_or_ally = no }
-	#		29 = { is_controlled_by_ROOT_or_ally = no }
-	#		785 = { is_controlled_by_ROOT_or_ally = no }
-	#		}
-	#
-	#		visible = {
-	#		tag = USA
-	#		NOT = { has_idea = ww2_operation }
-	#		}
-	#
-	#		cost = 0
-	#
-	#		fire_only_once = yes
-	#
-	#		ai_will_do = {
-	#			factor = 1
-	#		}
-	#
-	#		complete_effect = {
-	##
-	#
-	#		country_event = { id = ww2operations.6 }
-	#	}
-	#}
+	USA_operation_overlord = {
+			icon = generic_army_support
+	
+			available = { 
+			is_ai = yes
+			tag = USA
+			date > 1944.1.1
+			date < 1950.1.1
+			has_war_with = GER
+			surrender_progress < 0.1
+			126 = { is_controlled_by_ROOT_or_ally = yes }
+			15 = { is_controlled_by_ROOT_or_ally = no }
+			29 = { is_controlled_by_ROOT_or_ally = no }
+			785 = { is_controlled_by_ROOT_or_ally = no }
+			}
+	
+			visible = {
+			is_ai = yes
+			tag = USA
+			NOT = { has_country_flag = ww2_operation }
+			}
+	
+			cost = 0
+	
+			fire_only_once = yes
+	
+			ai_will_do = {
+				factor = 1000
+				modifier = {
+					factor = 0
+					date < 1944.6.6
+				}
+			}
+	
+			complete_effect = {
+	
+	
+			country_event = { id = ww2operations.6 }
+		}
+	}
 
-	#USA_operation_dragoon = {
-	#		icon = generic_army_support
-	#
-	#		available = { is_ai = yes
-	#		tag = USA
-	#		date > 1944.1.1
-	#		date < 1950.1.1
-	#		has_war_with = GER
-	#		surrender_progress < 0.1
-	#		15 = { is_controlled_by_ROOT_or_ally = yes }
-	#		29 = { is_controlled_by_ROOT_or_ally = yes }
-	#		785 = { is_controlled_by_ROOT_or_ally = yes }
-	#		}
-	#
-	#		visible = {
-	#		tag = USA
-	#		NOT = { has_idea = ww2_operation }
-	#		}
-	#
-	#		cost = 0
-	#
-	#		fire_only_once = yes
-	#
-	#		ai_will_do = {
-	#			factor = 1
-	#		}
-	#
-	#		complete_effect = {
-	#
-	#
-	#		country_event = { id = ww2operations.7 }
-	#	}
-	#}
+	USA_operation_dragoon = {
+			icon = generic_army_support
+	
+			available = { 
+			is_ai = yes
+			tag = USA
+			date > 1944.1.1
+			date < 1950.1.1
+			has_war_with = GER
+			surrender_progress < 0.1
+			15 = { is_controlled_by_ROOT_or_ally = yes }
+			29 = { is_controlled_by_ROOT_or_ally = yes }
+			785 = { is_controlled_by_ROOT_or_ally = yes }
+			}
+	
+			visible = {
+			tag = USA
+			NOT = { has_country_flag = ww2_operation }
+			}
+	
+			cost = 0
+	
+			fire_only_once = yes
+	
+			ai_will_do = {
+				factor = 1000
+				modifier = {
+					factor = 0
+					date < 1944.8.15
+				}
+			}
+	
+			complete_effect = {
+	
+	
+			country_event = { id = ww2operations.7 }
+		}
+	}
 
 	ENG_operation_market_garden = {
 		icon = generic_army_support
 
-		available = { is_ai = yes
+		available = { 
+			is_ai = yes
 			tag = ENG
 			date > 1944.1.1
 			date < 1950.1.1
@@ -1017,8 +1347,9 @@ WW2_operations_decisions = {
 		}
 
 		visible = {
+			is_ai = yes
 			tag = ENG
-			NOT = { has_idea = ww2_operation }
+			NOT = { has_country_flag = ww2_operation }
 		}
 
 		cost = 0
@@ -1026,8 +1357,13 @@ WW2_operations_decisions = {
 		fire_only_once = yes
 
 		ai_will_do = {
-			factor = 1
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1944.9.17
+			}
 		}
+
 
 		complete_effect = {
 
