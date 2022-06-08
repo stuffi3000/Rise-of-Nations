@@ -8142,32 +8142,40 @@ focus_tree = {
 		icon = GFX_goal_demand_slovakia
 		prerequisite = { focus = HUN_reassert_old_claims }
 		available = {
-			NOT = { has_war_with = CZE }
-			NOT = { is_in_faction_with = CZE }
-			CZE = {
-				exists = yes
-				is_puppet = no
-				owns_state = 70        #Western Slovakia
-				owns_state = 71        #Eastern Slovakia
+			70 = {
+				owner = {
+					NOT = {
+						is_in_faction_with = ROOT
+					}
+				}
 			}
-			OR = {
-				ROOT = { owns_state = 73 }    #Carpathian Ruthenia
-				CZE = { owns_state = 73 }    #Carpathian Ruthenia
-				RUT = { owns_state = 73 }    #Carpathian Ruthenia
+			71 = {
+				owner = {
+					NOT = {
+						is_in_faction_with = ROOT
+					}
+				}
 			}
-			OR = {
-				ROOT = { owns_state = 818 }    #Sobrance
-				CZE = { owns_state = 818 }    #Sobrance
-				RUT = { owns_state = 818 }    #Sobrance
+			73 = {
+				owner = {
+					NOT = {
+						is_in_faction_with = ROOT
+					}
+				}
 			}
-			OR = {
-				ROOT = { owns_state = 802 }    #Beregszasz
-				CZE = { owns_state = 802 }    #Beregszasz
-				RUT = { owns_state = 802 }    #Beregszasz
+			664 = {
+				owner = {
+					NOT = {
+						is_in_faction_with = ROOT
+					}
+				}
 			}
-			OR = {
-				ROOT = { owns_state = 664 }    #Southern Slovakia
-				CZE = { owns_state = 664 }    #Southern Slovakia
+			889 = {
+				owner = {
+					NOT = {
+						is_in_faction_with = ROOT
+					}
+				}
 			}
 			if = {
 				limit = { has_country_flag = HUN_realism }
@@ -8176,12 +8184,42 @@ focus_tree = {
 			custom_trigger_tooltip = { tooltip = HUN_bigger_army_better_chances }
 		}
 		bypass = {
-			owns_state = 70        #Western Slovakia
-			owns_state = 71        #Eastern Slovakia
-			owns_state = 818    #Sobrance
-			owns_state = 73        #Carpathian Ruthenia
-			owns_state = 802    #Beregszasz
-			owns_state = 664    #Southern Slovakia
+			OR = {
+				AND = {
+					owns_state = 70
+					owns_state = 71
+					owns_state = 73
+					owns_state = 664
+					owns_state = 889
+				}
+				AND = {
+					70 = {
+						owner = {
+							has_war_with = ROOT
+						}
+					}
+					71 = {
+						owner = {
+							has_war_with = ROOT
+						}
+					}
+					73 = {
+						owner = {
+							has_war_with = ROOT
+						}
+					}
+					664 = {
+						owner = {
+							has_war_with = ROOT
+						}
+					}
+					889 = {
+						owner = {
+							has_war_with = ROOT
+						}
+					}
+				}
+			}			
 		}
 		x = -3
 		y = 1
@@ -8207,7 +8245,34 @@ focus_tree = {
 
 		search_filters = { FOCUS_FILTER_ANNEXATION }
 		completion_reward = {
-			CZE = {
+			every_other_country = {
+				limit = {
+					OR = {
+						owns_state = 70
+						owns_state = 71
+						owns_state = 73
+						owns_state = 664
+						owns_state = 889
+						
+						controls_state = 70
+						controls_state = 71
+						controls_state = 73
+						controls_state = 664
+						controls_state = 889
+					}
+				}
+				ROOT = {
+					if = {
+						limit = {
+							NOT = { is_in_faction_with = PREV }
+						}
+						create_wargoal = {
+							type = take_state_focus
+							generator = { 70 71 73 664 889 }
+							target = PREV
+						}
+					}
+				}
 				add_opinion_modifier = { target = ROOT modifier = HUN_demanded_territory }
 				country_event = { hours = 6 id = hungary_flavor_cze.1 }
 			}
