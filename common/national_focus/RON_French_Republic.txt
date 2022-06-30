@@ -121,6 +121,7 @@ focus_tree = {
 	focus = {
 		id = FRA1_center_left_victory
 		cost = 5
+		icon = democracy2
 		relative_position_id = FRA1_prepare_the_legislatives
 		x = -1
 		y= 1
@@ -145,6 +146,7 @@ focus_tree = {
 	}
 	focus = {
 		id = FRA1_center_right_victory
+		icon = democracy2
 		cost = 5
 		relative_position_id = FRA1_prepare_the_legislatives
 		x = 1
@@ -172,6 +174,7 @@ focus_tree = {
 		id = FRA1_break_cheminots_strike
 		cost = 5
 		relative_position_id = FRA1_prepare_the_legislatives
+		icon = GFX_SIA_domesticindustrylaw
 		x = 0
 		y = 2
 		ai_will_do = {
@@ -188,11 +191,19 @@ focus_tree = {
 	focus = {
 		id = FRA1_talks_with_syndicats
 		cost = 10
+		icon = GFX_PER_trade_union
 		relative_position_id = FRA1_center_left_victory
 		x = -1
 		y = 1
 		prerequisite = {
 			focus = FRA1_center_left_victory
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
 		}
 		completion_reward = {
 			set_temp_variable = {
@@ -210,10 +221,14 @@ focus_tree = {
 		icon = support_workers
 		cost = 10
 		relative_position_id = FRA1_talks_with_syndicats
-		x = -1
+		x = -2
 		y = 1
 		prerequisite = {
 			focus = FRA1_talks_with_syndicats
+		}
+		mutually_exclusive ={
+			focus = FRA1_time_question
+			focus = FRA1_strike_breakers
 		}
 		completion_reward = {
 			add_popularity = {
@@ -237,6 +252,7 @@ focus_tree = {
 		id = FRA1_appoint_Ernest_Billiet_as_minister
 		cost = 10
 		relative_position_id = FRA1_center_right_victory
+		icon = GFX_SIA_mixedeconomy
 		x = 1
 		y = 1
 		prerequisite = {
@@ -248,10 +264,24 @@ focus_tree = {
 		cost = 10
 		icon = GFX_focus_spr_crush_the_revolution
 		relative_position_id = FRA1_appoint_Ernest_Billiet_as_minister
-		x = 1
+		x = 2
 		y = 1
+		ai_will_do = {
+			factor = 300
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
 		prerequisite = {
 			focus = FRA1_appoint_Ernest_Billiet_as_minister
+		}
+		mutually_exclusive ={
+			focus = FRA1_time_question
+			focus = FRA1_empower_syndicats
+		}
+		completion_reward = {
+			add_ideas = FRA_strike_breakers
 		}
 	}
 	focus = {
@@ -259,32 +289,277 @@ focus_tree = {
 		cost = 10
 		icon = military_sphere
 		relative_position_id = FRA1_strike_breakers
-		x = 0
+		x = -1
 		y = 1
+		ai_will_do = {
+			factor = 100
+		}
 		prerequisite = {
 			focus = FRA1_strike_breakers
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			}
 		}
 	}
 	focus = {
 		id = FRA1_gray_sunday
 		cost = 10
-		relative_position_id = FRA1_organise_militias
+		relative_position_id = FRA1_strike_breakers
 		icon = destroy_establishment
-		x = 0
+		ai_will_do = {
+			factor = 100
+		}
+		x = 1
 		y = 1
 		prerequisite = {
-			focus = FRA1_organise_militias
+			focus = FRA1_strike_breakers
+		}
+		completion_reward = {
+			country_event = ww1_france.70
 		}
 	}
 	focus = {
 		id = FRA1_bring_back_in_the_fold
+		ai_will_do = {
+			factor = 100
+		}
 		cost = 10
 		relative_position_id = FRA1_gray_sunday
 		icon = dangerous_deal
-		x = 0
+		x = -1
 		y = 1
 		prerequisite = {
 			focus = FRA1_gray_sunday
+			focus = FRA1_organise_militias
+		}
+		completion_reward = {
+			swap_ideas ={
+				remove_idea = FRA_strike_breakers
+				add_idea = FRA_strike_breakers_politics
+			}
+		}
+	}
+	focus = {
+		id = FRA1_the_coup
+		ai_will_do = {
+			factor = 100
+		}
+		cost = 10
+		relative_position_id = FRA1_bring_back_in_the_fold
+		icon = GFX_generic_the_coup
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = FRA1_bring_back_in_the_fold
+		}
+		completion_reward = {
+			FRA_ferdinand_foch = {
+				add_country_leader_role = {
+  
+  					
+  					country_leader = {
+    					ideology = militarism
+   						expire = "1965.1.1.1"
+    					traits = { war_industrialist }
+  					}
+					
+				}
+				promote_character = militarism
+			}
+			retire_character = FRA_philippe_dorleans
+			set_politics = {
+				ruling_party = neutrality
+    			elections_allowed = no
+				long_name = "Militarist Junta"
+    			name = "Militarist Junta"
+			}
+			set_cosmetic_tag = FRA_MILITARIST
+			retire_president_du_conseil = yes
+			set_country_flag = foch_president_du_conseil
+			leave_faction = yes
+		}
+	}
+	focus = {
+		id = FRA1_liquidate_political_ennemies
+		ai_will_do = {
+			factor = 100
+		}
+		icon = destroy_establishment
+		cost = 10
+		relative_position_id = FRA1_bring_back_in_the_fold
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = FRA1_bring_back_in_the_fold
+		}
+		completion_reward = {
+			unlock_decision_tooltip = FRA_get_rid_of_SFIC
+			unlock_decision_tooltip = FRA_get_rid_of_PRRRS
+			unlock_decision_tooltip = FRA_get_rid_of_SFIO
+			unlock_decision_tooltip = FRA_get_rid_of_AD
+			unlock_decision_tooltip = FRA_get_rid_of_FR
+		}
+	}
+	focus = {
+		id = FRA1_unexpected_alliance
+		cost = 10
+		icon = GFX_focus_support_german_empire
+		relative_position_id = FRA1_liquidate_political_ennemies
+		x= -1
+		y = 1
+		ai_will_do = {
+			factor = 100
+		}
+		prerequisite = {
+			focus = FRA1_liquidate_political_ennemies
+			focus = FRA1_the_coup
+		}
+		completion_reward = {
+			GER = {
+				country_event = generic.2
+			}
+			SPR = {
+				add_ai_strategy = {
+					type = prepare_for_war 
+					id = FRA
+					value = 1000
+				}
+				add_ai_strategy = {
+					type = force_build_armies
+					value = 500
+				}
+			}
+		}
+	}
+	focus = {
+		id = FRA1_Namur_agreements
+		icon = GFX_focus_FRA_Namur_conference
+		cost = 10
+		relative_position_id = FRA1_unexpected_alliance
+		x = -1
+		y = 1
+		will_lead_to_war_with = BEL
+		will_lead_to_war_with = HOL
+		will_lead_to_war_with = LUX
+		ai_will_do = {
+			factor = 1000
+		}
+		prerequisite = {
+			focus = FRA1_unexpected_alliance
+		}
+		completion_reward = {
+			LUX = {
+				country_event = ww1_france.74
+			}
+			HOL = {
+				country_event = {
+					id = ww1_france.74 days = 2
+				}
+			}
+			BEL = {
+				country_event = {
+					id = ww1_france.74 days = 10
+				}
+			}
+		}
+	}
+	focus = {
+		id = FRA1_Zurich_conference
+		cost = 10
+		icon = GFX_focus_FRA_zurich_conference
+		relative_position_id = FRA1_unexpected_alliance
+		x = 1
+		y = 1
+		will_lead_to_war_with = ITA
+		ai_will_do = {
+			factor = 100
+		}
+		 prerequisite = {
+			focus = FRA1_unexpected_alliance
+		 }
+		 completion_reward = {
+			ITA = {
+				country_event = {
+					id = ww1_france.71
+					days = 5
+				}
+			}
+		 }
+	}
+	focus = {
+		id = FRA1_conferation_acier_charbon
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		relative_position_id = FRA1_Zurich_conference
+		icon = GFX_focus_FRA_confederation_charbon_acier
+		x = -1
+		y = 1
+		prerequisite ={
+			focus = FRA1_Zurich_conference
+			focus = FRA1_Namur_agreements
+		}
+	}
+	focus = {
+		id = FRA1_operation_mercure
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		relative_position_id = FRA1_Zurich_conference
+		x = 2
+		y = 0
+		will_lead_to_war_with = MEX
+		prerequisite = {
+			focus = FRA1_unexpected_alliance
+		}
+		icon = attack_mexico
+	}
+	focus = {
+		id = FRA1_demand_catalonia
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		relative_position_id = FRA1_Zurich_conference
+		icon = forceful_treaty
+		x = 1
+		y = 1
+		will_lead_to_war_with = SPR
+		prerequisite = {
+			focus = FRA1_operation_mercure
+			focus = FRA1_Zurich_conference
+		}
+		completion_reward = {
+			165 = {
+				add_claim_by = FRA
+			}
+			create_wargoal = {
+				target = SPR
+				type = take_claimed_state
+			}
+		}
+	}
+	focus = {
+		id = FRA1_our_true_ennemy
+		cost = 10
+		ai_will_do = {
+			factor = 100
+		}
+		icon = GFX_focus_FRA_our_true_ennemy
+		relative_position_id = FRA1_Zurich_conference
+		x = 0
+		y = 2
+		will_lead_to_war_with = ENG
+		prerequisite = {
+			focus = FRA1_demand_catalonia
+		}
+		prerequisite = {
+			focus = FRA1_conferation_acier_charbon
 		}
 	}
 	focus = {
@@ -302,11 +577,16 @@ focus_tree = {
 			focus = FRA1_break_cheminots_strike
 			focus = FRA1_talks_with_syndicats
 		}
+		mutually_exclusive ={
+			focus = FRA1_strike_breakers
+			focus = FRA1_empower_syndicats
+		}
 	}
 	focus = {
 		id = FRA1_new_government_same_FM
 		cost = 10
 		relative_position_id = FRA1_time_question
+		icon = democracy
 		x = -1
 		y = 1
 		ai_will_do = {
@@ -333,6 +613,7 @@ focus_tree = {
 		id = FRA1_Briands_resignation
 		cost = 10
 		relative_position_id = FRA1_time_question
+		icon = GFX_goal_aus_embrace_the_german_model_of_rule
 		x = 1
 		y = 1
 		ai_will_do = {
@@ -352,6 +633,9 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus = FRA1_time_question
+		}
+		completion_reward = {
+			retire_president_du_conseil = yes
 		}
 	}
 	focus = {
@@ -390,7 +674,7 @@ focus_tree = {
 		id = FRA1_prepare_rearmament
 		cost = 10
 		relative_position_id = FRA1_3_years_law
-		icon = GFX_focus_secret_rearmament
+		icon = GFX_SIA_weaponfactory
 		x = 1
 		y = 1
 		ai_will_do = {
