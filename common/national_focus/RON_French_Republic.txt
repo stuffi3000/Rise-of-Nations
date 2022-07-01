@@ -970,6 +970,9 @@ focus_tree = {
 		allow_branch = {
 			is_debug = yes
 		}
+		completion_reward = {
+			add_political_power = 50
+		}
 	}
 	focus = {
 		id = FRA1_developping_french_equatorial_africa
@@ -980,10 +983,24 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		available = {
+			country_exists = RCG
+		}
 		prerequisite = {
 			focus = FRA1_ministre_des_colonies
 		}
 		icon = GFX_focus_generic_africa_infrastructure
+		completion_reward = {
+			RCG = {
+				random_owned_state = {
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
 	}
 	focus = {
 		id = FRA1_army_training_AEF
@@ -998,6 +1015,15 @@ focus_tree = {
 		prerequisite = {
 			focus = FRA1_ministre_des_colonies
 		}
+		available = {
+			country_exists = RCG
+		}
+		completion_reward = {
+			RCG = {
+				army_experience = 25
+			}
+			army_experience = 10
+		}
 	}
 	focus = {
 		id = FRA1_indochinese_developpement
@@ -1009,10 +1035,23 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		available = {
+			country_exists= VIN
+		}
 		prerequisite = {
 			focus = FRA1_developping_french_equatorial_africa
 		}
-
+		completion_reward = {
+			VIN = {
+				random_owned_state = {
+					add_resource = {
+    					type = steel
+    					amount = 5
+    					state = THIS
+					}
+				}
+			}
+		}
 	}
 	focus = {
 		id = FRA1_army_training_Indochina
@@ -1024,8 +1063,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		available = {
+			country_exists = VIN
+		}
 		prerequisite = {
 			focus = FRA1_army_training_AEF
+		}
+		completion_reward = {
+			VIN = {
+				army_experience = 25
+			}
+			army_experience = 10
 		}
 	}
 	focus = {
@@ -1058,6 +1106,12 @@ focus_tree = {
 			modifier = {
 				factor = 200
 				date > 1911.4.23
+			}
+		}
+		completion_reward = {
+			add_named_threat = {
+				threat = 5
+				name = "Moroccan Question"
 			}
 		}
 	}
@@ -1102,6 +1156,9 @@ focus_tree = {
 				factor = 100
 				is_historical_focus_on = yes
 			}
+		}
+		completion_reward = {
+			add_threat = -5
 		}
 	}
 	focus = {
@@ -1169,6 +1226,19 @@ focus_tree = {
 			base = 200
 			
 		}
+		completion_reward = {
+			every_state ={
+				limit = {
+					OR = {
+						is_owned_by = MOB
+						is_owned_by = MOR
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = sabotaged_state
+				}
+			}
+		}
 
 	}
 	focus = {
@@ -1184,6 +1254,11 @@ focus_tree = {
 		ai_will_do = {
 			base = 200
 			
+		}
+		completion_reward = {
+			MOB = {
+				add_ideas = FRA1_naval_blockade_idea
+			}
 		}
 	}
 	focus = {
@@ -1226,6 +1301,9 @@ focus_tree = {
 				date > 1911.11.4
 			}
 		}
+		completion_reward = {
+			country_event = ww1_france.77
+		}
 	}
 	focus = {
 		id = FRA1_Fes_treaty
@@ -1236,6 +1314,11 @@ focus_tree = {
 		y = 1
 		prerequisite = {
 			focus = FRA1_French_German_convention
+		}
+		completion_reward = {
+			MOR = {
+				add_country_leader_trait = unpopular_monarch
+			}
 		}
 	}
 	focus = {
@@ -1255,6 +1338,9 @@ focus_tree = {
 				date > 1912.4.28
 			}
 		}
+		completion_reward = {
+			add_political_power = 50
+		}
 	}
 	focus = {
 		id = FRA1_Madrid_convention
@@ -1273,26 +1359,83 @@ focus_tree = {
 				date > 1912.11.27
 			}
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					MOR = {
+						is_ai = yes
+					}
+				}
+				FRA = {
+					transfer_state = 462
+					transfer_state = 461
+				}
+				SPR = {
+					annex_country = {
+    					target = MOR
+   
+					}
+				}
+			}
+			if = {
+				limit = {
+					MOR = {
+						is_ai = no
+					}
+				}
+				FRA = {
+					create_wargoal = {
+						type = take_claimed_state
+						target = MOR
+					}
+				}
+				SPR = {
+					create_wargoal = {
+						type = take_claimed_state
+						target = MOR
+					}
+				}
+			}
+			
+		}
 	}
 	focus = {
 		allow_branch = {
 			is_debug = yes
 		}
+		relative_position_id = FRA1_air_force
 		id = FRA1_mourmelon_raid
 		icon = airforce
-		x = 15
+		x = 1
 		y = 1
 		cost = 10
+		completion_reward = {
+			air_experience = 10
+		}
+		prerequisite = {
+			focus = FRA1_air_force
+		}
 	}
 	focus = {
 		id = FRA1_military_air_laws
 		icon = airforce
 		cost = 10
-		relative_position_id = FRA1_mourmelon_raid
-		x = 0
+		relative_position_id = FRA1_air_force
+		x = -1
 		y = 1
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = conseil_legitimacy_more_than_50_tt
+				check_variable = {
+					president_du_conseil_legitimacy > 50
+				}
+			}
+		}
 		prerequisite = {
-			focus = FRA1_mourmelon_raid
+			focus = FRA1_air_force
+		}
+		completion_reward = {
+			add_ideas = FRA1_military_air_laws
 		}
 	}
 
@@ -2991,7 +3134,14 @@ focus_tree = {
 		allow_branch = {
 			date > 1909.12.31 date < 1919.1.1
 		}
-
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = conseil_legitimacy_more_than_50_tt
+				check_variable = {
+					president_du_conseil_legitimacy > 50
+				}
+			}
+		}
 		mutually_exclusive = { focus = FRA1_planned_economy }
 		completion_reward = {
 			add_ideas = { free_trade }
@@ -3143,7 +3293,14 @@ focus_tree = {
 		x = 38
 		y = 0
 		cost = 10
-
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = conseil_legitimacy_more_than_50_tt
+				check_variable = {
+					president_du_conseil_legitimacy > 50
+				}
+			}
+		}
 		allow_branch = {
 			date > 1909.12.31 date < 1919.1.1
 		}
@@ -4182,10 +4339,11 @@ focus_tree = {
 	focus = {
 		id = FRA1_scout_planes
 		icon = GFX_goal_generic_air_fighter2
-		x = 59
-		y = 1
+		x = 0
+		y = 2
 		cost = 10
-		prerequisite = { focus = FRA1_air_force }
+		relative_position_id = FRA1_air_force
+		prerequisite = { focus = FRA1_mourmelon_raid focus = FRA1_military_air_laws }
 		completion_reward = {
 			add_tech_bonus = {
 				bonus = 1.0
@@ -4204,7 +4362,7 @@ focus_tree = {
 		id = FRA1_british_fighters
 		icon = GFX_goal_generic_air_fighter
 		x = 57
-		y = 2
+		y = 3
 		cost = 10
 		prerequisite = { focus = FRA1_scout_planes }
 
@@ -4225,7 +4383,7 @@ focus_tree = {
 		id = FRA1_daring_pilots
 		icon = GFX_goal_generic_CAS
 		x = 56
-		y = 3
+		y = 4
 		cost = 10
 		prerequisite = { focus = FRA1_british_fighters }
 		completion_reward = {
@@ -4237,7 +4395,7 @@ focus_tree = {
 		id = FRA1_own_fighters
 		icon = GFX_focus_CZE_military_aeronautical_institute
 		x = 58
-		y = 3
+		y = 4
 		cost = 10
 		prerequisite = { focus = FRA1_british_fighters }
 
@@ -4269,7 +4427,7 @@ focus_tree = {
 		id = FRA1_high_altitude_training
 		icon = GFX_goal_generic_air_fighter
 		x = 57
-		y = 4
+		y = 5
 		cost = 10
 		prerequisite = { focus = FRA1_own_fighters }
 		prerequisite = { focus = FRA1_daring_pilots }
@@ -4287,7 +4445,7 @@ focus_tree = {
 		id = FRA1_build_airfields
 		icon = GFX_goal_generic_air_production
 		x = 59
-		y = 2
+		y = 3
 		cost = 10
 		prerequisite = { focus = FRA1_scout_planes }
 		complete_tooltip = {
@@ -4367,7 +4525,7 @@ focus_tree = {
 		id = FRA1_anti_air
 		icon = GFX_focus_generic_air_defense
 		x = 59
-		y = 4
+		y = 5
 		cost = 10
 		prerequisite = { focus = FRA1_build_airfields }
 		completion_reward = {
@@ -4392,7 +4550,7 @@ focus_tree = {
 		id = FRA1_german_zeppeline
 		icon = GFX_goal_generic_air_bomber
 		x = 61
-		y = 2
+		y = 3
 		cost = 10
 		prerequisite = { focus = FRA1_scout_planes }
 
@@ -4413,7 +4571,7 @@ focus_tree = {
 		id = FRA1_larger_bombs
 		icon = GFX_goal_generic_army_artillery
 		x = 60
-		y = 3
+		y = 4
 		cost = 10
 		prerequisite = { focus = FRA1_german_zeppeline }
 		completion_reward = {
@@ -4434,7 +4592,7 @@ focus_tree = {
 		id = FRA1_own_bombers
 		icon = GFX_goal_generic_air_bomber
 		x = 62
-		y = 3
+		y = 4
 		cost = 10
 		prerequisite = { focus = FRA1_german_zeppeline }
 
@@ -4464,7 +4622,7 @@ focus_tree = {
 		id = FRA1_night_raids
 		icon = GFX_focus_usa_escort_fighters
 		x = 61
-		y = 4
+		y = 5
 		cost = 10
 		prerequisite = { focus = FRA1_own_bombers }
 		prerequisite = { focus = FRA1_larger_bombs }
@@ -4485,7 +4643,7 @@ focus_tree = {
 		id = FRA1_proper_doctrine
 		icon = air_doctrine
 		x = 59
-		y = 5
+		y = 6
 		cost = 10
 		prerequisite = { focus = FRA1_night_raids }
 		prerequisite = { focus = FRA1_anti_air }
