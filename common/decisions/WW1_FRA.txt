@@ -71,12 +71,96 @@ FRA_cutoms_tariffs = {
    }
    
 }
-FRA_syndicalists_revolution = {
-    FRA_cerate_fac= {
+FRA_WW1_Offensives = {
+    FRA_toggle_sound = {
         complete_effect = {
-            create_faction = "Europe"
+            if = {
+                limit = {
+                    has_country_flag = no_offensive_sound
+                 }
+                clr_country_flag = no_offensive_sound
+            }
+            if = {
+                limit = {
+                    NOT = {
+                        has_country_flag = no_offensive_sound
+                    }
+                }
+                set_country_flag = no_offensive_sound
+            }
         }
     }
+
+    FRA_offensives_in_FROM = {
+        icon= generic_prepare_civil_war
+        state_target = yes
+        target_trigger= {
+            FROM = {
+                is_core_of = FRA
+                NOT = {
+                    is_fully_controlled_by = FRA
+                }
+            }
+            FROM.CONTROLLER = {
+                has_war_with = FRA
+            }
+        }
+        available = {
+            NOT = {
+                has_decision = FRA_offensives_in_FROM
+            }
+        }
+        visible = {
+            FROM = {
+                OR = {
+                    AND = {
+                        OR = {
+                            state = 18
+                        }
+                        has_completed_focus = FRA1_champagne
+                    }
+                    AND = {
+                        OR = {
+                            state = 89
+                        }
+                        has_completed_focus = FRA1_Flanders_1
+                    }
+                }
+            }
+        }
+        on_map_mode = map_only
+        highlight_states = {
+ 			
+ 			highlight_color_before_active = 3
+			highlight_color_while_active = 2
+		}
+        days_remove = 50
+        complete_effect ={
+            if = {
+                limit ={
+                    NOT = {
+                        ROOT = {
+                            has_country_flag = no_offensive_sound
+                        }
+                    }
+                    
+                }
+                ROOT = {
+                    scoped_sound_effect = FRA_offensives
+                }
+            }
+            
+            FROM = {
+                add_dynamic_modifier = {
+                    modifier = offensive_launched
+                    days = 50
+                }
+            }
+        }
+    }
+}
+FRA_syndicalists_revolution = {
+    
     FRA_spread_revolution = {
         fire_only_once = yes
         cost = 50
