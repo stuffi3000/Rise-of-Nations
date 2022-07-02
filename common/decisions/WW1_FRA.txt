@@ -298,34 +298,55 @@ FRA_syndicalists_revolution = {
         days_remove = 20
         war_with_target_on_remove = yes
         remove_effect = {
-
-            FROM = {
-                start_civil_war = {
-                    ideology = communism
-                    size = 0.1
-                }
-                random_country = {
-                    limit = {
-                        original_tag = FROM
-                        has_government = communism
-                    }
-                    set_country_flag = syndicalist_country
-                }
-            }
-            random_country = {
+            if = {
                 limit = {
-                    has_country_flag = syndicalist_country
-                }
-                FRA = {
-                    add_to_faction = PREV
+                    FROM = {
+                        num_owned_controlled_states < 2
+                    }
                 }
                 FRA = {
                     declare_war_on = {
                         target = FROM
-                        type = civil_war
+                        type = puppet_wargoal_focus
                     }
-               }
+                }
             }
+            if = {
+                limit = {
+                    FROM = {
+                        num_owned_controlled_states > 1
+                    }
+                }
+                FROM = {
+                    start_civil_war = {
+                        ideology = communism
+                        size = 0.1
+                    }
+                    random_country = {
+                        limit = {
+                            original_tag = FROM
+                            has_government = communism
+                        }
+                        set_country_flag = syndicalist_country
+                    }
+                }
+                random_country = {
+                    limit = {
+                        has_country_flag = syndicalist_country
+                    }
+                    FRA = {
+                        add_to_faction = PREV
+                    }
+                    FRA = {
+                        declare_war_on = {
+                            target = FROM
+                            type = civil_war
+                        }
+                    }
+                }
+               
+            }
+            
         }
     }
 }
