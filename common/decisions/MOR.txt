@@ -1,4 +1,4 @@
-#//TODO: Just edited because WIP
+##TODO: Just edited because WIP
 
 # MOR_gather_foreign_support = {
 # 	MOR_timer = {
@@ -96,84 +96,192 @@
 # 		}
 # 	}
 # }
-# MOR_pacification_campaign = {
-	
-# 	MOR_fight_insurgency_in_state = {
-# 		allowed = {
-# 			OR = {
-# 				original_tag = MOR
-# 				original_tag = FRA
-# 				original_tag = SPR
-# 			}
-# 		}
-# 		available = {
-# 			always = yes
-# 		}
-# 		ai_will_do = {
-# 			factor = 1000
-# 			modifier = {
-# 				factor = 0
-# 				NOT = {tag = MOB}
-# 				FROM = {
-# 					is_owned_by = MOB
-# 				}
-# 				OR = {
-# 					has_country_flag = support_MOR
-# 					tag = MOR
-# 				}
-# 			}
-# 		}
-# 		state_target = yes
-# 		icon = revolt
-# 		target_trigger = {
-# 			FROM = {
-# 				has_state_flag = MOR_resistance
-# 			}
-# 		}
-# 		visible = {
-# 			FROM = {
-# 				has_state_flag = MOR_resistance
-# 			}
-# 			ROOT = {
-# 				OR = {  
-# 					original_tag = MOR
-# 					has_country_flag = joined_moroccan_pacification_campaign
-# 				}
-# 			}
-# 		}
-# 		modifier = {
-# 			political_power_gain = -0.1
-# 		}
-# 		days_remove = 150
-# 		cost = 20
-# 		remove_effect = {
-# 			random_list = {
-# 				33 = {
-# 					modifier = {
-# 						add = 33
-# 						tag = MOR
-# 					}
-# 					FROM = {
-# 						add_resistance = 5
-# 					}
-					
-# 				} 
+MOR_pacification_campaign = {
+    get_rid_of_sabotage = {
+		state_target = yes
+		allowed = {
+			original_tag = MOR
+			original_tag = SPR
+			original_tag = FRA
+			original_tag = GER
+		}
+		target_trigger = {
+			FROM = {
+				has_dynamic_modifier = sabotaged_state
 
-# 				66 = {
-# 					modifier = {
-# 						add = -33
-# 						tag = MOR
-# 					}
-# 					FROM = {
-# 						cancel_resistance = yes
-# 						clr_state_flag = MOR_resistance
-# 					}
-# 				}
-# 			}
-# 		}
-		
-# 	}
-# }
+			}
+
+		}
+		visible = {
+			
+			OR = {
+				AND = {
+					FROM = {
+						is_controlled_by = MOB
+					}
+					ROOT = {
+						OR = {
+							tag = GER
+							tag = MOB
+						}
+					}
+				}
+				AND = {
+					FROM = {
+						is_controlled_by = MOR
+					}
+					ROOT = {
+						OR = {
+							tag = FRA
+							tag = SPR
+							tag = MOR
+						}
+					}
+				}
+			}
+			
+		}
+		days_remove = 25
+		cost = 20
+		remove_effect = {
+			FROM = {
+				remove_dynamic_modifier = {
+					modifier = sabotaged_state
+				}
+			}
+		}
+	}
+	SPR_send_soldiers_to_MOR = {
+		ai_will_do = {
+			factor = 1000
+		}
+		fire_only_once = yes
+		visible = {
+			MOR = {
+				has_war_with = MOB
+			}
+		}
+		complete_effect = {
+			MOR = {
+				division_template = {
+    				name = "Spanish Volunteers"
+    				is_locked = yes
+    				priority = 0
+    				regiments = {
+   					    infantry = { x = 0 y = 0 }
+   					    infantry = { x = 0 y = 1 }
+   					    infantry = { x = 0 y = 2 }
+   					    infantry = { x = 0 y = 3 }
+   					}
+    
+				}
+				random_owned_state = {
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+					create_unit = {
+					    division = "name = \"Spanish Volunteers\" division_template = \"Spanish Volunteers\" start_experience_factor = 0.5 start_equipment_factor = 1 start_manpower_factor = 1"
+    					owner = MOR
+					}
+
+				}
+			}
+		}
+	}
+	
+ 	MOR_fight_insurgency_in_state = {
+ 		allowed = {
+ 			OR = {
+ 				original_tag = MOR
+ 				original_tag = FRA
+ 				original_tag = SPR
+ 			}
+ 		}
+ 		available = {
+ 			always = yes
+ 		}
+ 		ai_will_do = {
+ 			factor = 1000
+ 			modifier = {
+ 				factor = 0
+ 				NOT = {tag = MOB}
+ 				FROM = {
+ 					is_owned_by = MOB
+ 				}
+ 				OR = {
+ 					has_country_flag = support_MOR
+ 					tag = MOR
+ 				}
+ 			}
+ 		}
+ 		state_target = yes
+ 		icon = revolt
+ 		target_trigger = {
+ 			FROM = {
+ 				has_state_flag = MOR_resistance
+ 			}
+ 		}
+ 		visible = {
+ 			FROM = {
+ 				has_state_flag = MOR_resistance
+ 			}
+ 			ROOT = {
+ 				OR = {  
+ 					original_tag = MOR
+ 					has_country_flag = joined_moroccan_pacification_campaign
+ 				}
+ 			}
+ 		}
+ 		modifier = {
+ 			political_power_gain = -0.1
+ 		}
+ 		days_remove = 150
+ 		cost = 20
+ 		remove_effect = {
+ 			random_list = {
+ 				33 = {
+ 					modifier = {
+ 						add = 33
+ 						tag = MOR
+ 					}
+ 					FROM = {
+ 						add_resistance = 5
+ 					}
+					
+ 				} 
+
+ 				66 = {
+ 					modifier = {
+ 						add = -33
+ 						tag = MOR
+ 					}
+ 					FROM = {
+ 						cancel_resistance = yes
+ 						clr_state_flag = MOR_resistance
+ 					}
+ 				}
+ 			}
+ 		}
+	
+ 	}
+ }
 #  MOR_foreign_influence = {
 #  	MOR_take_up_french_loans = {
 #  		allowed = {
