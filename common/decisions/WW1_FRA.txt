@@ -71,6 +71,135 @@ FRA_cutoms_tariffs = {
    }
    
 }
+FRA_syndicalists_revolution = {
+    FRA_cerate_fac= {
+        complete_effect = {
+            create_faction = "Europe"
+        }
+    }
+    FRA_spread_revolution = {
+        fire_only_once = yes
+        cost = 50
+        ai_will_do = {
+            base = 100
+            modifier = {
+                factor = 01
+                FROM = {
+                    is_in_faction = yes
+                }
+            }
+            
+            modifier = {
+               factor = 6
+               OR = {
+                FROM = {
+                    is_neighbor_of = ROOT
+                }
+                any_country = {
+                    is_in_faction_with = FRA
+                    is_neighbor_of = FROM
+
+                }
+               }
+            }
+            modifier = {
+                factor = 5
+                strength_ratio = {
+                    tag = FROM
+                    ratio > 1
+                }
+            }
+
+
+        }
+        target_trigger = {
+            FROM = {
+                capital_scope = {
+                    is_on_continent = europe
+                }
+            }
+        }
+        visible = {
+            NOT = {
+                FROM = {
+                    OR = {
+                        has_war = yes
+                        has_government = communism
+                        is_in_faction_with = FRA
+                    }
+                }
+            }
+            AND = {
+                FROM = {
+                    OR = {
+                        tag = SPR
+                        tag= POR
+                    }
+                }
+                has_completed_focus = FRA1_strike_iberia
+            }
+            AND = {
+                FROM = {
+                    OR = {
+                        tag = GER
+                        tag= AUH
+                    }
+                }
+                has_completed_focus = FRA1_strike_central_powers
+            }
+        }
+        complete_effect = {
+            hidden_effect = {
+                set_country_flag = {
+                    flag = revolution_started
+                    days = 30
+                }
+                every_country = {
+                    limit = {
+                        is_in_faction_with = ROOT
+                    }
+                    add_ai_strategy = {
+                        type = prepare_for_war
+                        id = FROM
+                        value = 500
+                    }
+                }
+            }
+        }
+        days_remove = 20
+        war_with_target_on_remove = yes
+        remove_effect = {
+
+            FROM = {
+                start_civil_war = {
+                    ideology = communism
+                    size = 0.1
+                }
+                random_country = {
+                    limit = {
+                        original_tag = FROM
+                        has_government = communism
+                    }
+                    set_country_flag = syndicalist_country
+                }
+            }
+            random_country = {
+                limit = {
+                    has_country_flag = syndicalist_country
+                }
+                FRA = {
+                    add_to_faction = PREV
+                }
+                FRA = {
+                    declare_war_on = {
+                        target = FROM
+                        type = civil_war
+                    }
+               }
+            }
+        }
+    }
+}
 FRA_confederation_acier_charbon_cat = {
     join_confederation = {
         ai_will_do = {
