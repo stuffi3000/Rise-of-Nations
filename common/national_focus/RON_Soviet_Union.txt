@@ -9417,6 +9417,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			GER = {
+				country_event = generic.2
+			}
+		}
 	}
 
 	#Focus for Approach The Empire of Japan
@@ -9443,6 +9448,19 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_opinion_modifier = {
+				target = JAP
+				modifier = RI_supports_own_politics
+			}
+			JAP = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = RI_supports_own_politics
+				}
+			}
+			add_political_power = 10
+		}
 	}
 
 	#Focus for Approach The German Reich
@@ -9466,6 +9484,19 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_opinion_modifier = {
+				target = GER
+				modifier = RI_supports_own_politics
+			}
+			GER = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = RI_supports_own_politics
+				}
+			}
+			add_political_power = 10
 		}
 	}
 
@@ -9529,6 +9560,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = RON_Russian_Alt_History.91
+				}
+			}
+		}
 	}
 
 	#Focus for Protect Nature
@@ -9543,6 +9581,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_magnitogorsk_iron_and_steel_works }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_political_power = 100
 		}
 	}
 
@@ -9758,7 +9799,7 @@ focus_tree = {
 		}
 	}
 
-	#Focus for The New Russian Man
+	##Focus for The New Russian Man
 	focus = {
 		id = SOVAH_the_new_russian_man
 		icon = GFX_focus_generic_support_the_left_right
@@ -9771,9 +9812,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			RON_increase_maximum_age_laws = yes
+		}
 	}
 
-	#Focus for Against The Prussian Menace
+	##Focus for Against The Prussian Menace
 	focus = {
 		id = SOVAH_against_the_prussian_menace
 		icon = GFX_focus_ger_oppose_hitler
@@ -9785,6 +9829,45 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_purge_the_sympathizers }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_named_threat = { threat = 10 name = "The Great Prussian Menace" }
+			GER = { country_event = { id = RON_Russian_Alt_History.119 days = 1 } }
+			hidden_effect = { news_event = { id = RON_Russian_Alt_History_News.121 hours = 6 } }
+			every_other_country = {
+				limit = {
+					any_owned_state = { is_on_continent = europe }
+					NOT = {
+						tag = ENG
+						tag = FRA
+						tag = SWI
+						tag = ITA
+						tag = IRE
+						tag = TUR
+						tag = ALB
+						original_tag = SPR
+						tag = POR
+						tag = GRE
+						has_government = communism
+						has_government = fascism
+					}
+				}
+				country_event = { id = RON_Russian_Alt_History.124 }
+				add_timed_idea = { idea = SOV_the_great_prussian_menace days = 1095 }
+				add_ai_strategy = {
+					type = befriend
+					id = "SOV"			
+					value = 200
+				}
+				add_ai_strategy = {
+					type = befriend
+					id = "ENG"			
+					value = -200
+				}
+			}
+			GER = { 
+				add_opinion_modifier = { target = SOV modifier = embargo } 
+			}
 		}
 	}
 
@@ -10760,9 +10843,57 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					RON_is_Eastern_European_Country = yes
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = fascism
+						}
+					}
+					add_ideas = fascist_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = communism
+						}
+					}
+					add_ideas = communist_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = democratic
+						}
+					}
+					add_ideas = democratic_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = neutrality
+						}
+					}
+					add_ideas = neutrality_influence
+				}
+				country_event = {
+					id = generic.1
+				}
+				if = {
+					limit = {
+						has_idea = neutrality_idea
+					}
+					remove_ideas = neutrality_idea
+				}
+			}
+		}
 	}
 
-	#Focus for Make Alliances
+	##Focus for Make Alliances
 	focus = {
 		id = SOVAH_make_alliances
 		icon = GFX_focus_hol_the_fourth_ally
@@ -10778,6 +10909,9 @@ focus_tree = {
 		mutually_exclusive = { focus = SOVAH_looking_at_the_past }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_political_power = 150
 		}
 	}
 
@@ -10819,6 +10953,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.3
+			}
+		}
 	}
 
 	#Focus for Purge The Sympathizers
@@ -10838,6 +10978,43 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			#If Civil War hasn't ocurred, then Fascist Uprising Happens
+			if = {
+				limit = {
+					SOV = {
+						has_country_flag = RON_Stalin_Captured
+					}
+				}
+				random_list = {
+				30 = {
+						country_event = {
+							id = RON_Russian_Alt_History.184
+						}
+					}
+				
+				70 = {
+					country_event = {
+						id = RON_Russian_Alt_History.185
+					}	
+				}
+			
+			}
+			}
+			
+			#If Civil War has ocurred, then another Civil War is too much
+			if = {
+				limit = {
+					SOV = {
+						NOT = { has_country_flag = RON_Stalin_Captured }
+					}
+				}
+				country_event = {
+					id = RON_Russian_Alt_History.185
+				}
+			}
+			
+	}
 	}
 
 	#Focus for Militarist Society
@@ -10855,6 +11032,9 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			RON_increase_minimum_age_laws = yes
 		}
 	}
 
@@ -10874,6 +11054,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			RON_increase_economy_law = yes
+			341 = { add_claim_by = SOV }
+			1067 = { add_claim_by = SOV }
+			1068 = { add_claim_by = SOV }
+			145 = { add_claim_by = SOV }
+		}
 	}
 
 	#Focus for European Interests
@@ -10889,6 +11076,54 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					RON_is_Central_European_Country = yes
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = fascism
+						}
+					}
+					add_ideas = fascist_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = communism
+						}
+					}
+					add_ideas = communist_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = democratic
+						}
+					}
+					add_ideas = democratic_influence
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = neutrality
+						}
+					}
+					add_ideas = neutrality_influence
+				}
+				country_event = {
+					id = generic.1
+				}
+				if = {
+					limit = {
+						has_idea = neutrality_idea
+					}
+					remove_ideas = neutrality_idea
+				}
+			}
+		}
 	}
 
 	#Focus for Privatize Non-Essential Businesses
@@ -10903,6 +11138,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_monarchy_triumphant }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			RON_decrease_nationalization_level = yes
 		}
 	}
 
@@ -10923,6 +11161,19 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_opinion_modifier = {
+				target = ENG
+				modifier = RI_supports_own_politics
+			}
+			ENG = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = RI_supports_own_politics
+				}
+			}
+			add_political_power = 10
+		}
 	}
 
 	#Focus for Ready For Action
@@ -10937,6 +11188,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_against_the_prussian_menace }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			RON_increase_conscription_law = yes
 		}
 	}
 
@@ -10953,6 +11207,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			RON_increase_press_law = yes
+		}
 	}
 
 	#Focus for Military Parades
@@ -10968,6 +11225,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			RON_increase_army_spending = yes
+		}
 	}
 
 	#Focus for Prepare For Conflict
@@ -10982,6 +11242,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_secure_warm_water_ports }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_war_support = 0.10
 		}
 	}
 
@@ -11013,6 +11276,51 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			GER = {
+				if = {
+					limit = {
+						SOV = {
+							has_government = fascism
+						}
+					}
+					add_ideas = RI_fascists_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = communism
+						}
+					}
+					add_ideas = RI_commies_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = democratic
+						}
+					}
+					add_ideas = RI_democrats_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = neutrality
+						}
+					}
+					add_ideas = RI_neutrals_rise
+				}
+				country_event = {
+					id = generic.1
+				}
+				if = {
+					limit = {
+						has_idea = neutrality_idea
+					}
+					remove_ideas = neutrality_idea
+				}
+			}
+		}
 	}
 
 	#Focus for Magnitogorsk Iron and Steel Works
@@ -11027,6 +11335,14 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_privatize_nonessential_businesses }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			1000 = {
+				add_resource = {
+					type = steel
+					amount = 15
+				}
+			}
 		}
 	}
 
@@ -11043,6 +11359,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			ENG = {
+				country_event = generic.2
+			}
+		}
 	}
 
 	#Focus for Concessions In Turkey
@@ -11057,6 +11378,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_prepare_for_conflict }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			TUR = { country_event = { id = RON_Russian_Alt_History.93 hours = 6 } }
 		}
 	}
 
@@ -11078,6 +11402,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		will_lead_to_war_with = GER
+		completion_reward = {
+			create_wargoal = {
+				type = annex_everything
+				target = GER
+			}
+		}
 	}
 
 	#Focus for Concessions In Finland
@@ -11092,6 +11423,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_prepare_for_conflict }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			FIN = { country_event = { id = RON_Russian_Alt_History.96 hours = 6 } }
 		}
 	}
 
@@ -11113,6 +11447,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_completed_focus = SOVAH_military_dictatorship
+				}
+				add_ideas = GEN_Bastion_of_Nationalism
+			}
+			else = {
+				add_ideas = GEN_Bastion_of_Monarchism
+			}
+		}
 	}
 
 	#Focus for The Breadbasket of The World
@@ -11127,6 +11472,10 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_protect_nature }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_ideas = USA_Breadbasket_of_The_World
+			remove_ideas = proliferation_of_disease
 		}
 	}
 
@@ -11704,6 +12053,11 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_approach_the_empire_of_japan }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			JAP = {
+				country_event = generic.2
+			}
 		}
 	}
 
@@ -12789,6 +13143,51 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			AUS = {
+				if = {
+					limit = {
+						SOV = {
+							has_government = fascism
+						}
+					}
+					add_ideas = RI_fascists_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = communism
+						}
+					}
+					add_ideas = RI_commies_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = democratic
+						}
+					}
+					add_ideas = RI_democrats_rise
+				}
+				if = {
+					limit = {
+						SOV = {
+							has_government = neutrality
+						}
+					}
+					add_ideas = RI_neutrals_rise
+				}
+				country_event = {
+					id = generic.1
+				}
+				if = {
+					limit = {
+						has_idea = neutrality_idea
+					}
+					remove_ideas = neutrality_idea
+				}
+			}
+		}
 	}
 
 	#Focus for Restore The Austrian Empire
@@ -12803,6 +13202,13 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_influence_austria }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			AUS = {
+				country_event = {
+					id = RON_Russian_Alt_History.92
+				}
+			}
 		}
 	}
 
@@ -13969,7 +14375,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = fascism
 						}
 					}
@@ -13977,7 +14383,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = communism
 						}
 					}
@@ -13985,7 +14391,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = democratic
 						}
 					}
@@ -13993,7 +14399,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = neutrality
 						}
 					}
@@ -14316,6 +14722,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_political_power = 150
+		}
 	}
 
 	#Focus for Our Ties With Germany
@@ -14324,13 +14733,19 @@ focus_tree = {
 		icon = GFX_focus_chi_mission_to_germany
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -3
-		y = 15
+		y = 16
 		cost = 5
 		available_if_capitulated = yes
-		prerequisite = { focus = SOVAH_looking_at_the_past }
-		mutually_exclusive = { focus = SOVAH_our_ties_with_france }
+		prerequisite = { focus = SOVAH_league_of_the_three_emperors }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			GER = {
+				country_event = {
+					id = generic.205 days = 1
+				}
+			}
 		}
 	}
 
@@ -14340,13 +14755,21 @@ focus_tree = {
 		icon = GFX_focus_chi_reach_out_to_france
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -1
-		y = 15
+		y = 16
 		cost = 5
 		available_if_capitulated = yes
-		prerequisite = { focus = SOVAH_looking_at_the_past }
-		mutually_exclusive = { focus = SOVAH_our_ties_with_germany }
+		prerequisite = { focus = SOVAH_the_triple_entente }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			
+			FRA = {
+				country_event = {
+					id = generic.5 days = 1
+				}
+			}
+			
 		}
 	}
 
@@ -14356,12 +14779,20 @@ focus_tree = {
 		icon = GFX_focus_proclaim_the_restauration_of_Austria_Hungary
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -3
-		y = 16
+		y = 17
 		cost = 5
 		available_if_capitulated = yes
 		prerequisite = { focus = SOVAH_our_ties_with_germany }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			AUS = {
+				country_event = {
+					id = generic.5 days = 1
+				}
+			}
+			
 		}
 	}
 
@@ -14371,12 +14802,19 @@ focus_tree = {
 		icon = GFX_focus_eng_the_sun_never_sets
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -1
-		y = 16
+		y = 17
 		cost = 5
 		available_if_capitulated = yes
 		prerequisite = { focus = SOVAH_our_ties_with_france }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			ENG = {
+				country_event = {
+					id = generic.205 days = 1
+				}
+			}
 		}
 	}
 
@@ -14386,12 +14824,16 @@ focus_tree = {
 		icon = GFX_goal_tfv_strengthen_commonwealth_ties
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -3
-		y = 17
+		y = 15
 		cost = 5
 		available_if_capitulated = yes
-		prerequisite = { focus = SOVAH_our_ties_with_austria }
+		prerequisite = { focus = SOVAH_looking_at_the_past }
+		mutually_exclusive = { focus = SOVAH_the_triple_entente }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			create_faction = "League of The Three Emperors"
 		}
 	}
 
@@ -14401,12 +14843,16 @@ focus_tree = {
 		icon = GFX_focus_eng_concessions_to_the_trade_unions
 		relative_position_id = SOVAH_rally_under_denikins_cause
 		x = -1
-		y = 17
+		y = 15
 		cost = 5
 		available_if_capitulated = yes
-		prerequisite = { focus = SOVAH_our_ties_with_britain }
+		prerequisite = { focus = SOVAH_looking_at_the_past }
+		mutually_exclusive = { focus = SOVAH_league_of_the_three_emperors }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			create_faction = "Entente"
 		}
 	}
 
@@ -14564,7 +15010,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = fascism
 						}
 					}
@@ -14572,7 +15018,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = communism
 						}
 					}
@@ -14580,7 +15026,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = democratic
 						}
 					}
@@ -14588,7 +15034,7 @@ focus_tree = {
 				}
 				if = {
 					limit = {
-						USA = {
+						SOV = {
 							has_government = neutrality
 						}
 					}
