@@ -9388,7 +9388,7 @@ focus_tree = {
 		id = SOVAH_allrussian_fascist_organisation
 		icon = GFX_focus_usa_honor_the_confederacy
 		relative_position_id = SOVAH_rally_under_denikins_cause
-		x = 33
+		x = 32
 		y = 9
 		cost = 5
 		available_if_capitulated = yes
@@ -9505,7 +9505,7 @@ focus_tree = {
 		id = SOVAH_russian_fascist_party
 		icon = GFX_focus_ger_reichskommisariats
 		relative_position_id = SOVAH_rally_under_denikins_cause
-		x = 29
+		x = 30
 		y = 9
 		cost = 5
 		available_if_capitulated = yes
@@ -9621,6 +9621,46 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			if = {
+				limit = {
+					any_state = {
+						is_controlled_by = ROOT
+						is_coastal = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = dockyard
+							size > 0
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+				random_owned_state = {
+					limit = {
+						free_building_slots = {
+							building = dockyard
+							size > 0
+							include_locked = yes
+						}
+					}
+					add_extra_state_shared_building_slots = 1
+					add_building_construction = {
+						type = dockyard
+						level = 1
+						instant_build = yes
+					}
+				}
+			}
+		}
 	}
 
 	#Focus for Land In France And Britain
@@ -9640,6 +9680,36 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+			modifier = {
+				factor = 0
+				date < 1939.1.1
+			}
+		}
+		bypass = {
+			AND = {
+				OR = {
+					FRA = { is_in_faction_with = ROOT }
+					NOT = { country_exists = FRA }
+					has_war_with = FRA
+				}
+				OR = {
+					ENG = { is_in_faction_with = ROOT }
+					NOT = { country_exists = ENG }
+					has_war_with = ENG
+				}
+			}
+		}
+		will_lead_to_war_with = FRA
+		will_lead_to_war_with = ENG
+		completion_reward = {
+			create_wargoal = {
+				type = annex_everything
+				target = ENG
+			}
+			create_wargoal = {
+				type = annex_everything
+				target = FRA
+			}
 		}
 	}
 
@@ -9656,6 +9726,11 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			JAP = {
+				country_event = ron_diplomatic.123
+			}
+		}
 	}
 
 	#Focus for Build Infraestructure In Western Europe
@@ -9670,6 +9745,20 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_agreement_with_the_allies }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			every_country = {
+				limit = {
+					RON_is_European_Country = yes
+					NOT = { has_government = communism }
+					NOT = { is_in_faction_with = GER }
+					NOT = { has_war_with = SOV }
+				}
+				country_event = {
+					id = DNC_Diplomacy.42
+					days = 1
+				}
+			}
 		}
 	}
 
@@ -9686,6 +9775,16 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = fighter_bonus
+				bonus = 0.5
+				uses = 2
+				technology = heavy_fighter1
+				technology = heavy_fighter2
+				technology = heavy_fighter3
+			}
+		}
 	}
 
 	#Focus for Arm The IRA
@@ -9700,6 +9799,25 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_dismantle_the_allies }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward= {
+			ENG = {
+				add_opinion_modifier = {
+					target = SOV
+					modifier = RI_super_hostile_foreign_policy
+				}
+			}
+			IRE = {
+				country_event = {
+					id = RON_American_Alt_History.174
+					days = 1
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -1200
+				producer = SOV
+			}
 		}
 	}
 
@@ -9716,6 +9834,24 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			ENG = {
+				country_event = {
+					id = DNC_Diplomacy.40
+					days = 1
+				}
+			}
+			every_country = {
+				limit = {
+					NOT = { tag = ENG }
+					is_in_faction_with = ENG
+				}
+				country_event = {
+					id = DNC_Diplomacy.40
+					days = 1
+				}
+			}
+		}
 	}
 
 	#Focus for Prepare The Russian Naval Infantry
@@ -9731,6 +9867,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1.0
+				uses = 1
+				technology = marines
+				technology = marines2
+				technology = marines3
+			}
+		}
 	}
 
 	#Focus for Prepare For War In Europe
@@ -9745,6 +9890,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_war_is_coming }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			RON_increase_conscription_law = yes
 		}
 	}
 
@@ -9762,6 +9910,24 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			GER = {
+				add_opinion_modifier = {
+					target = SOV
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+			every_country = {
+				limit = {
+					NOT = { tag = GER }
+					is_in_faction_with = GER
+				}
+				add_opinion_modifier = {
+					target = SOV
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+		}
 	}
 
 	#Focus for Agreement With The Allies
@@ -9776,6 +9942,11 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_there_can_only_be_one_fascist_superpower }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			ENG = {
+				country_event = ron_diplomatic.123
+			}
 		}
 	}
 
@@ -11588,6 +11759,7 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
+			add_political_power = 50
 			RON_increase_security_policy = yes
 		}
 	}
@@ -11748,6 +11920,7 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
+			add_political_power = 50
 			RON_increase_press_law = yes
 		}
 	}
@@ -11842,6 +12015,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_war_support = 0.1
+		}
 	}
 
 	#Focus for Demand Oaths of Loyalty
@@ -11856,6 +12032,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_the_allrussian_republic }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_ideas = RI_esprit_de_corps_idea
 		}
 	}
 
@@ -12262,6 +12441,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			release_puppet = ARM
+			release_puppet = AZR
+			release_puppet = GEO
+			release_puppet = KAZ
+			release_puppet = TAJ
+			release_puppet = TMS
+			release_puppet = UZB
+			release_puppet = KYR
+			set_cosmetic_tag = RUS
+		}
 	}
 
 	#Focus for Imperial Ambitions
@@ -12315,6 +12505,68 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		available = {
+			is_puppet = no
+			NOT = { is_in_faction_with = POL }
+			NOT = { has_war_with = POL }
+			POL = {
+				OR = {
+					96 = { is_owned_and_controlled_by = POL }
+					95 = { is_owned_and_controlled_by = POL }
+					94 = { is_owned_and_controlled_by = POL }
+					93 = { is_owned_and_controlled_by = POL }
+					91 = { is_owned_and_controlled_by = POL }
+					89 = { is_owned_and_controlled_by = POL }
+				}
+			}
+		}
+
+		completion_reward = {
+			POL = {
+				country_event = { id = poland.2 }
+				custom_effect_tooltip = needs_approval
+			}
+			effect_tooltip = {
+				SOV = {
+					if = {
+						limit = { POL = { owns_state = 997 controls_state = 997 } }
+						transfer_state = 997
+					}
+					if = {
+						limit = { POL = { owns_state = 933 controls_state = 933 } }
+						transfer_state = 933
+					}
+					if = {
+						limit = { POL = { owns_state = 784 controls_state = 784 } }
+						transfer_state = 784
+					}
+					if = {
+						limit = { POL = { owns_state = 96 controls_state = 96 } }
+						transfer_state = 96
+					}
+					if = {
+						limit = { POL = { owns_state = 95 controls_state = 95 } }
+						transfer_state = 95
+					}
+					if = {
+						limit = { POL = { owns_state = 94 controls_state = 94 } }
+						transfer_state = 94
+					}
+					if = {
+						limit = { POL = { owns_state = 93 controls_state = 93 } }
+						transfer_state = 93
+					}
+					if = {
+						limit = { POL = { owns_state = 91 controls_state = 91 } }
+						transfer_state = 91
+					}
+					if = {
+						limit = { POL = { owns_state = 89 controls_state = 89 } }
+						transfer_state = 89
+					}
+				}
+			}
+		}
 	}
 
 	#Focus for Demand Carpathian Ruthenia
@@ -12345,6 +12597,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			POL = { 
+				country_event =  { 
+					id = ron_decolonizationdiplo.28 hours = 6 
+				} 
+			}
+		}
 	}
 
 	#Focus for Fate of Czechoslovakia
@@ -12359,6 +12618,13 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_demand_carpathian_ruthenia }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			CZE = { 
+				country_event =  { 
+					id = ron_decolonizationdiplo.28 hours = 6 
+				} 
+			}
 		}
 	}
 
@@ -12379,6 +12645,9 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			set_cosmetic_tag = FORM_Greater_Russia
 		}
 	}
 
@@ -12418,6 +12687,29 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		available = {
+			NOT = { has_war_with = ENG }
+			NOT = { is_in_faction_with = ENG }
+			ENG = { has_government = democratic }
+		}
+		completion_reward = {
+			ENG = {
+				add_opinion_modifier = {
+					target = SOV
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+			every_country = {
+				limit = {
+					NOT = { tag = ENG }
+					is_in_faction_with = ENG
+				}
+				add_opinion_modifier = {
+					target = SOV
+					modifier = RI_hostile_foreign_policy
+				}
+			}
+		}
 	}
 
 	#Focus for Joint Invasion of Germany
@@ -12437,6 +12729,24 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+			modifier = {
+				factor = 0
+				date < 1942.1.1
+			}
+		}
+		bypass = {
+				OR = {
+					GER = { is_in_faction_with = ROOT }
+					NOT = { country_exists = GER }
+					has_war_with = GER
+				}
+		}
+		will_lead_to_war_with = GER
+		completion_reward = {
+			create_wargoal = {
+				type = annex_everything
+				target = GER
+			}
 		}
 	}
 
@@ -12478,6 +12788,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_ideas = RI_fanatics
+		}
 	}
 
 	#Focus for Expand Military Industry
@@ -12492,6 +12805,38 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_purge_communist_generals }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 
@@ -12508,6 +12853,38 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
 	}
 
 	#Focus for Expand Oil Production
@@ -12522,6 +12899,22 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_intensify_russian_atomic_bomb_project }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			random_owned_state = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 1
+					instant_build = yes
+				}
+			}
+			add_tech_bonus = {
+				name = synth_bonus
+				bonus = 0.5
+				uses = 1
+				category = synth_resources
+			}
 		}
 	}
 
@@ -12539,6 +12932,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_ideas = RI_army_for_defence
+		}
 	}
 
 	#Focus for Intensify Russian Atomic Bomb Project
@@ -12554,6 +12950,13 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = nuclear_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+		}
 	}
 
 	#Focus for Russian Ingenuity
@@ -12568,6 +12971,9 @@ focus_tree = {
 		prerequisite = { focus = SOVAH_expand_oil_production }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_research_slot = 1
 		}
 	}
 
@@ -12589,6 +12995,38 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
 	}
 
 	#Focus for An Offensive Army
@@ -12604,6 +13042,9 @@ focus_tree = {
 		mutually_exclusive = { focus = SOVAH_a_defensive_army }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			add_ideas = RI_army_for_offence
 		}
 	}
 
@@ -12622,6 +13063,9 @@ focus_tree = {
 		}
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			RON_increase_economy_law = yes
 		}
 	}
 
@@ -14050,7 +14494,7 @@ focus_tree = {
 			focus = SOVAH_demand_eastern_france 
 		}
 		prerequisite = { 
-			focus = SOVAH_eYEswTMA 
+			focus = SOVAH_demand_northern_italy
 		}
 		ai_will_do = {
 			factor = 100
