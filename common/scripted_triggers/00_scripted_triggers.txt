@@ -12,15 +12,25 @@
 #		exampel_trigger = yes
 #	}
 #
-is_mexican_revolution_tag = {
-	OR = {
-		tag = MEX
-		tag = ZAP
-		tag = CNT
-		tag = VIL
-		tag = MDR
-	}
+
+	
+needs_army_reduction_for_manpower = {
+	#first check the number of units a country's factories can support
+	set_temp_variable = { num_supported_units = 0 }
+	set_temp_variable = { num_civs = num_of_civilian_factories }
+	multiply_temp_variable = { num_civs = 0.5 }
+	add_to_temp_variable = { num_supported_units = num_civs }
+	set_temp_variable = { num_mils = num_of_military_factories }
+	multiply_temp_variable = { num_mils = 0.5 }
+	add_to_temp_variable = { num_supported_units = num_mils }
+
+	#now check to make sure we're not under that number
+	num_divisions > num_supported_units
+
+	#and check to make sure we're low on manpower
+	has_manpower < 5000
 }
+
 has_reached_maximum_divisions = {
 	if = {
 		limit = {
@@ -56,7 +66,7 @@ is_border_conflict_defender_vs_FROM = {
 has_not_initiated_border_incident_with_FROM = {
 	custom_trigger_tooltip = {
 		tooltip = not_initiated_border_incident_with_FROM
-		NOT = {		
+		NOT = {
 			any_state = {
 				check_variable = { FROM.defender_state_vs_@PREV = id }
 			}
@@ -98,7 +108,7 @@ check_has_focus_tree_to_switch_to_fascism = {
 		AND = {
 			tag = SAF
 			has_dlc = "Together for Victory"
-#			has_completed_focus = SAF_south_africa_first
+			#			has_completed_focus = SAF_south_africa_first
 		}
 	}
 	NOT = {
@@ -125,17 +135,17 @@ check_has_focus_tree_to_switch_to_fascism = {
 			has_dlc = "La Resistance"
 		}
 	}
-#	NOT = {
-#		AND = {
+	#	NOT = {
+	#		AND = {
 	#		original_tag = SPR
-#			OR = {
-#				has_completed_focus = SPA_the_phalanx_ascendant
-#				has_completed_focus = SPA_supremacy_of_the_communion
-#				has_completed_focus = SPR_the_popular_front
-#			}
-#			has_dlc = "La Resistance"
-#		}
-#	}
+	#			OR = {
+	#				has_completed_focus = SPA_the_phalanx_ascendant
+	#				has_completed_focus = SPA_supremacy_of_the_communion
+	#				has_completed_focus = SPR_the_popular_front
+	#			}
+	#			has_dlc = "La Resistance"
+	#		}
+	#	}
 }
 
 check_has_focus_tree_to_switch_to_democratic = {
@@ -165,7 +175,7 @@ check_has_focus_tree_to_switch_to_democratic = {
 		AND = {
 			tag = GER
 			has_dlc = "Waking the Tiger"
-		} 
+		}
 	}
 }
 
@@ -329,7 +339,7 @@ CHI_is_on_historical_plan_trigger = {
 			has_game_rule = {
 				rule = CHI_ai_behavior
 				option = DEFAULT
-			}	
+			}
 		}
 		has_country_flag = CHI_AI_RANDOM_HISTORICAL
 		has_game_rule = {
@@ -424,7 +434,7 @@ ENG_is_on_historical_plan_trigger = {
 SOV_save_pp_for_manpower_trouble = {
 	has_manpower < 1000000
 	has_political_power < 200
-	surrender_progress > 0	
+	surrender_progress > 0
 }
 
 anti_submarine_strategy_required_trigger = {
@@ -494,7 +504,7 @@ should_USA_invade_europe_or_africa = {
 			OR = {
 				AND = {
 					has_government = democratic
-					ENG = { has_government = democratic } 
+					ENG = { has_government = democratic }
 					OR = {
 						GER = { has_government = fascism }
 						ITA = { has_government = fascism }
@@ -513,80 +523,80 @@ enemy_has_equal_or_better_radar_tech_trigger = {
 		tooltip = enemy_has_equal_or_better_radar_tech_trigger_tt
 		if = {
 			limit = {
-				ROOT = { 
-					has_tech = radio_detection 
+				ROOT = {
+					has_tech = radio_detection
 					NOT = {
 						has_tech = decimetric_radar
 					}
-				} 
+				}
 			}
-			FROM = { 
+			FROM = {
 				OR = {
-					has_tech = radio_detection 
+					has_tech = radio_detection
 					has_tech = decimetric_radar
 				}
 			}
 		}
 		else_if = {
 			limit = {
-				ROOT = { 
-					has_tech = decimetric_radar 
+				ROOT = {
+					has_tech = decimetric_radar
 					NOT = {
 						has_tech = improved_decimetric_radar
 					}
-				} 
+				}
 			}
-			FROM = { 
+			FROM = {
 				OR = {
-					has_tech = decimetric_radar 
+					has_tech = decimetric_radar
 					has_tech = improved_decimetric_radar
 				}
 			}
 		}
 		else_if = {
 			limit = {
-				ROOT = { 
-					has_tech = improved_decimetric_radar 
+				ROOT = {
+					has_tech = improved_decimetric_radar
 					NOT = {
 						has_tech = centimetric_radar
 					}
-				} 
+				}
 			}
-			FROM = { 
+			FROM = {
 				OR = {
-					has_tech = improved_decimetric_radar 
+					has_tech = improved_decimetric_radar
 					has_tech = centimetric_radar
 				}
 			}
 		}
 		else_if = {
 			limit = {
-				ROOT = { 
-					has_tech = centimetric_radar 
+				ROOT = {
+					has_tech = centimetric_radar
 					NOT = {
 						has_tech = improved_centimetric_radar
 					}
-				} 
+				}
 			}
-			FROM = { 
+			FROM = {
 				OR = {
-					has_tech = centimetric_radar 
+					has_tech = centimetric_radar
 					has_tech = improved_centimetric_radar
 				}
 			}
 		}
 		else_if = {
 			limit = {
-				ROOT = { 
-					has_tech = improved_centimetric_radar 
+				ROOT = {
+					has_tech = improved_centimetric_radar
 					NOT = {
 						has_tech = advanced_centimetric_radar
 					}
-				} 
+				}
 			}
-			FROM = { 
+			FROM = {
 				OR = {
-					has_tech = improved_centimetric_radar 
+					has_tech = improved_centimetric_radar
 					has_tech = advanced_centimetric_radar
 				}
 			}
@@ -608,7 +618,7 @@ is_available_to_collaboration_government = { # occupied_countries.1 should be up
 has_large_ally_not_pick_closed_economy = {
 	any_of_scopes = {
 		array = faction_members
-		
+
 		NOT = { tag = PREV }
 		num_of_military_factories > 30
 	}
@@ -619,6 +629,251 @@ is_owned_or_subject_trigger = {
 		OR = {
 			tag = ROOT
 			is_subject_of = ROOT
+		}
+	}
+}
+
+### industry
+
+nuclear_tech_focus = {
+	OR = {
+		AND = {
+			num_of_factories > 400
+			date > 1945.1.1
+			has_war = yes
+			NOT = { any_neighbor_country = { has_war_with = ROOT } }
+		}
+	}
+}
+
+rubber_processing_tech_focus = {
+	set_temp_variable = { tmp2 = resource_consumed@rubber }
+	if = { limit = { check_variable = { resource@rubber < 0 } }
+
+		set_temp_variable = { tmp3 = resource@rubber }
+		multiply_temp_variable = { tmp3 = -1 }
+		add_to_temp_variable = { tmp2 = tmp3 }
+	}
+	check_variable = { tmp2 > 20 }
+
+	OR = {
+		AND = {
+			num_of_civilian_factories_available_for_projects > 60
+
+			set_temp_variable = { tmp1 = resource_imported@rubber }
+			divide_temp_variable = { tmp1 = resource_consumed@rubber }
+
+			OR = {
+				check_variable = { resource@rubber < -16 }
+				check_variable = { tmp1 > 0.5 }
+			}
+		}
+
+		# special focus
+		AND = { original_tag = GER NOT = { has_tech = advanced_rubber_processing } }
+	}
+}
+
+radar_tech_focus = {
+	OR = {
+		original_tag = ENG
+		original_tag = USA
+		original_tag = GER
+		original_tag = ITA
+		original_tag = JAP
+		original_tag = FRA
+	}
+}
+
+radar_tech_focus_2 = {
+	OR = {
+		original_tag = ENG
+	}
+}
+
+resource_extraction_tech_focus = {
+	OR = {
+		NOT = { is_major = yes }
+		original_tag = JAP
+	}
+	OR = {
+		oil > 75
+		rubber > 75
+		steel > 75
+		tungsten > 75
+		chromium > 75
+		aluminium > 75
+	}
+}
+
+synth_tech_focus = {
+	OR = {
+		original_tag = ENG
+		original_tag = GER
+		original_tag = ITA
+		original_tag = JAP
+		original_tag = USA
+	}
+}
+
+concentrated_industry_tech_focus = {
+	NOT = {
+		any_enemy_country = {
+			has_deployed_air_force_size = {
+				size > 500
+				type = strategic_bomber
+			}
+		}
+	}
+}
+
+dispersed_industry_tech_focus = {
+	any_enemy_country = {
+		has_deployed_air_force_size = {
+			size > 500
+			type = strategic_bomber
+		}
+	}
+}
+
+prioritise_main_industry = {
+	OR = {
+		AND = {
+			date > 1943.1.1
+			OR = {
+				can_research = concentrated_industry5
+				can_research = dispersed_industry5
+			}
+			NOT = {
+				has_tech = concentrated_industry5
+				is_researching_technology = concentrated_industry5
+				has_tech = dispersed_industry5
+				is_researching_technology = dispersed_industry5
+			}
+		}
+		AND = {
+			date > 1941.1.1
+			OR = {
+				can_research = concentrated_industry4
+				can_research = dispersed_industry4
+			}
+			NOT = {
+				has_tech = concentrated_industry4
+				is_researching_technology = concentrated_industry4
+				has_tech = dispersed_industry4
+				is_researching_technology = dispersed_industry4
+			}
+		}
+		AND = {
+			date > 1939.1.1
+			OR = {
+				can_research = concentrated_industry3
+				can_research = dispersed_industry3
+			}
+			NOT = {
+				has_tech = concentrated_industry3
+				is_researching_technology = concentrated_industry3
+				has_tech = dispersed_industry3
+				is_researching_technology = dispersed_industry3
+			}
+		}
+		AND = {
+			date > 1936.1.1
+			OR = {
+				can_research = concentrated_industry2
+				can_research = dispersed_industry2
+			}
+			NOT = {
+				has_tech = concentrated_industry2
+				is_researching_technology = concentrated_industry2
+				has_tech = dispersed_industry2
+				is_researching_technology = dispersed_industry2
+			}
+		}
+		AND = {
+			date > 1936.1.1
+			OR = {
+				can_research = concentrated_industry
+				can_research = dispersed_industry
+			}
+			NOT = {
+				has_tech = concentrated_industry
+				is_researching_technology = concentrated_industry
+				has_tech = dispersed_industry
+				is_researching_technology = dispersed_industry
+			}
+		}
+	}
+}
+
+prioritise_infantry_techs = {
+	OR = {
+		AND = {
+			date > 1938.6.1
+			NOT = {
+				is_researching_technology = gw_artillery
+				is_researching_technology = interwar_artillery
+				has_tech = artillery1
+				is_researching_technology = artillery1
+			}
+		}
+
+		AND = {
+			date > 1938.6.1
+			NOT = {
+				is_researching_technology = infantry_weapons1
+				is_researching_technology = infantry_weapons2
+				has_tech = improved_infantry_weapons
+				is_researching_technology = improved_infantry_weapons
+			}
+		}
+
+		if = {
+			limit = {
+				date > 1940.1.1
+			}
+			NOT = {
+				has_tech = mechanised_infantry
+				is_researching_technology = mechanised_infantry
+			}
+			else = { always = no }
+		}
+	}
+}
+
+prioritise_aircraft = {
+	OR = {
+		if = {
+			OR = {
+				AND = { date > 1936.1.1 NOT = { has_tech = fighter1 is_researching_technology = fighter1 } }
+				AND = { date > 1940.1.1 NOT = { has_tech = fighter2 is_researching_technology = fighter2 } }
+				AND = { date > 1944.1.1 NOT = { has_tech = fighter3 is_researching_technology = fighter3 } }
+			}
+			else = { always = no }
+		}
+		if = {
+			OR = {
+				AND = { date > 1936.1.1 NOT = { has_tech = CAS1 is_researching_technology = CAS1 } }
+				AND = { date > 1940.1.1 NOT = { has_tech = CAS2 is_researching_technology = CAS2 } }
+				AND = { date > 1944.1.1 NOT = { has_tech = CAS3 is_researching_technology = CAS3 } }
+			}
+			else = { always = no }
+		}
+		if = {
+			OR = {
+				AND = { date > 1936.1.1 NOT = { has_tech = tactical_bomber1 is_researching_technology = tactical_bomber1 } }
+				AND = { date > 1940.1.1 NOT = { has_tech = tactical_bomber2 is_researching_technology = tactical_bomber2 } }
+				AND = { date > 1944.1.1 NOT = { has_tech = tactical_bomber3 is_researching_technology = tactical_bomber3 } }
+			}
+			else = { always = no }
+		}
+		if = {
+			OR = {
+				AND = { date > 1936.1.1 NOT = { has_tech = strategic_bomber1 is_researching_technology = strategic_bomber1 } }
+				AND = { date > 1940.1.1 NOT = { has_tech = strategic_bomber2 is_researching_technology = strategic_bomber2 } }
+				AND = { date > 1944.1.1 NOT = { has_tech = strategic_bomber3 is_researching_technology = strategic_bomber3 } }
+			}
+			else = { always = no }
 		}
 	}
 }

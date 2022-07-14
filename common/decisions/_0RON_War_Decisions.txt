@@ -1,4 +1,170 @@
 RON_Wars_Early = {
+	WW1_zurich_conference_peace = {
+		allowed  ={
+			tag = ITA
+		}
+		fire_only_once = yes
+		days_mission_timeout = 10
+		is_good = no
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		activation = {
+			ITA = {
+				surrender_progress > 0.59
+
+			}
+			has_global_flag = ITA_refused_zurich_conference
+		}
+		timeout_effect = {
+			FRA = {
+				transfer_state = 989
+				transfer_state = 988
+				transfer_state = 158
+			}
+			AUH = {
+				transfer_state = 159
+				transfer_state = 160
+				transfer_state = 986
+			}
+			every_country = {
+				limit = {
+					OR = {
+						is_in_faction_with = FRA
+						is_in_faction_with = AUH
+					}
+					has_war_with = ITA
+				}
+				white_peace = ITA
+			}
+			ITA = {
+				add_ai_strategy = {
+					type = prepare_for_war
+					id = FRA
+					value = 200
+				}
+				add_ai_strategy = {
+					type = prepare_for_war
+					id = AUH
+					value = 200
+				}
+				add_ai_strategy = {
+					type = antagonise
+					id = FRA
+					value = 200
+				}
+				add_ai_strategy = {
+					type = antagonise
+					id = GER
+					value = 200
+				}
+				add_ai_strategy = {
+					type = antagonise
+					id = AUH
+					value = 200
+				}
+				add_ai_strategy = {
+					type = force_build_armies
+					value = 200
+				}
+			}
+		}
+	}
+	WW1_Namur_agreements_peace = {
+		allowed = {
+			tag = BEL
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		fire_only_once = yes
+		days_mission_timeout = 5
+		is_good = no
+		activation = {
+			has_global_flag = BEL_refused_Namur_agreements
+			BEL = {
+				surrender_progress > 0.5
+			}
+		}
+		timeout_effect = {
+			GER = {
+				transfer_state = 1113
+				transfer_state = 6
+			}
+			if = {
+				limit = {
+					HOL = {
+						is_subject_of = GER
+					}
+				}
+				HOL = {
+					transfer_state = 1113
+					transfer_state = 6
+
+				}
+				1113 = {
+					add_core_of = HOL
+				}
+				6 = {
+					add_core_of = HOL
+				}
+			}
+			FRA = {
+				transfer_state = 813
+				transfer_state = 34
+			}
+		}
+	}
+	DNC_join_morocco_campaign = {
+		allowed ={
+			OR = {
+				tag = SPR
+				tag = FRA
+			}
+		}
+		available = {
+			MOR = {
+				any_owned_state= {
+					resistance > 80
+				}
+			}
+			NOT = {
+				has_country_flag = joined_moroccan_pacification_campaign
+			}
+		}
+		ai_will_do = {
+			factor = 10000  
+		}
+		complete_effect = {
+			unlock_decision_category_tooltip = MOR_pacification_campaign
+			set_country_flag = joined_moroccan_pacification_campaign 
+		}
+	}
+	DNC_Jerusalem_Conquest = {
+		allowed = {
+			always = no
+		}
+		available = { 
+			1121 = { is_controlled_by_ROOT_or_ally = yes }	
+		}
+		activation = { 
+		}
+		fire_only_once = yes
+		is_good = no
+		selectable_mission = no 
+		days_mission_timeout = 365
+		complete_effect = { 
+			country_event = { id = dnc_eng.49 }
+		}
+		timeout_effect = { 
+			country_event = { id = dnc_eng.50 }
+		}
+	}
+
 	RON_disband_eight_nation = {
 		icon = generic_democracy
 		days_remove = 35
@@ -126,7 +292,14 @@ RON_Wars_Early = {
 							has_government = neutrality
 						}
 					}
+					RUE = {
+						has_war = yes
+					}
 				}
+			}
+			modifier = {
+				factor = 0
+				date < 1906.1.1
 			}
 		}
 		fire_only_once = yes
@@ -248,330 +421,330 @@ RON_Wars_Early = {
 			}
 		}
 	}
-	russian_invasion_of_MAN = {
-		fire_only_once = yes
-		days_remove = 21
-		war_with_on_remove = QIN
-		icon = GFX_decision_category_jap_intervene_in_china
-		allowed = {
-			original_tag = RUE
-		}
-		visible = {
-			original_tag = RUE
-			country_exists = QIN
-		}
-		available = {
-			original_tag = RUE
-			NOT = {
-				has_war_with = QIN
-			}
-			NOT = {
-				is_in_faction_with = QIN
-			}
-			date > 1900.6.1
-			date < 1901.6.1
-		}
-		ai_will_do = {
-			factor = 1000
-		}
-		remove_effect = {
-			country_event = {
-				id = ron_diplomatic.77
-			}
-			RUE = {
-				set_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-	}
-	russian_invasion_of_MAN_wp = {
-		fire_only_once = no
-		days_remove = 7
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = RUE
-		}
-		visible = {
-			has_war_with = QIN
-			original_tag = RUE
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = RUE
-			has_war_with = QIN
-			country_exists = RUE
-			country_exists = QIN
-			date > 1902.6.2
-			date < 1905.4.2
-		}
-		remove_effect = {
-			QIN = {
-				country_event = {
-					id = ron_diplomatic.79
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				date > 1902.6.12
-				add = 100
-			}
-		}
-	}
-	russian_invasion_of_MAN_wp_qin = {
-		fire_only_once = no
-		days_remove = 7
-		days_re_enable = 90
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = QIN
-		}
-		visible = {
-			has_war_with = RUE
-			original_tag = QIN
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = QIN
-			has_war_with = RUE
-			country_exists = QIN
-			country_exists = RUE
-			date > 1902.4.5
-			date < 1905.4.2
-		}
-		remove_effect = {
-			RUE = {
-				country_event = {
-					id = ron_diplomatic.80
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				date > 1902.6.12
-				add = 100
-			}
-		}
-	}
-	russian_invasion_of_MAN_historic = {
-		fire_only_once = yes
-		days_remove = 7
-		days_re_enable = 90
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = RUE
-		}
-		visible = {
-			has_war_with = QIN
-			original_tag = RUE
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = RUE
-			has_war_with = QIN
-			country_exists = RUE
-			country_exists = QIN
-			date > 1900.6.2
-			date < 1906.4.2
-			RUE = {
-				OR = {
-					controls_state = 717
-					controls_state = 714
-					controls_state = 328
-					controls_state = 1024
-					controls_state = 1022
-					controls_state = 1026
-					controls_state = 1023
-					controls_state = 716
-					controls_state = 761
-					AND = {
-						QIN = {
-							surrender_progress > 0.15
-						}
-					}
-				}
-			}
-		}
-		remove_effect = {
-			QIN = {
-				country_event = {
-					id = ron_diplomatic.81
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				is_historical_focus_on = yes
-				add = 1000
-			}
-		}
-	}
-	russian_invasion_of_MAN_QIN_peace = {
-		fire_only_once = yes
-		days_remove = 7
-		days_re_enable = 90
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = QIN
-		}
-		visible = {
-			has_war_with = RUE
-			original_tag = QIN
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = QIN
-			has_war_with = RUE
-			country_exists = RUE
-			country_exists = QIN
-			date > 1900.6.2
-			date < 1906.4.2
-			OR = {
-				QIN = {
-					controls_state = 561
-					controls_state = 657
-					controls_state = 560
-					controls_state = 970
-					controls_state = 409
-					controls_state = 408
-				}
-				AND = {
-					RUE = {
-						surrender_progress > 0.1
-					}
-				}
-			}
-		}
-		remove_effect = {
-			RUE = {
-				country_event = {
-					id = ron_diplomatic.82
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				is_historical_focus_on = yes
-				factor = 1001
-			}
-		}
-	}
-	russian_invasion_of_MAN_historic_ai = {
-		fire_only_once = yes
-		days_remove = 7
-		days_re_enable = 90
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = QIN
-		}
-		visible = {
-			has_war_with = RUE
-			original_tag = QIN
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = QIN
-			has_war_with = RUE
-			date > 1900.10.2
-			date < 1906.4.2
-			RUE = {
-				OR = {
-					controls_state = 717
-					controls_state = 714
-					controls_state = 328
-					controls_state = 1024
-					controls_state = 1022
-					controls_state = 1026
-					controls_state = 1023
-					controls_state = 716
-					controls_state = 761
-					AND = {
-						QIN = {
-							surrender_progress > 0.15
-						}
-					}
-				}
-			}
-		}
-		remove_effect = {
-			QIN = {
-				country_event = {
-					id = ron_diplomatic.81
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				is_historical_focus_on = yes
-				add = 1000
-			}
-		}
-	}
-	russian_invasion_of_MAN_QIN_peace_ai = {
-		fire_only_once = yes
-		days_remove = 7
-		days_re_enable = 90
-		icon = GFX_decision_category_generic_political_actions
-		allowed = {
-			original_tag = RUE
-		}
-		visible = {
-			has_war_with = QIN
-			original_tag = RUE
-			RUE = {
-				has_country_flag = DNC_MANCHURIA_INVASION
-			}
-		}
-		available = {
-			original_tag = RUE
-			has_war_with = QIN
-			date > 1900.10.2
-			date < 1906.4.2
-			OR = {
-				QIN = {
-					controls_state = 561
-					controls_state = 657
-					controls_state = 560
-					controls_state = 970
-					controls_state = 409
-					controls_state = 408
-				}
-				AND = {
-					RUE = {
-						surrender_progress > 0.1
-					}
-				}
-			}
-		}
-		remove_effect = {
-			RUE = {
-				country_event = {
-					id = ron_diplomatic.82
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				is_historical_focus_on = yes
-				factor = 1001
-			}
-		}
-	}
+	# russian_invasion_of_MAN = {
+	# 	fire_only_once = yes
+	# 	days_remove = 21
+	# 	war_with_on_remove = QIN
+	# 	icon = GFX_decision_category_jap_intervene_in_china
+	# 	allowed = {
+	# 		original_tag = RUE
+	# 	}
+	# 	visible = {
+	# 		original_tag = RUE
+	# 		country_exists = QIN
+	# 	}
+	# 	available = {
+	# 		original_tag = RUE
+	# 		NOT = {
+	# 			has_war_with = QIN
+	# 		}
+	# 		NOT = {
+	# 			is_in_faction_with = QIN
+	# 		}
+	# 		date > 1900.6.1
+	# 		date < 1901.6.1
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 	}
+	# 	remove_effect = {
+	# 		country_event = {
+	# 			id = ron_diplomatic.77
+	# 		}
+	# 		RUE = {
+	# 			set_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_wp = {
+	# 	fire_only_once = no
+	# 	days_remove = 7
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = RUE
+	# 	}
+	# 	visible = {
+	# 		has_war_with = QIN
+	# 		original_tag = RUE
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = RUE
+	# 		has_war_with = QIN
+	# 		country_exists = RUE
+	# 		country_exists = QIN
+	# 		date > 1902.6.2
+	# 		date < 1905.4.2
+	# 	}
+	# 	remove_effect = {
+	# 		QIN = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.79
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 0
+	# 		modifier = {
+	# 			date > 1902.6.12
+	# 			add = 100
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_wp_qin = {
+	# 	fire_only_once = no
+	# 	days_remove = 7
+	# 	days_re_enable = 90
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = QIN
+	# 	}
+	# 	visible = {
+	# 		has_war_with = RUE
+	# 		original_tag = QIN
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = QIN
+	# 		has_war_with = RUE
+	# 		country_exists = QIN
+	# 		country_exists = RUE
+	# 		date > 1902.4.5
+	# 		date < 1905.4.2
+	# 	}
+	# 	remove_effect = {
+	# 		RUE = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.80
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 0
+	# 		modifier = {
+	# 			date > 1902.6.12
+	# 			add = 100
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_historic = {
+	# 	fire_only_once = yes
+	# 	days_remove = 7
+	# 	days_re_enable = 90
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = RUE
+	# 	}
+	# 	visible = {
+	# 		has_war_with = QIN
+	# 		original_tag = RUE
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = RUE
+	# 		has_war_with = QIN
+	# 		country_exists = RUE
+	# 		country_exists = QIN
+	# 		date > 1900.6.2
+	# 		date < 1906.4.2
+	# 		RUE = {
+	# 			OR = {
+	# 				controls_state = 717
+	# 				controls_state = 714
+	# 				controls_state = 328
+	# 				controls_state = 1024
+	# 				controls_state = 1022
+	# 				controls_state = 1026
+	# 				controls_state = 1023
+	# 				controls_state = 716
+	# 				controls_state = 761
+	# 				AND = {
+	# 					QIN = {
+	# 						surrender_progress > 0.15
+	# 					}
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# 	remove_effect = {
+	# 		QIN = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.81
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 		modifier = {
+	# 			is_historical_focus_on = yes
+	# 			add = 1000
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_QIN_peace = {
+	# 	fire_only_once = yes
+	# 	days_remove = 7
+	# 	days_re_enable = 90
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = QIN
+	# 	}
+	# 	visible = {
+	# 		has_war_with = RUE
+	# 		original_tag = QIN
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = QIN
+	# 		has_war_with = RUE
+	# 		country_exists = RUE
+	# 		country_exists = QIN
+	# 		date > 1900.6.2
+	# 		date < 1906.4.2
+	# 		OR = {
+	# 			QIN = {
+	# 				controls_state = 561
+	# 				controls_state = 657
+	# 				controls_state = 560
+	# 				controls_state = 970
+	# 				controls_state = 409
+	# 				controls_state = 408
+	# 			}
+	# 			AND = {
+	# 				RUE = {
+	# 					surrender_progress > 0.1
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# 	remove_effect = {
+	# 		RUE = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.82
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 		modifier = {
+	# 			is_historical_focus_on = yes
+	# 			factor = 1001
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_historic_ai = {
+	# 	fire_only_once = yes
+	# 	days_remove = 7
+	# 	days_re_enable = 90
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = QIN
+	# 	}
+	# 	visible = {
+	# 		has_war_with = RUE
+	# 		original_tag = QIN
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = QIN
+	# 		has_war_with = RUE
+	# 		date > 1900.10.2
+	# 		date < 1906.4.2
+	# 		RUE = {
+	# 			OR = {
+	# 				controls_state = 717
+	# 				controls_state = 714
+	# 				controls_state = 328
+	# 				controls_state = 1024
+	# 				controls_state = 1022
+	# 				controls_state = 1026
+	# 				controls_state = 1023
+	# 				controls_state = 716
+	# 				controls_state = 761
+	# 				AND = {
+	# 					QIN = {
+	# 						surrender_progress > 0.15
+	# 					}
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# 	remove_effect = {
+	# 		QIN = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.81
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 		modifier = {
+	# 			is_historical_focus_on = yes
+	# 			add = 1000
+	# 		}
+	# 	}
+	# }
+	# russian_invasion_of_MAN_QIN_peace_ai = {
+	# 	fire_only_once = yes
+	# 	days_remove = 7
+	# 	days_re_enable = 90
+	# 	icon = GFX_decision_category_generic_political_actions
+	# 	allowed = {
+	# 		original_tag = RUE
+	# 	}
+	# 	visible = {
+	# 		has_war_with = QIN
+	# 		original_tag = RUE
+	# 		RUE = {
+	# 			has_country_flag = DNC_MANCHURIA_INVASION
+	# 		}
+	# 	}
+	# 	available = {
+	# 		original_tag = RUE
+	# 		has_war_with = QIN
+	# 		date > 1900.10.2
+	# 		date < 1906.4.2
+	# 		OR = {
+	# 			QIN = {
+	# 				controls_state = 561
+	# 				controls_state = 657
+	# 				controls_state = 560
+	# 				controls_state = 970
+	# 				controls_state = 409
+	# 				controls_state = 408
+	# 			}
+	# 			AND = {
+	# 				RUE = {
+	# 					surrender_progress > 0.1
+	# 				}
+	# 			}
+	# 		}
+	# 	}
+	# 	remove_effect = {
+	# 		RUE = {
+	# 			country_event = {
+	# 				id = ron_diplomatic.82
+	# 			}
+	# 		}
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 		modifier = {
+	# 			is_historical_focus_on = yes
+	# 			factor = 1001
+	# 		}
+	# 	}
+	# }
 	tib_expedition = {
 		fire_only_once = yes
 		days_remove = 21
@@ -806,7 +979,7 @@ RON_Wars_Early = {
 			}
 		}
 		remove_effect = {
-			country_event = ron_early_wars.30
+			country_event = dnc_japan.1
 		}
 	}
 	somaliland_campaign = {
@@ -1079,6 +1252,7 @@ RON_Wars_Early = {
 					id = DNC_Expansion_country.147
 				}
 			}
+			set_global_flag = DNC_RJW_Japanese_Victory
 		}
 		ai_will_do = {
 			factor = 1000
@@ -1209,9 +1383,2200 @@ RON_Wars_Early = {
 			}
 		}
 	}
+	ITA_OTT_Invasion = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = OTT
+		allowed = {
+			original_tag = ITA
+		}
+		available = {
+			original_tag = ITA
+			country_exists = OTT
+			NOT = {
+				is_in_faction_with = OTT
+			}
+			NOT = {
+				has_war_with = OTT
+			}
+			date > 1911.9.29
+			date < 1912.9.29
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#Not worth the risk if Ottoman Army Is Large
+				OTT = {
+					has_army_size = {
+						size > 80
+					}
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if Italy's Army Is Small
+				ITA = {
+					has_army_size = {
+						size < 40
+					}
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if Italy is already at War with a Great Power
+				any_country = {
+					is_major = yes
+					has_war_with = ITA
+				}
+			}
+			modifier = {
+				#Not worth the risk if Italy is losing a war
+				ITA = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 2
+		}
+		remove_effect = {
+			country_event = WW1_Expansion_country.48
+		}
+	}
 }
 
 RON_Wars_WW2 = {
+
+	#AI Only Wars to make WW2 Historical
+	
+	
+GER_anschluss_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = AUS
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			NOT = { has_completed_focus = GER_anschluss }
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			country_exists = AUS
+			NOT = {
+				is_in_faction_with = AUS
+			}
+			NOT = {
+				has_war_with = AUS
+			}
+			date > 1938.1.1
+			date < 1939.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1938.3.5
+			}
+			modifier = {
+				factor = 0
+				AUS = {
+					has_completed_focus = AUS_germanic_brotherhood
+				}
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = AUS
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+			AUS = {
+				country_event = erwache.8
+			}
+		}
+	}
+
+GER_sudetenland_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = CZE
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			owns_state = 4
+			NOT = { has_completed_focus = GER_demand_sudetenland }
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			country_exists = CZE
+			NOT = {
+				is_in_faction_with = CZE
+			}
+			NOT = {
+				has_war_with = CZE
+			}
+			date > 1938.1.1
+			date < 1939.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1938.9.23
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = CZE
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+				ENG = {
+					country_event = germany.40
+				}
+				add_named_threat = {
+					threat = 2
+					name = GER_demand_sudetenland_threat
+				}
+		}
+	}
+	
+	GER_fate_of_czech_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = CZE
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			owns_state = 69
+			NOT = { has_completed_focus = GER_end_of_czechoslovakia }
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			country_exists = CZE
+			NOT = {
+				is_in_faction_with = CZE
+			}
+			NOT = {
+				has_war_with = CZE
+			}
+			date > 1939.1.1
+			date < 1940.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.3.8
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = CZE
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					NOT = { has_completed_focus = GER_first_vienna_award }
+				}
+				HUN = {
+					country_event = {
+						id = germany.51
+					}
+					add_opinion_modifier = {
+						target = GER
+						modifier = GER_first_vienna_award_GER
+					}
+				}
+				every_other_country = {
+					limit = {
+						is_faction_leader = yes
+					}
+					reverse_add_opinion_modifier = {
+						target = HUN
+						modifier = GER_first_vienna_award_other
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = CZE
+				}
+				set_global_flag = end_of_czechoslovakia
+				CZE = {
+					country_event = germany.53
+				}
+			}
+		}
+	}
+	
+	GER_POL_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = POL
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			owns_state = 69
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = GER_danzig_or_war }
+			country_exists = POL
+			NOT = {
+				is_in_faction_with = POL
+			}
+			NOT = {
+				has_war_with = POL
+			}
+			date > 1939.1.1
+			date < 1940.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.8.23
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = POL
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 5
+		}
+		remove_effect = {
+			diplomatic_relation = { country = POL relation = non_aggression_pact active = no }
+			create_wargoal = {
+				target = POL
+				type = annex_everything
+			}
+		}
+	}
+	
+	GER_weserubung_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = DEN
+		war_with_on_remove = NOR
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			has_war_with = ENG
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = GER_weserubung }
+			OR = {
+				country_exists = DEN
+				country_exists = NOR
+			}
+			OR = {
+				NOT = { has_war_with = DEN }
+				NOT = { has_war_with = NOR }
+			}
+			#Poland Neutralized
+			OR = {
+				POL = {
+					has_capitulated = yes
+				}
+				POL = {
+					exists = no
+				}
+				POL = {
+					is_subject_of = GER
+				}
+				PGG = {
+					is_subject_of = GER
+				}
+			}
+			date > 1939.9.1
+			date < 1941.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.9.1
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = DEN
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			create_wargoal = {
+				target = DEN
+				type = annex_everything
+			}
+			create_wargoal = {
+				target = NOR
+				type = annex_everything
+			}
+		}
+	}
+	
+	GER_around_maginot_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = HOL
+		war_with_on_remove = BEL
+		war_with_on_remove = LUX
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			has_war_with = FRA
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = GER_around_maginot }
+			OR = {
+				country_exists = HOL
+				country_exists = BEL
+				country_exists = LUX
+			}
+			OR = {
+				NOT = { has_war_with = HOL }
+				NOT = { has_war_with = BEL }
+				NOT = { has_war_with = LUX }
+			}
+			#Denmark Neutralized
+			OR = {
+				DEN = {
+					has_capitulated = yes
+				}
+				DEN = {
+					exists = no
+				}
+				DEN = {
+					is_subject_of = GER
+				}
+				RPD = {
+					is_subject_of = GER
+				}
+			}
+			date > 1939.9.1
+			date < 1941.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.9.1
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+			create_wargoal = {
+				target = HOL
+				type = annex_everything
+			}
+			create_wargoal = {
+				target = BEL
+				type = annex_everything
+			}
+			create_wargoal = {
+				target = LUX
+				type = annex_everything
+			}
+		}
+	}
+	
+	GER_SOV_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = SOV
+		allowed = {
+			original_tag = GER
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			NOT = { has_country_flag = RON_Redbeard_Accepted }
+			has_war_with = ENG
+			has_war_with = FRA
+			original_tag = GER
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = GER_soviet_invasion }
+			country_exists = SOV
+			NOT = {
+				is_in_faction_with = SOV
+			}
+			NOT = {
+				has_war_with = SOV
+			}
+			#Poland and France Neutralized
+			RON_POL_Defeated = yes
+			RON_FRA_Defeated = yes
+			date > 1941.1.1
+			date < 1942.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1941.6.15
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = SOV
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+			diplomatic_relation = { country = SOV relation = non_aggression_pact active = no }
+			create_wargoal = {
+				target = SOV
+				type = annex_everything
+			}
+		}
+	}
+	
+	#Italian Wargoal
+	
+	ITA_albania_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = ALB
+		allowed = {
+			original_tag = ITA
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			NOT = { has_completed_focus = ITA_albania_war_goal }
+			original_tag = ITA
+			is_historical_focus_on = yes
+			has_government = fascism
+			country_exists = ALB
+			NOT = {
+				is_in_faction_with = ALB
+			}
+			NOT = {
+				has_war_with = ALB
+			}
+			date > 1939.1.1
+			date < 1940.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.4.1
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		remove_effect = {
+			ALB = {
+				country_event = {
+					id = italy.3
+				}
+			}
+		}
+	}
+	
+	ITA_GRE_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = GRE
+		allowed = {
+			original_tag = ITA
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			original_tag = ITA
+			is_in_faction_with = GER
+			GER = { has_war_with = ENG }
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = ITA_greece_war_goal }
+			country_exists = GRE
+			NOT = {
+				is_in_faction_with = GRE
+			}
+			NOT = {
+				has_war_with = GRE
+			}
+			date > 1940.1.1
+			date < 1941.1.1
+			RON_POL_Defeated = yes
+			RON_FRA_Defeated = yes
+			#Denmark Neutralized
+			OR = {
+				DEN = {
+					has_capitulated = yes
+				}
+				DEN = {
+					exists = no
+				}
+				DEN = {
+					is_subject_of = GER
+				}
+				RPD = {
+					is_subject_of = GER
+				}
+			}
+			#Norway Neutralized
+			OR = {
+				NOR = {
+					has_capitulated = yes
+				}
+				NOR = {
+					exists = no
+				}
+				NOR = {
+					is_subject_of = GER
+				}
+				RKN = {
+					is_subject_of = GER
+				}
+			}
+			#Holland Neutralized
+			OR = {
+				HOL = {
+					has_capitulated = yes
+				}
+				HOL = {
+					exists = no
+				}
+				HOL = {
+					is_subject_of = GER
+				}
+				RKH = {
+					is_subject_of = GER
+				}
+			}
+			#Belgium Neutralized
+			OR = {
+				BEL = {
+					has_capitulated = yes
+				}
+				BEL = {
+					exists = no
+				}
+				BEL = {
+					is_subject_of = GER
+				}
+				RKB = {
+					is_subject_of = GER
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#Need a land link
+				NOT = { is_neighbor_of = GRE }
+				NOT = { ALB = { is_subject_of = ITA } }
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			create_wargoal = {
+				target = GRE
+				type = annex_everything
+			}
+		}
+	}
+	
+	ITA_YUG_war_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = YUG
+		allowed = {
+			original_tag = ITA
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			has_war_with = GRE
+			original_tag = ITA
+			is_in_faction_with = GER
+			GER = { has_war_with = ENG }
+			is_historical_focus_on = yes
+			has_government = fascism
+			NOT = { has_completed_focus = ITA_yugoslavia_war_goal }
+			country_exists = YUG
+			NOT = {
+				is_in_faction_with = YUG
+			}
+			NOT = {
+				has_war_with = YUG
+			}
+			date > 1940.1.1
+			date < 1942.1.1
+			#Poland Neutralized
+			RON_POL_Defeated = yes
+			RON_FRA_Defeated = yes
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#Need a land link
+				NOT = { is_neighbor_of = YUG }
+				factor = 0
+			}
+			modifier = {
+				#at war with USSR
+				has_war_with = SOV
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			every_country = {
+				limit = { 
+					OR = {
+						tag = HUN
+						tag = ROM
+						tag = BUL
+					}
+					is_ai = yes
+					NOT = { has_government = communism }
+					is_in_faction = no
+					is_subject = no
+				} 
+				country_event = {
+					id = ww2tree.69
+					hours = 6
+				}
+			}
+		}
+		remove_effect = {
+			create_wargoal = {
+				target = YUG
+				type = annex_everything
+			}
+		}
+	}
+	
+	#Soviet Wargoal on Finland
+	
+	SOV_karelia_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = FIN
+		allowed = {
+			original_tag = SOV
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			NOT = { has_country_flag = karjala_demand }
+			NOT = { FIN = { has_country_flag = FIN_Recieved_Soviet_Ultimatum } }
+			original_tag = SOV
+			is_historical_focus_on = yes
+			has_government = communism
+			country_exists = FIN
+			FIN = { owns_state = 146 }
+			NOT = {
+				is_in_faction_with = FIN
+			}
+			NOT = {
+				has_war_with = FIN
+			}
+			date > 1939.1.1
+			date < 1940.6.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1939.6.1
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = FIN
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+			SOV = { set_country_flag = karjala_demand }
+		}
+		remove_effect = {
+				FIN = { country_event = { days = 2 id = finland.1 } }
+		}
+	}
+	
+	#Soviet Wargoal on Romania
+	
+	SOV_bessarabia_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = ROM
+		allowed = {
+			original_tag = SOV
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			NOT = { has_country_flag = bessarabia_demand }
+			NOT = { ROM = { has_country_flag = ROM_Recieved_Soviet_Ultimatum } }
+			original_tag = SOV
+			is_historical_focus_on = yes
+			has_government = communism
+			country_exists = ROM
+			ROM = { owns_state = 78 }
+			ROM = { owns_state = 80 }
+			ROM = { owns_state = 925 }
+			NOT = {
+				is_in_faction_with = ROM
+			}
+			NOT = {
+				has_war_with = ROM
+			}
+			date > 1940.1.1
+			date < 1941.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1940.6.26
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = ROM
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+			SOV = { set_country_flag = bessarabia_demand }
+		}
+		remove_effect = {
+				ROM = { country_event = { days = 2 id = romania.1 } }
+		}
+	}
+	
+	#Soviet Wargoal on Baltics
+	
+	SOV_baltic_wargoal_decision_ai_only = {
+		fire_only_once = yes
+		days_remove = 7
+		war_with_on_remove = LIT
+		war_with_on_remove = LAT
+		war_with_on_remove = EST
+		allowed = {
+			original_tag = SOV
+		}
+		visible = {
+			is_ai = yes
+		}
+		available = {
+			original_tag = SOV
+			is_historical_focus_on = yes
+			has_government = communism
+			OR = {
+				NOT = { LIT = { has_country_flag = baltic_coups_1940 } }
+				NOT = { LAT = { has_country_flag = baltic_coups_1940 } }
+				NOT = { EST = { has_country_flag = baltic_coups_1940 } }
+			}
+			OR = {
+				country_exists = LIT
+				country_exists = LAT
+				country_exists = EST
+			}
+			OR = {
+				NOT = { has_war_with = LIT }
+				NOT = { has_war_with = LAT }
+				NOT = { has_war_with = EST }
+			}
+			date > 1940.1.1
+			date < 1941.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				date < 1940.6.1
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.01
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+		}
+		complete_effect = {
+		}
+		remove_effect = {
+			if = {
+				limit = {
+					LIT = { exists = yes }
+					NOT = { LIT = { has_war_with = SOV } }
+					NOT = { LIT = { has_country_flag = baltic_coups_1940 } }
+				}
+				LIT = { country_event = { days = 2 id = ron_coupscountry.46 } }
+			}
+			if = {
+				limit = {
+					LAT = { exists = yes }
+					NOT = { LAT = { has_war_with = SOV } }
+					NOT = { LAT = { has_country_flag = baltic_coups_1940 } }
+				}
+				LAT = { country_event = { days = 2 id = ron_coupscountry.461 } }
+			}
+			if = {
+				limit = {
+					EST = { exists = yes }
+					NOT = { EST = { has_war_with = SOV } }
+					NOT = { EST = { has_country_flag = baltic_coups_1940 } }
+				}
+				EST = { country_event = { days = 2 id = ron_coupscountry.462 } }
+			}
+				
+		}
+	}
+
+	SACW_Crush_Communists = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = USC
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USD
+				original_tag = CSA
+			}
+		}
+		available = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USD
+				original_tag = CSA
+			}
+			country_exists = USC
+			NOT = {
+				is_in_faction_with = USC
+			}
+			NOT = {
+				has_war_with = USC
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = USC
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = USC
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SACW_Crush_Democrats = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = USD
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USC
+				original_tag = CSA
+			}
+		}
+		available = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USC
+				original_tag = CSA
+			}
+			country_exists = USD
+			NOT = {
+				is_in_faction_with = USD
+			}
+			NOT = {
+				has_war_with = USD
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = USD
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = USD
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SACW_Crush_Fascists = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = CSA
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USD
+				original_tag = USC
+			}
+		}
+		available = {
+			OR = {
+				original_tag = USA
+				original_tag = USM
+				original_tag = USD
+				original_tag = USC
+			}
+			country_exists = CSA
+			NOT = {
+				is_in_faction_with = CSA
+			}
+			NOT = {
+				has_war_with = CSA
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = CSA
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = CSA
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SACW_Crush_Monarchists = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = USM
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USC
+				original_tag = USD
+				original_tag = CSA
+			}
+		}
+		available = {
+			OR = {
+				original_tag = USA
+				original_tag = USC
+				original_tag = USD
+				original_tag = CSA
+			}
+			country_exists = USM
+			NOT = {
+				is_in_faction_with = USM
+			}
+			NOT = {
+				has_war_with = USM
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = USM
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				tag = USA
+				threat > 14
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = USM
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SACW_Crush_Military = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = USA
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			OR = {
+				original_tag = USC
+				original_tag = USM
+				original_tag = USD
+				original_tag = CSA
+			}
+		}
+		available = {
+			OR = {
+				original_tag = USC
+				original_tag = USM
+				original_tag = USD
+				original_tag = CSA
+			}
+			country_exists = USA
+			NOT = {
+				is_in_faction_with = USA
+			}
+			NOT = {
+				has_war_with = USA
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#CSA Would Rather just leave
+				tag = CSA
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if Enemy Army Is Large and not busy
+				USA = {
+					has_army_size = {
+						size > 40
+					}
+					has_war = no
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if Ours Is Small
+				ROOT = {
+					has_army_size = {
+						size < 5
+					}
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = USA
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = USA
+					type = annex_everything
+				}
+			}
+		}
+	}
+	SACW_Demand_Recognition_CSA = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = USA
+		visible = {
+			has_global_flag = RON_Second_American_Civil_War
+			NOT = { has_global_flag = RON_Second_American_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = CSA
+		}
+		available = {
+			original_tag = CSA
+			country_exists = USA
+			NOT = {
+				is_in_faction_with = USA
+			}
+			NOT = {
+				has_war_with = USA
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				#Not worth the risk if USA Isn't Busy
+				USA = {
+					has_war = no
+				}
+				factor = 0
+			}
+			modifier = {
+				#Not worth the risk if Ours Army Doesn't Exist
+				ROOT = {
+					has_army_size = {
+						size < 5
+					}
+				}
+				factor = 0
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = USA
+				}
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			USA = {
+				country_event = {
+					id = RON_American_Alt_History.67
+					hours = 6
+				}
+			}
+		}
+	}
+	#Second Russian Civil War
+	SRCW_Crush_UKR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = UKR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = UKR
+			NOT = {
+				is_in_faction_with = UKR
+			}
+			NOT = {
+				has_war_with = UKR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = UKR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = UKR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_BLR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = BLR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = BLR
+			NOT = {
+				is_in_faction_with = BLR
+			}
+			NOT = {
+				has_war_with = BLR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = BLR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = BLR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_GEO = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = GEO
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = GEO
+			NOT = {
+				is_in_faction_with = GEO
+			}
+			NOT = {
+				has_war_with = GEO
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = GEO
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = GEO
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_ARM = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = ARM
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = ARM
+			NOT = {
+				is_in_faction_with = ARM
+			}
+			NOT = {
+				has_war_with = ARM
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = ARM
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = ARM
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_AZR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = AZR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = AZR
+			NOT = {
+				is_in_faction_with = AZR
+			}
+			NOT = {
+				has_war_with = AZR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = AZR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = AZR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_UZB = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = UZB
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = UZB
+			NOT = {
+				is_in_faction_with = UZB
+			}
+			NOT = {
+				has_war_with = UZB
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = UZB
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = UZB
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_TAJ = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = TAJ
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = TAJ
+			NOT = {
+				is_in_faction_with = TAJ
+			}
+			NOT = {
+				has_war_with = TAJ
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = TAJ
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = TAJ
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_KYR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = KYR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = KYR
+			NOT = {
+				is_in_faction_with = KYR
+			}
+			NOT = {
+				has_war_with = KYR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = KYR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = KYR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_TMS = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = TMS
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = TMS
+			NOT = {
+				is_in_faction_with = TMS
+			}
+			NOT = {
+				has_war_with = TMS
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = TMS
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = TMS
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_KAZ = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = KAZ
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = KAZ
+			NOT = {
+				is_in_faction_with = KAZ
+			}
+			NOT = {
+				has_war_with = KAZ
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = KAZ
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = KAZ
+					type = annex_everything
+				}
+			}
+		}
+	}
 	SAU_YEM_war = {
 		fire_only_once = yes
 		days_remove = 7
@@ -1830,6 +4195,40 @@ RON_Wars_Modern = {
 				has_war_with = UKR
 			}
 			date > 2014.1.1
+			date < 2015.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+		complete_effect = {
+			add_threat = 3
+			hidden_effect = {
+				create_wargoal = {
+					target = UKR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	RUS_UKR_war_two = {
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = UKR
+		allowed = {
+			original_tag = RUS
+		}
+		available = {
+			original_tag = RUS
+			country_exists = UKR
+			NOT = {
+				is_in_faction_with = UKR
+			}
+			NOT = {
+				has_war_with = UKR
+			}
+			date > 2022.1.1
+			date < 2022.1.1
 		}
 		ai_will_do = {
 			factor = 1000
