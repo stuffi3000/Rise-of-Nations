@@ -2283,3 +2283,360 @@ country_event = {
 		}
 	}
 }
+
+Generic invitaton to join major Alliance When The Other Country is a faction leader
+country_event = {
+	id = generic.205
+	title = generic.5.t
+	desc = { # FROM and ROOT are Democratic
+		text = generic.5.d.a
+		trigger = {
+			AND = {
+				FROM = {
+					has_government = democratic
+				}
+				has_government = democratic
+			}
+		}
+	}
+	desc = { # FROM and ROOT are Fascist
+		text = generic.5.d.b
+		trigger = {
+			AND = {
+				FROM = {
+					has_government = fascism
+				}
+				has_government = fascism
+			}
+		}
+	}
+	desc = { # FROM and ROOT are Communist
+		text = generic.5.d.c
+		trigger = {
+			AND = {
+				FROM = {
+					has_government = communism
+				}
+				has_government = communism
+			}
+		}
+	}
+	desc = { # FROM and ROOT are different ideologies
+		text = generic.5.d.e
+		trigger = {
+			NOT = {
+				AND = {
+					FROM = {
+						has_government = democratic
+					}
+					has_government = democratic
+				}
+				AND = {
+					FROM = {
+						has_government = fascism
+					}
+					has_government = fascism
+				}
+				AND = {
+					FROM = {
+						has_government = communism
+					}
+					has_government = communism
+				}
+			}
+		}
+	}
+	picture = GFX_report_event_generic_read_write
+
+	immediate = {
+		hidden_effect = {
+			save_event_target_as = alliance_applicant
+			FROM = {
+				save_event_target_as = alliance_inviter
+			}
+		}
+	}
+
+	is_triggered_only = yes
+
+	option = { #Agree / Both Democratic
+		name = generic.5.a
+		trigger = {
+			
+			AND = {
+				FROM = {
+					has_government = democratic
+				}
+				has_government = democratic
+			}
+		}
+		ai_chance = {
+			base = 100
+		}
+		every_other_country = {
+			limit = { is_in_faction_with = ROOT }
+			leave_faction = yes
+		}
+
+		ROOT = { dismantle_faction = yes }
+		FROM = {
+			add_to_faction = ROOT
+			country_event = { id = generic.6 hours = 6 }
+		}
+		add_ai_strategy = {
+			type = alliance
+			id = FROM
+			value = 200
+		}
+		hidden_effect = {
+			set_country_flag = alliance_applicant@ROOT
+			FROM = { set_country_flag = alliance_inviter@ROOT }
+			news_event = { id = news.289 hours = 12 }
+			if = {
+				limit = {
+					FROM = {
+						original_tag = GER
+						has_government = democratic
+						#has_completed_focus = GER_pool_technical_know_how
+					}
+					NOT = { has_idea = GER_pool_technical_know_how }
+				}
+				add_ideas = GER_pool_technical_know_how
+			}
+		}
+	}
+	option = { #Agree / Both Fascist
+		name = generic.5.b
+		trigger = {
+			
+			AND = {
+				FROM = {
+					has_government = fascism
+				}
+				has_government = fascism
+			}
+		}
+		ai_chance = {
+			base = 100
+		}
+		every_other_country = {
+			limit = { is_in_faction_with = ROOT }
+			leave_faction = yes
+		}
+
+		ROOT = { dismantle_faction = yes }
+		FROM = {
+			add_to_faction = ROOT
+			country_event = { id = generic.6 hours = 6 }
+		}
+		add_ai_strategy = {
+			type = alliance
+			id = FROM
+			value = 200
+		}
+		hidden_effect = {
+			set_country_flag = alliance_applicant@ROOT
+			FROM = { set_country_flag = alliance_inviter@ROOT }
+			news_event = { id = news.289 hours = 12 }
+		}
+	}
+	option = { #Agree / Both Communist
+		name = generic.5.c
+		trigger = {
+			
+			AND = {
+				FROM = {
+					has_government = communism
+				}
+				has_government = communism
+			}
+		}
+		ai_chance = {
+			base = 100
+		}
+		every_other_country = {
+			limit = { is_in_faction_with = ROOT }
+			leave_faction = yes
+		}
+
+		ROOT = { dismantle_faction = yes }
+		FROM = {
+			add_to_faction = ROOT
+			country_event = { id = generic.6 hours = 6 }
+		}
+		add_ai_strategy = {
+			type = alliance
+			id = FROM
+			value = 200
+		}
+		hidden_effect = {
+			set_country_flag = alliance_applicant@ROOT
+			FROM = { set_country_flag = alliance_inviter@ROOT }
+			news_event = { id = news.289 hours = 12 }
+		}
+	}
+	option = { #Agree / Both different
+		name = generic.5.e
+		trigger = {
+			
+			NOT = {
+				AND = {
+					FROM = {
+						has_government = democratic
+					}
+					has_government = democratic
+				}
+				AND = {
+					FROM = {
+						has_government = fascism
+					}
+					has_government = fascism
+				}
+				AND = {
+					FROM = {
+						has_government = communism
+					}
+					has_government = communism
+				}
+			}
+		}
+		ai_chance = {
+			base = 100
+
+			modifier = {
+				factor = 0.5
+				has_war = no
+				FROM = {
+					has_war = yes
+				}
+			}
+
+			modifier = {
+				factor = 0.5
+				NOT = {
+					has_government = neutrality
+				}
+			}
+
+			modifier = {
+				factor = 0.75
+				FROM = {
+					is_major = no
+				}
+			}
+		}
+		every_other_country = {
+			limit = { is_in_faction_with = ROOT }
+			leave_faction = yes
+		}
+
+		ROOT = { dismantle_faction = yes }
+		FROM = {
+			add_to_faction = ROOT
+			country_event = { id = generic.6 hours = 6 }
+		}
+		if = {
+			limit = {
+				is_literally_china = yes
+				has_DLC = "Waking the Tiger"
+			}
+			CHI_set_ally_strat_on_current_leader = yes #sets ally strategy to current Chinese leader
+		}
+		add_ai_strategy = {
+			type = alliance
+			id = FROM
+			value = 200
+		}
+		hidden_effect = {
+			set_country_flag = alliance_applicant@ROOT
+			FROM = { set_country_flag = alliance_inviter@ROOT }
+			news_event = { id = news.289 hours = 12 }
+			if = {
+				limit = {
+					FROM = {
+						original_tag = GER
+						has_government = democratic
+						#has_completed_focus = GER_pool_technical_know_how
+					}
+					NOT = { has_idea = GER_pool_technical_know_how }
+				}
+				add_ideas = GER_pool_technical_know_how
+			}
+		}
+	}
+
+	option = { #Reject
+		name = generic.2.f
+		ai_chance = {
+			factor = 50
+
+			modifier = {
+				factor = 0
+				original_tag = PRC
+				FROM = {
+					original_tag = CHI
+				}
+				is_historical_focus_on = yes
+			}
+
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = FROM
+					value > 65
+				}
+			}
+
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = FROM
+					value > 35
+				}
+			}
+
+			modifier = {
+				factor = 0.5
+				has_opinion = {
+					target = FROM
+					value > 5
+				}
+			}
+
+			modifier = {
+				factor = 2.0
+				has_opinion = {
+					target = FROM
+					value < 35
+				}
+			}
+
+			modifier = {
+				factor = 2.0
+				has_opinion = {
+					target = FROM
+					value < 65
+				}
+			}
+
+			modifier = {
+				factor = 0.1
+				has_war = yes
+				FROM = {
+					has_war = no
+				}
+			}
+
+			modifier = {
+				factor = 0.1
+				FROM = {
+					is_major = yes
+				}
+			}
+		}
+		FROM = {
+			country_event = { id = generic.7 hours = 6 }
+		}
+	}
+
+}

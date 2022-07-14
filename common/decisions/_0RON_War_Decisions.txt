@@ -1,4 +1,71 @@
 RON_Wars_Early = {
+	rebuid_railways = {
+		state_target = yes
+		
+		target_trigger = {
+			FROM = {
+				OR = {
+					has_dynamic_modifier = {
+						modifier = OTT_modifier_disjointed_railways
+					}
+
+					has_dynamic_modifier = {
+						modifier = OTT_modifier_disjointed_railways2
+					}
+				}
+			}
+		}
+		visible = {
+			FROM = {
+				is_owned_by = ROOT
+			}
+			ROOT = {
+				NOT = {
+					tag = OTT
+				}
+			}
+		}
+		
+		remove_effect = {
+			if = {
+				limit = {
+					FROM = {
+						has_dynamic_modifier = {
+							modifier = OTT_modifier_disjointed_railways
+						}
+					}
+				}
+				FROM = {
+					remove_dynamic_modifier = {
+						modifier = OTT_modifier_disjointed_railways
+					}
+				}
+			}
+			if = {
+				limit = {
+					FROM = {
+						has_dynamic_modifier = {
+							modifier = OTT_modifier_disjointed_railways2
+						}
+					}
+				}
+				FROM = {
+					remove_dynamic_modifier = {
+						modifier = OTT_modifier_disjointed_railways2
+					}
+				}
+			}
+		}
+		days_remove = 15
+		cost = 10
+		ai_will_do = {
+			base = 50
+			modifier = {
+				factor = 10
+				has_political_power > 200
+			}
+		}
+	}
 	WW1_zurich_conference_peace = {
 		allowed  ={
 			tag = ITA
@@ -1383,68 +1450,68 @@ RON_Wars_Early = {
 			}
 		}
 	}
-	ITA_OTT_Invasion = {
-		fire_only_once = yes
-		days_remove = 7
-		war_with_on_remove = OTT
-		allowed = {
-			original_tag = ITA
-		}
-		available = {
-			original_tag = ITA
-			country_exists = OTT
-			NOT = {
-				is_in_faction_with = OTT
-			}
-			NOT = {
-				has_war_with = OTT
-			}
-			date > 1911.9.29
-			date < 1912.9.29
-		}
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				#Not worth the risk if Ottoman Army Is Large
-				OTT = {
-					has_army_size = {
-						size > 80
-					}
-				}
-				factor = 0
-			}
-			modifier = {
-				#Not worth the risk if Italy's Army Is Small
-				ITA = {
-					has_army_size = {
-						size < 40
-					}
-				}
-				factor = 0
-			}
-			modifier = {
-				factor = 0
-				#Not worth the risk if Italy is already at War with a Great Power
-				any_country = {
-					is_major = yes
-					has_war_with = ITA
-				}
-			}
-			modifier = {
-				#Not worth the risk if Italy is losing a war
-				ITA = {
-					surrender_progress > 0.05
-				}
-				factor = 0
-			}
-		}
-		complete_effect = {
-			add_threat = 2
-		}
-		remove_effect = {
-			country_event = WW1_Expansion_country.48
-		}
-	}
+	# ITA_OTT_Invasion = {
+	# 	fire_only_once = yes
+	# 	days_remove = 7
+	# 	war_with_on_remove = OTT
+	# 	allowed = {
+	# 		original_tag = ITA
+	# 	}
+	# 	available = {
+	# 		original_tag = ITA
+	# 		country_exists = OTT
+	# 		NOT = {
+	# 			is_in_faction_with = OTT
+	# 		}
+	# 		NOT = {
+	# 			has_war_with = OTT
+	# 		}
+	# 		date > 1911.9.29
+	# 		date < 1912.9.29
+	# 	}
+	# 	ai_will_do = {
+	# 		factor = 1000
+	# 		modifier = {
+	# 			#Not worth the risk if Ottoman Army Is Large
+	# 			OTT = {
+	# 				has_army_size = {
+	# 					size > 80
+	# 				}
+	# 			}
+	# 			factor = 0
+	# 		}
+	# 		modifier = {
+	# 			#Not worth the risk if Italy's Army Is Small
+	# 			ITA = {
+	# 				has_army_size = {
+	# 					size < 40
+	# 				}
+	# 			}
+	# 			factor = 0
+	# 		}
+	# 		modifier = {
+	# 			factor = 0
+	# 			#Not worth the risk if Italy is already at War with a Great Power
+	# 			any_country = {
+	# 				is_major = yes
+	# 				has_war_with = ITA
+	# 			}
+	# 		}
+	# 		modifier = {
+	# 			#Not worth the risk if Italy is losing a war
+	# 			ITA = {
+	# 				surrender_progress > 0.05
+	# 			}
+	# 			factor = 0
+	# 		}
+	# 	}
+	# 	complete_effect = {
+	# 		add_threat = 2
+	# 	}
+	# 	remove_effect = {
+	# 		country_event = ww1_italy.1
+	# 	}
+	# }
 }
 
 RON_Wars_WW2 = {
@@ -2853,6 +2920,726 @@ GER_sudetenland_decision_ai_only = {
 				country_event = {
 					id = RON_American_Alt_History.67
 					hours = 6
+				}
+			}
+		}
+	}
+	#Second Russian Civil War
+	SRCW_Crush_UKR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = UKR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = UKR
+			NOT = {
+				is_in_faction_with = UKR
+			}
+			NOT = {
+				has_war_with = UKR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = UKR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = UKR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_BLR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = BLR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = BLR
+			NOT = {
+				is_in_faction_with = BLR
+			}
+			NOT = {
+				has_war_with = BLR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = BLR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = BLR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_GEO = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = GEO
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = GEO
+			NOT = {
+				is_in_faction_with = GEO
+			}
+			NOT = {
+				has_war_with = GEO
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = GEO
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = GEO
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_ARM = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = ARM
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = ARM
+			NOT = {
+				is_in_faction_with = ARM
+			}
+			NOT = {
+				has_war_with = ARM
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = ARM
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = ARM
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_AZR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = AZR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = AZR
+			NOT = {
+				is_in_faction_with = AZR
+			}
+			NOT = {
+				has_war_with = AZR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = AZR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = AZR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_UZB = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = UZB
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = UZB
+			NOT = {
+				is_in_faction_with = UZB
+			}
+			NOT = {
+				has_war_with = UZB
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = UZB
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = UZB
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_TAJ = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = TAJ
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = TAJ
+			NOT = {
+				is_in_faction_with = TAJ
+			}
+			NOT = {
+				has_war_with = TAJ
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = TAJ
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = TAJ
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_KYR = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = KYR
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = KYR
+			NOT = {
+				is_in_faction_with = KYR
+			}
+			NOT = {
+				has_war_with = KYR
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = KYR
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = KYR
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_TMS = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = TMS
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = TMS
+			NOT = {
+				is_in_faction_with = TMS
+			}
+			NOT = {
+				has_war_with = TMS
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = TMS
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = TMS
+					type = annex_everything
+				}
+			}
+		}
+	}
+	
+	SRCW_Crush_KAZ = {
+		cost = 50
+		fire_only_once = yes
+		days_remove = 5
+		war_with_on_remove = KAZ
+		visible = {
+			has_global_flag = RON_Second_Russian_Civil_War
+			NOT = { has_global_flag = RON_Second_Russian_Civil_War_Over }
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		available = {
+			original_tag = SOV
+			country_exists = KAZ
+			NOT = {
+				is_in_faction_with = KAZ
+			}
+			NOT = {
+				has_war_with = KAZ
+			}
+			date > 1933.1.1
+			date < 1949.1.1
+		}
+		ai_will_do = {
+			factor = 1000
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
+			}
+			modifier = {
+				#Need a land link
+				NOT = {
+					is_neighbor_of = KAZ
+				}
+				factor = 0
+			}
+			modifier = {
+				#Is Fighting Civil War
+				has_civil_war = yes
+				factor = 0
+			}
+			modifier = {
+				#Is Democratic
+				has_government = democratic
+				factor = 0
+			}
+		}
+		complete_effect = {
+			add_threat = 1
+		}
+		remove_effect = {
+			hidden_effect = {
+				create_wargoal = {
+					target = KAZ
+					type = annex_everything
 				}
 			}
 		}

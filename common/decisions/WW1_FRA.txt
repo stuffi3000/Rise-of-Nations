@@ -1,4 +1,54 @@
 FRA_cutoms_tariffs = {
+    custom_war_timer = {
+        activation = {
+            has_completed_focus = FRA1_revise_general_customs_tariff
+        }
+        allowed = {
+            tag = FRA
+        }
+        days_mission_timeout = 100
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        timeout_effect = {
+            if = {
+                limit = {
+                    check_variable = {
+                        global.fra_customs_value > global.ger_customs_value
+                    }
+                }
+                FRA = {
+                    add_political_power = global.fra_customs_value
+                }
+            }
+            if = {
+                limit = {
+                    check_variable = {
+                        global.fra_customs_value < global.ger_customs_value
+                    }
+                }
+                GER = {
+                    add_political_power = global.ger_customs_value
+                }
+            }
+            if = {
+                limit = {
+                    check_variable = {
+                        global.fra_customs_value = global.ger_customs_value
+                    }
+                }
+                FRA = {
+                    add_political_power = global.fra_customs_value
+                }
+                GER = {
+                    add_political_power = global.fra_customs_value
+                }
+            }
+            set_global_flag = customs_war_over
+        }
+    }
    increase_taxes_on_german_products = {
         visible = {
             NOT = {
@@ -7,6 +57,31 @@ FRA_cutoms_tariffs = {
                     original_tag = GER
                     has_idea = FRA_FRA_customs_war
                     has_idea = FRA_GER_customs_war
+                    has_global_flag = customs_war_over
+                }
+            }
+        }
+        ai_will_do ={
+            base = 0
+            modifier = {
+                add = 1000
+                ROOT = {
+                    OR = {
+                        tag = ROM
+                        tag = RUE
+                    }
+                }
+                is_historical_focus_on = yes
+            }
+            modifier = {
+                add = 1000
+                is_historical_focus_on = no
+            }
+            modifier = {
+                add = 1000
+                OR = {
+                    is_in_faction_with = FRA
+                    is_subject_of = FRA
                 }
             }
         }
@@ -42,6 +117,31 @@ FRA_cutoms_tariffs = {
                     original_tag = GER
                     has_idea = FRA_FRA_customs_war
                     has_idea = FRA_GER_customs_war
+                    has_global_flag = customs_war_over
+                }
+            }
+        }
+        ai_will_do ={
+            base = 0
+            modifier = {
+                add = 1000
+                ROOT = {
+                    OR = {
+                        tag = AUH
+                        tag = GER
+                    }
+                }
+                is_historical_focus_on = yes
+            }
+            modifier = {
+                add = 1000
+                is_historical_focus_on = no
+            }
+            modifier = {
+                add = 1000
+                OR = {
+                    is_in_faction_with = GER
+                    is_subject_of = GER
                 }
             }
         }
@@ -170,6 +270,7 @@ FRA_organise_strikes_cat = {
             }
         }
         days_remove = 15
+	cost = 15
         ai_will_do = {
             base = 100
             modifier = {
