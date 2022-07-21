@@ -13,14 +13,139 @@ focus_tree = {
 
 	focus = {
 		id = MEX_WW1_prepare_1910_elections
-		x = 1
+		x = 15
 		y = 1
-
+		cost = 1
+		allow_branch = {
+			date < 1919.1.1
+			date > 1909.12.31
+		}
 		completion_reward = {
 			add_political_power = 50
 		}
 
 	}
+
+	focus = {
+		id = MEX_WW1_path_of_democracy
+		relative_position_id = MEX_WW1_prepare_1910_elections
+		x = 1
+		y = 1
+		cost = 9
+		
+		prerequisite = {
+			focus = MEX_WW1_prepare_1910_elections
+		}
+		mutually_exclusive = {
+			focus = MEX_WW1_pressure_aristocracy
+		}
+		completion_reward = {
+			unlock_decision_tooltip = MEX_campaign_in_FROM
+			480 = {
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+			482 = {
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+		}
+	}
+	focus = {
+		id = MEX_WW1_anti_reelection_party
+		relative_position_id = MEX_WW1_path_of_democracy
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = MEX_WW1_path_of_democracy
+		}
+		completion_reward = {
+			add_popularity = {
+                ideology = democratic
+                popularity = 0.1
+            }
+		}
+	}
+	focus = {
+		id = MEX_WW1_pressure_aristocracy
+		relative_position_id = MEX_WW1_prepare_1910_elections
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = MEX_WW1_prepare_1910_elections
+		}
+		mutually_exclusive = { 
+			focus = MEX_WW1_path_of_democracy
+		}
+		cost = 9
+		completion_reward = {
+			unlock_decision_tooltip = MEX_pressure_aristocracy_in_FROM
+		}
+	}
+	focus = {
+		id = MEX_WW1_prepare_election_rigging
+		relative_position_id = MEX_WW1_pressure_aristocracy
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = MEX_WW1_pressure_aristocracy
+		}
+		completion_reward = {
+			hidden_effect = {
+				if = {
+					limit = {
+						any_owned_state = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+					}
+					country_event = ww1_mexico.4
+				}
+			}
+			if = {
+				limit = {
+					capital_scope = {
+						check_variable = {
+							revolution_alignment = 5
+						}
+					}
+				}
+				capital_scope = {
+					set_temp_variable = { faction = 6 }
+                	MEX_change_state_aligment = yes
+				}
+				else = {
+					random_owned_state = {
+						limit = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+						set_temp_variable = { faction = 6 }
+                		MEX_change_state_aligment = yes
+					}
+				}
+			}
+		}
+		cost = 10
+	}
+	focus = {
+		id = WW1_MEX_election_day
+		relative_position_id = MEX_WW1_prepare_election_rigging
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = MEX_WW1_prepare_election_rigging
+			focus = MEX_WW1_anti_reelection_party
+		}
+		completion_reward = {
+			country_event = ww1_mexico.3
+		}
+	}
+
 
 
 
