@@ -5,7 +5,25 @@
 # ZAP = 4 
 # VIL = 3 
 MEX_revolution_cat = {
-    
+   
+    MEX_put_madero_in_house_arrest = {
+        cost = 50
+        fire_only_once = yes
+        allowed = {
+            tag = MEX
+        }
+        ai_will_do = {
+            base = 100
+           
+        }
+        visible = {
+            has_completed_focus = MEX_WW1_prepare_election_rigging
+        }
+        days_remove = 5
+        remove_effect = {
+            set_country_flag = madero_arrested
+        }
+    }
     MEX_WW1_anti_reelection_party_AI = {
         is_good = no
         activation = {
@@ -51,6 +69,65 @@ MEX_revolution_cat = {
                 MEX_change_state_aligment = yes
 			}
             set_country_flag = MEX_WW1_path_of_democracy_AI_done
+        }
+    }
+    MEX_WW1_pressure_aristocracy_AI = {
+        is_good = no
+        available = {
+            hidden_trigger = {   
+                always = no
+            }
+        }
+        fire_only_once = yes
+        activation = {
+            has_completed_focus = MEX_WW1_path_of_democracy
+        }
+        days_mission_timeout = 1
+        timeout_effect = {
+            effect_tooltip = {
+                unlock_decision_tooltip = MEX_pressure_aristocracy_in_FROM
+            }
+            set_country_flag = pressure_aristocracy_ai_done
+        }
+    }
+    MEX_WW1_prepare_election_rigging_AI = {
+        is_good = no
+        activation = {
+            has_country_flag = pressure_aristocracy_ai_done
+        }
+        fire_only_once = yes
+        days_mission_timeout = 70
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        timeout_effect = {
+            set_country_flag = madero_arrested
+            if = {
+				limit = {
+					capital_scope = {
+						check_variable = {
+							revolution_alignment = 5
+						}
+					}
+				}
+				capital_scope = {
+					set_temp_variable = { faction = 6 }
+                	MEX_change_state_aligment = yes
+				}
+				else = {
+					random_owned_state = {
+						limit = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+						set_temp_variable = { faction = 6 }
+                		MEX_change_state_aligment = yes
+					}
+				}
+			}
         }
     }
     MEX_campaign_in_FROM = {
@@ -108,6 +185,9 @@ MEX_revolution_cat = {
     }
     MEX_pressure_aristocracy_in_FROM = {
         state_target = yes
+        ai_will_do = {
+            base = 100
+        }
         target_trigger = {
             FROM = {
                 is_owned_by = MEX
@@ -151,6 +231,9 @@ MEX_revolution_cat = {
             date > 1909.1.1
             tag = MEX
             NOT = {
+                has_country_flag = madero_arrested
+            }
+            NOT = {
                 ruling_party = democracy
             }
             has_completed_focus = MEX_WW1_prepare_1910_elections
@@ -189,7 +272,7 @@ MEX_revolution_cat = {
         }
     }
 
-     MEX_porfirist_pressure = {
+    MEX_porfirist_pressure = {
         activation = {
             date > 1909.1.1
             tag = MEX
