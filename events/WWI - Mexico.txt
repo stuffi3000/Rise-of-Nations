@@ -137,9 +137,16 @@ country_event = {
   						uncomplete_children = yes
   						refund_political_power = no
 					}
+					uncomplete_national_focus = {
+  						focus = WW1_MEX_organise_escape
+  						uncomplete_children = yes
+  						refund_political_power = no
+					}
+
 					unlock_national_focus = MEX_WW1_pressure_aristocracy
 					unlock_national_focus = MEX_WW1_prepare_election_rigging
 					unlock_national_focus = WW1_MEX_election_day
+					mark_focus_tree_layout_dirty = yes
 				}
 			}
 		}
@@ -251,53 +258,50 @@ country_event = {
 
 	fire_only_once = yes
 
-	trigger = {
-		NOT = { date > 1932.12.1 }
-		NOT = { has_global_flag = maderista_victory }
-		tag = MEX
-		always = no
-		surrender_progress > 0.10
-		has_start_date > 1909.01.01
-		has_start_date < 1911.01.01
-	}
+	#trigger = {
+	#	NOT = { date > 1932.12.1 }
+	#	NOT = { has_global_flag = maderista_victory }
+	#	tag = MEX
+	#	always = no
+	#	surrender_progress > 0.10
+	#	has_start_date > 1909.01.01
+	#	has_start_date < 1911.01.01
+	#}
 
-	mean_time_to_happen = {
-		days = 1
-	}
+	is_triggered_only = yes
 
 	option = {
 		name = ww1_mexico.7.a
 		news_event = { hours = 6 id = endsieg_news.203 }
 		set_global_flag = maderista_victory
-		MEX = {
-			annex_country = { target = MDR transfer_troops = no }
-			change_tag_from = MDR
+		MDR = {
+			annex_country = { target = MEX transfer_troops = no }
 			country_event = { id = ww1_mexico.9 days = 15 }
 		}
-		MEX = {
-			remove_ideas = unpopular_dictatorship_1
-			set_politics = {
-				ruling_party = democratic
-				elections_allowed = yes
-			}
+		#MEX = {
+		#	remove_ideas = unpopular_dictatorship_1
+		#	set_politics = {
+		#		ruling_party = democratic
+		#		elections_allowed = yes
+		#	}
 
-			set_popularities = {
-				neutrality = 10
-				democratic = 80
-				communism = 10
-			}
-			retire_country_leader = yes
-			create_country_leader = {
-				name = "Francisco Madero"
-				desc = "POLITICS_FRANCISCO_MDRERO_DESC"
-				picture = "Portrait_mexico.Francisco_Madero.dds"
-				expire = "1943.5.16"
-				ideology = liberalism
-				traits = {
-					man_of_the_people1
-				}
-			}
-		}
+		#	set_popularities = {
+		#		neutrality = 10
+		#		democratic = 80
+		#		communism = 10
+		#	}
+		#	retire_country_leader = yes
+		#	create_country_leader = {
+		#		name = "Francisco Madero"
+		#		desc = "POLITICS_FRANCISCO_MDRERO_DESC"
+		#		picture = "Portrait_mexico.Francisco_Madero.dds"
+		#		expire = "1943.5.16"
+		#		ideology = liberalism
+		#		traits = {
+		#			man_of_the_people1
+		#		}
+		#	}
+		#}
 	}
 }
 
@@ -679,6 +683,66 @@ country_event = {
 				picture = "WW1/Portrait_mexico.Venustiano_Carranza.dds"
 				expire = "1943.5.16"
 				ideology = liberalism
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ww1_mexico.21
+	title = ww1_mexico.21.t
+	desc = ww1_mexico.21.d
+
+	is_triggered_only = yes
+
+
+	option = {
+		ai_chance = {
+			factor = 10
+
+		}
+		name = ww1_mexico.21.a
+		MDR = {
+			country_event = ww1_mexico.7
+		}
+		every_state = {
+			limit = {
+				check_variable = {
+					revolution_alignment = 6
+				}
+
+			}
+			set_temp_variable = { faction = 5 }
+            MEX_change_state_aligment = yes
+		}
+	}
+
+	option = {
+		name = ww1_mexico.21.b
+		ai_chance = {
+			factor = 10
+			modifier ={
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		MEX = {
+			declare_war_on = {
+				target = MDR
+				type = civil_war
+			}
+			add_civil_war_target = MDR
+		}
+		if = {
+			limit = {
+				country_exists = ZAP
+			}
+			MEX = {
+				declare_war_on = {
+					target = ZAP
+					type = civil_war
+				}
+				add_civil_war_target = ZAP
 			}
 		}
 	}
