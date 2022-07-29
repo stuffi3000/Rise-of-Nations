@@ -14781,6 +14781,30 @@ focus_tree = {
 		ai_will_do = {
 			factor = 100
 		}
+		bypass = {
+				OR = {
+					RAJ = { is_in_faction_with = ROOT }
+					NOT = { country_exists = RAJ }
+					has_war_with = RAJ
+				}
+		}
+		will_lead_to_war_with = RAJ
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = { JAP = { has_war_with = RAJ } }
+				}
+			JAP = { country_event = { id = RON_Russian_Alt_History.212 hours = 6 } }
+			}
+			create_wargoal = {
+				type = annex_everything
+				target = RAJ
+			}
+			hidden_effect = {
+				every_state = { limit = { is_core_of = PAK NOT = { is_core_of = BAN } } add_claim_by = SOV }
+				every_state = { limit = { is_core_of = IND } add_claim_by = SOV }
+			}
+		}
 	}
 
 	#Focus for Demand The Return of Alaska
@@ -14795,9 +14819,12 @@ focus_tree = {
 		bypass = {
 			controls_state = 463
 		}
-		prerequisite = { focus = SOVAH_befriend_japan }
+		prerequisite = { focus = SOVAH_befriend_japan focus = SOVAH_befriend_america }
 		ai_will_do = {
 			factor = 100
+		}
+		completion_reward = {
+			USA = { country_event = { id = RON_Russian_Alt_History.293 hours = 6 } }
 		}
 	}
 
@@ -14844,13 +14871,12 @@ focus_tree = {
 			controls_state = 745
 			controls_state = 537
 		}
-		prerequisite = { focus = SOVAH_befriend_america }
+		prerequisite = { focus = SOVAH_befriend_japan focus = SOVAH_befriend_america }
 		ai_will_do = {
 			factor = 100
 		}
 		completion_reward = {
-			745 = { add_claim_by = SOV }
-			537 = { add_claim_by = SOV }
+			JAP = { country_event = { id = RON_Russian_Alt_History.393 hours = 6 } }
 		}
 	}
 
@@ -14941,6 +14967,7 @@ focus_tree = {
 		id = SOVAH_partition_china_with_japan
 		icon = GFX_focus_attack_china
 		relative_position_id = SOVAH_rally_under_denikins_cause
+		mutually_exclusive = { focus = SOVAH_partition_japan_with_america }
 		x = 57
 		y = 6
 		cost = 5
@@ -14955,8 +14982,27 @@ focus_tree = {
 			}
 		}
 		prerequisite = { focus = SOVAH_demand_the_return_of_alaska }
+		prerequisite = { focus = SOVAH_claim_our_lands_lost_in_1905 }
 		ai_will_do = {
 			factor = 100
+		}
+		will_lead_to_war_with = CHI
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = { JAP = { has_war_with = CHI } }
+				}
+			JAP = { country_event = { id = RON_Russian_Alt_History.213 hours = 6 } }
+			}
+			create_wargoal = {
+				type = annex_everything
+				target = CHI
+			}
+			hidden_effect = {
+				every_state = { limit = { is_core_of = SIK } add_claim_by = SOV }
+				every_state = { limit = { is_core_of = MON } add_claim_by = SOV }
+				every_state = { limit = { is_core_of = TAN } add_claim_by = SOV }
+			}
 		}
 	}
 
@@ -14968,6 +15014,7 @@ focus_tree = {
 		x = 59
 		y = 6
 		cost = 5
+		mutually_exclusive = { focus = SOVAH_partition_china_with_japan }
 		available = {
 			NOT = { has_war_with = USA }
 		}
@@ -14978,9 +15025,35 @@ focus_tree = {
 				NOT = { country_exists = JAP }
 			}
 		}
+		prerequisite = { focus = SOVAH_demand_the_return_of_alaska }
 		prerequisite = { focus = SOVAH_claim_our_lands_lost_in_1905 }
 		ai_will_do = {
 			factor = 100
+		}
+		will_lead_to_war_with = JAP
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = { USA = { has_war_with = JAP } }
+				}
+			USA = { country_event = { id = RON_Russian_Alt_History.214 hours = 6 } }
+			}
+			create_wargoal = {
+				type = annex_everything
+				target = JAP
+			}
+			hidden_effect = {
+				every_state = { limit = { is_core_of = MAN } add_claim_by = SOV }
+				every_state = { limit = { is_core_of = MEN } add_claim_by = SOV }
+				every_state = { limit = { is_core_of = KOR } add_claim_by = SOV }
+				#Northern Japan
+				537 = { add_claim_by = SOV }
+				555 = { add_claim_by = SOV }
+				536 = { add_claim_by = SOV }
+				#Japanese China
+				609 = { add_claim_by = SOV }
+				745 = { add_claim_by = SOV }
+			}
 		}
 	}
 
@@ -14993,6 +15066,22 @@ focus_tree = {
 		y = 7
 		cost = 5
 		available_if_capitulated = yes
+		available = {
+			AND = {
+				OR = {
+					has_completed_focus = SOVAH_partition_poland_with_germany
+					has_completed_focus = SOVAH_annex_poland
+				}
+				OR = {
+					has_completed_focus = SOVAH_partition_india_with_japan
+					has_completed_focus = SOVAH_spark_an_uprising_in_india
+				}
+				OR = {
+					has_completed_focus = SOVAH_partition_china_with_japan
+					has_completed_focus = SOVAH_partition_japan_with_america
+				}
+			}
+		}
 		prerequisite = { 
 			focus = SOVAH_annex_poland 
 			focus = SOVAH_partition_poland_with_germany 
@@ -15661,12 +15750,28 @@ focus_tree = {
 		y = 18
 		cost = 5
 		available_if_capitulated = yes
+		
 		prerequisite = { 
 			focus = SOVAH_annex_spain 
+		}
+		
+		prerequisite = { 
 			focus = SOVAH_annex_portugal 
+		}
+		
+		prerequisite = { 
 			focus = SOVAH_the_bulgarian_question 
+		}
+		
+		prerequisite = { 
 			focus = SOVAH_the_romanian_question 
+		}
+		
+		prerequisite = { 
 			focus = SOVAH_demand_french_mediterranean_colonies 
+		}
+		
+		prerequisite = { 
 			focus = SOVAH_demand_british_mediterranean_colonies 
 		}
 		ai_will_do = {
