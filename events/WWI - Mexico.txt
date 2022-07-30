@@ -382,9 +382,83 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
+		#rebelion fails
+		trigger = {
+			482 = {
+				NOT = {
+					check_variable = { revolution_alignment = 4 }
+				}
+			}
+		}
 		name = ww1_mexico.10.a
 		add_political_power = -50
 		#set_stability = -0.05
+	}
+	option = {
+
+		#Historical revolt
+		trigger = {
+			ZAP = {
+				NOT = {
+					has_country_leader = {
+						name = "Pascual Orozco"
+						ruling_only = yes
+					}
+				}
+			}
+			482 = {
+				check_variable = {
+					revolution_alignment = 4
+				}
+			}
+		}
+		name = ww1_mexico.10.b
+		add_political_power = -100
+		if = {
+			limit = {
+				is_historical_focus_on = yes
+			}
+			create_dynamic_country = {
+				original_tag = MEX
+				transfer_state = 482
+				set_cosmetic_tag = MEX_Miners_revolt
+					declare_war_on = {
+					target = MDR
+					type = civil_war
+				}
+				load_focus_tree = empty
+				add_civil_war_target = MDR
+			}
+		}
+		if = {
+			limit = {
+
+			}
+		}
+	}
+
+	option = {
+		trigger = {
+			ZAP = {
+				
+				has_country_leader = {
+					name = "Pascual Orozco"
+					ruling_only = yes
+				}
+				
+			}
+			482 = {
+				check_variable = {
+					revolution_alignment = 4
+				}
+			}
+		}
+		name = ww1_mexico.10.b
+		add_political_power = -100
+
+		482 = {
+			transfer_state_to = ZAP
+		}
 	}
 }
 
@@ -514,9 +588,9 @@ country_event = {
 	option = {
 		name = ww1_mexico.15.b
 		set_global_flag = angry_lapata
-		MEX = {
-			country_event = { id = ww1_mexico.16 days = 20 }
-		}
+		#MEX = {
+		#	country_event = { id = ww1_mexico.16 days = 20 }
+		#}
 		#set_stability = -0.025
 	}
 }
@@ -532,10 +606,16 @@ country_event = {
 
 	option = {
 		name = ww1_mexico.16.a
-		ZAP = {
-			transfer_state = 485
-			load_oob = Zapatistas_1911
-			add_state_core = 485
+		every_state = {
+			limit = {
+				check_variable = {
+					revolution_alignment = 4
+				}
+
+			}
+			ZAP = {
+				transfer_state = PREV
+			}
 		}
 		MEX = {
 			declare_war_on = { target = ZAP type = civil_war }
@@ -826,4 +906,54 @@ country_event = {
 		# okay
 	}
 
+}
+# Border war zapata win
+country_event = {
+	id = ww1_mexico.25
+	desc = ww1_mexico.25.d
+	title = ww1_mexico.25.t
+	is_triggered_only = yes
+	immediate = {
+		hidden_effect = {
+			if = {	
+				limit = {
+					event_target:defender_state = 277
+				}
+				MDR = {
+					declare_war_on = {
+						target = ZAP
+						type = civil_war
+					}
+					add_civil_war_target = ZAP
+				}
+			}
+			event_target:defender_state = {
+				transfer_state_to = ZAP
+			}
+			
+		}
+	}
+	option = {
+		effect_tooltip = {
+			event_target:defender_state = {
+				transfer_state_to = ZAP
+			}
+		}
+	}
+}
+
+country_event = {
+	id = ww1_mexico.26
+	desc = ww1_mexico.26.d
+	title = ww1_mexico.26.t
+
+	is_triggered_only = yes
+
+	option = {
+		# Madero stays chief of the revolution
+	}
+	option = {
+		# Orozco takes the lead
+	}
+	
 }

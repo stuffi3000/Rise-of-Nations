@@ -5,7 +5,60 @@
 # ZAP = 4 
 # VIL = 3 
 MEX_revolution_cat = {
-   
+    ZAP_initiate_border_clash_with_MDR = {
+        cost = 20
+        allowed = {
+            tag = ZAP
+        }
+        state_target = yes
+        target_trigger = {
+            FROM = {
+                is_controlled_by = MDR	
+                any_neighbor_state = { is_controlled_by = ZAP }    
+            }
+
+        }
+        complete_effect = {
+            random_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					
+					any_neighbor_state = {
+						state = FROM
+					}
+				}
+				
+				set_variable = { FROM.attacker_state = id }
+			    set_temp_variable = { FROM.attacker_state_temp = id }
+				
+			}
+        }
+        days_remove = 5
+        remove_effect = {
+            start_border_war = {
+                change_state_after_war = yes
+                attacker = {
+                    state = var:FROM.attacker_state
+                    num_provinces = 4
+                    on_win = ww1_mexico.25
+                }
+				
+                defender = {
+                    state = FROM
+                    num_provinces = 4
+        
+                }
+            }
+            FROM = {
+                save_global_event_target_as = defender_state
+            }
+            FROM.attacker_state = {
+                save_global_event_target_as = attacker_state
+            }
+            clear_variable = FROM.attacker_state
+        }
+    }
+    
     MEX_put_madero_in_house_arrest = {
         cost = 50
         fire_only_once = yes
