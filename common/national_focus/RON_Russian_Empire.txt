@@ -2096,8 +2096,180 @@ focus_tree = {
 			add_war_support = -0.1
 			add_stability = 0.01
 		}
-    }	
+    }
 
+
+	#DEMILITARIZATION SUBBRANCH
+	focus = {
+		id = RUE_new_demilitarize
+		icon = GFX_focus_generic_industry_3
+		x = 54
+		y = 4
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_lose_japwar
+			focus = RUE_win_japwar
+		}
+
+		completion_reward = {  
+			#move down economy law by 1 level
+			if = {
+				limit = {
+					has_idea = tot_economic_mobilisation 
+				}
+				swap_ideas = {
+					remove_idea = tot_economic_mobilisation 
+					add_idea = war_economy
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = war_economy
+				}
+				swap_ideas = {
+					remove_idea = war_economy
+					add_idea = partial_economic_mobilisation 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = partial_economic_mobilisation 
+				}
+				swap_ideas = {
+					remove_idea = partial_economic_mobilisation 
+					add_idea = low_economic_mobilisation 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = low_economic_mobilisation 
+				}
+				swap_ideas = {
+					remove_idea = low_economic_mobilisation 
+					add_idea = civilian_economy
+				}
+			}
+			add_war_support = -0.05
+			add_stability = 0.1
+		}
+    }
+	focus = {
+		id = RUE_new_sell_equipment
+		icon = GER_DNC_fiscal_reforms
+		x = 54
+		y = 5
+		cost = 10
+
+		available = { 
+			NOT = { has_war_with = FRA }
+		}
+
+		prerequisite = {
+			focus = RUE_new_demilitarize
+		}
+
+		completion_reward = {  
+			send_equipment = {
+				equipment = infantry_equipment
+				amount = 5000
+				target = FRA
+			}
+			send_equipment = {
+				equipment = artillery_equipment
+				amount = 100
+				target = FRA
+			}
+			send_equipment = {
+				equipment = support_equipment
+				amount = 500
+				target = FRA
+			}
+			add_ideas = RUE_arms_sales		
+		}
+    }
+	focus = {
+		id = RUE_new_convert_mils
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 54
+		y = 6
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_sell_equipment
+		}
+
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					arms_factory > 2
+				}
+				remove_building = {
+					type = arms_factory
+					level = 2
+				}	
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_state = {
+				limit = {
+					arms_factory > 2
+				}
+				remove_building = {
+					type = arms_factory
+					level = 2
+				}	
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}	
+		}
+    }
+	focus = {
+		id = RUE_new_small_army
+		icon = army_officers
+		x = 54
+		y = 7
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_convert_mils
+		}
+
+		completion_reward = {
+			add_ideas = RUE_small_army
+		}
+    }
+	focus = {
+		id = RUE_new_convert_mil_schools
+		icon = GFX_focus_generic_military_academy
+		x = 54
+		y = 8
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_small_army
+		}
+
+		completion_reward = {
+			add_research_slot = 1
+			army_experience = -50
+			navy_experience = -50
+		}
+    }
 	##########################
 	#BEGIN DNC MILITARY BRANCH
 	##########################
