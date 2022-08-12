@@ -2062,6 +2062,7 @@ focus_tree = {
 			NOT = { has_war_with = JAP }
 			has_country_flag = DNC_Russia.jap.won
 		}
+		mutually_exclusive = { focus = RUE_lose_japwar }
 
 		prerequisite = {
 			focus = RUE_send_navy
@@ -2085,21 +2086,495 @@ focus_tree = {
 			NOT = { has_war_with = JAP }
 			has_country_flag = DNC_Russia.jap.lost
 		}
-
+		mutually_exclusive = { focus = RUE_win_japwar }
 		prerequisite = {
 			focus = RUE_send_navy
 			focus = RUE_new_def_muk
 			focus = RUE_new_def_art
 		}
 
-		completion_reward = {  
+		completion_reward = {
 			add_war_support = -0.1
 			add_stability = 0.01
 		}
     }
+	#LOSING MILITARIZATION SUBBRANCH
+	focus = {
+		id = RUE_new_lose_militarize
+		icon = GFX_goal_extensive_conscription
+		x = 57
+		y = 4
+		cost = 10
 
+		available = { }
+		mutually_exclusive = { focus = RUE_new_demilitarize }
+		prerequisite = {
+			focus = RUE_lose_japwar
+		}
+
+		completion_reward = {  
+			add_war_support = 0.1
+			add_stability = -0.05
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_equipment
+		icon = small_arms
+		x = 56
+		y = 5
+		cost = 10
+
+		available = { 
+			NOT = { has_war_with = FRA }
+		}
+
+		prerequisite = {
+			focus = RUE_new_lose_militarize
+		}
+
+		completion_reward = {  
+			FRA = {
+				send_equipment = {
+					equipment = infantry_equipment
+					amount = 2000
+					target = RUE
+				}
+				send_equipment = {
+					equipment = artillery_equipment
+					amount = 200
+					target = RUE
+				}
+				send_equipment = {
+					equipment = support_equipment
+					amount = 200
+					target = RUE
+				}
+			}
+			#move up trade deficit spirit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2 
+					add_idea = RUE_trade_deficit_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1
+					add_idea = RUE_trade_deficit_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_0 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_0 
+					add_idea = RUE_trade_deficit_1 
+				}
+			}
+			else = {
+				add_ideas = RUE_trade_deficit_0	
+			}
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_advisors
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 56
+		y = 6
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_foreign_equipment
+		}
+
+		completion_reward = {
+			#decrease army penalty
+			if = {
+				limit = {
+					has_idea = RUE_shat_army 
+				}
+				swap_ideas = {
+					remove_idea = RUE_shat_army 
+					add_idea = RUE_shat_army_1
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_shat_army_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_shat_army_1
+					add_idea = RUE_shat_army_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_shat_army_2 
+				}
+				swap_ideas = {
+					remove_idea = RUE_shat_army_2 
+					add_idea = RUE_shat_army_3 
+				}
+			}
+			else = {
+				remove_ideas = RUE_shat_army_3	
+			}
+			add_stability = -0.05
+			army_experience = 50
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_tools
+		icon = GFX_goal_generic_production
+		x = 56
+		y = 7
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_foreign_advisors
+		}
+
+		completion_reward = {  
+			#move up trade deficit spirit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2 
+					add_idea = RUE_trade_deficit_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1
+					add_idea = RUE_trade_deficit_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_0 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_0 
+					add_idea = RUE_trade_deficit_1 
+				}
+			}
+			else = {
+				add_ideas = RUE_trade_deficit_0	
+			}
+			add_ideas = RUE_foreign_tools
+		}
+    }
+	focus = {
+		id = RUE_new_improve_mil_schools
+		icon = GFX_focus_generic_military_academy
+		x = 56
+		y = 8
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_foreign_tools
+		}
+
+		completion_reward = {  
+			unlock_decision_category_tooltip = RUE_recover
+		}
+    }
+	focus = {
+		id = RUE_new_naval_rebuild
+		icon = GFX_goal_generic_build_navy
+		x = 58
+		y = 5
+		cost = 10
+
+		available = { 
+			any_owned_state = {
+				is_coastal = yes
+			}
+		}
+
+		prerequisite = {
+			focus = RUE_new_lose_militarize
+		}
+
+		completion_reward = {  
+			navy_experience = 50
+			add_political_power = 50
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_advisors_navy
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 58
+		y = 6
+		cost = 10
+
+		available = { 
+			any_owned_state = {
+				is_coastal = yes
+			}
+		}
+
+		prerequisite = {
+			focus = RUE_new_naval_rebuild
+		}
+
+		completion_reward = {  
+			navy_experience = 50
+			stability_factor = -0.05
+			#decrease naval penalty
+			if = {
+				limit = {
+					has_idea = RUE_shat_navy 
+				}
+				swap_ideas = {
+					remove_idea = RUE_shat_navy
+					add_idea = RUE_shat_navy_1
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_shat_navy_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_shat_navy_1
+					add_idea = RUE_shat_navy_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_shat_navy_2
+				}
+				remove_ideas = RUE_shat_navy_2	
+			}
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_license_navy
+		icon = GFX_goal_generic_scientific_exchange
+		x = 58
+		y = 7
+		cost = 10
+
+		available = { 
+			any_owned_state = {
+				is_coastal = yes
+			}
+		}
+
+		prerequisite = {
+			focus = RUE_new_foreign_advisors_navy
+		}
+
+		completion_reward = {  
+			add_tech_bonus = {
+				bonus = 1
+				uses = 3
+				category = naval_equipment
+			}
+			#increase deficit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2 
+					add_idea = RUE_trade_deficit_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1
+					add_idea = RUE_trade_deficit_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_0 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_0 
+					add_idea = RUE_trade_deficit_1 
+				}
+			}
+			else = {
+				add_ideas = RUE_trade_deficit_0	
+			}
+		}
+    }
+	focus = {
+		id = RUE_new_foreign_shipbuilding
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 58
+		y = 8
+		cost = 10
+
+		available = { 
+			any_owned_state = {
+				is_coastal = yes
+			}
+		}
+
+		prerequisite = {
+			focus = RUE_new_foreign_license_navy
+		}
+
+		completion_reward = {  
+			add_offsite_building = { type = dockyard level = 3 }
+			#increase deficit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2 
+					add_idea = RUE_trade_deficit_3
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1
+					add_idea = RUE_trade_deficit_2 
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_0 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_0 
+					add_idea = RUE_trade_deficit_1 
+				}
+			}
+			else = {
+				add_ideas = RUE_trade_deficit_0	
+			}
+		}
+    }
+	focus = {
+		id = RUE_new_export_resources
+		icon = GFX_goal_generic_construction2
+		x = 58
+		y = 9
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_foreign_shipbuilding
+			focus = RUE_new_improve_mil_schools
+		}
+
+		completion_reward = {
+			add_ideas = RUE_excessive_exports_resources
+			#decrease deficit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_3 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_3 
+					add_idea = RUE_trade_deficit_2
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2
+					add_idea = RUE_trade_deficit_1
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1 
+					add_idea = RUE_trade_deficit_0
+				}
+			}
+			else = {
+				remove_ideas = RUE_trade_deficit_0	
+			}
+		}
+    }
+	focus = {
+		id = RUE_new_export_grain
+		icon = GFX_goal_generic_forceful_treaty
+		x = 56
+		y = 9
+		cost = 10
+
+		available = { }
+
+		prerequisite = {
+			focus = RUE_new_foreign_shipbuilding
+			focus = RUE_new_improve_mil_schools
+		}
+
+		completion_reward = {
+			add_ideas = RUE_excessive_exports_grain
+			#decrease deficit
+			if = {
+				limit = {
+					has_idea = RUE_trade_deficit_3 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_3 
+					add_idea = RUE_trade_deficit_2
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_2
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_2
+					add_idea = RUE_trade_deficit_1
+				}
+			}
+			else_if = {
+				limit = {
+					has_idea = RUE_trade_deficit_1 
+				}
+				swap_ideas = {
+					remove_idea = RUE_trade_deficit_1 
+					add_idea = RUE_trade_deficit_0
+				}
+			}
+			else = {
+				remove_ideas = RUE_trade_deficit_0	
+			}
+		}
+    }	
 
 	#DEMILITARIZATION SUBBRANCH
+
 	focus = {
 		id = RUE_new_demilitarize
 		icon = GFX_focus_generic_industry_3
@@ -2108,7 +2583,7 @@ focus_tree = {
 		cost = 10
 
 		available = { }
-
+		mutually_exclusive = { focus = RUE_new_lose_militarize }
 		prerequisite = {
 			focus = RUE_lose_japwar
 			focus = RUE_win_japwar
@@ -2158,7 +2633,7 @@ focus_tree = {
     }
 	focus = {
 		id = RUE_new_sell_equipment
-		icon = GER_DNC_fiscal_reforms
+		icon = GFX_focus_usa_reestablish_the_gold_standard
 		x = 54
 		y = 5
 		cost = 10
@@ -2258,7 +2733,10 @@ focus_tree = {
 		y = 8
 		cost = 10
 
-		available = { }
+		available = {
+			has_army_experience > 50
+			has_navy_experience > 50
+		 }
 
 		prerequisite = {
 			focus = RUE_new_small_army
