@@ -674,6 +674,7 @@ NDefines_Graphics = {
             1.0, 0.0, 0.86, 1.0, -- 7: pink
             0.0, 0.33, 0.05, 1.0, -- 8: dark green
             1.0, 1.0, 1.0, 1.0, -- 9: white
+            0.5, 0.5, 0.5, 1.0, -- 10: gray
         },
         BORDER_COLOR_TUTORIAL_HIGHLIGHT_R = 0.0,
         BORDER_COLOR_TUTORIAL_HIGHLIGHT_G = 0.61,

@@ -1,0 +1,631 @@
+add_namespace = cw_axis_victory
+add_namespace = cw_axis_victory_news
+
+# Hitler's Birthday
+country_event = {
+	id = cw_axis_victory.1
+	title = cw_axis_victory.1.t
+	desc = cw_axis_victory.1.d
+	picture = GFX_event_hitler_60_yo
+	fire_only_once = yes
+
+	trigger = {
+		tag = GER
+		has_government = fascism
+		has_global_flag = RON_Axis_Victory
+		date > 1949.4.19
+		date < 1949.5.19
+	}
+
+	option = {
+		add_political_power = 25
+		name = cw_axis_victory.1.a
+	}
+}
+
+#Damascus Conference about Syria
+country_event = {
+	id = cw_axis_victory.2
+	title = cw_axis_victory.2.t
+	desc = cw_axis_victory.2.d
+	picture = GFX_report_event_turkey_propaganda
+	trigger = {
+		OR = {
+			tag = ITA
+			
+		}
+		has_global_flag = RON_Axis_Victory
+		date > 1949.5.1
+		date < 1949.6.1
+	}
+
+	fire_only_once = yes
+
+	option = {
+		# Ask for Syria
+		name = cw_axis_victory.2.a
+		TUR = {
+			country_event = cw_axis_victory.4
+		}
+	}
+
+	option = {
+
+		#Give Syria to the other party (turkey)
+		
+		name = cw_axis_victory.2.b
+		
+		TUR = {
+			country_event = cw_axis_victory.3
+		}
+		
+	}
+}
+
+
+#Damascus conference, we got the proposal to assume power over syria
+country_event = {
+	id = cw_axis_victory.3
+	title = cw_axis_victory.3.t
+	desc = cw_axis_victory.3.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = cw_axis_victory.3.a
+		puppet = SYR
+	}
+
+}
+
+# They want Syria!
+country_event = {
+	id = cw_axis_victory.4
+	title = cw_axis_victory.4.t
+	desc = cw_axis_victory.4.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = cw_axis_victory.4.a
+		ITA = {
+			country_event = cw_axis_victory.6
+		}
+	}
+
+	option = {
+		name = cw_axis_victory.4.b
+		ITA = {
+			country_event = cw_axis_victory.5
+		}
+	}
+}
+
+#Damascus conference back down
+country_event = {
+	id = cw_axis_victory.5
+	title = cw_axis_victory.5.t
+	desc = cw_axis_victory.5.d
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		name = cw_axis_victory.5.a
+		puppet = SYR
+	}
+}
+
+# Damascus Conference escalation
+country_event = {
+	id = cw_axis_victory.6
+	title = cw_axis_victory.6.t
+	desc = cw_axis_victory.6.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	option = {
+		name = cw_axis_victory.6.a
+
+		ITA = {
+			set_country_flag = damascus_escalation
+			declare_war_on = {
+				target = SYR
+				type = puppet_wargoal_focus
+			}
+			declare_war_on = {
+				target = TUR
+				type = puppet_wargoal_focus
+			}
+
+			ITR = {
+				transfer_state = 159
+				transfer_state = 987
+			}
+
+			transfer_units_fraction = {
+				target = ITR
+				size = 0.15
+			}
+
+			declare_war_on = {
+				target = ITR
+				type = civil_war
+			}
+			add_civil_war_target = ITR
+		}
+		TUR = {
+			set_country_flag = damascus_escalation
+			declare_war_on = {
+				target = SYR
+				type = annex_everything
+			}
+		}
+
+	}
+}
+
+# Damascus Conference escalation, Turkish defeat
+
+country_event = {
+	id = cw_axis_victory.7
+	title = cw_axis_victory.7.t
+	desc = cw_axis_victory.7.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = cw_axis_victory.7.a
+		every_country = {
+			limit = {
+				has_war_with = TUR
+				is_in_faction_with = ITA
+			}
+			white_peace = TUR
+		}
+
+		ITA = {
+			puppet = SYR
+		}
+	}
+
+	option = {
+		name = cw_axis_victory.7.b
+		every_country = {
+			limit = {
+				has_war_with = TUR
+				is_in_faction_with = ITA
+			}
+			white_peace = TUR
+		}
+
+		TUR = {
+			set_popularities = {
+				democratic = 0
+				neutrality = 45
+				fascism = 55
+				communism = 0
+			}
+			set_politics = {
+				ruling_party = fascism
+    			elections_allowed = no
+   
+			}
+			release = SYR
+		}
+
+		ITA = {
+			release = SYR
+			puppet = SYR
+		}
+	}
+
+	option = {
+
+		name = cw_axis_victory.7.c
+
+		add_political_power = 25
+	}
+}
+
+# Damascus conference escalation, Italian stalemate
+country_event = {
+	id = cw_axis_victory.8
+	desc = cw_axis_victory.8.d
+	title = cw_axis_victory.8.t
+
+	is_triggered_only = yes
+
+	option = {
+		name = cw_axis_victory.8.a
+		every_country = {
+			limit = {
+				has_war_with = TUR
+				is_in_faction_with = ITA
+			}
+			white_peace = TUR
+		}
+		ITA = {
+			release = SYR
+		}
+		TUR = {
+			release = SYR
+			puppet = SYR
+		}
+
+	}
+}
+
+#Japan returns to civilian rule
+country_event = {
+	id = cw_axis_victory.9
+	title = cw_axis_victory.9.t
+	desc = cw_axis_victory.9.d
+
+	trigger = {
+		has_global_flag = RON_Axis_Victory
+		tag = JAP
+		date > 1949.6.1
+		date < 1949.7.1
+		JAP = {
+			has_war_with = CHI
+				
+			is_subject = no
+		}
+	}
+
+	fire_only_once = yes
+
+	option = {
+		name = cw_axis_victory.9.a
+	}
+
+}
+# Japanese stock market reopens
+country_event = {
+	id = cw_axis_victory.10
+	desc = cw_axis_victory.10.d
+	title = cw_axis_victory.10.t
+
+	fire_only_once = yes
+	trigger = {
+		has_global_flag = RON_Axis_Victory
+		tag = JAP
+		date > 1949.7.1
+		date < 1949.8.1
+		JAP = {
+			has_war_with = CHI
+			is_subject = no
+		}
+	}
+
+	option = {
+		name = cw_axis_victory.10.a
+
+		add_political_power = 100
+	}
+}
+
+
+#German Student protests
+country_event = {
+	id = cw_axis_victory.11
+	title = cw_axis_victory.11.t
+	desc = cw_axis_victory.11.d
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = GER
+		date > 1949.7.1
+		date < 1949.8.1
+		has_global_flag = RON_Axis_Victory
+	}
+
+	option = {
+		name = cw_axis_victory.11.a
+
+		add_stability = -0.1
+		add_war_support = -0.15
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+	}
+
+	
+
+}
+
+#Triumph Arch is built
+country_event = {
+	id = cw_axis_victory.12
+	desc = cw_axis_victory.12.d
+	title = cw_axis_victory.12.t
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = GER
+		has_global_flag = RON_Axis_Victory
+
+		date > 1949.8.1
+		date < 1949.9.1
+
+	}
+	option = {
+		name = cw_axis_victory.12.a
+		add_war_support = 0.05
+		add_political_power = 50
+	}
+}
+
+#American cities bombed by fascists
+country_event = {
+	id = cw_axis_victory.13
+	title = cw_axis_victory.13.t
+	desc = cw_axis_victory.13.d
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = USA
+		date > 1949.9.1
+		date < 1949.10.1
+		has_global_flag = RON_Axis_Victory
+	}
+
+	option = {
+
+		name = cw_axis_victory.13.a
+		add_stability = -0.1
+		add_manpower = -589
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.05
+		}
+	}
+
+	option = {
+		name = cw_axis_victory.13.b
+		add_stability = -0.1
+		add_manpower = -589
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+	}
+}
+
+# Tokyo Market Boom
+country_event = {
+	id = cw_axis_victory.14
+	title = cw_axis_victory.14.t
+	desc = cw_axis_victory.14.d
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = JAP
+		has_global_flag = RON_Axis_Victory
+
+		JAP = {
+			is_subject = no
+
+		}
+
+		date > 1949.9.1
+		date < 1949.10.1
+	}
+
+	option = {
+		name = cw_axis_victory.14.a
+		add_stability = 0.1
+	}
+}
+
+#Algerian Uprising
+country_event = {
+	id = cw_axis_victory.15
+	title = cw_axis_victory.15.t
+	desc = cw_axis_victory.15.d
+
+	trigger = {
+		date > 1949.6.1
+		date < 1949.7.1
+		tag = VIF
+		has_global_flag = RON_Axis_Victory
+
+	}
+
+	fire_only_once = yes
+
+	option = {
+		name = cw_axis_victory.15.a
+		ALG = {
+			transfer_state = 513
+			load_oob = "generic_1949"
+		}
+		513 = {
+			create_unit = {
+    			division = "name = \"Infantry Brigade\" division_template = \"Infantry Brigade\" start_experience_factor = 0.5"
+   				owner = ALG
+			}
+			create_unit = {
+    			division = "name = \"Infantry Brigade\" division_template = \"Infantry Brigade\" start_experience_factor = 0.5"
+   				owner = ALG
+			}
+			create_unit = {
+    			division = "name = \"Infantry Brigade\" division_template = \"Infantry Brigade\" start_experience_factor = 0.5"
+   				owner = ALG
+			}
+			create_unit = {
+    			division = "name = \"Infantry Brigade\" division_template = \"Infantry Brigade\" start_experience_factor = 0.5"
+   				owner = ALG
+			}
+		}
+
+		ALG = {
+			declare_war_on = {
+				target = VIF
+				type = take_core_state
+			}
+		}
+	}
+}
+
+#Israeli independence
+country_event = {
+	id = cw_axis_victory.16
+	title = cw_axis_victory.16.t
+	desc = cw_axis_victory.16.d
+
+	fire_only_once = yes
+
+	trigger = {
+		has_global_flag = RON_Axis_Victory
+		date > 1949.9.1
+		date < 1949.10.1
+		tag = SYR.OVERLORD
+	}
+
+	option = {
+		ISR = {
+			transfer_state = 454
+			transfer_state = 1121
+			load_oob = "ISR_1949"
+			
+		}
+		SYR = {
+			declare_war_on = {
+				target = ISR
+				type = take_core_state
+			}
+		}
+	}
+
+}
+
+# Axis meeting
+country_event = {
+	id = cw_axis_victory.17
+	title = cw_axis_victory.17.t
+	desc = cw_axis_victory.17.d
+
+	trigger = {
+		OR = {
+			tag = ITA
+			tag = GER
+		}
+		date > 1949.10.1
+		date < 1949.11.1
+		has_global_flag = RON_Axis_Victory
+	}
+
+	option = {
+		name = cw_axis_victory.17.a
+		trigger = {
+			tag = ITA
+		}
+		# Let Moustache Man go
+	}
+
+	option = {
+		name = cw_axis_victory.17.b
+		trigger = {
+			tag = GER
+		}
+		#Let mussolini rot
+	}
+
+	option = {
+		name = cw_axis_victory.17.c
+
+		#Maintain collaboration
+	}
+}
+
+# Iberian Unification Campaign
+
+country_event = {
+	id = cw_axis_victory.18
+	desc = cw_axis_victory.18.d
+	title = cw_axis_victory.18.t
+
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = {
+		name = cw_axis_victory.18.a
+		add_war_support = 0.05
+	}
+}
+
+#England Election Gridlock
+country_event = {
+	id = cw_axis_victory.19
+	desc = cw_axis_victory.19.d
+	title = cw_axis_victory.19.t
+
+	trigger = {
+		tag = ENG
+		has_global_flag = RON_Axis_Victory
+		date > 1949.11.1
+		date < 1949.12.1
+	}
+
+	option = {
+		name = cw_axis_victory.19.a
+
+	}
+}
+
+# Turkish-German Conference on Armenia
+
+country_event = {
+	id = cw_axis_victory.20
+	title = cw_axis_victory.20.t
+	desc = cw_axis_victory.20.d
+
+	fire_only_once = yes
+	trigger = {
+		tag = TUR
+		date < 1949.8.1
+		date > 1949.7.1
+		has_global_flag = RON_Axis_Victory
+	}
+
+	option = {
+		name = cw_axis_victory.20.a
+
+
+	}
+
+	option = {
+		name = cw_axis_victory.20.b
+		GER = {
+			country_event = {
+				id = cw_axis_victory.21
+				days = 10
+			}
+		}
+
+	}
+}
+
+
+#Germany's answer
+country_event = {
+	id = cw_axis_victory.21
+	title = cw_axis_victory.21.t
+	desc = cw_axis_victory.21.d
+
+	is_triggered_only = yes
+
+	option ={
+		name = cw_axis_victory.21.a
+
+	}
+}
+
+
