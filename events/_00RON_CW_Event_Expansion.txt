@@ -4744,7 +4744,7 @@ news_event = {
 	}
 }
 
-# Crisis of 1946
+# Iran Gets Released by Soviets
 country_event = {
 	id = CW_Expansion_country.88
 	title = CW_Expansion_country.88.t
@@ -4753,12 +4753,17 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = PER
 		date > 1946.1.22
 		date < 1947.1.1
-		NOT = { has_global_flag = RON_Axis_Victory }
-		NOT = { has_government = communism }
-		is_historical_focus_on = yes
+		
+		OR = {
+			tag = PER
+			AND = {
+				tag = SOV
+				NOT = { country_exists = PER } 
+				owns_state = 1086
+			}
+		}
 	}
 
 	option = {
@@ -4767,19 +4772,45 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
+		PER = { drop_cosmetic_tag = yes }
 		
+		ENG = {
+			release = PER
+			end_puppet = PER
+		}
 		SOV = {
 			release = PER
 			end_puppet = PER
 		}
-
-		start_civil_war = {
-				ruling_party = ROOT
-				ideology = communism
-				size = 0.3
-				#capital = 1
-				#states = { 1 }
+		PER = {
+			every_state = {
+				limit = {
+					is_core_of = PER
+					OR = { 
+						is_owned_by = ENG 
+						is_owned_by = SOV 
+					}
+				}
+				PER = {
+					transfer_state = PREV
+				}
 			}
+		}
+		
+		if = {
+		limit = {
+			NOT = { has_global_flag = RON_Axis_Victory }
+		}
+		PER = {
+			start_civil_war = {
+					ruling_party = ROOT
+					ideology = communism
+					size = 0.3
+					capital = 419
+					states = { 419 420 1086 }
+				}
+			}
+		}
 
 		news_event = {
 			id = CW_Expansion_news.88
