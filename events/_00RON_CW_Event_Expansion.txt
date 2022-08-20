@@ -4772,6 +4772,8 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
+		
+		
 		if = {
 			limit = {
 				NOT = { country_exists = PER } 
@@ -4808,6 +4810,7 @@ country_event = {
 			}
 			PER = {
 				load_oob = "PER_1940"
+				set_country_flag = RON_Iranian_Civil_War
 				clr_global_flag = PER_Needs_Army
 			}
 		}
@@ -4818,7 +4821,7 @@ country_event = {
 		}
 		PER = {
 			start_civil_war = {
-					ruling_party = ROOT
+					ruling_party = neutrality
 					ideology = communism
 					size = 0.3
 					capital = 419
@@ -5959,6 +5962,111 @@ news_event = {
 	}
 }
 
+# Greek Communist Civil War
+country_event = {
+	id = CW_Expansion_country.104
+	title = CW_Expansion_country.104.t
+	desc = CW_Expansion_country.104.d
+	picture = GFX_report_event_CW_Expansion_country104
+	fire_only_once = yes
+
+	trigger = {
+		tag = GRE
+		date > 1946.3.30
+		date < 1947.1.1
+		has_civil_war = no
+		NOT = { has_war_with = GRC }
+		NOT = { has_government = communism }
+		NOT = { has_global_flag = RON_Axis_Victory }
+	}
+
+	option = {
+		name = "Crush Communism"
+
+		ai_chance = {
+			factor = 40
+		}
+		
+		trigger = { 
+			NOT = { has_government = communism }
+		}
+
+		GRC = { 
+		transfer_state = 731
+		transfer_state = 976
+		load_oob = "GRC_1949"
+		declare_war_on = {
+			target = GRE
+			type = civil_war
+			}
+		}
+
+		news_event = {
+			id = CW_Expansion_news.104
+			hours = 6
+		}
+	}
+	option = {
+		name = "Support The Communists"
+		
+		trigger = { 
+			is_subject = no
+		}
+		
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				factor = 50
+				has_government = communism
+			}
+		}
+		
+		if = {
+			limit = {
+				NOT = {
+					has_government = communism
+				}
+			}
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = 0.5
+			}
+		}
+		
+		create_country_leader = {
+			name = "Nikos Zachariadis"
+			picture = "gfx/leaders/GRC/CW/Communist_Greece_Nikos_Zachariadis.dds"
+			ideology = stalinism
+		}
+		
+		
+	}
+}
+
+# Purchase of Greenland
+news_event = {
+	id = CW_Expansion_news.104
+	title = CW_Expansion_news.104.t
+	desc = CW_Expansion_news.104.d
+	picture = GFX_news_event_CW_Expansion_news104
+
+	major = yes
+
+	is_triggered_only = yes
+
+	option = {
+		name = CW_Expansion_news.104.a
+	}
+}
+
 
 # Purchase of Greenland
 country_event = {
@@ -6027,9 +6135,10 @@ country_event = {
 
 	trigger = {
 		tag = PER
-		date > 1946.12.15
+		date > 1946.1.22
 		date < 1947.1.1
 		has_civil_war = no
+		has_country_flag = RON_Iranian_Civil_War
 	}
 
 	option = {
