@@ -9852,7 +9852,7 @@ news_event = {
 
 	trigger = {
 		tag = DPK
-		has_war_with = KOR
+		has_war_with = ROK
 		date > 1950.1.1
 		date < 1951.1.1
 	}
@@ -9971,7 +9971,7 @@ country_event = {
 		tag = USA
 		date > 1950.6.27
 		date < 1952.1.1
-		KOR = { has_war_with = DPK }
+		ROK = { has_war_with = DPK }
 		NOT = { has_government = communism }
 	}
 
@@ -9979,11 +9979,26 @@ country_event = {
 		name = "Declare War on North Korea"
 
 		ai_chance = {
-			factor = 10
+			factor = 80
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
 				threat < 0.50
+			}
+			modifier = {
+				factor = 0
+				#Not worth the risk if We are already at War with a major
+				any_country = {
+					is_major = yes
+					has_war_with = ROOT
+				}
+			}
+			modifier = {
+				#Not worth the risk if we are losing the war
+				ROOT = {
+					surrender_progress > 0.05
+				}
+				factor = 0
 			}
 		}
 		
@@ -10005,12 +10020,26 @@ country_event = {
 		name = "Military Aid Will Suffice"
 
 		ai_chance = {
-			factor = 10
+			factor = 20
+		}
+		
+		#Symbolizes US Manpower Sent To Korea
+		add_manpower = -326863
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = -50000
 		}
 		
 		add_war_support = 0.05
 		add_stability = -0.05
 		add_political_power = 50
+		
+		ROK = {
+			country_event = {
+				id = ron_diplomatic.204
+				hours = 6
+			}
+		}
 
 		news_event = {
 			id = CW_Expansion_news.188
@@ -10022,7 +10051,11 @@ country_event = {
 		name = "Better Not Get Involved"
 
 		ai_chance = {
-			factor = 0
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
 		}
 		
 		add_war_support = -0.10
