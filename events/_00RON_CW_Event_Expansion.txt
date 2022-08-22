@@ -5590,14 +5590,14 @@ country_event = {
 		random_list = {
 			50 = {
 				start_civil_war = {
-					ruling_party = ROOT
+					ruling_party = democratic
 					ideology = neutrality
 					size = 0.5
 				}
 				random_other_country = {
 					limit = {
 						original_tag = GRE
-						has_government = communism
+						has_government = neutrality
 					}
 					create_country_leader = {
 						name = "Paul I"
@@ -7264,10 +7264,12 @@ news_event = {
 		tag = IND
 		tag = RAJ
 		}
-		date > 1947.10.20
-		date < 1948.6.1
+		date > 1947.1.1
+		date < 1949.1.1
 		has_war_with = PAK
 	}
+	
+	fire_only_once = yes
 
 	option = {
 		name = CW_Expansion_news.126.a
@@ -7700,11 +7702,13 @@ news_event = {
 	picture = GFX_news_event_CW_Expansion_news138
 
 	major = yes
+	
+	fire_only_once = yes
 
 	trigger = {
 		tag = ISR
-		date > 1948.15.15
-		date < 1949.1.1
+		date > 1948.1.1
+		date < 1950.1.1
 		has_war_with = PAL
 	}
 
@@ -9105,7 +9109,7 @@ news_event = {
 	}
 }
 
-# 
+# Cinderella Movie Released
 country_event = {
 	id = CW_Expansion_country.176
 	title = CW_Expansion_country.176.t
@@ -9115,7 +9119,7 @@ country_event = {
 
 	trigger = {
 		tag = USA
-		date > 1950.1.1
+		date > 1950.2.15
 		date < 1951.1.1
 	}
 
@@ -9135,7 +9139,7 @@ country_event = {
 	}
 }
 
-# 
+# Cinderella Movie Released
 news_event = {
 	id = CW_Expansion_news.176
 	title = CW_Expansion_news.176.t
@@ -9151,7 +9155,7 @@ news_event = {
 	}
 }
 
-# 
+# Polish Expulsion of Ethnic Germans
 country_event = {
 	id = CW_Expansion_country.177
 	title = CW_Expansion_country.177.t
@@ -9160,28 +9164,79 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = POL
+		date > 1950.3.3
 		date < 1951.1.1
+		NOT = { has_global_flag = RON_Axis_Victory }
+		NOT = { is_subject_of = GER }
 	}
 
 	option = {
 		name = CW_Expansion_country.177.a
 
 		ai_chance = {
-			factor = 10
+			factor = 100
+		}
+		
+		POL = {
+			every_state = {
+				limit = {
+					is_owned_by = POL
+					is_core_of = GER
+				}
+				POL = {
+					add_state_core = PREV
+				}
+				remove_core_of = GER
+			}
 		}
 
-		add_stability = 0.05
+		add_manpower = -155495
+		
+		if = {
+			limit = {
+				country_exists = DDR
+			}
+			DDR = {
+				country_event = {
+					id = DNC_Diplomacy.203
+					hours = 6
+				}
+			}
+		
+		}
+		
+		if = {
+			limit = {
+				country_exists = GER
+				NOT = { country_exists = DDR }
+			}
+			GER = {
+				country_event = {
+					id = DNC_Diplomacy.203
+					hours = 6
+				}
+			}
+		
+		}
 
 		news_event = {
 			id = CW_Expansion_news.177
 			hours = 6
 		}
 	}
+	
+	option = {
+		name = "An Eye For An Eye Leaves The World Blind"
+
+		ai_chance = {
+			factor = 0
+		}
+		
+	}
 }
 
-# 
+# Polish Expulsion of Ethnic Germans
 news_event = {
 	id = CW_Expansion_news.177
 	title = CW_Expansion_news.177.t
@@ -9197,7 +9252,7 @@ news_event = {
 	}
 }
 
-# 
+# Belgian Monarchy Referendum
 country_event = {
 	id = CW_Expansion_country.178
 	title = CW_Expansion_country.178.t
@@ -9206,16 +9261,42 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = BEL
+		date > 1950.3.13
 		date < 1951.1.1
 	}
 
 	option = {
-		name = CW_Expansion_country.178.a
+		name = "Continue With The Monarchy"
 
 		ai_chance = {
 			factor = 10
+		}
+		
+		if = {
+			limit = {
+				NOT = {
+					has_government = neutrality
+				}
+			}
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
+			set_popularities = {
+				neutrality = 90
+				communism = 5
+				fascism = 5
+			}
+		}
+		
+		create_country_leader = {
+			name = "Leopold III"
+			picture = "gfx/leaders/BEL/Portrait_Belgium_Leopold_III.dds"
+			ideology = despotism
+			traits = {
+				stout_defender
+			}
 		}
 
 		add_stability = 0.05
@@ -9225,9 +9306,67 @@ country_event = {
 			hours = 6
 		}
 	}
-}
+	option = {
+		name = "We Will Not Allow This"
+		
+		trigger = {
+			is_subject = no
+		}
+		
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+			set_politics = {
+				ruling_party = democratic
+				elections_allowed = yes
+			}
+			set_popularities = {
+				democratic = 90
+				communism = 5
+				fascism = 5
+			}
+			
+			create_country_leader = {
+				name = "Paul-Henri Spaak"
+				picture = "gfx/leaders/BEL/CW/Belgium_Paul-Henri_Spaak.dds"
+				ideology = socialism
+			}
+			
+		random_list = {
+			50 = {
+				start_civil_war = {
+					ruling_party = democratic
+					ideology = neutrality
+					size = 0.5
+				}
+				random_other_country = {
+					limit = {
+						original_tag = BEL
+						has_government = neutrality
+					}
+					create_country_leader = {
+						name = "Leopold III"
+						picture = "gfx/leaders/BEL/Portrait_Belgium_Leopold_III.dds"
+						ideology = despotism
+						traits = {
+							stout_defender
+						}
+					}
+				}
+			}
+			50 = {
+			}
+			}
+			
+		}
+	}
 
-# 
+# Belgian Monarchy Referendum
 news_event = {
 	id = CW_Expansion_news.178
 	title = CW_Expansion_news.178.t
@@ -9243,7 +9382,7 @@ news_event = {
 	}
 }
 
-# 
+# Egypt Demands British Troop Withdrawan From Suez
 country_event = {
 	id = CW_Expansion_country.179
 	title = CW_Expansion_country.179.t
@@ -9252,20 +9391,57 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = ENG
+		date > 1950.3.22
 		date < 1951.1.1
+		country_exists = EGY
+		owns_state = 995
 	}
 
 	option = {
-		name = CW_Expansion_country.179.a
+		name = "Accept"
 
 		ai_chance = {
 			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
 		}
 
-		add_stability = 0.05
+		add_war_support = -0.10
+		add_political_power = 100
+		
+		EGY = {
+			transfer_state = 995
+			country_event = {
+				id = ron_diplomatic.126
+				hours = 6
+			}
+		}
 
+		news_event = {
+			id = CW_Expansion_news.179
+			hours = 6
+		}
+	}
+	option = {
+		name = "The Suez Is Rightfully British"
+		
+		ai_chance = {
+			factor = 10
+		}
+		
+		add_war_support = 0.10
+		add_political_power = -100
+		
+		EGY = {
+			country_event = {
+				id = ron_diplomatic.127
+				hours = 6
+			}
+		}
+		
 		news_event = {
 			id = CW_Expansion_news.179
 			hours = 6
@@ -9273,7 +9449,7 @@ country_event = {
 	}
 }
 
-# 
+# Egypt Demands British Troop Withdrawan From Suez
 news_event = {
 	id = CW_Expansion_news.179
 	title = CW_Expansion_news.179.t
@@ -9289,7 +9465,7 @@ news_event = {
 	}
 }
 
-# 
+# Jordan Formally Annexes West Bank
 country_event = {
 	id = CW_Expansion_country.180
 	title = CW_Expansion_country.180.t
@@ -9298,9 +9474,10 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = JOR
+		date > 1950.4.24
 		date < 1951.1.1
+		NOT = { owns_state = 1121 }
 	}
 
 	option = {
@@ -9310,16 +9487,53 @@ country_event = {
 			factor = 10
 		}
 
-		add_stability = 0.05
+		add_stability = -0.05
+		add_war_support = 0.05
+		add_political_power = 100
+		
+		any_country = {
+			limit = { owns_state = 1121 }
+			country_event = {
+				id = ron_diplomatic.204
+				hours = 6
+			}
+		}
+		
+		transfer_state = 1121
 
 		news_event = {
 			id = CW_Expansion_news.180
 			hours = 6
 		}
 	}
+	
+	option = {
+		name = "Better Not"
+		
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		
+		any_country = {
+			limit = { owns_state = 1121 }
+			country_event = {
+				id = ron_diplomatic.203
+				hours = 6
+			}
+		}
+		
+		add_stability = 0.05
+		add_war_support = -0.05
+		add_political_power = -100
+		
+	}
 }
 
-# 
+# Jordan Formally Annexes West Bank
 news_event = {
 	id = CW_Expansion_news.180
 	title = CW_Expansion_news.180.t
@@ -9335,7 +9549,7 @@ news_event = {
 	}
 }
 
-# 
+# Rama IX Crowned King of Thailand
 country_event = {
 	id = CW_Expansion_country.181
 	title = CW_Expansion_country.181.t
@@ -9344,9 +9558,13 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = SIA
+		date > 1950.5.5
 		date < 1951.1.1
+		has_country_leader = {
+			name = "Bhumibol Adulyadej"
+			ruling_only = yes
+		}
 	}
 
 	option = {
@@ -9356,7 +9574,7 @@ country_event = {
 			factor = 10
 		}
 
-		add_stability = 0.05
+		add_stability = 0.0
 
 		news_event = {
 			id = CW_Expansion_news.181
@@ -9365,7 +9583,7 @@ country_event = {
 	}
 }
 
-# 
+# Rama IX Crowned King of Thailand
 news_event = {
 	id = CW_Expansion_news.181
 	title = CW_Expansion_news.181.t
@@ -9381,7 +9599,7 @@ news_event = {
 	}
 }
 
-# 
+# First Formula 1 Race
 country_event = {
 	id = CW_Expansion_country.182
 	title = CW_Expansion_country.182.t
@@ -9390,8 +9608,8 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = ENG
+		date > 1950.5.13
 		date < 1951.1.1
 	}
 
@@ -9403,6 +9621,12 @@ country_event = {
 		}
 
 		add_stability = 0.05
+		
+		add_tech_bonus = {
+			bonus = 0.05
+			uses = 1
+			category = motorized_equipment
+		}
 
 		news_event = {
 			id = CW_Expansion_news.182
@@ -9411,7 +9635,7 @@ country_event = {
 	}
 }
 
-# 
+# First Formula 1 Race
 news_event = {
 	id = CW_Expansion_news.182
 	title = CW_Expansion_news.182.t
@@ -9427,7 +9651,7 @@ news_event = {
 	}
 }
 
-# 
+# Turkey Unbans Arabic Call To Prayer
 country_event = {
 	id = CW_Expansion_country.183
 	title = CW_Expansion_country.183.t
@@ -9436,8 +9660,8 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = TUR
+		date > 1950.6.6
 		date < 1951.1.1
 	}
 
@@ -9449,11 +9673,40 @@ country_event = {
 		}
 
 		add_stability = 0.05
+		
+		add_popularity = {
+			popularity = 0.05
+			ideology = islamism
+		}
 
 		news_event = {
 			id = CW_Expansion_news.183
 			hours = 6
 		}
+	}
+	option = {
+		name = "Keep It Banned"
+
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				NOT = { has_government = communism }
+			}
+			modifier = {
+				factor = 10
+				has_government = communism
+			}
+		}
+
+		add_stability = -0.05
+		
+		add_popularity = {
+			popularity = -0.05
+			ideology = islamism
+		}
+
 	}
 }
 
@@ -9473,7 +9726,7 @@ news_event = {
 	}
 }
 
-# 
+# Sir Thomas Blamey Promoted To Field Marshal
 country_event = {
 	id = CW_Expansion_country.184
 	title = CW_Expansion_country.184.t
@@ -9482,8 +9735,8 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = AST
+		date > 1950.7.8
 		date < 1951.1.1
 	}
 
@@ -9495,6 +9748,8 @@ country_event = {
 		}
 
 		add_stability = 0.05
+		add_political_power = 25
+		army_experience = 100
 
 		news_event = {
 			id = CW_Expansion_news.184
@@ -9503,7 +9758,7 @@ country_event = {
 	}
 }
 
-# 
+# Sir Thomas Blamey Promoted To Field Marshal
 news_event = {
 	id = CW_Expansion_news.184
 	title = CW_Expansion_news.184.t
@@ -9519,7 +9774,7 @@ news_event = {
 	}
 }
 
-# 
+# Maracana Stadium Opens In Rio De Janeiro
 country_event = {
 	id = CW_Expansion_country.185
 	title = CW_Expansion_country.185.t
@@ -9528,8 +9783,8 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = BRA
+		date > 1950.6.16
 		date < 1951.1.1
 	}
 
@@ -9549,7 +9804,7 @@ country_event = {
 	}
 }
 
-# 
+# Maracana Stadium Opens In Rio De Janeiro
 news_event = {
 	id = CW_Expansion_news.185
 	title = CW_Expansion_news.185.t
@@ -9565,7 +9820,7 @@ news_event = {
 	}
 }
 
-# 
+# Korean War Begins
 country_event = {
 	id = CW_Expansion_country.186
 	title = CW_Expansion_country.186.t
@@ -9573,29 +9828,18 @@ country_event = {
 	picture = GFX_report_event_CW_Expansion_country186
 	fire_only_once = yes
 
-	trigger = {
-		tag = USA
-		date > 1950.1.1
-		date < 1951.1.1
-	}
+	is_triggered_only = yes
 
 	option = {
-		name = CW_Expansion_country.186.a
+		name = "We Will Fight Them"
 
 		ai_chance = {
 			factor = 10
 		}
-
-		add_stability = 0.05
-
-		news_event = {
-			id = CW_Expansion_news.186
-			hours = 6
-		}
 	}
 }
 
-# 
+# Korean War Begins
 news_event = {
 	id = CW_Expansion_news.186
 	title = CW_Expansion_news.186.t
@@ -9603,15 +9847,22 @@ news_event = {
 	picture = GFX_news_event_CW_Expansion_news186
 
 	major = yes
+	
+	fire_only_once = yes
 
-	is_triggered_only = yes
+	trigger = {
+		tag = DPK
+		has_war_with = KOR
+		date > 1950.1.1
+		date < 1951.1.1
+	}
 
 	option = {
 		name = CW_Expansion_news.186.a
 	}
 }
 
-# 
+# Suppression of Communism Act
 country_event = {
 	id = CW_Expansion_country.187
 	title = CW_Expansion_country.187.t
@@ -9620,9 +9871,10 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = USA
-		date > 1950.1.1
+		tag = SAF
+		date > 1950.6.26
 		date < 1951.1.1
+		NOT = { has_government = communism }
 	}
 
 	option = {
@@ -9633,15 +9885,65 @@ country_event = {
 		}
 
 		add_stability = 0.05
+		
+		add_popularity = {
+			popularity = -0.30
+			ideology = communism
+		}
+		
+		every_country = {
+			limit = {
+				has_government = communism
+			}
+			country_event = {
+				id = ron_diplomatic.204
+				hours = 6
+			}
+		}
 
 		news_event = {
 			id = CW_Expansion_news.187
 			hours = 6
 		}
 	}
+	option = {
+		name = "Actually We Sympathize With Communism"
+
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				NOT = { has_government = communism }
+			}
+			modifier = {
+				factor = 10
+				communism > 0.29
+			}
+		}
+		
+		add_stability = -0.05
+
+		add_popularity = {
+			popularity = 0.30
+			ideology = communism
+		}
+		
+		every_country = {
+			limit = {
+				has_government = communism
+			}
+			country_event = {
+				id = ron_diplomatic.203
+				hours = 6
+			}
+		}
+		
+
+	}
 }
 
-# 
+# Suppression of Communism Act
 news_event = {
 	id = CW_Expansion_news.187
 	title = CW_Expansion_news.187.t
@@ -9657,7 +9959,7 @@ news_event = {
 	}
 }
 
-# 
+# Defense of South Korea
 country_event = {
 	id = CW_Expansion_country.188
 	title = CW_Expansion_country.188.t
@@ -9667,27 +9969,70 @@ country_event = {
 
 	trigger = {
 		tag = USA
-		date > 1950.1.1
-		date < 1951.1.1
+		date > 1950.6.27
+		date < 1952.1.1
+		KOR = { has_war_with = DPK }
+		NOT = { has_government = communism }
 	}
 
 	option = {
-		name = CW_Expansion_country.188.a
+		name = "Declare War on North Korea"
 
 		ai_chance = {
 			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				threat < 0.50
+			}
 		}
+		
+		add_war_support = 0.10
+		add_stability = -0.10
+		add_political_power = -100
 
-		add_stability = 0.05
+		declare_war_on = {
+			target = DPK
+			type = annex_everything
+		}
 
 		news_event = {
 			id = CW_Expansion_news.188
 			hours = 6
 		}
 	}
+	option = {
+		name = "Military Aid Will Suffice"
+
+		ai_chance = {
+			factor = 10
+		}
+		
+		add_war_support = 0.05
+		add_stability = -0.05
+		add_political_power = 50
+
+		news_event = {
+			id = CW_Expansion_news.188
+			hours = 6
+		}
+	}
+	
+	option = {
+		name = "Better Not Get Involved"
+
+		ai_chance = {
+			factor = 0
+		}
+		
+		add_war_support = -0.10
+		add_stability = 0.10
+		add_political_power = 100
+
+	}
 }
 
-# 
+# Defense of South Korea
 news_event = {
 	id = CW_Expansion_news.188
 	title = CW_Expansion_news.188.t
