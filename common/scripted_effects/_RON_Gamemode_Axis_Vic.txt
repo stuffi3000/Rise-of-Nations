@@ -18,34 +18,83 @@ set_global_flag = RON_Axis_Victory
 					end_puppet = GER
 				}
 				SOV = {
-					dismantle_faction = yes
-					GER = {
-						every_country = {
-							limit = {
-								is_subject_of = GER
-							}
-
-							every_state = {
-								limit = {
-									OR = {
-										is_owned_by = GER
-										is_owned_by = PREV
-									}
-								}
-								teleport_armies = {
-									limit = {
-										tag = SOV
-									}
-									to_state_array = owned_controlled_states
-								}
-							}
-						}
-						
+					release = KAZ
+					transfer_units_fraction = {
+						target = KAZ
+						size = 1.0
+						stockpile_ratio = 1.0
+						army_ratio = 1.0
+						navy_ratio = 1.0
+						air_ratio = 1.0
 					}
+					annex_country = {
+						target = KAZ
+						transfer_troops = no
+					}
+					#Chose the 1941 OOB for the USSR to represent the Red Army Being Shattered after the German-Soviet War
+					load_oob = "SOV_1941"
+					dismantle_faction = yes
+					kill_country_leader = yes
+					create_country_leader = {
+						name = "Lavrenty Beria"
+						picture = "gfx/leaders/SOV/CW/USSR_Lavrenty_Beria.dds"
+						expire = "1965.1.1"
+						ideology = stalinism
+					}
+					add_ideas = volunteer_only
+					add_ideas = closed_economy
+					add_ideas = isolation
+					add_ideas = SOV_sour_loser_ussr 
+
+					create_dynamic_country = {
+  						original_tag = SOV
+    					add_political_power = 100
+    					set_cosmetic_tag = SOV_WEST_URAL_GVT
+						set_politics = {
+							ruling_party = neutrality
+						}
+						set_popularities = {
+							neutrality = 50
+							communism = 50
+						}
+						reserve_dynamic_country = yes
+					}
+					create_dynamic_country = {
+  						original_tag = SOV
+    					add_political_power = 100
+    					set_cosmetic_tag = SOV_FASCIST_FRONT
+						set_politics = {
+							ruling_party = fascism
+						}
+						set_popularities = {
+							fascism = 55
+							communism = 45
+						}
+						reserve_dynamic_country = yes
+					}
+					create_dynamic_country = {
+  						original_tag = SOV
+    					add_political_power = 100
+    					set_cosmetic_tag = SOV_DEMOCRATIC_FRONT
+						set_politics = {
+							ruling_party = democratic
+						}
+						set_popularities = {
+							democratic = 100
+						}
+						reserve_dynamic_country = yes
+					}
+					set_cosmetic_tag = SOV_RED_ARMY
 				}
 
 				IRE = {
 					transfer_state = 119
+					transfer_state = 684
+					transfer_state = 638
+					transfer_state = 633
+					transfer_state = 726
+					transfer_state = 641
+
 				}
 				
 				CAN = {
@@ -87,6 +136,15 @@ set_global_flag = RON_Axis_Victory
 						target = VIE
 						type = civil_war
 					}
+					load_oob = "FRA_1942"
+					load_oob = "FRA_1940_naval_legacy"
+				}
+
+				every_state = {
+					limit = {
+						is_core_of = FRA
+					}
+					add_core_of = VIF
 				}
 				CHI = {
 					annex_country = {
@@ -100,6 +158,17 @@ set_global_flag = RON_Axis_Victory
 				}
 				IND = {
 					set_cosmetic_tag = FORM_Greater_India
+					set_politics = {
+						ruling_party = neutrality
+					}
+					add_popularity = {
+						ideology = neutrality
+						popularity = 0.75
+					}
+					add_popularity = {
+						ideology = fascism
+						popularity = 0.25
+					}
 					annex_country = {
 						target = RAJ
 						transfer_troops = yes
@@ -1145,7 +1214,8 @@ set_global_flag = RON_Axis_Victory
 					long_name = "NSDAP - Straserist Faction" 
 					name = "NSDAP/SF" 
 				}
-					load_oob = "GER_1945"
+					#I opted for the 1943 German Army, cause by then Germany is tired but not yet on its knees, and thats more accurate for a Nazi Victory than the 1945 Oob where the wehrmacht isn't even in fighting shape
+					load_oob = "GER_1943"
 					retire_ideology_leader = fascism
 					recruit_character = GER_adolf_hitler_win #fascism
 					GER_adolf_hitler_win = {
@@ -1420,6 +1490,10 @@ set_global_flag = RON_Axis_Victory
 					}
 					annex_country = {
 						target = SWI
+						transfer_troops = no
+					}
+					annex_country = {
+						target = LON
 						transfer_troops = no
 					}
 					annex_country = {
@@ -2099,6 +2173,30 @@ set_global_flag = RON_Axis_Victory
 				every_state = { limit = { is_owned_by = RKO NOT = { is_core_of = RKO } } add_core_of = RKO }
 				every_state = { limit = { is_owned_by = RKU NOT = { is_core_of = RKU } } add_core_of = RKU }
 				every_state = { limit = { is_owned_by = RKM NOT = { is_core_of = RKM } } add_core_of = RKM }
+
+				GER = {
+						every_country = {
+							limit = {
+								is_subject_of = GER
+							}
+
+							every_state = {
+								limit = {
+									OR = {
+										is_owned_by = GER
+										is_owned_by = PREV
+									}
+								}
+								teleport_armies = {
+									limit = {
+										tag = SOV
+									}
+									to_state_array = owned_controlled_states
+								}
+							}
+						}
+						
+					}
 	
 }
 
@@ -2743,10 +2841,6 @@ RON_handle_gamemode_axis_vic_jap = {
 			coordination_skill = 2
 		}
 		annex_country = {
-			target = MON
-			transfer_troops = no
-		}
-		annex_country = {
 			target = DPK
 			transfer_troops = no
 		}
@@ -2786,8 +2880,12 @@ RON_handle_gamemode_axis_vic_jap = {
 			target = CAM
 			transfer_troops = no
 		}
+		annex_country = {
+			target = MON
+			transfer_troops = no
+		}
+		release = MON
 		puppet = SIA
-		puppet = BRM
 		puppet = PHI
 		declare_war_on = {
 			target = CHI
@@ -2806,21 +2904,25 @@ RON_handle_gamemode_axis_vic_jap = {
 		JAP = { transfer_state = 555 }
 		JAP = { transfer_state = 537 }
 		JAP = { transfer_state = 655 }
+		
+		#Manchuria
+		MAN = { transfer_state = 408 }
+		MAN = { transfer_state = 409 }
+		MAN = { transfer_state = 657 }
+		MAN = { transfer_state = 561 }
+		MAN = { transfer_state = 970 }
+		MAN = { transfer_state = 560 }
+		MAN = { transfer_state = 1090 }
+		
 		#More Russia
-		JAP = { transfer_state = 408 }
-		JAP = { transfer_state = 409 }
-		JAP = { transfer_state = 560 }
-		JAP = { transfer_state = 657 }
-		JAP = { transfer_state = 1090 }
-		JAP = { transfer_state = 970 }
-		JAP = { transfer_state = 637 }
-		JAP = { transfer_state = 644 }
-		JAP = { transfer_state = 562 }
-		JAP = { transfer_state = 574 }
-		JAP = { transfer_state = 561 }
-		JAP = { transfer_state = 563 }
-		JAP = { transfer_state = 564 }
-		JAP = { transfer_state = 565 }
+		YAK = { transfer_state = 563 }
+		YAK = { transfer_state = 637 }
+		YAK = { transfer_state = 644 }
+		YAK = { transfer_state = 562 }
+		YAK = { transfer_state = 574 }
+		
+		YAK = { transfer_state = 564 }
+		YAK = { transfer_state = 565 }
 		
 		#Islands
 		JAP = { transfer_state = 629 }
@@ -2858,6 +2960,9 @@ RON_handle_gamemode_axis_vic_jap = {
 							transfer_state = PREV
 						}
 					}
+					
+		release_puppet = MAN
+		release_puppet = MEN
 	}
 	CHI = {
 		add_ideas = RON_chinese_resistance_strategy
@@ -2865,5 +2970,32 @@ RON_handle_gamemode_axis_vic_jap = {
 	JAP = {
 		create_faction = "Greater East Asia Co-Prosperity Sphere"
 		add_ideas = RON_japanese_bogged_down_in_china
+		puppet = YAK
+	}
+	MAN = {
+		load_oob = "MAN_1936"
+		every_state = { limit = { is_owned_by = MAN NOT = { is_core_of = MAN } is_on_continent = asia } add_core_of = MAN }
+	}
+	MEN = {
+		load_oob = "MEN_1936"
+		annex_country = {
+			target = MON
+			transfer_troops = no
+		}
+		transfer_state = 621	
+		every_state = { limit = { is_owned_by = MEN NOT = { is_core_of = MEN } is_on_continent = asia } add_core_of = MEN }
+	}
+	IND = {
+		release = BRM
+	}
+	JAP = { puppet = BRM }
+	YAK = {
+	set_cosmetic_tag = YAK_JAP
+	create_country_leader = {
+		name = "Platon Oyunsky"
+		picture = "gfx/leaders/JAP/Portrait_Japan_Platon_Oyunsky.dds"
+		ideology = fascism_ideology
+	}
+	every_state = { limit = { is_owned_by = YAK NOT = { is_core_of = YAK } is_on_continent = asia } add_core_of = YAK }
 	}
 }
