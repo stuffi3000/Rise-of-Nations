@@ -241,7 +241,7 @@ country_event = {
 			name = "Prince Paul"
 			desc = "POLITICS_PRINCE_PAUL_DESC"
 			picture = "Portrait_Yugoslavia_Prince_Paul.dds"
-			expire = "2060.1.1"
+			
 			ideology = despotism
 		}
 
@@ -4393,7 +4393,7 @@ country_event = {
 		create_country_leader = {
 			name = "José Miguel Gómez"
 			picture = "WW1/Jose_Miguel.dds"
-			expire = "2060.1.1"
+			
 			ideology = liberalism
 		}
 
@@ -4466,7 +4466,7 @@ country_event = {
 		create_country_leader = {
 			name = "José Miguel Gómez"
 			picture = "WW1/Jose_Miguel.dds"
-			expire = "2060.1.1"
+			
 			ideology = liberalism
 		}
 		news_event = { id = DNC_Expansion_news.173 }
@@ -5718,6 +5718,212 @@ country_event = {
 	}
 }
 
+#Generic Hostile Foreign Policy With Wargoal Country Responds With Violence
+country_event = {
+	id = ron_diplomatic.205
+	title = ron_diplomatic.204.t
+	desc = ron_diplomatic.204.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = "This Is An Act of War"
+		
+		create_wargoal = { type = annex_everything target = FROM }
+
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		name = "Better Not"
+
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+}
+
+#Generic Hostile Foreign Policy With Wargoal Country Doesn't Respond With Violence
+country_event = {
+	id = ron_diplomatic.206
+	title = ron_diplomatic.204.t
+	desc = ron_diplomatic.204.d
+	picture = GFX_report_event_DNC_Conference_country1
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		name = "This Is An Act of War"
+		
+		create_wargoal = { type = annex_everything target = FROM }
+
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+		}
+		name = "Better Not"
+
+		FROM = {
+			add_opinion_modifier = {
+				modifier = RI_hostile_foreign_policy
+				target = ROOT
+			}
+		}
+
+		add_opinion_modifier = {
+			modifier = RI_hostile_foreign_policy
+			target = FROM
+		}
+
+	}
+}
+
+#Generic Country Engaging in War Crimes
+country_event = {
+	id = ron_diplomatic.207
+	title = ron_diplomatic.207.t
+	desc = ron_diplomatic.207.d
+	picture = GFX_report_event_CW_War_Crime
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 10
+				modifier = {
+					factor = 0
+					is_in_faction_with = FROM
+				}
+				modifier = {
+					factor = 0
+					is_subject_of = FROM
+				}
+				#Different Ideology More Likely To Condemn
+				modifier = {
+				factor = 10
+					NOT = {
+						AND = {
+							has_government = communism
+							FROM = { has_government = communism }
+						}
+						AND = {
+							has_government = fascism
+							FROM = { has_government = fascism }
+						}
+						AND = {
+							has_government = democratic
+							FROM = { has_government = democratic }
+						}
+						AND = {
+							has_government = neutrality
+							FROM = { has_government = neutrality }
+						}
+						AND = {
+							has_government = islamism
+							FROM = { has_government = islamism }
+						}
+					}
+			}
+				
+		}
+		name = "Condemn"
+
+		country_event = {
+			id = ron_diplomatic.204
+			hours = 6
+		}
+
+	}
+	
+	option = {
+		ai_chance = {
+			factor = 10
+			modifier = {
+					factor = 10
+					#Same Ideology More Likely To Overlook
+					OR = {
+						AND = {
+							has_government = communism
+							FROM = { has_government = communism }
+						}
+						AND = {
+							has_government = fascism
+							FROM = { has_government = fascism }
+						}
+						AND = {
+							has_government = democratic
+							FROM = { has_government = democratic }
+						}
+						AND = {
+							has_government = neutrality
+							FROM = { has_government = neutrality }
+						}
+						AND = {
+							has_government = islamism
+							FROM = { has_government = islamism }
+						}
+					}
+				}
+			
+			
+		}
+		name = "Who Cares?"
+		
+		country_event = {
+			id = ron_diplomatic.203
+			hours = 6
+		}
+
+
+	}
+}
+
 #Treaty of Paris
 country_event = {
 	id = ron_diplomatic.223
@@ -5858,6 +6064,96 @@ country_event = {
 
 	}
 
+}
+
+#Pact of Madrid
+country_event = {
+	id = ron_diplomatic.310
+	title = CW_Expansion_country.310.t
+	desc = CW_Expansion_country.310.d
+	picture = GFX_report_event_CW_Expansion_country310
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 40
+		}
+		name = "Accept"
+		
+		give_military_access = USA
+		
+		add_timed_idea = {
+			idea = RI_marshall_plan_reciever
+			days = 3650
+		}
+		
+
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.126
+				hours = 6
+			}
+		}
+
+
+	}
+	option = {
+		ai_chance = {
+			factor = 0
+		}
+		name = "Decline"
+
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.127
+				hours = 6
+			}
+		}
+
+
+	}
+}
+
+#Antartic Treaty
+country_event = {
+	id = ron_diplomatic.497
+	title = CW_Expansion_country.497.t
+	desc = CW_Expansion_country.497.d
+	picture = GFX_report_event_CW_Expansion_country497
+	is_triggered_only = yes
+	option = {
+		ai_chance = {
+			factor = 40
+		}
+		name = "Accept"
+		
+		add_political_power = 25
+
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.126
+				hours = 6
+			}
+		}
+
+
+	}
+	option = {
+		ai_chance = {
+			factor = 0
+		}
+		name = "Decline"
+		
+		add_political_power = -25
+
+		FROM = {
+			country_event = {
+				id = ron_diplomatic.127
+				hours = 6
+			}
+		}
+
+
+	}
 }
 
 
