@@ -17,6 +17,7 @@ name="Rise of Nations"
 supported_version="1.12.1"
 
 picture="Rise_of_Nations.gif"
+replace_path="events"
 replace_path="common/ai_focuses"
 replace_path="common/ai_strategy"
 replace_path="common/ai_strategy_plans"
