@@ -27,8 +27,8 @@ NDefines_Graphics = {
         PEACE_CONFERENCE_CURRENT_SELECTED_SECONDARY_COLOR = { 0, 0, 1, 0.25 },
         PEACE_CONFERENCE_SELECTABLE_SECONDARY_COLOR = { 0, 1, 0, 0.25 },
         PEACE_CONFERENCE_CONTESTED_SECONDARY_COLOR = { 1, 0, 0, 0.25 },
-	    PEACE_CONFERENCE_CHANGE_TARGET_TAG_SECONDARY_COLOR =  { 0, 0.8, 0.5, 0.25 },
-	    PEACE_CONFERENCE_DIFFERENT_STACKABLE_SECONDARY_COLOR =  { 1, 1, 0, 0.25 },
+        PEACE_CONFERENCE_CHANGE_TARGET_TAG_SECONDARY_COLOR =  { 0, 0.8, 0.5, 0.25 },
+        PEACE_CONFERENCE_DIFFERENT_STACKABLE_SECONDARY_COLOR =  { 1, 1, 0, 0.25 },
         FACTIONS_COLOR_NOT_MEMBER = { 0.6, 0.6, 0.6, 0.25 },
         FACTIONS_MEMBER_TRANSPARENCY = 1.0,
         PLAYER_MAPMODE_NOT_SELECTED_COUNTRY_TRANSPARENCY = 0.15, -- How much is the country colors faded out, for countries that are not occupied by the any player.
@@ -625,7 +625,8 @@ NDefines_Graphics = {
         LAND_UNIT_MOVEMENT_SPEED = 12,
         NAVAL_UNIT_MOVEMENT_SPEED = 12,
         ARROW_MOVEMENT_SPEED = 2,
-        DRAW_COUNTRY_NAMES_CUTOFF = 400,
+        DRAW_COUNTRY_NAMES_CUTOFF = 260,                    -- Cutoff for drawing country names on the map
+        DRAW_DETAILED_CUTOFF = 400,
         TRADEROUTE_SMOOTHNESS = 0.65,
         TRADEROUTE_SMOOTHEN_PASSES = 2,
         SUPPLYFLOW_SMOOTHNESS = 0.25,
@@ -717,10 +718,11 @@ NDefines_Graphics = {
         GRADIENT_BORDERS_THICKNESS_DIPLOMACY = 12.0,
         GRADIENT_BORDERS_THICKNESS_DIPLOMACY_ON_INTEL_LEDGER = 3.0,
         GRADIENT_BORDERS_THICKNESS_PEACE_CONFERENCE_A = 3.0, -- transparency at 0 up until A
-	    GRADIENT_BORDERS_THICKNESS_PEACE_CONFERENCE_B = 6.0, -- increasing transparency up to 100% when at B
+        GRADIENT_BORDERS_THICKNESS_PEACE_CONFERENCE_B = 6.0, -- increasing transparency up to 100% when at B
         GRADIENT_BORDERS_OUTLINE_CUTOFF_COUNTRY = 0.973, -- Magic number to balance cutoff on edges without neighbor
         GRADIENT_BORDERS_OUTLINE_CUTOFF_DIPLOMACY = 0.973,
         GRADIENT_BORDERS_OUTLINE_CUTOFF_DIPLOMACY_ON_INTEL_LEDGER = 0.973,
+        GRADIENT_BORDERS_OUTLINE_CUTOFF_PEACE_CONFERENCE = 0.973,
         GRADIENT_BORDERS_OUTLINE_CUTOFF_STATE = 0.973,
         GRADIENT_BORDERS_OUTLINE_CUTOFF_SUPPLY_AREA = 0.973,
         GRADIENT_BORDERS_OUTLINE_CUTOFF_STRATEGIC_REGIONS = 0.98,
@@ -740,7 +742,8 @@ NDefines_Graphics = {
         GRADIENT_BORDERS_CAMERA_DISTANCE_OVERRIDE_DIPLOMACY_ON_INTEL_LEDGER = 1.0,
         GRADIENT_BORDERS_CAMERA_DISTANCE_OVERRIDE_PEACE_CONFERENCE = 1.0,
 	    GRADIENT_BORDERS_ACTIVATE_FOR_PEACE_CONFERENCE = false,
-	    GRADIENT_BORDERS_ONE_COLOR_FOR_PEACE_CONFERENCE = { -1.0, -1.0, -1.0, -1.0 }, -- all gradient will have this color. if { -1.0, -1.0, -1.0, -1.0 } then use Negotiator MapColor
+    	GRADIENT_BORDERS_ONE_COLOR_FOR_PEACE_CONFERENCE = { -1.0, -1.0, -1.0, -1.0 }, -- all gradient will have this color. if { -1.0, -1.0, -1.0, -1.0 } then use Negotiator MapColor
+
 
         GRADIENT_BORDERS_OPTIMIZATION_RANGE = 30.0, -- smaller value = faster gradient borders but may have artifacts on large provinces (value to balance)
         GRADIENT_BORDERS_REFRESH_FREQ = 0.12, -- how frequent is gradient borders repainting (optimization for high-speed gameplay)
@@ -1330,7 +1333,6 @@ NDefines_Graphics = {
         OFFLINE_COLOR = { 0.7, 0.7, 0.7, 1.0}, -- Text color of offline state
         ONLINE_COLOR = { 0.56, 0.85, 0.56, 1.0 }, -- Text color of online state
     },
-
 }
 
 for k, v in pairs(NDefines_Graphics) do
