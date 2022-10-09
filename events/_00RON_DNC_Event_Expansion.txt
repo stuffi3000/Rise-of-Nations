@@ -2792,7 +2792,7 @@ country_event = {
 		country_exists = BOX
 		QIN = { has_war_with = DEL }
 		OR = {
-			QIN = { surrender_progress > 0.2 }
+			QIN = { surrender_progress > 0.4 }
 			BOX = { has_capitulated = yes }
 		}
 		NOT = { has_global_flag = player_wants_custom_peacedeals }
@@ -2804,7 +2804,7 @@ country_event = {
 
 	option = {
 		ai_chance = {
-			factor = 10
+			factor = 100
 		}
 		name = DNC_Expansion_country.51.a
 
@@ -2825,6 +2825,15 @@ country_event = {
 			annex_country = {
 				target = BOX
 				transfer_troops = no
+			}
+			dismantle_faction = yes
+		}
+		#Dismantle 8 nation alliance
+		every_country = {
+			limit = {
+				has_war_with = QIN
+				is_in_faction_with = DEL
+				is_faction_leader = yes
 			}
 			dismantle_faction = yes
 		}
@@ -7138,6 +7147,27 @@ country_event = {
 			ideology = communism
 			popularity = 0.05
 		}
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+		RUE = {
+			every_state = {
+				limit = {
+					is_core_of = RUE
+					OR = {
+						is_core_of = EST
+						is_core_of = POL
+						is_core_of = LAT
+						is_core_of = LIT
+						is_core_of = FIN
+					}
+				}
+				remove_core_of = RUE
+				start_resistance = yes
+				add_resistance = 10
+			}
+		}
 
 		set_global_flag = DNC_Revolution_of_1905
 
@@ -7273,8 +7303,10 @@ country_event = {
 
 	trigger = {
 		tag = RUE
-		date > 1905.3.3
-		date < 1905.4.3
+		OR = {
+			has_completed_focus = RUE_new_liberal_constitution
+			has_completed_focus = RUE_new_status_quo_constitution
+		}
 		has_government = neutrality
 		has_global_flag = DNC_Revolution_of_1905
 	}
