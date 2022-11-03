@@ -195,27 +195,18 @@ ideas = {
 			cancel_if_invalid = no
 
 			ai_will_do = {
-				factor = 100000
+				#factor = 100000
+				factor = 50000
 
 				modifier = {
-					factor = 0
+					factor = 20
 
-					NOT = {
-						AND = {
-							can_take_low_economic_mobilisation = yes
+					is_major = yes
+				}
 
-							OR = {
-								AND = {
-									has_war = yes
-
-									NOT = { can_upgrade_manpower_law = yes }
-								}
-								AND = {
-									has_war = no
-								}
-							}
-						}
-					}
+				modifier = {
+					has_war_support > 0.25
+					factor = 0 #don't even look at it if you could be taking partial mob
 				}
 			}
 		}
@@ -261,28 +252,16 @@ ideas = {
 				}
 			}
 
+			
+
 			ai_will_do = {
-				factor = 100000
+				#factor = 100000
+				factor = 50000
 
 				modifier = {
-					factor = 0
+					factor = 20
 
-					NOT = {
-						AND = {
-							can_take_partial_economic_mobilisation = yes
-
-							OR = {
-								AND = {
-									has_war = yes
-
-									NOT = { can_upgrade_manpower_law = yes }
-								}
-								AND = {
-									has_war = no
-								}
-							}
-						}
-					}
+					is_major = yes
 				}
 			}
 		}
@@ -346,27 +325,36 @@ ideas = {
 				}
 			}
 			ai_will_do = {
-				factor = 100000
+				#factor = 100000
+				factor = 75000
 
 				modifier = {
+					#High prio on production
+					factor = 20
+					manpower_per_military_factory >  1000
+				}
+
+				modifier = {
+					# If we CAN go for total mobilization and have enough manpower for it, skip war economy, it's only a waste of PP
 					factor = 0
 
-					NOT = {
-						AND = {
-							can_take_war_economy = yes
-
-							OR = {
-								AND = {
-									has_war = yes
-
-									NOT = { can_upgrade_manpower_law = yes }
-								}
-								AND = {
-									has_war = no
-								}
-							}
+					manpower_per_military_factory > 15000
+					has_war = yes
+					has_war_support > 0.8
+					any_enemy_country = {
+						ic_ratio = {
+							tag = ROOT
+							ratio > 0.5
 						}
 					}
+				}
+
+				modifier = {
+					add = 1800
+
+					# revert from closed_economy if we have large allies
+					has_idea = closed_economy
+					#has_large_ally_not_pick_closed_economy = yes
 				}
 			}
 		}
@@ -417,26 +405,42 @@ ideas = {
 
 			cancel_if_invalid = no
 
-			ai_will_do = {
-				factor = 100000
+		ai_will_do = {
+			#factor = 100000
+			factor = 25000
 
-				modifier = {
-					factor = 0
+			modifier = {
+					factor = 25
+					#Prio this if nation has a lot of manpower compared to MIC
+					manpower_per_military_factory > 15000
+				}
 
+			modifier = {
+				#Block  unless nation has a lot of manpower
+				factor = 0
+				manpower_per_military_factory <  10000
+			}
+
+
+			modifier = {
+				# never take this if we are on low conscription laws for safety
+				factor = 0
+				OR = {
+					has_idea = volunteer_only
+					has_idea = limited_conscription
+				}
+			}
+			modifier = {
+				factor = 0
+
+				tag = SOV
+				has_war = yes
+				OR = {
+					has_manpower < 2000000
 					NOT = {
-						AND = {
-							can_take_tot_economic_mobilisation = yes
-
-							OR = {
-								AND = {
-									has_war = yes
-
-									NOT = { can_upgrade_manpower_law = yes }
-								}
-								AND = {
-									has_war = no
-								}
-							}
+						OR = {
+							has_idea = all_adults_serve
+							has_idea = service_by_requirement
 						}
 					}
 				}
