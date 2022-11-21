@@ -1030,7 +1030,7 @@ NGraphics = {
 	TRADE_ROUTE_INTERSECT_DISTANCE_MULT = 10.0,			-- For balancing the collision distance with painted arrows and trade routes.
 	RAILWAY_INTERSECT_DISTANCE_MULT = 3.0,				-- For balancing the collision distance with painted arrows and railways.
 
-	MINIMUM_PROVINCE_SIZE_IN_PIXELS = 8,			-- Provinces that are smaller than that are just making the game unplayable. It doesn't affect the game, just informs in the error.log
+	MINIMUM_PROVINCE_SIZE_IN_PIXELS = 1,			-- Provinces that are smaller than that are just making the game unplayable. It doesn't affect the game, just informs in the error.log
 
 	NATIONAL_FOCUS_SHINE_DISTANCE_SCALE = 0.03,
 	NATIONAL_FOCUS_PULSE_BASE =	10.0,
