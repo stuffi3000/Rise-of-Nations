@@ -521,7 +521,7 @@ focus_tree = {
 						}
 					}
 				}
-				729.controller = {
+				var:729.controller = {
 					country_event = dnc_china.14
 				}
 			}
@@ -2141,6 +2141,38 @@ focus_tree = {
 		}
 	}
 	focus = {
+		id = DNC_QIN_put_out_boxers
+		icon = GFX_QIN_end_imperial_rule
+		x = 1
+		y = 1
+		ai_will_do = {
+				factor = 1000
+					modifier = {
+						factor = 0
+						AND = {
+							NOT = { has_completed_focus = DNC_QIN_horrific_loss }
+							NOT = { has_completed_focus = DNC_QIN_stunning_victory }
+						}
+					}
+			}
+		cost = 5
+		relative_position_id = DNC_QIN_rebuild_armies
+		prerequisite = {
+			focus = DNC_QIN_rebuild_armies
+	# TODO After boxer protocols happen, Qing will have events about Boxer resistance that damage buildings, to combat this, Qing have to do focuses to fight them
+		}
+		prerequisite = {
+			focus = DNC_QIN_resupply_arsenals
+		}
+
+		available = {
+				
+		}
+		completion_reward = {
+			unlock_decision_category_tooltip = fight_boxer_resistance_decision_cat
+		}
+	}
+	focus = {
 		id = DNC_QIN_smaller_regional_armies
 		icon = GFX_RUE_focus_state_duma
 		x = -2
@@ -2184,38 +2216,7 @@ focus_tree = {
 			}			
 		}
 	}
-	focus = {
-		id = DNC_QIN_put_out_boxers
-		icon = GFX_QIN_end_imperial_rule
-		x = 1
-		y = 1
-		ai_will_do = {
-				factor = 1000
-					modifier = {
-						factor = 0
-						AND = {
-							NOT = { has_completed_focus = DNC_QIN_horrific_loss }
-							NOT = { has_completed_focus = DNC_QIN_stunning_victory }
-						}
-					}
-			}
-		cost = 5
-		relative_position_id = DNC_QIN_rebuild_armies
-		prerequisite = {
-			focus = DNC_QIN_rebuild_armies
-	# TODO After boxer protocols happen, Qing will have events about Boxer resistance that damage buildings, to combat this, Qing have to do focuses to fight them
-		}
-		prerequisite = {
-			focus = DNC_QIN_resupply_arsenals
-		}
-
-		available = {
-				
-		}
-		completion_reward = {
-			unlock_decision_category_tooltip = fight_boxer_resistance_decision_cat
-		}
-	}
+	
 	focus = {
 		id = DNC_QIN_continue_8_banners_system
 		icon = GFX_QIN_focus_end_imperial_rule
@@ -2467,6 +2468,57 @@ focus_tree = {
 			}
 		}
 		focus = {
+			id = DNC_QIN_arming_soldiers
+			#icon = 
+			x = -8
+			y = 1
+			relative_position_id = DNC_QIN_westernization_movement
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_westernization_movement
+			}
+
+			available = {
+				has_army_manpower = {
+    				size > 10000
+				}
+			}
+			
+			ai_will_do = {
+			factor = 100
+			}
+
+			completion_reward = { 
+				if = {
+					limit = {
+						NOT = {
+							has_variable = QIN_foreign_suspicion_level 
+						}
+
+					}
+					set_variable = {
+						QIN_foreign_suspicion_level = 0
+					}
+				}
+				random_owned_state  ={
+					add_building_construction = {
+                        type = arms_factory
+                        level = 1
+                        instant_build = yes
+                    }
+				add_extra_state_shared_building_slots = 1
+				}
+				if = {
+					limit = {
+						has_idea = boxer_protocols
+					}
+					unlock_decision_category_tooltip = QIN_smuggling_weapons
+				}
+            
+			}
+		}
+		focus = {
 			id = DNC_QIN_modernizing_the_beiyang_army
 			icon = GFX_QIN_focus_modern_beiyang_army
 			x = 0
@@ -2491,7 +2543,75 @@ focus_tree = {
 
 			}
 		}
+		focus = {
+			id = DNC_QIN_arms_factories_shanghai
+			icon = GFX_goal_generic_construct_mil_factory
+			x = -1
+			y = 1
+			relative_position_id = DNC_QIN_arming_soldiers
+			cost = 10
 
+			prerequisite = {
+				focus = DNC_QIN_arming_soldiers
+			}
+
+			available = {
+				owns_state = 613
+			}
+			
+			ai_will_do = {
+			factor = 100
+			}
+
+			completion_reward = { 
+				613 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+                        type = arms_factory
+                        level = 2
+                        instant_build = yes
+                    }
+
+			}
+            
+			}
+		}
+	focus = {
+			id = DNC_QIN_peking_factories
+			icon = GFX_goal_generic_construct_mil_factory
+			x = 1
+			y = 1
+			relative_position_id = DNC_QIN_arms_factories_shanghai
+			cost = 10
+
+			prerequisite = {
+				focus = DNC_QIN_arms_factories_shanghai
+			}
+			prerequisite = {
+				focus = DNC_QIN_use_arsenals
+			}
+
+			available = {
+				owns_state = 608
+			}
+			
+			ai_will_do = {
+			factor = 100
+			}
+
+			completion_reward = { 
+				608 = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+                        type = arms_factory
+                        level = 3
+                        instant_build = yes
+                    }
+
+			}
+            
+			}
+		}
 		focus = {
 			id = DNC_QIN_modernize_qing_equipment
 			icon = GFX_RUE_focus_state_duma
@@ -2515,7 +2635,7 @@ focus_tree = {
 				add_tech_bonus = {
 					uses = 1
 					bonus = 1
-					category = infantry_equipment
+					category = infantry_weapons
 				}
 			}
 		}
@@ -2627,11 +2747,11 @@ focus_tree = {
 			}
 			
 			ai_will_do = {
-			factor = 100
-		}
+				factor = 100
+			}
 			
-			completion_reward = {
-				every_country = {
+		completion_reward = {
+			every_country = {
 				limit = {
 					OR = {
 						tag = GER
@@ -2641,15 +2761,14 @@ focus_tree = {
 				country_event = { id = generic.19 }
 				add_offsite_building = { type = arms_factory level = -2 }
 				create_field_marshal = {
-		name = "Keizo Hayashi"
-		picture = "gfx/leaders/SOJ/CW/Keizo_Hayashi.dds"
-		traits = {
-			japan_army_trait
-		}
-		skill = 1
-	}
-	recruit_character = GER_erich_ludendorff 
-			}
+					name = "Keizo Hayashi"
+					picture = "gfx/leaders/SOJ/CW/Keizo_Hayashi.dds"
+					traits = {
+						japan_army_trait
+					}
+					skill = 1
+				}
+				GER_erich_ludendorff = {set_nationality = QIN}
 			}
 		} 
 		focus = {
@@ -2773,90 +2892,8 @@ focus_tree = {
 				add_war_support = 0.1
 			}
 		}
-		focus = {
-			id = DNC_QIN_arming_soldiers
-			#icon = 
-			x = -8
-			y = 1
-			relative_position_id = DNC_QIN_westernization_movement
-			cost = 10
-
-			prerequisite = {
-				focus = DNC_QIN_westernization_movement
-			}
-
-			available = {
-				has_army_manpower = {
-    				size > 10000
-				}
-			}
-			
-			ai_will_do = {
-			factor = 100
-			}
-
-			completion_reward = { 
-				if = {
-					limit = {
-						NOT = {
-							has_variable = QIN_foreign_suspicion_level 
-						}
-
-					}
-					set_variable = {
-						QIN_foreign_suspicion_level = 0
-					}
-				}
-				random_owned_state  ={
-					add_building_construction = {
-                        type = arms_factory
-                        level = 1
-                        instant_build = yes
-                    }
-				add_extra_state_shared_building_slots = 1
-				}
-				if = {
-					limit = {
-						has_idea = boxer_protocols
-					}
-					unlock_decision_category_tooltip = QIN_smuggling_weapons
-				}
-            
-			}
-		}
-		focus = {
-			id = DNC_QIN_arms_factories_shanghai
-			icon = GFX_goal_generic_construct_mil_factory
-			x = -1
-			y = 1
-			relative_position_id = DNC_QIN_arming_soldiers
-			cost = 10
-
-			prerequisite = {
-				focus = DNC_QIN_arming_soldiers
-			}
-
-			available = {
-				owns_state = 613
-			}
-			
-			ai_will_do = {
-			factor = 100
-			}
-
-			completion_reward = { 
-				613 = {
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-                        type = arms_factory
-                        level = 2
-                        instant_build = yes
-                    }
-
-			}
-            
-			}
-		}
+		
+		
 		focus = {
 			id = DNC_QIN_use_arsenals
 			#icon = 
@@ -2881,42 +2918,7 @@ focus_tree = {
             
 			}
 		}
-		focus = {
-			id = DNC_QIN_peking_factories
-			icon = GFX_goal_generic_construct_mil_factory
-			x = 1
-			y = 1
-			relative_position_id = DNC_QIN_arms_factories_shanghai
-			cost = 10
-
-			prerequisite = {
-				focus = DNC_QIN_arms_factories_shanghai
-			}
-			prerequisite = {
-				focus = DNC_QIN_use_arsenals
-			}
-
-			available = {
-				owns_state = 608
-			}
-			
-			ai_will_do = {
-			factor = 100
-			}
-
-			completion_reward = { 
-				608 = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-                        type = arms_factory
-                        level = 3
-                        instant_build = yes
-                    }
-
-			}
-            
-			}
-		}
+		
 
 		#END OF ARMY TREE
 
@@ -4446,7 +4448,32 @@ focus_tree = {
             
 			}
 		}
+	focus = {
+			id = DNC_QIN_manchuria_crisis
+			icon = GFX_JAP_focus_the_manchurian_crisis
+			search_filters = { FOCUS_FILTER_POLITICAL }
+			x = 0
+			y = 1
+			relative_position_id = DNC_QIN_opening_east_china_railway
+			prerequisite = {
+				focus = DNC_QIN_opening_east_china_railway
+			}
 
+			cost = 7
+
+			available = {
+				
+			}
+			
+			ai_will_do = {
+			factor = 100
+			}
+
+			completion_reward = { 
+            news_event = ww1_china.27
+			country_event = ww1_china.28
+			}
+		}
 		focus = {
 			id = DNC_QIN_protest_russian_deployment
 			icon = GFX_QIN_focus_russian_war
@@ -4510,32 +4537,7 @@ focus_tree = {
 			}
 		}
 
-		focus = {
-			id = DNC_QIN_manchuria_crisis
-			icon = GFX_JAP_focus_the_manchurian_crisis
-			search_filters = { FOCUS_FILTER_POLITICAL }
-			x = 0
-			y = 1
-			relative_position_id = DNC_QIN_opening_east_china_railway
-			prerequisite = {
-				focus = DNC_QIN_opening_east_china_railway
-			}
-
-			cost = 7
-
-			available = {
-				
-			}
-			
-			ai_will_do = {
-			factor = 100
-			}
-
-			completion_reward = { 
-            news_event = ww1_china.27
-			country_event = ww1_china.28
-			}
-		}
+		
 
 		focus = {
 			id = DNC_QIN_limited_industrialization_south_china

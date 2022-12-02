@@ -164,7 +164,7 @@ focus_tree = {
 		}
 		available = {
 			BOX = { has_war = yes }
-			congress_small_support_trigger = yes
+			congress_low_support_trigger = yes
 			BOX = { exists = yes }
 		}
 		completion_reward = {
@@ -18425,32 +18425,30 @@ diplomatic_relation = {
 			factor = 100
 		}
 		completion_reward = {
-					if = {
+			if = {
 				limit = { NOT = {has_idea = war_economy } }
-			add_ideas = war_economy
-			add_war_support = .30
-			add_stability = .20
+				add_ideas = war_economy
+				add_war_support = .30
+				add_stability = .20
 			}
 			else = {
-				limit = { has_idea = war_economy  } 
+			
 				add_ideas = {
-				usa_war_bonds_i
+					usa_war_bonds_i
 				}
-			470 = { add_claim_by = USA }
-			472 = { add_claim_by = USA }
-			473 = { add_claim_by = USA }
-			471 = { add_claim_by = USA }
-			740 = { add_claim_by = USA }
-			739 = { add_claim_by = USA }
-			}
-			484 = { add_claim_by = USA }
-			483 = { add_claim_by = USA }
-			482 = { add_claim_by = USA }
-			480 = { add_claim_by = USA }
-			464 = { add_claim_by = USA }
-			465 = { add_claim_by = USA }
-			842 = { add_claim_by = USA }
-
+				470 = { add_claim_by = USA }
+				472 = { add_claim_by = USA }
+				473 = { add_claim_by = USA }
+				471 = { add_claim_by = USA }
+				740 = { add_claim_by = USA }
+				739 = { add_claim_by = USA }
+				484 = { add_claim_by = USA }
+				483 = { add_claim_by = USA }
+				482 = { add_claim_by = USA }
+				480 = { add_claim_by = USA }
+				464 = { add_claim_by = USA }
+				465 = { add_claim_by = USA }
+				842 = { add_claim_by = USA }
 		}
 	}
 
@@ -19612,6 +19610,50 @@ diplomatic_relation = {
 			
 		}
 	}
+	##Focus for Choose A Side
+	focus = {
+		id = USAAH_choose_a_side
+		icon = GFX_focus_hol_the_fourth_ally
+		relative_position_id = USAAH_find_allies
+		x = 2
+		y = 1
+		cost = 5
+		available_if_capitulated = yes
+		prerequisite = { focus = USAAH_find_allies }
+		mutually_exclusive = { focus = USAAH_our_own_path }
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			add_political_power = 150
+		}
+	}
+	#Focus for Approach Japan
+	focus = {
+		id = USAAH_approach_japan
+		icon = GFX_align_to_japan2
+		relative_position_id = USAAH_choose_a_side
+		x = 1
+		y = 1
+		cost = 5
+		available_if_capitulated = yes
+		prerequisite = { focus = USAAH_choose_a_side }
+		mutually_exclusive = { focus = USAAH_approach_germany }
+		ai_will_do = {
+			factor = 100
+		}
+		available = {
+			JAP = { is_faction_leader = yes }
+		}
+		completion_reward = {
+			JAP = {
+				add_opinion_modifier = {
+					target = USA
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+		}
+	}
 
 	#Focus for Join Co-Prosperity Sphere
 	focus = {
@@ -19715,32 +19757,7 @@ diplomatic_relation = {
 		}
 	}
 
-	#Focus for Approach Japan
-	focus = {
-		id = USAAH_approach_japan
-		icon = GFX_align_to_japan2
-		relative_position_id = USAAH_choose_a_side
-		x = 1
-		y = 1
-		cost = 5
-		available_if_capitulated = yes
-		prerequisite = { focus = USAAH_choose_a_side }
-		mutually_exclusive = { focus = USAAH_approach_germany }
-		ai_will_do = {
-			factor = 100
-		}
-		available = {
-			JAP = { is_faction_leader = yes }
-		}
-		completion_reward = {
-			JAP = {
-				add_opinion_modifier = {
-					target = USA
-					modifier = RI_friendly_foreign_policy
-				}
-			}
-		}
-	}
+	
 
 	#Focus for Join Axis
 	focus = {
@@ -19762,24 +19779,7 @@ diplomatic_relation = {
 		}
 	}
 
-	##Focus for Choose A Side
-	focus = {
-		id = USAAH_choose_a_side
-		icon = GFX_focus_hol_the_fourth_ally
-		relative_position_id = USAAH_find_allies
-		x = 2
-		y = 1
-		cost = 5
-		available_if_capitulated = yes
-		prerequisite = { focus = USAAH_find_allies }
-		mutually_exclusive = { focus = USAAH_our_own_path }
-		ai_will_do = {
-			factor = 100
-		}
-		completion_reward = {
-			add_political_power = 150
-		}
-	}
+	
 
 	#Focus for Join The Co-Prosperity Sphere
 	focus = {
@@ -20215,7 +20215,57 @@ diplomatic_relation = {
 			}
 		}
 	}
-
+	#Focus for The American Military Machine
+	focus = {
+		id = USAAH_the_american_military_machine
+		icon = GFX_focus_generic_little_entente
+		relative_position_id = USAAH_purge_disloyal_generals
+		x = 1
+		y = 2
+		cost = 5
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = USAAH_rapid_militarization 
+		}
+		prerequisite = { 
+			focus = USAAH_expand_military_industry 
+		}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			random_owned_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
 	#Focus for A Defensive Army
 	focus = {
 		id = USAAH_a_defensive_army
@@ -20306,57 +20356,7 @@ diplomatic_relation = {
 		}
 	}
 
-	#Focus for The American Military Machine
-	focus = {
-		id = USAAH_the_american_military_machine
-		icon = GFX_focus_generic_little_entente
-		relative_position_id = USAAH_purge_disloyal_generals
-		x = 1
-		y = 2
-		cost = 5
-		available_if_capitulated = yes
-		prerequisite = { 
-			focus = USAAH_rapid_militarization 
-		}
-		prerequisite = { 
-			focus = USAAH_expand_military_industry 
-		}
-		ai_will_do = {
-			factor = 100
-		}
-		completion_reward = {
-			random_owned_state = {
-				limit = {
-					free_building_slots = {
-						building = arms_factory
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = arms_factory
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
+	
 
 	#Focus for An Offensive Army
 	focus = {
@@ -21151,9 +21151,7 @@ diplomatic_relation = {
 			}
 		}
 	}
-	ai_will_do = {
-		factor = 0
-	}
+	
 
 	#Focus for Inviting Communists In South America
 	focus = {
@@ -21266,9 +21264,6 @@ diplomatic_relation = {
 			}
 		}
 	}
-	ai_will_do = {
-		factor = 0
-	}
 
 	#Focus for Inviting Communists In South America
 	focus = {
@@ -21345,9 +21340,6 @@ diplomatic_relation = {
 			}
 		}
 	}
-	ai_will_do = {
-		factor = 0
-	}
 
 	#Focus for Inviting Communists In South America
 	focus = {
@@ -21423,9 +21415,6 @@ diplomatic_relation = {
 				}
 			}
 		}
-	}
-	ai_will_do = {
-		factor = 0
 	}
 
 	#Canada Independence Part 1
