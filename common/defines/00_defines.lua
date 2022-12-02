@@ -88,6 +88,8 @@ NDiplomacy = {
 	INFLUENCE_RATIO_CONTROLLED = 0.5,               -- Ratio of influence based on distance to neared controlled territory (including uncontested peace conference bids)
 	INFLUENCE_DISTANCE_DIVISOR = 30.0,              -- Divide pixel distance with this when determining distance to capital / core / controlled states. Just an arbitrary way of scaling the distance numbers.
 	
+	INFLUENCE_PER_ADJACENCY = 0.05,					-- How much influence to add per uncontested adjacent state in the PC (blob, don't snake)
+
 	INFLUENCE_MAJOR_FACTOR = 1.0,					--How much influence discount a major will get
 	INFLUENCE_MINOR_FACTOR = 0.65,					--How much influence discount a minor will get
 	
@@ -2121,6 +2123,10 @@ NAI = {
 	DAYS_BETWEEN_CHECK_BEST_TEMPLATE = 7;       -- Recalculate desired best template to upgrade with this many days inbetween.
 	DAYS_BETWEEN_CHECK_BEST_EQUIPMENT = 7;      -- Recalculate desired best equipment to upgrade with this many days inbetween.
 
+	UNLOCK_SPIRIT_AI_WILL_DO_FACTOR = 10,       -- Factor for scripted ai_will_do value
+	UNLOCK_SPIRIT_MODIFIER_FACTOR = 0.1,        -- Factor for AI's evaluated value of the modifiers connected to the spirit
+	UNLOCK_SPIRIT_TRUNCATION_SELECT_THRESHOLD = 0.80,  -- Valid between [0.0, 1.0]. When unlocking spirits, select randomly from all spirits with AI score >= VALUE * HighestSpiritScore. To always select the best, set this value to 1.0. To select fully randomly, set this value to 0.0.
+
 	FOCUS_TREE_CONTINUE_FACTOR = 1.5,			-- Factor for score of how likely the AI is to keep going down a focus tree rather than starting a new path.
 	PLAN_VALUE_TO_EXECUTE = -0.5,				-- AI will typically avoid carrying out a plan it below this value (0.0 is considered balanced).
 	DECLARE_WAR_NOT_NEIGHBOR_FACTOR = 0.25,		-- Multiplier applied before force factor if country is not neighbor with the one it is considering going to war
@@ -3073,6 +3079,7 @@ NAI = {
 
 	COMMAND_POWER_BEFORE_SPEND_ON_TRAITS = 30.0,
 
+	PEACE_BID_FOLD_TURNS_AGAINST_OTHER_AI = 2,					--Resolve contests against other AIs after this many turns. Don't always contest forever, it yields the same results.
 	PEACE_BID_FOLD_AGAINST_PLAYER_CHANCE = 0.5,                 -- Likelihood that AI will fold in a bidding contest against human player.
 	PEACE_BID_FOLD_AGAINST_AI_CHANCE_UNCONTROLLED = 0.40,		-- Likelihood an AI will fold against an AI in a bidding contest where they do not control the state in question, if their own bid is take_states and there is a bidder with more points.
 	PEACE_BID_FOLD_AGAINST_LIBERATE_CONTEST = 1.0,				-- Likelihood that the AI will back down against a same-ideology country performing a contesting liberate bid ##Bordergore prevention therapy
