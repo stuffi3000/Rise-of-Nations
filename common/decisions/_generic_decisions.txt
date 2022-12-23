@@ -16,12 +16,14 @@ moon_race_cat = {
 		icon = GFX_moon_race_ui_star
 		fire_only_once = yes
 		available = {
-			
-			check_variable = {
-				ROOT.life_support_test_count > 0
-			}
-			check_variable = {
-				ROOT.successful_engine_test_count > 4
+			custom_trigger_tooltip = {
+				tooltip = moonrace_manned_flight_decision_tt
+				check_variable = {
+					ROOT.life_support_test_count > 0
+				}
+				check_variable = {
+					ROOT.successful_engine_test_count > 4
+				}
 			}
 		}
 		remove_effect = {
@@ -59,6 +61,7 @@ moon_race_cat = {
 						array = global.array_star0
 					}
 				}
+				has_tech = RON_Manned_Orbital_Flights
 			}
 		}
 		remove_effect = {
@@ -74,6 +77,21 @@ moon_race_cat = {
 						ideology = ROOT
 						popularity = 0.005
 					}
+				}
+				if = {
+					limit = {
+						tag = USA
+					}
+					news_event = space_race.6
+				}
+				else_if = {
+					limit = {
+						tag = SOV
+					}
+					news_event = space_race.5
+				}
+				else = {	
+					news_event = space_race.7
 				}
 			}
 			add_to_array = {
@@ -95,6 +113,7 @@ moon_race_cat = {
 						array = global.array_star1
 					}
 				}
+				has_tech = RON_First_Spacewalk
 			}
 		}
 		remove_effect = {
@@ -131,6 +150,7 @@ moon_race_cat = {
 						array = global.array_star2
 					}
 				}
+				has_tech = RON_Lunar_Modules
 			}
 		}
 		remove_effect = {
@@ -167,6 +187,12 @@ moon_race_cat = {
 						array = global.array_star3
 					}
 				}
+				custom_trigger_tooltip = {
+					tooltip = has_at_least_1_rocket_tt
+					check_variable = {
+						available_rockets > 0
+					}
+				}
 			}
 		}
 		remove_effect = {
@@ -183,6 +209,10 @@ moon_race_cat = {
 						popularity = 0.005
 					}
 				}
+			}
+			custom_effect_tooltip = wiil_consume_1_rocket_tt
+			subtract_from_variable = {
+				available_rockets = 1
 			}
 			add_to_array = {
 				array = global.array_star4
@@ -203,10 +233,59 @@ moon_race_cat = {
 						array = global.array_star4
 					}
 				}
+				custom_trigger_tooltip = {
+					tooltip = has_at_least_1_rocket_tt
+					check_variable = {
+						available_rockets > 0
+					}
+				}
+				has_tech = RON_First_Man_On_The_Moon
 			}
 		}
 		remove_effect = {
 			custom_effect_tooltip = completes_milestone_tt
+			add_to_array = {
+				array = global.array_star5
+				value = ROOT
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						tag = USA
+					}
+					random_list = {
+						75 = {
+							modifier = {
+								is_historical_focus_on = yes
+								factor = 0
+							}
+							#Moon landing fail
+							remove_from_array = {
+								array = global.array_star5
+								value = ROOT
+							}
+							news_event = space_race.2
+						}
+						25 = {
+							modifier = {
+								is_historical_focus_on = yes
+								factor = 4
+							}
+							news_event = roncw_spacenews.57
+						}
+					}
+				}
+				else_if = {
+					limit = {
+						tag = SOV
+					}
+					#Soviet Moon
+					news_event = space_race.3
+				}
+				else = {
+					news_event = space_race.11
+				}
+			}
 			if = {
 				limit = {
 					check_variable = {
@@ -220,10 +299,12 @@ moon_race_cat = {
 					}
 				}
 			}
-			add_to_array = {
-				array = global.array_star5
-				value = ROOT
+			custom_effect_tooltip = wiil_consume_1_rocket_tt
+			subtract_from_variable = {
+				available_rockets = 1
 			}
+			
+			
 		}
 	}
 	general_candidate_astronaut = {
@@ -246,11 +327,30 @@ moon_race_cat = {
 			}
 		}
 	}
+	start_rocket_construction = {
+		icon = generic_industry
+		days_remove = 120
+		available = {
+			has_tech = RON_Massive_Rockets
+		}
+		complete_effect = {
+			add_offsite_building = { type = industrial_complex level = -5 }
+			add_to_variable = {
+				available_rockets = 1
+			}
+		}
+		remove_effect = {
+			add_offsite_building = { type = industrial_complex level = 5 }
+		}
+	}
 	launch_life_support_testing = {
 		icon = generic_research
 		days_remove = 50
 		modifier = {
 			political_power_cost = 0.5
+		}
+		available = {
+			has_tech = RON_Life_Support
 		}
 		remove_effect = {
 			random_list = {
@@ -271,7 +371,9 @@ moon_race_cat = {
 		modifier = {
 			political_power_cost = 0.3
 		}
-
+		available = {
+			has_tech = rocket_engines
+		}
 		remove_effect = {
 			random_list = {
 

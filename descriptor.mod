@@ -13,7 +13,7 @@ tags={
 
 }
 name="Rise of Nations"
-supported_version="1.12.2"
+supported_version="1.12.7"
 
 picture="Rise_of_Nations.gif"
 replace_path="events"
