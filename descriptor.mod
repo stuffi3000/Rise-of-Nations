@@ -10,11 +10,8 @@ tags={
 	"National Focuses"
 	"Map"
 	"Military"
-
 }
 name="Rise of Nations"
-supported_version="1.12.7"
-
 picture="Rise_of_Nations.gif"
 replace_path="events"
 replace_path="common/ai_focuses"
@@ -44,3 +41,5 @@ replace_path="history/units"
 replace_path="map/strategicregions"
 replace_path="map/supplyareas"
 replace_path="music"
+supported_version="1.12.8"
+remote_file_id="2026448968"
