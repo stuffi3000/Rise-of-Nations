@@ -11,6 +11,49 @@ SOV_cold_war_world = {
 
 }
 SOV_secret_police = {
+	Red_army_revolts = {
+		days_mission_timeout = 2
+
+		available = {
+			set_temp_variable = { strengh_ratio_div =  secret_police_strengh }
+			divide_temp_variable = { strengh_ratio_div = num_armies }
+			check_variable= {
+    			var = strengh_ratio_div
+    			value = 0.6
+    			compare = less_than_or_equals
+			
+			}
+		}
+		activation = {
+			set_temp_variable = { strengh_ratio_div =  secret_police_strengh }
+			divide_temp_variable = { strengh_ratio_div = num_armies }
+			check_variable= {
+				
+    			var = strengh_ratio_div
+    			value = 0.6
+    			compare = greater_than
+			
+			}
+		}
+
+		timeout_effect = {
+			create_dynamic_country = {
+    			original_tag = SOV
+				set_popularities = {
+					communism = 50
+					neutrality = 25
+					democratic = 25
+				}
+				set_politics = {
+					ruling_party = communism
+				}
+   				set_cosmetic_tag = SOV_RED_ARMY
+			}
+			SOC = {
+				transfer_state = 219
+			}
+		}
+	}
 	SOV_launch_recruitment_campaign = {
 		available = {
 			has_character = SOV_lavrentiy_beria
@@ -49,8 +92,10 @@ SOV_power_struggle_category ={
 		days_mission_timeout = 30
 		priority = 10
 		activation = {
-			always = no
+			date > 1953.5.26
+			date < 1954.1.1
 		}
+		fire_only_once = yes
 		available = {
 			OR = {
 				custom_trigger_tooltip = {
@@ -75,12 +120,86 @@ SOV_power_struggle_category ={
 	}
 	instigate_coup_against_Beria = {
 		icon = generic_political_discourse
+		fire_only_once = yes
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1000
+				date > 1953.6.11
+				date < 1954.1.1
+				is_historical_focus_on = yes
+			}
+			modifier = {
+				add = 10
+				date > 1953.6.11
+				date < 1955.1.1
+				is_historical_focus_on = no
+			}
+
+		}
 		allowed = {
 			original_tag = SOV
 		}
+		cancel_trigger = {
+			custom_trigger_tooltip = {
+				has_country_flag = beria_discovers_plot
+				tooltip = beria_discovers_plot_tt
+			}
+		}
 		days_remove = 15
 		remove_effect = {
+			custom_effect_tooltip = instigate_coup_against_Beria_tt
+			hidden_effect = {
+				if = {
+					limit = {
+						is_historical_focus_on = yes
+					}
+					set_country_flag = khrushchev_joined_plot
+					add_to_temp_variable = {total_plot_influence = khrushchev_influence}
+					set_country_flag = malenkov_joined_plot
+					add_to_temp_variable = {total_plot_influence = malenkov_influence}
+					set_country_flag = zhukov_joined_plot
+					add_to_temp_variable = {total_plot_influence = zhukov_influence}
+					
+				}
+				if = {
+					limit= {
+						is_historical_focus_on = no
+					}
+					set_country_flag = khrushchev_joined_plot
+					add_to_temp_variable = {total_plot_influence = khrushchev_influence}
 
+					random_list = {
+						75 = {
+
+						}
+						25 = {
+							set_country_flag = malenkov_joined_plot
+							add_to_temp_variable = {total_plot_influence = malenkov_influence}
+						}
+					}
+					random_list = {
+						75 = {
+
+						}
+						25 = {
+							set_country_flag = zhukov_joined_plot
+							add_to_temp_variable = {total_plot_influence = zhukov_influence}
+						}
+					}
+				}
+
+				if = {
+					limit = {
+						check_variable = { total_plot_influence > beria_influence }
+					}
+					set_country_flag = beria_purged
+					
+				}
+			}
+		}
+		cancel_effect = {
+			custom_effect_tooltip = trials_will_begin_tt
 		}
 	}
 }
