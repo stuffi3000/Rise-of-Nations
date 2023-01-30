@@ -13,19 +13,83 @@ scripted_gui = {
 			
 			launch_nuke_attack_click_enabled = {
 				ROOT = {
-					any_owned_state = {
-						any_state = {
-							CONTROLLER = {
-								tag = ROOT
+					if = {
+						limit = {
+							check_variable = { missile_type = 1}
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM1
 							}
-							meta_trigger = {
-								text = { distance_to = { value > [DISTANCE_NUMBER] target = PREV } }
-								DISTANCE_NUMBER = 10
+							set_temp_variable = { range = 300 }
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM2
 							}
+							set_temp_variable = { range = 400 }
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM3
+							}
+							set_temp_variable = { range = 550 }
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM4
+							}
+							set_temp_variable = { range = 600 }
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM5
+							}
+							set_temp_variable = { range = 650 }
+						}
+						if = {
+							limit = {
+								has_tech = RON_SRBM6
+							}
+							set_temp_variable = { range = 700 }
 						}
 						
 					}
+
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 1
+								}
+								check_variable = {
+									warhead_type = 0
+								}
+							}
+						}
+						subtract_from_temp_variable = {
+							range = 50
+						}
+					}
 					
+					any_state = {
+						CONTROLLER = {
+							OR = {
+								tag = ROOT
+								is_ally_with = ROOT
+
+								AND = {
+									has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
+									NOT = { has_war_with = ROOT } #自国と交戦していない
+								}
+							}
+						}
+						
+						non_damaged_building_level = { building = rocket_site level > 0 }
+						set_temp_variable = { range_hoi4 = range }
+						divide_temp_variable = { range_hoi4 = 4.4}
+						check_variable = { distance_to@PREV.PREV < var:range_hoi4}
+					}
 				}
 			}
 		}
@@ -86,8 +150,30 @@ scripted_gui = {
 			launch_nuke_attack_click = {
 				CONTROLLER = {
 					for_each_scope_loop = { array = owned_states
+						if = {
+							limit = {
+								ROOT = {
+									any_state = {
+										CONTROLLER = {
+											OR = {
+												tag = ROOT
+												is_ally_with = ROOT
+												AND = {
+													has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
+													NOT = { has_war_with = ROOT } #自国と交戦していない
+												}
+											}
+										}
+										non_damaged_building_level = { building = rocket_site level > 0 }
+										check_variable = { distance_to@PREV.PREV < 600}
+									}
+								}
+							}
 
-						ROOT = { launch_nuke = { state = PREV controller = PREV.PREV use_nuke = no } }
+							ROOT = { launch_nuke = { state = PREV use_nuke = no } } 
+						}
+						
+						
 					}
 				}
 			}
@@ -103,6 +189,33 @@ scripted_gui = {
 		visible = {
 			ROOT = {
 				has_country_flag = selecting_new_warhead
+			}
+		}
+		triggers = {
+			warhead_1_click_enabled = {
+				ROOT = {
+					has_tech = nukes
+				}
+			}
+			warhead_2_click_enabled = {
+				ROOT = {
+					has_tech = RON_Thermonuclear_Bomb
+				}
+			}
+			warhead_3_click_enabled = {
+				ROOT = {
+					has_tech = RON_Thermonuclear_Bomb3
+				}
+			}
+			warhead_4_click_enabled = {
+				ROOT = {
+					has_tech = RON_Neutron_Bomb
+				}
+			}
+			warhead_5_click_enabled = {
+				ROOT = {
+					has_tech = RON_Antimatter_Bomb
+				}
 			}
 		}
 		effects = {
@@ -202,7 +315,23 @@ scripted_gui = {
 				has_country_flag = selecting_new_missile
 			} 
 		}
-
+		triggers = {
+			nuclear_missile_1_click_enabled = {
+				ROOT = {
+					has_tech = RON_SRBM1
+				}
+			}
+			nuclear_missile_3_click_enabled = {
+				ROOT = {
+					has_tech = RON_IRBM1
+				}
+			}
+			nuclear_missile_4_click_enabled = {
+				ROOT = {
+					has_tech = RON_ICBM1
+				}
+			}
+		}
 		effects = {
 			nuclear_missile_1_click = {
 				ROOT = {
