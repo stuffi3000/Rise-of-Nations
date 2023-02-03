@@ -256,7 +256,122 @@ scripted_gui = {
 			}
 
 			launch_nuke_attack_click = {
+				ROOT = {
+					
+					if = {
+						limit = {
+							check_variable = { missile_type = 1}
+						}
+						set_variable = { range_eff = SRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 2}
+						}
+						set_variable = { range_eff = MRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 3}
+						}
+						set_variable = { range_eff = IRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 4}
+						}
+					set_variable = { range_eff = ICBM_base_range }
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 1
+								}
+								check_variable = {
+									warhead_type = 0
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 50
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 2
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 3
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 4
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 5
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					divide_variable = {range_eff = 4.4}
+				}
 
+				if = {
+					limit = {
+						ROOT = {
+							num_of_nukes > 0 
+							any_state = {
+								CONTROLLER = {
+									OR = {
+										tag = ROOT
+										is_ally_with = ROOT
+										AND = {
+											has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
+											NOT = { has_war_with = ROOT } #自国と交戦していない
+										}
+									}
+								}
+								non_damaged_building_level = { building = rocket_site level > 0 }
+								
+								
+								check_variable = { distance_to@PREV.PREV < ROOT.range_eff}
+							}
+						}
+					}
+					ROOT = { launch_nuke = { state = PREV use_nuke = yes } } 
+				}
 			}
 			launch_nuke_attack_shift_click = {
 
