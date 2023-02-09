@@ -13,83 +13,186 @@ scripted_gui = {
 			
 			launch_nuke_attack_click_enabled = {
 				ROOT = {
+					
+					hidden_trigger = {
+						if = {
+							limit = {
+								check_variable = { missile_type = 1}
+							}
+							set_temp_variable = { range = SRBM_base_range }
+							set_temp_variable = { payload_mass_cap = 50 }
+						}
+						if = {
+							limit = {
+								check_variable = { missile_type = 2}
+							}
+							set_temp_variable = { range = MRBM_base_range }
+							set_temp_variable = { payload_mass_cap = 50 }
+						}
+						if = {
+							limit = {
+								check_variable = { missile_type = 3}
+							}
+							set_temp_variable = { range = IRBM_base_range }
+							set_temp_variable = { payload_mass_cap = 2400 }
+
+						}
+						if = {
+							limit = {
+								check_variable = { missile_type = 4}
+							}
+						set_temp_variable = { range = ICBM_base_range }
+						set_temp_variable = { payload_mass_cap = 5000 }
+						}
+						if = {
+							limit = {
+								OR = {
+									check_variable = {
+										warhead_type = 1
+									}
+									check_variable = {
+										warhead_type = 0
+									}
+								}
+							}
+							subtract_from_temp_variable = {
+								range = 50
+							}
+							set_temp_variable = {
+								payload_mass = 50
+							}
+						}
+						if = {
+							limit = {
+								OR = {
+									check_variable = {
+										warhead_type = 2
+									}
+								}
+							}
+							subtract_from_temp_variable = {
+								range = 100
+							}
+							set_temp_variable = {
+								payload_mass = 2400
+							}
+						}
+						if = {
+							limit = {
+								OR = {
+									check_variable = {
+										warhead_type = 3
+									}
+								}
+							}
+							subtract_from_temp_variable = {
+								range = 150
+							}
+							set_temp_variable = {
+								payload_mass = 4500
+							}
+						}
+						if = {
+							limit = {
+								OR = {
+									check_variable = {
+										warhead_type = 4
+									}
+								}
+							}
+							subtract_from_temp_variable = {
+								range = 150
+							}
+							set_temp_variable = {
+								payload_mass = 900
+							}
+						}
+						if = {
+							limit = {
+								OR = {
+									check_variable = {
+										warhead_type = 5
+									}
+								}
+							}
+							subtract_from_temp_variable = {
+								range = 100
+							}
+							set_temp_variable = {
+								payload_mass = 2000
+							}
+						}
+					}
+					num_of_nukes > 0 
 					if = {
 						limit = {
 							check_variable = { missile_type = 1}
 						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM1
-							}
-							set_temp_variable = { range = 300 }
+						has_equipment = {
+							srbm_equipment > 0
 						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM2
-							}
-							set_temp_variable = { range = 400 }
-						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM3
-							}
-							set_temp_variable = { range = 550 }
-						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM4
-							}
-							set_temp_variable = { range = 600 }
-						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM5
-							}
-							set_temp_variable = { range = 650 }
-						}
-						if = {
-							limit = {
-								has_tech = RON_SRBM6
-							}
-							set_temp_variable = { range = 700 }
-						}
-						
 					}
-
 					if = {
 						limit = {
-							OR = {
-								check_variable = {
-									warhead_type = 1
-								}
-								check_variable = {
-									warhead_type = 0
-								}
-							}
+							check_variable = { missile_type = 2}
 						}
-						subtract_from_temp_variable = {
-							range = 50
+						has_equipment = {
+							srbm_equipment > 0
+						}
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 3}
+						}
+						has_equipment = {
+							irbm_equipment > 0
+						}
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 4}
+						}
+						has_equipment = {
+							guided_missile_equipment > 0
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = range_check_tt
+						check_variable = {
+							range > 0
 						}
 					}
 					
-					any_state = {
-						CONTROLLER = {
-							OR = {
-								tag = ROOT
-								is_ally_with = ROOT
+					custom_trigger_tooltip = {
+						tooltip = mass_check_tt
+						check_variable = {
+    						var = payload_mass_cap
+    						value = payload_mass
+    						compare = greater_than_or_equals
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = range_and_state_launch_site_check_tt
+						any_state = {
+							CONTROLLER = {
+								OR = {
+									tag = ROOT
+									is_ally_with = ROOT
 
-								AND = {
-									has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
-									NOT = { has_war_with = ROOT } #自国と交戦していない
+									AND = {
+										has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
+										NOT = { has_war_with = ROOT } #自国と交戦していない
+									}
 								}
 							}
-						}
 						
-						non_damaged_building_level = { building = rocket_site level > 0 }
-						set_temp_variable = { range_hoi4 = range }
-						divide_temp_variable = { range_hoi4 = 4.4}
-						check_variable = { distance_to@PREV.PREV < var:range_hoi4}
+							non_damaged_building_level = { building = rocket_site level > 0 }
+							set_temp_variable = { range_hoi4 = range }
+							divide_temp_variable = { range_hoi4 = 4.4}
+							check_variable = { distance_to@PREV.PREV < var:range_hoi4}
+						}
 					}
+					
 				}
 			}
 		}
@@ -99,6 +202,10 @@ scripted_gui = {
 			}
 		}
 		effects = {
+			close_button_click = {
+				ROOT = {clr_country_flag = show_nuclear_ui}
+			}
+
 			warhead_selected_click = {
 				ROOT = {
 					
@@ -147,12 +254,501 @@ scripted_gui = {
 					}
 				}
 			}
+
 			launch_nuke_attack_click = {
+				ROOT = {
+					
+					if = {
+						limit = {
+							check_variable = { missile_type = 1}
+						}
+						set_variable = { range_eff = SRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 2}
+						}
+						set_variable = { range_eff = MRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 3}
+						}
+						set_variable = { range_eff = IRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 4}
+						}
+					set_variable = { range_eff = ICBM_base_range }
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 1
+								}
+								check_variable = {
+									warhead_type = 0
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 50
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 2
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 3
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 4
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 5
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					divide_variable = {range_eff = 4.4}
+				}
+
+				if = {
+					limit = {
+						ROOT = {
+							num_of_nukes > 0 
+							any_state = {
+								CONTROLLER = {
+									OR = {
+										tag = ROOT
+										is_ally_with = ROOT
+										AND = {
+											has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
+											NOT = { has_war_with = ROOT } #自国と交戦していない
+										}
+									}
+								}
+								non_damaged_building_level = { building = rocket_site level > 0 }
+								
+								
+								check_variable = { distance_to@PREV.PREV < ROOT.range_eff}
+							}
+						}
+					}
+					ROOT = { launch_nuke = { state = PREV use_nuke = yes } } 
+					if = {
+
+						# Hiroshima estimates: ~30% civilian deaths
+						limit = {
+							check_variable= {
+								ROOT.warhead_type = 1
+							}
+						}
+						set_temp_variable = {
+							temp1 = state_population_k 
+						}
+						multiply_temp_variable = {
+							temp1 = -0.30
+						}
+						multiply_temp_variable = {
+							temp1 = 1000
+						}
+						add_manpower = var:temp1
+
+						damage_building = {
+    						type = industrial_complex
+    						damage = 1
+						}
+						damage_building = {
+    						type = arms_factory
+    						damage = 1
+						}
+
+					}
+
+					if = {
+						limit = {
+							check_variable = {
+								ROOT.warhead_type = 2
+							}
+						}
+						set_temp_variable = {
+							temp1 = state_population_k 
+						}
+						multiply_temp_variable = {
+							temp1 = -0.50
+						}
+						multiply_temp_variable = {
+							temp1 = 1000
+						}
+						add_manpower = var:temp1
+
+						set_temp_variable = {
+							temp_arms = arms_factory_level
+						}
+						multiply_temp_variable = {
+							temp_arms = 0.5
+						}
+						round_temp_variable = temp_arms
+						remove_building = {
+    						type = arms_factory
+    						level = var:temp_arms
+						}
+						set_temp_variable = {
+							temp_civs = industrial_complex_level
+						}
+						multiply_temp_variable = {
+							temp_civs = 0.5
+						}
+						round_temp_variable  = temp_civs
+						remove_building = {
+    						type = industrial_complex
+    						level = var:temp_civs
+						}
+						set_temp_variable = {
+							temp_nuclear = building_level@nuclear_reactor
+						}
+						multiply_temp_variable = {
+							temp_nuclear = 0.5
+						}
+						round_temp_variable  = temp_nuclear
+						remove_building = {
+    						type = nuclear_reactor
+    						level = var:temp_nuclear
+						}
+						set_temp_variable = {
+							temp_infra = building_level@infrastructure
+						}
+						multiply_temp_variable = {
+							temp_infra = 0.5
+						}
+						round_temp_variable  = temp_infra
+						remove_building = {
+    						type = infrastructure
+    						level = var:temp_infra
+						}
+					}
+
+					if = { 
+						limit = {
+							check_variable = {
+								ROOT.warhead_type = 3
+							}
+						}
+						set_temp_variable = {
+							temp1 = state_population_k 
+						}
+						multiply_temp_variable = {
+							temp1 = -0.70
+						}
+						multiply_temp_variable = {
+							temp1 = 1000
+						}
+						add_manpower = var:temp1
+
+						set_temp_variable = {
+							temp_arms = arms_factory_level
+						}
+						multiply_temp_variable = {
+							temp_arms = 0.7
+						}
+						round_temp_variable = temp_arms
+						remove_building = {
+    						type = arms_factory
+    						level = var:temp_arms
+						}
+						set_temp_variable = {
+							temp_civs = industrial_complex_level
+						}
+						multiply_temp_variable = {
+							temp_civs = 0.7
+						}
+						round_temp_variable  = temp_civs
+						remove_building = {
+    						type = industrial_complex
+    						level = var:temp_civs
+						}
+						set_temp_variable = {
+							temp_nuclear = building_level@nuclear_reactor
+						}
+						multiply_temp_variable = {
+							temp_nuclear = 0.7
+						}
+						round_temp_variable  = temp_nuclear
+						remove_building = {
+    						type = nuclear_reactor
+    						level = var:temp_nuclear
+						}
+						set_temp_variable = {
+							temp_infra = building_level@infrastructure
+						}
+						multiply_temp_variable = {
+							temp_infra = 0.7
+						}
+						round_temp_variable  = temp_infra
+						remove_building = {
+    						type = infrastructure
+    						level = var:temp_infra
+						}
+					}
+					if = {
+						limit = {
+							check_variable = {
+								ROOT.warhead_type = 4
+							}
+						}
+						set_temp_variable = {
+							temp1 = state_population_k 
+						}
+						multiply_temp_variable = {
+							temp1 = -0.90
+						}
+						multiply_temp_variable = {
+							temp1 = 1000
+						}
+						add_manpower = var:temp1
+
+						damage_units = {
+    						state = THIS
+    						limit = { NOT = { TAG = ROOT}}
+    						damage = 0.9
+    						org_damage = 0.9
+    						str_damage = 0.9
+    						ratio = yes
+    						army = yes
+    						navy = yes
+						}
+						damage_units = {
+    						state = THIS
+    						limit = { TAG = ROOT}
+    						damage = 0.2
+    						org_damage = 0.2
+    						str_damage = 0.2
+    						ratio = yes
+    						army = yes
+    						navy = yes
+						}
+					}
+					if = {
+						limit = {
+							check_variable = {
+								ROOT.warhead_type = 5
+							}
+						}
+						set_temp_variable = {
+							temp1 = state_population_k 
+						}
+						multiply_temp_variable = {
+							temp1 = -0.95
+						}
+						multiply_temp_variable = {
+							temp1 = 1000
+						}
+						add_manpower = var:temp1
+
+						set_temp_variable = {
+							temp_arms = arms_factory_level
+						}
+						multiply_temp_variable = {
+							temp_arms = 0.95
+						}
+						round_temp_variable = temp_arms
+						remove_building = {
+    						type = arms_factory
+    						level = var:temp_arms
+						}
+						set_temp_variable = {
+							temp_civs = industrial_complex_level
+						}
+						multiply_temp_variable = {
+							temp_civs = 0.95
+						}
+						round_temp_variable  = temp_civs
+						remove_building = {
+    						type = industrial_complex
+    						level = var:temp_civs
+						}
+						set_temp_variable = {
+							temp_nuclear = building_level@nuclear_reactor
+						}
+						multiply_temp_variable = {
+							temp_nuclear = 0.95
+						}
+						round_temp_variable  = temp_nuclear
+						remove_building = {
+    						type = nuclear_reactor
+    						level = var:temp_nuclear
+						}
+						set_temp_variable = {
+							temp_infra = building_level@infrastructure
+						}
+						multiply_temp_variable = {
+							temp_infra = 0.95
+						}
+						round_temp_variable  = temp_infra
+						remove_building = {
+    						type = infrastructure
+    						level = var:temp_infra
+						}
+						damage_units = {
+    						state = THIS
+    						limit = { NOT = { TAG = ROOT}}
+    						damage = 0.95
+    						org_damage = 0.95
+    						str_damage = 0.95
+    						ratio = yes
+    						army = yes
+    						navy = yes
+						}
+						damage_units = {
+    						state = THIS
+    						limit = { TAG = ROOT}
+    						damage = 0.2
+    						org_damage = 0.2
+    						str_damage = 0.2
+    						ratio = yes
+    						army = yes
+    						navy = yes
+						}
+					}
+				}
+			}
+			launch_nuke_attack_shift_click = {
+
+				ROOT = {
+					
+					if = {
+						limit = {
+							check_variable = { missile_type = 1}
+						}
+						set_variable = { range_eff = SRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 2}
+						}
+						set_variable = { range_eff = MRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 3}
+						}
+						set_variable = { range_eff = IRBM_base_range }
+					}
+					if = {
+						limit = {
+							check_variable = { missile_type = 4}
+						}
+					set_variable = { range_eff = ICBM_base_range }
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 1
+								}
+								check_variable = {
+									warhead_type = 0
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 50
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 2
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 3
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 4
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 150
+						}
+					}
+					if = {
+						limit = {
+							OR = {
+								check_variable = {
+									warhead_type = 5
+								}
+							}
+						}
+						subtract_from_variable = {
+							range_eff = 100
+						}
+					}
+					divide_variable = {range_eff = 4.4}
+				}
 				CONTROLLER = {
-					for_each_scope_loop = { array = owned_states
+					for_each_scope_loop = { 
+						array = owned_states
+						
 						if = {
 							limit = {
 								ROOT = {
+									num_of_nukes > 0 
 									any_state = {
 										CONTROLLER = {
 											OR = {
@@ -165,12 +761,14 @@ scripted_gui = {
 											}
 										}
 										non_damaged_building_level = { building = rocket_site level > 0 }
-										check_variable = { distance_to@PREV.PREV < 600}
+										
+										
+										check_variable = { distance_to@PREV.PREV < ROOT.range_eff}
 									}
 								}
 							}
 
-							ROOT = { launch_nuke = { state = PREV use_nuke = no } } 
+							ROOT = { launch_nuke = { state = PREV use_nuke = yes } } 
 						}
 						
 						
