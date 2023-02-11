@@ -12,8 +12,9 @@ SOV_cold_war_world = {
 }
 SOV_secret_police = {
 	Red_army_revolts = {
-		days_mission_timeout = 2
-
+		icon = generic_prepare_civil_war
+		days_mission_timeout = 200
+		fire_only_once = yes
 		available = {
 			set_temp_variable = { strengh_ratio_div =  secret_police_strengh }
 			divide_temp_variable = { strengh_ratio_div = num_armies }
@@ -35,7 +36,9 @@ SOV_secret_police = {
 			
 			}
 		}
-
+		complete_effect = {
+			country_lock_all_division_template = yes
+		}
 		timeout_effect = {
 			create_dynamic_country = {
     			original_tag = SOV
@@ -51,10 +54,22 @@ SOV_secret_police = {
 			}
 			SOC = {
 				transfer_state = 219
+				
+				declare_war_on = {
+					target = SOV
+					type = civil_war
+				}
+				add_civil_war_target = SOV
 			}
+			transfer_units_fraction = {
+				target = SOC
+				size = 1 
+			}
+			country_lock_all_division_template = no
 		}
 	}
 	SOV_launch_recruitment_campaign = {
+		icon = onmap_recruit_operative
 		available = {
 			has_character = SOV_lavrentiy_beria
 		}
@@ -67,6 +82,7 @@ SOV_secret_police = {
 	}
 
 	recruit_NKVD_in_FROM = {
+		icon = onmap_recruit_operative
 		visible = {
 			has_country_flag = secret_police_recruitment
 		}
@@ -78,8 +94,14 @@ SOV_secret_police = {
 				is_subject_of = ROOT
 			}
 		}
-		days_remove = 1
+		days_remove = 10
 		remove_effect = {
+			ROOT = {
+				add_to_variable = {
+					beria_influence = 2
+					tooltip = beria_influence_increased_to_tt	
+				}
+			}
 			add_to_variable = {
 				SOV.secret_police_strengh = 5
 			}
@@ -114,11 +136,17 @@ SOV_power_struggle_category ={
 		timeout_effect = {
 			add_to_variable = {
 				zhukov_influence = 5
-				tooltip = zhukov_influence_increased_to_tt
+				tooltip = zhukov_influence_increased_to_tt	
 			}
+			set_country_flag = zhukov_in_moscow
 		}
 	}
 	instigate_coup_against_Beria = {
+		visible = {
+			NOT = {
+				has_country_flag = beria_path
+			}
+		}
 		icon = generic_political_discourse
 		fire_only_once = yes
 		ai_will_do = {
@@ -142,8 +170,25 @@ SOV_power_struggle_category ={
 		}
 		cancel_trigger = {
 			custom_trigger_tooltip = {
-				has_country_flag = beria_discovers_plot
+				has_country_flag = beria_discovers_plot  
 				tooltip = beria_discovers_plot_tt
+			}
+		}
+		complete_effect = {
+			set_country_flag = non_beria_path
+			hidden_effect = {
+				random_list = {
+					50 = {
+						country_event = {id = cw_sov.15 days = 10}
+						modifier = {
+							factor = 0
+							is_historical_focus_on = yes
+						}
+					}
+					50 = {
+
+					}
+				}
 			}
 		}
 		days_remove = 15
@@ -158,9 +203,16 @@ SOV_power_struggle_category ={
 					add_to_temp_variable = {total_plot_influence = khrushchev_influence}
 					set_country_flag = malenkov_joined_plot
 					add_to_temp_variable = {total_plot_influence = malenkov_influence}
-					set_country_flag = zhukov_joined_plot
-					add_to_temp_variable = {total_plot_influence = zhukov_influence}
+					if = {
+						limit = {
+							has_country_flag = zhukov_in_moscow
+						}
+						set_country_flag = zhukov_joined_plot
+						add_to_temp_variable = {total_plot_influence = zhukov_influence}
+					}
 					
+					set_country_flag = kaganovich_joined_plot
+					add_to_temp_variable = {total_plot_influence = kaganovich_influence}
 				}
 				if = {
 					limit= {
@@ -178,13 +230,28 @@ SOV_power_struggle_category ={
 							add_to_temp_variable = {total_plot_influence = malenkov_influence}
 						}
 					}
+					if = {
+						limit = {
+							has_country_flag = zhukov_in_moscow
+						}
+						random_list = {
+							75 = {
+
+							}
+							25 = {
+								set_country_flag = zhukov_joined_plot
+								add_to_temp_variable = {total_plot_influence = zhukov_influence}
+							}
+						}
+					}
+					
 					random_list = {
-						75 = {
+						10 = {
 
 						}
-						25 = {
-							set_country_flag = zhukov_joined_plot
-							add_to_temp_variable = {total_plot_influence = zhukov_influence}
+						90 = {
+							set_country_flag = kaganovich_joined_plot
+							add_to_temp_variable = {total_plot_influence = kaganovich_influence}
 						}
 					}
 				}
@@ -200,6 +267,21 @@ SOV_power_struggle_category ={
 		}
 		cancel_effect = {
 			custom_effect_tooltip = trials_will_begin_tt
+		}
+	}
+	put_committee_under_surveillance = {
+		icon = onmap_recruit_operative
+		fire_only_once = yes
+		visible = {
+			NOT = {
+				has_country_flag = non_beria_path
+			}
+		}
+		complete_effect = {
+			set_country_flag = beria_path
+			hidden_effect = {
+				country_event = {id = cw_sov.14 days = 10}
+			}
 		}
 	}
 }
