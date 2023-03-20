@@ -1,17 +1,55 @@
 scripted_gui = {
+	nuclear_attack_button = {
+		context_type = selected_state_context
+		parent_window_token = selected_state_view 
+		window_name = "nuclear_attack_ui_button"
+		visible = {
+			always = yes
+		}
 
+		effects = {
+			nuclear_attack_ui_button_e_click = {
+				ROOT = {
+					set_country_flag = show_nuclear_ui
+				}
+			}
+		}
+		triggers = {
+			nuclear_attack_ui_button_e_enabled = {
+				ROOT = {
+					OR = {
+						has_tech = RON_SRBM1
+						has_tech = RON_IRBM1
+						has_tech = RON_ICBM1
+					}
+				}
+			}
+		}
+	}
 	nuclear_attack_ui = {
 		context_type = selected_state_context
 		parent_window_token = selected_state_view 
 		window_name = "nuclear_attack_ui_window"
+
+		# ai_test_interval = 24
+		# ai_test_scopes = test_enemy_controlled_states
+		# ai_enabled = {
+    	# 	always = yes
+		# }
 		visible = {
 			ROOT = {
+				OR = {
+					has_tech = RON_SRBM1
+					has_tech = RON_IRBM1
+					has_tech = RON_ICBM1
+				}
 				has_country_flag = show_nuclear_ui
 			}
 		}
 		triggers = {
 			
 			launch_nuke_attack_click_enabled = {
+				
 				ROOT = {
 					
 					hidden_trigger = {
@@ -180,18 +218,35 @@ scripted_gui = {
 									is_ally_with = ROOT
 
 									AND = {
-										has_war_together_with = ROOT #自国と共闘している国家（同陣営内？）
-										NOT = { has_war_with = ROOT } #自国と交戦していない
+										has_war_together_with = ROOT 
+										NOT = { has_war_with = ROOT }
 									}
 								}
 							}
-						
-							non_damaged_building_level = { building = rocket_site level > 0 }
+
+							OR = {
+								non_damaged_building_level = { building = rocket_site level > 0 }
+								AND = {
+									any_state_division = {
+										division_has_battalion_in_template = mobile_launch_site
+									}
+									ROOT = {
+										check_variable = {missile_type = 1}
+									}
+								}
+							}
 							set_temp_variable = { range_hoi4 = range }
 							divide_temp_variable = { range_hoi4 = 4.4}
 							check_variable = { distance_to@PREV.PREV < var:range_hoi4}
 						}
 					}
+					
+				}
+				THIS = {
+					
+						
+					is_controlled_by_ROOT_or_ally = no
+						
 					
 				}
 			}
@@ -363,7 +418,17 @@ scripted_gui = {
 										}
 									}
 								}
-								non_damaged_building_level = { building = rocket_site level > 0 }
+								OR = {
+									non_damaged_building_level = { building = rocket_site level > 0 }
+									AND = {
+										any_state_division = {
+											division_has_battalion_in_template = mobile_launch_site
+										}
+										ROOT = {
+											check_variable = {missile_type = 1}
+										}
+									}
+								}
 								
 								
 								check_variable = { distance_to@PREV.PREV < ROOT.range_eff}
@@ -649,7 +714,9 @@ scripted_gui = {
 				}
 			}
 			launch_nuke_attack_shift_click = {
-
+				CONTROLLER = {
+					set_country_flag = all_out_attack_by_@ROOT
+				}
 				ROOT = {
 					
 					if = {
@@ -760,7 +827,17 @@ scripted_gui = {
 												}
 											}
 										}
-										non_damaged_building_level = { building = rocket_site level > 0 }
+										OR = {
+											non_damaged_building_level = { building = rocket_site level > 0 }
+											AND = {
+												any_state_division = {
+													division_has_battalion_in_template = mobile_launch_site
+												}
+												ROOT = {
+													check_variable = {missile_type = 1}
+												}
+											}
+										}
 										
 										
 										check_variable = { distance_to@PREV.PREV < ROOT.range_eff}
