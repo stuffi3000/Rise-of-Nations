@@ -1,486 +1,486 @@
-scripted_diplomatic_actions = {
+# scripted_diplomatic_actions = {
 
-	RON_propose_peace = {
-		visible = {
-			has_capitulated = no
-			has_war_with = ROOT
-			is_subject = no
-			is_major = yes
-			OR = {
-				is_faction_leader = yes
-				is_in_faction = no
-			}
-		}
-		selectable = {
-			custom_trigger_tooltip = {
-				ROOT = {
-					NOT = {
-						has_country_flag = sent_peace_request
-					}
-				}
-				tooltip = is_on_peace_cooldown_tt
+# 	RON_propose_peace = {
+# 		visible = {
+# 			has_capitulated = no
+# 			has_war_with = ROOT
+# 			is_subject = no
+# 			is_major = yes
+# 			OR = {
+# 				is_faction_leader = yes
+# 				is_in_faction = no
+# 			}
+# 		}
+# 		selectable = {
+# 			custom_trigger_tooltip = {
+# 				ROOT = {
+# 					NOT = {
+# 						has_country_flag = sent_peace_request
+# 					}
+# 				}
+# 				tooltip = is_on_peace_cooldown_tt
 
-			}
-			hidden_trigger = {
-				if = {
-					limit = {
-						ROOT = {
-							AND = {
-								check_variable = { peace_cost = 0 }
-							}
-						}
-					}
-					AND = {
-						has_stability > 0.05
-						has_war_support > 0.05
-					}
+# 			}
+# 			hidden_trigger = {
+# 				if = {
+# 					limit = {
+# 						ROOT = {
+# 							AND = {
+# 								check_variable = { peace_cost = 0 }
+# 							}
+# 						}
+# 					}
+# 					AND = {
+# 						has_stability > 0.05
+# 						has_war_support > 0.05
+# 					}
 
-				}
-				else = {
-					set_temp_variable = { peace_cost_temp = peace_cost }
-					divide_temp_variable = { peace_cost_temp = 100 }
-					AND = {
-						has_stability > peace_cost_temp
-						has_war_support > peace_cost_temp
-					}
-				}
-			}
-		}
-		requires_acceptance = yes
-		show_acceptance_on_action_button = yes
+# 				}
+# 				else = {
+# 					set_temp_variable = { peace_cost_temp = peace_cost }
+# 					divide_temp_variable = { peace_cost_temp = 100 }
+# 					AND = {
+# 						has_stability > peace_cost_temp
+# 						has_war_support > peace_cost_temp
+# 					}
+# 				}
+# 			}
+# 		}
+# 		requires_acceptance = yes
+# 		show_acceptance_on_action_button = yes
 
-		cost_string = RON_propose_peace_cost_string
+# 		cost_string = RON_propose_peace_cost_string
 
 
-		complete_effect = {
+# 		complete_effect = {
 
-			#We are losing pls peace (Bad Ending)
-			if = {
-				limit = {
-					ROOT = {
-						surrender_progress > 0.3
-					}
-				}
+# 			#We are losing pls peace (Bad Ending)
+# 			if = {
+# 				limit = {
+# 					ROOT = {
+# 						surrender_progress > 0.3
+# 					}
+# 				}
 
-				THIS = {
-					every_country = {
-						limit = {
-							is_in_faction_with = ROOT
-						}
-						every_owned_state = {
+# 				THIS = {
+# 					every_country = {
+# 						limit = {
+# 							is_in_faction_with = ROOT
+# 						}
+# 						every_owned_state = {
 							
-							limit = {
-								is_controlled_by = PREV.PREV
+# 							limit = {
+# 								is_controlled_by = PREV.PREV
 								
-							}
-							set_state_flag = state_to_be_transfered
+# 							}
+# 							set_state_flag = state_to_be_transfered
 							
-						}
-					}
-				}
-				every_state = {
-					limit = {
-						has_state_flag = state_to_be_transfered
-					}
-					PREV = {
-						transfer_state = PREV
-					}
-					clr_state_flag = state_to_be_transfered
-				}
+# 						}
+# 					}
+# 				}
+# 				every_state = {
+# 					limit = {
+# 						has_state_flag = state_to_be_transfered
+# 					}
+# 					PREV = {
+# 						transfer_state = PREV
+# 					}
+# 					clr_state_flag = state_to_be_transfered
+# 				}
 
-				if = {
-					# ROOT is leader  of  the faction, all countries wp
-					limit = {
-						ROOT = {
-							is_faction_leader = yes
-						}
-					}
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = PREV
-								is_subject_of = PREV
-								tag = PREV
-							}
-						}
-						every_country = {
-							limit = {
-								OR = {
-									is_in_faction_with = ROOT
-									is_subject_of = ROOT
-									tag = ROOT
-								}
-							}
-							white_peace = {
-								tag = PREV
+# 				if = {
+# 					# ROOT is leader  of  the faction, all countries wp
+# 					limit = {
+# 						ROOT = {
+# 							is_faction_leader = yes
+# 						}
+# 					}
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = PREV
+# 								is_subject_of = PREV
+# 								tag = PREV
+# 							}
+# 						}
+# 						every_country = {
+# 							limit = {
+# 								OR = {
+# 									is_in_faction_with = ROOT
+# 									is_subject_of = ROOT
+# 									tag = ROOT
+# 								}
+# 							}
+# 							white_peace = {
+# 								tag = PREV
 
-							}
-						}
-					}
-				}
-				else = {
-					# ROOT is not faction leader, in that case only wp with him
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = PREV
-								is_subject_of = PREV
-								tag = PREV
-							}
-						}
+# 							}
+# 						}
+# 					}
+# 				}
+# 				else = {
+# 					# ROOT is not faction leader, in that case only wp with him
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = PREV
+# 								is_subject_of = PREV
+# 								tag = PREV
+# 							}
+# 						}
 
-						white_peace = {
-							tag = ROOT
-						}
-					}
-					ROOT = {
-						leave_faction = yes
-						add_timed_idea = {
-							idea = RI_Peace_prop_no_faction_joining
-							days = 100
-						}
-					}
-				}
-				log = "[ROOT.GetName] (was loosing) proposed peace to [THIS.GetName] and was accepted"
-			}
+# 						white_peace = {
+# 							tag = ROOT
+# 						}
+# 					}
+# 					ROOT = {
+# 						leave_faction = yes
+# 						add_timed_idea = {
+# 							idea = RI_Peace_prop_no_faction_joining
+# 							days = 100
+# 						}
+# 					}
+# 				}
+# 				log = "[ROOT.GetName] (was loosing) proposed peace to [THIS.GetName] and was accepted"
+# 			}
 
-			#We are winning (Good Ending)
-			else_if = {
-				limit = {
-					THIS = {
-						surrender_progress > 0.3
-					}
-				}
-				every_country = {
-					limit = {
-						OR = {
-							is_in_faction_with = PREV
-							tag = PREV
-						}
-					}
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = ROOT
-								is_subject_of = ROOT
-								tag = ROOT
-							}
-						}
-						every_controlled_state = {
-							limit = {
-								is_owned_by = PREV.PREV
-							}
-							PREV = {
-								transfer_state = PREV
-							}
-						}
-					}
-				}
-				if = {
-					# THIS is leader  of  the faction, all countries wp
-					limit = {
-						THIS = {
-							is_faction_leader = yes
-						}
-					}
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = ROOT
-								is_subject_of = ROOT
-								tag = ROOT
-							}
-						}
-						every_country = {
-							limit = {
-								OR = {
-									is_in_faction_with = PREV.PREV
-									is_subject_of = PREV.PREV
-									tag = PREV.PREV
-								}
-							}
-							white_peace = {
-								tag = PREV
-							}
-						}
-					}
-				}
-				else = {
-					# THIS is not faction leader, in that case only wp with him
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = PREV
-								is_subject_of = PREV
-								tag = PREV
-							}
-						}
+# 			#We are winning (Good Ending)
+# 			else_if = {
+# 				limit = {
+# 					THIS = {
+# 						surrender_progress > 0.3
+# 					}
+# 				}
+# 				every_country = {
+# 					limit = {
+# 						OR = {
+# 							is_in_faction_with = PREV
+# 							tag = PREV
+# 						}
+# 					}
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = ROOT
+# 								is_subject_of = ROOT
+# 								tag = ROOT
+# 							}
+# 						}
+# 						every_controlled_state = {
+# 							limit = {
+# 								is_owned_by = PREV.PREV
+# 							}
+# 							PREV = {
+# 								transfer_state = PREV
+# 							}
+# 						}
+# 					}
+# 				}
+# 				if = {
+# 					# THIS is leader  of  the faction, all countries wp
+# 					limit = {
+# 						THIS = {
+# 							is_faction_leader = yes
+# 						}
+# 					}
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = ROOT
+# 								is_subject_of = ROOT
+# 								tag = ROOT
+# 							}
+# 						}
+# 						every_country = {
+# 							limit = {
+# 								OR = {
+# 									is_in_faction_with = PREV.PREV
+# 									is_subject_of = PREV.PREV
+# 									tag = PREV.PREV
+# 								}
+# 							}
+# 							white_peace = {
+# 								tag = PREV
+# 							}
+# 						}
+# 					}
+# 				}
+# 				else = {
+# 					# THIS is not faction leader, in that case only wp with him
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = PREV
+# 								is_subject_of = PREV
+# 								tag = PREV
+# 							}
+# 						}
 
-						white_peace = {
-							tag = ROOT
-						}
-					}
-					PREV = {
-						leave_faction = yes
-						add_timed_idea = {
-							idea = RI_Peace_prop_no_faction_joining
-							days = 100
-						}
-					}
-				}
-				log = "[ROOT.GetName] (was winnig) proposed peace to [THIS.GetName] and was accepted"
-			}
-			#Just a standard wp (Neutral Ending)
-			else = {
-				log = "[ROOT.GetName] (neutral) proposed peace to [THIS.GetName] and was accepted"
-				if = {
-					# ROOT is leader  of  the faction, all countries wp
-					limit = {
-						ROOT = {
-							is_faction_leader = yes
-						}
-					}
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = PREV
-								is_subject_of = PREV
-								tag = PREV
-							}
-						}
-						every_country = {
-							limit = {
-								OR = {
-									is_in_faction_with = ROOT
-									is_subject_of = ROOT
-									tag = ROOT
-								}
-							}
-							white_peace = {
-								tag = PREV
+# 						white_peace = {
+# 							tag = ROOT
+# 						}
+# 					}
+# 					PREV = {
+# 						leave_faction = yes
+# 						add_timed_idea = {
+# 							idea = RI_Peace_prop_no_faction_joining
+# 							days = 100
+# 						}
+# 					}
+# 				}
+# 				log = "[ROOT.GetName] (was winnig) proposed peace to [THIS.GetName] and was accepted"
+# 			}
+# 			#Just a standard wp (Neutral Ending)
+# 			else = {
+# 				log = "[ROOT.GetName] (neutral) proposed peace to [THIS.GetName] and was accepted"
+# 				if = {
+# 					# ROOT is leader  of  the faction, all countries wp
+# 					limit = {
+# 						ROOT = {
+# 							is_faction_leader = yes
+# 						}
+# 					}
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = PREV
+# 								is_subject_of = PREV
+# 								tag = PREV
+# 							}
+# 						}
+# 						every_country = {
+# 							limit = {
+# 								OR = {
+# 									is_in_faction_with = ROOT
+# 									is_subject_of = ROOT
+# 									tag = ROOT
+# 								}
+# 							}
+# 							white_peace = {
+# 								tag = PREV
 
-							}
-						}
-					}
-				}
-				else = {
-					# ROOT is not faction leader, in that case only wp with him
-					every_country = {
-						limit = {
-							OR = {
-								is_in_faction_with = PREV
-								is_subject_of = PREV
-								tag = PREV
-							}
-						}
+# 							}
+# 						}
+# 					}
+# 				}
+# 				else = {
+# 					# ROOT is not faction leader, in that case only wp with him
+# 					every_country = {
+# 						limit = {
+# 							OR = {
+# 								is_in_faction_with = PREV
+# 								is_subject_of = PREV
+# 								tag = PREV
+# 							}
+# 						}
 
-						white_peace = {
-							tag = ROOT
-						}
-					}
-					ROOT = {
-						leave_faction = yes
-						add_timed_idea = {
-							idea = RI_Peace_prop_no_faction_joining
-							days = 100
-						}
-					}
-				}
-			}
-			ROOT = {
-				set_variable = { peace_cost = 5 }
-			}
-			#Reset the days at war modifier 
-			THIS = {
-				set_variable = { days_at_war_with_multiplier_@ROOT = 0 }
+# 						white_peace = {
+# 							tag = ROOT
+# 						}
+# 					}
+# 					ROOT = {
+# 						leave_faction = yes
+# 						add_timed_idea = {
+# 							idea = RI_Peace_prop_no_faction_joining
+# 							days = 100
+# 						}
+# 					}
+# 				}
+# 			}
+# 			ROOT = {
+# 				set_variable = { peace_cost = 5 }
+# 			}
+# 			#Reset the days at war modifier 
+# 			THIS = {
+# 				set_variable = { days_at_war_with_multiplier_@ROOT = 0 }
 
-			}
-			ROOT = {
-				set_variable = { days_at_war_with_multiplier_@ROOT = 0 }
-			}
-		}
-		on_sent_effect = {
+# 			}
+# 			ROOT = {
+# 				set_variable = { days_at_war_with_multiplier_@ROOT = 0 }
+# 			}
+# 		}
+# 		on_sent_effect = {
 
-			ROOT = {
-				if = {
-					#base cost
-					limit = {
-						check_variable = {
-							peace_cost = 0
-						}
-					}
-					set_variable = { peace_cost = 5 }
-				}
-				else = {
-					# multiplying by 2 everytime there's a peace request
-					multiply_variable = { peace_cost = 2 }
-				}
+# 			ROOT = {
+# 				if = {
+# 					#base cost
+# 					limit = {
+# 						check_variable = {
+# 							peace_cost = 0
+# 						}
+# 					}
+# 					set_variable = { peace_cost = 5 }
+# 				}
+# 				else = {
+# 					# multiplying by 2 everytime there's a peace request
+# 					multiply_variable = { peace_cost = 2 }
+# 				}
 
-				# actual cost
-				set_temp_variable = { peace_cost_temp = peace_cost }
-				divide_temp_variable = { peace_cost_temp = 100 }
-				multiply_temp_variable = { peace_cost_temp = -1 }
-				add_stability = peace_cost_temp
-				add_war_support = peace_cost_temp
-				set_country_flag = {
-					flag = sent_peace_request
-					days = 60
-				}
+# 				# actual cost
+# 				set_temp_variable = { peace_cost_temp = peace_cost }
+# 				divide_temp_variable = { peace_cost_temp = 100 }
+# 				multiply_temp_variable = { peace_cost_temp = -1 }
+# 				add_stability = peace_cost_temp
+# 				add_war_support = peace_cost_temp
+# 				set_country_flag = {
+# 					flag = sent_peace_request
+# 					days = 60
+# 				}
 
-			}
-		}
-		reject_effect = {
-			log = "[ROOT.GetName] proposed peace to [THIS.GetName] but it was refused"
-		}
+# 			}
+# 		}
+# 		reject_effect = {
+# 			log = "[ROOT.GetName] proposed peace to [THIS.GetName] but it was refused"
+# 		}
 
-		send_description = PROPOSE_PEACE_SEND_DESC
-		receive_description = PROPOSE_PEACE_RECEIVE_DESC
-		accept_title = PROPOSE_PEACE_ACCEPT_TITLE
-		accept_description = PROPOSE_PEACE_ACCEPT_DESC
-		reject_title = PROPOSE_PEACE_REJECT_TITLE
-		reject_description = PROPOSE_PEACE_REJECT_DESC
+# 		send_description = PROPOSE_PEACE_SEND_DESC
+# 		receive_description = PROPOSE_PEACE_RECEIVE_DESC
+# 		accept_title = PROPOSE_PEACE_ACCEPT_TITLE
+# 		accept_description = PROPOSE_PEACE_ACCEPT_DESC
+# 		reject_title = PROPOSE_PEACE_REJECT_TITLE
+# 		reject_description = PROPOSE_PEACE_REJECT_DESC
 
-		#AI 
+# 		#AI 
 
-		ai_acceptance = {
+# 		ai_acceptance = {
 
-			base_desire = {
-				base = 0
-				modifier = {
-					add = -15
-				}
-			}
+# 			base_desire = {
+# 				base = 0
+# 				modifier = {
+# 					add = -15
+# 				}
+# 			}
 
-			assured_victory = {
-				base = 0
-				modifier = {
-					add = 10
-					ROOT = {
-						surrender_progress > 0.4
-						surrender_progress < 0.8
-					}
-				}
+# 			assured_victory = {
+# 				base = 0
+# 				modifier = {
+# 					add = 10
+# 					ROOT = {
+# 						surrender_progress > 0.4
+# 						surrender_progress < 0.8
+# 					}
+# 				}
 
-			}
-			crushing_victory = {
-				base = 0
-				modifier = {
-					add = 20
-					ROOT = {
-						surrender_progress > 0.8
-					}
-				}
-			}
-			defeat = {
-				base = 0
-				modifier = {
-					add = 10
-					THIS = {
-						surrender_progress > 0.4
-						surrender_progress < 0.8
-					}
-				}
-			}
-			crushing_defeat = {
-				base = 0
-				modifier = {
-					add = 20
-					THIS = {
-						surrender_progress > 0.8
-					}
-				}
-			}
-			has_strong_allies = {
-				base = 0
-				modifier = {
-					add = -50
-					THIS = {
-						is_faction_leader = yes
-						any_allied_country = {
-							strength_ratio = {
-								tag = ROOT
-								ratio > 0.8
-							}
-						}
-					}
-				}
+# 			}
+# 			crushing_victory = {
+# 				base = 0
+# 				modifier = {
+# 					add = 20
+# 					ROOT = {
+# 						surrender_progress > 0.8
+# 					}
+# 				}
+# 			}
+# 			defeat = {
+# 				base = 0
+# 				modifier = {
+# 					add = 10
+# 					THIS = {
+# 						surrender_progress > 0.4
+# 						surrender_progress < 0.8
+# 					}
+# 				}
+# 			}
+# 			crushing_defeat = {
+# 				base = 0
+# 				modifier = {
+# 					add = 20
+# 					THIS = {
+# 						surrender_progress > 0.8
+# 					}
+# 				}
+# 			}
+# 			has_strong_allies = {
+# 				base = 0
+# 				modifier = {
+# 					add = -50
+# 					THIS = {
+# 						is_faction_leader = yes
+# 						any_allied_country = {
+# 							strength_ratio = {
+# 								tag = ROOT
+# 								ratio > 0.8
+# 							}
+# 						}
+# 					}
+# 				}
 
-			}
-			long_war = {
-				base = 0
-				modifier = {
-					add = THIS.days_at_war_with_multiplier_@ROOT
-				}
-			}
-		}
+# 			}
+# 			long_war = {
+# 				base = 0
+# 				modifier = {
+# 					add = THIS.days_at_war_with_multiplier_@ROOT
+# 				}
+# 			}
+# 		}
 
-		ai_desire = {
+# 		ai_desire = {
 			
-			base = -10
+# 			base = -10
 			
-			assured_victory = {
-				base = 0
-				modifier = {
-					add = 10
-					ROOT = {
-						surrender_progress > 0.4
-						surrender_progress < 0.8
-					}
-				}
+# 			assured_victory = {
+# 				base = 0
+# 				modifier = {
+# 					add = 10
+# 					ROOT = {
+# 						surrender_progress > 0.4
+# 						surrender_progress < 0.8
+# 					}
+# 				}
 
-			}
-			crushing_victory = {
-				base = 0
-				modifier = {
-					add = 20
-					ROOT = {
-						surrender_progress > 0.8
-					}
-				}
-			}
-			defeat = {
-				modifier = {
-					add = 10
-					THIS = {
-						surrender_progress > 0.4
-						surrender_progress < 0.8
-					}
-				}
-			}
-			crushing_defeat = {
-				base = 0
-				modifier = {
-					add = 20
-					THIS = {
-						surrender_progress > 0.8
-					}
-				}
-			}
-			has_strong_allies = {
-				base = 0
-				modifier = {
-					add = -50
-				}
-				THIS = {
-					is_faction_leader = yes
-					any_allied_country = {
-						strength_ratio = {
-							tag = ROOT
-							ratio > 0.8
-						}
-					}
-				}
-			}
-			long_war = {
-				base = 0
-				modifier = {
-					add = 15
-					has_country_flag = {
-						flag = has_war_with_@ROOT
-						days > 2000
-					}
-				}
-			}
-		}
-	}
-}
+# 			}
+# 			crushing_victory = {
+# 				base = 0
+# 				modifier = {
+# 					add = 20
+# 					ROOT = {
+# 						surrender_progress > 0.8
+# 					}
+# 				}
+# 			}
+# 			defeat = {
+# 				modifier = {
+# 					add = 10
+# 					THIS = {
+# 						surrender_progress > 0.4
+# 						surrender_progress < 0.8
+# 					}
+# 				}
+# 			}
+# 			crushing_defeat = {
+# 				base = 0
+# 				modifier = {
+# 					add = 20
+# 					THIS = {
+# 						surrender_progress > 0.8
+# 					}
+# 				}
+# 			}
+# 			has_strong_allies = {
+# 				base = 0
+# 				modifier = {
+# 					add = -50
+# 				}
+# 				THIS = {
+# 					is_faction_leader = yes
+# 					any_allied_country = {
+# 						strength_ratio = {
+# 							tag = ROOT
+# 							ratio > 0.8
+# 						}
+# 					}
+# 				}
+# 			}
+# 			long_war = {
+# 				base = 0
+# 				modifier = {
+# 					add = 15
+# 					has_country_flag = {
+# 						flag = has_war_with_@ROOT
+# 						days > 2000
+# 					}
+# 				}
+# 			}
+# 		}
+# 	}
+# }
