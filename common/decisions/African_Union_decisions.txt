@@ -1,0 +1,277 @@
+african_union_category = {
+
+	invite_to_org = {
+		cost = 25
+		fire_only_once = no   
+		icon = GFX_decision_generic_orginization_of_african_unity
+		allowed = { original_tag = ETH }
+
+		state_target = yes
+		on_map_mode = map_and_decisions_view
+		target_trigger = {
+			FROM = { 
+				is_capital = yes
+				OWNER = {
+					PREV = {
+						is_core_of = PREV
+					}
+					AND = {
+						NOT = { has_idea = organization_of_african_unity_member_idea }
+						OR = { 
+							is_subject = no
+							is_subject_of = ROOT
+						}
+					}
+					capital_scope = { is_on_continent = africa }
+				}
+			}
+		}
+		target_root_trigger = { 
+			original_tag = ETH
+		}
+		visible = {
+			 has_country_flag = org_of_african_unity_founder
+		}
+		available = { always = yes }
+
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				OWNER = {
+					country_event = {
+						id = BBA_african_union_events.1
+						hours = 1 
+					}
+				}				
+			}
+		}
+	}
+
+	invite_to_ACB = {
+		cost = 50
+		icon = GFX_decision_gre_paying_ifc_debt
+		fire_only_once = no   
+		visible = {
+			has_country_flag = org_of_african_unity_founder
+			has_dynamic_modifier = {modifier = african_union_central_bank_modifier}
+		}
+		target_trigger = {
+			FROM = {
+				AND = {
+					has_idea = organization_of_african_unity_member_idea
+					OR = { 
+						is_subject = no
+						is_subject_of = ROOT
+					}
+					NOT = { has_dynamic_modifier = { modifier = african_union_central_bank_modifier } }
+				}
+			}
+		}
+		target_root_trigger = { 
+			original_tag = ETH
+		}
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id =BBA_african_union_events.4
+					hours = 1
+				}
+			}
+		}
+	}
+
+	invite_to_exec_council = {
+		cost = 100
+		icon = GFX_decision_eng_trade_unions_support
+		fire_only_once = no   
+		visible = {
+			has_country_flag = org_of_african_unity_founder
+			has_dynamic_modifier = { modifier = african_union_executive_council_modifier}
+		}
+		target_trigger = {
+			FROM = {
+				AND = {
+					has_idea = organization_of_african_unity_member_idea
+					has_dynamic_modifier = {modifier = african_union_central_bank_modifier }
+					has_dynamic_modifier = {modifier = african_union_defense_agreement_modifier}
+					OR = { 
+						is_subject = no
+						is_subject_of = ROOT
+					}
+					NOT = { has_dynamic_modifier = { modifier = african_union_executive_council_modifier}}
+				}
+			}
+		}
+		target_root_trigger = { 			
+			original_tag = ETH
+		}
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id = BBA_african_union_events.7
+					hours = 1
+				}
+			}
+		}
+	}
+
+	integrate_into_org = {
+		fire_only_once = yes
+		icon = GFX_decision_generic_form_nation
+		visible = {
+			has_country_flag = org_of_african_unity_founder
+			has_country_flag = org_leader_is_african_union
+		}
+		target_trigger = {
+			FROM = {
+				AND = {
+					has_idea = organization_of_african_unity_member_idea
+					has_dynamic_modifier = {modifier = african_union_defense_agreement_modifier}
+					has_dynamic_modifier = {modifier = african_union_executive_council_modifier}
+					has_dynamic_modifier = {modifier = african_union_central_bank_modifier}
+				}
+			}
+		}
+		target_root_trigger = { 
+			original_tag = ETH
+		}
+		days_remove = 10
+		complete_effect = {
+			add_stability = -0.03
+		}
+		remove_effect = {
+			FROM = {
+				add_ideas = ETH_integrate_puppet
+				country_event = {
+					id = BBA_african_union_events.12
+					hours = 1
+				}
+			}			
+		}
+	}
+
+	invite_to_org_alliance = {
+		cost = 50
+		icon = GFX_decision_generic_military
+		fire_only_once = no   
+
+		visible = {
+			has_country_flag = org_of_african_unity_founder
+			has_dynamic_modifier = {modifier = african_union_defense_agreement_modifier}
+		}
+		target_root_trigger = { 
+			original_tag = ETH
+		}
+		target_trigger = {
+			FROM = {
+				AND = {
+					has_idea = organization_of_african_unity_member_idea
+					OR = { 
+						is_subject = no
+						is_subject_of = ROOT
+					}
+					NOT = { has_dynamic_modifier = { modifier = african_union_defense_agreement_modifier}}
+
+				}
+			}
+		}
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				country_event = {
+					id =BBA_african_union_events.15
+					hours = 1
+				}
+			}
+		}
+	}
+
+	leave_org_of_african_unity = {
+		cost = 250
+		fire_only_once = yes
+		icon = GFX_decision_generic_break_treaty
+		visible = {
+			NOT = {has_country_flag = org_of_african_unity_founder }
+			has_idea = organization_of_african_unity_member_idea
+			NOT = {has_country_flag = is_being_integrated_african_union_flag}
+			is_subject = no
+		}
+	
+		days_remove = 30
+		remove_effect = {
+			FROM = {
+				remove_dynamic_modifier = {
+					modifier = african_union_defense_agreement_modifier
+				}
+				remove_dynamic_modifier = {
+					modifier = african_union_central_bank_modifier
+				}
+				remove_dynamic_modifier = {
+					modifier = african_union_executive_council_modifier
+				}
+				remove_ideas = {
+					idea = organization_of_african_unity_member_idea
+				}
+			}
+			every_other_country = {
+				limit = {
+					has_country_flag = org_of_african_unity_founder
+				}
+				IF = {
+					limit = {
+						has_country_flag = org_founder_is_authoritarian_flag
+					}
+					country_event = {
+						id = BBA_african_union_events.14
+						hours = 1
+					}
+				}
+				ELSE = {
+					country_event = {
+						id = BBA_african_union_events.13
+						hours = 1
+					}
+				}
+				remove_from_faction = FROM
+			}
+		}
+	}
+
+	threaten_member_state = {
+		cost = 25
+		icon = GFX_decision_generic_assassination
+		fire_only_once = no   
+		is_good = no
+		visible = {
+			has_country_flag = org_of_african_unity_founder
+			has_country_flag = org_founder_is_authoritarian_flag			
+		}
+		target_root_trigger = { 
+			original_tag = ETH
+		}
+		target_trigger = {
+			FROM = {
+				AND = {
+					has_idea = organization_of_african_unity_member_idea
+				}
+			}
+		}
+		days_remove = 60
+		complete_effect = {
+			FROM = {
+				country_event = {
+					id = BBA_african_union_events.11
+					hours = 4
+				}
+			}
+			custom_effect_tooltip = threaten_member_state_tt
+		}
+		remove_effect = {
+			FROM = { clr_country_flag = threatened_by_org_africa_leader }
+		}
+	}
+}
+
+
