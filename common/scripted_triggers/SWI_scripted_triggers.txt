@@ -1,0 +1,653 @@
+###############################################
+########     ABSOLUTE NEUTRALITY       ########
+###############################################
+
+SWI_is_country_to_balance = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_country_to_balance_TT
+	}
+	hidden_trigger = {
+		NOT = { 
+			has_war_with = SWI
+			is_in_faction_with = SWI
+		}	
+		OR = {
+			AND = {
+				is_neighbor_of = SWI
+				OR = {
+					is_in_faction = no
+					is_faction_leader = yes 
+				}
+			}
+			AND = {
+ 				SWI_is_faction_leader_of_neighbor = yes 
+				NOT = { is_neighbor_of = SWI }
+			}
+			SWI_is_at_war_with_neighbor = yes 
+		}
+		is_major = yes
+	}
+}
+
+SWI_is_at_war_with_neighbor = { #Checks if it's at war with your major neighbor 
+	is_faction_leader = yes  
+	any_other_country = {
+		is_major = yes 
+		is_neighbor_of = SWI 
+		has_war_with = PREV
+		
+	}
+}
+
+SWI_is_democratic_to_balance = {
+	SWI_is_country_to_balance = yes 
+	has_government = democratic	
+}
+
+SWI_is_fascist_to_balance = {
+	SWI_is_country_to_balance = yes 
+	has_government = fascism	
+}
+
+SWI_is_faction_leader_of_neighbor = {
+	is_faction_leader = yes 
+	any_allied_country = {
+		is_neighbor_of = SWI 
+	}
+}
+
+SWI_has_easy_fascist_neighbor_option = {
+	OR = {
+		GER = {
+			exists = yes 
+			has_government = fascism 
+		}
+		ITA = {
+			exists = yes 
+			has_government = fascism 
+		}
+		FRA = {
+			exists = yes 
+			has_government = fascism 
+		}
+	}
+}
+
+SWI_has_fascist_neighbor = {
+	hidden_trigger = { has_variable = SWI_biggest_fascist }
+	custom_trigger_tooltip = {
+		tooltip =  SWI_has_fascist_neighbor_trigger_TT
+	}
+}
+
+is_suitable_fascist_major = { #This is an adaptation of the one found in the Baltic Scripted Triggers
+	is_major = yes
+	capital_scope = { is_on_continent = europe }
+	exists = yes
+	has_capitulated = no
+	has_government = fascism
+	NOT = { has_war_with = ROOT }
+}
+
+is_suitable_democratic_major = {
+	is_major = yes
+	capital_scope = { is_on_continent = europe }
+	exists = yes
+	has_capitulated = no
+	has_government = democratic
+	NOT = { has_war_with = ROOT }	
+}
+
+is_possible_secret_ally = {
+	is_major = yes
+	exists = yes
+	has_capitulated = no
+	has_government = democratic
+	NOT = { has_war_with = ROOT }	
+	OR = {
+		is_faction_leader = yes
+		is_in_faction = yes
+	}
+}
+
+SWI_angriest_country_still_mad = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_avoid_failing_country_angry_TT
+	}
+	hidden_trigger = {
+		SWI = { has_variable = SWI_angriest_country }
+		var:SWI.SWI_angriest_country = {
+			check_variable = {
+				THIS.opinion@SWI < SWI.SWI_no_longer_angry_threshold
+			}
+			SWI_is_country_to_balance = yes
+		}
+	}
+}
+
+SWI_country_is_happy = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_country_is_happy_TT
+	}
+	check_variable = {
+		THIS.opinion@SWI > SWI_good_opinion
+	}
+}
+
+SWI_country_positive_opinion = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_country_positive_opinion_TT
+	}
+	check_variable = {
+		THIS.opinion@SWI > 0
+	}
+}
+
+SWI_country_opinion_is_good = {
+	check_variable = {
+		var = THIS.opinion@SWI
+		value = SWI_good_opinion
+		compare = greater_than_or_equals
+	}
+}
+SWI_country_opinion_is_excellent = {
+	check_variable = {
+		var = THIS.opinion@SWI
+		value = SWI_excellent_opinion
+		compare = greater_than_or_equals
+	}	
+}
+
+SWI_country_is_angry = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_country_is_angry_TT
+	}
+	check_variable = {
+		THIS.opinion@SWI > SWI_bad_opinion
+	}
+}
+
+SWI_country_opinion_is_dangerous = {
+	check_variable = {
+		THIS.opinion@SWI < SWI_dangerous_opinion
+	}
+}
+
+SWI_dem_usa_valid_to_buy_planes = {
+	USA = { 
+		exists = yes
+		has_government = democratic
+		NOT = { has_war_with = ROOT }
+	 }
+}
+
+###############################################
+########        COUNCIL SYSTEM         ########
+###############################################
+
+SWI_can_be_councilor = {	
+	if = {
+		limit = {
+			NOT = { has_country_flag = SWI_elected_centralized_president }
+		}
+		NOT = { has_character_flag = SWI_former_confederation_president }
+		NOT = { has_character_flag = SWI_current_confederation_president }
+		NOT = { has_character_flag = SWI_ousted_councilor }
+		OR = {
+			SWI_council_not_filled = yes
+			has_character_flag = SWI_councilor
+		}
+	}
+	else = {
+		hidden_trigger = { always = yes }
+	}	
+
+}
+
+SWI_councilor_visible = {
+	OR = {
+		AND = {
+			has_dlc = "La Resistance"
+			NOT = { has_character_flag = SWI_former_confederation_president }
+			NOT = { has_character_flag = SWI_ousted_councilor }
+		}
+		AND = {
+			NOT = { has_dlc = "La Resistance" }
+			NOT = { has_trait = SWI_intelligence_officer }
+			NOT = { has_character_flag = SWI_former_confederation_president }
+			NOT = { has_character_flag = SWI_ousted_councilor }		
+		}
+	}
+}
+
+SWI_president_initiative_available_trigger = {
+	NOT = {
+		has_active_mission = SWI_recently_finished_president_initiative_mission
+	}
+}
+
+SWI_president_initiative_cancel_trigger = {
+	NOT = {
+		has_country_flag = SWI_ongoing_president_initiative
+	}
+}
+
+
+SWI_council_not_filled = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_council_not_filled_TT
+	}
+	hidden_trigger = {
+		SWI = {
+			NOT = { has_country_flag = SWI_councilor_recently_removed }
+			OR = {
+				NOT = { has_variable = SWI_councilor_1 }
+				NOT = { has_variable = SWI_councilor_2 }
+				NOT = { has_variable = SWI_councilor_3 }
+			}
+		}
+	}
+}
+
+##### Sorting Councilors by Canton vs Council #### 
+
+SWI_is_council_guy = { #Checks if the character has traits that favor the council side of the BoP
+	OR = {
+		has_trait = SWI_fascist_appeaser
+		has_trait = SWI_fascist
+		has_trait = SWI_fascist_propagandist
+		has_trait = SWI_fascist_recruiter
+		has_trait = SWI_corporatist
+		has_trait = SWI_social_democrat
+		has_trait = SWI_socialist_pacifist
+		has_trait = SWI_pragmatic_democrat
+		has_trait = SWI_conservative_democrat
+		has_trait = SWI_militaristic_democrat
+		has_trait = SWI_militaristic_nationalist
+		has_trait = SWI_soviet_spy
+		has_trait = SWI_nationalistic_industrialist
+	}
+}
+
+SWI_is_cantons_guy = { #Checks if the character has traits that favor the Cantons side of the BoP
+	OR = {
+		has_trait = SWI_radical_democrat
+		has_trait = SWI_democratic_capitalist
+		has_trait = SWI_cantonal_conservative
+		has_trait = SWI_anarchist
+		has_trait = SWI_trade_unionist
+	}
+}
+
+### Sorting councilors by Ideology #####
+
+SWI_councilor_is_fascist = { #trigger used to check if councilor in scope is fascist 
+	OR = {
+		has_trait = SWI_fascist_appeaser
+		has_trait = SWI_fascist
+		has_trait = SWI_fascist_propagandist
+		has_trait = SWI_fascist_recruiter
+		has_trait = SWI_corporatist	
+	} 
+}
+
+SWI_councilor_is_any_kind_of_communist = { #Checks if the councilor has any trait related to communism. I hate this solution but otherwise the tooltip is a mess. 
+	OR = {
+		has_trait = SWI_anarchist	
+		has_trait = SWI_trade_unionist
+		has_trait = SWI_socialist_pacifist
+		has_trait = SWI_humanitarian
+		has_trait = SWI_soviet_spy
+	}
+}
+
+SWI_councilor_is_democratic = {
+	OR = {
+		has_trait = SWI_radical_democrat
+		has_trait = SWI_pragmatic_democrat
+		has_trait = SWI_diplomat
+		has_trait = SWI_democratic_capitalist
+		has_trait = SWI_cantonal_conservative
+		has_trait = SWI_conservative_democrat
+		has_trait = SWI_militaristic_democrat
+		has_trait = SWI_social_democrat
+	}
+}
+
+SWI_councilor_is_neutrality_despotism = {
+	OR = {
+		has_trait = SWI_commander_in_chief
+		has_trait = SWI_militaristic_nationalist
+		has_trait = SWI_intelligence_officer
+		has_trait = SWI_weapons_designer
+		has_trait = SWI_nationalistic_industrialist
+	}
+}
+
+SWI_councilor_is_communist_anarchist = {
+	has_trait = SWI_anarchist	
+}
+
+SWI_councilor_is_communist = {
+	OR = {
+		has_trait = SWI_trade_unionist
+		has_trait = SWI_socialist_pacifist
+		has_trait = SWI_humanitarian
+		has_trait = SWI_soviet_spy
+	}
+}
+
+SWI_councilor_is_democratic_liberalism = {
+	OR = {
+		has_trait = SWI_radical_democrat
+		has_trait = SWI_pragmatic_democrat
+		has_trait = SWI_diplomat
+	}
+}
+
+SWI_councilor_is_democratic_conservatism = {
+	OR = {
+		has_trait = SWI_democratic_capitalist
+		has_trait = SWI_cantonal_conservative
+		has_trait = SWI_conservative_democrat
+		has_trait = SWI_militaristic_democrat
+
+	}
+}
+
+SWI_councilor_is_democratic_socialism = {
+	has_trait = SWI_social_democrat
+}
+
+SWI_president_compatible_with_country_politics = {
+	custom_trigger_tooltip = {
+		tooltip = SWI_president_matches_country_politics_TT
+	} 
+	hidden_trigger = {
+		var:SWI_confederation_president = {
+			OR = {
+				AND = {
+					ROOT = { has_government = democratic }
+					OR = {
+						SWI_councilor_is_democratic_socialism = yes
+						SWI_councilor_is_democratic_conservatism = yes
+						SWI_councilor_is_democratic_liberalism = yes
+					}
+				}
+				AND = {
+					ROOT = { has_government = communism }
+					OR = {
+						SWI_councilor_is_communist = yes 
+						SWI_councilor_is_communist_anarchist = yes 
+					}
+				}
+				AND = {
+					ROOT = { has_government = fascism }
+					SWI_councilor_is_fascist = yes 
+				}
+				AND = {
+					ROOT = { has_government = neutrality }
+					SWI_councilor_is_neutrality_despotism = yes
+				}
+			}
+		}
+	}
+}
+
+SWI_has_fascist_council_president = { #Checks of the president of the council is a fascist 
+	var:SWI_confederation_president = {
+		SWI_councilor_is_fascist = yes
+	}
+}
+
+
+SWI_has_fascist_councilor = { #Checks if any councilor is fascist 
+	OR = {
+		var:SWI_councilor_1 = {
+			SWI_councilor_is_fascist = yes 
+		}
+		var:SWI_councilor_2 = {
+			SWI_councilor_is_fascist = yes 
+		}
+		var:SWI_councilor_3 = {
+			SWI_councilor_is_fascist = yes 
+		}
+	}
+} 
+
+###############################################
+########       Militia System          ########
+###############################################
+
+SWI_MR_full = {
+	check_variable = {
+		var = SWI_military_readiness
+		value = SWI_max_mil_readiness
+		compare = greater_than_or_equals
+	}
+}
+
+###############################################
+########            OTHER              ########
+###############################################
+
+SWI_has_any_spirit_of_helvetia = { #Checks if ANY Spirit of Helvetia ideas are present in current scope
+	OR = {
+		has_idea = SWI_spirit_of_helvetia_passive_peace
+		has_idea = SWI_spirit_of_helvetia_passive_war
+		has_idea = SWI_spirit_of_helvetia_defensive_peace
+		has_idea = SWI_spirit_of_helvetia_defensive_war
+		has_idea = SWI_spirit_of_helvetia_aggressive_peace
+		has_idea = SWI_spirit_of_helvetia_aggressive_war
+	}
+}
+
+SWI_is_fully_centralized = {
+	is_power_balance_in_range = {
+		id = SWI_centralization_bop
+		range = SWI_centralization_bop_fully_council
+	}
+	NOT = {
+		power_balance_weekly_change = {
+			id = SWI_centralization_bop 
+			value > 0.01
+		}
+	}
+}
+
+SWI_bba = { #Trigger so I don't thave to type has_dlc = "By Blood Alone" every time - Should've done this 6 months ago...  
+	AND = {
+		tag = SWI
+		original_tag = SWI
+		has_dlc = "By Blood Alone"
+	}
+}
+
+SWI_bba_lar = { #Trigger for having BBA and LaR, mostly for espionage stuff. 
+	AND = {
+		original_tag = SWI
+		has_dlc = "By Blood Alone"	
+		has_dlc = "La Resistance"
+	}
+}
+
+SWI_is_regular_switzerland = { #Check for the states belonging to Vanilla Switzerland flavor
+	OR = {
+		state = 845
+		state = 3
+		state = 847
+		state = 846
+		state = 151 	
+	}
+}
+
+SWI_country_has_alpine_states = {
+	any_owned_state = {
+		is_alpine_state = yes
+	}
+}
+
+SWI_country_about_to_be_angry = {
+	check_variable = {
+		THIS.opinion@SWI < SWI.SWI_dangerous_opinion
+	}
+}
+
+SWI_someone_is_about_to_be_angry = {
+	any_other_country = {
+		SWI_is_country_to_balance = yes 
+		SWI_country_about_to_be_angry = yes 
+	}
+}
+
+SWI_any_democratic_to_balance_is_about_to_be_angry = {
+	any_other_country = {
+		SWI_is_country_to_balance = yes 
+		has_government = democratic 
+		SWI_country_about_to_be_angry = yes 
+	}
+}
+
+
+SWI_any_communist_to_balance_is_about_to_be_angry = {
+	any_other_country = {
+		SWI_is_country_to_balance = yes 
+		has_government = communism 
+		SWI_country_about_to_be_angry = yes 
+	}
+}
+
+
+SWI_any_fascist_to_balance_is_about_to_be_angry = {
+	any_other_country = {
+		SWI_is_country_to_balance = yes 
+		has_government = fascism 
+		SWI_country_about_to_be_angry = yes 
+	}
+}
+
+SWI_can_form_alpine = {
+	count_triggers = {
+		amount > 7 
+		controls_state = 21 #Bouche-du-Rhone - FRA
+		controls_state = 851 #Var - FRA 
+		controls_state = 735 #Savoy - FRA 
+		controls_state = 32 #Alpes - FRA 
+		controls_state = 158 #Piemonte - ITA
+		controls_state = 159 #Lombardia - ITA 
+		controls_state = 850 #Trentino - ITA 
+		controls_state = 39 #Alto Adige - ITA
+		controls_state = 847 #Western Swiss Alps - SWi
+		controls_state = 151 #Eastern Swiss Alps - SWI 
+		controls_state = 846 #Ticino - SWI
+		controls_state = 848 #Vorarlberg - AUS
+		controls_state = 153 #Tyrol - AUS 
+		controls_state = 152 #Upper Austria - AUS 
+		controls_state = 4 #Lower Austria 
+	}
+}
+
+SWI_fascist_germany_exists = { #Checks if there's any fascist Germany around
+	any_other_country = { 
+		SWI_is_fasc_ger = yes 
+	}
+}
+
+SWI_is_fasc_ger = {
+	original_tag = GER 
+	has_government = fascism
+}
+
+###### AI Triggers ##### 
+
+SWI_is_historical_ai = { 
+		is_ai = yes 
+		OR = {
+			AND = {
+				is_historical_focus_on = yes 
+				has_game_rule = {
+					rule = SWI_AI_BEHAVIOR
+					option = DEFAULT
+				}
+			}
+			has_country_flag = SWI_AI_RANDOM_HISTORICAL
+			has_game_rule = {
+				rule = SWI_ai_behavior
+				option = HISTORICAL
+			}
+		}	
+}
+
+SWI_AI_is_dem_allied = {
+	OR = {		
+		has_game_rule = {
+			rule = SWI_AI_BEHAVIOR
+			option = SWI_ALLIED_DEMOCRATIC
+		}
+		has_country_flag = SWI_AI_RANDOM_ALLIED_DEMOCRATIC
+	}
+}
+SWI_AI_is_dem_exp = {
+	OR = {		
+		has_game_rule = {
+			rule = SWI_AI_BEHAVIOR
+			option = SWI_EXPANSIONIST_DEMOCRATIC
+		}
+		has_country_flag = SWI_AI_RANDOM_EXPANSIONIST_DEMOCRATIC
+	}
+}
+
+SWI_AI_is_imperial = {
+	OR = {		
+		has_game_rule = {
+			rule = SWI_AI_BEHAVIOR
+			option = SWI_IMPERIAL
+		}
+		has_country_flag = SWI_AI_RANDOM_IMPERIAL
+	}	
+}
+SWI_AI_is_fascist = {
+	OR = {		
+		has_game_rule = {
+			rule = SWI_AI_BEHAVIOR
+			option = SWI_FASCIST
+		}
+		has_country_flag = SWI_AI_RANDOM_FASCIST
+	}	
+}
+
+SWI_character_matches_strategy = {
+	OR = {
+		AND = {
+			SWI = { SWI_is_historical_ai = yes } 
+			OR = {
+				SWI_is_cantons_guy = yes
+				SWI_councilor_is_democratic = yes  
+			}
+		}
+		AND = {
+			SWI = { SWI_AI_is_fascist = yes }
+			SWI_councilor_is_fascist = yes 
+		}
+		AND = {
+			SWI = { SWI_AI_is_dem_exp = yes } 
+			OR = {
+				SWI_councilor_is_democratic = yes 
+				AND = {
+					SWI_is_council_guy = yes 
+					SWI_councilor_is_fascist = no 
+				}
+			} 
+		}
+		AND = {
+			SWI = { SWI_AI_is_imperial = yes }
+			SWI_is_council_guy = yes 
+			SWI_councilor_is_fascist = no 
+		}
+		AND = {
+			SWI = { SWI_AI_is_dem_allied = yes } 
+			SWI_councilor_is_fascist = no 
+			SWI_councilor_is_any_kind_of_communist = no
+		}
+	}
+}

@@ -1,0 +1,3438 @@
+##########################################################################
+################    Spirit of Helvetia Effects      ######################
+##########################################################################
+
+SWI_enable_spirit_of_helvetia = {
+	if = {
+		limit = {
+			NOT = { SWI_has_any_spirit_of_helvetia = yes }
+		}
+			if = {
+				limit = { has_war = no }
+				add_ideas = { SWI_spirit_of_helvetia_passive_peace }
+			}
+			else = {
+				add_ideas = { SWI_spirit_of_helvetia_passive_war }
+			}
+	}
+}
+
+SWI_make_helvetia_defensive = {
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_peace
+			add_idea = SWI_spirit_of_helvetia_defensive_peace
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_aggressive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_aggressive_peace
+			add_idea = SWI_spirit_of_helvetia_defensive_peace
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_war
+			add_idea = SWI_spirit_of_helvetia_defensive_war
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_aggressive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_aggressive_war
+			add_idea = SWI_spirit_of_helvetia_defensive_war
+		}
+	}
+	else_if = {
+		limit = {
+			NOT = { SWI_has_any_spirit_of_helvetia = yes }
+			has_war = yes 
+		}
+		add_ideas = SWI_spirit_of_helvetia_passive_war
+	}
+	else_if = {
+		limit = {
+			NOT = { SWI_has_any_spirit_of_helvetia = yes }
+			has_war = no 
+		}
+		add_ideas = SWI_spirit_of_helvetia_passive_peace
+	}
+}
+
+SWI_make_helvetia_aggressive = {
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_peace
+			add_idea = SWI_spirit_of_helvetia_aggressive_peace
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_defensive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_defensive_peace
+			add_idea = SWI_spirit_of_helvetia_aggressive_peace
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_war
+			add_idea = SWI_spirit_of_helvetia_aggressive_war
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_defensive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_defensive_war
+			add_idea = SWI_spirit_of_helvetia_aggressive_war
+		}
+	}
+	else_if = {
+		limit = {
+			NOT = { SWI_has_any_spirit_of_helvetia = yes }
+			has_war = yes 
+		}
+		add_ideas = SWI_spirit_of_helvetia_aggressive_war
+	}
+	else_if = {
+		limit = {
+			NOT = { SWI_has_any_spirit_of_helvetia = yes }
+			has_war = no 
+		}
+		add_ideas = SWI_spirit_of_helvetia_aggressive_peace
+	}
+}
+
+SWI_make_helvetia_war = {
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_peace
+			add_idea = SWI_spirit_of_helvetia_passive_war
+		}
+	}
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_defensive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_defensive_peace
+			add_idea = SWI_spirit_of_helvetia_defensive_war
+		}
+	}
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_aggressive_peace
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_aggressive_peace
+			add_idea = SWI_spirit_of_helvetia_aggressive_war
+		}
+	}
+}
+
+SWI_make_helvetia_peace = {
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_passive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_passive_war
+			add_idea = SWI_spirit_of_helvetia_passive_peace
+		}
+	}
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_defensive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_defensive_war
+			add_idea = SWI_spirit_of_helvetia_defensive_peace
+		}
+	}
+	if = {
+		limit = {
+			has_idea = SWI_spirit_of_helvetia_aggressive_war
+		}
+		swap_ideas = {
+			remove_idea = SWI_spirit_of_helvetia_aggressive_war
+			add_idea = SWI_spirit_of_helvetia_aggressive_peace
+		}
+	}	
+}
+
+########################################################################################
+#############              MILITARY READINESS EFFECTS                   ################
+########################################################################################
+
+### Increasing and Decreasing Military Readiness
+
+SWI_clamp_mr = {
+	clamp_variable = {
+		var = SWI_military_readiness
+		min = 0 
+		max = SWI_max_mil_readiness
+	}
+}
+
+SWI_mr_lowest_increase = { #5 MR
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_lowest_amount
+		tooltip = SWI_decision_add_var_MR
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_low_increase = { #10 MR
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_low_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_low_medium_increase = { #15 MR
+	custom_effect_tooltip = SWI_decision_add_low_medium_MR	
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_low_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_medium_increase = { #20 MR
+	custom_effect_tooltip = SWI_decision_add_medium_MR
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_high_medium_increase = { #25 MR
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_high_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_high_increase = { #30 MR
+	custom_effect_tooltip = SWI_decision_add_high_MR
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_high_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_max_increase = { #50 MR 
+	add_to_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_max_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_lowest_reduction = { #5 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_lowest_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_low_reduction = { #10 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_low_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_low_medium_reduction = { #15 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_low_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_medium_reduction = { #20 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_high_medium_reduction = { #25 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_high_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_high_reduction = { #30 MR
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_high_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_max_reduction = { #75 MR 
+	subtract_from_variable = {
+		var = SWI_military_readiness
+		value = SWI_mr_max_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_mr_total_reduction = {
+	custom_effect_tooltip = SWI_decision_substract_total_MR
+	set_variable = {
+		var = SWI_military_readiness
+		value = 0
+	}
+}
+
+### Max Military Readiness ###
+
+SWI_max_mr_low_increase = {
+	custom_effect_tooltip = SWI_decision_add_small_MR_max
+	hidden_effect = {
+		add_to_variable = {
+			var = SWI_max_mil_readiness
+			value = SWI_mr_low_amount
+		}
+		SWI_clamp_mr = yes
+	}
+}
+
+SWI_max_mr_medium_increase = {
+	custom_effect_tooltip = SWI_decision_add_medium_MR_max
+	add_to_variable = {
+		var = SWI_max_mil_readiness
+		value = SWI_mr_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_max_mr_high_increase = {
+	custom_effect_tooltip = SWI_decision_add_high_MR_max
+	add_to_variable = {
+		var = SWI_max_mil_readiness
+		value = SWI_mr_high_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+
+SWI_min_mr_low_reduction = {
+	custom_effect_tooltip = SWI_decision_subtract_small_MR_min
+	subtract_from_variable = {
+		var = SWI_min_mil_readiness
+		value = SWI_mr_low_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+SWI_min_mr_medium_reduction = {
+	custom_effect_tooltip = SWI_decision_subtract_medium_MR_min
+	subtract_from_variable = {
+		var = SWI_min_mil_readiness
+		value = SWI_mr_medium_amount
+	}
+	SWI_clamp_mr = yes
+}
+
+#### Upgrading Force ####
+
+SWI_upgrade_template_and_divisions = { #this is meant to upgrade the militia division linearly, create the division if it hasn't been created already. 
+	if = {
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable =  { SWI_militia_template_level < 2 }
+		}
+		add_units_to_division_template = {
+			template_name = "Swiss Citizen Militia"
+			regiments = {
+				militia = 0
+				militia = 0 
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable =  { SWI_militia_template_level < 4 }
+		}
+		add_units_to_division_template = {
+			template_name = "Swiss Citizen Militia"
+			regiments = {
+				militia = 1
+				militia = 1 
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable =  { SWI_militia_template_level < 6 }
+
+		}
+		add_units_to_division_template = {
+			template_name = "Swiss Citizen Militia"
+			regiments = {
+				militia = 2
+				militia = 2 
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable =  { SWI_militia_template_level < 8 }
+
+		}
+		add_units_to_division_template = {
+			template_name = "Swiss Citizen Militia"
+			regiments = {
+				militia = 3
+				militia = 3 
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable =  { SWI_militia_template_level < 10 }
+		}
+		add_units_to_division_template = {
+			template_name = "Swiss Citizen Militia"
+			regiments = {
+				militia = 4
+				militia = 4 
+			}
+		}
+	}
+	if = { #Increasing the Militia Level variable 
+		limit = {
+			has_variable = SWI_militia_template_level
+			check_variable = { SWI_militia_template_level < 10 }
+		}
+		add_to_variable = { SWI_militia_template_level = 1 }
+	}
+	else_if = {
+		limit = {
+			NOT = { has_variable = SWI_militia_template_level }  
+		}
+		division_template = {
+			name = "Swiss Citizen Militia"
+			is_locked = yes
+			force_allow_recruiting = yes
+			priority = 1
+			template_counter = 70
+			regiments = {
+				militia = { x = 0 y = 0 }
+				militia = { x = 0 y = 1 }
+			}
+			support = {
+
+			}
+			division_cap = 15 
+		}
+		set_variable = { SWI_militia_template_level = 1 }
+	}
+}
+
+SWI_increase_militia_cap = { 
+	effect_tooltip = {
+		set_temp_variable = { SWI_new_militia_cap_for_tooltip = SWI_militia_division_cap }
+		add_to_temp_variable = { SWI_new_militia_cap_for_tooltip = SWI_militia_cap_increase }
+		set_division_template_cap = { 
+			division_template = "Swiss Citizen Militia" 
+			division_cap = SWI_new_militia_cap_for_tooltip   
+		}
+	}
+	hidden_effect = {
+		add_to_variable = { SWI_militia_division_cap = SWI_militia_cap_increase }
+		clamp_variable = {
+			var = SWI_militia_division_cap
+			min = 0 
+			max = SWI_max_militia_division_cap
+		}  
+		set_division_template_cap = { 
+			division_template = "Swiss Citizen Militia" 
+			division_cap = SWI_militia_division_cap
+		}
+	}
+}
+
+SWI_remove_militia_recruitment_law = {
+	if = { 
+		limit = {
+			has_idea = SWI_citizen_militia_1
+		}
+		swap_ideas = {
+			remove_idea = SWI_citizen_militia_1
+			add_idea = limited_conscription
+		}
+	}
+	else_if = {
+		limit = {
+			has_idea = SWI_citizen_militia_2
+		}
+		swap_ideas = {
+			remove_idea = SWI_citizen_militia_2
+			add_idea = extensive_conscription
+		}
+	}
+}
+
+SWI_turn_militias_into_regulars = { #Effect to turn militias into regulars 
+	custom_effect_tooltip = SWI_professionalize_militias_TT
+	hidden_effect = {
+		division_template = {
+			name = "Swiss Infantry Division"
+			priority = 1
+			regiments = {
+				infantry = { x = 0 y = 0 }
+				infantry = { x = 0 y = 1 }
+			}
+			support = {
+			}
+		}
+		SWI_bring_professionalized_divisions_to_the_correct_level = yes
+		every_country_division = {
+			limit = {
+				division_has_majority_template = militia
+			}
+			change_division_template = {
+				division_template = "Swiss Infantry Division" 
+			}
+		}
+		set_division_template_lock = { division_template = "Swiss Citizen Militia" is_locked = no }
+		clear_division_template_cap = { division_template = "Swiss Citizen Militia"  }
+		SWI = { 
+			set_country_flag = SWI_militias_turned_into_regulars 
+			if = {
+				limit = {
+					has_country_flag = SWI_militia_active
+				}
+				clr_country_flag = SWI_militia_active
+			}
+			if = {
+				limit = {
+					has_dynamic_modifier = { modifier =  SWI_dormant_citizen_militia} 
+				}
+				remove_dynamic_modifier = {
+					modifier = SWI_dormant_citizen_militia 
+				}
+			}
+			if = {
+				limit = {
+					has_dynamic_modifier = { modifier = SWI_active_citizen_militia }
+				}
+				remove_dynamic_modifier = {
+					modifier = SWI_active_citizen_militia 
+				}
+			}
+		}  
+	}
+}
+
+SWI_bring_professionalized_divisions_to_the_correct_level = {
+	set_variable = { SWI_infantry_template_level = 1 }
+
+	while_loop_effect = {
+		limit = {
+			check_variable = {
+				SWI_infantry_template_level < SWI_militia_template_level
+			}
+		}
+		if = {
+			limit = {
+				check_variable =  { SWI_infantry_template_level < 2 }
+			}
+			add_units_to_division_template = {
+				template_name = "Swiss Infantry Division"
+				regiments = {
+					infantry = 0
+					infantry = 0 
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable =  { SWI_infantry_template_level < 4 }
+			}
+			add_units_to_division_template = {
+				template_name = "Swiss Infantry Division"
+				regiments = {
+					infantry = 1
+					infantry = 1 
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable =  { SWI_infantry_template_level < 6 }
+	
+			}
+			add_units_to_division_template = {
+				template_name = "Swiss Infantry Division"
+				regiments = {
+					infantry = 2
+					infantry = 2 
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable =  { SWI_infantry_template_level < 8 }
+	
+			}
+			add_units_to_division_template = {
+				template_name = "Swiss Infantry Division"
+				regiments = {
+					infantry = 3
+					infantry = 3 
+				}
+			}
+		}
+		else_if = {
+			limit = {
+				check_variable =  { SWI_infantry_template_level < 10 }
+			}
+			add_units_to_division_template = {
+				template_name = "Swiss Infantry Division"
+				regiments = {
+					infantry = 4
+					infantry = 4 
+				}
+			}
+		}
+		add_to_variable = { SWI_infantry_template_level = 1 }
+	}
+
+}
+
+SWI_reset_citizen_militia_active_modifier = {
+
+	set_variable = { SWI_citizen_militia_industrial_capacity_factory = SWI_citizen_militia_initial_industrial_capacity_factory }
+	set_variable = { SWI_citizen_militia_industrial_capacity_dockyard = SWI_citizen_militia_initial_industrial_capacity_dockyard }
+	set_variable = { SWI_citizen_militia_production_speed_buildings_factor = SWI_citizen_militia_initial_production_speed_buildings_factor }
+	set_variable = { SWI_citizen_militia_civ_factory_use = SWI_citizen_militia_initial_civ_factory_use }
+	set_variable = { SWI_citizen_militia_training_time_factor = SWI_citizen_militia_initial_training_time_factor}
+	set_variable = { SWI_citizen_militia_active_level = 1 }
+
+}
+
+SWI_level_up_citizen_militia_active_modifier = {
+	
+	subtract_from_variable = { SWI_citizen_militia_industrial_capacity_factory = SWI_citizen_militia_modifier_change } 
+	subtract_from_variable = { SWI_citizen_militia_industrial_capacity_dockyard = SWI_citizen_militia_modifier_change } 
+	subtract_from_variable = { SWI_citizen_militia_production_speed_buildings_factor = SWI_citizen_militia_modifier_change } 
+	add_to_variable = { SWI_citizen_militia_civ_factory_use = 1 } 
+	add_to_variable = { SWI_citizen_militia_training_time_factor = SWI_citizen_militia_modifier_change }  
+	add_to_variable = { SWI_citizen_militia_active_level = 1 }
+}
+
+########################################################################################
+#############                    ABSOLUTE NEUTRALITY                    ################
+########################################################################################
+
+SWI_fill_neighbors = {
+	hidden_effect = {
+		clear_variable = SWI_country_to_appease_1
+		clear_variable = SWI_country_to_appease_2
+		clear_variable = SWI_country_to_appease_3
+		clear_variable = SWI_country_to_appease_4
+		every_other_country = {
+			limit = {
+				has_country_flag = SWI_country_to_appease 
+			}
+			clr_country_flag = SWI_country_to_appease 
+
+		}
+		every_other_country = {
+			limit = {
+				SWI_is_country_to_balance = yes
+			}	
+			if = {
+				limit = {
+					SWI = {	
+						NOT = { has_variable = SWI_country_to_appease_1 }
+					} 
+				}
+				SWI = { 
+					set_variable = { SWI_country_to_appease_1 = PREV } 
+					
+				}
+				var:SWI.SWI_country_to_appease_1 = {
+					set_country_flag = SWI_country_to_appease
+					every_other_country = {
+						limit = {
+							is_in_faction_with = PREV
+						}
+						set_country_flag = SWI_country_to_appease
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					SWI = { 
+						NOT = { has_variable = SWI_country_to_appease_2 } 
+					}
+				}
+				SWI = { 
+					set_variable = { SWI_country_to_appease_2 = PREV } 
+				}
+				var:SWI.SWI_country_to_appease_2 = {
+					set_country_flag = SWI_country_to_appease
+					every_other_country = {
+						limit = {
+							is_in_faction_with = PREV
+						}
+						set_country_flag = SWI_country_to_appease
+					}
+				}					
+			}
+			else_if = {
+				limit = {
+					SWI = { 
+						NOT = { has_variable = SWI_country_to_appease_3 } 
+					}
+				}
+
+				SWI = { 
+					set_variable = { SWI_country_to_appease_3 = PREV } 
+				}
+				var:SWI.SWI_country_to_appease_3 = {
+					set_country_flag = SWI_country_to_appease
+					every_other_country = {
+						limit = {
+							is_in_faction_with = PREV
+						}
+						set_country_flag = SWI_country_to_appease
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					SWI = { 
+						NOT = { has_variable = SWI_country_to_appease_4 } 
+					}
+				}
+				SWI = { 
+					set_variable = { SWI_country_to_appease_4 = PREV } 
+				}
+				var:SWI.SWI_country_to_appease_4 = {
+					set_country_flag = SWI_country_to_appease
+					every_other_country = {
+						limit = {
+							is_in_faction_with = PREV
+						}
+						set_country_flag = SWI_country_to_appease
+					}
+				}
+			}
+		}
+	}
+
+}
+
+SWI_update_neighbor_opinion_balance = { #This is the one to call when you add opinion modifiers. 
+	hidden_effect = {
+		SWI_find_biggest_fascist_neighbor = yes
+		SWI_fill_neighbors = yes
+		clear_variable = SWI_country_to_appease_1_opinion
+		clear_variable = SWI_country_to_appease_2_opinion
+		clear_variable = SWI_country_to_appease_3_opinion
+		clear_variable = SWI_country_to_appease_4_opinion
+		var:SWI.SWI_country_to_appease_1 = {
+			SWI = {
+				set_variable = { SWI_country_to_appease_1_opinion = PREV.opinion@SWI }
+			}
+			SWI_check_if_angry = yes
+		}
+		var:SWI.SWI_country_to_appease_2 = {
+			SWI = {
+				set_variable = { SWI_country_to_appease_2_opinion = PREV.opinion@SWI }
+			}
+			SWI_check_if_angry = yes
+		}
+		var:SWI.SWI_country_to_appease_3 = {
+			SWI = {
+				set_variable = { SWI_country_to_appease_3_opinion = PREV.opinion@SWI }
+			}
+			SWI_check_if_angry = yes
+		}
+		var:SWI.SWI_country_to_appease_4 = {
+			SWI = {
+				set_variable = { SWI_country_to_appease_4_opinion = PREV.opinion@SWI }
+			}
+			SWI_check_if_angry = yes
+		}
+		SWI_check_if_anyone_angry = yes
+	}
+}
+
+SWI_check_if_angry = {
+	set_variable = { SWI.SWI_country_to_evaluate = THIS } 
+	if = {
+		limit = {
+			check_variable = { 
+				var = THIS.opinion@SWI 
+				value = SWI.SWI_angry_threshold  
+				compare = less_than_or_equals
+			}
+			NOT = { tag = SWI }
+			NOT = { has_country_flag = SWI_angry_country }
+		}
+		set_country_flag = SWI_angry_country
+		SWI = { 
+			if = {
+				limit = {
+					NOT = { has_variable = SWI_angriest_country } 
+				}
+				set_variable = { SWI_angriest_country = SWI_country_to_evaluate }
+			}
+			else_if = {
+				limit = {
+					var:SWI.SWI_country_to_evaluate = { #Sorry for this 
+						var:SWI.SWI_angriest_country = {
+							check_variable = {PREV.opinion@SWI < THIS.opinion@SWI}
+						}
+					}
+				}
+				set_variable = { SWI_angriest_country = SWI_country_to_evaluate }
+				if = {
+					limit = {
+						has_active_mission = SWI_country_angry_mission
+					}
+					add_days_mission_timeout = {
+						mission = SWI_country_angry_mission
+						days = 50
+					}
+				}
+			}
+		}
+	}
+	if = {
+		limit = {
+			has_country_flag = SWI_angry_country
+			check_variable = { 
+				var = THIS.opinion@SWI 
+				value = SWI.SWI_terrible_opinion 
+				compare = greater_than_or_equals
+			}
+		}
+		clr_country_flag = SWI_angry_country
+	}
+	if = {
+		limit = {
+			has_country_flag = SWI_angry_country
+			SWI_is_country_to_balance = no 
+		}
+		clr_country_flag = SWI_angry_country
+	}
+	clear_variable = SWI_country_to_evaluate
+}
+
+SWI_check_if_anyone_angry = { 
+	if = {
+		limit = {
+			any_other_country = {
+				has_country_flag = SWI_angry_country
+				NOT = { tag = SWI }
+			}
+			SWI = {
+				NOT = {	has_country_flag = SWI_in_breach_of_neutrality }
+			}
+		}
+		set_country_flag = SWI_in_breach_of_neutrality 
+		if = {
+			limit = {
+				NOT = {
+					check_variable = { SWI_angriest_country = 0 }
+				}
+			}
+		}
+		var:SWI_angriest_country = {
+			if = {
+				limit = {
+					has_country_flag = SWI_angry_country
+					check_variable = { 
+						var = THIS.opinion@SWI 
+						value = SWI.SWI_terrible_opinion 
+						compare = greater_than_or_equals
+					}
+					SWI_is_country_to_balance = yes
+					SWI = {
+						has_idea =  SWI_swiss_neutrality
+					}
+				}
+				SWI = {
+					country_event = { id = BBA_switzerland.24 }
+				}
+			}
+			else = {
+				clr_country_flag = SWI_angry_country
+			}
+		}
+	}
+	else_if = {
+		limit = { 
+			NOT = {
+				any_other_country = {
+					has_country_flag = SWI_angry_country
+				}
+			}
+			SWI = { has_country_flag = SWI_in_breach_of_neutrality } 
+		}
+		clr_country_flag = SWI_in_breach_of_neutrality
+		set_variable = { SWI_last_angriest_country = SWI_angriest_country }
+		clear_variable = SWI_angriest_country
+	}
+}
+
+SWI_give_wargoal_to_angriest_country  = {
+	if = {
+		limit = {
+			SWI = { has_variable = SWI_angriest_country }
+		}
+		var:SWI.SWI_angriest_country = {
+			create_wargoal = {
+				type = topple_government 
+				target = SWI
+			}
+		}
+	}
+}
+
+SWI_determine_target_and_fallout_countries = {
+	hidden_effect = {
+		## Clear previously set variables	
+		clear_array = SWI_fallout_opinion_countries
+		
+		var:ROOT.SWI_country_to_appease_1 = {
+			if = {
+				limit = {
+					NOT = { original_tag = ROOT.SWI_target_opinion_country } 
+				}
+				ROOT = {
+					add_to_array = {
+						array = SWI_fallout_opinion_countries 
+						value = PREV 						
+					}
+				}		
+			}
+		}
+		var:ROOT.SWI_country_to_appease_2 = {
+			if = {
+				limit = {
+					NOT = { original_tag = ROOT.SWI_target_opinion_country } 
+				}
+				ROOT = {
+					add_to_array = {
+						array = SWI_fallout_opinion_countries 
+						value = PREV 						
+					}
+				}		
+			}
+		}
+		var:ROOT.SWI_country_to_appease_3 = {
+			if = {
+				limit = {
+					NOT = { original_tag = ROOT.SWI_target_opinion_country } 
+				}
+				ROOT = {
+					add_to_array = {
+						array = SWI_fallout_opinion_countries 
+						value = PREV 						
+					}
+				}		
+			}
+		}
+		var:ROOT.SWI_country_to_appease_4 = {
+			if = {
+				limit = {
+					NOT = { original_tag = ROOT.SWI_target_opinion_country } 
+				}
+				ROOT = {
+					add_to_array = {
+						array = SWI_fallout_opinion_countries 
+						value = PREV 						
+					}
+				}		
+			}
+		}
+	}
+}
+
+SWI_add_suspicious_prep_opinion = { #Adds a bit of bad opinion to keep it spicy 
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		every_other_country = {
+			limit = {
+				SWI_is_country_to_balance = yes
+			}
+			add_opinion_modifier = {
+				target = SWI 
+				modifier = SWI_suspicious_preparations
+			}
+		}
+		SWI_update_neighbor_opinion_balance = yes
+	}
+}
+
+SWI_add_small_good_opinion = { #Adding 10 Opinion to one country, minus 10 to the other ones
+	effect_tooltip = {
+		add_opinion_modifier = {
+			target = ROOT 
+			modifier = SWI_mild_appeasement
+		}
+	}
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		hidden_effect = {
+			ROOT = { 
+				set_variable = {
+					var = SWI_target_opinion_country
+					value = FROM 
+				}
+				SWI_determine_target_and_fallout_countries = yes
+			} 
+			var:ROOT.SWI_target_opinion_country = {     
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_mild_appeasement
+				}
+			}
+			if = {
+				limit = {
+					var:ROOT.SWI_target_opinion_country = {
+						is_in_faction = yes
+					}	
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = var:ROOT.SWI_target_opinion_country
+						NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+					}
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_mild_appeasement
+					}	
+				}
+			}
+		}
+		ROOT = {
+			if = {
+				limit = {
+					has_country_flag = SWI_add_fallout_to_opinion  #If you want the appeasement to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 
+				}
+				hidden_effect = {
+					for_each_scope_loop = {
+						array = SWI_fallout_opinion_countries
+						
+						add_opinion_modifier = {
+							target = ROOT 
+							modifier = SWI_mild_breach_of_neutrality	
+						}
+						if = {
+							limit = {
+								is_in_faction = yes
+							}
+							every_other_country = {
+								limit = {
+									is_in_faction_with = PREV
+									NOT = { 
+										original_tag = PREV
+										original_tag = ROOT 
+									}
+								}
+								add_opinion_modifier = {
+									target = ROOT 
+									modifier = SWI_mild_breach_of_neutrality	
+								}					
+							}
+						}
+					}
+				}
+			}
+			clr_country_flag = SWI_add_fallout_to_opinion
+			SWI_update_neighbor_opinion_balance = yes
+		}
+	}
+}
+
+SWI_add_medium_good_opinion = { #Adding 20 Opinion to one country, minus 20 to the other ones
+	
+	effect_tooltip = {
+		add_opinion_modifier = {
+			target = ROOT 
+			modifier = SWI_considerable_appeasement
+		}
+	}
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		hidden_effect = {
+			ROOT = { 
+				set_variable = {
+					var = SWI_target_opinion_country
+					value = PREV 
+				}
+				SWI_determine_target_and_fallout_countries = yes
+	 		} 
+			var:ROOT.SWI_target_opinion_country = {
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_considerable_appeasement
+				}
+			}
+			if = {
+				limit = {
+					var:ROOT.SWI_target_opinion_country = {
+						is_in_faction = yes
+					}	
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = var:ROOT.SWI_target_opinion_country
+						NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+					}
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_considerable_appeasement
+					}	
+				}
+			}
+		}
+		hidden_effect = {
+			ROOT = {
+				if = {
+					limit = {
+						has_country_flag = SWI_add_fallout_to_opinion  #If you want the appeasement to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 
+					}
+					for_each_scope_loop = {
+						array = SWI_fallout_opinion_countries
+						
+						add_opinion_modifier = {
+							target = ROOT 
+							modifier = SWI_considerable_breach_of_neutrality	
+						}
+						if = {
+							limit = {
+								is_in_faction = yes
+							}
+							every_other_country = {
+								limit = {
+									is_in_faction_with = PREV
+									NOT = { 
+										original_tag = PREV
+										original_tag = ROOT 
+									}
+								}
+								add_opinion_modifier = {
+									target = ROOT 
+									modifier = SWI_considerable_breach_of_neutrality	
+								}					
+							}
+						}
+					}
+				}
+				clr_country_flag = SWI_add_fallout_to_opinion
+				SWI_update_neighbor_opinion_balance = yes
+			}	
+		}
+	}
+}
+
+SWI_add_large_good_opinion = { #Adding 30 Opinion to one country, minus 30 to the other ones
+	
+	effect_tooltip = {
+		add_opinion_modifier = {
+			target = ROOT 
+			modifier = SWI_extensive_appeasement
+		}
+	}
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		hidden_effect = {
+			ROOT = { 
+				set_variable = {
+					var = SWI_target_opinion_country
+					value = PREV 
+				}
+				SWI_determine_target_and_fallout_countries = yes
+	 		} 
+			var:ROOT.SWI_target_opinion_country = {
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_extensive_appeasement
+				}
+			}
+			if = {
+				limit = {
+					var:ROOT.SWI_target_opinion_country = {
+						is_in_faction = yes
+					}	
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = var:ROOT.SWI_target_opinion_country
+						NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+					}
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_extensive_appeasement
+					}	
+				}
+			}
+		}
+		hidden_effect = {
+			ROOT = {
+				if = {
+					limit = {
+						has_country_flag = SWI_add_fallout_to_opinion   #If you want the appeasement to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 				
+					}
+					for_each_scope_loop = {
+						array = SWI_fallout_opinion_countries
+						
+						add_opinion_modifier = {
+							target = ROOT 
+							modifier = SWI_grave_breach_of_neutrality	
+						}
+						if = {
+							limit = {
+								is_in_faction = yes
+							}
+							every_other_country = {
+								limit = {
+									is_in_faction_with = PREV
+									NOT = { 
+										original_tag = PREV
+										original_tag = ROOT 
+									}
+								}
+								add_opinion_modifier = {
+									target = ROOT 
+									modifier = SWI_grave_breach_of_neutrality	
+								}					
+							}
+						}
+					}
+				}
+				clr_country_flag = SWI_add_fallout_to_opinion
+				SWI_update_neighbor_opinion_balance = yes
+			}
+		}
+	}
+}
+
+SWI_add_small_bad_opinion = { #Minus 10 Opinion to one country, plus 10 to the other ones
+	
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+	}
+	effect_tooltip = {
+		add_opinion_modifier = {
+			target = ROOT 
+			modifier = SWI_mild_breach_of_neutrality
+		}
+	}
+	hidden_effect = {
+		ROOT = { 
+			set_variable = {
+				var = SWI_target_opinion_country
+				value = PREV 
+			}
+			SWI_determine_target_and_fallout_countries = yes
+ 		} 
+		var:ROOT.SWI_target_opinion_country = {
+			add_opinion_modifier = {
+				target = ROOT 
+				modifier = SWI_mild_breach_of_neutrality
+			}
+		}
+		if = {
+			limit = {
+				var:ROOT.SWI_target_opinion_country = {
+					is_in_faction = yes
+				}	
+			}
+			every_other_country = {
+				limit = {
+					is_in_faction_with = var:ROOT.SWI_target_opinion_country
+					NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+				}
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_mild_breach_of_neutrality
+				}	
+			}
+		}
+	}
+	hidden_effect = {
+		ROOT = {
+			if = {
+				limit = {
+					has_country_flag = SWI_add_fallout_to_opinion   #If you want the breach of neutrality to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 				
+				}
+				for_each_scope_loop = {
+					array = SWI_fallout_opinion_countries
+					
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_mild_appeasement	
+					}
+					if = {
+						limit = {
+							is_in_faction = yes
+						}
+						every_other_country = {
+							limit = {
+								is_in_faction_with = PREV
+								NOT = { 
+									original_tag = PREV
+									original_tag = ROOT 
+								}
+							}
+							add_opinion_modifier = {
+								target = ROOT 
+								modifier = SWI_mild_appeasement	
+							}					
+						}
+					}
+				}
+			}
+			clr_country_flag = SWI_add_fallout_to_opinion
+			SWI_update_neighbor_opinion_balance = yes
+		}
+	}
+}
+
+SWI_add_medium_bad_opinion = { #Minus 20 Opinion to one country, plus 20 to the other ones
+	
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		effect_tooltip = {
+			add_opinion_modifier = {
+				target = ROOT 
+				modifier = SWI_considerable_breach_of_neutrality
+			}
+		}
+		hidden_effect = {
+			ROOT = { 
+				set_variable = {
+					var = SWI_target_opinion_country
+					value = PREV 
+				}
+				SWI_determine_target_and_fallout_countries = yes
+ 			} 
+			var:ROOT.SWI_target_opinion_country = {
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_considerable_breach_of_neutrality
+				}
+			}
+			if = {
+				limit = {
+					var:ROOT.SWI_target_opinion_country = {
+						is_in_faction = yes
+					}	
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = var:ROOT.SWI_target_opinion_country
+						NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+					}
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_considerable_breach_of_neutrality
+					}	
+				}
+			}
+		}
+		hidden_effect = {
+			ROOT = {
+				if = {
+					limit = {
+						has_country_flag = SWI_add_fallout_to_opinion   #If you want the breach of neutrality to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 	
+					}
+					for_each_scope_loop = {
+						array = SWI_fallout_opinion_countries
+						
+						add_opinion_modifier = {
+							target = ROOT 
+							modifier = SWI_considerable_appeasement	
+						}
+						if = {
+							limit = {
+								is_in_faction = yes
+							}
+							every_other_country = {
+								limit = {
+									is_in_faction_with = PREV
+									NOT = { 
+										original_tag = PREV
+										original_tag = ROOT 
+									}
+								}
+								add_opinion_modifier = {
+									target = ROOT 
+									modifier = SWI_considerable_appeasement	
+								}					
+							}
+						}
+					}
+				}
+				clr_country_flag = SWI_add_fallout_to_opinion
+				SWI_update_neighbor_opinion_balance = yes
+			}
+		}
+	}
+}
+
+SWI_add_large_bad_opinion = { #Minus 30 Opinion to one country, plus 30 to the other ones
+	
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		effect_tooltip = {
+			add_opinion_modifier = {
+				target = ROOT 
+				modifier = SWI_grave_breach_of_neutrality
+			}
+		}
+		hidden_effect = {
+			ROOT = { 
+				set_variable = {
+					var = SWI_target_opinion_country
+					value = PREV 
+				}
+				SWI_determine_target_and_fallout_countries = yes
+	 		} 
+			var:ROOT.SWI_target_opinion_country = {
+				add_opinion_modifier = {
+					target = ROOT 
+					modifier = SWI_grave_breach_of_neutrality
+				}
+			}
+			if = {
+				limit = {
+					var:ROOT.SWI_target_opinion_country = {
+						is_in_faction = yes
+					}	
+				}
+				every_other_country = {
+					limit = {
+						is_in_faction_with = var:ROOT.SWI_target_opinion_country
+						NOT = { original_tag = var:ROOT.SWI_target_opinion_country }
+					}
+					add_opinion_modifier = {
+						target = ROOT 
+						modifier = SWI_grave_breach_of_neutrality
+					}	
+				}
+			}
+		}
+		hidden_effect = {
+			ROOT = {
+				if = {
+					limit = {
+						has_country_flag = SWI_add_fallout_to_opinion   #If you want the breach of neutrality to have repercussions for the opinion of other countries, mark this flag as true before using the effect. 					
+					}
+					for_each_scope_loop = {
+						array = SWI_fallout_opinion_countries
+						
+						add_opinion_modifier = {
+							target = ROOT 
+							modifier = SWI_extensive_appeasement	
+						}
+						if = {
+							limit = {
+								is_in_faction = yes
+							}
+							every_other_country = {
+								limit = {
+									is_in_faction_with = PREV
+									NOT = { 
+										original_tag = PREV
+										original_tag = ROOT 
+									}
+								}
+								add_opinion_modifier = {
+									target = ROOT 
+									modifier = SWI_extensive_appeasement	
+								}					
+							}
+						}
+					}
+				}
+				clr_country_flag = SWI_add_fallout_to_opinion
+				SWI_update_neighbor_opinion_balance = yes
+			}
+		}
+	}
+}
+
+SWI_fortify_border_with_country_opinion_fallout = {
+	
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		add_opinion_modifier = { 
+			target = ROOT 
+			modifier = SWI_fortified_border #-40 opinion of SWI forever 
+		} 
+		if = { #Apply an extra opinion modifier to countries allied with GER 
+			limit = {
+				is_in_faction = yes
+			}
+			every_other_country = {
+				limit = {
+					is_in_faction_with = PREV 
+					NOT = { original_tag = PREV }
+				}
+				add_opinion_modifier = { 
+					target = ROOT 
+					modifier = SWI_fortified_border #-40 opinion of SWI forever 
+				} 					
+			}
+		}
+		every_other_country = {
+			limit = {
+				SWI_is_country_to_balance = yes 
+				NOT = {
+					original_tag = PREV
+					is_in_faction_with = PREV
+					has_government = PREV
+				}
+			}
+			add_opinion_modifier = {
+				target = SWI 
+				modifier = SWI_mild_appeasement
+			}
+		} 
+		ROOT = { SWI_update_neighbor_opinion_balance = yes }
+	}
+}
+
+SWI_concessions_to_party_effects = {
+	
+	FROM = {
+		SWI_add_medium_good_opinion = yes
+	}
+	every_other_country = {
+		limit = {
+			has_country_flag = SWI_country_to_appease
+			NOT = { is_in_faction_with = FROM }
+			NOT = { original_tag = FROM }
+			has_government = FROM 
+		}
+		SWI_add_small_good_opinion = yes
+	}
+	every_other_country = {
+		limit = {
+			has_country_flag = SWI_country_to_appease
+			NOT = { original_tag = FROM }
+			NOT = { has_government = FROM } 
+		}
+		add_opinion_modifier = {
+			target = ROOT 
+			modifier = SWI_mild_breach_of_neutrality
+		}	
+	}	
+}
+
+SWI_trade_agreement_apply_opinions = {
+	
+	if = {
+		limit = {
+			SWI = { is_ai = no }
+		}
+		add_opinion_modifier = {
+			target = FROM 
+			modifier = SWI_trade_agreement
+		}
+		every_other_country = {
+			limit = {
+				SWI_is_country_to_balance = yes
+				NOT = { 
+					original_tag = ROOT
+					has_government = ROOT  
+				}
+			}
+			add_opinion_modifier = {
+				target = FROM 
+				modifier = SWI_grave_breach_of_neutrality
+			}
+		}
+	}
+}
+
+SWI_increase_gold_trade = { #Increases the gold trade level for both parties
+	if = {
+		limit = { NOT = { has_variable = SWI_country_gold_trading_level } }
+		set_variable = { SWI_country_gold_trading_level = 0 }
+		set_country_flag = SWI_gold_trading_partner
+	}
+	if = {
+		limit = { 
+			SWI = { NOT = { has_variable = SWI_gold_trade } } 
+		}
+		SWI = { set_variable = { SWI_gold_trade = 0 } }
+	}
+	if = {
+		limit = { 
+			check_variable = { SWI.SWI_gold_trade < SWI.SWI_max_gold_trade }
+		}
+		if = {
+			limit = {
+				check_variable = { SWI_country_gold_trading_level < SWI.SWI_max_country_gold_trading_level }
+			}
+			add_to_variable = {	SWI.SWI_gold_trade = 1 }
+			add_to_variable = { SWI_country_gold_trading_level = 1 }
+			SWI_update_gold_trade_modifiers = yes
+		}
+		else = {
+			custom_effect_tooltip = SWI_max_country_gold_trade_TT
+		}
+	}
+	else = {
+		custom_effect_tooltip = SWI_max_gold_trade_TT
+	}
+}
+
+SWI_update_gold_trade_modifiers = { #Creates dynamic modifier if there's none, and updates the values. 
+	if = {
+		limit = { NOT = { has_dynamic_modifier = { modifier = SWI_gold_trade_with_switzerland } } }
+		set_variable = { SWI_gold_trade_consumer_goods_factor = SWI.SWI_gold_trade_consumer_goods_factor_increase }
+		set_variable = { SWI_gold_trade_building_speed_factor = SWI.SWI_gold_trade_building_speed_factor_increase }
+		set_variable = { SWI_gold_trade_research_speed_factor = SWI.SWI_gold_trade_research_speed_factor_increase }
+		set_variable = { SWI_gold_trade_lack_of_resource_penalty_factor = SWI.SWI_gold_trade_lack_of_resource_penalty_factor_increase }
+		set_variable = { SWI_gold_trade_factory_max_efficiency_factor = SWI.SWI_gold_trade_factory_max_efficiency_factor_increase }
+		hidden_effect = {
+			add_dynamic_modifier = { modifier = SWI_gold_trade_with_switzerland }
+		}
+		custom_effect_tooltip = SWI_start_gold_trade_with_switzerland_dynamic_mod_TT
+		add_opinion_modifier = {
+			target = SWI 
+			modifier = SWI_gold_trade
+		}
+	}
+	else = {
+		add_to_variable = { SWI_gold_trade_consumer_goods_factor = SWI.SWI_gold_trade_consumer_goods_factor_increase }
+		add_to_variable = { SWI_gold_trade_building_speed_factor = SWI.SWI_gold_trade_building_speed_factor_increase }
+		add_to_variable = { SWI_gold_trade_research_speed_factor = SWI.SWI_gold_trade_research_speed_factor_increase }
+		add_to_variable = { SWI_gold_trade_lack_of_resource_penalty_factor = SWI.SWI_gold_trade_lack_of_resource_penalty_factor_increase }
+		add_to_variable = { SWI_gold_trade_factory_max_efficiency_factor = SWI.SWI_gold_trade_factory_max_efficiency_factor_increase }
+		custom_effect_tooltip = SWI_improve_gold_trade_with_switzerland_dynamic_mod_TT
+		add_opinion_modifier = {
+			target = SWI 
+			modifier = SWI_gold_trade
+		}
+	}
+	SW_calculate_seized_modifiers = yes
+	SWI = {
+		if = {
+			limit = { NOT = { has_dynamic_modifier = { modifier = SWI_swiss_gold_market } } }
+			set_variable = { SWI_gold_trade_consumer_goods_factor = SWI_gold_trade_consumer_goods_factor_increase }
+			set_variable = { SWI_gold_trade_building_speed_factor = SWI_gold_trade_building_speed_factor_increase }
+			set_variable = { SWI_gold_trade_research_speed_factor = SWI_gold_trade_research_speed_factor_increase }
+			set_variable = { SWI_gold_trade_lack_of_resource_penalty_factor = SWI_gold_trade_lack_of_resource_penalty_factor_increase }
+			set_variable = { SWI_gold_trade_factory_max_efficiency_factor = SWI_gold_trade_factory_max_efficiency_factor_increase }
+			hidden_effect = { 
+				add_dynamic_modifier = { modifier = SWI_swiss_gold_market } 
+			}
+			custom_effect_tooltip = SWI_Start_swiss_gold_market_dynamic_mod_TT
+		}
+		else = {
+			add_to_variable = { SWI_gold_trade_consumer_goods_factor = SWI_gold_trade_consumer_goods_factor_increase }
+			add_to_variable = { SWI_gold_trade_building_speed_factor = SWI_gold_trade_building_speed_factor_increase }
+			add_to_variable = { SWI_gold_trade_research_speed_factor = SWI_gold_trade_research_speed_factor_increase }
+			add_to_variable = { SWI_gold_trade_lack_of_resource_penalty_factor = SWI_gold_trade_lack_of_resource_penalty_factor_increase }
+			add_to_variable = { SWI_gold_trade_factory_max_efficiency_factor = SWI_gold_trade_factory_max_efficiency_factor_increase }
+			custom_effect_tooltip = SWI_improve_swiss_gold_market_dynamic_mod_TT
+		}
+	}
+}
+
+SW_calculate_seized_modifiers = { #All of this so the tooltips can work... I should've listened to my mom and made it a bunch of National Spirits instead...  
+	
+	#Setting seized values same as the current ones 
+	set_variable = { SWI_gold_seized_consumer_goods_factor = SWI_gold_trade_consumer_goods_factor }
+ 	set_variable = { SWI_gold_seized_building_speed_factor = SWI_gold_trade_building_speed_factor }
+ 	set_variable = { SWI_gold_seized_research_speed_factor = SWI_gold_trade_research_speed_factor }
+ 	set_variable = { SWI_gold_seized_lack_of_resource_penalty_factor = SWI_gold_trade_lack_of_resource_penalty_factor }
+ 	set_variable = { SWI_gold_seized_factory_max_efficiency_factor = SWI_gold_trade_factory_max_efficiency_factor }
+	
+	#Doubling it 
+	multiply_variable = { SWI_gold_seized_consumer_goods_factor = 2 }
+	multiply_variable = { SWI_gold_seized_building_speed_factor = 2 }
+	multiply_variable = { SWI_gold_seized_research_speed_factor = 2 }
+	multiply_variable = { SWI_gold_seized_lack_of_resource_penalty_factor = 2 }
+	multiply_variable = { SWI_gold_seized_factory_max_efficiency_factor = 2 } 
+	
+	#Setting the values the country that got the gold stolen will have. 
+	set_variable = { SWI_gold_seized_bad_consumer_goods_factor = 0 }
+	set_variable = { SWI_gold_seized_bad_building_speed_factor = 0 }
+	set_variable = { SWI_gold_seized_bad_research_speed_factor = 0 }
+	set_variable = { SWI_gold_seized_bad_lack_of_resource_penalty_factor = 0 }
+	set_variable = { SWI_gold_seized_bad_factory_max_efficiency_factor = 0 }
+
+	subtract_from_variable = { SWI_gold_seized_bad_consumer_goods_factor = SWI_gold_trade_consumer_goods_factor }  
+	subtract_from_variable = { SWI_gold_seized_bad_building_speed_factor = SWI_gold_trade_building_speed_factor } 
+	subtract_from_variable = { SWI_gold_seized_bad_research_speed_factor = SWI_gold_trade_research_speed_factor } 
+	subtract_from_variable = { SWI_gold_seized_bad_lack_of_resource_penalty_factor = SWI_gold_trade_lack_of_resource_penalty_factor } 
+	subtract_from_variable = { SWI_gold_seized_bad_factory_max_efficiency_factor = SWI_gold_trade_factory_max_efficiency_factor } 
+
+}
+
+SWI_seize_gold = {
+	hidden_effect = {
+		if = {
+			limit = {
+				SWI = {
+					NOT = {
+						has_dynamic_modifier = { modifier = SWI_seized_gold }
+					}
+				}
+			}
+			set_variable = { SWI.SWI_gold_seized_consumer_goods_factor = SWI_gold_seized_consumer_goods_factor  }
+			set_variable = { SWI.SWI_gold_seized_building_speed_factor = SWI_gold_seized_building_speed_factor  }
+			set_variable = { SWI.SWI_gold_seized_research_speed_factor = SWI_gold_seized_research_speed_factor  }
+			set_variable = { SWI.SWI_gold_seized_lack_of_resource_penalty_factor = SWI_gold_seized_lack_of_resource_penalty_factor  }
+			set_variable = { SWI.SWI_gold_seized_factory_max_efficiency_factor = SWI_gold_seized_factory_max_efficiency_factor  }
+		}
+		else = {
+			add_to_variable = { SWI.SWI_gold_seized_consumer_goods_factor = SWI_gold_seized_consumer_goods_factor  }
+			add_to_variable = { SWI.SWI_gold_seized_building_speed_factor = SWI_gold_seized_building_speed_factor  }
+			add_to_variable = { SWI.SWI_gold_seized_research_speed_factor = SWI_gold_seized_research_speed_factor  }
+			add_to_variable = { SWI.SWI_gold_seized_lack_of_resource_penalty_factor = SWI_gold_seized_lack_of_resource_penalty_factor  }
+			add_to_variable = { SWI.SWI_gold_seized_factory_max_efficiency_factor = SWI_gold_seized_factory_max_efficiency_factor  }
+		}
+	}
+	remove_dynamic_modifier = { modifier = SWI_gold_trade_with_switzerland }
+	custom_effect_tooltip = SWI_remove_swiss_gold_dynamic_mod_TT
+	add_opinion_modifier = {
+		target = SWI
+		modifier = SWI_gold_seized_opinion_bad
+	}
+	remove_opinion_modifier = {
+		target = SWI 
+		modifier = SWI_gold_trade
+	}
+	add_dynamic_modifier = {
+		modifier = SWI_stole_our_gold_reserves
+		days = 180
+	}
+	custom_effect_tooltip = SWI_add_stolen_gold_dynamic_mod_TT
+	SWI = {
+		add_dynamic_modifier = { modifier = SWI_seized_gold days = 365 } 
+		custom_effect_tooltip = SWI_seized_gold_dynamic_mod_TT
+	}
+	SWI_adjust_gold_market_after_seizing_gold = yes 
+}
+
+SWI_adjust_gold_market_after_seizing_gold = {
+
+	if = {
+		limit = {
+			check_variable = { SWI.SWI_gold_trade = SWI_country_gold_trading_level }
+		}
+		SWI = {
+			remove_dynamic_modifier = { modifier = SWI_swiss_gold_market }
+			set_variable = { SWI.SWI_gold_trade = 0 }
+		}
+	}
+	else = {
+		subtract_from_variable = { SWI.SWI_gold_trade_consumer_goods_factor = SWI_gold_trade_consumer_goods_factor }
+		subtract_from_variable = { SWI.SWI_gold_trade_building_speed_factor = SWI_gold_trade_building_speed_factor }
+		subtract_from_variable = { SWI.SWI_gold_trade_research_speed_factor = SWI_gold_trade_research_speed_factor }
+		subtract_from_variable = { SWI.SWI_gold_trade_lack_of_resource_penalty_factor = SWI_gold_trade_lack_of_resource_penalty_factor }
+		subtract_from_variable = { SWI.SWI_gold_trade_factory_max_efficiency_factor = SWI_gold_trade_factory_max_efficiency_factor }
+		subtract_from_variable = { SWI.SWI_gold_trade = SWI_country_gold_trading_level }
+		custom_Effect_tooltip = SWI_reducing_effects_from_seizing_gold_TT
+
+	}
+	clear_variable = SWI_gold_trade_consumer_goods_factor
+	clear_variable = SWI_gold_trade_building_speed_factor
+	clear_variable = SWI_gold_trade_research_speed_factor
+	clear_variable = SWI_gold_trade_lack_of_resource_penalty_factor
+	clear_variable = SWI_gold_trade_factory_max_efficiency_factor
+}
+
+SWI_angry_country_cleanup = { #MEant to clean up any leftover variables or flags after the angry country is no longer angry 
+	every_other_country = {
+		limit = {
+			has_country_flag = SWI_already_asked_for_guarantees
+		}
+		clr_country_flag = SWI_already_asked_for_guarantees
+	}
+	if = {
+		limit = {
+			has_country_flag = SWI_has_done_backchannel_negotiations_once
+		}
+		clr_country_flag =  SWI_has_done_backchannel_negotiations_once
+	}
+	if = {
+		limit = {
+			has_country_flag = SWI_in_breach_of_neutrality
+		}
+		clr_country_flag = SWI_in_breach_of_neutrality
+	}
+	clr_country_flag = SWI_country_angry_warning_triggered
+	if = {
+		limit = {
+			has_variable = SWI_angriest_country
+		}
+		clear_variable = SWI_angriest_country
+	}
+}
+SWI_find_fascist_germany = { #Checks if fascist Germany still exists, and if it does, set a variable with it. If not, it sets a Country Flag to know there's no more fascist Germany. 
+	
+	if = {
+		limit = {
+			SWI_fascist_germany_exists = yes 
+		}
+		if = {
+			limit = {
+				SWI_is_fasc_ger = no
+				any_other_country = {
+					original_tag = GER 
+					NOT = { has_government = fascism }
+				}
+			}
+			random_other_country = {
+				limit = {
+					SWI_is_fasc_ger = yes
+				}
+				SWI = {
+					set_variable = { SWI_fascist_germany = PREV }
+				}				
+			}
+		}
+		SWI = {
+			if = {
+				limit = {
+					has_country_flag = SWI_fascist_germany_is_dead 
+				}
+				clr_country_flag = SWI_fascist_germany_is_dead
+			}
+		}
+	}
+	else = {
+		SWI = { set_country_flag = SWI_fascist_germany_is_dead }
+	}	
+}
+
+########################################################################################
+#############                    FEDERAL COUNCIL                        ################
+########################################################################################
+
+SWI_outgoing_president_cleanup = {
+	ROOT = {
+		if = {
+			limit = { has_country_flag = SWI_recently_finished_president_initiative }
+			clr_country_flag = SWI_recently_finished_president_initiative
+		}
+		if = {
+			limit = { has_country_flag = SWI_ongoing_president_initiative }
+			clr_country_flag = SWI_ongoing_president_initiative
+		}
+		random_character = {
+			limit = { has_character_flag = SWI_current_confederation_president }
+			clr_character_flag = SWI_current_confederation_president
+			set_character_flag = SWI_former_confederation_president
+		}
+		if = {
+			limit = { has_active_mission = SWI_recently_finished_president_initiative_mission }
+			remove_mission = SWI_recently_finished_president_initiative_mission 
+		}
+		if = {
+			limit = { has_country_flag = SWI_president_gave_MR_speech }
+			clr_country_flag = SWI_president_gave_MR_speech 
+		}
+	}
+}
+
+SWI_make_character_confederation_president = { #This is an effect to promote the scoped character to President Of The Council. It needs a character scope to work.
+	SWI_outgoing_president_cleanup = yes 
+	set_character_flag = SWI_current_confederation_president
+	clr_character_flag = SWI_councilor
+	ROOT = { 
+		set_variable = { SWI_confederation_president = PREV } 
+		if = {
+			limit = { has_idea = SWI_no_confederation_president_idea }
+			remove_ideas = { SWI_no_confederation_president_idea }
+		}
+
+		if = {
+			limit = {
+				has_country_flag = SWI_vacant_confederation_president_position
+			}
+			clr_country_flag = SWI_vacant_confederation_president_position
+		}
+
+		if = {
+			limit = { has_variable =  temp_character_president}
+			clear_variable = temp_character_president
+		}
+	}
+	SWI_update_councilors = yes
+}
+
+SWI_on_add_councilors = {
+	set_character_flag = SWI_councilor	
+	hidden_effect = {
+		ROOT = { country_event = { id = BBA_switzerland.99 hours = 1 } } 
+	}
+	if = {
+		limit = {
+			has_power_balance = {
+				id = SWI_centralization_bop
+			}
+		}
+		SWI_move_balance_of_power_based_on_trait = yes
+	}
+	
+}
+
+SWI_on_remove_councilor = {
+	clr_character_flag = SWI_councilor 	
+	hidden_effect = {
+		ROOT = { country_event = { id = BBA_switzerland.99 hours = 1 } } 
+	}
+}
+
+SWI_move_balance_of_power_based_on_trait = {
+	if = {
+		limit = {
+			SWI_is_council_guy = yes 
+		}
+		add_power_balance_value = {
+			id = SWI_centralization_bop
+			value = -0.1 
+		}
+	}
+	else_if = {
+		limit = {
+			SWI_is_cantons_guy = yes 
+		}
+		add_power_balance_value = {
+			id = SWI_centralization_bop
+			value = 0.1 
+		}
+	}
+}
+
+SWI_update_councilors = {
+	SWI = {
+		clear_variable = SWI_councilor_1
+		clear_variable = SWI_councilor_2
+		clear_variable = SWI_councilor_3
+		clear_variable = SWI_confederation_president
+		set_temp_variable = { fake_array = 0 }
+		every_character = {
+			limit = {
+				has_character_flag = SWI_councilor
+				is_political_advisor = no 
+			}
+			clr_character_flag = SWI_councilor
+		}
+		every_character = {
+			limit = {
+				is_character_slot = political_advisor
+				has_character_flag =  SWI_councilor
+			}
+			if = {
+				limit = {
+					check_variable = { SWI.fake_array = 0 }
+				}
+				ROOT = { 
+					set_variable = { SWI_councilor_1 = PREV } 
+					add_to_temp_variable = { fake_array = 1 }
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SWI.fake_array = 1 }
+				}
+				ROOT = { 
+					set_variable = { SWI_councilor_2 = PREV } 
+					add_to_temp_variable = { fake_array = 1 }
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SWI.fake_array = 2 }
+				}
+				ROOT = { 
+					set_variable = { SWI_councilor_3 = PREV } 
+					add_to_temp_variable = { fake_array = 1 }
+				}
+			}
+		}
+		random_character = {
+			limit = {
+				has_character_flag = SWI_current_confederation_president
+			}
+			ROOT = {
+				set_variable = { SWI_confederation_president = PREV }
+			}
+		}
+	}
+}
+
+
+SWI_president_initiative_complete_effect ={ 
+	set_country_flag = SWI_ongoing_president_initiative
+	if = {
+		limit = {
+			has_any_power_balance = yes 
+		}
+		add_power_balance_value = {
+			id = SWI_centralization_bop
+			value = -0.15 
+		}
+	}
+}
+
+SWI_president_initiative_remove_effect = {
+	set_country_flag = SWI_recently_finished_president_initiative
+	clr_country_flag = SWI_ongoing_president_initiative
+	hidden_effect = {
+		activate_mission = SWI_recently_finished_president_initiative_mission
+	}
+}
+
+SWI_add_random_councillor = {
+	if = {
+		limit = {
+			is_ai = no
+			SWI_empty_councilor_seat = {
+				is_character_slot = political_advisor
+			}
+		}
+		activate_advisor = SWI_empty_councilor_seat
+	}
+	#SWI = {
+	#	random_character = {
+	#		limit = {
+	#			is_character_slot = political_advisor
+	#			SWI_can_be_councilor = yes
+	#		}
+	#		activate = yes
+	#	}
+	#}
+	SWI_update_councilors = yes
+}
+
+SWI_remove_councilor = {
+	set_character_flag = SWI_ousted_councilor
+	clr_character_flag = SWI_councilor
+	ROOT = {  
+		set_country_flag = SWI_councilor_recently_removed
+	}
+}
+
+SWI_allow_hiring_councilor_again = {
+	ROOT = { clr_country_flag = SWI_councilor_recently_removed }
+}
+
+SWI_show_president_decisions = {
+	SWI = {
+		set_variable = { temp_character_president = PREV }
+	}
+	if = {
+		limit = {
+			OR = {
+				has_trait = SWI_pragmatic_democrat
+				has_trait = SWI_democratic_capitalist
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_defense_fund_drive
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_cantonal_conservative
+				has_trait = SWI_radical_democrat
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_swiss_democratic_tradition_campaign
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_trade_unionist
+				has_trait = SWI_corporatist
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_rally_workers
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_fascist_recruiter
+				has_trait = SWI_fascist_propagandist
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_spouse_fascism
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_fascist
+				has_trait = SWI_fascist_appeaser
+			}
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_appease_fascists
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			
+	}	}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_social_democrat
+				has_trait = SWI_socialist_pacifist
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_focus_on_swiss_unity
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_conservative_democrat
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_isolate_switzerland
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_militaristic_democrat
+				has_trait = SWI_militaristic_nationalist			
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_militarization_drive
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_intelligence_officer
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_expand_covert_operations
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_weapons_designer
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_expand_arms_industry
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}	
+	else_if = {
+		limit = {
+			OR = {
+				has_trait = SWI_soviet_spy
+				has_trait = SWI_anarchist
+			}		
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_anti_fascist_drive
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_trait = SWI_humanitarian
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_support_humanitarian_efforts
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	else_if = {
+		limit = {
+			has_trait = SWI_diplomat
+		}
+		SWI = {
+			unlock_decision_tooltip = {
+				decision = SWI_diplomatic_mission
+				show_effect_tooltip = yes
+				show_modifiers = yes
+			}
+		}
+	}
+	if = {
+		limit = {
+			SWI = { has_government = democratic }
+		}
+		SWI = {
+			custom_effect_tooltip = SWI_promoting_to_president_TT
+		}
+	}
+}
+
+SWI_add_country_leader_trait_based_on_councilor_trait = {
+	effect_tooltip = {
+		if = {
+			limit = {
+				has_trait = SWI_commander_in_chief
+			}
+			add_trait = {
+				character = THIS 
+				trait = SWI_commander_in_chief
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_radical_democrat
+			}
+			add_trait = {
+				character = THIS 
+				trait = SWI_radical_democrat
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_democratic_capitalist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_democratic_capitalist 
+			}
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_cantonal_conservative
+			}
+			add_trait = {
+				character = THIS 
+				trait = SWI_cantonal_conservative
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_anarchist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_anarchist
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_trade_unionist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_trade_unionist
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_appeaser
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_fascist_appeaser
+			}
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_fascist
+			}
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_propagandist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_fascist_propagandist
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_recruiter
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_fascist_recruiter
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_corporatist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_corporatist
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_social_democrat
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_social_democrat
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_socialist_pacifist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_socialist_pacifist
+			}
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_pragmatic_democrat
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_pragmatic_democrat
+			}
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_conservative_democrat
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_conservative_democrat
+			} 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_militaristic_democrat
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_militaristic_democrat
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_militaristic_nationalist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_militaristic_nationalist
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_diplomat
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_diplomat
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_intelligence_officer
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_intelligence_officer
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_humanitarian
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_humanitarian
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_weapons_designer
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_weapons_designer
+			}  
+		}
+		else_if = {
+			limit = { 
+				has_trait = SWI_soviet_spy 
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_soviet_spy
+			}  
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_nationalistic_industrialist
+			}
+			add_trait = {
+				character = THIS
+				trait = SWI_nationalistic_industrialist
+			}  
+		}
+	}
+	hidden_effect = {
+		if = {
+			limit = {
+				is_unit_leader = yes 
+			}	
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_commander_in_chief
+			}
+			add_country_leader_trait = SWI_commander_in_chief 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_radical_democrat
+			}
+			add_country_leader_trait = SWI_radical_democrat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_democratic_capitalist
+			}
+			add_country_leader_trait = SWI_democratic_capitalist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_cantonal_conservative
+			}
+			add_country_leader_trait = SWI_cantonal_conservative 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_anarchist
+			}
+			add_country_leader_trait = SWI_anarchist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_trade_unionist
+			}
+			add_country_leader_trait = SWI_trade_unionist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_appeaser
+			}
+			add_country_leader_trait = SWI_fascist_appeaser 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist
+			}
+			add_country_leader_trait = SWI_fascist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_propagandist
+			}
+			add_country_leader_trait = SWI_fascist_propagandist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_fascist_recruiter
+			}
+			add_country_leader_trait = SWI_fascist_recruiter 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_corporatist
+			}
+			add_country_leader_trait = SWI_corporatist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_social_democrat
+			}
+			add_country_leader_trait = SWI_social_democrat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_socialist_pacifist
+			}
+			add_country_leader_trait = SWI_socialist_pacifist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_pragmatic_democrat
+			}
+			add_country_leader_trait = SWI_pragmatic_democrat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_conservative_democrat
+			}
+			add_country_leader_trait = SWI_conservative_democrat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_militaristic_democrat
+			}
+			add_country_leader_trait = SWI_militaristic_democrat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_militaristic_nationalist
+			}
+			add_country_leader_trait = SWI_militaristic_nationalist 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_diplomat
+			}
+			add_country_leader_trait = SWI_diplomat 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_intelligence_officer
+			}
+			add_country_leader_trait = SWI_intelligence_officer 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_humanitarian
+			}
+			add_country_leader_trait = SWI_humanitarian 
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_weapons_designer
+			}
+			add_country_leader_trait = SWI_weapons_designer 
+		}
+		else_if = {
+			limit = { 
+				has_trait = SWI_soviet_spy 
+			}
+			add_country_leader_trait = SWI_soviet_spy
+		}
+		else_if = {
+			limit = {
+				has_trait = SWI_nationalistic_industrialist
+			}
+			add_country_leader_trait = SWI_nationalistic_industrialist
+		}
+	}
+}
+
+SWI_make_centralized_president = { #This takes the current president of the Confederation and makes them into a regulaar presiden. 
+	ROOT = {
+		every_character = {
+			limit = {
+				has_advisor_role = political_advisor 
+			}
+			set_can_be_fired_in_advisor_role = {
+				slot = political_advisor 
+				value = yes
+			}
+		}
+	}
+	if = {
+		limit = { ROOT = { has_government = democratic } }
+		if = {
+			limit = { SWI_councilor_is_democratic_liberalism = yes }
+			add_country_leader_role = {
+				country_leader = {
+					ideology = liberalism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+		}
+		else_if ={
+			limit = { SWI_councilor_is_democratic_conservatism = yes }
+			add_country_leader_role = {
+				country_leader = {
+					ideology = conservatism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+		}
+		else_if ={
+			limit = { SWI_councilor_is_democratic_socialism = yes }
+			add_country_leader_role = {
+				country_leader = {
+					ideology = socialism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+		} 
+		else = {
+			add_country_leader_role = {
+				country_leader = {
+					ideology = conservatism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+		}
+		SWI_add_country_leader_trait_based_on_councilor_trait = yes	
+		ROOT = { set_country_flag = SWI_elected_centralized_president }
+	}
+	else_if = {
+		limit = { ROOT = { has_government = fascism } }
+		add_country_leader_role = {
+			country_leader = {
+				ideology = fascism_ideology
+				expire = "1965.1.1.1"
+			}
+			promote_leader = yes 
+		}
+		SWI_add_country_leader_trait_based_on_councilor_trait = yes
+		ROOT = { set_country_flag = SWI_elected_centralized_president }
+	}
+	else_if = {
+		limit = { ROOT = { has_government = neutrality } } #This is a workaround, change when scope issue with Character System is fixed #TODO_Carlo
+		if = {
+		 	limit = {
+		 		var:SWI.SWI_confederation_president = {
+		 			has_trait = SWI_intelligence_officer
+		 		}
+		 	}
+			ROOT = {
+				add_country_leader_role = {
+					character = var:SWI_confederation_president
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+						traits = { SWI_intelligence_officer }
+					}
+					promote_leader = yes 
+				}			
+			}
+		}
+		else_if = {
+			limit = {
+				var:SWI.SWI_confederation_president = {
+					has_trait = SWI_militaristic_nationalist
+				}
+			}
+			ROOT = {
+				add_country_leader_role = {
+					character = var:SWI_confederation_president
+					country_leader = {
+						ideology = despotism
+						expire = "1965.1.1.1"
+						traits = { SWI_militaristic_nationalist }
+					}
+					promote_leader = yes
+				}				
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				character = var:SWI_confederation_president
+				country_leader = {
+					ideology = despotism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+			SWI_add_country_leader_trait_based_on_councilor_trait = yes 
+		}
+		ROOT = { set_country_flag = SWI_elected_centralized_president }
+	}
+	else_if = {
+		limit = { ROOT = { has_government = communism } }
+		if = {
+			limit = { SWI_councilor_is_communist_anarchist = yes }
+			add_country_leader_role = {
+				country_leader = {
+					ideology = anarchist_communism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			}
+		}
+		else = {
+			add_country_leader_role = {
+				country_leader = {
+					ideology = marxism
+					expire = "1965.1.1.1"
+				}
+				promote_leader = yes 
+			} 
+		}
+		SWI_add_country_leader_trait_based_on_councilor_trait = yes 	
+		ROOT = { set_country_flag = SWI_elected_centralized_president }	
+	}
+	else = {
+		log = "HEY - Something went wrong with the centralized president."
+	}
+
+	
+}
+
+########################################################################################
+##################                    OTHER                        #####################
+########################################################################################
+
+SWI_create_david_frankfurter_operative = {
+	SWI = {
+		create_operative_leader = {
+			name = SWI_david_frankfurter
+			GFX = GFX_portrait_SWI_david_frankfurter
+			traits = { operative_infiltrator }
+			bypass_recruitment = yes 
+			available_to_spy_master = yes
+			female = no
+			nationalities = { CRO YUG GER ISR }
+		}
+	}
+}
+
+SWI_check_fascist_factories = {
+	if = {
+		limit = {
+			SWI = {
+				has_variable = SWI_biggest_fascist
+				check_variable = {
+					SWI_biggest_fascist.num_of_factories < PREV.num_of_factories 
+				} 
+			}
+		}
+		SWI = { set_variable = { SWI_biggest_fascist = PREV } }  
+	}
+	else_if = {
+		limit = {
+			NOT = {
+				SWI = { has_variable = SWI_biggest_fascist }
+			}
+		}
+		SWI = { set_variable = { SWI_biggest_fascist = PREV } }
+	}
+}
+
+SWI_find_best_democratic_ally = { #This looks for the most suitable democratic ally
+	if = {
+		limit = {
+			FRA = {
+				exists = yes
+				has_government = democratic
+				SWI_is_country_to_balance = yes 
+				has_capitulated = no 
+				OR = {
+					is_faction_leader = yes
+					is_in_faction = no
+				}
+			}
+		}
+		set_variable = {
+			SWI.SWI_best_dem_ally = FRA 
+		}
+	}
+	else_if = { 
+		limit = {
+			ENG = {
+				exists = yes
+				is_faction_leader = yes
+				has_government = democratic
+			}
+		}
+		set_variable = {
+			SWI.SWI_best_dem_ally = ENG 
+		}
+	}
+	else_if = {
+		limit = {
+			USA = {
+				exists = yes
+				SWI_is_country_to_balance = yes
+				is_faction_leader = yes
+				has_government = democratic
+			}
+		}
+		set_variable = {
+			SWI.SWI_best_dem_ally = USA 
+		}
+	}
+	else = {
+		random_other_country = {
+			limit = {
+				is_major = yes
+				is_faction_leader = yes
+				exists = yes 
+				has_government = democratic
+				NOT = { has_war_with = ROOT }
+			}
+			SWI = {
+				set_variable = {
+					SWI_best_dem_ally = PREV 
+				}
+			}
+		} 
+	}
+	SWI = { mark_focus_tree_layout_dirty = yes }
+} 
+
+SWI_find_democratic_planes_seller = {
+	SWI_find_best_democratic_ally = yes
+	if = {
+		limit = { SWI_dem_usa_valid_to_buy_planes = yes }
+		set_variable = { SWI.SWI_democratic_planes_seller = USA }
+	}
+	else = {
+		set_variable = { SWI.SWI_democratic_planes_seller = SWI.SWI_best_dem_ally }
+	}
+}
+
+SWI_find_biggest_fascist_neighbor = { 
+	if = {
+		limit = {
+			SWI_has_easy_fascist_neighbor_option = yes #Checking to see if will have to look elsewhere. 
+		}
+		if = { #Preferably, the biggest fascist will be Germany.
+			limit = {
+				GER = { 
+					exists = yes 
+					has_government = fascism 
+					has_capitulated = no
+					NOT = { has_war_with = SWI }
+				}
+			}
+			set_variable = { SWI_biggest_fascist = GER }
+		#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (GER pref)"
+		}
+		else_if = { #Second preference is Italy
+			limit = { 
+				ITA = {
+					exists = yes 
+					has_government = fascism 
+					has_capitulated = no
+					NOT = { has_war_with = SWI }
+				}
+			}
+			set_variable = { SWI_biggest_fascist = ITA }
+		#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (ITA pref)"
+		}
+		else_if = { #If France happens to be fascist, it's better than a random fascist country
+			limit = { 
+				FRA = {
+					exists = yes 
+					has_government = fascism 
+					has_capitulated = no
+					NOT = { has_war_with = SWI }
+				}
+			}
+			set_variable = { SWI_biggest_fascist = FRA }
+		#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (FRA pref)"
+		}
+	}
+	else_if = { #I guess maybe the UK? 
+		limit = { 
+			ENG = {
+				exists = yes 
+				has_government = fascism 
+				has_capitulated = no
+				NOT = { has_war_with = SWI }
+			}
+		}
+		set_variable = { SWI_biggest_fascist = ENG }
+		#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (ENG pref)"
+	}
+	else_if = { #Ok is there any fascist country around? 
+		limit = {
+			any_other_country = {
+				SWI_is_country_to_balance = yes
+				has_government = fascism 
+			}
+		}
+		every_other_country = {
+			limit = {
+				SWI_is_country_to_balance = yes
+				has_government = fascism 
+			}
+			SWI_check_fascist_factories = yes
+			#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (Any Fascist Country to balance)"
+		}
+	}
+	else_if = { #In Europe?? 
+		limit = {
+			any_other_country = {
+				is_suitable_fascist_major = yes
+			}
+		}
+		every_other_country = {
+			limit = {
+				is_suitable_fascist_major = yes
+			}
+			SWI_check_fascist_factories = yes
+			#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (Any Fascist Major in Europe)"
+		}
+	}
+	else_if = { #We'll take any fascist Neighbor at this point I guess
+		limit = {
+			any_other_country = {
+				NOT = { has_war_with = SWI }
+				is_neighbor_of = SWI
+				has_government = fascism 
+			}
+		}
+		every_other_country = {
+			limit = {
+				NOT = { has_war_with = SWI }
+				is_neighbor_of = SWI
+				has_government = fascism 		
+			}
+			SWI_check_fascist_factories = yes
+			#log = "Biggest fash around is [?SWI_biggest_fascist.GetName] (Any Fascist Neighbor)"
+		}
+	}
+	else_if = { # I guess we can try to find a European Fascist? 
+		limit = {
+			any_other_country = {
+				NOT = { has_war_with = SWI }
+				has_government = fascism 
+				capital_scope = { is_on_continent = europe }
+			}	
+		}
+		every_other_country = {
+			limit = { 
+				NOT = { has_war_with = SWI }
+				has_government = fascism 
+				capital_scope = { is_on_continent = europe }
+			}
+			SWI_check_fascist_factories = yes 
+		}
+	}
+	else = {
+		clear_variable = SWI_biggest_fascist #Switzerland is safe I guess 
+		if = {
+			limit = {
+				has_country_flag = SWI_viable_fascist_in_europe 
+			}
+			clr_country_flag = SWI_viable_fascist_in_europe 
+		}
+	}
+	SWI = { mark_focus_tree_layout_dirty = yes }
+	if = {
+		limit = {
+			SWI = { 
+				has_variable = SWI_biggest_fascist 
+				NOT = { has_country_flag = SWI_viable_fascist_in_europe }
+			}
+		}
+		SWI = { set_country_flag = SWI_viable_fascist_in_europe }
+	}
+}
+
+SWI_turn_into_alpine = {
+	if = {
+		limit = {
+			any_owned_state = {
+				NOT = { is_core_of = ROOT }
+				is_alpine_state = yes 
+			}
+		}
+		every_owned_state = {
+			limit = {
+				is_alpine_state = yes 
+				NOT = { is_core_of = ROOT }
+			}
+			add_core_of = ROOT
+		}
+	}
+	if = {
+		limit = {
+			has_idea = SWI_democratic_unrest
+		}
+		remove_ideas = { SWI_democratic_unrest }
+	}
+	if = {
+		limit = {
+			has_government = democratic 
+		}
+		set_cosmetic_tag = SWI_alpine_democratic
+	}
+	else_if = {
+		limit = {
+			has_government = neutrality 
+		}
+		set_cosmetic_tag = SWI_alpine_neutrality
+	}
+	else_if = {
+		limit = {
+			has_government = communism 
+		}
+		set_cosmetic_tag = SWI_alpine_communism
+	}
+	else_if = {
+		limit = {
+			has_government = fascism 
+		}
+		set_cosmetic_tag = SWI_alpine_fascism
+	}
+}
+
+SWI_get_fighters_from_this_country = { #This checks the scoped country and tries to match it with plausible major-ish, then sends 100 Fighters to that coutnry... 
+	if = {
+		limit = { tag = USA }
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_1
+			    amount = 50
+			    producer = USA
+			    variant_name = "P-36A"
+			}				
+		}
+	}
+	else_if = {
+		limit = { tag = ENG }
+		PREV = {
+			add_equipment_to_stockpile = {
+		    	type = small_plane_airframe_0
+		    	amount = 50
+		    	producer = ENG
+		    	variant_name = "Gloster Gladiator"
+			}	
+		}
+	}
+	else_if = {
+		limit = { tag = FRA	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = FRA
+			    variant_name = "D.510"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = GER	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_1
+			    amount = 50
+			    producer = GER
+			    variant_name = "Bf 109 D"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = ITA	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = ITA
+			    variant_name = "CR.32"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = SOV	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_1
+			    amount = 50
+			    producer = SOV
+			    variant_name = "I-16"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = SWE	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = SWE
+			    variant_name = "Svenska Jaktfalken"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = CZE	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = CZE
+			    variant_name = "Avia B.534"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = JAP	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = JAP
+			    variant_name = "Ki-10"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = POL	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = POL
+			    variant_name = "PZL P.24"
+			}
+		}
+	}
+	else = { #If the seller is not one of the above, just give them an american one ¯\_(ツ)_/¯ They fell off a truck or something. 
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_1
+			    amount = 50
+			    producer = USA
+			    variant_name = "P-36A"
+			}	
+		}
+	}
+}
+
+SWI_get_cas_from_this_country = { #This checks the scoped country and tries to match it with plausible major-ish, then sends 100 small CAS to that coutnry... 
+	if = {
+		limit = { tag = USA }
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_1
+			    amount = 50
+			    producer = USA
+			    variant_name = "A-17"
+			}				
+		}
+	}
+	else_if = {
+		limit = { tag = ENG }
+		PREV = {
+			add_equipment_to_stockpile = {
+		    	type = small_plane_cas_airframe_0
+		    	amount = 50
+		    	producer = ENG
+		    	variant_name = "Fairey Gordon"
+			}	
+		}
+	}
+	else_if = {
+		limit = { tag = FRA	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_airframe_0
+			    amount = 50
+			    producer = FRA
+			    variant_name = "Br. 19"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = GER	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_1
+			    amount = 50
+			    producer = GER
+			    variant_name = "Ju 87"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = ITA	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_1
+			    amount = 50
+			    producer = ITA
+			    variant_name = "Ba.65"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = CZE	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_0
+			    amount = 50
+			    producer = CZE
+			    variant_name = "Aero A.101"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = POL	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_0
+			    amount = 50
+			    producer = POL
+			    variant_name = "PZL P.23"
+			}
+		}
+	}
+	else_if = {
+		limit = { tag = JAP	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_0
+			    amount = 50
+			    producer = JAP
+			    variant_name = "Ki-2"
+			}
+		}
+	}
+	else_if = { #### I know this is not a CAS plane, but it's better than getting American Planes from the Soviet union
+		limit = { tag = SOV	}
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = medium_plane_airframe_0
+			    amount = 50
+			    producer = SOV
+			    variant_name = "DB-3"
+			}
+		}
+	}
+	else = { #If the seller is not one of the above, just give them an american one ¯\_(ツ)_/¯ They fell off a truck or something. 
+		PREV = {
+			add_equipment_to_stockpile = {
+			    type = small_plane_cas_airframe_1
+			    amount = 50
+			    producer = USA
+			    variant_name = "A-17"
+			}	
+		}
+	}
+}
+
+SWI_make_clara_thalmann_operative = {
+	SWI = {
+		if = {
+			limit = {
+				NOT = { has_country_flag = SWI_clara_thalmann_hired }	
+			}
+			create_operative_leader = {
+				name = "Clara Thalmann"
+				GFX = GFX_portrait_IA_clara_thalmann
+				traits = { operative_commando }
+				bypass_recruitment = no
+				available_to_spy_master = yes
+				female = yes
+				nationalities = { SWI }
+			}
+			set_country_flag = SWI_clara_thalmann_hired
+		}
+
+	}
+}
+
+SWI_on_action_puppet_selection = { # DO NOT USE OUTSIDE ON_ACTIONS Effect to select the puppet to become if we have the correct cosmetic tag. 
+	if = {
+		limit = {
+			ROOT = { SWI_bba = yes } 
+		}
+		FROM = {
+			if = {
+				limit = { original_tag = GER }
+				if = {
+					limit = { has_government = fascism }
+					ROOT = { set_cosmetic_tag = SWI_GER_puppet_fascism }
+				}
+				else_if = {
+					limit = { has_government = democratic }
+					ROOT = { set_cosmetic_tag = SWI_GER_puppet_democratic }
+				}
+			}
+			else_if = {
+				limit = { original_tag = FRA }
+				if = {
+					limit = { has_government = fascism }
+					ROOT = { set_cosmetic_tag = SWI_FRA_puppet_fascism}
+				}
+				else_if = {
+					limit = { has_government = democratic }
+					ROOT = { set_cosmetic_tag = SWI_FRA_puppet_democratic }
+				}
+			}
+			else_if = {
+				limit = { original_tag = ITA }
+				if = {
+					limit = { has_government = fascism }
+					ROOT = { set_cosmetic_tag = SWI_ITA_puppet_fascism}
+				}
+				else_if = {
+					limit = { has_government = democratic }
+					ROOT = { set_cosmetic_tag = SWI_ITA_puppet_democratic }
+				}
+			}
+			else_if = {
+				limit = { original_tag = SOV }
+				if = {
+					limit = { has_government = communism }
+					ROOT = { set_cosmetic_tag = SWI_SOV_puppet_communism }
+				}
+			}
+			else_if = {
+				limit = { original_tag = ENG }
+				if = {
+					limit = { has_government = fascism }
+					ROOT = { set_cosmetic_tag = SWI_ENG_puppet_fascism}
+				}
+				else_if = {
+					limit = { has_government = democratic }
+					ROOT = { set_cosmetic_tag = SWI_ENG_puppet_democratic }
+				}
+			}
+			else_if = {
+				limit = { has_government = democratic }
+				ROOT = { set_cosmetic_tag = SWI_helvetic_republic }
+			}
+		}
+	}
+}
+
+SWI_demand_alps = { #called from country scope
+	every_core_state = {
+		limit = {
+			is_alpine_state = yes
+		}
+		controller = {  #state must be a core of ITA and/or the controller, must be an alpine state, controller is not at war with SWI
+			if = {
+				limit = {
+					NOT = { has_war_with = ROOT }
+					PREV = {  # <- points towards the state in question
+						is_owned_by = PREV # <- points towards controller
+						is_fully_controlled_by = PREV
+						is_core_of = PREV # <- points towards controller
+					}
+					exists = yes 
+					NOT = { has_country_flag = SWI_already_asked_for_alps }
+				}
+				PREV = { add_claim_by = ROOT }
+				country_event = { id = BBA_swiss_expansion.12 hours = 4 }	
+			}
+		}
+	}
+}
