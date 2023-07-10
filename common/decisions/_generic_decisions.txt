@@ -29,18 +29,28 @@ UNSC_decision_cat = {
 		}
 		timeout_effect = {
 			#country_event = {id = unsc.5}
-			
 			if = {
-				limit= {
-					check_variable = { global.negative_disp > global.positive_disp }
+				limit = {
+					check_variable = {global.UNSC_vetos = 0 }
 				}
-				country_event = { id = unsc.4 }
+				if = {
+					limit= {
+						check_variable = { global.negative_disp > global.positive_disp }
+					}
+					country_event = { id = unsc.4 }
+				}
+				if = {
+					limit = {
+						check_variable = { global.negative_disp < global.positive_disp }
+					}
+					country_event = { id = unsc.5 }
+				}
 			}
 			if = {
 				limit = {
-					check_variable = { global.negative_disp < global.positive_disp }
+					check_variable = {global.UNSC_vetos > 0 }
 				}
-				country_event = { id = unsc.5 }
+				country_event = { id = unsc.4 }
 			}
 			
 			#clr_global_flag = UNSC_sanction_voting_ongoing
@@ -70,6 +80,20 @@ UNSC_decision_cat = {
 			NOT = {
 				has_global_flag = UNSC_sanction_voting_ongoing
 			}
+		}
+		complete_effect = {
+			set_variable_to_random = {
+    			var = random_num
+    			max = 20
+    			integer = yes
+			}
+			set_country_flag = UN_has_voted
+		}
+		days_remove = var:random_num
+		remove_effect = {
+			add_to_variable = { global.UNSC_vetos = 1 }
+			calculate_voting_bar = yes
+			set_variable = {global.UNSC_veto_origin = ROOT}
 		}
 		ai_will_do = {
 			factor = 0
