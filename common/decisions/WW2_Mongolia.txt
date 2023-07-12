@@ -1,4 +1,4 @@
-political_actions = {
+political_actions = { 
 	MON_rename_capital = {
 
 		icon = mon
@@ -36,6 +36,7 @@ political_actions = {
 			country_event = { id = MON.60 }
 		}
 	}
+
 	MON_constitutional_monarchy = {
 
 		icon = mon
@@ -395,8 +396,139 @@ MON_additional_troops = {
 	#Buryat
 	#Kalmyk
 }
+political_actions = {
 
-operations = {
+	give_russia_land = {
+		ai_will_do = {
+			factor = 100000
+		}
+		icon = generic_decision
+
+		allowed = {
+			is_literally_china = yes
+		}
+
+		available = {
+			is_subject = no
+			country_exists = SOV
+			date > 1910.1.1
+			date < 1916.1.1
+			SOV = { owns_state = 329}
+			SOV = { is_puppet_of = CHI}
+		}
+
+		visible = {
+			OR = {
+			SOV = { is_puppet_of = CHI}
+			SOV = { is_puppet_of = QIN}
+			SOV = { is_puppet_of = BOX}
+			}
+			date > 1910.1.1
+			date < 1916.1.1
+			OR = {
+			tag = CHI
+			tag = QIN
+			tag = BOX
+			}
+		}
+			priority = 99999
+	
+
+		fire_only_once = yes
+		complete_effect = {
+			add_days_mission_timeout = {
+				mission = fragile_unity
+				days = 30
+			}
+			RUE = {transfer_state = 329 }
+		}
+	} 
+	ban_religion = {
+			priority = 99999
+		cost = 50
+		icon = generic_decision
+
+		allowed = {
+			tag = box
+		}
+
+		available = {
+			has_war = no
+			tag = BOX
+		NOT = {
+			country_exists = CHI
+			country_exists = QIN
+			}
+			date > 1910.1.1
+		}
+
+		visible = {
+			tag = BOX
+			date > 1910.1.1
+			NOT = {
+			country_exists = CHI
+			country_exists = QIN
+			}
+		}
+
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 0
+		}
+		complete_effect = {
+			add_ideas = RON_Atheism 
+			add_days_mission_timeout = {
+				mission = box_fragile_unity
+				days = -900
+			}
+			add_stability = 0.3
+			add_political_power = 400
+		}
+	}
+	invade_box = {
+			priority = 99999
+	
+		icon = generic_decision
+
+		allowed = {
+			is_literally_china = yes
+		}
+
+		available = {
+			has_war = no
+			is_subject = no
+			country_exists = BOX
+			date > 1910.1.1
+		}
+
+		visible = {
+			country_exists = BOX
+			date > 1910.1.1
+			OR = {
+			tag = CHI
+			tag = BOX
+			tag = QIN
+			}
+		}
+
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 100000
+		}
+		cost = 50
+
+		complete_effect = {
+			add_days_mission_timeout = {
+				mission = box_fragile_unity
+				days = -500
+			}
+			declare_war_on = {
+				target = BOX
+				type = annex_everything
+			}
+		}
+	}
+
 	MON_retake_mongolia = {
 
 		icon = mon
@@ -427,6 +559,170 @@ operations = {
 			MON = { every_owned_state = { add_core_of = ROOT
 			} }
 			create_wargoal = { type = annex_everything target = MON }
+		}
+	}
+}
+chinese_revolution  = {
+	box_fragile_unity = {
+
+		icon = mon
+
+		activation = {
+			tag = BOX
+			has_start_date > 1909.1.1
+			date < 1920.1.1
+			NOT = {
+			has_government = democratic
+			}			
+		}
+
+		available = {
+			has_civil_war = no
+			has_stability > .65
+			has_political_power > 0
+			has_war_support > .30
+			NOT = {
+				has_idea = QIN_outdated_army 
+				has_idea = QIN_low_legitimacy 
+				country_exists = CHI
+			}
+			controls_state = 608
+			num_researched_technologies > 55
+			land_doctrine_level > 3
+		}
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1
+		}
+		days_mission_timeout = 1500 # Will collapse faster from instabality 
+		timeout_effect = {
+			country_event = { id = chinese_empire.181 }
+		}
+	}	
+	Kill_the_queen = {
+		icon = generic_industry
+	allowed = {
+		tag = BOX
+	}
+	available = {
+		controls_state = 613
+	}
+	visible = {
+		tag = BOX
+		has_war_with = CHI
+	}
+
+		fire_only_once = yes
+
+
+		cost = 100
+
+		complete_effect = {
+			QIN = {
+				kill_country_leader = yes
+				add_political_power = -100
+				add_stability = -.3
+			}
+			add_stability = .3
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 0
+		}
+	}
+	fragile_unity = {
+
+		icon = mon
+
+		activation = {
+			OR = {
+				tag = CHI
+				tag = QIN
+			}
+			date < 1920.1.1
+			NOT = {
+			has_government = democratic
+			}			
+			#has_start_date = 1900.1.1
+		}
+
+		available = {
+			OR = {
+				tag = CHI
+				tag = QIN
+			}
+			has_civil_war = no
+			has_stability > .65
+			has_political_power > 0
+			has_war_support > .30
+			NOT = {
+				has_idea = QIN_outdated_army 
+				has_idea = QIN_low_legitimacy 
+				country_exists = box
+			}
+			controls_state = 608
+			num_researched_technologies > 40
+			land_doctrine_level > 2
+		}
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1
+		}
+		days_mission_timeout = 7300
+		complete_effect = {
+
+		}
+		timeout_effect = {
+			country_event = { id = chinese_empire.181 }
+		}
+	}
+	fragile_unity1 = {
+
+		icon = mon
+
+		activation = {
+			OR = {
+				tag = CHI
+				tag = QIN
+			}
+			date < 1920.1.1	
+			has_start_date > 1909.1.1
+		}
+
+		available = {
+			OR = {
+				tag = CHI
+				tag = QIN
+			} 
+			has_civil_war = no
+			has_stability > .65
+			has_political_power > 0
+			has_war_support > .30
+			NOT = {
+				has_idea = QIN_outdated_army 
+				has_idea = QIN_low_legitimacy 
+				country_exists = box
+			}
+			controls_state = 608
+			num_researched_technologies > 40
+			land_doctrine_level > 2
+			NOT = {
+			has_government = democratic
+			}
+		}
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 1
+		}
+		days_mission_timeout = 4010 
+		complete_effect = {
+
+		}
+		timeout_effect = {
+			country_event = { id = chinese_empire.181 }
 		}
 	}
 
@@ -470,13 +766,14 @@ operations = {
 		}
 	}
 }
+operations = {
+
 #If you change the values loc for WTT_border_incident_delay_until_new_incident_180 and WTT_border_incident_delay_until_new_incident_120 has to be changed
 @border_incident_escalation_countdown = 15
 @border_conflict_incident_forgotten_timer = 30
 @border_conflict_escalate_to_war_countdown = 45
 @border_conflict_time_until_cancelled = 360
 
-operations = {
 
 	MON_border_conflict_initiate_incident = {
 		icon = border_war
@@ -1224,6 +1521,7 @@ operations = {
 		}
 	}
 }
+}
 MON_resources = {
 	develop_mongolia_metal = {
 
@@ -1465,3 +1763,4 @@ MON_resources = {
 		}
 	}
 }
+
