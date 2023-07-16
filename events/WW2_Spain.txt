@@ -12,11 +12,11 @@ country_event = {
 
 	option = {
 		name = ww2_spain.1.a
-		complete_national_focus = SPA_CEDA
+		#complete_national_focus = SPA_CEDA
 	}
 	option = {
 		name = ww2_spain.1.b
-		complete_national_focus = SPR_popular_front
+		#complete_national_focus = SPR_popular_front
 	}
 }
 
@@ -157,7 +157,7 @@ country_event = {
 				#Make republican AI not choose this if already republican
 				modifier = {
 					factor = 0
-					check_variable = { 167.scw_color = 1}
+					check_variable = { 173.scw_color = 1}
 					has_completed_focus = SPA_CEDA
 				}
 				activate_mission = SPA_expand_influence_in_granada_mission
@@ -352,10 +352,188 @@ country_event = {
 				}
 				activate_mission = SPA_expand_influence_in_aragon_mission
 			}
+			
 		}
+		country_event = { id = ww2_spain.2 days = 15 random_days = 3}
 	}
 }
 
+country_event = {
+	id = ww2_spain.3
+	title = ww2_spain.3.t
+	desc = ww2_spain.3.d
+
+	is_triggered_only = yes
+
+	immediate = {
+		
+		disband_all_units = yes
+		set_global_flag = spanish_civil_war
+		SPA = {
+			transfer_state = 297
+			transfer_state = 178
+			transfer_state = 1106
+			transfer_state = 699
+			transfer_state = 1118
+			transfer_state = 1043
+			transfer_state = 1044
+			country_lock_all_division_template = no
+			retire_ideology_leader = democratic
+			retire_ideology_leader = neutrality
+			retire_ideology_leader = communism
+
+			set_politics = {
+				ruling_party = neutrality
+			}
+			add_popularity = {
+			    ideology = democratic
+			    popularity = -0.25
+			}
+			add_popularity = {
+			    ideology = communism
+				popularity = -0.1
+			}
+			
+
+			division_template = {
+				name = "Guarnición Nacionalista"
+				is_locked = yes
+				template_counter = 6
+				division_names_group = SPR_INF_02
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+			division_template = {
+				name = "División del Ejército de África"
+				template_counter = 4
+				division_names_group = SPR_INF_06
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+					infantry = { x = 1 y = 0 }
+					infantry = { x = 1 y = 1 }
+					infantry = { x = 1 y = 2 }
+					infantry = { x = 2 y = 0 }
+					artillery_brigade = { x = 2 y = 1 }
+					artillery_brigade = { x = 2 y = 2 }
+				}
+				support = {
+					recon = { x = 0 y = 0 }
+					engineer = { x = 0 y = 1 }
+				}
+			}
+		}
+		SPR = {
+			retire_ideology_leader = fascism
+			retire_ideology_leader = neutrality
+			retire_ideology_leader = communism
+			country_lock_all_division_template = no
+			division_template = {
+				name = "Guarnición Republicana"
+				is_locked = yes
+				template_counter = 6
+				division_names_group = SPD_INF_01
+				regiments = {
+					infantry = { x = 0 y = 0 }
+					infantry = { x = 0 y = 1 }
+					infantry = { x = 0 y = 2 }
+				}
+			}
+		}
+		every_owned_state = {
+			limit = {
+				OR = {
+					check_variable = { scw_color = 2 }
+					
+				}
+			}
+			SPA = {
+				transfer_state = PREV
+			}
+			if = {
+				limit = {
+					THIS = {
+						NOT = {
+							state = 290
+						}
+					}
+				}
+				THIS = {
+			 		create_unit = {
+			 			division = "division_template = \"Guarnición Nacionalista\" start_experience_factor = 0.1" 
+			 			owner = SPA
+			 			allow_spawning_on_enemy_provs = yes
+			 			count = 3
+			 		}
+				}
+			}
+			
+		}
+		create_unit = {
+			division = "division_template = \"División del Ejército de África\" start_experience_factor = 0.3" 
+			owner = 290.OWNER
+		}
+		create_unit = {
+			division = "division_template = \"División del Ejército de África\" start_experience_factor = 0.3" 
+			owner = 290.OWNER
+		}
+		create_unit = {
+			division = "division_template = \"División del Ejército de África\" start_experience_factor = 0.3" 
+			owner = 290.OWNER
+		}
+		SPR = {
+			every_owned_state = {
+				limit = {
+					check_variable = { scw_color = 1}
+				}
+				if = {
+					limit = {
+						THIS = {
+							NOT = {
+								state = 290
+							}
+						}
+					}
+					THIS = {
+						create_unit = {
+							division = "division_template = \"Guarnición Republicana\" start_experience_factor = 0.1" 
+							owner = SPR
+							allow_spawning_on_enemy_provs = yes
+							count = 3
+						}
+					}
+				}
+			}
+			
+		}
+		if = {
+		 	limit = {
+		 		has_completed_focus = SPA_CEDA
+		 	}
+		 	SPA = { change_tag_from = SPR }
+			
+		}
+		SPA = {
+			declare_war_on = {
+				target = SPR
+				type = civil_war
+			}
+			add_civil_war_target = SPR
+			add_ideas = SPR_no_surrender
+		}
+		SPR = {
+			add_ideas = SPR_no_surrender
+		}
+	}
+
+	option = {
+
+	}
+}
 
 country_event = {
 	id = veren.1
