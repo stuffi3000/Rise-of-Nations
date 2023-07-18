@@ -2998,4 +2998,341 @@ SPR_the_inevitable_civil_war = {
             }
         }
     }
+
+    SPR_anarchist_rise = {
+        activation = { always= no}
+        days_mission_timeout = 2
+        available = { hidden_trigger = {always = no} }
+        allowed = {
+            original_tag = SPR
+        }
+        timeout_effect = {
+            random_controlled_state = {
+                prioritize = { 165 }
+                limit = {
+                    has_state_flag = is_scw_state
+                }
+                SPC = {
+                    transfer_state = PREV
+                }
+            }
+            transfer_units_fraction = {
+				target = SPC
+				size = 0
+				stockpile_ratio = 0.2
+			}
+            SPC = {
+                division_template = {
+				    name = "Guarnición Anarquista"
+				    is_locked = yes
+				    template_counter = 6
+				    division_names_group = SPD_INF_01
+				    regiments = {
+					    infantry = { x = 0 y = 0 }
+					    infantry = { x = 0 y = 1 }
+					    infantry = { x = 0 y = 2 }
+				    }
+			    }
+                every_country = {
+                    limit = {
+                        original_tag = SPR
+                        NOT = {
+                            tag = SPC
+                        }
+                    }
+                    SPC = {
+                        declare_war_on = {target = PREV type = civil_war}
+                        add_civil_war_target = PREV
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    is_historical_focus_on = no
+                }
+                SPR = {
+                    set_temp_variable = { amount = num_controlled_states}
+                    divide_temp_variable = { amount = 3 }
+                    round_temp_variable = amount
+                    for_loop_effect = {
+                        end = var:amount
+                        value = temp
+                        random_controlled_state = {
+                            prioritize = { 165 166 167 168}
+                            SPC = {
+                                transfer_state = PREV
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            every_state = {
+                limit = {
+                    is_owned_by = SPC
+                }
+                create_unit = {
+					division = "division_template = \"Guarnición Anarquista\" start_experience_factor = 0 start_equipment_factor = 0.25" 
+					owner = SPC
+                    count = 5
+				}
+            }
+            SPR = {
+                activate_mission = SPR_POUM_rise
+            }
+        }
+    }
+    SPR_POUM_rise = {
+        activation = { always= no}
+        days_mission_timeout = 50
+        available = { hidden_trigger = {always = no} }
+        allowed = {
+            original_tag = SPR
+        }
+        timeout_effect = {
+            random_controlled_state = {
+                #prioritize = { 165 }
+                limit = {
+                    has_state_flag = is_scw_state
+                }
+                SPG = {
+                    transfer_state = PREV
+                }
+            }
+            transfer_units_fraction = {
+				target = SPG
+				size = 0
+				stockpile_ratio = 0.2
+			}
+            SPG = {
+                division_template = {
+				    name = "Guarnición Marxista"
+				    is_locked = yes
+				    template_counter = 6
+				    division_names_group = SPD_INF_01
+				    regiments = {
+					    infantry = { x = 0 y = 0 }
+					    infantry = { x = 0 y = 1 }
+					    infantry = { x = 0 y = 2 }
+				    }
+			    }
+                every_country = {
+                    limit = {
+                        original_tag = SPR
+                        NOT = {
+                            tag = SPG
+                        }
+                    }
+                    SPG = {
+                        declare_war_on = {target = PREV type = civil_war}
+                        add_civil_war_target = PREV
+                        add_ideas = SPR_no_surrender
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    is_historical_focus_on = no
+                }
+                
+                SPR = {
+                    set_temp_variable = { amount = num_controlled_states}
+                    divide_temp_variable = { amount = 2 }
+                    round_temp_variable = amount
+                    for_loop_effect = {
+                        end = var:amount
+                        value = temp
+                        random_controlled_state = {
+                           
+                            SPG = {
+                                transfer_state = PREV
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            every_state = {
+                limit = {
+                    is_owned_by = SPG
+                }
+                create_unit = {
+					division = "division_template = \"Guarnición Marxista\" start_experience_factor = 0 start_equipment_factor = 0.25" 
+					owner = SPG
+                    count = 5
+				}
+            }
+        }
+    }
+    SPR_carlist_rise = {
+        activation = { always= no}
+        days_mission_timeout = 50
+        available = { hidden_trigger = {always = no} }
+        allowed = {
+            original_tag = SPR
+        }
+        timeout_effect = {
+            random_controlled_state = {
+                prioritize = { 1053 172 }
+                limit = {
+                    has_state_flag = is_scw_state
+                }
+                SPB = {
+                    transfer_state = PREV
+                }
+            }
+            transfer_units_fraction = {
+				target = SPB
+				size = 0
+				stockpile_ratio = 0.2
+			}
+            delete_unit_template_and_units = {
+                division_template = "Requeté Carlista"
+                disband = yes #will refund equipment and manpower
+            }
+            SPB = {
+                division_template = {
+				    name = "Guarnición Carlista"
+				    is_locked = yes
+				    template_counter = 6
+				    division_names_group = SPD_INF_01
+				    regiments = {
+					    infantry = { x = 0 y = 0 }
+					    infantry = { x = 0 y = 1 }
+					    infantry = { x = 0 y = 2 }
+				    }
+			    }
+                every_country = {
+                    limit = {
+                        original_tag = SPR
+                        NOT = {
+                            tag = SPB
+                        }
+                    }
+                    SPB = {
+                        declare_war_on = {target = PREV type = civil_war}
+                        add_civil_war_target = PREV
+                        add_ideas = SPR_no_surrender
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    is_historical_focus_on = no
+                }
+                SPA = {
+                    set_temp_variable = { amount = num_controlled_states}
+                    divide_temp_variable = { amount = 3 }
+                    round_temp_variable = amount
+                    for_loop_effect = {
+                        end = var:amount
+                        value = temp
+                        random_controlled_state = {
+                            prioritize = { 1053 172 176}
+                            SPB = {
+                                transfer_state = PREV
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            
+            every_state = {
+                limit = {
+                    is_owned_by = SPB
+                }
+                create_unit = {
+					division = "division_template = \"Guarnición Carlista\" start_experience_factor = 0 start_equipment_factor = 0.25" 
+					owner = SPB
+                    count = 5
+				}
+            }
+            SPA = {
+                activate_mission = SPR_alfonsist_rise
+            }
+        }
+    }
+    
+    SPR_alfonsist_rise = {
+        activation = { always= no}
+        days_mission_timeout = 50
+        available = { hidden_trigger = {always = no} }
+        allowed = {
+            original_tag = SPR
+        }
+        timeout_effect = {
+            random_controlled_state = {
+                #prioritize = { 1053 172 }
+                limit = {
+                    has_state_flag = is_scw_state
+                }
+                SPF = {
+                    transfer_state = PREV
+                }
+            }
+            transfer_units_fraction = {
+				target = SPF
+				size = 0
+				stockpile_ratio = 0.2
+			}
+            SPF = {
+                division_template = {
+				    name = "Guarnición Alfonista"
+				    is_locked = yes
+				    template_counter = 6
+				    division_names_group = SPD_INF_01
+				    regiments = {
+					    infantry = { x = 0 y = 0 }
+					    infantry = { x = 0 y = 1 }
+					    infantry = { x = 0 y = 2 }
+				    }
+			    }
+                every_country = {
+                    limit = {
+                        original_tag = SPR
+                        NOT = {
+                            tag = SPF
+                        }
+                    }
+                    SPF = {
+                        declare_war_on = {target = PREV type = civil_war}
+                        add_civil_war_target = PREV
+                        add_ideas = SPR_no_surrender
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    is_historical_focus_on = no
+                }
+                SPF = {
+                    set_temp_variable = { amount = num_controlled_states}
+                    divide_temp_variable = { amount = 2 }
+                    round_temp_variable = amount
+                    for_loop_effect = {
+                        end = var:amount
+                        value = temp
+                        random_controlled_state = {
+                           # prioritize = { 165 166 167 168}
+                            SPF = {
+                                transfer_state = PREV
+                            }
+                        }
+                    }
+                    
+                }
+            }
+            every_state = {
+                limit = {
+                    is_owned_by = SPF
+                }
+                create_unit = {
+					division = "division_template = \"Guarnición Alfonista\" start_experience_factor = 0 start_equipment_factor = 0.25" 
+					owner = SPF
+                    count = 5
+				}
+            }
+        }
+    }
 } 
