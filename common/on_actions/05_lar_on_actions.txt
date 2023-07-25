@@ -326,7 +326,7 @@ on_actions = {
 					remove_core_of = FROM
 				}
 				ROOT = {
-					annex_country = FROM
+					annex_country = {target = FROM }
 				}
 			}
 		}
@@ -343,6 +343,72 @@ on_actions = {
 
 	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
 	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					has_global_flag = spanish_civil_war
+					NOT = {
+						has_global_flag = scw_over
+					}
+					ROOT = { original_tag = SPR }
+					FROM.FROM = {
+
+						has_state_flag = is_scw_state
+					}
+				}
+				random_list = {
+
+					75 = {
+						FROM.FROM = { save_event_target_as = state_target }
+						ROOT = { country_event = { id = ww2_spain.4 } }#Weapon cache found
+					}
+					25 = {
+
+					}
+				}
+
+			}
+			if = {
+				limit = {
+					has_global_flag = spanish_civil_war
+					NOT = {
+						has_global_flag = scw_over
+					}
+					original_tag = SPR
+					is_ai = yes
+					NOT = {
+						any_controlled_state = {
+							OR = {
+								AND = {
+									has_state_flag = is_scw_state
+									NOT = {
+										state = 177
+										state = 178
+									}
+									state = 118
+								}
+							}
+						}
+					}
+					any_controlled_state = {
+						OR	= {
+							state = 177
+							state = 178
+							NOT = { is_on_continent = europe}
+						}
+					}
+				}
+				FROM = {
+					if = {
+						limit = {
+							has_idea = SPR_no_surrender
+						}
+						remove_ideas = SPR_no_surrender
+						add_ideas = SPR_capitulate
+					}
+				}
+			}
+		}
 	}
 
 	#THIS is country that has just gotten into a war
