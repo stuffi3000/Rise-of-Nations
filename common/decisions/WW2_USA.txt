@@ -11,7 +11,7 @@ USA_american_civil_war = {
 			has_global_flag = USA_american_cw
 			FROM = {
 				is_fully_controlled_by = ROOT
-			}
+			} 
 		}
 		state_target = yes
 		cost = 20
@@ -10858,7 +10858,207 @@ USA_consequence_of_nanjing = {
 }
 
 USA_domestic_policy = {
+		usa_capitalist_economy_GD = { #GD  active
 
+		icon = generic_decision
+
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USD
+			}
+			 
+		}
+		activation = {
+			has_idea = usa_capitalist_economy
+			has_idea = great_depression 
+			
+		} 
+		available = {
+		    NOT = { has_idea = usa_capitalist_economy }
+			has_idea = great_depression 
+		}
+		    days_mission_timeout = 200
+
+		
+		fire_only_once = no
+		days_remove = 14
+		ai_will_do = {
+			factor = 200
+		}
+
+		visible = {
+			always = yes
+		}
+
+		timeout_effect  = {
+					random_list = {					
+			50 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = industrial_complex
+	level = 1
+	instant_build = yes
+}
+				}
+			}
+			10 = {
+				random_owned_controlled_state = {
+				add_building_construction = {
+	type = arms_factory  
+	level = 1
+	instant_build = yes
+}
+				}
+			}
+
+				10 = {
+									random_owned_controlled_state = {
+					remove_building = {
+						limit = { arms_factory > 0 }
+	type = arms_factory
+	level = 1
+}
+				}
+				}
+
+				20 = {
+									random_owned_controlled_state = {
+					remove_building = {
+						limit = { industrial_complex > 0 }
+	type = industrial_complex
+	level = 1
+}
+				}
+				}
+				
+			
+				10 = {
+					add_political_power = 30
+				}								
+			}
+		activate_mission = usa_capitalist_economy_GD
+		}
+	}
+	usa_capitalist_economy = { #GD non active
+
+		icon = generic_decision
+
+		allowed = {
+			OR = {
+				original_tag = USA
+				original_tag = USD
+			}
+			 
+		}
+		activation = {
+			has_idea = usa_capitalist_economy
+			NOT = {
+				has_idea = great_depression
+			}
+		} 
+		available = {			
+		    NOT = { has_idea = usa_capitalist_economy }
+		}
+		    days_mission_timeout = 150
+
+		
+		fire_only_once = no
+		days_remove = 14
+		ai_will_do = {
+			factor = 200
+		}
+
+		visible = {
+			always = yes
+		}
+
+		timeout_effect  = {
+					random_list = {	
+			10 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = infrastructure
+	level = 3
+	instant_build = yes
+}
+				}
+			}
+			10 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = infrastructure
+	level = 5
+	instant_build = yes
+}
+				}
+			}
+			15 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = synthetic_refinery
+	level = 1
+	instant_build = yes
+}
+				}
+			}												
+			05 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = radar_station
+	level = 1
+	instant_build = yes
+}
+				}
+			}				
+			10 = {
+				random_owned_controlled_state = {
+					add_building_construction = {
+	type = industrial_complex
+	level = 1
+	instant_build = yes
+}
+				}
+			}
+			20 = {
+				random_owned_controlled_state = {
+				add_building_construction = {
+	type = arms_factory  
+	level = 1
+	instant_build = yes
+}
+				}
+			}
+
+				10 = {
+									random_owned_controlled_state = {
+					remove_building = {
+						limit = { arms_factory > 0 }
+	type = arms_factory
+	level = 1
+}
+				}
+				}
+
+				10 = {
+									random_owned_controlled_state = {
+					remove_building = {
+						limit = { industrial_complex > 0 }
+	type = industrial_complex
+	level = 1
+}
+				}
+				}
+				
+			
+				10 = {
+					add_political_power = 50
+				}								
+			}
+		activate_mission = usa_capitalist_economy
+		}
+	}
+	}
 	USA_john_garand_rifle = {
 
 		icon = generic_prepare_civil_war
@@ -16237,6 +16437,46 @@ usa_war_in_the_pacific = {
 			#targeted_modifier = { tag = JAP defense_bonus_against = 0.2 }
 		}
 	}
+	reform_allies_against_japan = {
+
+		icon = generic_prepare_civil_war
+
+		allowed = {
+			original_tag = USA
+			has_global_flag = deadhitler
+		}
+
+		available = {
+			has_government = democratic
+			has_war_with = JAP
+			JAP = {
+				has_war_with = CHI
+			}
+			has_global_flag = deadhitler
+			date > 1940.1.1
+			date < 1951.1.1
+			is_in_faction = no
+		}
+
+		cost = 0
+
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 3000
+		}
+
+		visible = {
+			tag = USA
+		}
+		complete_effect = {
+			JAP = {
+				add_threat = 100
+				add_timed_idea = { idea = total_war days = 300 }
+			}
+			
+			create_faction = "Allies"
+		}
+	}
 
 	USA_Deploy_Chemical_Weapons = {
 
@@ -16516,7 +16756,10 @@ USA_instigate_communist_uprisings_category = {
 					}
 				}	
 				NOT = {
+					OR = {
 					has_government = communism
+					tag = XXB
+				}
 				}
 			}
         }

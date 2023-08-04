@@ -8,19 +8,26 @@
 
 economy_decisions = {
 	join_the_comecon = {
+		custom_effect_tooltip = join_the_comecon_d
 		visible = {
+			SOV = {
+				has_completed_focus = SOV_ECW_COMECON
+			}
 			NOT = {
-				has_dynamic_modifier = {
-					modifier = COMECON_dynamic_modifier
-					scope = ROOT
-				}
+				tag = SOV
+			}
+			NOT = {
+				has_country_flag = comeconmember
 			}
 			OR = {
 				has_government = communism
 				communism > 0.30
 			}
 		}
+		fire_only_once = yes
 		complete_effect = {
+			hidden_effect = {
+			set_country_flag = comeconmember
 			add_to_variable = { global.comecon_modifier_strengh = 0.01 }
 			add_dynamic_modifier = {modifier = COMECON_dynamic_modifier}
 			if = {
@@ -34,11 +41,59 @@ economy_decisions = {
 					popularity = 0.05
 				}
 			}
+			}
 		}
 
-		cost = 20
+		cost = 35
 		ai_will_do = {
-			base = 1
+			base = -30
+			modifier = {
+				add = -40
+				has_war = yes
+			}
+			modifier = {
+				add = 90
+				is_in_faction_with = SOV
+			}
+			modifier = {
+			add = 40
+			 has_opinion = {
+                target = SOV
+                value > 60
+            } 
+		}
+			modifier = {
+				add = -35
+				OR = {
+				has_idea = superstate_size4
+				has_idea = superstate_size5
+				has_idea = superstate_size6
+				has_idea = superstate_size7
+				}
+			}	
+			modifier = {
+				add = 35
+				OR = {
+				has_idea = planned_economy
+				has_idea = major_industries
+				}
+			}	
+			modifier = {
+				add = 20
+				has_government = communism
+			}			
+			modifier = {
+				add = -30
+				tag = PRC
+			}			
+			modifier = {
+				add = -40
+				is_puppet = yes
+			}
+			modifier = {
+				add = 2000
+				is_puppet_of = SOV
+			}			
 			modifier = {
 				add = 100
 				OR = {
@@ -52,14 +107,6 @@ economy_decisions = {
 						date > 1950.1.1
 						date < 1990.1.1
 					}
-					tag = BUL
-					tag = HUN
-					tag = POL
-					tag = ROM
-					tag = CZE
-					tag = MON
-					tag = CUB
-					tag = VIE
 				}
 			}
 		}
@@ -67,14 +114,42 @@ economy_decisions = {
 
 
 	leave_the_comecon = {
+		
 		visible = {
-			has_dynamic_modifier = {
-				modifier = COMECON_dynamic_modifier
-				scope = ROOT
+			has_country_flag = comeconmember
+			NOT = {
+				tag = sov
 			}
 		}
+		cost = 20
 		ai_will_do = {
-			base = 0
+			base = -50
+			modifier = {
+				add = 30
+				OR = {
+				has_idea = superstate_size4
+				has_idea = superstate_size5
+				has_idea = superstate_size6
+				has_idea = superstate_size7
+				}
+			}	
+			modifier = {
+				add = 25
+				has_government = neutrality
+			}			
+			modifier = {
+				add = -45
+				is_in_faction_with = SOV
+			}					
+			modifier = {
+				add = 80
+				has_government = democratic
+			}
+			modifier = {
+				add = 50
+				tag = PRC
+				date > 1960.1.1
+			}						
 			modifier = {
 				add = 100
 				OR = {
@@ -90,8 +165,13 @@ economy_decisions = {
 			}
 		}
 		complete_effect = {
-			subtract_from_variable = { global.comecon_modifier_strengh = 0.01 }
-			remove_dynamic_modifier = { modifier = COMECON_dynamic_modifier}
+
+			custom_effect_tooltip = leave_the_comecon_d
+			hidden_effect = {
+				clr_country_flag = comeconmember
+				subtract_from_variable = { global.comecon_modifier_strengh = 0.01 }
+				remove_dynamic_modifier = { modifier = COMECON_dynamic_modifier}
+			}
 		}
 	}
 }
@@ -115,9 +195,8 @@ SOV_secret_police = {
 		}
 		activation = {
 			set_temp_variable = { strengh_ratio_div =  secret_police_strengh }
-			divide_temp_variable = { strengh_ratio_div = num_armies }
-			check_variable= {
-				
+			#divide_temp_variable = { strengh_ratio_div = num_armies }
+			check_variable= {	
     			var = strengh_ratio_div
     			value = 0.6
     			compare = greater_than
@@ -1158,6 +1237,7 @@ SOV_stalins_initiatives = {
 
 		cost = 0
 		fire_only_once = no
+		days_re_enable = 60
 		days_remove = 90
 		ai_will_do = {
 			factor = 1
@@ -1168,8 +1248,8 @@ SOV_stalins_initiatives = {
 		}
 
 		modifier = {
-			civilian_factory_use = 5
-			political_power_gain = 1
+			civilian_factory_use = 7
+			political_power_gain = 0.5
 		}
 
 	}
@@ -1189,6 +1269,7 @@ SOV_stalins_initiatives = {
 		cost = 0
 		fire_only_once = no
 		days_remove = 90
+		days_re_enable = 60
 		ai_will_do = {
 			factor = 1
 		}
@@ -1199,7 +1280,7 @@ SOV_stalins_initiatives = {
 
 		modifier = {
 			civilian_factory_use = 10
-			political_power_gain = 2
+			political_power_gain = 1
 		}
 
 		remove_effect = {
@@ -1233,7 +1314,7 @@ SOV_stalins_initiatives = {
 
 		modifier = {
 			political_power_gain = -1.25
-			industrial_capacity_factory = 0.25
+			industrial_capacity_factory = 0.15
 		}
 
 		remove_effect = {
@@ -1387,7 +1468,7 @@ SOV_stalins_initiatives = {
 
 		modifier = {
 			political_power_gain = -0.75
-			production_speed_buildings_factor = 0.25
+			production_speed_buildings_factor = 0.15
 		}
 
 		remove_effect = {
@@ -1449,7 +1530,7 @@ SOV_stalins_initiatives = {
 
 		modifier = {
 			political_power_gain = -0.5
-			local_resources_factor = 0.5
+			local_resources_factor = 0.2
 		}
 
 		remove_effect = {

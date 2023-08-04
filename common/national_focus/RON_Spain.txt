@@ -29,6 +29,176 @@ focus_tree = {
 	###############################################################################################################################
 	###############################################################################################################################
 
+
+	focus = {
+		id = SPR_1936_elections
+		x = 10
+		y = 1
+		allow_branch = {
+			is_debug = yes
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			date > 1935.12.31
+		}
+		cost = 6
+		completion_reward = {
+			#Event for election
+			set_country_flag = SPR_spanish_elections_flag
+			country_event = ww2_spain.1
+			hidden_effect = {country_event = { id = ww2_spain.2 days = 30}}
+		}
+	}
+	focus = {
+		id = SPA_CEDA
+		relative_position_id = SPR_1936_elections
+		x = -2
+		y = 1
+		prerequisite = {focus = SPR_1936_elections}
+		mutually_exclusive = { focus = SPR_popular_front}
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			custom_effect_tooltip = SPA_path_tt
+			add_political_power = 50
+		}
+	}
+	focus = {
+		id = SPA_meeting_with_the_monarchists
+		relative_position_id = SPA_prepare_troops
+		x = 1
+		y = 1
+		prerequisite = { focus = SPA_prepare_troops focus = SPA_elite_troops }
+		cost = 7
+		completion_reward = {
+			add_to_variable = {spa_civil_war_divisions_counter_var = 5}
+			random_list = {
+				66 = {
+
+				}
+				33 = {
+
+				}
+			}
+			random_list= {
+				66 = {
+
+				}
+				33 = {
+
+				}
+			}
+			random_list = {
+				66 = {
+
+				}
+				33 = {
+
+				}
+			}
+
+		}
+	}
+	focus = {
+		id = SPA_elite_troops
+		relative_position_id = SPA_CEDA
+		x = 1
+		y = 1
+		prerequisite = { focus = SPA_CEDA}
+		cost = 7
+		completion_reward = {
+			set_variable = {290.scw_color = 2}
+			SPR = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 5 } }
+			SPR = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 5 } }
+			custom_effect_tooltip = will_secure_the_army_of_africa_tt
+		}
+	}
+	focus = {
+		id = SPA_prepare_troops
+		relative_position_id = SPA_CEDA
+		x = -1
+		y = 1
+		prerequisite = { focus = SPA_CEDA }
+		cost = 7
+		
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0
+				NOT = {
+					count_triggers = {
+						amount = 7
+						166 = { check_variable = { scw_color = 2 }}
+						165 = { check_variable = { scw_color = 2 }}
+						172 = { check_variable = { scw_color = 2 }}
+						176 = { check_variable = { scw_color = 2 }}
+						1053 = { check_variable = { scw_color = 2 }}
+						1051 = { check_variable = { scw_color = 2 }}
+						171 = { check_variable = { scw_color = 2 }}
+						177 = { check_variable = { scw_color = 2 }}
+						169 = { check_variable = { scw_color = 2 }}
+						170 = { check_variable = { scw_color = 2 }}
+						1054 = { check_variable = { scw_color = 2 }}
+						1052 = { check_variable = { scw_color = 2 }}
+						174 = { check_variable = { scw_color = 2 }}
+						41 = { check_variable = { scw_color = 2 }}
+						175 = { check_variable = { scw_color = 2 }}
+						1055 = { check_variable = { scw_color = 2 }}
+						168 = { check_variable = { scw_color = 2 }}
+						173 = { check_variable = { scw_color = 2 }}
+						167 = { check_variable = { scw_color = 2 }}
+						290 = { check_variable = { scw_color = 2 }}
+					}
+				}
+			}
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = unlocks_decisions_to_train_nat_troops_tt
+		}
+	}
+	focus= {
+		id = SPA_unify_factions
+		relative_position_id = SPA_meeting_with_the_monarchists
+		x = -1
+		y = 1
+		available = {
+			has_global_flag = spanish_civil_war
+		}
+		prerequisite = {
+			focus = SPA_meeting_with_the_monarchists
+		}
+		mutually_exclusive = { focus = SPA_for_king_and_country}
+		completion_reward = {
+			SPR_francisco_franco = {
+				promote_character = yes
+			}
+		}
+	}
+	focus = {
+		id = SPA_for_king_and_country
+		relative_position_id = SPA_unify_factions
+		available = {
+			has_global_flag = spanish_civil_war
+		}
+		x = 2
+		y = 0
+		prerequisite = { focus = SPA_meeting_with_the_monarchists }
+		mutually_exclusive = { focus = SPA_unify_factions }
+	}
+	focus = {
+		id = SPR_popular_front
+		relative_position_id = SPR_1936_elections
+		x = 2
+		y = 1
+		prerequisite = {focus = SPR_1936_elections}
+		mutually_exclusive = { focus = SPA_CEDA}
+		completion_reward = {
+			custom_effect_tooltip = popular_front_path
+		}
+	}
 #The Will of the People
 	focus = {
 		id = SPR1933_the_will_of_the_people
@@ -42,6 +212,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -104,6 +275,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -135,6 +307,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -1132,6 +1305,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -1568,6 +1742,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -1591,6 +1766,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 		}
 		available = {
 			date < 1936.1.1
@@ -2013,7 +2189,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-
+			is_debug = no
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
@@ -2386,6 +2562,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			is_debug = no
 
 		}
 		available = {
@@ -2497,7 +2674,12 @@ focus_tree = {
 		}
 
 		completion_reward = {
+			remove_ideas = SPA_recovering_from_civil_war 
 			add_research_slot = 1
+			set_rule = {
+				can_not_declare_war = no
+				can_declare_war_on_same_ideology = yes
+			}
 		}
 	}
 
@@ -2572,7 +2754,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-
+			is_debug = no
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
@@ -2956,7 +3138,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-
+			is_debug = no
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
@@ -3181,7 +3363,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-
+			is_debug = no
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
@@ -3424,7 +3606,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-
+			is_debug = no
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
@@ -4137,7 +4319,6 @@ focus_tree = {
 
 		completion_reward = {
 			add_research_slot = 1
-			remove_ideas = SPA_recovering_from_civil_war 
 		}
 	}
 
