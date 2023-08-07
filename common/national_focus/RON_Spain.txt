@@ -47,7 +47,7 @@ focus_tree = {
 			#Event for election
 			set_country_flag = SPR_spanish_elections_flag
 			country_event = ww2_spain.1
-			hidden_effect = {country_event = { id = ww2_spain.2 days = 30}}
+			hidden_effect = {}
 		}
 	}
 	focus = {
@@ -63,6 +63,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = SPA_path_tt
 			add_political_power = 50
+			hidden_effect = {country_event = { id = ww2_spain.2 days = 30}}
 		}
 	}
 	focus = {
@@ -74,30 +75,12 @@ focus_tree = {
 		cost = 7
 		completion_reward = {
 			add_to_variable = {spa_civil_war_divisions_counter_var = 5}
-			random_list = {
-				66 = {
-
-				}
-				33 = {
-
-				}
+			custom_effect_tooltip = will_spawn_monarchist_units_tt
+			add_timed_idea = {
+				idea = SPR_temporar_unity
+				days = 140
 			}
-			random_list= {
-				66 = {
-
-				}
-				33 = {
-
-				}
-			}
-			random_list = {
-				66 = {
-
-				}
-				33 = {
-
-				}
-			}
+			set_country_flag = SPA_meeting_with_the_monarchists_completed
 
 		}
 	}
@@ -113,6 +96,7 @@ focus_tree = {
 			SPR = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 5 } }
 			SPR = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 5 } }
 			custom_effect_tooltip = will_secure_the_army_of_africa_tt
+			set_country_flag = SPA_elite_troops_completed
 		}
 	}
 	focus = {
@@ -157,6 +141,7 @@ focus_tree = {
 
 		completion_reward = {
 			custom_effect_tooltip = unlocks_decisions_to_train_nat_troops_tt
+			set_country_flag = SPA_prepare_troops_completed
 		}
 	}
 	focus= {
@@ -176,6 +161,7 @@ focus_tree = {
 				promote_character = yes
 			}
 		}
+		cost = 7
 	}
 	focus = {
 		id = SPA_for_king_and_country
@@ -183,10 +169,68 @@ focus_tree = {
 		available = {
 			has_global_flag = spanish_civil_war
 		}
+		cost = 5
 		x = 2
 		y = 0
 		prerequisite = { focus = SPA_meeting_with_the_monarchists }
 		mutually_exclusive = { focus = SPA_unify_factions }
+		completion_reward = {
+			SPB = {
+				add_political_power = 50
+			}
+			SPF = {
+				add_political_power = 50
+			}
+		}
+	}
+	focus = {
+		id = SPB_SPF_put_our_differences_aside
+		relative_position_id = SPA_for_king_and_country
+		x = 0
+		y = 1
+		prerequisite = {focus = SPA_for_king_and_country}
+		available = {
+			OR = {
+				tag = SPF
+				tag = SPB
+			}
+			has_global_flag = SPB_has_risen
+			has_global_flag = SPF_has_risen
+			OR = {
+				has_war_with = SPF
+				has_war_with = SPB
+			}
+		}
+		bypass = {
+			OR = {
+				NOT = { country_exists = SPF }
+				NOT = { country_exists = SPB }
+			}
+		}
+		completion_reward = {
+			SPB = {
+				remove_civil_war_target = SPF
+			}
+			SPF = {
+				remove_civil_war_target = SPB
+			}
+			SPF = {
+				white_peace = SPB
+			}
+			create_faction = SPA_MONARCHIST_FACTION
+			if = {
+				limit = {
+					tag = SPF
+				}
+				add_to_faction = SPB
+			}
+			if = {
+				limit = {
+					tag = SPB
+				}
+				add_to_faction = SPF
+			}
+		}
 	}
 	focus = {
 		id = SPR_popular_front
@@ -197,6 +241,55 @@ focus_tree = {
 		mutually_exclusive = { focus = SPA_CEDA}
 		completion_reward = {
 			custom_effect_tooltip = popular_front_path
+			hidden_effect = {country_event = { id = ww2_spain.2 days = 10} country_event = { id = ww2_spain.2 days = 20}country_event = { id = ww2_spain.2 days = 30} activate_mission = SPA_elite_troops_AI}
+		}
+	}
+	focus = {
+		id = SPR_dissolve_rightist_movements
+		relative_position_id = SPR_popular_front
+		x = -1
+		y = 1
+		prerequisite = { focus = SPR_popular_front}
+	}
+	focus = {
+		id = SPR_act_on_the_strikes
+		relative_position_id = SPR_popular_front
+		x = 1
+		y = 1
+		prerequisite = { focus = SPR_popular_front}
+
+	}
+	focus = {
+		id = SPR_disarm_the_military
+		relative_position_id = SPR_dissolve_rightist_movements
+		x = 1
+		y = 1
+		prerequisite = { focus = SPR_dissolve_rightist_movements }
+		prerequisite = { focus = SPR_act_on_the_strikes}
+
+		completion_reward = {
+			subtract_from_variable = { spa_civil_war_divisions_counter_var = 5 } #monarchist_divs
+			if = {
+				limit = {
+					check_variable = { 290.scw_color = 1}
+				}
+				subtract_from_variable = { spr_civil_war_divisions_counter_var = 5 }
+				divide_variable = { spa_civil_war_divisions_counter_var = 2 }
+				divide_temp_variable = { spr_civil_war_divisions_counter_var = 3 }
+				multiply_variable = { spr_civil_war_divisions_counter_var = 2 }
+				add_to_variable = { spr_civil_war_divisions_counter_var = 5 }
+			}
+			if = {
+				limit = {
+					check_variable = { 290.scw_color = 2}
+				}
+				subtract_from_variable = { spa_civil_war_divisions_counter_var = 5 }
+				divide_variable = { spa_civil_war_divisions_counter_var = 2 }
+				divide_temp_variable = { spr_civil_war_divisions_counter_var = 3 }
+				multiply_variable = { spr_civil_war_divisions_counter_var = 2 }
+				add_to_variable = { spa_civil_war_divisions_counter_var = 5 }
+			}
+			add_to_variable = { spa_civil_war_divisions_counter_var = 5 } #monarchist divs
 		}
 	}
 #The Will of the People
