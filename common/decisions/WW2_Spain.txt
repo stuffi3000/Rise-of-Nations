@@ -1,5 +1,60 @@
-SPR_the_inevitable_civil_war = {
+SPR_the_civil_war = {
     
+    SPR_failsafe = {
+        days_mission_timeout = 30
+        allowed = {
+            original_tag = SPR
+
+        }
+        cancel_if_not_visible = yes
+        available = { hidden_trigger = { always = no}}
+        activation = {
+            has_global_flag = spanish_civil_war
+            NOT = {
+                has_global_flag = scw_over
+            }
+            NOT = {
+                any_state = {
+                    has_state_flag = is_scw_state
+                    is_controlled_by = ROOT
+                    NOT = {
+                        OR = {
+                            state = 290
+                            state = 177
+                        }
+                    }
+                }
+            }
+        }
+        is_good = no
+        visible = {
+            has_global_flag = spanish_civil_war
+            NOT = {
+                has_global_flag = scw_over
+            }
+            NOT = {
+                any_state = {
+                    AND = {
+                        has_state_flag = is_scw_state
+                        is_controlled_by = ROOT
+                        NOT = {
+                            OR = {
+                                state = 290
+                                state = 177
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        timeout_effect = {
+            remove_ideas = SPR_no_surrender
+            add_ideas = SPR_capitulate
+
+
+        }
+    }
     SPA_military_plot_nationalists = {
 
 		priority = 10
@@ -10,12 +65,12 @@ SPR_the_inevitable_civil_war = {
 			hidden_trigger = { always = no }
 		}
 
-		days_mission_timeout = 150
+		days_mission_timeout = 160
 
 		fire_only_once = yes
 
 		activation = {
-			has_country_flag = SPR_spanish_elections_flag
+			
 			NOT = { has_global_flag = spanish_civil_war }
 		}
 
@@ -33,7 +88,25 @@ SPR_the_inevitable_civil_war = {
 		is_good = yes
 
 		timeout_effect = {
-            country_event = ww2_spain.3
+            
+            if = {
+                limit = {
+                    all_owned_state = {
+                        OR = {
+                            AND = {
+                                has_state_flag = is_scw_state
+                                check_variable = { scw_color = 2 }
+                            }
+                            NOT = { has_state_flag = is_scw_state}
+                        }
+                    }
+                }
+                add_political_power = 100
+                
+            }
+            else = {
+               country_event = ww2_spain.3
+            }
 			# country_event = lar_spain.2
 			# if = {
 			# 	limit = {
@@ -54,7 +127,7 @@ SPR_the_inevitable_civil_war = {
 			hidden_trigger = { always = no }
 		}
 
-		days_mission_timeout = 150
+		days_mission_timeout = 160
 
 		fire_only_once = yes
 
@@ -77,11 +150,63 @@ SPR_the_inevitable_civil_war = {
 		is_good = no
 
 		timeout_effect = {
-            country_event = ww2_spain.3
+             if = {
+                limit = {
+                    all_owned_state = {
+                        OR = {
+                            AND = {
+                                has_state_flag = is_scw_state
+                                check_variable = { scw_color = 1 }
+                            }
+                            NOT = { has_state_flag = is_scw_state}
+                        }
+                    }
+                }
+                add_political_power = 100
+                
+            }
+            else = {
+               country_event = ww2_spain.3
+            }
 			#country_event = lar_spain.2
 		}
 	}
-    
+    SPA_organize_rally = {
+        icon = eng_propaganda_campaigns
+        allowed = {
+            original_tag = SPR
+        }
+        modifier = {
+            political_power_gain = 0.2
+        }
+        ai_will_do = {
+            base = 100
+            modifier = {
+                factor = 0
+                check_variable = {
+                    num_rally_organized = 2
+                }
+            }
+        }
+        visible = {
+            NOT = {
+                OR = {
+                    has_global_flag = scw_over
+                    has_global_flag = spanish_civil_war
+                }
+            }
+            has_completed_focus = SPA_CEDA
+        }
+        days_remove = var:rally_duration?40
+        cost = 10
+        remove_effect = {
+            add_days_mission_timeout = {
+                mission = SPA_military_plot_nationalists
+                days = -5
+            }
+            add_to_variable = { num_rally_organized = 1 }
+        }
+    }
     SPA_train_troops_in_FROM = {
         icon = generic_prepare_civil_war
         ai_will_do = {
@@ -2821,6 +2946,7 @@ SPR_the_inevitable_civil_war = {
             original_tag = SPR
         }
         timeout_effect = {
+            add_to_variable = { global.scw_factions_num = 1 }
             every_state = {
 			    limit = {
 				    is_core_of = SPR
@@ -2935,6 +3061,7 @@ SPR_the_inevitable_civil_war = {
             original_tag = SPR
         }
         timeout_effect = {
+            add_to_variable = { global.scw_factions_num = 1 }
             every_state = {
 			    limit = {
 				    is_core_of = SPR
@@ -3042,13 +3169,14 @@ SPR_the_inevitable_civil_war = {
     }
     SPR_carlist_rise = {
         activation = { always= no}
-        days_mission_timeout = 50
+        days_mission_timeout = 100
         available = { hidden_trigger = {always = no} }
         allowed = {
             original_tag = SPR
         }
         cancel_trigger = { has_country_leader = { character = SPR_francisco_franco ruling_only = yes}}
         timeout_effect = {
+            add_to_variable = { global.scw_factions_num = 1 }
             set_global_flag = SPB_has_risen
             every_state = {
 			    limit = {
@@ -3174,6 +3302,14 @@ SPR_the_inevitable_civil_war = {
                 }
                 add_ideas = SPR_no_surrender
             }
+            SPB = {
+                unlock_national_focus = SPR_1936_elections
+                unlock_national_focus = SPA_CEDA
+                unlock_national_focus = SPA_meeting_with_the_monarchists
+                unlock_national_focus = SPA_elite_troops
+                unlock_national_focus = SPA_prepare_troops
+                unlock_national_focus = SPA_for_king_and_country
+            }
         }
     }
     
@@ -3185,6 +3321,7 @@ SPR_the_inevitable_civil_war = {
             original_tag = SPR
         }
         timeout_effect = {
+            add_to_variable = { global.scw_factions_num = 1 }
             set_global_flag = SPF_has_risen
             every_state = {
 			    limit = {
@@ -3303,6 +3440,15 @@ SPR_the_inevitable_civil_war = {
                 }
                 add_ideas = SPR_no_surrender
             }
+            
+            SPF = {
+                unlock_national_focus = SPR_1936_elections
+                unlock_national_focus = SPA_CEDA
+                unlock_national_focus = SPA_meeting_with_the_monarchists
+                unlock_national_focus = SPA_elite_troops
+                unlock_national_focus = SPA_prepare_troops
+                unlock_national_focus = SPA_for_king_and_country
+            }
         }
     }
 }
@@ -3400,6 +3546,106 @@ SPR_civil_war_opposition = {
             SPA = {add_timed_idea = { idea = SPR_temporar_unity days = 140}}
             custom_effect_tooltip = will_spawn_monarchist_units_AI_tt
             set_country_flag = SPA_meeting_with_the_monarchists_completed
+        }
+    }
+    SPR_dissolve_rightist_movements_AI = {
+        allowed = {
+            original_tag = SPR
+        }
+        #icon = generic_political_discourse
+        available = { has_global_flag = spanish_civil_war}
+        cancel_if_not_visible = yes
+        visible ={
+            hidden_trigger = {
+                has_completed_focus = SPA_CEDA
+            }
+        }
+        activation = { always = no }
+        
+        days_mission_timeout = 49
+
+        timeout_effect = {
+            hidden_effect = {
+                activate_mission = SPR_act_on_the_strikes_AI
+            }
+            custom_effect_tooltip = rightist_movements_dissolved_tt
+            set_country_flag = SPR_dissolve_rightist_movements_completed
+            set_variable = { rally_duration = 20 }
+        }
+    }
+    SPR_act_on_the_strikes_AI = {
+        allowed = {
+            original_tag = SPR
+        }
+        icon = generic_political_discourse
+        available = { has_global_flag = spanish_civil_war}
+        cancel_if_not_visible = yes
+        visible ={
+            hidden_trigger = {
+                has_completed_focus = SPA_CEDA
+            }
+        }
+        activation = { always = no }
+
+        days_mission_timeout = 49
+
+        timeout_effect = {
+            hidden_effect = {
+                activate_mission = SPR_disarm_the_military_AI
+            }
+            #set_country_flag = rightist_movements_dissolved_tt
+            set_country_flag = SPR_act_on_the_strikes_completed
+            SPR = {
+                add_ideas = SPR_political_discussion
+            }
+            add_ideas = SPA_political_discussion
+        }
+    }
+    SPR_disarm_the_military_AI = {
+        allowed = {
+            original_tag = SPR
+        }
+        icon = generic_prepare_civil_war
+        available = { has_global_flag = spanish_civil_war}
+        cancel_if_not_visible = yes
+        visible ={
+            hidden_trigger = {
+                has_completed_focus = SPA_CEDA
+            }
+        }
+        activation = { always = no }
+
+        days_mission_timeout = 49
+
+        timeout_effect = {
+            set_country_flag = SPR_disarm_the_military_completed
+            #set_country_flag = rightist_movements_dissolved_tt
+            add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = -1000
+            }
+            subtract_from_variable = { spa_civil_war_divisions_counter_var = 5 } #monarchist_divs
+			if = {
+				limit = {
+					check_variable = { 290.scw_color = 1}
+				}
+				subtract_from_variable = { spr_civil_war_divisions_counter_var = 5 }
+				divide_variable = { spa_civil_war_divisions_counter_var = 2 }
+				divide_temp_variable = { spr_civil_war_divisions_counter_var = 3 }
+				multiply_variable = { spr_civil_war_divisions_counter_var = 2 }
+				add_to_variable = { spr_civil_war_divisions_counter_var = 5 }
+			}
+			if = {
+				limit = {
+					check_variable = { 290.scw_color = 2}
+				}
+				subtract_from_variable = { spa_civil_war_divisions_counter_var = 5 }
+				divide_variable = { spa_civil_war_divisions_counter_var = 2 }
+				divide_temp_variable = { spr_civil_war_divisions_counter_var = 3 }
+				multiply_variable = { spr_civil_war_divisions_counter_var = 2 }
+				add_to_variable = { spa_civil_war_divisions_counter_var = 5 }
+			}
+			add_to_variable = { spa_civil_war_divisions_counter_var = 5 } #monarchist divs
         }
     }
     SPA_expand_influence_in_catalonia_mission = {

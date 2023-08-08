@@ -63,7 +63,7 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = SPA_path_tt
 			add_political_power = 50
-			hidden_effect = {country_event = { id = ww2_spain.2 days = 30}}
+			hidden_effect = {country_event = { id = ww2_spain.2 days = 30} activate_mission = SPA_military_plot_nationalists}
 		}
 	}
 	focus = {
@@ -181,6 +181,12 @@ focus_tree = {
 			SPF = {
 				add_political_power = 50
 			}
+			SPA = {
+				add_days_mission_timeout = {
+					mission = SPR_carlist_rise
+					days = -50
+				}
+			}
 		}
 	}
 	focus = {
@@ -202,10 +208,15 @@ focus_tree = {
 			}
 		}
 		bypass = {
-			OR = {
-				NOT = { country_exists = SPF }
-				NOT = { country_exists = SPB }
+			has_global_flag = SPB_has_risen
+			has_global_flag = SPF_has_risen
+			NOT = {
+				OR = {
+					country_exists = SPF
+					country_exists = SPB
+				}
 			}
+			has_global_flag = scw_over
 		}
 		completion_reward = {
 			SPB = {
@@ -241,7 +252,7 @@ focus_tree = {
 		mutually_exclusive = { focus = SPA_CEDA}
 		completion_reward = {
 			custom_effect_tooltip = popular_front_path
-			hidden_effect = {country_event = { id = ww2_spain.2 days = 10} country_event = { id = ww2_spain.2 days = 20}country_event = { id = ww2_spain.2 days = 30} activate_mission = SPA_elite_troops_AI}
+			hidden_effect = {activate_mission = SPR_military_plot_republicans country_event = { id = ww2_spain.2 days = 10} country_event = { id = ww2_spain.2 days = 20}country_event = { id = ww2_spain.2 days = 30} activate_mission = SPA_elite_troops_AI}
 		}
 	}
 	focus = {
@@ -250,6 +261,11 @@ focus_tree = {
 		x = -1
 		y = 1
 		prerequisite = { focus = SPR_popular_front}
+		completion_reward = {
+			set_country_flag = rightist_movements_dissolved_temp
+			custom_effect_tooltip = will_prevent_SPA_from_expanding_tt
+		}
+		cost = 7
 	}
 	focus = {
 		id = SPR_act_on_the_strikes
@@ -257,7 +273,13 @@ focus_tree = {
 		x = 1
 		y = 1
 		prerequisite = { focus = SPR_popular_front}
-
+		completion_reward = {
+			add_ideas = SPR_political_discussion
+			SPA = {
+				add_ideas = SPA_political_discussion
+			}
+		}
+		cost = 7
 	}
 	focus = {
 		id = SPR_disarm_the_military
@@ -266,8 +288,13 @@ focus_tree = {
 		y = 1
 		prerequisite = { focus = SPR_dissolve_rightist_movements }
 		prerequisite = { focus = SPR_act_on_the_strikes}
-
+		cost = 8
 		completion_reward = {
+			add_equipment_to_stockpile = {
+                type = infantry_equipment
+                amount = -1000
+            }
+			custom_effect_tooltip = will_disband_the_military_tt
 			subtract_from_variable = { spa_civil_war_divisions_counter_var = 5 } #monarchist_divs
 			if = {
 				limit = {
