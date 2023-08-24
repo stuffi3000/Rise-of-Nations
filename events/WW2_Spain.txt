@@ -848,6 +848,8 @@ country_event = {
 		
 		
 		
+		
+		
 		290 = {
 			create_unit = {
 				division = "division_template = \"División del Ejército de África\" start_experience_factor = 0.3" 
@@ -996,6 +998,23 @@ country_event = {
 			}
 			set_variable = { scw_color = 3 }
 		}
+		SPA = {
+			random_owned_state = {
+				limit = {
+					has_state_flag = is_scw_state
+					NOT = {
+						OR = {
+							state = 290
+							state = 177
+							state = 1043
+						}
+					}
+				}
+				SPA = {
+					set_capital = { state = PREV}
+				}
+			}
+		}
 	}
 	}
 	option = {
@@ -1013,7 +1032,7 @@ country_event = {
 	}
 }
 
-country_event = {
+state_event = {
 	#Weapon cache found
 	id = ww2_spain.4
 	title = ww2_spain.4.t
@@ -1027,16 +1046,18 @@ country_event = {
 
 	option = {
 		name = ww2_spain.4.a
-		set_temp_variable_to_random = {
-			var = amount
-			min = 100
-			max = 200
-			integer = yes
-		}
-		add_equipment_to_stockpile = {
-			type = infantry_equipment
-			amount = var:amount
-			producer = SPR
+		ROOT.CONTROLLER = {
+			set_temp_variable_to_random = {
+				var = amount
+				min = 100
+				max = 200
+				integer = yes
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = var:amount
+				producer = SPR
+			}
 		}
 	}
 }
@@ -1082,10 +1103,69 @@ country_event = {
 
 	is_triggered_only = yes
 	fire_only_once = yes
+	immediate = {
+		news_event = ww2_spain.61
+	}
+	option = {
+		name = ww2_spain.6.a
+		add_ideas = SPA_recovering_from_civil_war
+		set_capital = {state = 41}
+	}
+}
+
+news_event = {
+	id = ww2_spain.61
+	title = ww2_spain.61.t
+	desc = ww2_spain.61.d
+
+	is_triggered_only = yes
+	major = yes
 
 	option = {
-		
+
 	}
+
+}
+country_event = {
+	id = ww2_spain.7
+	desc = ww2_spain.7.d
+	title = ww2_spain.7.t
+
+	is_triggered_only = yes
+	option = {
+		name = ww2_spain.7.a
+		ai_chance = {
+			base = 10
+			
+		}
+		SPB = {
+			add_opinion_modifier = {modifier = RI_break_relations target = ROOT}
+		}
+		SPF = {
+			add_opinion_modifier = {modifier = RI_break_relations target = ROOT}
+		}
+	}
+	option = {
+		name = ww2_spain.7.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				has_government = fascism
+			}
+			modifier = {
+				factor = 10
+				has_government = neutrality
+			}
+		}
+		recall_volunteers_from = SPA
+		set_global_flag = ITA_recalled_SPA_volunteers
+		SPA = {
+			add_opinion_modifier = {modifier = RI_break_relations target = ROOT}
+		}
+	}
+	
 }
 country_event = {
 	id = veren.1
