@@ -1,6 +1,6 @@
 focus_tree = {
 	id = japan_wtt_focus
-	country = {
+	country = { 
 		factor = 0
 		modifier = {
 			add = 10
@@ -166,6 +166,9 @@ focus_tree = {
 		available_if_capitulated = yes
 		prerequisite = {
 			focus = Japan_the_tokubetsukeibitai
+		}
+		available = {
+			any_war_score < 80
 		}
 		ai_will_do = {
 			factor = 100
@@ -509,6 +512,7 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+			has_government = fascism
 		}
 		available = {
 			NOT = {has_completed_focus = Japan_the_successful_coup }
@@ -2811,6 +2815,7 @@ remove_from_faction =  GUI
 		}
 		available = {
 			RON_can_do_focuses_1936 = yes
+			has_war = yes
 		}
 		ai_will_do = {
 			factor = 1
@@ -2881,6 +2886,7 @@ remove_from_faction =  GUI
 		}
 		available = {
 			has_tech = rocket_engines
+			has_war = yes
 		}
 		completion_reward = {
 			set_technology = { suicide_craft = 1 }
@@ -2948,6 +2954,9 @@ remove_from_faction =  GUI
 		cost = 6
 		ai_will_do = {
 			factor = 1
+		}
+		available = {
+			has_war = yes
 		}
 		completion_reward = {
 			add_tech_bonus = {
@@ -3337,7 +3346,7 @@ remove_from_faction =  GUI
 		}
 
 		available = {
-
+		has_completed_focus = Japan_the_successful_coup
 		}
 
 		bypass = {
@@ -4298,6 +4307,7 @@ remove_from_faction =  GUI
 
 		available = {
             NOT  = { has_idea = the_fading_sun }
+			has_completed_focus = Japan_crush_the_rebels
 		}
 
 		bypass = {
@@ -5862,6 +5872,7 @@ remove_from_faction =  GUI
 
 		available = {
 			NOT  = { has_idea = the_fading_sun }
+			has_completed_focus = Japan_crush_the_rebels
 		}
 
 		bypass = {
@@ -6858,7 +6869,7 @@ remove_from_faction =  GUI
 		}
 
 		available = {
-
+			has_completed_focus = Japan_the_successful_coup
 		}
 
 		bypass = {
@@ -7087,6 +7098,16 @@ remove_from_faction =  GUI
 					release = KOR
 					set_autonomy = { target = KOR autonomy_state = autonomy_free }
 				}
+				if = {
+					limit = {
+						any_state = {
+							is_controlled_by = ROOT
+							is_core_of = CHI
+						}
+					}
+					release = CHI
+					set_autonomy = { target = CHI autonomy_state = autonomy_free }
+				}				
 			}
 			hidden_effect = {
 				add_ideas = jap_our_last_opportunity
@@ -7373,8 +7394,22 @@ remove_from_faction =  GUI
 					generator = { 525 527 }
 				}
 			}
-			unlock_decision_tooltip = send_economic_assistance_to_korea
-			unlock_decision_tooltip = rebuild_the_korean_army
+					if = {
+			limit = {
+				country_exists = KOR
+				is_in_faction = no
+			}
+			     create_wargoal = {
+            target = KOR
+			type = annex_everything
+					}
+		}
+			if = {
+			limit = {
+			NOT = {	country_exists = KOR }
+			}
+			release = KOR
+		}			
 		}
 	}
 
@@ -7443,9 +7478,22 @@ remove_from_faction =  GUI
 					generator = { 610 716 328 715 714 717 }
 				}
 			}
-			unlock_decision_tooltip = JAP_return_manchuria
-			custom_effect_tooltip = JAP_liberate_manchuria_tt
+			if = {
+			limit = {
+				country_exists = MAN
+			}
+			     create_wargoal = {
+            target = MAN
+			type = annex_everything
+					}
 		}
+			if = {
+			limit = {
+			NOT = {	country_exists = MAN }
+			}
+			release = MAN
+		}		
+	}
 	}
 
 	focus = {
@@ -9390,6 +9438,7 @@ remove_from_faction =  GUI
 		}
 
 		available = {
+			is_subject = no
 			has_idea = the_fading_sun
 		}
 
@@ -9914,8 +9963,7 @@ focus = {
 		}
 
 		available = {
-			has_completed_focus = JAP_cast_the_die
-			has_country_flag = murder_in_nagoya
+
 		}
 		prerequisite = {
 			focus = Japan_developp_industry
@@ -9930,6 +9978,11 @@ focus = {
 		available_if_capitulated = no
 
 		completion_reward = {
+			release = MAN
+			release = MEN
+			set_autonomy = { target = MEN autonomy_state = autonomy_free }
+			set_autonomy = { target = MAN autonomy_state = autonomy_free }
+			set_autonomy = { target = KOR autonomy_state = autonomy_free }
 			add_stability = 0.1
 			remove_ideas = JAP_militarism
 			random_country = {
@@ -10546,8 +10599,8 @@ focus = {
 		id = JAP_a_new_government
 		icon = GFX_japanese_imperialism
 		#prerequisite = { focus = JAP_cast_the_die }
-		x = 11
-		y = 10
+		x = 7
+		y = 9
 		#relative_position_id = JAP_cast_the_die
 
 		cost = 10
@@ -10558,9 +10611,10 @@ focus = {
 
 		available = {
 			has_completed_focus = JAP_purge_the_kodoha_faction #down here mate
-			has_country_flag = new_government_jap
 		}
-
+		prerequisite = {
+			focus = Japan_sign_martial_law
+		}
 		bypass = {
 
 		}
@@ -11147,5 +11201,5 @@ focus = {
 	}
 }
 
-}
+
 
