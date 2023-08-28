@@ -6566,25 +6566,6 @@ remove_from_faction =  GUI
 
 		search_filters = { FOCUS_FILTER_RESEARCH }
 		completion_reward = {
-			if = {
-				limit = {
-					has_country_leader = { id = 700 } #Hirohito
-				}
-				remove_country_leader_trait = warrior_code
-			}
-			random_country = {
-				limit = {
-					original_tag = GER
-					is_faction_leader = yes
-				}
-				if = {
-					limit = {
-						not = {
-							is_in_faction_with = ROOT
-						}
-					}
-					country_event = generic.2
-				}
 				if = {
 					limit = {
 						OR = {
@@ -6598,7 +6579,7 @@ remove_from_faction =  GUI
 				}
 			}
 		}
-	}
+	
 
 	focus = {
 		id = JAP_preemptive_war
@@ -9999,7 +9980,11 @@ focus = {
 		}
 
 		available = {
-
+			OR = {
+			has_completed_focus = JAP_strengthen_civilian_government
+			has_completed_focus = JAP_the_unthinkable_option
+			has_government = democratic
+			}
 		}
 		prerequisite = {
 			focus = Japan_developp_industry
@@ -10014,11 +9999,8 @@ focus = {
 		available_if_capitulated = no
 
 		completion_reward = {
-			release = MAN
 			release = MEN
 			set_autonomy = { target = MEN autonomy_state = autonomy_free }
-			set_autonomy = { target = MAN autonomy_state = autonomy_free }
-			set_autonomy = { target = KOR autonomy_state = autonomy_free }
 			add_stability = 0.1
 			remove_ideas = JAP_militarism
 			random_country = {
@@ -10199,7 +10181,7 @@ focus = {
 		available_if_capitulated = no
 
 		completion_reward = {
-			if = { limit = { MAN = { has_country_flag = kwantung_leads } }
+			if = { limit = { MAN = { has_ideas = MAN_low_legitimacy_I10  } }
 				MAN = { country_event = jap.17 }
 			}
 			else = {
@@ -10336,7 +10318,7 @@ focus = {
 		}
 
 		available = {
-			has_country_leader = { name = "Toyohiko Kagawa" ruling_only = yes }
+			has_government = democratic
 			MAN = { exists = no }
 		}
 
@@ -10439,11 +10421,11 @@ focus = {
 		}
 
 		available = {
-			
+			has_government = democratic
 		}
 
 		bypass = {
-
+			has_war = yes
 		}
 
 		cancel_if_invalid = yes
@@ -10455,12 +10437,11 @@ focus = {
 				remove_idea = protectors_of_japan_3
 				add_idea = protectors_of_japan_4
 			}
-			custom_effect_tooltip = rule_guarantee_others_lower_tension
+			set_rule = { can_guarantee_other_ideologies = yes }
 			add_popularity = { ideology = communism popularity = -0.1 }
 			add_popularity = { ideology = fascism popularity = -0.1 }
 
 			hidden_effect = {
-				set_rule = { can_guarantee_other_ideologies = yes }
 				set_rule = { can_lower_tension = yes }
 			}
 		}
@@ -10765,7 +10746,7 @@ focus = {
 				NOT = { has_war_with = GER }
 				GER = { NOT = { has_government = fascism } }
 			}
-			has_country_leader = { ruling_only = yes name = "Seigo Nakano" }
+			has_government = neutrality
 			NOT  = { has_idea = the_fading_sun }
 		}
 
@@ -10779,19 +10760,19 @@ focus = {
 
 		completion_reward = {
 			set_rule = { can_create_factions = yes }
-			random_country = {
 				limit = {
-					original_tag = GER
-					has_government = fascism
+					GER = { 
+					has_government = fascism 
 					is_faction_leader = yes
+					}
 				}
 				if = {
 					limit = {
 						not = {
-							is_in_faction_with = ROOT
+							is_in_faction_with = GER
 						}
 					}
-					country_event = generic.2
+					GER = { country_event = generic.2 }
 				}
 				if = {
 					limit = {
@@ -10805,15 +10786,9 @@ focus = {
 					add_to_tech_sharing_group = JAP_technological_exchange
 					ROOT = { add_to_tech_sharing_group = JAP_technological_exchange }
 				}
-			}
 			if = {
 				limit = { GER = { has_government = fascism } ITA = { has_government = fascism } }
 				complete_national_focus = JAP_sign_tripartite_pact
-			}
-			if = {
-				limit = { GER = { NOT = { has_government = fascism } } }
-				set_rule = { can_create_factions = yes }
-				create_faction = Axis
 			}
 		}
 	}
@@ -10999,6 +10974,10 @@ focus = {
 			add_to_tech_sharing_group = JAP_showa_kenkyukai
 			every_country = { limit = { is_subject_of = ROOT capital_scope = { is_on_continent = asia } NOT = { original_tag = ROOT } }
 				add_to_tech_sharing_group = JAP_showa_kenkyukai
+				add_timed_idea = {
+					idea = JAP_militarism
+					days = 500
+				}
 			}
 		}
 	}
