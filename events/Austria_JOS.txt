@@ -1,0 +1,855 @@
+add_namespace = aus
+
+# kaiser is simping austria
+country_event = {
+	id = aus.1
+	title = "[GER.GetLeader] proposes Anschluss"
+	desc = aus.1.d
+	picture = GFX_report_event_royal_visit
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.1.a
+		ai_chance = {
+			base = 100
+			modifier = { AUS = { has_completed_focus = AUS_the_fourth_reich } factor = 0 }
+			modifier = { GER = { NOT = { has_government = communism } } AUS = { has_government = communism } factor = 0 }
+		}
+		GER = {
+			country_event = { hours = 2 id = aus.3 }
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+	}
+	option = { # Refuse
+		name = aus.1.b
+		ai_chance = {
+			base = 0
+			modifier = { AUS = { has_completed_focus = AUS_the_fourth_reich } add = 100 }
+			modifier = { GER = { NOT = { has_government = communism } } AUS = { has_government = communism } add = 100 }
+		}
+		GER = {
+			add_opinion_modifier = { target = ROOT modifier = GER_anschluss_rejected }
+			country_event = { hours = 2 id = aus.2 }
+			if = { limit = { is_in_faction_with = AUS }
+				remove_from_faction = AUS
+			}
+		}
+	}
+}
+
+# Austria refuses Anschluss
+country_event = {
+	id = aus.2
+	title = "Austria refuses Anschluss"
+	desc = aus.2.d
+	picture = GFX_report_event_german_troops
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.2.a
+		create_wargoal = {
+			type = take_state_focus
+			target = AUS
+			generator = { 4 }
+		}
+	}
+}
+
+# Austrian Anschluss Completed
+country_event = {
+	id = aus.3
+	title = "Austria accepts Anschluss"
+	desc = aus.3.d
+	picture = GFX_report_event_eng_royal_family
+	
+	is_triggered_only = yes
+
+	option = {
+		name = aus.3.a
+		add_state_core = 4
+		add_state_core = 152
+		add_state_core = 153
+		add_state_core = 39
+		AUS = {
+			every_unit_leader = {
+				set_nationality = GER
+			}
+		}
+		annex_country = { target = AUS transfer_troops = yes }
+		add_political_power = 75
+	}
+}
+
+# the virgin nazism vs the chad fascism
+country_event = {
+	id = aus.4
+	title = "March on Vienna"
+	desc = aus.4.d
+	picture = GFX_report_event_tur_politician_march
+	
+	is_triggered_only = yes
+
+	option = {
+		name = aus.4.a
+		ai_chance = {
+			base = 0
+		}
+		complete_national_focus = AUS_the_new_austria
+		news_event = jos_news.51
+	}
+
+	option = {
+		name = aus.4.b
+		ai_chance = {
+			base = 100
+		}
+		kill_country_leader = yes
+		complete_national_focus = AUS_the_second_burgerkrieg
+		news_event = jos_news.52
+	}
+}
+
+# please Hitler-kun don't kill me nyaa
+country_event = {
+	id = aus.5
+	title = "A partial Anschluss?"
+	desc = aus.5.d
+	picture = GFX_report_event_hitler_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		ai_chance = {
+			base = 100
+		}
+		name = aus.5.a #yes
+		GER = {
+			hidden_effect = { puppet = AUS }
+			set_autonomy = { target = AUS autonomy_state = autonomy_satellite }
+		}
+		AUS = {
+			country_event = aus.6
+		}
+		
+		hidden_effect = {
+			
+		}
+	}
+	
+	option = {
+		name = aus.5.b
+		ai_chance = {
+			base = 0
+		}
+		AUS = {
+			country_event = aus.7
+		}
+		
+		hidden_effect = {
+			
+		}
+	}
+}
+# fair enough.
+country_event = {
+	id = aus.6
+	title = "[GER.GetLeader] accepts"
+	desc = aus.6.d
+	picture = GFX_report_event_hitler_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.6.a
+		effect_tooltip = {
+			GER = {
+				puppet = AUS
+			}
+		}
+		hidden_effect = {
+			
+		}
+	}
+}
+# begone thot
+country_event = {
+	id = aus.7
+	title = "[GER.GetLeader] refuses"
+	desc = aus.7.d
+	picture = GFX_report_event_hitler_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.7.a
+		
+		hidden_effect = {
+		
+		}
+	}
+}
+
+# please Hitler-kun give me czechia nyaa
+country_event = {
+	id = aus.8
+	title = "Austria asks for full control over the Sudetenland"
+	desc = aus.8.d
+	picture = GFX_report_event_hitler_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.8.a
+		ai_chance = { base = 100 }
+		effect_tooltip = {
+			AUS = {
+				add_state_core = 69
+				add_state_core = 74
+				add_state_core = 9
+				add_state_core = 75
+			}
+		}
+		AUS = {
+			transfer_state = 69
+			transfer_state = 74
+			transfer_state = 9
+			transfer_state = 75
+		}
+	}
+
+	option = {
+		ai_chance = { base = 0  }
+		name = aus.8.b
+		hidden_effect = {
+			AUS = { country_event = aus.9 }
+		}
+	}
+}
+
+# no
+country_event = {
+	id = aus.9
+	title = "[GER.GetLeader] refuses"
+	desc = aus.9.d
+	picture = GFX_report_event_hitler_handshake
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.9.a
+	}
+}
+
+# no
+country_event = {
+	id = aus.10
+	title = "The New Reichskanzler"
+	desc = aus.10.desc
+	picture = GFX_report_event_german_speech
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.10.a
+		ai_chance = { base = 50 }
+		create_country_leader = {
+			name = "Heinrich Himmler"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Heinrich_Himmler.dds"
+			expire = "1965.1.1"
+			ideology = nazism
+			traits = {
+
+			}
+		}
+	}
+
+	option = {
+		name = aus.10.b
+		ai_chance = { base = 0 }
+		create_country_leader = {
+			name = "Reinhard Heydrich"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Reinhard_Heydrich.dds"
+			expire = "1965.1.1"
+			ideology = nazism
+			traits = {
+
+			}
+		}
+	}
+
+	option = {
+		name = aus.10.d
+		ai_chance = { base = 15 }
+		create_country_leader = {
+			name = "Josef Göbbels"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Josef_Goebbels_5.tga"
+			expire = "1965.1.1"
+			ideology = nazism
+			traits = {
+
+			}
+		}
+	}
+
+	option = {
+		name = aus.10.c
+		ai_chance = { base = 35 }
+		create_country_leader = {
+			name = "Hermann Göring"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Hermann_Goring.dds"
+			expire = "1965.1.1"
+			ideology = nazism
+			traits = {
+
+			}
+		}
+	}
+}
+
+# Austrian Referendum - event for Austria to allow it
+country_event = {
+	id = aus.11
+	title = "Austria demands a Referendum"
+	desc = aus.11.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+	
+	option = { #sure
+		name = aus.11.a
+		ai_chance = {
+			factor = 80
+
+		}
+		if = {
+			limit = {
+				NOT = { HUN = { has_opinion = { target = HUN value > 75 } } }
+			}
+			random_list = {
+				70 = { HUN = { country_event = { id = aus.12 hours = 24 } } } #country votes yes
+				30 = { HUN = { country_event = { id = aus.13 hours = 24 } } } #country votes no
+			}
+		}
+		if = {
+			limit = {
+				HUN = { has_opinion = { target = HUN value > 75 } } 
+			}
+			random_list = {
+				80 = { HUN = { country_event = { id = aus.12 hours = 24 } } } #country votes yes
+				20 = { HUN = { country_event = { id = aus.13 hours = 24 } } } #country votes no
+			}
+		}
+	}
+
+	option = { #no
+		name = aus.11.b
+		ai_chance = {
+			factor = 20
+			modifier = {
+				OR = {
+					has_government = democratic
+					has_government = communism
+				}
+				factor = 0
+			}
+		}
+		AUS = { country_event = { id = aus.16 hours = 6 } }
+	}
+
+	option = { #sure, but we'll make sure it gets the right result
+		name = aus.11.c
+		ai_chance = { factor = 160 }
+		trigger = {
+			OR = {
+				has_government = communism
+				has_government = fascism
+			}
+		}
+		add_threat = -2
+		add_political_power = -50
+		AUS = { country_event = { id = aus.17 hours = 24 } }
+		set_global_flag = HUN_referendum_shenanigans
+	}
+}
+#country votes yes
+country_event = {
+	id = aus.12 
+	title = "Referendum approved"
+	desc = aus.12.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = {
+		name = aus.12.a
+		custom_effect_tooltip = GAME_OVER_TT
+		AUS = { country_event = { id = aus.14 } }
+		
+	}
+
+}
+
+#country votes no
+country_event = {
+	id = aus.13 
+	title = "Referendum fails"
+	desc = aus.13.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = {
+		name = aus.13.a
+		AUS = { country_event = { id = aus.15 } }
+	}
+
+}
+#country votes yes - aus
+country_event = {
+	id = aus.14 
+	title = "Referendum succeds"
+	desc = aus.14.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = {
+		name = aus.14.a
+		HUN = {
+			every_unit_leader = {
+				set_nationality = AUS
+			}
+		}
+		AUS = { annex_country = { target = HUN transfer_troops = yes } }
+		#hidden_effect = { news_event = { id = news.291 days = 1 } }
+	}
+
+}
+
+#country votes no - aus
+country_event = {
+	id = aus.15 
+	title = "Referendum defeated"
+	desc = aus.15.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = { #TO WAR
+		name =aus.15.a
+		ai_chance = {
+			factor = 50
+			modifier = {
+				has_global_flag = HUN_referendum_shenanigans
+				factor = 2
+			}
+		}
+		create_wargoal = {
+					type = annex_everything
+					target = HUN
+				}
+		#hidden_effect = { news_event = { id = news.294 days = 1 } }
+		
+	}
+	option = { #Let it go
+		name = aus.15.b
+		ai_chance = {
+			factor = 50
+			modifier = {
+				HUN = { is_in_faction = yes }
+				factor = 3
+			}
+		}
+		#hidden_effect = { news_event = { id = news.293 days = 1 } }
+	}
+
+}
+
+#Austria refuses
+country_event = {
+	id = aus.16 
+	title = "Referendum Refused"
+	desc = aus.16.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = { #TO WAR
+		name = aus.16.a
+		ai_chance = {
+			factor = 30
+			modifier = {
+				HUN = {
+					OR = {
+						has_government = communism
+						has_government = fascism
+					}
+				}
+				factor = 3
+			}
+			modifier = {
+				HUN = { is_in_faction = no }
+				factor = 3
+			}
+			modifier = {
+				strength_ratio = { tag = HUN ratio > 1 }
+				factor = 2
+			}
+		}
+		create_wargoal = {
+					type = annex_everything
+					target = HUN
+				}
+		#hidden_effect = { news_event = { id = news.315 days = 1 } }
+		
+	}
+	option = { #Let it go
+		name = aus.16.b
+		ai_chance = {
+			factor = 70
+		}
+	}
+
+}
+#Cheat on the Referendum
+country_event = {
+	id = aus.17 
+	title = "Guiding the Referendum"
+	desc = aus.17.d
+	picture = GFX_report_event_election_vote
+	
+	is_triggered_only = yes
+
+	option = { #say no
+		name = aus.17.a
+		ai_chance = {
+			factor = 80
+		}
+		AUS = { country_event = { id = aus.15 } }
+		
+	}
+	option = { #say yes
+		name = aus.17.b
+		ai_chance = {
+			factor = 20 #brilliant plan #Absolutely epic, don't you think Paradox dev?
+		}
+		custom_effect_tooltip = GAME_OVER_TT
+		AUS = { country_event = { id = aus.14 } }
+		#hidden_effect = { news_event = { id = news.292 days = 1 } }
+	}
+
+}
+
+# giv south slovakia
+country_event = {
+	id = aus.18
+	title = "Austria proposes concessions to Hungary"
+	desc = aus.18.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.18.a
+		ai_chance = {
+			base = 100
+		}
+		effect_tooltip = {
+			HUN = { add_state_core = 664 transfer_state = 664 add_political_power = -50 }
+			add_timed_idea = {
+				idea = generic_payments
+				days = 120
+			}
+		}
+		HUN = {
+			country_event = aus.19
+		}
+	}
+	option = { # Refuse
+		name = aus.18.b
+		ai_chance = {
+			base = 0
+		}
+		AUS = {
+			country_event = aus.20
+		}
+	}
+}
+
+# giv south slovakia
+country_event = {
+	id = aus.19
+	title = "Austria and Czechoslovakia propose concessions"
+	desc = aus.19.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.19.a
+		ai_chance = {
+			base = 100
+		}
+		HUN = { add_state_core = 664 transfer_state = 664 add_political_power = -50 }
+		FROM = {
+			add_timed_idea = {
+				idea = generic_payments
+				days = 120
+			}
+		}
+		AUS = {
+			add_to_faction = HUN
+		}
+	}
+	option = { # Refuse
+		name = aus.19.b
+		ai_chance = {
+			base = 0
+		}
+		AUS = {
+			country_event = aus.20
+		}
+	}
+}
+
+# giv south slovakia
+country_event = {
+	id = aus.20
+	title = "[From.GetLeader] refuses concessions"
+	desc = aus.20.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.20.a
+		ai_chance = {
+			base = 100
+		}
+		
+	}
+}
+
+# giv south dobrudja
+country_event = {
+	id = aus.21
+	title = "Austria proposes concessions to Bulgaria"
+	desc = aus.21.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.21.a
+		ai_chance = {
+			base = 100
+		}
+		effect_tooltip = {
+			BUL = { add_state_core = 77 transfer_state = 77 add_political_power = -50 }
+			add_timed_idea = {
+				idea = generic_payments
+				days = 120
+			}
+		}
+		BUL = {
+			country_event = aus.22
+		}
+	}
+	option = { # Refuse
+		name = aus.21.b
+		ai_chance = {
+			base = 0
+		}
+		AUS = {
+			country_event = aus.23
+		}
+	}
+}
+
+# giv south slovakia
+country_event = {
+	id = aus.22
+	title = "Austria and Romania propose concessions"
+	desc = aus.22.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.22.a
+		ai_chance = {
+			base = 100
+		}
+		BUL = { add_state_core = 77 transfer_state = 77 add_political_power = -50 }
+		FROM = {
+			add_timed_idea = {
+				idea = generic_payments
+				days = 120
+			}
+		}
+		AUS = {
+			add_to_faction = BUL
+		}
+	}
+	option = { # Refuse
+		name = aus.22.b
+		ai_chance = {
+			base = 0
+		}
+		AUS = {
+			country_event = aus.23
+		}
+	}
+}
+
+# giv south slovakia
+country_event = {
+	id = aus.23
+	title = "[From.GetLeader] refuses concessions"
+	desc = aus.23.d
+	picture = GFX_report_event_generic_rally_3
+	
+	is_triggered_only = yes
+	
+	option = { # Accept
+		name = aus.23.a
+		ai_chance = {
+			base = 100
+		}
+		
+	}
+}
+
+# help austria?
+country_event = {
+	id = aus.24
+	title = "Guaranteeing the Geneva Protocols"
+	desc = aus.24.d
+	picture = GFX_report_event_german_troops_paris
+	
+	is_triggered_only = yes
+	
+	option = { # full support
+		name = aus.24.a
+		ai_chance = {
+			base = 0
+		}
+		army_experience = 10
+		give_guarantee = AUS
+		AUS = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1500
+				producer = ROOT
+			}
+		}
+		AUS = {
+			country_event = aus.25
+		}
+	}
+
+	option = { # take these guns and leave
+		name = aus.24.b
+		ai_chance = {
+			base = 100 modifier = { tag = ENG is_historical_focus_on = yes factor = 0 } modifier = { tag = FRA is_historical_focus_on = yes factor = 0 }
+		}
+		army_experience = 5
+		AUS = {
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1500
+				producer = ROOT
+			}
+		}
+		AUS = {
+			country_event = aus.26
+		}
+	}
+
+	option = { # im a scawed democwatic nation pwease help meee
+		name = aus.24.c
+		ai_chance = {
+			base = 0 modifier = { tag = ENG is_historical_focus_on = yes add = 100 } modifier = { tag = FRA is_historical_focus_on = yes add = 100 }
+		}
+		AUS = {
+			country_event = aus.27
+		}
+	}
+}
+
+# got guarantee
+country_event = {
+	id = aus.25
+	title = "[From.GetLeader] guarantees our independence"
+	desc = aus.25.d
+	picture = GFX_report_event_king_speech
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.25.a
+		ai_chance = {
+			base = 100
+		}
+		effect_tooltip = {
+			give_guarantee = AUS
+			AUS = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1500
+					producer = ROOT
+				}
+			}
+		}
+	}
+}
+
+# got guarantee
+country_event = {
+	id = aus.26
+	title = "[From.GetLeader] provides equipment"
+	desc = aus.26.d
+	picture = GFX_report_event_lithuania_army
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.26.a
+		ai_chance = {
+			base = 100
+		}
+		effect_tooltip = {
+			AUS = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1500
+					producer = ROOT
+				}
+			}
+		}
+	}
+}
+
+# got guarantee
+country_event = {
+	id = aus.27
+	title = "[From.GetLeader] refuses to provide support"
+	desc = aus.27.d
+	picture = GFX_report_event_german_troops_paris
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = aus.27.a
+		ai_chance = {
+			base = 100
+		}
+		
+	}
+}
