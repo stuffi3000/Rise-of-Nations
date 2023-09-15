@@ -1,0 +1,285 @@
+GER_want_to_invade_FRA_without_ITA = {
+	allowed = {
+		original_tag = GER
+	}
+	enable = {
+		is_historical_focus_on = yes
+		date < 1940.1.1
+		FRA = {
+			is_ai = yes
+		}
+		HOL = {	has_capitulated = no }
+		BEL = {	has_capitulated = no }
+	}
+
+	abort = {
+		OR = {
+			date > 1940.1.1
+			FRA = {
+				is_ai = no
+			}
+			AND = {
+				HOL = {	has_capitulated = yes }
+				BEL = {	has_capitulated = yes }
+			}
+		}
+	}
+
+	ai_strategy = {
+		type = dont_join_wars_with  # TODO seems bugged
+		id = ITA
+		target_country = FRA
+		value = 500
+	}
+}
+
+GER_let_italy_handle_french_front_alone = {
+	allowed = {
+		original_tag = GER
+	}
+	enable = {
+		is_in_faction_with = ITA
+        date > 1930.1.1
+		OR = {
+			AND = {
+				has_war_together_with = ITA
+				has_war_with = FRA
+			}
+		}
+		FRA = { has_capitulated = no } # Abort when France is out of the equation
+		date < 1940.8.1
+	}
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = dont_defend_ally_borders
+		id = "ITA"
+		value = 100
+	}
+}
+
+GER_enable_invasion_of_NOR = {
+	allowed = {
+		OR = {
+			original_tag = GER
+			original_tag = ITA
+		}
+	}
+	enable = {
+		# try to invade NOR if things are looking not so bad
+		OR = {
+			
+            AND = {
+                date < 1940.4.4
+                date > 1930.1.1
+            }
+			FRA = { has_capitulated = yes } # uh oh, maybe we need more units against FRA
+		}
+	}
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = invade
+		id = "NOR"
+		value = 10
+	}
+}
+GER_around_the_maginot = {
+	allowed = {
+		original_tag = GER
+		is_historical_focus_on = yes
+	}
+
+	enable = {
+		date < 1941.4.1
+
+		FRA = {
+			is_ai = yes
+		}
+
+		#uh oh, they are pushing
+		# 42 = {
+		# 	is_controlled_by = GER
+		# }
+		# 50 = {
+		# 	is_controlled_by = GER
+		# }
+
+		# both low countries fell
+		OR = {
+			HOL = {
+				has_capitulated = no
+			}
+			BEL = {
+				has_capitulated = no
+			}
+		}
+
+		# lux somehow joined the fun
+		NOT = { has_war_with = LUX }
+		LUX = {
+			has_capitulated = no
+			NOT = { is_in_faction_with = FRA }
+		}
+
+		# we are ready to declare war on low countries
+		OR = {
+			focus_progress = {
+			 	focus = GER_around_maginot
+			 	progress > 0
+			}
+			AND = {
+				is_in_array = { potential_and_current_enemies = HOL }
+				is_in_array = { potential_and_current_enemies = BEL }
+			}
+		}
+		is_in_array = { potential_and_current_enemies = FRA }
+	}
+
+	abort_when_not_enabled = yes
+
+	# leave LUX for later
+	ai_strategy = {
+		type = declare_war
+		id = "LUX"
+		value = -2000
+	}
+
+	ai_strategy = {
+		type = diplo_action_desire
+		id = "LUX"
+		target = declare_war
+		value = -50000
+	}
+
+	ai_strategy = {
+		type = front_armor_score
+		id = "FRA"
+		value = -100
+	}
+
+	ai_strategy = {
+		type = front_armor_score
+		id = "HOL"
+		value = 100
+	}
+
+	ai_strategy = {
+		type = front_armor_score
+		id = "BEL"
+		value = 100
+	}
+
+	ai_strategy = {
+		type = front_armor_score
+		id = "POL"
+		value = 100
+	}
+
+}
+GER_blitzkrieg_benelux  = {
+	allowed = {
+		original_tag = GER
+	}
+
+	enable = {
+		date < 1940.3.1 #Don't keep pushing wildly if we haven't capitulated benelux in 4 months - we lost anyway
+
+		OR = {
+			AND = {
+				focus_progress = {
+					focus = GER_around_maginot
+					progress > 0.01
+				}
+				NOT = { has_war_with = HOL  }
+			}
+			AND = {
+				has_war_with = HOL
+				HOL = { has_capitulated = no }
+			}
+			AND = {
+				has_war_with = BEL
+				BEL = { has_capitulated = no }
+			}
+		}
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = front_control
+
+		tag = HOL
+
+		ratio = 0.25
+
+		priority = 100
+		ordertype = front
+		execution_type = rush
+		execute_order = yes
+	}
+
+	ai_strategy = {
+		type = front_control
+
+		tag = BEL
+
+		ratio = 0.25
+
+		priority = 100
+		ordertype = front
+		execution_type = rush
+		execute_order = yes
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+
+		tag = BEL
+
+		value = 50 # lets put more units, should be safe
+	}
+
+	ai_strategy = {
+		type = front_unit_request
+
+		tag = HOL
+
+		value = 50 # lets put more units, should be safe
+	}
+}
+
+GER_blitz_france = {
+
+	allowed = {
+		original_tag = GER
+	}
+
+	enable = {
+		date < 1940.6.1
+        date > 1920.1.1
+		HOL = { has_capitulated = yes }
+		is_historical_focus_on = yes
+	}
+
+	abort_when_not_enabled = yes
+
+	ai_strategy = {
+		type = consider_weak
+		id = "FRA"
+		value = 25
+	}
+
+	ai_strategy = {
+		type = front_control
+
+		tag = FRA
+
+		ratio = 0.5
+
+		priority = 100
+		ordertype = front
+		execution_type = rush_weak
+		execute_order = yes
+	}
+
+}
