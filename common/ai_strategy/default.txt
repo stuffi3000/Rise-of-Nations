@@ -1,29 +1,89 @@
 # Written by Henrik "Groogy" Hansson
 # Modified by Daniel "Da9L" Sjöberg
+
+dont_build_units_interwar = {
+	enable = {
+		date > 1920.1.1
+		date < 1933.1.1
+		OR = {
+			NOT = {
+				any_other_country = {
+					OR = {
+						is_justifying_wargoal_against = ROOT
+						has_wargoal_against = ROOT
+						ROOT = { is_justifying_wargoal_against = PREV }
+						ROOT = { has_wargoal_against = PREV }
+					}
+				}
+			}
+			NOT = {
+				has_war = yes
+			}
+		}	
+	}	
+	abort_when_not_enabled = yes
+	ai_strategy = {
+		type = build_army
+		value = -10000
+	}
+}
 ignore_optimisation_tag = {
 	enable = {
 		always = yes
 	}
 	ai_strategy = {
         type = ignore
-        id = XXB
+        id = "XXB"
         value = 10000
     }
 }
 optimisation_tag_ignores_us = {
 	reversed = yes
+	enable = {
+		always = yes
+	}
 	enable_reverse = {
 		always = yes
 	}
 	ai_strategy = {
         type = ignore
-        id = XXB
+        id = "XXB"
         value = 10000
     }
 }
+XXB_no_alliance = {
+	enable = {
+		country_exists = XXB
+	}
+	abort = {
+		NOT = { country_exists = XXB }
+	}
+
+	ai_strategy = {
+		type = alliance
+		id = "XXB"
+		value = -1000
+	}
+}
 default_unit_production = { #If adding country-unique ones, bear in mind that they STACK
 	enable = {
-		always = yes
+		#always = yes
+		
+		
+		NOT = {
+			OR = {
+				AND ={
+					original_tag = GER
+					date > 1933.1.1
+				}
+				AND = {
+					original_tag = ENG
+					date > 1933.1.1
+				}
+			}
+		}
+		
+		
 		# NOT = { original_tag = GER } NOT = { original_tag = FRA } NOT = { original_tag = CHI  } NOT = { original_tag = ENG  }
 		# not = { original_tag = CZE }
 		# NOT = { tag = SOV }
@@ -33,7 +93,7 @@ default_unit_production = { #If adding country-unique ones, bear in mind that th
 		# 	}
 		# }
 	}
-
+	abort_when_not_enabled = yes
 	ai_strategy = {
 		type = role_ratio
 		id = paratroopers
