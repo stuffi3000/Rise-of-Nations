@@ -573,6 +573,9 @@ focus_tree = {
 		y = 1
 		prerequisite = { focus = SPR_disarm_the_military}
 		mutually_exclusive = { focus = SPR_no_masters}
+		completion_reward = {
+			add_political_power = -20
+		}
 	}
 	focus = {
 		id = SPR_sending_the_federal_reserves
@@ -580,6 +583,9 @@ focus_tree = {
 		x = 0
 		y = 1
 		prerequisite = { focus = SPR_foreign_help}
+		completion_reward = {
+			custom_effect_tooltip = SPR_sending_the_federal_reserves_decision_tooltip
+		}
 		
 	}
 	focus = {
@@ -588,13 +594,86 @@ focus_tree = {
 		x = -1
 		y = 1
 		prerequisite = { focus = SPR_sending_the_federal_reserves}
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			division_template = {
+    			name = "International Brigades"
+    			is_locked = yes
+    			division_cap = 2
+    
+    			priority = 0
+    			template_counter = 0
+    			regiments = {
+        			infantry = { x = 0 y = 0 }
+        			infantry = { x = 0 y = 1 }
+        			infantry = { x = 0 y = 2 }
+        			infantry = { x = 0 y = 3 }
+   				}
+    
+			}
+			random_controlled_state = {
+				create_unit = {
+    				division = "name = \"International Brigade 1\" division_template = \"International Brigades\" start_experience_factor = 0.1"
+    				owner = SPR
+				}
+				create_unit = {
+    				division = "name = \"International Brigade 2\" division_template = \"International Brigades\" start_experience_factor = 0.1"
+    				owner = SPR
+				}
+			}
+			SOV = {
+				country_event = {id = ww2_spain.9}
+			}
+		}
 	}
 	focus = {
 		id = SPR_training_camps
 		relative_position_id = SPR_sending_the_federal_reserves
 		x = 1
 		y = 1
+		cost = 10
 		prerequisite = { focus = SPR_sending_the_federal_reserves }
+		completion_reward = {
+			remove_ideas = SPR_dispersed_combat_groups
+		}
+	}
+	focus = {
+		id = SPR_crackdown_on_extremist_commies
+		relative_position_id = SPR_international_brigades
+		x = -1
+		y = 1
+		prerequisite = { focus = SPR_international_brigades }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = has_less_commie_than_non_comie_volunteer
+				set_temp_variable = {commie_volunteer = 0}
+				set_temp_variable = {non_commie_volunteer = 0}
+				all_country = {
+					if = {
+						limit = {has_government = communism}
+
+						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_government = communism
+							}
+						}
+						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+				}
+				SPR = { 
+					OR = {
+						check_variable = { non_commie_volunteer > commie_volunteer}
+						check_variable = { non_commie_volunteer = commie_volunteer}
+					}
+				}
+			}
+		}
 	}
 	focus = {
 		id = SPR_no_masters

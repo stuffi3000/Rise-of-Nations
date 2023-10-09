@@ -1,9 +1,53 @@
 ###########################
 # turkey Events
 ###########################
-
+add_namespace = volunteer_event
 add_namespace = generic
+country_event = {
 
+	#Event is used to count the amount of volunteer sent, because variablefor this doesn't exist thx Paradox
+	id = volunteer_event.1
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		
+		var:sender_country_array^0 = { 
+			save_event_target_as = sender_country
+		}
+		
+		event_target:sender_country = {
+			ROOT = {
+				clear_variable = num_volunteer_received_from_@PREV #initialisation
+			}
+			every_country = {
+				limit = {
+					has_war_with = ROOT
+				}
+				every_state = {
+					limit = {
+						is_owned_by = PREV
+						NOT = { is_fully_controlled_by = PREV }
+					}
+					ROOT = {
+						add_to_variable = { num_volunteer_received_from_@PREV.PREV.PREV = event_target:sender_country.num_armies_in_state@PREV }
+					}
+				}
+			}
+			every_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				ROOT = {
+					add_to_variable = { num_volunteer_received_from_@PREV.PREV = event_target:sender_country.num_armies_in_state@PREV }
+				}
+			}
+		}
+		remove_from_array = {
+			array = sender_country_array
+			index = 0
+		}
+	}
+}
 # President dies
 country_event = {
 	id = generic.1
