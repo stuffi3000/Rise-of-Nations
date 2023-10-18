@@ -646,6 +646,7 @@ focus_tree = {
 		x = -1
 		y = 1
 		prerequisite = { focus = SPR_international_brigades }
+		mutually_exclusive = { focus = SPR_soviet_councils}
 		available = {
 			NOT = {
 				any_country = {
@@ -682,6 +683,62 @@ focus_tree = {
 				}
 			}
 		}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_POUM_rise
+				days = 100
+			}
+		}
+	}
+	focus = {
+		id = SPR_soviet_councils
+		relative_position_id = SPR_international_brigades
+		x = 1
+		y = 1
+		prerequisite = { focus = SPR_international_brigades }
+		mutually_exclusive = { focus = SPR_crackdown_on_extremist_commies}
+		available = {
+			NOT = {
+				any_country = {
+					AND = {
+						NOT= { has_government= communism }
+						has_country_flag = received_reserves_from_SPR
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = has_more_commie_than_non_comie_volunteer
+				set_temp_variable = {commie_volunteer = 0}
+				set_temp_variable = {non_commie_volunteer = 0}
+				all_country = {
+					if = {
+						limit = {has_government = communism}
+
+						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_government = communism
+							}
+						}
+						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+				}
+				SPR = { 
+					OR = {
+						check_variable = { non_commie_volunteer < commie_volunteer}
+						check_variable = { non_commie_volunteer = commie_volunteer}
+					}
+				}
+			}
+		}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_POUM_rise
+				days = -25
+			}
+		}
 	}
 	focus = {
 		id = SPR_no_masters
@@ -691,6 +748,7 @@ focus_tree = {
 		prerequisite = { focus = SPR_disarm_the_military}
 		mutually_exclusive = { focus = SPR_foreign_help}
 	}
+	
 #The Will of the People
 	focus = {
 		id = SPR1933_the_will_of_the_people
