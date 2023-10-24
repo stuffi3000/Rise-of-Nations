@@ -1,0 +1,427 @@
+# leader_traits contain a list of UnitLeaderTrait with the following structure:
+# trait_key = {
+# 	type = all # or either of field_marshal, corps_commander, navy
+#	trait_type = basic_trait # or either of status_trait, personality_trait, assignable_trait, basic_terrain_trait, assignable_terrain_trait, exile
+#	attack_skill = 0 # integer
+#	defense_skill = 0 # integer
+#	logistics_skill = 0 # integer
+#	planning_skill = 0 # integer
+#	maneuvering_skill = 0 # integer
+#	coordination_skill = 0 # integer
+#	attack_skill_factor = 0.0 # decimal
+#	defense_skill_factor = 0.0 # decimal
+#	logistics_skill_factor = 0.0 # decimal
+#	planning_skill_factor = 0.0 # decimal
+#	maneuvering_skill_factor = 0.0 # decimal
+#	coordination_skill_factor = 0.0 # decimal
+#	show_in_combat = yes # boolean
+#	override_effect_tooltip = "" # loc key
+#	custom_effect_tooltip = "" # loc key
+#	custom_prerequisite_tooltip = "" # loc key
+#	custom_gain_xp_trigger_tooltip = "" # loc key
+#	mutually_exclusive = other_trait # trait key
+#	parent = { # Can be added multiple times
+#	    traits = {XXX YYY ZZZ}  # A list of other traits that
+#       num_parents_needed = 1 # The number of the above traits that must be true
+#   }
+#   any_parent = { XXX YYY ZZZ } # shorthand for parent when num_parents_needed are defaulted to 1
+#   all_parents = { XXX YYY ZZZ } # shorthand for parent when num_parents_needed are the same as the number of parents
+#	gui_row = 0 # integer, starts at 0, unset or -1 means the trait does not appear in unlockable trait tree.
+#	gui_column = 0 # integer, starts at 0, unset or -1 means auto
+#	allowed = trigger # scope is a unit leader
+#	prerequisites = trigger # scope is an unit leader
+#	gain_xp = trigger # scope is a combatant
+#	gain_xp_leader = trigger # scope is a unit leader. ROOT is country you are from and FROM is any target nationality for agents
+#	gain_xp_on_spotting = 0 # integer
+#	modifier = { } # list of modifiers
+#	non_shared_modifier = {} #
+#	corps_commander_modifier = {} #
+#	field_marshal_modifier = {} #
+#	sub_unit_modifiers = { # list of sub unit def
+#		# e.g.
+#		submarine {
+#			units = {} # list of adjusters
+#			# list of modifiers e.g.
+#			naval_visibility = -0.1
+#		}
+#	}
+#	trait_xp_factor = {} # list of trait_key/decimal
+#	on_add = effect # scope is an unit leader
+#	on_remove = effect # scope is an unit leader
+#	daily_effect = effect # scope is an unit leader
+#	cost = 1000 # integer
+#	ai_will_do = {} # weight
+#	new_commander_weight = {} # weight
+#	enable_ability = ability_key
+#}
+
+leader_traits = {
+	artillery_officer = {
+		type = corps_commander
+		trait_type = personality_trait
+		
+		unit_type = {
+			type = artillery
+			type = artillery_brigade
+			#ype = howitzer
+			type = howitzer_brigade
+		}
+		
+		unit_trigger = {
+			OR = {
+				division_has_battalion_in_template = artillery
+				division_has_battalion_in_template = artillery_brigade
+				#division_has_battalion_in_template = howitzer
+				division_has_battalion_in_template = howitzer_brigade
+				
+				owner = {
+					has_idea = superior_firepower_academy_spirit
+				}
+			}
+			owner = {
+				NOT = {
+					has_idea = best_of_the_best_spirit
+					has_idea = academy_scholarships_spirit
+				}
+			}
+		}
+
+		trait_xp_factor = {
+			artillery_specialist = 1	#+100%
+		}
+		new_commander_weight = {
+			factor = 1
+			
+			modifier = {
+				FROM = { has_idea = superior_firepower_academy_spirit }
+				factor = 2
+			}
+
+			modifier = {
+				FROM = { has_idea = best_of_the_best_spirit }
+				factor = 0
+			}
+			
+			modifier = {
+				FROM = { has_idea = academy_scholarships_spirit }
+				factor = 0
+			}
+		}	
+	}
+
+	artillery_specialist = {
+		type = corps_commander
+		gain_xp = {
+			set_temp_variable = { temp = num_units }
+			multiply_temp_variable = { temp = 0.3 }
+			check_variable = { num_artillery > temp }
+		}
+		custom_gain_xp_trigger_tooltip = artillery_ratio_over_30
+		
+		slot = high_command
+		specialist_advisor_trait = army_artillery_1
+		expert_advisor_trait = army_artillery_2
+		genius_advisor_trait = army_artillery_3		
+
+		cost = 1000
+		modifier = {
+			army_artillery_attack_factor = 0.1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		gui_row = 15
+	}
+
+	artillery_expert = {
+		type = corps_commander
+		gain_xp = {
+			always = no # not gainable
+		}
+		cost = 500
+		modifier = {
+			army_artillery_attack_factor = 0.1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		trait_type = assignable_trait
+		any_parent = { artillery_specialist }
+		gui_row = 15
+	}
+
+
+   	trait_royalist = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		modifier = {
+			
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+   	ENG_new_guard = { #literally just a reverse of Old Guard
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		modifier = {
+	        land_reinforce_rate = -0.01
+		}
+		
+		non_shared_modifier = {
+			experience_gain_factor = 0.25
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+   	ENG_hmmlr_member = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		modifier = {
+			
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	trait_royal = {
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		non_shared_modifier = {
+			promote_cost_factor = -0.3
+		}
+		
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_liberal_sympathies = {
+		
+		type = all
+		trait_type = personality_trait
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_ittihadist_sympathies = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_ittihadist_radical_sympathies = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_halaskar_zabitan_member = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	TUR_Loyal_Reformist = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_reactionaries_sympathies = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	trait_TUR_reactionaries_political_sympathies = {
+
+		type = all
+		trait_type = personality_trait
+
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	chinese_royalist = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				is_china_or_warlord = yes
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	chinese_nationalist = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				is_china_or_warlord = yes
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+
+	yuan_shikai_loyalist = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				is_china_or_warlord = yes
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	
+	chinese_federalist = { 
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				is_china_or_warlord = yes
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	
+	trait_por_republican = {
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				original_tag = POR
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+	
+	trait_por_monarchist = {
+		type = all
+		trait_type = personality_trait
+		gain_xp = {
+			always = no # not gainable
+		}
+		allowed = {
+			FROM = {
+				original_tag = POR
+			}
+		}
+		modifier = {
+			
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		new_commander_weight = {
+			factor = 0
+		}
+	}
+}
