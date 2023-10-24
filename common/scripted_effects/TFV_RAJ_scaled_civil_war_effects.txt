@@ -1,0 +1,56 @@
+### Scale based on party support and autonomy progress.
+### First look for party support level. Then look for autonomy progress
+### It's not pretty, but that's how we like it
+				
+scale_var_civil_war_size_by_autonomy_and_var_ideology_val = {
+	set_temp_variable = { civil_war_size = 0.94 } #Worst size we can get. Will reduce as we go.
+
+	#ideology_val #This will end up as civil war size bonus for party popularity 
+	set_temp_variable = { upper_ideology_range = 0.5 } #Ideology bonus scales from lower to this
+	set_temp_variable = { lower_ideology_range = 0.1 } #Ideology bonus scales from this to upper
+
+	set_temp_variable = { ideology_range = upper_ideology_range }
+	subtract_from_temp_variable = { ideology_range = lower_ideology_range }
+
+	subtract_from_temp_variable = { ideology_val = lower_ideology_range }
+	if = {
+		limit = { check_variable = { ideology_val < lower_ideology_range } }
+	}
+	else = {
+		divide_temp_variable = { ideology_val = ideology_range }
+	}
+	clamp_temp_variable = {
+		var = ideology_val
+		min = 0
+		max = 1
+	}
+	multiply_temp_variable = { ideology_val = 0.2 }
+
+	subtract_from_temp_variable = { civil_war_size = ideology_val }
+
+	#autonomy_val #This will end up as civil war size bonus for party autonomy 
+	set_temp_variable = { upper_autonomy_range = 0.95 } #autonomy bonus scales from lower to this
+
+	set_temp_variable = { autonomy_range = upper_autonomy_range }
+	subtract_from_temp_variable = { autonomy_range = lower_autonomy_range }
+
+	set_temp_variable = { autonomy_val = autonomy_ratio }
+	subtract_from_temp_variable = { autonomy_val = lower_autonomy_range }
+	divide_temp_variable = { autonomy_val = autonomy_range }
+
+	if = {
+		limit = { compare_autonomy_state < autonomy_colony }
+		multiply_temp_variable = { autonomy_val = 0.5 }
+	}
+
+	multiply_temp_variable = { autonomy_val = 0.7 }
+	
+	if = { #Prevent this breaking if you aren't a subject
+		limit = {
+			is_subject = no
+		}
+		set_temp_variable = { autonomy_val = 0.3 }
+	}
+	
+	subtract_from_temp_variable = { civil_war_size = autonomy_val }
+}

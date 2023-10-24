@@ -1,3 +1,125 @@
+generic_maritime_blockade = {
+	blockade_timer = {
+		is_good = yes
+		days_mission_timeout = 150
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			has_global_flag = SPR_POR_blockade_lifted
+			POR = {
+				NOT = {
+					OR = {
+						controls_state = 702
+						controls_state = 296
+					}
+				}
+			}
+		}
+	}
+	blockade_issue_warning_salve = {
+		cost = 20
+		visible = {
+			has_country_flag = POR_navy_spotted
+		}
+		complete_effect = {
+			POR = {
+				country_event = ww2_spain.16
+			}
+		}
+	}
+	lift_blockade = {
+		cost = 5
+		visible = {
+			has_active_mission = blockade_timer
+		}
+		complete_effect = {
+			add_war_support = -0.1
+			set_global_flag = SPR_POR_blockade_lifted
+		}
+	}
+	blockade_timer_bad = {
+		is_good = no
+		days_mission_timeout = 30
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			POR = {
+				ships_in_area = { 
+					area = 61 size > 0
+				} 
+			}
+		}
+		complete_effect = {
+			SPB = {
+				country_event = ww2_spain.13
+				set_country_flag = POR_navy_spotted
+			}
+		}
+		timeout_effect = {
+			SPB ={
+				transfer_state = 702
+				transfer_state = 296
+			}
+		}
+	}
+	blockade_timer_bad_2 = {
+		is_good = no
+		days_mission_timeout = 30
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			POR = {
+				ships_in_area = { 
+					area = 61 size > 4
+				} 
+			}
+		}
+		complete_effect = {
+			SPB = {
+				country_event = ww2_spain.15
+				
+			}
+		}
+		timeout_effect = {
+			SPB ={
+				transfer_state = 702
+				transfer_state = 296
+			}
+		}
+	}
+}
 UNSC_decision_cat = {
 	resolution_vote_timer = {
 		icon = GFX_UN_decisions
@@ -610,6 +732,7 @@ demobilization = {
 				OR = {
 					has_country_flag = show_settings
 					has_country_flag = show_recent_changes
+					has_global_flag = KR_no_unit_limits
 				}
 			}
 			has_war = no
@@ -642,6 +765,7 @@ demobilization = {
 				OR = {
 					has_country_flag = show_settings
 					has_country_flag = show_recent_changes
+					has_global_flag = KR_no_unit_limits
 				}
 			}
 			NOT = {
@@ -2494,6 +2618,35 @@ war_measures = {
 }
 
 foreign_politics = {
+
+	sending_troops_to_SPR_timer = {
+		days_mission_timeout = 30
+		is_good = no
+		activation = {
+			always = no
+		}
+		available = {
+			SPR = {
+				has_volunteers_amount_from = {
+    				tag = ROOT
+    				count > 0
+				}
+			}
+		}
+		cancel_trigger = {
+			OR = {
+				NOT = {
+					country_exists = SPR
+				}
+				has_global_flag = scw_over
+			}
+		}
+		timeout_effect = {
+			add_political_power = -50
+		}
+
+	}
+
 	object_to_attaches = {
 
 		allowed = {

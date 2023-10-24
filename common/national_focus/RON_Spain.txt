@@ -10,14 +10,13 @@ focus_tree = {
 	}
 
 	default = no 
- reset_on_civilwar = no
 	reset_on_civilwar = no
 
 	continuous_focus_position = {
 		x = 200
 		y = 3000
 	}
-
+	shared_focus = SPA_for_king_and_country
 
 	###############################################################################################################################
 	###############################################################################################################################
@@ -38,6 +37,9 @@ focus_tree = {
 			date > 1932.12.31
 			date < 1949.1.1
 			has_global_flag = test_features
+		}
+		available = {
+			date < 1936.1.1
 		}
 		completion_reward = {
 
@@ -248,7 +250,8 @@ focus_tree = {
 	focus = {
 		id = SPA_CEDA
 		relative_position_id = SPR_1936_elections
-		x = -2
+		icon = GFX_goal_SPR_establish_traditional_cortes
+		x = -7
 		y = 1
 		available = {
 			hidden_trigger = {
@@ -349,7 +352,7 @@ focus_tree = {
 	focus= {
 		id = SPA_unify_factions
 		relative_position_id = SPA_meeting_with_the_monarchists
-		x = -1
+		x = -4
 		y = 1
 		available = {
 			has_global_flag = spanish_civil_war
@@ -366,126 +369,202 @@ focus_tree = {
 		cost = 7
 	}
 	focus = {
-		id = SPA_for_king_and_country
+		id = SPA_strengthen_caudillo
 		relative_position_id = SPA_unify_factions
-		available = {
-			has_global_flag = spanish_civil_war
-		}
-		cost = 5
-		x = 2
-		y = 0
-		prerequisite = { focus = SPA_meeting_with_the_monarchists }
-		mutually_exclusive = { focus = SPA_unify_factions }
-		completion_reward = {
-			SPB = {
-				add_political_power = 50
-			}
-			SPF = {
-				add_political_power = 50
-			}
-			SPA = {
-				add_days_mission_timeout = {
-					mission = SPR_carlist_rise
-					days = -50
-				}
-			}
+		x = 0
+		y = 1
+		prerequisite = { focus = SPA_unify_factions}
+
+	}
+	focus = {
+		id = SPA_opposition_repression
+		relative_position_id = SPA_strengthen_caudillo
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = SPA_strengthen_caudillo
 		}
 	}
 	focus = {
-		id = SPB_SPF_put_our_differences_aside
-		relative_position_id = SPA_for_king_and_country
-		x = 0
+		id = SPA_propaganda_campaigns
+		relative_position_id = SPA_strengthen_caudillo
+		x = 1
 		y = 1
-		prerequisite = {focus = SPA_for_king_and_country}
-		available = {
-			OR = {
-				tag = SPF
-				tag = SPB
-			}
-			has_global_flag = SPB_has_risen
-			has_global_flag = SPF_has_risen
-			OR = {
-				has_war_with = SPF
-				has_war_with = SPB
-			}
+		prerequisite = { focus = SPA_strengthen_caudillo}
+	}
+	focus = {
+		id = SPA_land_reforms
+		relative_position_id = SPA_strengthen_caudillo
+		x = 0
+		y = 2
+		prerequisite = { 
+			focus = SPA_propaganda_campaigns
+			focus = SPA_opposition_repression	
 		}
-		bypass = {
-			has_global_flag = SPB_has_risen
-			has_global_flag = SPF_has_risen
-			NOT = {
-				OR = {
-					country_exists = SPF
-					country_exists = SPB
-				}
-			}
+	}
+	focus = {
+		id = SPA_suppress_local_autonomy
+		relative_position_id = SPA_propaganda_campaigns
+		x = 1
+		y = 1
+		prerequisite = {focus = SPA_propaganda_campaigns}
+	}
+	focus = {
+		id = SPA_education_reforms
+		relative_position_id = SPA_opposition_repression
+		x = -1
+		y = 1
+		prerequisite = { focus = SPA_opposition_repression}
+
+	}
+	focus = {
+		id = SPA_take_back_factory_control
+		relative_position_id = SPA_education_reforms
+		x = 1
+		y = 1
+		prerequisite= { focus = SPA_education_reforms}
+	}
+	focus = {
+		id = SPA_reorganize_church
+		relative_position_id = SPA_suppress_local_autonomy
+		x = -1
+		y = 1
+		prerequisite= { focus = SPA_suppress_local_autonomy}
+	}
+	focus = {
+		id = SPA_Nationalist_victory
+		relative_position_id = SPA_reorganize_church
+		x = -1
+		y = 1
+		available = {
 			has_global_flag = scw_over
 		}
-		completion_reward = {
-			SPB = {
-				remove_civil_war_target = SPF
-			}
-			SPF = {
-				remove_civil_war_target = SPB
-			}
-			SPF = {
-				white_peace = SPB
-			}
-			create_faction = SPA_MONARCHIST_FACTION
-			if = {
-				limit = {
-					tag = SPF
-				}
-				add_to_faction = SPB
-			}
-			if = {
-				limit = {
-					tag = SPB
-				}
-				add_to_faction = SPF
-			}
-		}
+		prerequisite = { focus = SPA_reorganize_church}
+		prerequisite = { focus = SPA_take_back_factory_control}
+		prerequisite = { focus = SPA_land_reforms}
 	}
-	focus = {
-		id = SPB_SPF_remind_italy
+	#  focus = {
+	#  	id = SPA_for_king_and_country
+	#  	relative_position_id = SPA_unify_factions
+	#  	available = {
+	#  		has_global_flag = spanish_civil_war
+	#  	}
+	#  	cost = 5
+	#  	x = 2
+	#  	y = 0
+	#  	prerequisite = { focus = SPA_meeting_with_the_monarchists }
+	#  	mutually_exclusive = { focus = SPA_unify_factions }
+	#  	completion_reward = {
+	#  		SPB = {
+	#  			add_political_power = 50
+	#  		}
+	#  		SPF = {
+	#  			add_political_power = 50
+	#  		}
+	#  		SPA = {
+	#  			add_days_mission_timeout = {
+	#  				mission = SPR_carlist_rise
+	#  				days = -50
+	#  			}
+	#  		}
+	#  	}
+	#  }
+	# focus = {
+	# 	id = SPB_SPF_put_our_differences_aside
+	# 	relative_position_id = SPA_for_king_and_country
+	# 	x = 0
+	# 	y = 1
+	# 	prerequisite = {focus = SPA_for_king_and_country}
+	# 	available = {
+	# 		OR = {
+	# 			tag = SPF
+	# 			tag = SPB
+	# 		}
+	# 		has_global_flag = SPB_has_risen
+	# 		has_global_flag = SPF_has_risen
+	# 		OR = {
+	# 			has_war_with = SPF
+	# 			has_war_with = SPB
+	# 		}
+	# 	}
+	# 	bypass = {
+	# 		has_global_flag = SPB_has_risen
+	# 		has_global_flag = SPF_has_risen
+	# 		NOT = {
+	# 			OR = {
+	# 				country_exists = SPF
+	# 				country_exists = SPB
+	# 			}
+	# 		}
+	# 		has_global_flag = scw_over
+	# 	}
+	# 	completion_reward = {
+	# 		SPB = {
+	# 			remove_civil_war_target = SPF
+	# 		}
+	# 		SPF = {
+	# 			remove_civil_war_target = SPB
+	# 		}
+	# 		SPF = {
+	# 			white_peace = SPB
+	# 		}
+	# 		create_faction = SPA_MONARCHIST_FACTION
+	# 		if = {
+	# 			limit = {
+	# 				tag = SPF
+	# 			}
+	# 			add_to_faction = SPB
+	# 		}
+	# 		if = {
+	# 			limit = {
+	# 				tag = SPB
+	# 			}
+	# 			add_to_faction = SPF
+	# 		}
+	# 	}
+	# }
+	# focus = {
+	# 	id = SPB_SPF_remind_italy
 
-		available = {
-			OR = {
-				tag = SPF
-				tag = SPB
-			}
+	# 	available = {
+	# 		OR = {
+	# 			tag = SPF
+	# 			tag = SPB
+	# 		}
 
-		}
-		bypass = {
-			OR = {
-				SPB = {
-					has_completed_focus = SPB_SPF_remind_italy
-				}
-				SPF = {
-					has_completed_focus = SPB_SPF_put_our_differences_aside
-				}
-			}
-		}
-		x = 0
-		y = 1
-		relative_position_id = SPB_SPF_put_our_differences_aside
-		completion_reward = {
-			ITA = {
-				country_event = ww2_spain.7
-			}
-		}
-		prerequisite = {
-			focus = SPB_SPF_put_our_differences_aside
-		}
-	}
+	# 	}
+	# 	bypass = {
+	# 		OR = {
+	# 			SPB = {
+	# 				has_completed_focus = SPB_SPF_remind_italy
+	# 			}
+	# 			SPF = {
+	# 				has_completed_focus = SPB_SPF_put_our_differences_aside
+	# 			}
+	# 		}
+	# 	}
+	# 	x = 0
+	# 	y = 1
+	# 	relative_position_id = SPB_SPF_put_our_differences_aside
+	# 	completion_reward = {
+	# 		ITA = {
+	# 			country_event = ww2_spain.7
+	# 		}
+	# 	}
+	# 	prerequisite = {
+	# 		focus = SPB_SPF_put_our_differences_aside
+	# 	}
+	# }
 	focus = {
 		id = SPR_popular_front
+		icon = GFX_goal_spr_democracy_in_our_country
 		relative_position_id = SPR_1936_elections
 		available = {
 			hidden_trigger = {
 				always = no
 			}
 		}
-		x = 2
+		x = 4
 		y = 1
 		prerequisite = {focus = SPR_1936_elections}
 		mutually_exclusive = { focus = SPA_CEDA}
@@ -570,6 +649,9 @@ focus_tree = {
 		y = 1
 		prerequisite = { focus = SPR_disarm_the_military}
 		mutually_exclusive = { focus = SPR_no_masters}
+		completion_reward = {
+			add_political_power = -20
+		}
 	}
 	focus = {
 		id = SPR_sending_the_federal_reserves
@@ -577,7 +659,162 @@ focus_tree = {
 		x = 0
 		y = 1
 		prerequisite = { focus = SPR_foreign_help}
+		completion_reward = {
+			custom_effect_tooltip = SPR_sending_the_federal_reserves_decision_tooltip
+		}
 		
+	}
+	focus = {
+		id = SPR_international_brigades
+		relative_position_id = SPR_sending_the_federal_reserves
+		x = -1
+		y = 1
+		prerequisite = { focus = SPR_sending_the_federal_reserves}
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			division_template = {
+    			name = "International Brigades"
+    			is_locked = yes
+    			division_cap = 2
+    
+    			priority = 0
+    			template_counter = 0
+    			regiments = {
+        			infantry = { x = 0 y = 0 }
+        			infantry = { x = 0 y = 1 }
+        			infantry = { x = 0 y = 2 }
+        			infantry = { x = 0 y = 3 }
+   				}
+    
+			}
+			random_controlled_state = {
+				create_unit = {
+    				division = "name = \"International Brigade 1\" division_template = \"International Brigades\" start_experience_factor = 0.1"
+    				owner = SPR
+				}
+				create_unit = {
+    				division = "name = \"International Brigade 2\" division_template = \"International Brigades\" start_experience_factor = 0.1"
+    				owner = SPR
+				}
+			}
+			SOV = {
+				country_event = {id = ww2_spain.9}
+			}
+		}
+	}
+	focus = {
+		id = SPR_training_camps
+		relative_position_id = SPR_sending_the_federal_reserves
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = { focus = SPR_sending_the_federal_reserves }
+		completion_reward = {
+			remove_ideas = SPR_dispersed_combat_groups
+		}
+	}
+	focus = {
+		id = SPR_crackdown_on_extremist_commies
+		relative_position_id = SPR_international_brigades
+		x = -1
+		y = 1
+		prerequisite = { focus = SPR_international_brigades }
+		mutually_exclusive = { focus = SPR_soviet_councils}
+		available = {
+			NOT = {
+				any_country = {
+					AND = {
+						has_government= communism
+						has_country_flag = received_reserves_from_SPR
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = has_less_commie_than_non_comie_volunteer
+				set_temp_variable = {commie_volunteer = 0}
+				set_temp_variable = {non_commie_volunteer = 0}
+				all_country = {
+					if = {
+						limit = {has_government = communism}
+
+						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_government = communism
+							}
+						}
+						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+				}
+				SPR = { 
+					OR = {
+						check_variable = { non_commie_volunteer > commie_volunteer}
+						check_variable = { non_commie_volunteer = commie_volunteer}
+					}
+				}
+			}
+		}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_POUM_rise
+				days = 100
+			}
+		}
+	}
+	focus = {
+		id = SPR_soviet_councils
+		relative_position_id = SPR_international_brigades
+		x = 1
+		y = 1
+		prerequisite = { focus = SPR_international_brigades }
+		mutually_exclusive = { focus = SPR_crackdown_on_extremist_commies}
+		available = {
+			NOT = {
+				any_country = {
+					AND = {
+						NOT= { has_government= communism }
+						has_country_flag = received_reserves_from_SPR
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = has_more_commie_than_non_comie_volunteer
+				set_temp_variable = {commie_volunteer = 0}
+				set_temp_variable = {non_commie_volunteer = 0}
+				all_country = {
+					if = {
+						limit = {has_government = communism}
+
+						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_government = communism
+							}
+						}
+						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+				}
+				SPR = { 
+					OR = {
+						check_variable = { non_commie_volunteer < commie_volunteer}
+						check_variable = { non_commie_volunteer = commie_volunteer}
+					}
+				}
+			}
+		}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_POUM_rise
+				days = -25
+			}
+		}
 	}
 	focus = {
 		id = SPR_no_masters
@@ -586,7 +823,14 @@ focus_tree = {
 		y = 1
 		prerequisite = { focus = SPR_disarm_the_military}
 		mutually_exclusive = { focus = SPR_foreign_help}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_anarchist_rise
+				days = -20
+			}
+		}
 	}
+	
 #The Will of the People
 	focus = {
 		id = SPR1933_the_will_of_the_people
