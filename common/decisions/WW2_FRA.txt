@@ -4,10 +4,8 @@ propaganda_campaigns = {
         days_remove = 150
         cost = 20
         visible = {
-            OR = {
-				tag = FRA
-			
-			}
+           
+			tag = FRA
 			has_capitulated = yes
 			OR = {
 				has_war_with = VIC
@@ -18,12 +16,7 @@ propaganda_campaigns = {
             hidden_trigger = {
                 OR = {
 					is_debug = yes
-                    check_variable = { propaganda_poster_left_frame = 1}
-                    check_variable = { propaganda_poster_left_frame = 0}
-                    check_variable = { propaganda_poster_center_frame = 1 }
-                    check_variable = { propaganda_poster_center_frame = 0 }
-                    check_variable = { propaganda_poster_right_frame = 1 }
-                    check_variable = { propaganda_poster_right_frame = 0 }
+                    has_slot_available_for_propaganda = yes
                 }
             }
         }
@@ -52,47 +45,12 @@ propaganda_campaigns = {
 					}
 				}
 			}
-            if = {
-                limit = {
-                    OR = {
-                        check_variable = { propaganda_poster_left_frame = 1 }
-                        check_variable = { propaganda_poster_left_frame = 0 }
-                    }
-                }
-                set_variable = { propaganda_poster_left_frame = 3}
-            }
-            else_if = {
-                limit = {
-                    OR = {
-                        check_variable = { propaganda_poster_center_frame = 1 }
-                        check_variable = { propaganda_poster_center_frame = 0 }
-                    }
-                }
-                set_variable = { propaganda_poster_center_frame = 3}
-            }
-            else_if = {
-                limit = {
-                    OR = {
-                        check_variable = { propaganda_poster_right_frame = 1 }
-                        check_variable = { propaganda_poster_right_frame = 0 }
-                    }
-                }
-                set_variable = { propaganda_poster_right_frame = 3}
-            }
+			set_temp_variable = { poster_frame = 3 }
+            create_propaganda = yes
         }
         remove_effect = {
-            if = {
-                limit = { check_variable = { propaganda_poster_left_frame = 3 }}
-                set_variable = { propaganda_poster_left_frame = 1 }
-            }
-            if = {
-                limit = { check_variable = { propaganda_poster_center_frame = 3 }}
-                set_variable = { propaganda_poster_center_frame = 1}
-            }
-            if = {
-                limit = { check_variable = { propaganda_poster_right_frame = 3 }}
-                set_variable = { propaganda_poster_right_frame = 1 }
-            }
+            set_temp_variable = { poster_frame = 3 }
+            clear_propaganda_poster = yes
         }
         modifier = {
             WEEKLY_MANPOWER = 1000
@@ -104,6 +62,9 @@ propaganda_campaigns = {
 		days_remove = 90
 		cost = 25
 		visible = {
+			tag = FRA
+			has_war_together_with = USA
+			has_war_together_with = ENG
 			
 		}
 		available = {
@@ -113,6 +74,12 @@ propaganda_campaigns = {
                     has_slot_available_for_propaganda = yes
                 }
             }
+			any_enemy_country = {
+				AND = {
+					is_major = yes
+					surrender_progress > 0.1
+				}
+			}
         }
         complete_effect = {
             set_temp_variable = { poster_frame = 4 }
@@ -126,6 +93,383 @@ propaganda_campaigns = {
             war_support_factor = 0.1
             army_attack_factor = 0.1
         }
+	}
+	FRA_entre_le_marteau_et_lenclume = {
+		days_remove = 100
+		cost = 45
+		visible = {
+			tag = FRA
+			has_capitulated = yes
+		}
+		available = {
+			has_slot_available_for_propaganda = yes
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 5}
+			create_propaganda = yes
+			
+			
+			if = {
+				limit = { 
+					country_exists = VIC
+				}
+				VIC = {
+					set_temp_variable = { poster_frame = 5}
+					create_propaganda = yes
+				}
+			}
+			if = {
+				limit = {
+					country_exists = VIF
+				}
+				VIF = {
+					set_temp_variable = { poster_frame = 5}
+					create_propaganda = yes
+				}
+			}
+			every_core_state = {
+				limit = {
+					NOT = {
+						is_controlled_by_ROOT_or_ally = yes
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = FRA_french_resistance
+					days = 100
+				}
+			}
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 5 }
+			clear_propaganda_poster = yes
+		}
+		
+	}
+	FRA_un_seul_combat = {
+		days_remove = 80
+		cost = 50
+		visible = {
+			has_capitulated = yes
+			tag = FRA
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 6 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster = 6 }
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			industrial_capacity_factor = 0.1
+		}
+	}
+	FRA_pour_la_defense_de_lempire = {
+		days_remove = 120
+		cost = 100
+		visible = {
+			tag = FRA
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 7}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 7}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			non_core_manpower = 0.05
+			army_defence_factor = 0.05
+		}
+	}
+	FRA_trois_couleurs_un_drapeau = {
+		days_remove = 150
+		cost = 120
+		visible = {
+			tag = FRA
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 8}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 8}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			resistance_decay = 0.05
+		}
+	}
+	VIC_ils_donnent_leur_sang= {
+		days_remove = 100
+		cost = 50
+		visible = {
+			OR = {
+				tag = VIC
+				tag = VIF
+			}
+			has_government = fascism
+			GER = {
+				has_government = fascism
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 9}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = {poster_frame = 9}
+			clear_propaganda_poster = yes
+		}
+		targeted_modifier = {
+			tag = GER
+			cic_to_target_factor = 0.1
+			mic_to_target_factor = 0.1
+		}
+	}
+	VIC_vous_ne_prendrez_rien = {
+		days_remove = 75
+		cost = 30
+		visible = {
+			OR= {
+				tag = VIC
+				tag = VIF
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 10}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 10}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			industrial_capacity_dockyard = 0.2
+		}
+		targeted_modifier = {
+			tag = FRA
+			exiled_government_weekly_manpower = -1000
+		}
+	}
+	VIC_taisons_nous = {
+		days_remove = 50
+		cost = 20
+		visible = {
+			OR = {
+				tag = VIC
+				tag = VIF
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 11}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 11}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			stability_factor = 0.1
+		}
+	}
+	VIC_communisme_ennemi_de_la_france = {
+		days_remove = 70
+		cost = 25
+		visible = {
+			OR = {
+				tag = VIC
+				tag = VIF
+			}
+			NOT = {
+				has_government = communism
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 12}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 12}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			communism_drift = -0.03
+			communism_acceptance = -50
+		}
+	}
+	VIC_police_nationale = {
+		days_remove = 100
+		cost = 50
+		visible = {
+			OR = {
+				tag = VIC
+				tag = VIF
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 13}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 13}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			resistance_activity = -0.1
+			resistance_target = -0.2
+		}
+	}
+	VIC_au_secours = {
+		days_remove = 120
+		cost = 50
+		visible = {
+			OR = {
+				tag = VIF
+				tag = VIC
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 14}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 14}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			country_resource_aluminium = 10
+			country_resource_tungsten = 2
+			political_power_gain = -0.2
+		}
+	} 
+	VIC_revolution_nationale = {
+		days_remove = 150
+		cost = 20
+		visible = {
+			OR = {
+				tag = VIF
+				tag = VIC
+			}
+			has_government = fascism
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 15}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 15}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			war_support_factor = 0.1
+			stability_factor = 0.15
+		}
+	}
+	VIC_infanterie_nouvelle = {
+		days_remove = 180
+		cost = 60
+		visible = {
+			OR = {
+				tag = VIF
+				tag = VIC
+			}
+			has_war = yes
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 16}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 16}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			recruitable_population_factor = 0.01
+		}
+	}
+	VIC_legions_volontaires_francais = {
+		days_remove = 150
+		cost = 50
+		visible = {
+			OR = {
+				tag = VIF
+				tag = VIC
+			}
+			has_government = fascism
+			GER = {
+				has_war_with = SOV
+			}
+			SOV = {
+				has_government = communism
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 17}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 17}
+			clear_propaganda_poster = yes
+		}
+		targeted_modifier = {
+			tag = SOV
+			attack_bonus_against = 0.2
+		}
+		targeted_modifier = {
+			tag = GER
+			weekly_manpower = 1000 
+		}
+	}
+	VIC_legions_tricolores = {
+		days_remove = 90
+		cost = 45
+		visible = {
+			OR = {
+				tag = VIF
+				tag = VIC
+			}
+			has_war = yes
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 18}
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 18}
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			army_attack_factor = 0.1
+			army_core_attack_factor = 0.05
+			army_core_defence_factor = 0.05
+		}
+	}
+	VIC_entre_le_marteau_et_lenclume = {
+		days_mission_timeout = 100
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		is_good = no
+		
+		timeout_effect = {
+			effect_tooltip = {
+				every_state = {
+					limit = {
+						has_dynamic_modifier = {
+							modifier = FRA_french_resistance
+						}
+					}
+					remove_dynamic_modifier = { modifier = FRA_french_resistance }
+				}
+			}
+		}
 	}
 	VIC_appel_aux_francais = {
 		
