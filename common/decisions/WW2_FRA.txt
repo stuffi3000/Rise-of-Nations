@@ -1,3 +1,152 @@
+propaganda_campaigns = {
+	FRA_appel_aux_francais = {
+		
+        days_remove = 150
+        cost = 20
+        visible = {
+            OR = {
+				tag = FRA
+			
+			}
+			has_capitulated = yes
+			OR = {
+				has_war_with = VIC
+				has_war_with = VIF
+			}
+        }
+        available = {
+            hidden_trigger = {
+                OR = {
+					is_debug = yes
+                    check_variable = { propaganda_poster_left_frame = 1}
+                    check_variable = { propaganda_poster_left_frame = 0}
+                    check_variable = { propaganda_poster_center_frame = 1 }
+                    check_variable = { propaganda_poster_center_frame = 0 }
+                    check_variable = { propaganda_poster_right_frame = 1 }
+                    check_variable = { propaganda_poster_right_frame = 0 }
+                }
+            }
+        }
+        complete_effect = {
+			if = {
+				limit = {
+					country_exists = VIC
+				}
+				VIC = {
+					activate_mission = VIC_appel_aux_francais
+					add_dynamic_modifier = {
+						modifier = FRA_propaganda_against_VIC
+						days = 150
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = VIF
+				}
+				VIF = {
+					activate_mission = VIC_appel_aux_francais
+					add_dynamic_modifier = {
+						modifier = FRA_propaganda_against_VIC
+						days = 150
+					}
+				}
+			}
+            if = {
+                limit = {
+                    OR = {
+                        check_variable = { propaganda_poster_left_frame = 1 }
+                        check_variable = { propaganda_poster_left_frame = 0 }
+                    }
+                }
+                set_variable = { propaganda_poster_left_frame = 3}
+            }
+            else_if = {
+                limit = {
+                    OR = {
+                        check_variable = { propaganda_poster_center_frame = 1 }
+                        check_variable = { propaganda_poster_center_frame = 0 }
+                    }
+                }
+                set_variable = { propaganda_poster_center_frame = 3}
+            }
+            else_if = {
+                limit = {
+                    OR = {
+                        check_variable = { propaganda_poster_right_frame = 1 }
+                        check_variable = { propaganda_poster_right_frame = 0 }
+                    }
+                }
+                set_variable = { propaganda_poster_right_frame = 3}
+            }
+        }
+        remove_effect = {
+            if = {
+                limit = { check_variable = { propaganda_poster_left_frame = 3 }}
+                set_variable = { propaganda_poster_left_frame = 1 }
+            }
+            if = {
+                limit = { check_variable = { propaganda_poster_center_frame = 3 }}
+                set_variable = { propaganda_poster_center_frame = 1}
+            }
+            if = {
+                limit = { check_variable = { propaganda_poster_right_frame = 3 }}
+                set_variable = { propaganda_poster_right_frame = 1 }
+            }
+        }
+        modifier = {
+            WEEKLY_MANPOWER = 1000
+            recruitable_population_factor = 0.05
+        }
+    
+	}
+	FRA_la_victoire_est_certaine = {
+		days_remove = 90
+		cost = 25
+		visible = {
+			
+		}
+		available = {
+            hidden_trigger = {
+                OR = {
+					is_debug = yes
+                    has_slot_available_for_propaganda = yes
+                }
+            }
+        }
+        complete_effect = {
+            set_temp_variable = { poster_frame = 4 }
+			create_propaganda = yes
+        }
+        remove_effect = {
+			set_temp_variable = { poster_frame = 4 }
+            clear_propaganda_poster = yes
+        }
+        modifier = {
+            war_support_factor = 0.1
+            army_attack_factor = 0.1
+        }
+	}
+	VIC_appel_aux_francais = {
+		
+		days_mission_timeout = 150
+		activation = {
+			always = no
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		is_good = no
+		
+		timeout_effect = {
+			effect_tooltip = {
+				remove_dynamic_modifier = { modifier = FRA_propaganda_against_VIC }
+			}
+		}
+	}
+}
 FRA_vichy_france = {
 
 	FRA_scuttle_the_fleet = {
