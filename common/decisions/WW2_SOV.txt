@@ -5,7 +5,491 @@
 ### #  # ###   ##  ###   #  #  #   #      #  # #### ####  ##   ##  #  #  #  ###  ##  #  #
 
 #Category only allowed for SOV
+propaganda_campaigns = {
+	SOV_propaganda_motherland_calls = { # ID = 3
+		priority = 2
 
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1
+				surrender_progress > 0.4
+			}
+			modifier = {
+				add = 10
+				has_manpower < 500000
+			}
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		modifier = {
+			weekly_manpower = 1000
+			training_time_factor = -0.1
+			minimum_training_level = -0.1
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		
+		complete_effect = {
+			set_temp_variable = { poster_frame = 3 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 3 }
+			clear_propaganda_poster = yes
+		}
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			has_war = yes
+			any_enemy_country = {
+				is_major = yes
+			}
+		}
+	}
+	SOV_propaganda_victory_at_hand = { # fID = 4
+		priority = 3
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 1
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			has_war = yes
+			surrender_progress < 0.01
+			any_enemy_country = {
+				is_major = yes
+				ROOT = {
+					any_controlled_state = {
+						is_core_of = PREV.PREV
+					}
+				}
+			}
+			
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		modifier = {
+			army_attack_factor = 0.05
+			army_speed_factor = 0.1
+			org_loss_when_moving = -0.05
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 4 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 4 }
+			clear_propaganda_poster = yes
+		}
+	}
+	SOV_propaganda_defend_moscow = { # ID = 5
+		priority = 4
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 500
+		}
+	
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			controls_state = 219 #Moscow
+			219 = {
+				any_neighbor_state = {
+					controller = {
+						has_war_with = ROOT
+					}
+				}
+			}
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		
+		complete_effect = {
+			set_temp_variable = { poster_frame = 5 }
+			create_propaganda = yes
+			219 = { #Moscow
+				add_dynamic_modifier = { modifier = SOV_defend_moscow scope = SOV }
+				every_neighbor_state = {
+					add_dynamic_modifier = { modifier = SOV_defend_moscow scope = SOV }
+				}
+			}
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 5 }
+			clear_propaganda_poster = yes
+			219 = { #Moscow
+				remove_dynamic_modifier = { modifier = SOV_defend_moscow }
+				every_neighbor_state = {
+					remove_dynamic_modifier = { modifier = SOV_defend_moscow }
+				}
+			}
+		}
+	}
+	SOV_propaganda_fight_to_the_last = { # ID = 6
+		priority = 5
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 0.75
+			modifier = {
+				factor = 10
+				OR = {
+					AND = {
+						stockpile_ratio = {
+							archetype = train_equipment
+							ratio < 0.75
+						}
+						stockpile_ratio = {
+							archetype = motorized_equipment
+							ratio < 0.75
+						}
+					}
+					stockpile_ratio = {
+						archetype = convoy
+						ratio < 5
+					}
+				}
+			}
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+			has_war = yes
+			surrender_progress > 0.1
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		
+		complete_effect = {
+			set_temp_variable = { poster_frame = 6 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 6 }
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			army_org_factor = 0.05
+			out_of_supply_factor = -0.1
+			no_supply_grace = 70
+		}
+	}
+	SOV_propaganda_hit_of_hammer = { # ID = 7
+		priority = 6
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 10
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			has_war = yes
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		
+		complete_effect = {
+			set_temp_variable = { poster_frame = 7 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 7 }
+			clear_propaganda_poster = yes
+		}
+		modifier = {
+			industrial_capacity_factory = 0.05
+			industrial_capacity_dockyard = 0.05
+		}
+	}
+	SOV_propaganda_transport = { # ID = 8
+		priority = 7
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 0.7
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		modifier = {
+			production_speed_supply_node_factor = 0.15
+			production_speed_rail_way_factor = 0.15
+			supply_consumption_factor = -0.1
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 8 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 8 }
+			clear_propaganda_poster = yes
+		}
+	}
+	SOV_propaganda_oil_for_the_motherland = { # ID = 9
+		priority = 8
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 1
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			any_controlled_state = {
+				has_resources_amount = {
+					resource = oil
+					amount > 0
+				}
+			}
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		modifier = {
+			fuel_gain_factor = 0.1
+			army_fuel_consumption_factor = -0.1
+			air_fuel_consumption_factor = -0.1
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 9 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 9 }
+			clear_propaganda_poster = yes
+		}
+	}
+	SOV_propaganda_more_metal = { # ID = 10
+		priority = 9
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 0.8
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			any_controlled_state = {
+				OR = {
+					has_resources_amount = {
+						resource = steel
+						amount > 0
+					}
+					has_resources_amount = {
+						resource = aluminium
+						amount > 0
+					}
+					has_resources_amount = {
+						resource = chromium
+						amount > 0
+					}
+					has_resources_amount = {
+						resource = tungsten
+						amount > 0
+					}
+				}
+			}
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		complete_effect = {
+			set_temp_variable = { poster_frame = 10 }
+			create_propaganda = yes
+			hidden_effect = {
+				capital_scope = {
+					set_variable = { SOV_steel_bonus = 0 }
+					set_variable = { SOV_aluminium_bonus = 0 }
+					set_variable = { SOV_chromium_bonus = 0 }
+					set_variable = { SOV_tungsten_bonus = 0 }
+				}
+				every_controlled_state = {
+					limit = {
+						has_resources_amount = {
+							resource = steel
+							amount > 0
+						}
+					}
+					capital_scope = { add_to_variable = { SOV_steel_bonus = 1 } }
+				}
+
+				every_controlled_state = {
+					limit = {
+						has_resources_amount = {
+							resource = aluminium
+							amount > 0
+						}
+					}
+					capital_scope = { add_to_variable = { SOV_aluminium_bonus = 1 } }
+				}
+
+				every_controlled_state = {
+					limit = {
+						has_resources_amount = {
+							resource = chromium
+							amount > 0
+						}
+					}
+					capital_scope = { add_to_variable = { SOV_chromium_bonus = 1 } }
+				}
+
+				every_controlled_state = {
+					limit = {
+						has_resources_amount = {
+							resource = tungsten
+							amount > 0
+						}
+					}
+					capital_scope = { add_to_variable = { SOV_tungsten_bonus = 1 } }
+				}
+			}
+
+			capital_scope = {
+				add_dynamic_modifier = { modifier = SOV_increased_metals_production }
+			}
+
+			custom_effect_tooltip = SOV_propaganda_more_metal_tt
+		}
+		remove_effect = {
+			capital_scope = {
+				remove_dynamic_modifier = { modifier = SOV_increased_metals_production }
+			}
+			set_temp_variable = { poster_frame = 9 }
+			clear_propaganda_poster = yes
+		}
+	}
+	SOV_propaganda_high_yield = { # ID = 11
+		priority = 10
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 10
+		}
+		allowed = {
+			original_tag = SOV
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			surrender_progress < 0.15
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+		modifier = {
+			consumer_goods_factor = -0.15
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 11 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 11 }
+			clear_propaganda_poster = yes
+		}
+	}
+	SOV_propaganda_for_the_motherland = { # ID = 12
+		priority = 11
+
+		icon = eng_propaganda_campaigns
+
+		ai_will_do = {
+			base = 1
+			modifier = {
+				factor = 10
+				has_manpower < 300000
+			}
+			modifier = {
+				factor = 2
+				OR = {
+					command_power < 25
+					has_army_experience < 25
+				}
+			}
+		}
+		allowed = {
+			original_tag = SOV
+		}
+		cost = 50
+		days_remove = 180
+		days_re_enable = 90
+
+		modifier = {
+			experience_gain_army_factor = 0.1
+			command_power_gain_mult = 0.15
+			breakthrough_factor = 0.075
+		}
+
+		available = {
+			has_slot_available_for_propaganda = yes
+
+			has_war = yes
+			any_enemy_country = {
+				is_major = yes
+			}
+		}
+		complete_effect = {
+			set_temp_variable = { poster_frame = 12 }
+			create_propaganda = yes
+		}
+		remove_effect = {
+			set_temp_variable = { poster_frame = 12 }
+			clear_propaganda_poster = yes
+		}
+	}
+}
 economy_decisions = {
 	join_the_comecon = {
 		
