@@ -1,3 +1,172 @@
+AI_paradrops = {
+	paradrop_in_FROM = {
+		visible = {
+			has_global_flag = test_features
+			ROOT = {
+				is_major = yes
+				has_war_with = FROM.CONTROLLER
+				has_tech = paratroopers
+			}
+			any_enemy_country = {
+				FROM = {
+					is_controlled_by = PREV
+				}
+			}
+			FROM = {
+				NOT = {
+					has_state_flag = paradrop
+				}
+			 	check_variable = {
+			 		days_since_last_strategic_bombing < 1
+			 	}
+			}
+			ROOT = {
+			 	any_country_division = {
+			 		division_has_battalion_in_template = paratrooper
+			 	}
+			}
+			
+		}
+		available = {
+			NOT = {
+				has_country_flag = is_paradropping
+			}
+		}
+		target_trigger = {
+			
+		}
+		state_target = yes
+		
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0.8
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 100
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 200
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 200
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 400
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0.2
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 400
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 500
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 500
+    					type = fighter
+					}
+				}
+			}
+			
+		}
+		cancel_trigger = {
+			FROM = {
+					
+				check_variable = {
+					days_since_last_strategic_bombing > 1
+				}
+			}
+			ROOT = {
+				NOT = {
+					has_war_with = FROM.CONTROLLER
+				}
+			}
+		}
+		complete_effect = {
+			ROOT = {
+				set_country_flag = is_paradropping
+			}
+			FROM = {
+				set_state_flag = paradrop
+			}
+			FROM.CONTROLLER = {
+				set_variable = { state_ai_paradrop = FROM.id}
+			}
+		}
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				clr_state_flag = paradrop
+			}
+			if = {
+				limit ={
+					ROOT = {
+						NOT = { has_template = "Paratroopers AI"}
+					}
+				}
+				division_template = {
+  					name = "Paratroopers AI"
+					division_cap = 5
+  					is_locked = yes
+  					priority = 2
+  					regiments = {
+  					    paratrooper = { x = 0 y = 0 }
+  					    paratrooper = { x = 0 y = 1 }
+  					    paratrooper = { x = 0 y = 2 }
+  					   
+  					}
+				}
+			}
+			FROM = {
+				create_unit = {
+   					division = "name = \"Artie\" division_template = \"Paratroopers AI\" start_manpower_factor = 0.3"
+   					owner = ROOT
+   					count = 1
+   					allow_spawning_on_enemy_provs = yes
+    			}
+			}
+			ROOT = {
+				clr_country_flag = is_paradropping
+			}
+			FROM.CONTROLLER = {
+				clear_variable = state_ai_paradrop
+			}
+		}
+		cancel_effect = {
+			ROOT = {clr_country_flag = is_paradropping}
+			FROM.CONTROLLER = {
+				clear_variable = state_ai_paradrop
+			}
+			FROM = {
+				clr_state_flag = paradrop
+			}
+		}
+	} 
+}
 generic_maritime_blockade = {
 	blockade_timer = {
 		is_good = yes
