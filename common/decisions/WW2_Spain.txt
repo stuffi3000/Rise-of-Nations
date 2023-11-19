@@ -1,3 +1,313 @@
+SPR_spanish_neutrality = {
+    SPR_wheat_shipment = {
+        icon = GFX_wheat_icon
+        is_good = yes
+        days_mission_timeout = 60
+        activation = {
+            has_country_flag = receives_wheat_shipment
+        }
+        visible = {
+            original_tag = SPR
+            has_country_flag = receives_wheat_shipment
+        }
+        cancel_trigger = {
+            hidden_trigger = {
+                NOT = {
+                    has_country_flag = receives_wheat_shipment
+                }
+            }
+        }
+        allowed = {
+            hidden_trigger = {always = no}
+        }
+        timeout_effect = {
+            custom_effect_tooltip = SPR_wheat_shipment_tt
+        }
+    }
+    SPR_end_wheat_shipment = {
+        cost = 20
+        icon = GFX_wheat_icon
+        allowed = {
+            NOT = {
+                original_tag = SPR
+            }
+        }
+        visible = {
+            SPR = {
+                has_country_flag = receives_wheat_shipment
+            }
+            has_country_flag = is_sending_wheat
+        }
+        available = {
+            if = {
+                limit = {
+                    has_country_flag = promise_wheat_shipment
+                }
+                has_war_with = SPR
+            }
+        }
+        completion_reward = {
+            clr_country_flag = is_sending_wheat
+            SPR = {
+                clr_country_flag = receives_wheat_shipment
+            }
+        }
+    }
+    ship_wheat_to_SPR = {
+        cost = 50
+        allowed = {
+            NOT = {
+                original_tag = SPR
+            }
+        }
+        visible = {
+            SPR = {
+                NOT = {
+                    has_country_flag = receives_wheat_shipment
+                }
+            }
+        }
+        completion_reward = {
+            set_country_flag = is_sending_wheat
+            SPR = {
+                set_country_flag = receives_wheat_shipment
+            }
+        }
+    }
+    cut_market_access_to_ENG = {
+        fire_only_once = yes
+        icon = tungsten
+        cost = 50
+        allowed = {
+            original_tag = SPR
+        }
+        complete_effect = {
+            custom_effect_tooltip = allies_will_get_embargo_tt
+            hidden_effect = {
+                every_country = {
+                    limit = {
+                        is_in_faction_with = ENG
+                    }
+                    ROOT = {
+                        send_embargo = PREV
+                    }
+                }
+            }
+            subtract_from_variable = { allies_opinion = 20}
+        }
+    }
+    cut_market_access_to_GER = {
+        icon = tungsten
+        fire_only_once = yes
+        cost = 50
+        allowed = {
+            original_tag = SPR
+        }
+        complete_effect = {
+            hidden_effect = {
+                every_country = {
+                    limit = {
+                        is_in_faction_with = GER
+                    }
+                    ROOT = {
+                        send_embargo = PREV
+                    }
+                }
+                
+            }
+            custom_effect_tooltip = axis_will_get_embargo_tt
+            subtract_from_variable = { axis_opinion = 20}
+        }
+    }
+    SPR_Defensa_Pirenaica = {
+        icon = border_war
+        target_trigger = {
+            FROM = {
+                OR = {
+                    state = 166
+                    state = 165
+                    state = 1053
+                    state = 172
+                }
+            }
+        }
+        visible = {
+            has_completed_focus = SPA_remain_neutral
+
+            check_variable = {
+                axis_opinion < -4
+            }
+        }
+        complete_effect = {
+            if = {
+                limit = {
+                    FROM = {
+                        state = 166
+                    }
+                }
+                FROM = {
+                    add_province_modifier = {
+	                    static_modifiers = { SPR_defensa_pirenaica_modifier }
+	                    province = {
+	                    	id = 11838
+	                    	id = 915
+                            id = 899
+                    	}
+
+
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        state = 1053
+                    }
+                }
+                FROM = {
+                    add_province_modifier = {
+	                    static_modifiers = { SPR_defensa_pirenaica_modifier }
+	                    province = {
+                            id = 3931
+                	    }
+
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        state = 172
+                    }
+                }
+                FROM = {
+                    add_province_modifier = {
+	                    static_modifiers = { SPR_defensa_pirenaica_modifier }
+	                    province = {
+                            id = 3737
+                	    }
+
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    FROM = {
+                        state = 165
+                    }
+                }
+                FROM = {
+                    add_province_modifier = {
+	                    static_modifiers = { SPR_defensa_pirenaica_modifier }
+	                    province = {
+                            id = 3899
+                            id = 3898
+                            id = 11779
+                	    }
+                    }
+
+                }
+            }
+        }
+        state_target = yes
+    }
+    SPR_blue_division_mission = {
+        fire_only_once = yes
+        activation = {
+            always = no
+        }
+        icon = generic_ignite_civil_war
+        cancel_trigger = {
+            OR = {
+                GER = {
+                    has_volunteers_amount_from = {
+    				    tag = ROOT
+    				    count > 0
+				    }
+                }
+                has_war = yes
+            }
+        }
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        allowed = {
+            original_tag = SPR
+        }
+        days_mission_timeout = 45
+
+        timeout_effect = {
+            subtract_from_variable = { axis_opinion = 5}
+            add_political_power = -20
+            custom_effect_tooltip = SPR_blue_division_mission_tt
+
+        }
+    }
+    SPR_prepare_plan_felix = {
+        fire_only_once = yes
+        cost = 20
+        icon = generic_civil_support
+        allowed = {
+            original_tag = SPR
+        }
+        visible = {
+            has_completed_focus = SPA_plan_with_germans
+        }
+        fire_only_once = yes
+        days_remove = 120
+        remove_effect = {
+            GER = {
+                country_event = { id = ww2_spain.19 }
+            }
+        }
+    }
+    SPR_prepare_plan_felix_mission = {
+        days_mission_timeout = 120
+        icon = generic_army_support
+        activation = {
+            #always = no
+        }
+        visible = {
+            original_tag = SPR
+        }
+        available = {
+            hidden_trigger = { always = no}
+        }
+        cancel_trigger = {
+            if = {
+                limit = {
+                    has_global_flag = GER_supports_felix
+                }
+                GER = {
+                    has_war = yes
+                    OR = {
+                        
+                        has_capitulated = yes
+                        surrender_progress > 0.5
+                    }
+                }
+            }
+            if = {
+                limit = {
+                    NOT = {
+                        has_global_flag = GER_supports_felix
+                    }
+                }
+                always = no
+            }
+        }
+        war_with_on_timeout = 118.OWNER
+        timeout_effect = {
+            create_wargoal = {
+                target = 118.OWNER
+                type = take_claimed_state
+                generator = { 118 }
+            }
+        }
+    }
+}
 SPR_recolonisation_cat = {
     SPR_recolonise = {
         icon =generic_army_support
