@@ -41,6 +41,87 @@ characters = {
 			ideology = stalinism
 		}
 	}
+	lev_trotsky = {
+		name = "Leon Trotsky"
+		portraits = {
+			civilian = {
+				large = "gfx/leaders/SOV/Portrait_Leon_Trotsky.dds"
+			}
+			army = {
+				large = "gfx/leaders/SOV/WW1/Portrait_Russia_Leon_Trotsky_army.dds"
+				small = "gfx/interface/ideas/SOV/idea_SOV_leon_trotsky.dds"
+			}
+		}
+		allowed_civil_war = { 
+			OR = {
+				AND = {
+					tag = SOV 
+					has_government = communism
+				}
+				AND = {
+					SOV_is_exiles = yes 
+					has_government = communism 
+				}
+			}
+		}
+		advisor = {
+			slot = political_advisor
+			idea_token = lev_trotsky
+			allowed = {
+				original_tag = SOV
+			}
+			on_add = {
+				if = {
+					limit = {	has_global_flag = AAT_trotsky_in_mexico }
+					set_global_flag = flag_trotsky_returning_to_ussr_from_mexico
+					MEX = { country_event = { id = mexico.22 } }		
+				}
+				else_if = {
+					limit = { has_global_flag = NOR_trotsky_in_norway }
+					set_global_flag = flag_trotsky_returning_to_ussr_from_norway
+					set_global_flag = NOR_trotsky_in_soviet
+					clr_global_flag = NOR_trotsky_in_norway
+					NOR = { country_event = { id = mexico.22 } }
+				}
+			}
+			
+			visible = {
+				NOT = {
+					has_character_flag = SOV_character_purged_flag 
+				}
+				NOT = {
+					has_global_flag = trotsky_dead
+				}
+			}
+			available = {
+				is_country_leader = no
+				if = {
+					limit = {
+						has_character_flag = SOV_exiled_flag
+					}
+					NOT = { has_character_flag = SOV_exiled_flag }
+				}
+			}
+			traits = {
+				pc_military_naval_affairs
+			}
+		}
+		field_marshal={
+			traits={ media_personality harsh_leader defensive_doctrine organisational_leader inspirational_leader }
+			skill=3
+			attack_skill=4
+			defense_skill=2
+			planning_skill=5
+			logistics_skill=3
+			legacy_id=85042
+			visible = {
+				has_government = communism
+				is_country_leader = no	
+				has_war = yes
+				date < 1930.1.1
+			}
+		}
+	}
     mikhail_kalinin = {
         name = "Mikhail Kalinin"
         portraits = {
@@ -478,7 +559,12 @@ characters = {
 	}
 	SOV_mikhail_tukhachevsky = {
 		name = "Mikhail Tukhachevsky"
-		#picture = mikhail_tukhachevsky
+		portraits = {
+			army = {
+				large = "gfx/leaders/SOV/Portrait_Soviet_Mikhail_Tukhachevsky.dds"
+				small = "gfx/interface/ideas/idea_SOV_mikhail_tukhachevsky.dds"
+			}
+		}
 		advisor = {
 			slot = army_chief
 			idea_token = mikhail_tukhachevsky2
@@ -531,6 +617,96 @@ characters = {
 			# PURGED
 			traits = {
 				mass_assault_expert
+			}
+		}
+	}
+	SOV_vladimir_antonov_ovseenko = {
+		name = "Vladimir Antonov-Ovseenko"
+		portraits = {
+			army = {
+				large = "gfx/leaders/SOV/WW1/Portrait_Vladimir_Antonov-Ovseenko.dds"
+			}
+			civilian = {
+				small = "gfx/interface/ideas/SOV/idea_SOV_vladimir_ovseenko.dds"
+			}
+		}
+		advisor = {
+			slot = army_chief
+			idea_token = SOV_vladimir_antonov_ovseenko
+			allowed = {
+				original_tag = SOV
+			}
+			visible = {
+				date < 1949.2.10
+			}
+			available = {
+				date < 1949.2.10
+			}
+			cost = 150
+			traits = {
+				army_chief_offensive_2
+			}
+		}
+		field_marshal={
+			traits={ media_personality inspirational_leader }
+			skill=2
+			attack_skill=2
+			defense_skill=2
+			planning_skill=3
+			logistics_skill=3
+			legacy_id=85042
+			visible = {
+				has_government = communism	
+				date < 1930.1.1
+			}
+		}
+	}
+	SOV_mikhail_frunze = {
+		name = "Mikhail Frunze"
+		portraits = {
+			army = {
+				large = "gfx/leaders/SOV/WW1/Portrait_Russia_Mikhail_Frunze.dds"
+			}
+		}
+		advisor = {
+			idea_token = SOV_mikhail_frunze
+			slot = army_chief
+			allowed = {
+				original_tag = SOV
+			}
+			visible = {
+				date < 1925.1.11
+			}
+			available = {
+				date < 1925.1.11
+				
+				hidden_trigger = {
+					NOT = {
+						any_other_country = {
+							has_war_with = SOV
+							original_tag = SOV
+							has_character = SOV_mikhail_frunze
+						}
+					}
+				}
+			}
+			traits = {
+				army_chief_reform_2
+			}
+			ai_will_do = {
+				factor = 3
+			}
+		}
+		field_marshal={
+			traits={ politically_connected brilliant_strategist old_guard }
+			skill=3
+			attack_skill=4
+			defense_skill=2
+			planning_skill=3
+			logistics_skill=3
+			visible = {
+				date < 1925.1.11	
+				has_government = communism
 			}
 		}
 	}
@@ -693,6 +869,26 @@ characters = {
 			}
 			traits = {
 				military_theorist
+			}
+		}
+	}
+	SOV_pavel_dybenko = {
+		name = "Pavel Dybenko"
+		portraits = {
+			army = {
+				large = "gfx/leaders/SOV/WW1/Portrait_Russia_Pavel_Dybenko.dds"
+			}
+		}
+		corps_commander={
+			traits = { harsh_leader inflexible_strategist }
+			skill = 2
+			attack_skill = 4
+			defense_skill = 1
+			planning_skill = 2
+			logistics_skill = 2
+			visible = {
+				date < 1946.1.11	
+				has_government = communism
 			}
 		}
 	}
