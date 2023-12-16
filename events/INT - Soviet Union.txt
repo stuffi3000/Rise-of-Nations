@@ -1099,14 +1099,8 @@ country_event = {
 		has_war_with = EST
 		EST = {
 			OR = {
-				AND = {
-					date > 1919.8.20
-					has_capitulated = no
-				}
-				AND = {
-					191 = { is_fully_controlled_by = EST }
-					has_capitulated = no
-				}
+				date > 1920.2.2
+				has_capitulated = no
 			}
 		}
 	}
@@ -1120,7 +1114,7 @@ country_event = {
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.46.a
+		name = interwar_soviet.46.b
 		ai_chance = { factor = 0 }
 	}
 }
@@ -1139,17 +1133,8 @@ country_event = {
 		tag = SOV
 		has_war_with = LIT
 		LIT = {
-			OR = {
-				AND = {
-					date > 1920.2.2
-					has_capitulated = no
-				}
-				AND = {
-					controls_state = 784
-					11 = { is_fully_controlled_by = LIT }
-					has_capitulated = no
-				}
-			}
+			date > 1919.8.30
+			has_capitulated = no
 		}
 	}
 
@@ -1158,11 +1143,14 @@ country_event = {
 	option = { #yes we want peace
 		name = interwar_soviet.47.a
 		ai_chance = { factor = 100 }
-		LIT = { country_event = { id = INT_baltics.1 days = 1 } }
+		LIT = { 
+			country_event = { id = INT_baltics.1 days = 1}
+			give_military_access = SOV
+		}
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.47.a
+		name = interwar_soviet.47.b
 		ai_chance = { factor = 0 }
 	}
 }
@@ -1177,20 +1165,11 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		NOT = { date > 1932.12.1 }
 		tag = SOV
 		has_war_with = LAT
 		LAT = {
-			OR = {
-				AND = {
-					date > 1920.8.11
-					has_capitulated = no
-				}
-				AND = {
-					12 = { is_fully_controlled_by = LAT }
-					has_capitulated = no
-				}
-			}
+			date > 1920.8.11
+			has_capitulated = no
 		}
 	}
 
@@ -1203,7 +1182,73 @@ country_event = {
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.48.a
+		name = interwar_soviet.48.b
 		ai_chance = { factor = 0 }
+	}
+}
+
+#Pavel Dybenko's fate
+country_event = {
+	id = interwar_soviet.49
+	title = interwar_soviet.49.t
+	desc = interwar_soviet.49.d
+	picture = GFX_report_event_dybenko
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = {
+			has_character = SOV_pavel_dybenko
+		}
+		has_war = yes
+		date > 1919.8.1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = { #the man is needed
+		name = interwar_soviet.49.a
+		ai_chance = { factor = 0 }
+		
+		set_country_flag = SOV_dybenko_general
+		add_stability = -0.02
+		recruit_character = SOV_pavel_dybenko
+	}
+
+	option = { #fuck him
+		name = interwar_soviet.49.b
+		ai_chance = { factor = 100 }
+	}
+}
+
+#Dybenko fucking up
+country_event = {
+	id = interwar_soviet.50
+	title = interwar_soviet.50.t
+	desc = interwar_soviet.50.d
+	picture = GFX_report_event_dybenko
+
+	fire_only_once = yes
+
+	trigger = {
+		has_character = SOV_pavel_dybenko
+		has_war = yes
+		TAG = SOV
+		controls_state = 137
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = { #Fuck.
+		name = interwar_soviet.50.a
+		
+		add_stability = -0.05
+		add_manpower = -1000
+	}
+	option = { #Stop this loon
+		name = interwar_soviet.50.b
+		
+		retire_character = SOV_pavel_dybenko
+		add_manpower = -10000
 	}
 }
