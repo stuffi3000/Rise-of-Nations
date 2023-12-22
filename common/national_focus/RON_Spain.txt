@@ -306,42 +306,6 @@ focus_tree = {
 		}
 	}
 	focus = {
-		id = SPA_meeting_with_the_monarchists
-		relative_position_id = SPA_prepare_troops
-		icon = dangerous_deal
-		x = 1
-		y = 1
-		prerequisite = { focus = SPA_prepare_troops focus = SPA_elite_troops }
-		bypass = { has_global_flag = spanish_civil_war}
-		cost = 7
-		completion_reward = {
-			add_to_variable = {spa_civil_war_divisions_counter_var = 5}
-			custom_effect_tooltip = will_spawn_monarchist_units_tt
-			add_timed_idea = {
-				idea = SPR_temporar_unity
-				days = 140
-			}
-			set_country_flag = SPA_meeting_with_the_monarchists_completed
-
-		}
-	}
-	focus = {
-		id = SPA_elite_troops
-		relative_position_id = SPA_CEDA
-		x = 1
-		y = 1
-		prerequisite = { focus = SPA_CEDA}
-		bypass = { has_global_flag = spanish_civil_war}
-		cost = 7
-		completion_reward = {
-			set_variable = {290.scw_color = 2}
-			SPR = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 5 } }
-			SPR = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 5 } }
-			custom_effect_tooltip = will_secure_the_army_of_africa_tt
-			set_country_flag = SPA_elite_troops_completed
-		}
-	}
-	focus = {
 		id = SPA_prepare_troops
 		icon = GFX_focus_ron_MEX_politicised_army
 		relative_position_id = SPA_CEDA
@@ -387,6 +351,43 @@ focus_tree = {
 			set_country_flag = SPA_prepare_troops_completed
 		}
 	}
+	focus = {
+		id = SPA_meeting_with_the_monarchists
+		relative_position_id = SPA_prepare_troops
+		icon = dangerous_deal
+		x = 1
+		y = 1
+		prerequisite = { focus = SPA_prepare_troops focus = SPA_elite_troops }
+		bypass = { has_global_flag = spanish_civil_war}
+		cost = 7
+		completion_reward = {
+			add_to_variable = {spa_civil_war_divisions_counter_var = 5}
+			custom_effect_tooltip = will_spawn_monarchist_units_tt
+			add_timed_idea = {
+				idea = SPR_temporar_unity
+				days = 140
+			}
+			set_country_flag = SPA_meeting_with_the_monarchists_completed
+
+		}
+	}
+	focus = {
+		id = SPA_elite_troops
+		relative_position_id = SPA_CEDA
+		x = 1
+		y = 1
+		prerequisite = { focus = SPA_CEDA}
+		bypass = { has_global_flag = spanish_civil_war}
+		cost = 7
+		completion_reward = {
+			set_variable = {290.scw_color = 2}
+			SPR = { add_to_variable = { var = spa_civil_war_divisions_counter_var value = 5 } }
+			SPR = { subtract_from_variable = { var = spr_civil_war_divisions_counter_var value = 5 } }
+			custom_effect_tooltip = will_secure_the_army_of_africa_tt
+			set_country_flag = SPA_elite_troops_completed
+		}
+	}
+	
 	focus= {
 		id = SPA_unify_factions
 		icon = national_unity
@@ -630,6 +631,7 @@ focus_tree = {
 		id = SPA_meet_petain
 		icon = GFX_align_to_france
 		relative_position_id = SPA_mediterranean_pact
+		prerequisite = { focus = SPA_mediterranean_pact}
 		x = -1
 		y = 1
 		
@@ -637,6 +639,7 @@ focus_tree = {
 	focus = {
 		id = SPA_meet_benito_2
 		icon = GFX_align_to_italy2
+		prerequisite = { focus = SPA_mediterranean_pact}
 		relative_position_id = SPA_mediterranean_pact
 		x = 1
 		y = 1
@@ -1022,6 +1025,73 @@ focus_tree = {
 
 	}
 	focus = {
+		id = SPR_autonomy_status
+		icon = constitution
+		relative_position_id = SPR_crackdown_on_extremist_commies
+		x = 1
+		y = 1
+		prerequisite = { 
+			focus = SPR_crackdown_on_extremist_commies
+			focus = SPR_soviet_councils
+		}
+		cost = 2
+		completion_reward = {
+			custom_effect_tooltip = SPR_autonomy_status_tt
+		}
+
+	}
+	focus = {
+		id = SPR_crackdown_on_extremist_commies
+		icon = GFX_Anti_Communist
+		relative_position_id = SPR_international_brigades
+		x = -1
+		y = 1
+		prerequisite = { focus = SPR_international_brigades }
+		mutually_exclusive = { focus = SPR_soviet_councils}
+		available = {
+			NOT = {
+				any_country = {
+					AND = {
+						has_government= communism
+						has_country_flag = received_reserves_from_SPR
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = has_less_commie_than_non_comie_volunteer
+				set_temp_variable = {commie_volunteer = 0}
+				set_temp_variable = {non_commie_volunteer = 0}
+				all_country = {
+					if = {
+						limit = {has_government = communism}
+
+						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+					if = {
+						limit = {
+							NOT = {
+								has_government = communism
+							}
+						}
+						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
+					}
+				}
+				SPR = { 
+					OR = {
+						check_variable = { non_commie_volunteer > commie_volunteer}
+						check_variable = { non_commie_volunteer = commie_volunteer}
+					}
+				}
+			}
+		}
+		completion_reward = {
+			add_days_mission_timeout = {
+				mission = SPR_POUM_rise
+				days = 100
+			}
+		}
+	}
+	focus = {
 		icon = GFX_align_to_france
 		id = SPR_andorran_pact
 		prerequisite = { focus = SPR_autonomy_status}
@@ -1084,57 +1154,7 @@ focus_tree = {
 		}
 
 	}
-	focus = {
-		id = SPR_crackdown_on_extremist_commies
-		icon = GFX_Anti_Communist
-		relative_position_id = SPR_international_brigades
-		x = -1
-		y = 1
-		prerequisite = { focus = SPR_international_brigades }
-		mutually_exclusive = { focus = SPR_soviet_councils}
-		available = {
-			NOT = {
-				any_country = {
-					AND = {
-						has_government= communism
-						has_country_flag = received_reserves_from_SPR
-					}
-				}
-			}
-			custom_trigger_tooltip = {
-				tooltip = has_less_commie_than_non_comie_volunteer
-				set_temp_variable = {commie_volunteer = 0}
-				set_temp_variable = {non_commie_volunteer = 0}
-				all_country = {
-					if = {
-						limit = {has_government = communism}
-
-						add_to_temp_variable = {SPR.commie_volunteer = SPR.num_volunteer_received_from_@THIS}
-					}
-					if = {
-						limit = {
-							NOT = {
-								has_government = communism
-							}
-						}
-						add_to_temp_variable = {SPR.non_commie_volunteer = SPR.num_volunteer_received_from_@THIS}
-					}
-				}
-				SPR = { 
-					OR = {
-						check_variable = { non_commie_volunteer > commie_volunteer}
-						check_variable = { non_commie_volunteer = commie_volunteer}
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_days_mission_timeout = {
-				mission = SPR_POUM_rise
-				days = 100
-			}
-		}
-	}
+	
 	focus = {
 		id = SPR_soviet_councils
 		icon = communism5
@@ -1186,22 +1206,7 @@ focus_tree = {
 			}
 		}
 	}
-	focus = {
-		id = SPR_autonomy_status
-		icon = constitution
-		relative_position_id = SPR_crackdown_on_extremist_commies
-		x = 1
-		y = 1
-		prerequisite = { 
-			focus = SPR_crackdown_on_extremist_commies
-			focus = SPR_soviet_councils
-		}
-		cost = 2
-		completion_reward = {
-			custom_effect_tooltip = SPR_autonomy_status_tt
-		}
-
-	}
+	
 	focus = {
 		id = SPR_no_masters
 		icon = destroy_establishment
@@ -1228,6 +1233,7 @@ focus_tree = {
 	focus = {
 		id = SPR_wartime_defense_council
 		relative_position_id = SPR_preparing_the_uprise
+		icon = GFX_SIA_thaiculturalrevolution
 		x = -1
 		y = 1
 		prerequisite = {
@@ -1247,6 +1253,7 @@ focus_tree = {
 	focus = {
 		id = SPR_seize_public_transport
 		relative_position_id = SPR_preparing_the_uprise
+		icon = army_logistics
 		x = 1
 		y = 1
 		prerequisite = {
@@ -1254,7 +1261,19 @@ focus_tree = {
 		}
 	}
 	focus = {
+		id = SPR_anarchist_propaganda
+		icon = propaganda
+		x = 1
+		y = 1
+		relative_position_id = SPR_wartime_defense_council
+		prerequisite = {
+			focus = SPR_seize_public_transport
+			focus = SPR_wartime_defense_council
+		}
+	}
+	focus = {
 		id = SPR_anarchist_fighters
+		icon = GFX_focus_spr_no_pasaran
 		relative_position_id = SPR_anarchist_propaganda
 		x = -1
 		y = 1
@@ -1263,6 +1282,7 @@ focus_tree = {
 	}
 	focus = {
 		id = SPR_anarchist_workers
+		icon = GFX_goal_Focus_Socialist_Worker
 		relative_position_id = SPR_anarchist_propaganda
 		x = 1
 		y = 1
@@ -1272,6 +1292,7 @@ focus_tree = {
 	focus = {
 		id = SPR_red_spain
 		relative_position_id = SPR_anarchist_fighters
+		icon = GFX_focus_bo_ansyns
 		x = 1
 		y = 1
 		prerequisite = {
@@ -1282,16 +1303,7 @@ focus_tree = {
 			focus = SPR_anarchist_workers
 		}
 	}
-	focus = {
-		id = SPR_anarchist_propaganda
-		x = 1
-		y = 1
-		relative_position_id = SPR_wartime_defense_council
-		prerequisite = {
-			focus = SPR_seize_public_transport
-			focus = SPR_wartime_defense_council
-		}
-	}
+	
 	focus = {
 		id = SPR_ressource_collectivisation
 		x = 1
@@ -1311,6 +1323,7 @@ focus_tree = {
 	}
 	focus = {
 		id = SPR_autarky_economy
+		icon = GFX_focus_bo_closed_trade
 		x = 0
 		y = 1
 		relative_position_id = SPR_revolution_to_the_utmost
@@ -3838,30 +3851,6 @@ focus_tree = {
 			add_ideas = Instalaza_SA
 		}
 	}
-
-	focus = {
-		id = SPR_Research
-		icon = GFX_focus_research
-		prerequisite = { focus = SPR_Colonial_Forts }
-		relative_position_id = SPR_Colonial_Forts
-		x = 0
-		y = 1
-		cost = 10
-		ai_will_do = {
-			factor = 10
-		}
-
-		completion_reward = {
-			remove_ideas = SPA_recovering_from_civil_war 
-			add_research_slot = 1
-			set_rule = {
-				can_not_declare_war = no
-				can_declare_war_on_same_ideology = yes
-			}
-		}
-	}
-
-
 	focus = {
 		id = SPR_Colonial_Forts
 		icon = GFX_goal_generic_construct_military
@@ -3919,6 +3908,30 @@ focus_tree = {
 			}
 		}
 	}
+	focus = {
+		id = SPR_Research
+		icon = GFX_focus_research
+		prerequisite = { focus = SPR_Colonial_Forts }
+		relative_position_id = SPR_Colonial_Forts
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+
+		completion_reward = {
+			remove_ideas = SPA_recovering_from_civil_war 
+			add_research_slot = 1
+			set_rule = {
+				can_not_declare_war = no
+				can_declare_war_on_same_ideology = yes
+			}
+		}
+	}
+
+
+	
 
 	focus = {
 		id = SPR_Mil
