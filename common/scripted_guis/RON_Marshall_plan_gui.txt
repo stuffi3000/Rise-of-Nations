@@ -1,0 +1,108 @@
+scripted_gui = {
+
+	usa_marshall_plan_gui = {
+		context_type = decision_category
+		window_name = "usa_marshall_plan_ui_window"
+
+		properties = {
+			flag_USA = {
+				image = "[?USA.GetFlag]"
+			}
+			entry_flag = {
+	 			image = "[This.GetFlag]"
+	 		}
+		}
+		triggers = {
+			add_button_click_enabled = {
+				check_variable = { ROOT.marshall_plan_assigned_factories > 0}
+			}
+			subtract_button_click_enabled = {
+				check_variable = { THIS.marshall_plan_received_factories > 0}
+			}
+			subtract_button_usa_click_enabled = {
+				check_variable = { ROOT.marshall_plan_assigned_factories > 0}
+			}
+		}
+		effects = {
+			add_button_usa_click = {
+				add_to_variable = { ROOT.marshall_plan_assigned_factories = 1}
+				add_to_variable = { ROOT.total_MP_factories_spent = 1 }
+				if = {
+					limit = {
+						NOT = {
+							OR = {
+								has_dlc = "Waking the Tiger"
+								has_dlc = "La Resistance"
+							}
+							
+							 
+						}
+					}
+					random_core_state = {
+						limit = {
+							industrial_complex > 0
+						}
+						remove_building = {
+    						type = industrial_complex
+    						level = 1
+						}
+						add_to_variable = { marshall_plan_factory = 1 }
+					}
+					
+				}
+			}
+			subtract_button_usa_click = {
+				subtract_from_variable = { ROOT.marshall_plan_assigned_factories = 1}
+				subtract_from_variable = { ROOT.total_MP_factories_spent = 1 }
+				if = {
+					limit = {
+						NOT = {
+							OR = {
+								has_dlc = "Waking the Tiger"
+								has_dlc = "La Resistance"
+							}
+							
+							 
+						}
+					}
+					random_core_state = {
+						limit = {
+							check_variable = { marshall_plan_factory > 0 }
+						}
+						add_building_construction = {
+    						type = industrial_complex
+    						level = 1
+							instant_build = yes
+						}
+						subtract_from_variable = { marshall_plan_factory = 1 }
+					}
+					
+				}
+			}
+			add_button_click = {
+				add_to_variable = { THIS.marshall_plan_received_factories = 1}
+				subtract_from_variable = {ROOT.marshall_plan_assigned_factories = 1}
+				THIS = {
+					add_offsite_building = { type = arms_factory level = 1 }
+				}
+			}
+			subtract_button_click = {
+				subtract_from_variable = {THIS.marshall_plan_received_factories = 1}
+				add_to_variable = {ROOT.marshall_plan_assigned_factories = 1}
+				THIS = {
+					add_offsite_building = { type = arms_factory level = -1 }
+				}
+			}
+		}
+		dynamic_lists = {
+	 		marshall_plan_receiver_gridbox = {
+	 			array = global.marshall_plan_receiver
+	 			entry_container = marshall_member_list_entry
+	 			change_scope = yes
+			}
+		}
+		
+	}
+
+}
+
