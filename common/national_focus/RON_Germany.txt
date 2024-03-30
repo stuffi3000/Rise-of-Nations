@@ -20252,6 +20252,10 @@ focus_tree = {
 		ai_will_do = {
 			factor = 10
 		}
+		completion_reward = {
+			add_political_power = 150
+
+		}
 	}
 	focus = {
 		id = GER_communist_neutrality
@@ -27676,7 +27680,2681 @@ focus_tree = {
 			add_stability = -0.03
 		}
 	}
+#########################################COTF#################################################################################
+ 
 
+	focus = {
+		id = GER_roter_morgen
+		icon = GFX_Communist_War
+		x = 20
+		y = 0
+		relative_position_id = GER_consolidate_the_left
+
+		cost = 10
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+			NOT = {
+				has_completed_focus = GER_legit_hitler
+			}
+		}
+		available = {
+			has_completed_focus = GER_proletarian_economy
+			has_completed_focus = GER_nva
+			is_puppet = no
+			has_war = no
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+ 
+		completion_reward = {
+			add_stability = 0.1
+			add_political_power = 120
+			add_manpower = -25000
+			add_popularity = {
+				ideology = communism
+				popularity = 0.35
+			}
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = no
+			}
+			add_timed_idea = {
+				idea = GER_clamp_down_on_fascism
+				days = 730
+			}
+			if = {
+				limit = {
+					NOT = { owns_state = 85 }
+					OR = {
+						owns_state = 5
+						owns_state = 763
+						owns_state = 188
+					}
+				}
+				custom_effect_tooltip = will_lose_east_prussia
+				hidden_effect = {
+					every_state = {
+						limit = {
+							is_core_of = GER
+						}
+						add_core_of = GRR
+					}
+					GRR = { inherit_technology = ROOT }
+					if = {
+						limit = {
+							5 = {
+								CONTROLLER = {
+									original_tag = GER
+								}
+							}
+						}
+						GRR = {
+							transfer_state = 5
+						}
+					}
+					if = {
+						limit = {
+							763 = {
+								CONTROLLER = {
+									original_tag = GER
+								}
+							}
+						}
+						GRR = {
+							transfer_state = 763
+						}
+					}
+					if = {
+						limit = {
+							188 = {
+								CONTROLLER = {
+									original_tag = GER
+								}
+							}
+						}
+						GRR = {
+							transfer_state = 188
+						}
+					}
+					GRR = {
+						set_cosmetic_tag = GER_german_empire
+						set_stability = 0.9
+						set_war_support = 0.8
+						set_party_name = {
+							ideology = democratic
+							long_name = GER_democratic_party
+							name = GER_democratic_party
+						}
+						set_politics = {
+							ruling_party = neutrality
+							elections_allowed = no
+						}
+						add_popularity = {
+							ideology = democratic
+							popularity = 0.25
+						}
+						add_popularity = {
+							ideology = neutrality
+							popularity = 0.50
+						}
+						add_popularity = {
+							ideology = communism
+							popularity = -1
+						}
+						create_country_leader = {
+							name = "Konrad Adenauer"
+							desc = "POLITICS_KONRAD_ADENAUER_DESC"
+							picture = "Portrait_Germany_Konrad_Adenauer.dds"
+							expire = "1965.1.1"
+							ideology = conservatism
+							traits = {
+								anti_communist
+							}
+						}
+						create_country_leader = {
+							name = "Wilhelm III"
+							desc = "POLITICS_WILHELM_III_DESC"
+							picture = GFX_portrait_ger_wilhelm_iii
+							expire = "1965.1.1"
+							ideology = monarchism
+							traits = {
+								popular_figurehead2
+								fascist_sympathies2
+							}
+						}
+						create_country_leader = {
+							name = "Wilhelm III"
+							desc = "POLITICS_WILHELM_III_DESC"
+							picture = GFX_portrait_ger_wilhelm_iii
+							expire = "1965.1.1"
+							ideology = rexism
+							traits = {
+								popular_figurehead2
+								fascist_sympathies2
+							}
+						}
+					}
+				}
+			}
+			hidden_effect = {
+				set_global_flag = wont_annex_grr
+				set_cosmetic_tag = GER_commie
+				create_country_leader = {
+					name = "Red Junta"
+					desc = ""
+					picture = "gfx/leaders/GER2/communist_red_junta.tga"
+					expire = "1956.1.1"
+					ideology = stalinism
+					traits = {
+						
+					}
+				}
+				kill_ideology_leader = neutrality
+				every_unit_leader = {
+					set_nationality = GRR
+				}
+				news_event = jos_news.61
+			}
+			custom_effect_tooltip = will_lose_generals
+		}
+	}
+
+	focus = {
+		id = GER_rebuild_germany2
+		icon = GFX_goal_generic_soviet_construction
+		x = 0
+		y = 1
+		relative_position_id = GER_roter_morgen
+		prerequisite = { focus = GER_roter_morgen }
+
+		cost = 10
+
+		available = {
+			has_country_flag = GER_has_commie_support
+			is_puppet = no
+			has_war = no
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_timed_idea = { idea = GER_rebuild_the_nation_com days = 365 }
+			add_ideas = GER_national_revitalization_com
+		}
+	}
+
+	focus = {
+		id = GER_peoples_militias
+		icon = GFX_Communist_Militia
+		prerequisite = { focus = GER_rebuild_germany2 }
+		available = {
+		}
+		x = -2
+		y = 2
+		relative_position_id = GER_roter_morgen
+		cost = 5
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_idea = GER_national_revitalization_com
+						has_idea = GER_national_revitalization3_com
+					}
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = GER_national_revitalization_com
+						add_idea = GER_national_revitalization2_com
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_idea = GER_national_revitalization_com
+				}
+				swap_ideas = {
+					remove_idea =GER_national_revitalization_com
+					add_idea = GER_national_revitalization2_com
+				}
+			}
+			if = {
+				limit = {
+					has_idea = GER_national_revitalization3_com
+				}
+				swap_ideas = {
+					remove_idea = GER_national_revitalization3_com
+					add_idea = GER_national_revitalization4_com
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_german_red_army
+		icon = GFX_PRC_Mass_Assault
+		x = 0
+		y = 2
+		relative_position_id = GER_roter_morgen
+		prerequisite = { focus = GER_rebuild_germany2 }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = german_red_army
+			create_field_marshal = {
+				name = "Ernst Thälmann"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_GER_ernst_thalmann.tga"
+				traits = {
+					organizer
+					war_hero
+					infantry_leader
+					media_personality
+					trait_SPR_stalinist_loyalties
+				}
+				id = 193333
+				skill = 4
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 4
+				logistics_skill = 3
+			}
+			create_field_marshal = {
+				name = "Karl Korsch"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_GER_Karl_Korsch.tga"
+				traits = {
+					organizer
+					war_hero
+					skilled_staffer
+					media_personality
+					trait_SPR_anti_stalinist_loyalties
+				}
+				id = 193335
+				skill = 4
+				attack_skill = 2
+				defense_skill = 4
+				planning_skill = 3
+				logistics_skill = 4
+			}
+			create_corps_commander = {
+				name = "Willy Leow"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Willy_Leow.tga"
+				traits = {
+					war_hero
+					infantry_leader
+					media_personality
+					trait_SPR_stalinist_loyalties
+				}
+				id = 193334
+				skill = 3
+				attack_skill = 3
+				defense_skill = 2
+				planning_skill = 2
+				logistics_skill = 3
+			}
+			create_corps_commander = {
+				name = "Vincenz Müller"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Generic_land_3.dds"
+				traits = {
+					trait_mountaineer
+				}
+				skill = 3
+				attack_skill = 2
+				defense_skill = 2
+				planning_skill = 4
+				logistics_skill = 2
+			}
+			create_corps_commander = {
+				name = "Ludwig Renn"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Generic_land_2.dds"
+				traits = {
+					career_officer
+					war_hero
+					urban_assault_specialist
+				}
+				skill = 3
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 3
+				logistics_skill = 1
+			}
+			create_corps_commander = {
+				name = "Hans Kahle"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Generic_land_1.dds"
+				traits = {
+					trait_engineer
+				}
+				skill = 3
+				attack_skill = 4
+				defense_skill = 2
+				planning_skill = 3
+				logistics_skill = 1
+			}
+			create_corps_commander = {
+				name = "Wilhelm Zaisser"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Generic_land_5.dds"
+				traits = {
+					career_officer hill_fighter
+				}
+				skill = 3
+				attack_skill = 3
+				defense_skill = 2
+				planning_skill = 3
+				logistics_skill = 2
+			}
+			create_corps_commander = {
+				name = "Willi Bredel"
+				desc = ""
+				portrait_path = "gfx/leaders/GER/Portrait_Germany_Generic_land_4.dds"
+				traits = {
+					skilled_staffer
+				}
+				skill = 2
+				attack_skill = 2
+				defense_skill = 2
+				planning_skill = 2
+				logistics_skill = 1
+			}
+			if = {
+				limit = { has_dlc = "La Resistance" }
+				create_operative_leader = {
+					name = "Olga Benário"
+					portrait_path = "gfx/leaders/BRA/Portrait_BRA_Olga_Benario.tga"
+					traits = {
+						operative_tough operative_commando operative_demolition_expert
+					}
+					bypass_recruitment = no
+					available_to_spy_master = no
+					nationalities = { GER BRA }
+					female = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_workers_of_germany_unite
+		icon = GFX_focus_YUG_pan_slavic_congress
+		prerequisite = { focus = GER_rebuild_germany2 }
+		available = {
+		}
+		x = 2
+		y = 2
+		relative_position_id = GER_roter_morgen
+		cost = 5
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_idea = GER_national_revitalization_com
+						has_idea = GER_national_revitalization2_com
+					}
+				}
+				effect_tooltip = {
+					swap_ideas = {
+						remove_idea = GER_national_revitalization_com
+						add_idea = GER_national_revitalization3_com
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_idea = GER_national_revitalization_com
+				}
+				swap_ideas = {
+					remove_idea = GER_national_revitalization_com
+					add_idea = GER_national_revitalization3_com
+				}
+			}
+			if = {
+				limit = {
+					has_idea = GER_national_revitalization2_com
+				}
+				swap_ideas = {
+					remove_idea = GER_national_revitalization2_com
+					add_idea = GER_national_revitalization4_com
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_first_council_of_berlin
+		icon = GFX_focus_por_workers_of_iberia
+		x = 2
+		y = 1
+		relative_position_id = GER_peoples_militias
+		prerequisite = { focus = GER_peoples_militias }
+		prerequisite = { focus = GER_workers_of_germany_unite }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_stability = 0.1
+			country_event = ger.20
+		}
+	}
+
+	focus = {
+		id = GER_the_red_navy
+		icon = GFX_focus_hol_legacy_of_the_de_zeven_provincien_mutiny
+		x = -6
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			custom_trigger_tooltip =  {
+				tooltip = naval_effort_tt
+				NOT = {
+					any_owned_state = {
+						free_building_slots = {
+							building = dockyard
+							size > 1
+							include_locked = yes
+						}
+					}
+				}
+			}
+		}
+
+		complete_tooltip = {
+			if = {
+				limit = {
+					GRR = {
+						exists = yes
+					}
+				}
+				create_wargoal = {
+					type = annex_everything
+					target = GRR
+					expire = 0
+				}
+			}
+			every_state = {
+				limit = {	has_state_flag = GER_naval_rearmament_2dockyards }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+			every_state = {
+				limit = {	has_state_flag = GER_naval_rearmament_1dockyard }
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			if = {
+				limit = {
+					GRR = {
+						exists = yes
+					}
+				}
+				create_wargoal = {
+					type = annex_everything
+					target = GRR
+					expire = 0
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					dockyard > 0
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+				set_state_flag = GER_naval_rearmament_2dockyards
+			}
+			random_owned_controlled_state = {
+				limit = {
+					dockyard > 0
+					free_building_slots = {
+						building = dockyard
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+				set_state_flag = GER_naval_rearmament_1dockyard
+			}
+		}
+	}
+
+	focus = {
+		id = GER_the_spd_dilema
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = -4
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_stability = 0.05
+			add_political_power = 120
+			add_popularity = {
+				ideology = democratic
+				popularity = -0.15
+			}
+		}
+	}
+
+	focus = {
+		id = GER_women_suffrage
+		icon = GFX_focus_generic_treaty
+		x = -2
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = GER_womens_suffrage
+			add_popularity = { ideology = communism popularity = 0.05 }
+		}
+	}
+
+	focus = {
+		id = GER_worker_unions
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		x = 2
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = GER_worker_unions
+			add_popularity = { ideology = communism popularity = 0.05 }
+		}
+	}
+
+	focus = {
+		id = GER_state_controlled_economy
+		icon = GFX_goal_socialist_star
+		x = 4
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			communism > 0.8
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = state_controlled_economy_ger
+		}
+	}
+
+	focus = {
+		id = GER_liberate_the_austrian_workers
+		icon = GFX_AUS_defence_of_the_fatherland
+		x = 6
+		y = 1
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			if = {
+				limit = {
+					AUS = {
+						exists = yes
+					}
+				}
+				create_wargoal = {
+					type = annex_everything
+					target = AUS
+					expire = 0
+				}
+			}
+			add_state_core = 4
+			add_state_core = 152
+			add_state_core = 153
+			add_state_core = 39
+		}
+	}
+
+	focus = {
+		id = GER_follow_stalin
+		icon = GFX_focus_fra_loyalty_stalin
+		x = 0
+		y = 2
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+		mutually_exclusive = {
+			focus = GER_the_only_path_to_communism
+			focus = GER_the_red_eye
+		}
+		available = {
+			NOT = {
+				has_completed_focus = GER_world_revolution
+			}
+		}
+		cost = 10
+
+		available = {
+			is_subject = no
+			has_government = communism
+			SOV = {
+				exists = yes
+				has_government = communism
+				is_faction_leader = yes
+			}
+			NOT = { has_war_with = SOV }
+		}
+
+		bypass = {
+			has_country_leader = { ruling_only = yes name = "Ernst Thälmann" }
+			OR = {
+				SOV = {
+					exists = no
+				}
+				SOV = {
+					NOT = { has_government = communism }
+				}
+				SOV = {
+					is_faction_leader = no
+				}
+				is_in_faction_with = SOV
+				has_war_with = SOV
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			SOV = { country_event = { id = generic.2 } }
+		}
+	}
+
+	focus = {
+		id = GER_purge_the_marxists
+		icon = GFX_focus_eng_liberate_the_home_of_marx
+		x = 0
+		y = 1
+		relative_position_id = GER_follow_stalin
+		prerequisite = { focus = GER_follow_stalin }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			FRA = { 
+				add_timed_idea = {
+					idea = GER_communist_refugees
+					days = 730
+				}
+			}
+			ENG = { 
+				add_timed_idea = {
+					idea = GER_communist_refugees
+					days = 730
+				}
+			}
+			SWI = { 
+				add_timed_idea = {
+					idea = GER_communist_refugees
+					days = 730
+				}
+			}
+			if = {
+				limit = {
+					SOV = { has_country_leader = { ruling_only = yes name = "Joseph Stalin" } }
+				}
+				SOV = { 
+					add_opinion_modifier = { target = ROOT modifier = huge_increase  } 
+				}
+			}
+			add_popularity = { ideology = communism popularity = 0.1 }
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			remove_unit_leader = 193335
+			set_country_flag = kill_kotch
+			custom_effect_tooltip = kill_marxist
+		}
+	}
+
+	focus = {
+		id = GER_german_soviet_research_cooperation
+		icon = GFX_goal_continuous_armor_production
+		x = -2
+		y = 1
+		relative_position_id = GER_purge_the_marxists
+		prerequisite = { focus = GER_purge_the_marxists }
+
+		cost = 10
+
+		available = {
+			ROOT = {
+				has_government = communism
+			}
+			SOV = {
+				has_government = communism
+			}
+			NOT = {
+				has_war_with = SOV
+			}
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			ROOT = {
+				add_ideas = german_soviet_research_cooperation
+			}
+			SOV = {
+				add_ideas = german_soviet_research_cooperation
+			}
+		}
+	}
+
+	focus = {
+		id = GER_antifaschistische_aktion
+		icon = GFX_AUS_SDAP
+		x = 0
+		y = 1
+		relative_position_id = GER_purge_the_marxists
+		prerequisite = { focus = GER_purge_the_marxists }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_popularity = { ideology = fascism popularity = -0.1 }
+			add_country_leader_trait = anti_fascist
+			every_country = {
+				limit = {
+					is_major = yes
+					has_government = fascism
+					NOT = { is_in_faction_with = ROOT }
+				}
+				ROOT = {
+					create_wargoal = {
+						type = puppet_wargoal_focus
+						target = PREV
+						expire = 0
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_pieck_molotov_pact
+		icon = GFX_focus_chi_mission_to_the_soviet_union
+		x = 3
+		y = 1
+		relative_position_id = GER_purge_the_marxists
+		prerequisite = { focus = GER_purge_the_marxists focus = GER_say_nothing }
+		mutually_exclusive = {
+			focus = GER_carry_the_revolution_east
+		}
+
+		cost = 10
+
+		available = {
+			is_in_faction_with = SOV
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			188 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 188 }
+						}
+					}
+				}
+			}
+			85 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 85 }
+						}
+					}
+				}
+			}
+			add_state_core = 188
+			add_state_core = 85
+			add_state_claim = 86
+			add_state_claim = 762
+			SOV = {
+				add_state_claim = 13
+				add_state_claim = 191
+				add_state_claim = 190
+				add_state_claim = 12
+				add_state_claim = 189
+				add_state_claim = 11
+				add_state_claim = 188
+				add_state_claim = 784
+				add_state_claim = 96
+				add_state_claim = 95
+				add_state_claim = 94
+				add_state_claim = 93
+				add_state_claim = 91
+				add_state_claim = 89
+			}
+		}
+	}
+
+	focus = {
+		id = GER_carry_the_revolution_east
+		icon = GFX_focus_generic_join_comintern
+		x = 5
+		y = 1
+		relative_position_id = GER_purge_the_marxists
+		prerequisite = { focus = GER_purge_the_marxists focus = GER_say_nothing }
+		mutually_exclusive = {
+			focus = GER_pieck_molotov_pact
+		}
+
+		cost = 10
+
+		available = {
+			NOT = { is_in_faction_with = SOV }
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			188 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 188 }
+						}
+					}
+				}
+			}
+			85 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 85 }
+						}
+					}
+				}
+			}
+			add_state_core = 188
+			add_state_core = 85
+			add_state_claim = 86
+			add_state_claim = 762
+		}
+	}
+
+	focus = {
+		id = GER_partition_czechoslovakia
+		icon = GFX_SLO_Crush_Czechoslovakia
+		x = 0
+		y = 1
+		relative_position_id = GER_pieck_molotov_pact
+		prerequisite = { focus = GER_pieck_molotov_pact }
+		mutually_exclusive = {
+			focus = GER_carry_the_revolution_to_czechia
+		}
+
+		cost = 10
+
+		available = {
+			is_in_faction_with = SOV
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			69 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 69 }
+						}
+					}
+				}
+			}
+			add_state_core = 69
+			add_state_core = 74
+			SOV = {
+				add_state_claim = 73
+			}
+		}
+	}
+
+	focus = {
+		id = GER_carry_the_revolution_to_czechia
+		icon = GFX_focus_prc_infiltration
+		x = 0
+		y = 1
+		relative_position_id = GER_carry_the_revolution_east
+		prerequisite = { focus = GER_carry_the_revolution_east }
+
+		cost = 10
+
+		available = {
+			NOT = { is_in_faction_with = SOV }
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			69 = {
+				CONTROLLER = {
+					ROOT = {
+						create_wargoal = {
+							type = take_state_focus
+							target = PREV
+							expire = 0
+							generator = { 69 }
+						}
+					}
+				}
+			}
+			add_state_core = 69
+			add_state_core = 74
+		}
+	}
+
+	focus = {
+		id = GER_enter_the_balkans
+		icon = GFX_goal_support_communism
+		x = 1
+		y = 1
+		relative_position_id = GER_partition_czechoslovakia
+		prerequisite = { focus = GER_partition_czechoslovakia focus = GER_carry_the_revolution_to_czechia }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			HUN = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			ROM = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					is_in_faction_with = SOV
+				}
+				80 = { is_claimed_by = SOV }
+				79 = { is_claimed_by = SOV }
+				766 = { is_claimed_by = SOV }
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = HUN
+				expire = 0
+			} 
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = ROM
+				expire = 0
+			} 
+			if = {
+				limit = {
+					is_in_faction_with = SOV
+				}
+				SOV = {
+					add_state_claim = 80
+					add_state_claim = 79
+					add_state_claim = 766
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_liberate_the_south_slav_workers
+		icon = GFX_focus_spr_masters_of_our_own_fate
+		x = 0
+		y = 1
+		relative_position_id = GER_enter_the_balkans
+		prerequisite = { focus = GER_enter_the_balkans }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			YUG = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			BUL = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = YUG
+				expire = 0
+			}
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = BUL
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_dye_the_balkans_red
+		icon = GFX_focus_generic_join_comintern
+		x = 0
+		y = 1
+		relative_position_id = GER_liberate_the_south_slav_workers
+		prerequisite = { focus = GER_liberate_the_south_slav_workers }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			ALB = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			GRE = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = ALB
+				expire = 0
+			}
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = GRE
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_take_down_the_eagle
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		x = 0
+		y = 1
+		relative_position_id = GER_dye_the_balkans_red
+		prerequisite = { focus = GER_dye_the_balkans_red }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			ITA = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = ITA
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_the_red_dawn_of_the_east
+		icon = GFX_focus_por_workers_of_iberia
+		x = 0
+		y = 1
+		relative_position_id = GER_take_down_the_eagle
+		prerequisite = { focus = GER_take_down_the_eagle }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			BEL = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			HOL = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+			LUX = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = BEL
+				expire = 0
+			}
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = HOL
+				expire = 0
+			}
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = LUX
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_liberate_the_home_of_the_ploretariat
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		x = -1
+		y = 1
+		relative_position_id = GER_the_red_dawn_of_the_east
+		prerequisite = { focus = GER_the_red_dawn_of_the_east }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			ENG = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = ENG
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_liberate_the_home_of_the_commune
+		icon = GFX_focus_focus_fra_revolution_utmost
+		x = 1
+		y = 1
+		relative_position_id = GER_the_red_dawn_of_the_east
+		prerequisite = { focus = GER_the_red_dawn_of_the_east }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			FRA = {
+				OR = {
+					exists = no
+					OVERLORD = {
+						OR = {
+							tag = GER
+							is_in_faction_with = GER
+						}
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = FRA
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_declare_victory_over_capitalism
+		icon = GFX_focus_ger_great_red_menace
+		x = 1
+		y = 1
+		relative_position_id = GER_liberate_the_home_of_the_ploretariat
+		prerequisite = { focus = GER_liberate_the_home_of_the_ploretariat focus = GER_liberate_the_home_of_the_commune }
+
+		cost = 10
+
+		available = {
+			ROOT = {
+				has_government = communism
+			}
+			ENG = {
+				has_government = communism
+			}
+			FRA = {
+				has_government = communism
+			}
+			SOV = {
+				has_government = communism
+			}
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = sour_loser
+				add_idea = GER_victory_over_capitalism
+			}
+		}
+	}
+
+	focus = {
+		id = GER_reintegrate_the_alsace_region
+		icon = GFX_goal_generic_position_armies
+		prerequisite = { focus = GER_liberate_the_home_of_the_commune }
+		available = {
+			is_puppet = no
+			has_full_control_of_state = 8
+			has_full_control_of_state = 28
+			OR = {
+				FRA = { has_capitulated = yes }
+				FRA = { is_subject_of = ROOT }
+				NOT = {
+					any_country = {
+						original_tag = FRA
+						exists = yes
+					}
+				}
+				owns_state = 28
+			}
+			OR = {
+				LUX = { has_capitulated = yes }
+				NOT = {
+					any_country = {
+						original_tag = LUX
+						exists = yes
+					}
+				}
+			}
+		}
+		bypass = {
+		}
+		cancel_if_invalid = yes
+		x = 1
+		y = 1
+		relative_position_id = GER_liberate_the_home_of_the_commune
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		
+		completion_reward = {
+			add_state_core = 8
+			add_state_core = 28
+			if = {
+				limit = {
+					NOT = { owns_state = 28 }
+				}
+				transfer_state = 28
+			}
+			28 = { set_state_name = "Elsass-Lothringen" }
+			set_province_name = { id = 9503 name = "Strassburg" }
+			set_province_name = { id = 678 name = "Mulhausen" }
+			FRA = {
+				country_event = { id = wtt_germany.63 }
+			}
+			LUX = {
+				country_event = { id = wtt_germany.64 }
+			}
+		}
+	}
+
+	focus = {
+		id = GER_the_red_eye
+		icon = GFX_goal_generic_war_with_comintern
+		x = 8
+		y = 2
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+		mutually_exclusive = {
+			focus = GER_the_only_path_to_communism
+			focus = GER_follow_stalin
+		}
+
+		cost = 10
+
+
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = GER_the_german_dream1
+		}
+	}
+
+	focus = {
+		id = GER_say_nothing
+		icon = GFX_Communist_Purge2
+		x = 0
+		y = 1
+		relative_position_id = GER_the_red_eye
+		prerequisite = { focus = GER_the_red_eye }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			set_country_flag = ded_kotch
+			set_country_flag = ded_talman
+			remove_unit_leader = 193333
+			remove_unit_leader = 193334
+			remove_unit_leader = 193335
+			custom_effect_tooltip = kill_marxist
+			custom_effect_tooltip = kill_stalinist
+			create_field_marshal = {
+				name = "Josef Kiefel"
+				desc = ""
+				portrait_path = "gfx/leaders/SOV/Portrait_Soviet_Generic_land_3.dds"
+				traits = {
+					organizer
+					infantry_leader
+					trickster
+				}
+				skill = 4
+				attack_skill = 3
+				defense_skill = 3
+				planning_skill = 2
+				logistics_skill = 5
+			}
+			create_corps_commander = {
+				name = "Bruno Beater"
+				desc = ""
+				portrait_path = "gfx/leaders/SOV/Portrait_Soviet_Generic_land_2.dds"
+				traits = {
+					winter_specialist
+					harsh_leader
+					infantry_officer
+				}
+				skill = 3
+				attack_skill = 4
+				defense_skill = 3
+				planning_skill = 3
+				logistics_skill = 3
+			}
+		}
+	}
+
+	focus = {
+		id = GER_see_nothing
+		icon = GFX_Communist_Purge
+		x = 0
+		y = 1
+		relative_position_id = GER_say_nothing
+		prerequisite = { focus = GER_say_nothing }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = GER_the_german_dream1
+				add_idea = GER_the_german_dream2
+			}
+		}
+	}
+
+	focus = {
+		id = GER_hear_nothing
+		icon = GFX_focus_ger_great_red_menace
+		x = 0
+		y = 1
+		relative_position_id = GER_see_nothing
+		prerequisite = { focus = GER_see_nothing }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = GER_the_german_dream2
+				add_idea = GER_the_german_dream3
+			}
+			hidden_effect = {
+				create_country_leader = {
+					name = "..."
+					desc = stasi_propaganda
+					picture = "gfx/leaders/GER2/radio_silence.tga"
+					expire = "1965.1.1"
+					ideology = stalinism
+					traits = {
+						
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_the_only_path_to_communism
+		icon = GFX_focus_generic_soviet_politics
+		x = -8
+		y = 2
+		relative_position_id = GER_first_council_of_berlin
+		prerequisite = { focus = GER_first_council_of_berlin }
+		mutually_exclusive = {
+			focus = GER_follow_stalin
+			focus = GER_the_red_eye
+		}
+
+		cost = 10
+
+
+		available = {
+			has_completed_focus = GER_socialism_in_one_state
+		}
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_stability = 0.1
+			if = { limit = { is_in_faction = no }
+				create_faction = "Fith International"
+			}
+			remove_unit_leader = 193333
+			if = {
+				limit = {
+					SOV = { has_country_leader = { ruling_only = yes name = "Joseph Stalin" } }
+				}
+				SOV = {
+					create_corps_commander = {
+						name = "Ernst Thälmann"
+						desc = ""
+						portrait_path = "gfx/leaders/GER/Portrait_GER_ernst_thalmann.tga"
+						traits = {
+							organizer
+							infantry_leader
+						}
+						skill = 3
+						attack_skill = 3
+						defense_skill = 2
+						planning_skill = 2
+						logistics_skill = 3
+					}
+					add_opinion_modifier = { target = ROOT modifier = large_decrease  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_prepare_for_the_inevitable
+		icon = GFX_goal_generic_construct_military
+		prerequisite = { focus = GER_the_only_path_to_communism }
+		available = { 
+			is_puppet = no
+			has_full_control_of_state = 763
+		}
+		cancel_if_invalid = yes
+		x = -4
+		y = 1
+		relative_position_id = GER_the_only_path_to_communism
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		
+		completion_reward = {
+			188 = { add_core_of = ROOT }
+			add_named_threat = { threat = 3 name = GER_demand_memel_threat }
+			random_other_country = {
+				limit = {
+					owns_state = 188
+					controls_state = 188 
+				}
+				country_event = { id = baltic.4 }
+			}
+			if = {
+				limit = {
+					has_full_control_of_state = 763
+				}
+				5 = {
+					custom_effect_tooltip = GER_see_to_the_eastern_front_tt
+					hidden_effect = {
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 9327
+							instant_build = yes
+						}
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 11386
+							instant_build = yes
+						}
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 9372
+							instant_build = yes
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					has_full_control_of_state = 763
+				}
+				763 = {
+					custom_effect_tooltip = GER_see_to_the_eastern_front_tt2
+					hidden_effect = {
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 11265
+							instant_build = yes
+						}
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 348
+							instant_build = yes
+						}
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 281
+							instant_build = yes
+						}
+						add_building_construction = {
+							type = bunker
+							level = 2
+							province = 3384
+							instant_build = yes
+						}
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_the_sudetenland_trade
+		icon = GFX_SLO_Czechoslovak_Ideals
+		x = -3
+		y = 1
+		prerequisite = { focus = GER_prepare_for_the_inevitable }
+		relative_position_id = GER_prepare_for_the_inevitable
+		available = {
+			
+		}
+		
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_state_core = 69
+			add_state_core = 74
+			if = {
+				limit = {
+					CZE = {
+						owns_state = 69
+					}
+				}
+				CZE = { country_event = ger.18 }
+			}
+			else_if = {
+				limit = { NOT = { controls_state = 69 } }
+				69 = {
+					CONTROLLER = {
+						ROOT = {
+							create_wargoal = {
+								type = take_state_focus
+								target = PREV
+								expire = 0
+								generator = { 69 }
+						    }
+						}
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_recover_danzig
+		icon = GFX_focus_generic_polish_deal
+		x = -1
+		y = 1
+		prerequisite = { focus = GER_prepare_for_the_inevitable }
+		relative_position_id = GER_prepare_for_the_inevitable
+		available = {
+			owns_state = 5
+			owns_state = 763
+			85 = {
+				OWNER = {
+					NOT = {
+						has_war_with = GER
+					}
+				}
+			}
+		}
+		
+		cost = 10
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_offsite_building = { type = dockyard level = 2 }
+			85 = {
+				add_manpower = -420000
+			}
+			5 = {
+				add_manpower = 210000
+			}
+			763 = {
+				add_manpower = 210000
+			}
+			85 = {
+				OWNER = {
+					add_opinion_modifier = { target = ROOT modifier = large_increase  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_reintegrate_the_old_land
+		icon = GFX_goal_generic_position_armies
+		x = 1
+		y = 1
+		prerequisite = { focus = GER_prepare_for_the_inevitable }
+		relative_position_id = GER_prepare_for_the_inevitable
+		available = {
+			is_puppet = no
+			has_full_control_of_state = 28
+			OR = {
+				FRA = { has_capitulated = yes }
+				FRA = { is_subject_of = ROOT }
+				NOT = {
+					any_country = {
+						original_tag = FRA
+						exists = yes
+					}
+				}
+				owns_state = 28
+			}
+		}
+		bypass = {
+		}
+		cancel_if_invalid = yes
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
+		
+		completion_reward = {
+			add_state_core = 8
+			add_state_core = 28
+			if = {
+				limit = {
+					NOT = { owns_state = 28 }
+				}
+				transfer_state = 28
+			}
+			28 = { set_state_name = "Elsass-Lothringen" }
+			set_province_name = { id = 9503 name = "Strassburg" }
+			set_province_name = { id = 678 name = "Mulhausen" }
+			FRA = {
+				country_event = { id = wtt_germany.63 }
+			}
+		}
+	}
+
+	focus = {
+		id = GER_protect_the_baltic
+		icon = GFX_goal_generic_defence
+		prerequisite = { focus = GER_prepare_for_the_inevitable }
+		available = {
+			is_puppet = no
+			NOT = { has_war_with = EST }
+			NOT = { has_war_with = LAT }
+			NOT = { has_war_with = LIT }
+		}
+		bypass = {
+			OR = {
+				has_guaranteed = EST
+				NOT = { country_exists = EST }
+				AND = {
+					EST = { has_war = yes }
+					NOT = { has_war_with = EST }
+				}
+				AND = {
+					EST = { is_subject = yes }
+					NOT = { EST = { is_subject_of = ROOT } }
+				}
+			}
+			OR = {
+				has_guaranteed = LAT
+				NOT = { country_exists = LAT }
+				AND = {
+					LAT = { has_war = yes }
+					NOT = { has_war_with = LAT }
+				}
+				AND = {
+					LAT = { is_subject = yes }
+					NOT = { LAT = { is_subject_of = ROOT } }
+				}
+			}
+			OR = {
+				has_guaranteed = LIT
+				NOT = { country_exists = LIT }
+				AND = {
+					LIT = { has_war = yes }
+					NOT = { has_war_with = LIT }
+				}
+				AND = {
+					LIT = { is_subject = yes }
+					NOT = { LIT = { is_subject_of = ROOT } }
+				}
+			}
+		}
+		cancel_if_invalid = yes
+		x = 3
+		y = 1
+		relative_position_id = GER_prepare_for_the_inevitable
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		
+		completion_reward = {
+			if = {
+				limit = { country_exists = EST }
+				EST = {	
+					add_timed_idea = {
+						idea = marxist_influence
+						days = 1095
+					}
+					add_ai_strategy = {
+						type = befriend
+						id = "GER"			
+						value = 200
+					}
+					add_ai_strategy = {
+						type = alliance
+						id = "GER"			
+						value = 200
+					}
+				}
+
+				if = { 
+					limit = { NOT = { is_subject_of = ROOT } }
+					give_guarantee = EST
+				}
+			}
+			if = {
+				limit = { country_exists = LAT }
+				LAT = {
+					add_timed_idea = {
+						idea = marxist_influence
+						days = 1095
+					}
+					add_ai_strategy = {
+						type = befriend
+						id = "GER"			
+						value = 200
+					}
+					add_ai_strategy = {
+						type = alliance
+						id = "GER"			
+						value = 200
+					}
+				}
+
+				if = { 
+					limit = { NOT = { is_subject_of = ROOT } }
+					give_guarantee = LAT
+				}
+			}
+			if = {
+				limit = { country_exists = LIT }
+				LIT = {
+					add_timed_idea = {
+						idea = marxist_influence
+						days = 1095
+					}
+					add_ai_strategy = {
+						type = befriend
+						id = "GER"			
+						value = 200
+					}
+					add_ai_strategy = {
+						type = alliance
+						id = "GER"			
+						value = 200
+					}
+				}
+
+				if = { 
+					limit = { NOT = { is_subject_of = ROOT } }
+					give_guarantee = LIT
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_support_finland
+		icon = GFX_focus_invite_finland
+		prerequisite = { focus = GER_protect_the_baltic }
+		available = {
+			is_puppet = no
+			NOT = { has_war_with = FIN }
+		}
+		bypass = {
+			OR = {
+				AND = {
+					FIN = { has_war = yes }
+					NOT = { has_war_with = FIN }
+				}
+				AND = {
+					FIN = { is_subject = yes }
+					NOT = { FIN = { is_subject_of = ROOT } }
+				}
+				FIN = { exists = no }
+			}
+		}
+		cancel_if_invalid = yes
+		x = -1
+		y = 1
+		relative_position_id = GER_protect_the_baltic
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		
+		completion_reward = {
+			diplomatic_relation = {
+				country = FIN
+				relation = guarantee
+				active = yes
+			}
+			add_ai_strategy = {
+				type = support
+				id = "FIN"			
+				value = 200
+			}
+			FIN = {
+				add_ideas = GER_FIN_industrial_support
+				add_timed_idea = {
+					idea = marxist_influence
+					days = 1095
+				}
+				add_ai_strategy = {
+					type = befriend
+					id = "GER"			
+					value = 200
+				}
+				add_ai_strategy = {
+					type = alliance
+					id = "GER"			
+					value = 200
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_support_poland
+		icon = GFX_focus_generic_polish_deal
+		prerequisite = { focus = GER_protect_the_baltic }
+		available = {
+			is_puppet = no
+			NOT = { has_war_with = POL }
+		}
+		bypass = {
+			OR = {
+				AND = {
+					POL = { has_war = yes }
+					NOT = { has_war_with = POL }
+				}
+				AND = {
+					POL = { is_subject = yes }
+					NOT = { POL = { is_subject_of = ROOT } }
+				}
+				POL = { exists = no }
+			}
+		}
+		cancel_if_invalid = yes
+		x = 1
+		y = 1
+		relative_position_id = GER_protect_the_baltic
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		
+		completion_reward = {
+			diplomatic_relation = {
+				country = POL
+				relation = guarantee
+				active = yes
+			}
+			add_ai_strategy = {
+				type = support
+				id = "POL"			
+				value = 200
+			}
+			POL = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 3000
+					producer = GER
+				}
+				add_timed_idea = {
+					idea = marxist_influence
+					days = 1095
+				}
+				add_ai_strategy = {
+					type = befriend
+					id = "GER"			
+					value = 200
+				}
+				add_ai_strategy = {
+					type = alliance
+					id = "GER"			
+					value = 200
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_break_the_man_of_steel
+		icon = GFX_focus_attack_soviet
+		x = -1
+		y = 1
+		prerequisite = { focus = GER_support_poland }
+		prerequisite = { focus = GER_support_finland }
+		relative_position_id = GER_support_poland
+		available = {
+			NOT = {
+				is_in_faction_with = SOV
+			}
+		}
+		
+		bypass = {
+			SOV = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+				}
+			}
+		}
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		completion_reward = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = SOV
+				expire = 0
+			}
+		}
+	}
+
+	focus = {
+		id = GER_spread_the_marxist_thought
+		icon = GFX_focus_spr_unify_the_london_bureau
+		x = 4
+		y = 1
+		relative_position_id = GER_the_only_path_to_communism
+		prerequisite = { focus = GER_the_only_path_to_communism }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			add_ideas = to_fulfill_marxs_dream
+		}
+	}
+
+	focus = {
+		id = GER_support_the_prc
+		icon = GFX_PRC_Propaganda
+		x = -3
+		y = 1
+		relative_position_id = GER_spread_the_marxist_thought
+		prerequisite = { focus = GER_spread_the_marxist_thought }
+		mutually_exclusive = {
+			focus = GER_support_the_left_kuomintang
+		}
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			PRC= {
+				add_offsite_building = { type = arms_factory level = 2 }
+				add_timed_idea = {
+					idea = marxist_influence
+					days = 730
+				}
+				add_opinion_modifier = { target = ROOT modifier = large_increase  } 
+				add_ai_strategy = {
+					type = befriend
+					id = "GER"			
+					value = 50
+				}
+				add_ai_strategy = {
+					type = alliance
+					id = "GER"			
+					value = 50
+				}
+				add_popularity = {
+					ideology = communism
+					popularity = 0.05
+				}
+			}
+			CHI = {
+				add_opinion_modifier = { target = ROOT modifier = large_decrease  } 
+			}
+		}
+	}
+
+	focus = {
+		id = GER_support_the_left_kuomintang
+		icon = GFX_CHI_New_Life_Movement
+		x = -1
+		y = 1
+		relative_position_id = GER_spread_the_marxist_thought
+		prerequisite = { focus = GER_spread_the_marxist_thought }
+		mutually_exclusive = {
+			focus = GER_support_the_prc
+		}
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			CHI= {
+				add_offsite_building = { type = industrial_complex level = 1 }
+				add_offsite_building = { type = arms_factory level = 1 }
+				add_timed_idea = {
+					idea = marxist_influence
+					days = 730
+				}
+				add_opinion_modifier = { target = ROOT modifier = large_increase  } 
+				add_ai_strategy = {
+					type = befriend
+					id = "GER"			
+					value = 50
+				}
+				add_ai_strategy = {
+					type = alliance
+					id = "GER"			
+					value = 50
+				}
+				add_popularity = {
+					ideology = communism
+					popularity = 0.05
+				}
+			}
+			PRC = {
+				add_opinion_modifier = { target = ROOT modifier = large_decrease  } 
+			}
+		}
+	}
+
+	focus = {
+		id = GER_support_the_cpi
+		icon = GFX_focus_RAJ_seek_help_from_soviet
+		x = -2
+		y = 2
+		relative_position_id = GER_spread_the_marxist_thought
+		prerequisite = { focus = GER_spread_the_marxist_thought }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			RAJ= {
+				if = {
+					limit = { is_subject = yes }
+					add_autonomy_ratio = {
+						value = 0.1
+						localization = RAJ_indian_national_congress
+					}
+				}
+				add_offsite_building = { type = industrial_complex level = 2 }
+				add_timed_idea = {
+					idea = marxist_influence
+					days = 730
+				}
+				add_opinion_modifier = { target = ROOT modifier = large_increase  } 
+				add_ai_strategy = {
+					type = befriend
+					id = "GER"			
+					value = 50
+				}
+				add_ai_strategy = {
+					type = alliance
+					id = "GER"			
+					value = 50
+				}
+			}
+			RAJ = {
+				OVERLORD = {
+					add_opinion_modifier = { target = ROOT modifier = large_decrease  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_influence_north_america
+		icon = GFX_focus_mex_redeem_aztlan
+		x = 0
+		y = 2
+		relative_position_id = GER_spread_the_marxist_thought
+		prerequisite = { focus = GER_spread_the_marxist_thought }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			every_country = {
+				limit = {
+					OR = {
+						tag = MEX
+						tag = GUA
+						tag = BLZ
+						tag = HON
+						tag = ELS
+						tag = NIC
+						tag = COS
+						tag = PAN
+						tag = CUB
+						tag = HAI
+						tag = DOM
+					}
+				}
+				add_timed_idea = {
+					idea = communist_influence
+					days = 730
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_influence_south_america
+		icon = GFX_focus_por_latin_american_communism
+		x = 1
+		y = 3
+		relative_position_id = GER_spread_the_marxist_thought
+		prerequisite = { focus = GER_spread_the_marxist_thought }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			every_country = {
+				limit = {
+					capital_scope = { is_on_continent = south_america }
+					NOT = {
+						tag = MEX
+						tag = GUA
+						tag = BLZ
+						tag = HON
+						tag = ELS
+						tag = NIC
+						tag = COS
+						tag = PAN
+						tag = CUB
+						tag = HAI
+						tag = DOM
+					}
+				}
+				add_timed_idea = {
+					idea = communist_influence
+					days = 730
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = GER_dreams_of_a_red_world
+		icon = GFX_focus_ger_great_red_menace
+		x = 0
+		y = 1
+		relative_position_id = GER_break_the_man_of_steel
+		prerequisite = { focus = GER_break_the_man_of_steel }
+
+		cost = 10
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = sour_loser
+				add_idea = dreams_of_a_red_world_ger
+			}
+		}
+	}
+########################################################
 	###############################################################################################################################
 	###############################################################################################################################
 	###############################################################################################################################
