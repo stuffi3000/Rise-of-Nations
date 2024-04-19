@@ -7471,7 +7471,7 @@ focus_tree = {
 	focus = {
 		id = bel_guns_fall_silent
 		icon = GFX_goal_unknown
-		x = 5
+		x = 6
 		y = 2
 		cost = 10
 		ai_will_do = {
@@ -7541,8 +7541,8 @@ focus_tree = {
 				add_ideas = limited_conscription
 			}
 			add_timed_idea = {
-				idea = usa_greatest_generation
-				days = 3000
+				idea = FRA_recovering_from_german_invasion
+				days = 300
 			}
 			add_named_threat = { threat = -3 name = "Belgium Demobilizes" }
 			add_stability = 0.1
@@ -7552,7 +7552,7 @@ focus_tree = {
 focus = {
 		id = bel_international_matters
 		icon = GFX_goal_unknown
-		x = 5
+		x = 6
 		y = 3
 		cost = 10
 		ai_will_do = {
@@ -7561,14 +7561,14 @@ focus = {
 		available_if_capitulated = yes
 		prerequisite = { focus = bel_guns_fall_silent }
 		completion_reward = {
-
+			add_political_power = 150
 		}
 
 }
 focus = {
 		id = bel_treaty_of_b
 		icon = GFX_goal_unknown
-		x = 7
+		x = 9
 		y = 4
 		cost = 10
 		ai_will_do = {
@@ -7583,39 +7583,49 @@ focus = {
 focus = {
 		id = bel_treaty_invite_communist_nations
 		icon = GFX_goal_unknown
-		x = 6
-		y = 5
-		cost = 10
-		ai_will_do = {
-			factor = 4
-		}
-		mutually_exclusive = { focus = bel_treaty_only_democratic_nations }
-		available_if_capitulated = yes
-		prerequisite = { focus = bel_treaty_of_b }
-		completion_reward = {
-			if = {
-limit = {
-				has_government = communism
-				capital_scope = {
-					is_on_continent = europe
-				}
-			}
-			country_event = {
-				id = RON_European_Union.1
-				hours = 6
-			}			
-			}
-		}
-}
-focus = {
-		id = bel_treaty_only_democratic_nations
-		icon = GFX_goal_unknown
 		x = 8
 		y = 5
 		cost = 10
 		ai_will_do = {
 			factor = 4
 		}
+		available = {
+			has_idea = RON_European_Union
+		}
+		mutually_exclusive = { focus = bel_treaty_only_democratic_nations }
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_treaty_of_b }
+		completion_reward = {
+		every_other_country = {
+			limit = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+				NOT = {
+					has_country_flag = comeconmember
+					is_in_faction_with = SOV
+					has_government = democratic
+				}
+			}
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}
+		}
+		}
+		}
+focus = {
+		id = bel_treaty_only_democratic_nations
+		icon = GFX_goal_unknown
+		x = 10
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
 		available_if_capitulated = yes
 		mutually_exclusive = { focus = bel_treaty_invite_communist_nations }
 		prerequisite = { focus = bel_treaty_of_b }
@@ -7627,7 +7637,7 @@ focus = {
 focus = {
 		id = bel_treaty_finished
 		icon = GFX_goal_unknown
-		x = 7
+		x = 9
 		y = 6
 		cost = 10
 		ai_will_do = {
@@ -7643,19 +7653,21 @@ focus = {
 focus = {
 		id = bel_decolonization
 		icon = GFX_goal_unknown
-		x = 3
+		x = 4
 		y = 4
 		cost = 10
 		ai_will_do = {
 			factor = 4
 		}
+		
 		available_if_capitulated = yes
 		prerequisite = { focus = bel_international_matters }
 		completion_reward = {
+			release_puppet_on_controlled  = COG
 		}
 }
 focus = {
-		id = bel_guided_declonization
+		id = bel_guided_decolonization
 		icon = GFX_goal_unknown
 		x = 2
 		y = 5
@@ -7663,7 +7675,10 @@ focus = {
 		ai_will_do = {
 			factor = 4
 		}
-		mutually_exclusive = { focus = bel_rushed_declonization }
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		mutually_exclusive = { focus = bel_rushed_decolonization }
 		available_if_capitulated = yes
 		prerequisite = { focus = bel_decolonization }
 		completion_reward = {
@@ -7673,7 +7688,7 @@ focus = {
 focus = {
 		id = bel_congo_guideance
 		icon = GFX_goal_unknown
-		x = 1
+		x = 0
 		y = 6
 		cost = 10
 		ai_will_do = {
@@ -7681,38 +7696,20 @@ focus = {
 		}
 		available = {
 			COG = {is_puppet_of = BEL}
+			date > 1951.1.1
 		}
 		available_if_capitulated = yes
-		prerequisite = { focus = bel_guided_declonization }
+		prerequisite = { focus = bel_guided_decolonization }
 		completion_reward = {
 			COG = {
-army_experience = 15
-		    division_template = {
-				name = "Belgium Support Divisions"
-				priority = 2
-				regiments = {
-		
-					motorized = { x = 0 y = 0 }
-					motorized = { x = 0 y = 1 }
-					motorized = { x = 0 y = 2 }
-					motorized = { x = 0 y = 3 }
-
-					motorized = { x = 1 y = 0 }
-					motorized = { x = 1 y = 1 }
-					motorized = { x = 1 y = 2 }
-					motorized = { x = 1 y = 3 }
-
-					light_armor = { x = 2 y = 0 }
-					light_armor = { x = 2 y = 1 }
-				}
-			}	
+army_experience = 15	
 			}
 		}
 }
 focus = {
 		id = bel_congo_economic_aid
 		icon = GFX_goal_unknown
-		x = 3
+		x = 4
 		y = 6
 		cost = 10
 		ai_will_do = {
@@ -7720,12 +7717,12 @@ focus = {
 		}
 		available = {
 			COG = {is_puppet_of = BEL}
+			date > 1959.1.1
 		}
 		available_if_capitulated = yes
-		prerequisite = { focus = bel_guided_declonization }
-		completion_reward = {
+		prerequisite = { focus = bel_guided_decolonization }
+		completion_reward = {			
 			COG = {
-			random_owned_controlled_state = { limit = { free_building_slots = { building = industrial_complex size > 0 include_locked = yes } } add_extra_state_shared_building_slots = 2 add_building_construction = { type = industrial_complex level = 2 instant_build = yes }  }
 			random_owned_controlled_state = { limit = { free_building_slots = { building = industrial_complex size > 0 include_locked = yes } } add_extra_state_shared_building_slots = 2 add_building_construction = { type = industrial_complex level = 2 instant_build = yes }  }
 			}
 		}
@@ -7741,9 +7738,10 @@ focus = {
 		}
 		available = {
 			COG = {is_puppet_of = BEL}
+			date > 1954.1.1
 		}		
 		available_if_capitulated = yes
-		prerequisite = { focus = bel_guided_declonization }
+		prerequisite = { focus = bel_guided_decolonization }
 		completion_reward = {
 		add_opinion_modifier = {
 			target = COG
@@ -7767,22 +7765,25 @@ focus = {
 			factor = 4
 		}
 		available_if_capitulated = yes
-		prerequisite = { focus = bel_guided_declonization focus = bel_congo_economic_aid focus = bel_congo_guideance focus = bel_congo_send_advisors }
+		prerequisite = { focus = bel_guided_decolonization focus = bel_congo_economic_aid focus = bel_congo_guideance focus = bel_congo_send_advisors }
 		completion_reward = {
 			country_event = ron_decolonizationcountry.145
 		}
 }
 focus = {
-		id = bel_rushed_declonization
+		id = bel_rushed_decolonization
 		icon = GFX_goal_unknown
-		x = 4
+		x = 6
 		y = 5
 		cost = 10
 		ai_will_do = {
 			factor = 4
 		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
 		available_if_capitulated = yes
-		mutually_exclusive = { focus = bel_guided_declonization }
+		mutually_exclusive = { focus = bel_guided_decolonization }
 		prerequisite = { focus = bel_decolonization }
 		completion_reward = {
 			COG = {
@@ -7804,14 +7805,14 @@ add_popularity = {
 focus = {
 		id = bel_last_flight_out
 		icon = GFX_goal_unknown
-		x = 4
+		x = 6
 		y = 6
 		cost = 10
 		ai_will_do = {
 			factor = 4
 		}
 		available_if_capitulated = yes
-		prerequisite = { focus = bel_rushed_declonization }
+		prerequisite = { focus = bel_rushed_decolonization }
 		completion_reward = {
 			BEL = {
 				release = COG
@@ -7822,6 +7823,7 @@ focus = {
 					id = ron_decolonizationnews.1
 					hours = 6
 				}
+				leave_faction = yes
 			}
 			BEL = {
 				transfer_state = 768
