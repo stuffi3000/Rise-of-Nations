@@ -531,18 +531,29 @@ country_event = {
 	picture = GFX_report_event_february_revolution
 
 	fire_only_once = yes
-
-	trigger = {
-		date < 1919.1.1
-		tag = RUS
+		trigger = {
+			has_government = neutrality
+			tag = RUS
+			NOT = {
+				country_exists = sov
+			}
+			OR = {
+			democratic > party_popularity@neutrality
+			neutrality > party_popularity@neutrality
+			communism > party_popularity@neutrality
+			AND = {
 		RUS = {
 			NOT = { controls_state = 10 }
 			NOT = { controls_state = 189 }
 			NOT = { controls_state = 5 }
+		}			
+			}
+			}
+			date > 1916.1.1
+			date < 1920.1.1 
+		#	NOT = { has_global_flag = player_wants_custom_peacedeals } # this is not a custom peace deal
 		}
-		date > 1917.2.1
-		NOT = { has_global_flag = player_wants_custom_peacedeals }
-	}
+
 
 
 	mean_time_to_happen = { days = 1 }
@@ -553,7 +564,7 @@ country_event = {
 		set_global_flag = february_revolution1
 		set_politics = {
 			ruling_party = democratic
-			elections_allowed = no
+			elections_allowed = yes
 		}
 
 		set_popularities = {
@@ -565,7 +576,7 @@ country_event = {
 		create_country_leader = {
 			name = "Prince Lvov"
 			desc = "POLITICS_GEORGY_LVOV_DESC"
-			picture = "WW1/Portrait_Russia_Georgy_Lvov.dds"
+			picture = "RUS/WW1/Portrait_Russia_Georgy_Lvov.dds"
 			expire = "1943.5.16"
 			ideology = conservatism
 			traits = {
@@ -697,7 +708,7 @@ country_event = {
 		create_country_leader = {
 			name = "Alexander Kerensky"
 			desc = "POLITICS_ALEXANDER_KERENSKY_DESC"
-			picture = "WW1/Portrait_Russia_Alexander_Kerensky.dds"
+			picture = "RUS/WW1/Portrait_Russia_Alexander_Kerensky.dds"
 			expire = "1943.5.16"
 			ideology = conservatism
 			traits = {
@@ -754,11 +765,15 @@ country_event = {
 	trigger = {
 		#NOT = { has_global_flag = welcome_event_1918 }
 		tag = RUS
+		OR = {
 		RUS = { surrender_progress > 0.20 }
+		RUS = {
+			communism > 0.4
+		}
+		}
 		has_global_flag = february_revolution1
 		has_global_flag = lenin_in_russia
 		date > 1910.1.1
-
 	}
 
 	mean_time_to_happen = { days = 30 }
@@ -937,6 +952,7 @@ country_event = {
 		has_global_flag = october_revolution
 		has_global_flag = treaty_of_brest_litovsk
 		date > 1910.1.1
+		date < 1930.1.1
 	}
 
 
@@ -947,7 +963,13 @@ country_event = {
 		news_event = { hours = 6 id = endsieg_news.224 }
 		set_global_flag = russian_civil_war
 		ROM = { transfer_state = 925 }
-
+		every_state = {
+    limit = {
+        is_on_continent = europe
+        is_controlled_by = RUS
+    }
+    SOV = { transfer_state = PREV }
+		}
 		KUB = {
 			transfer_state = 245
 			transfer_state = 218
@@ -955,57 +977,6 @@ country_event = {
 			add_manpower = 300000
 		}
 		RUS = {
-			transfer_state = 251
-			transfer_state = 590
-			transfer_state = 215
-			transfer_state = 585
-			transfer_state = 652
-			transfer_state = 403
-			transfer_state = 213
-			transfer_state = 584
-			transfer_state = 407
-			transfer_state = 582
-			transfer_state = 580
-			transfer_state = 722
-			transfer_state = 402
-			transfer_state = 406
-			transfer_state = 583
-			transfer_state = 579
-			transfer_state = 587
-			transfer_state = 405
-			transfer_state = 742
-			transfer_state = 589
-			transfer_state = 40
-			transfer_state = 329
-			transfer_state = 565
-			transfer_state = 561
-			transfer_state = 732
-			transfer_state = 588
-			transfer_state = 570
-			transfer_state = 568
-			transfer_state = 564
-			transfer_state = 562
-			transfer_state = 586
-			transfer_state = 571
-			transfer_state = 578
-			transfer_state = 567
-			transfer_state = 563
-			transfer_state = 637
-			transfer_state = 404
-			transfer_state = 654
-			transfer_state = 569
-			transfer_state = 566
-			transfer_state = 574
-			transfer_state = 560
-			transfer_state = 657
-			transfer_state = 409
-			transfer_state = 408
-			transfer_state = 655
-			transfer_state = 644
-			transfer_state = 575
-			transfer_state = 577
-			transfer_state = 516
-			transfer_state = 576
 			set_politics = { ruling_party = neutrality elections_allowed = no }
 			if = {
 				limit = {
@@ -1018,34 +989,11 @@ country_event = {
 		hidden_effect = {
 			SOV = {
 				load_oob = SOV_1918
-				set_province_controller = 9391
-				set_province_controller = 9243
-				set_province_controller = 9365
-				set_province_controller = 6275
-				set_province_controller = 339
-				set_province_controller = 6404
-				set_province_controller = 9271
-				set_province_controller = 9299
-				set_province_controller = 298
-				set_province_controller = 11256
-				set_province_controller = 11281
-				set_province_controller = 227
-				set_province_controller = 3265
-				set_province_controller = 4324
-				set_province_controller = 7343
-				set_province_controller = 1350
-				set_province_controller = 12242
-				set_province_controller = 12270
-				set_province_controller = 11457
-				set_province_controller = 6525
-				set_province_controller = 545
-				set_province_controller = 11538
-				set_province_controller = 3406
-				set_province_controller = 4791
-				annex_country = { target = RUS transfer_troops = no }
-				transfer_state = 930
-				transfer_state = 255
-				transfer_state = 252
+				#transfer_state = 930
+				#transfer_state = 255
+				#transfer_state = 252
+				
+				set_politics = { ruling_party = communism elections_allowed = no }
 			}
 		}
 		RUS = {
@@ -1071,94 +1019,24 @@ country_event = {
 		news_event = { hours = 6 id = endsieg_news.224 }
 		set_global_flag = russian_civil_war
 		ROM = { transfer_state = 925 }
-
+		every_state = {
+    limit = {
+        is_on_continent = europe
+        is_controlled_by = RUS
+    }
+    SOV = { transfer_state = PREV }
+		}
 		KUB = {
 			transfer_state = 245
 			transfer_state = 218
 			load_oob = KUB_1918
 		}
 		RUS = {
-			transfer_state = 251
-			transfer_state = 590
-			transfer_state = 215
-			transfer_state = 585
-			transfer_state = 652
-			transfer_state = 403
-			transfer_state = 213
-			transfer_state = 584
-			transfer_state = 407
-			transfer_state = 582
-			transfer_state = 580
-			transfer_state = 722
-			transfer_state = 402
-			transfer_state = 406
-			transfer_state = 583
-			transfer_state = 579
-			transfer_state = 587
-			transfer_state = 405
-			transfer_state = 742
-			transfer_state = 589
-			transfer_state = 40
-			transfer_state = 329
-			transfer_state = 565
-			transfer_state = 561
-			transfer_state = 732
-			transfer_state = 588
-			transfer_state = 570
-			transfer_state = 568
-			transfer_state = 564
-			transfer_state = 562
-			transfer_state = 586
-			transfer_state = 571
-			transfer_state = 578
-			transfer_state = 567
-			transfer_state = 563
-			transfer_state = 637
-			transfer_state = 404
-			transfer_state = 654
-			transfer_state = 569
-			transfer_state = 566
-			transfer_state = 574
-			transfer_state = 560
-			transfer_state = 657
-			transfer_state = 409
-			transfer_state = 408
-			transfer_state = 655
-			transfer_state = 644
-			transfer_state = 575
-			transfer_state = 577
-			transfer_state = 516
-			transfer_state = 576
 			puppet = KUB
 		}
 		hidden_effect = {
 			SOV = {
 				load_oob = SOV_1918
-				set_province_controller = 9391
-				set_province_controller = 9243
-				set_province_controller = 9365
-				set_province_controller = 6275
-				set_province_controller = 339
-				set_province_controller = 6404
-				set_province_controller = 9271
-				set_province_controller = 9299
-				set_province_controller = 298
-				set_province_controller = 11256
-				set_province_controller = 11281
-				set_province_controller = 227
-				set_province_controller = 3265
-				set_province_controller = 4324
-				set_province_controller = 7343
-				set_province_controller = 1350
-				set_province_controller = 12242
-				set_province_controller = 12270
-				set_province_controller = 11457
-				set_province_controller = 6525
-				set_province_controller = 545
-				set_province_controller = 11538
-				set_province_controller = 3406
-				set_province_controller = 4791
-				annex_country = { target = RUS transfer_troops = no }
 			}
 		}
 		RUS = {

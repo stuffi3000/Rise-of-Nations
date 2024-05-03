@@ -374,7 +374,6 @@ country_event = {
 				popularity = 0.5
 			}
 		}
-		
 		create_country_leader = {
 			name = "Juan Domingo Peron"
 			picture = "gfx/leaders/ARG/Portrait_ARG_Juan_Domingo_Peron.dds"
@@ -383,12 +382,11 @@ country_event = {
 				nationalist_symbol
 			}
 		}
-		
-		set_party_name = { ideology = fascism  long_name = ARG_partido_peronista_long name = ARG_partido_peronista }
-		news_event = {
+ 		news_event = {
 			id = CW_Expansion_news.10
 			hours = 6
 		}
+		set_cosmetic_tag = ARG
 	}
 	option = {
 		name = "The Ruling Party Won"
@@ -2422,16 +2420,17 @@ country_event = {
 	desc = CW_Expansion_country.49.d
 	picture = GFX_report_event_CW_Expansion_country49
 	fire_only_once = yes
-	
-	trigger = {
-		NOT = {
-			has_global_flag = RON_Axis_Victory
-		}
-		date > 1948.3.17
-		date < 1949.1.1
-		NOT = { country_exists = EUR }
-		tag = BEL
-	}
+	is_triggered_only = yes
+	#trigger = {
+	#	NOT = {
+	#		has_global_flag = RON_Axis_Victory
+	#	}
+	#	date > 1948.3.17
+	#	date < 1959.1.1
+	#	NOT = { country_exists = EUR }
+	#	tag = BEL
+	#	has_start_date > 1950.1.1
+	#}
 
 	option = {
 		name = CW_Expansion_country.49.a
@@ -2448,23 +2447,9 @@ country_event = {
 			}
 		}
 		
-		release = EUR
+		EUR = {transfer_state = 1113 }
 		add_ideas = RON_European_Union
 		
-		every_other_country = {
-			limit = {
-				OR = {
-				tag = ENG
-				tag = LUX
-				tag = HOL
-				tag = FRA
-				tag = ENG
-				}
-			}
-			country_event = {
-				id = RON_European_Union.1
-				hours = 6
-			}
 		}
 		
 		news_event = {
@@ -3099,6 +3084,11 @@ country_event = {
 			NOT = {
 				country_exists = JAP
 			}
+			NOT = {
+				CHI = {
+					is_puppet_of = JAP
+				}
+			}
 		}
 		OR = {
 			tag = JAP
@@ -3383,9 +3373,7 @@ country_event = {
 	picture = GFX_report_event_CW_Expansion_country65
 	fire_only_once = yes
 	
-	trigger = {
-		date > 1949.1.31
-		date < 1950.1.1
+	trigger = { 
 		tag = PRC
 		controls_state = 608
 		CHI = { has_war_with = PRC }
@@ -3797,8 +3785,6 @@ country_event = {
 	
 	trigger = {
 		controls_state = 613
-		date > 1949.4.23
-		date < 1950.1.1
 		tag = PRC
 		CHI = { has_war_with = PRC }
 	}
@@ -4419,36 +4405,36 @@ news_event = {
 }
 
 #taiwan_evacuation
-country_event = {
-	id = CW_Expansion_country.84
-	title = CW_Expansion_country.84.t
-	desc = CW_Expansion_country.84.d
-	picture = GFX_report_event_CW_Expansion_country84
-	fire_only_once = yes
-	
-	trigger = {
-		date > 1949.12.8
-		date < 1950.6.1
-		tag = CHI
-		has_war_with = PRC
-		surrender_progress > 0.49
-	}
-
-	option = {
-		name = CW_Expansion_country.84.a
-
-		ai_chance = {
-			factor = 10
-		}
-		
-		add_stability = -0.10
-
-		news_event = {
-			id = CW_Expansion_news.84
-			hours = 6
-		}
-	}
-}
+#country_event = { #moved to decisions 
+#	id = CW_Expansion_country.84
+#	title = CW_Expansion_country.84.t
+#	desc = CW_Expansion_country.84.d
+#	picture = GFX_report_event_CW_Expansion_country84
+#	fire_only_once = yes
+#	
+#	trigger = {
+#		date > 1949.12.8
+#		date < 1950.6.1
+#		tag = CHI
+#		has_war_with = PRC
+#		surrender_progress > 0.49
+#	}
+#
+#	option = {
+#		name = CW_Expansion_country.84.a
+#
+#		ai_chance = {
+#			factor = 10
+#		}
+#		
+#		add_stability = -0.10
+#
+#		news_event = {
+#			id = CW_Expansion_news.84
+#			hours = 6
+#		}
+#	}
+#}
 
 #taiwan_evacuation
 news_event = {
@@ -7176,7 +7162,7 @@ country_event = {
 			factor = 10
 		}
 
-		create_wargoal = {
+				create_wargoal = {			expire = 100			expire = 100
 			type = annex_everything
 			target = PAK
 		}
@@ -8844,6 +8830,9 @@ country_event = {
 		CHI = { surrender_progress > 0.8 }
 		date > 1950.1.31
 		date < 1951.1.1
+		NOT = {
+			has_country_flag = weliveinthecursedtimeline
+		}
 	}
 
 	option = {
@@ -8852,49 +8841,39 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
-		
-		white_peace = PRC
-		
-		every_country = {
-			limit = { is_in_faction_with = CHI }
-			white_peace = PRC
-		}
-		
-		every_country = {
-			limit = { is_in_faction_with = PRC }
-			white_peace = CHI
-		}
-		
-		news_event = {
-			id = CW_Expansion_news.173
+					if = { limit = { is_ai = no }
+				hidden_effect = {
+					TWN = { change_tag_from = CHI }
+				}
+			}
+			hidden_effect = {
+				TWN = { inherit_technology = CHI }
+				TWN = {
+					set_party_name = {
+						ideology = democratic
+						name = CHI_neutrality_party
+						long_name = CHI_neutrality_party
+					}
+					set_party_name = {
+						ideology = neutrality
+						name = CHI_neutrality_party
+						long_name = CHI_neutrality_party
+					}
+					add_research_slot = 2
+				}
+			}
+			TWN = {
+				set_country_flag = weliveinthecursedtimeline
+				transfer_state = 524
+			}
+				news_event = {
+			id = CW_Expansion_news.158
 			hours = 6
 		}
 		
-		remove_ideas = CHI_No_Surrender_Until_Clearly_Lost
-		
-		PRC = {
-			every_state = {
-				limit = {
-					is_core_of = CHI
-					is_owned_by = CHI
-					is_island_state = no
-				}
-				add_core_of = PRC
-				PRC = {
-					transfer_state = PREV
-				}
-			}
-		}
-		
-		CHI = {
-			transfer_state = 524
-			set_capital = {state = 524}
-		}
-
-		
 	}
 	option = {
-		name = "No Truce"
+		name = "Keep Fighting"
 
 		ai_chance = {
 			factor = 0
@@ -8904,11 +8883,7 @@ country_event = {
 		add_stability = -0.20
 		add_political_power = -200
 		
-		news_event = {
-			id = CW_Expansion_news.158
-			hours = 6
-		}
-		
+
 	}
 }
 
@@ -12982,9 +12957,8 @@ country_event = {
 			traits = {
 				nationalist_symbol
 			}
-		}
-		
-		set_party_name = { ideology = fascism  long_name = ARG_partido_peronista_long name = ARG_partido_peronista }
+		}		
+		set_cosmetic_tag = ARG
 		news_event = {
 			id = CW_Expansion_news.245
 			hours = 6
@@ -13667,7 +13641,7 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		tag = CHI
+		tag = TWN
 		date > 1952.4.28
 		date < 1953.1.1
 		is_subject = no
@@ -19672,12 +19646,12 @@ country_event = {
 	picture = GFX_report_event_CW_Expansion_country384
 	fire_only_once = yes
 
-	trigger = {
-		tag = SWI
-		date > 1955.7.18
-		date < 1956.1.1
-	}
-
+	#trigger = {
+	#	tag = SWI
+	#	date > 1955.7.18
+	#	date < 1956.1.1
+	#}
+	is_triggered_only = yes
 	option = {
 		name = CW_Expansion_country.384.a
 
@@ -20452,7 +20426,7 @@ country_event = {
 			factor = 10
 		}
 
-		create_wargoal = {
+				create_wargoal = {			expire = 100
 			type = annex_everything
 			target = VIN
 		}
@@ -21808,7 +21782,7 @@ country_event = {
 			factor = 10
 		}
 
-		create_wargoal = {
+				create_wargoal = {			expire = 100
 			type = annex_everything
 			target = HUN
 		}
@@ -22663,50 +22637,50 @@ news_event = {
 }
 
 # 
-country_event = {
-	id = CW_Expansion_country.441
-	title = CW_Expansion_country.441.t
-	desc = CW_Expansion_country.441.d
-	picture = GFX_report_event_CW_Expansion_country441
-	fire_only_once = yes
-
-	trigger = {
-		tag = USA
-		date > 1951.1.1
-		date < 1952.1.1
-	}
-
-	option = {
-		name = CW_Expansion_country.441.a
-
-		ai_chance = {
-			factor = 10
-		}
-
-		add_stability = 0.05
-
-		news_event = {
-			id = CW_Expansion_news.441
-			hours = 6
-		}
-	}
-}
+#country_event = {
+#	id = CW_Expansion_country.441
+#	title = CW_Expansion_country.441.t
+#	desc = CW_Expansion_country.441.d
+#	picture = GFX_report_event_CW_Expansion_country441
+#	fire_only_once = yes
+#
+#	trigger = {
+#		tag = USA
+#		date > 1951.1.1
+#		date < 1952.1.1
+#	}
+#
+#	option = {
+#		name = CW_Expansion_country.441.a
+#
+#		ai_chance = {
+#			factor = 10
+#		}
+#
+#		add_stability = 0.05
+#
+#		news_event = {
+#			id = CW_Expansion_news.441
+#			hours = 6
+#		}
+#	}
+#}
 
 # 
-news_event = {
-	id = CW_Expansion_news.441
-	title = CW_Expansion_news.441.t
-	desc = CW_Expansion_news.441.d
-	picture = GFX_news_event_CW_Expansion_news441
-
-	major = yes
-
-	is_triggered_only = yes
-
-	option = {
-		name = CW_Expansion_news.441.a
-	}
-}
+#news_event = {
+#	id = CW_Expansion_news.441
+#	title = CW_Expansion_news.441.t
+#	desc = CW_Expansion_news.441.d
+#	picture = GFX_news_event_CW_Expansion_news441
+#
+#	major = yes
+#
+#	is_triggered_only = yes
+#
+#	option = {
+#		name = CW_Expansion_news.441.a
+#	}
+#}
 
 # European Economic Community Created
 country_event = {
