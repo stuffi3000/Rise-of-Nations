@@ -24,31 +24,32 @@ focus_tree = {
 	###############################################################################################################################
 
 	focus = { #The First 1919 Focus
-		id = SOV_INT_step_towards_revolution
+		id = SOV_INT_dissolve_the_constituent_assembly
 		icon = GFX_focus_SOV_the_path_of_marxism_leninism
-		x = 12
+		x = 20
 		y = 0
-		cost = 10
+		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
 		allow_branch = {
             date > 1918.12.31
-            date < 1933.1.1
+            date < 1924.1.1
         }
 		completion_reward = {
-			add_political_power = 150
+			add_political_power = 200
+			news_event = russia_civilwar.1
 		}
 	}
 
 	focus = { #War Communist Policies
 		id = SOV_INT_war_communism
 		icon = GFX_SOV_Defense_of_the_Union
-		relative_position_id = SOV_INT_step_towards_revolution
-		prerequisite = { focus = SOV_INT_step_towards_revolution }
-		x = 10
+		relative_position_id = SOV_INT_dissolve_the_constituent_assembly
+		prerequisite = { focus = SOV_INT_dissolve_the_constituent_assembly }
+		x = 18
 		y = 1
-		cost = 10
+		cost = 3
 		ai_will_do = {
 			factor = 1
 		}
@@ -60,9 +61,9 @@ focus_tree = {
 		}
 	}
 
-	focus = { #Food Rationing
-		id = SOV_INT_food_rationing
-		icon = GFX_SOV_Solidifying_our_Gains
+	focus = { #Confiscate Surpluses
+		id = SOV_INT_prodrazvyorstka 
+		icon = GFX_SOV_Sovkhoz_Farms
 		relative_position_id = SOV_INT_war_communism
 		prerequisite = { focus = SOV_INT_war_communism }
 		x = 2
@@ -71,45 +72,33 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		completion_reward = { #Plan on working on a system of food rationing, to maneuver the upcoming famine
+		completion_reward = {  #This one activates mission of dealing with and preventing famines with the needed food quotas
 		}
 	}
 
-	focus = { #Supply the Army
-		id = SOV_INT_army_supply
-		icon = GFX_SOV_General_Winter
-		relative_position_id = SOV_INT_ban_private_enterprises
-		prerequisite = { focus = SOV_INT_ban_private_enterprises }
-		prerequisite = { focus = SOV_INT_prodrazvyorstka }
-		prerequisite = { focus = SOV_INT_mass_conscription }
-		x = 2
+	focus = { #Forced Labor Service
+		id = SOV_INT_forced_labor
+		icon = GFX_goal_SOV_labor_service
+		relative_position_id = SOV_INT_war_communism
+		prerequisite = { focus = SOV_INT_war_communism }
+		x = -2
 		y = 1
 		cost = 2
 		ai_will_do = {
 			factor = 1
 		}
 		completion_reward = { 
+			custom_effect_tooltip = SOV_forced_labor_tt
+			hidden_effect = {
+				add_to_variable = { SOV_war_communism_consumer_goods_factor = -0.05 }
+				add_to_variable = { SOV_war_communism_stability_factor = -0.02 }
+			}
 		}
 	}
 
-	focus = { #Confiscate Surpluses
-		id = SOV_INT_prodrazvyorstka 
-		icon = GFX_SOV_Sovkhoz_Farms
-		relative_position_id = SOV_INT_food_rationing
-		prerequisite = { focus = SOV_INT_food_rationing }
-		x = 0
-		y = 1
-		cost = 5
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = { 
-		}
-	}
-
-	focus = { #Mass Conscription
-		id = SOV_INT_mass_conscription
-		icon = GFX_SOV_Human_Wave
+	focus = { #nationalization
+		id = SOV_INT_attack_private_property
+		icon = GFX_goal_SOV_reorganization_of_production_administration_n
 		relative_position_id = SOV_INT_war_communism
 		prerequisite = { focus = SOV_INT_war_communism }
 		x = 0
@@ -122,27 +111,75 @@ focus_tree = {
 		}
 	}
 
-	focus = { #Nationalization
-		id = SOV_INT_large_scale_nationalization
-		icon = GFX_SOV_Giga_Agrotowns
-		relative_position_id = SOV_INT_war_communism
-		prerequisite = { focus = SOV_INT_war_communism }
-		x = -2
+	focus = { #Food Rationing
+		id = SOV_INT_implement_food_rationing
+		icon = GFX_goal_SOV_free_food_product_distribution
+		relative_position_id = SOV_INT_prodrazvyorstka
+		prerequisite = { focus = SOV_INT_prodrazvyorstka }
+		x = 1
 		y = 1
 		cost = 5
 		ai_will_do = {
 			factor = 1
 		}
-		completion_reward = { #Maybe not directly related to the dynamic modifier of war communism, but another one, a spirit in which  means the transitional proccess of nationalizing industries
+		completion_reward = { #Unlocks decision for the prodrazvyorstka mission of famine
 		}
 	}
 
-	focus = { #Bribe Bankers
-		id = SOV_INT_bribe_bankers
-		icon = GFX_SOV_Begin_Ethnic_Operations
-		relative_position_id = SOV_INT_large_scale_nationalization
-		prerequisite = { focus = SOV_INT_large_scale_nationalization }
-		x = -2
+	focus = { #Forced Labor Service - Army
+		id = SOV_INT_labor_divisions
+		icon = GFX_goal_SOV_reorganization_of_labor_armies_n
+		relative_position_id = SOV_INT_forced_labor
+		prerequisite = { focus = SOV_INT_forced_labor }
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #conscription, and more divs
+		}
+	}
+
+	focus = { #Deal With Bankers
+		id = SOV_INT_deal_with_bankers
+		icon = GFX_goal_SOV_state_and_cooperative_banks_n
+		relative_position_id = SOV_INT_forced_labor
+		prerequisite = { focus = SOV_INT_forced_labor }
+		prerequisite = { focus = SOV_INT_attack_private_property } 
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #idk what to do with this
+		}
+	}
+
+	focus = { #Kolkhoz
+		id = SOV_INT_expand_the_kolkhoz
+		icon = GFX_goal_SOV_voluntary_agriculture_cooperatives_n
+		relative_position_id = SOV_INT_attack_private_property
+		prerequisite = { focus = SOV_INT_prodrazvyorstka }
+		prerequisite = { focus = SOV_INT_attack_private_property } 
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Maybe an idea for Kolkhozes
+		}
+	}
+
+	focus = { #Ban Strikes
+		id = SOV_INT_ban_strikes
+		icon = GFX_goal_SOV_dissolution_of_trade_unions
+		relative_position_id = SOV_INT_labor_divisions
+		prerequisite = { focus = SOV_INT_labor_divisions }
+		prerequisite = { focus = SOV_INT_deal_with_bankers } 
+		x = 1
 		y = 1
 		cost = 5
 		ai_will_do = {
@@ -152,41 +189,2291 @@ focus_tree = {
 		}
 	}
 
-	focus = { #Ban on Private Enterprises
-		id = SOV_INT_ban_private_enterprises
-		icon = GFX_SOV_The_Triumph_of_Zhdanov_Doctrine
-		relative_position_id = SOV_INT_large_scale_nationalization
-		prerequisite = { focus = SOV_INT_large_scale_nationalization }
+	focus = { #War Industrialism
+		id = SOV_INT_war_industrialism
+		icon = GFX_goal_SOV_trusts_and_syndicates
+		relative_position_id = SOV_INT_expand_the_kolkhoz
+		prerequisite = { focus = SOV_INT_expand_the_kolkhoz }
+		prerequisite = { focus = SOV_INT_deal_with_bankers } 
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #military factory cons. speed
+		}
+	}
+
+	focus = { #Army Supply
+		id = SOV_INT_army_supply
+		icon = GFX_SOV_General_Winter
+		relative_position_id = SOV_INT_expand_the_kolkhoz
+		prerequisite = { focus = SOV_INT_expand_the_kolkhoz }
+		prerequisite = { focus = SOV_INT_implement_food_rationing } 
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Military Railway Government
+		id = SOV_INT_military_railways
+		icon = GFX_goal_SOV_red_volunteer_army
+		relative_position_id = SOV_INT_ban_strikes
+		prerequisite = { focus = SOV_INT_ban_strikes }
+		prerequisite = { focus = SOV_INT_war_industrialism } 
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Rebuild the Rail System
+		id = SOV_INT_rebuild_the_rail_system
+		icon = GFX_goal_generic_construct_infrastructure
+		relative_position_id = SOV_INT_military_railways
+		prerequisite = { focus = SOV_INT_military_railways }
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {  #Maybe Decisions
+		}
+	}
+
+	focus = { #Prodnalog
+		id = SOV_INT_prodnalog
+		icon = GFX_goal_SOV_prodnalog_n
+		relative_position_id = SOV_INT_war_industrialism
+		prerequisite = { focus = SOV_INT_army_supply }
+		prerequisite = { focus = SOV_INT_war_industrialism } 
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = { #available only if at the end of the war, or if it ended
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #The Economic Question - War Communism+ / NEP
+		id = SOV_INT_economic_question
+		icon = GFX_goal_SOV_soviet_control_on_banks
+		relative_position_id = SOV_INT_prodnalog
+		prerequisite = { focus = SOV_INT_prodnalog }
+		prerequisite = { focus = SOV_INT_military_railways } 
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #This will trigger an event, which will autocomplete one of the two focuses, that will fractionalize into remaining into war communist policies, or moving to the NEP
+		}
+	}
+
+	focus = { #The NEP
+		id = SOV_INT_nep
+		icon = GFX_goal_SOV_new_economic_policy_n
+		relative_position_id = SOV_INT_economic_question
+		prerequisite = { focus = SOV_INT_economic_question }
+		mutually_exclusive = { focus = SOV_INT_deepen_war_communist_policies }
+		x = 7
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #The NEP, Historical, add into this branch the trade union thingies, while in the other, only the militarization of them
+		}
+	}
+
+	focus = { #Deepen War Communism
+		id = SOV_INT_deepen_war_communist_policies
+		icon = GFX_goal_SOV_deep_war_communism
+		relative_position_id = SOV_INT_economic_question
+		prerequisite = { focus = SOV_INT_economic_question }
+		mutually_exclusive = { focus = SOV_INT_nep }
+		x = -7
+		y = 1
+		cost = 1
+		ai_will_do = {  #Militarize the trade unions will be the only choice in this branch, 
+			factor = 0
+		}
+		completion_reward = { #The War communism will serve just jlike the Stalins policies prior to 28
+		}
+	}
+
+	focus = { #Food Distribution
+		id = SOV_INT_equal_food_distribution
+		icon = GFX_SOV_Solidifying_our_Gains
+		relative_position_id = SOV_INT_deepen_war_communist_policies
+		prerequisite = { focus = SOV_INT_deepen_war_communist_policies }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Collectivization Process
+		id = SOV_INT_speed_up_the_collectivization
+		icon = GFX_goal_SOV_mass_nationalization_of_anything_and_everything_indiscriminately
+		relative_position_id = SOV_INT_deepen_war_communist_policies
+		prerequisite = { focus = SOV_INT_deepen_war_communist_policies }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {  #important to have decisions, or missions, or whatever
+		}
+	}
+
+	focus = { #Militarize the Unions
+		id = SOV_INT_militarize_trade_unions
+		icon = GFX_goal_SOV_reorganization_of_labor_armies_1
+		relative_position_id = SOV_INT_equal_food_distribution
+		prerequisite = { focus = SOV_INT_speed_up_the_collectivization }
+		prerequisite = { focus = SOV_INT_equal_food_distribution }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { #completed the railway rebuild focus
+			factor = 1
+		}
+		completion_reward = {  #Idea Maybe
+		}
+	}
+
+	focus = { #Integrate the Unions into the State
+		id = SOV_INT_integrate_unions
+		icon = GFX_goal_SOV_restore_local_soviet_republik
+		relative_position_id = SOV_INT_militarize_trade_unions
+		prerequisite = { focus = SOV_INT_militarize_trade_unions }
 		x = 0
 		y = 1
-		cost = 5
-		ai_will_do = {
+		cost = 1
+		ai_will_do = { #Need to have some days after the militarize, or maybe after the timed idea of militarization of the unions
+			factor = 1
+		}
+		completion_reward = {  #Create another idea,  maybe beaurocratism in the unions, or just state-run unions
+		}
+	}
+
+	focus = { #Ban Private Property
+		id = SOV_INT_ban_on_private_properties
+		icon = GFX_goal_SOV_compromise_working_control
+		relative_position_id = SOV_INT_speed_up_the_collectivization
+		prerequisite = { focus = SOV_INT_speed_up_the_collectivization }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {  #prolly an national spirit for it, a timed one, just the proccess of private property ban, or change in policies
+		}
+	}
+
+	focus = { #Centralzie the Transport System
+		id = SOV_INT_centralize_transport_system
+		icon = GFX_goal_SOV_centralization_of_transport_system_n
+		relative_position_id = SOV_INT_equal_food_distribution
+		prerequisite = { focus = SOV_INT_equal_food_distribution }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {  #prolly an national spirit for it, a timed one, just the proccess of private property ban, or change in policies
+		}
+	}
+
+	focus = { #Red Army into the Party
+		id = SOV_INT_expand_red_army_influence_in_the_party
+		icon = GFX_goal_SOV_organization_of_the_war_industry_council
+		relative_position_id = SOV_INT_militarize_trade_unions
+		prerequisite = { focus = SOV_INT_militarize_trade_unions }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { #
 			factor = 1
 		}
 		completion_reward = { 
 		}
 	}
 
-	focus = { #Main Branch
-		id = SOV_INT_revolutionary_government
-		icon = GFX_SOV_Return_to_Lenins_Traditions
-		relative_position_id = SOV_INT_step_towards_revolution
-		prerequisite = { focus = SOV_INT_step_towards_revolution }
+	focus = { #New Revolutionary Committees
+		id = SOV_INT_new_revolutionary_committees
+		icon = GFX_goal_SOV_power_of_elected_committees
+		relative_position_id = SOV_INT_militarize_trade_unions
+		prerequisite = { focus = SOV_INT_militarize_trade_unions }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Monopoly on Telecommunication
+		id = SOV_INT_monopolize_communication_system
+		icon = GFX_SOV_Total_Party_Censorship
+		relative_position_id = SOV_INT_deepen_war_communist_policies
+		prerequisite = { focus = SOV_INT_deepen_war_communist_policies }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Militarist State
+		id = SOV_INT_a_militarist_state
+		icon = GFX_goal_SOV_reform_of_high_command_structure
+		relative_position_id = SOV_INT_integrate_unions
+		prerequisite = { focus = SOV_INT_new_revolutionary_committees }
+		prerequisite = { focus = SOV_INT_expand_red_army_influence_in_the_party }
+		prerequisite = { focus = SOV_INT_integrate_unions }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { #Co-Existence of Public and Private
+		id = SOV_INT_coexistence_of_public_and_private
+		icon = GFX_goal_SOV_combeds_n
+		relative_position_id = SOV_INT_nep
+		prerequisite = { focus = SOV_INT_nep }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_friendly_tax
+		icon = GFX_goal_SOV_exchange_in_kind
+		relative_position_id = SOV_INT_nep
+		prerequisite = { focus = SOV_INT_nep }
 		x = -4
 		y = 1
-		cost = 5
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_the_trade_unions_question
+		icon = GFX_goal_SOV_restore_local_soviet_republik
+		relative_position_id = SOV_INT_nep
+		prerequisite = { focus = SOV_INT_nep }
+		x = 5
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_schools_of_communism
+		icon = GFX_goal_SOV_vsevobuch
+		relative_position_id = SOV_INT_the_trade_unions_question
+		prerequisite = { focus = SOV_INT_the_trade_unions_question }
+		mutually_exclusive = { focus = SOV_INT_workers_opposition }
+		x = 3
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_workers_opposition
+		icon = GFX_goal_SOV_organization_of_the_war_industry_council
+		relative_position_id = SOV_INT_the_trade_unions_question
+		prerequisite = { focus = SOV_INT_the_trade_unions_question }
+		mutually_exclusive = { focus = SOV_INT_schools_of_communism }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_empower_the_soviets
+		icon = GFX_goal_SOV_trudovaya_povinnost
+		relative_position_id = SOV_INT_workers_opposition
+		prerequisite = { focus = SOV_INT_workers_opposition }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_organize_the_laboral_unions
+		icon = GFX_goal_SOV_recruit_old_bureaucrats_to_state_apparatus
+		relative_position_id = SOV_INT_empower_the_soviets
+		prerequisite = { focus = SOV_INT_empower_the_soviets }
+		mutually_exclusive = { focus = SOV_INT_industrial_privatization }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_workers_self_management
+		icon = GFX_goal_SOV_workers_self_controll
+		relative_position_id = SOV_INT_organize_the_laboral_unions
+		prerequisite = { focus = SOV_INT_organize_the_laboral_unions }
+		mutually_exclusive = { focus = SOV_INT_nepmen }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_hire_bourgeois_specialists
+		icon = GFX_goal_SOV_red_new_local_elections
+		relative_position_id = SOV_INT_workers_opposition
+		prerequisite = { focus = SOV_INT_workers_opposition focus = SOV_INT_schools_of_communism }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_currency_reform
+		icon = GFX_goal_SOV_monetary_reform_n
+		relative_position_id = SOV_INT_friendly_tax
+		prerequisite = { focus = SOV_INT_friendly_tax }
+		prerequisite = { focus = SOV_INT_coexistence_of_public_and_private }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_allow_farmers_to_sell_surpluses
+		icon = GFX_goal_SOV_contributions_as_a_system
+		relative_position_id = SOV_INT_friendly_tax
+		prerequisite = { focus = SOV_INT_friendly_tax }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_buy_farmers_surpluses
+		icon = GFX_goal_SOV_attraction_of_peasant_leaders
+		relative_position_id = SOV_INT_allow_farmers_to_sell_surpluses
+		prerequisite = { focus = SOV_INT_allow_farmers_to_sell_surpluses }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_rely_on_specialists
+		icon = GFX_goal_SOV_technological_basis_of_industrial_leap
+		relative_position_id = SOV_INT_currency_reform
+		prerequisite = { focus = SOV_INT_currency_reform }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_freedom_of_trade
+		icon = GFX_goal_SOV_economic_liberalisation
+		relative_position_id = SOV_INT_coexistence_of_public_and_private
+		prerequisite = { focus = SOV_INT_coexistence_of_public_and_private }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #Maybe change the idea of the trade factor
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_concessions_to_foreign_powers
+		icon = GFX_goal_SOV_concessions_n
+		relative_position_id = SOV_INT_freedom_of_trade
+		prerequisite = { focus = SOV_INT_freedom_of_trade }
+		mutually_exclusive = { focus = SOV_INT_empower_the_soviets }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #Maybe a dynamic thing with decisions
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_industrial_privatization
+		icon = GFX_goal_SOV_trusts_and_syndicates
+		relative_position_id = SOV_INT_concessions_to_foreign_powers
+		prerequisite = { focus = SOV_INT_concessions_to_foreign_powers }
+		mutually_exclusive = { focus = SOV_INT_organize_the_laboral_unions }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #Idk
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_nepmen
+		icon = GFX_goal_SOV_federation_of_consumer_cooperatives
+		relative_position_id = SOV_INT_industrial_privatization
+		prerequisite = { focus = SOV_INT_industrial_privatization }
+		mutually_exclusive = { focus = SOV_INT_workers_self_management }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_labor_reforms
+		icon = GFX_goal_SOV_compromise_with_the_right
+		relative_position_id = SOV_INT_currency_reform
+		prerequisite = { focus = SOV_INT_currency_reform }
+		prerequisite = { focus = SOV_INT_allow_farmers_to_sell_surpluses }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #National Spirit, like, Labor tied to Productivity or smth
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_encourage_cooperatives
+		icon = GFX_goal_SOV_cooperatives
+		relative_position_id = SOV_INT_labor_reforms
+		prerequisite = { focus = SOV_INT_labor_reforms }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #Idk if a Idea, national Spirit, idk, or just a plain modifier
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_grant_workers_political_positions
+		icon = GFX_goal_SOV_workers_in_politics
+		relative_position_id = SOV_INT_labor_reforms
+		prerequisite = { focus = SOV_INT_labor_reforms }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_currency_stabilization
+		icon = GFX_goal_SOV_monetary_reform
+		relative_position_id = SOV_INT_labor_reforms
+		prerequisite = { focus = SOV_INT_labor_reforms }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #maybe a focus previously for unstable currency, stabilizing one for the monetary reform, and now one for stabilized
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_exchange_in_cash
+		icon = GFX_goal_SOV_komsomol_n
+		relative_position_id = SOV_INT_currency_stabilization
+		prerequisite = { focus = SOV_INT_currency_stabilization }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #related to the idea from the exchange in kind
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_educate_the_workers
+		icon = GFX_SOV_Peoples_Front_Theory
+		relative_position_id = SOV_INT_schools_of_communism
+		prerequisite = { focus = SOV_INT_schools_of_communism }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #Prob a Timed idea that changes communism in 0.1/week
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_unionize_the_workers
+		icon = GFX_goal_SOV_red_free_press
+		relative_position_id = SOV_INT_schools_of_communism
+		prerequisite = { focus = SOV_INT_schools_of_communism }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #national Spirit
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_centralize_the_trade_unions
+		icon = GFX_goal_SOV_new_power_division
+		relative_position_id = SOV_INT_unionize_the_workers
+		prerequisite = { focus = SOV_INT_unionize_the_workers }
+		prerequisite = { focus = SOV_INT_educate_the_workers }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_one_back_two_forward
+		icon = GFX_SOV_Return_to_Lenins_Traditions
+		relative_position_id = SOV_INT_exchange_in_cash
+		prerequisite = { focus = SOV_INT_exchange_in_cash }
+		prerequisite = {
+			focus = SOV_INT_nepmen
+			focus = SOV_INT_workers_self_management
+		}
+		x = 5
+		y = 1
+		cost = 1
+		ai_will_do = { 
+			factor = 1
+		}
+		completion_reward = { #
+		}
+	}
+
+#related to Cheka Branch, a volunteers repatriation campaing or smth
+# A Focus in the Army branch to exclusive to assassinate white army generals (less PP), or  to call them to the red army, infiltrate the whites or smth (more PP cost)
+
+	focus = { #Cheka
+		id = SOV_INT_cheka
+		icon = GFX_SOV_NKVD
+		relative_position_id = SOV_INT_dissolve_the_constituent_assembly
+		prerequisite = { focus = SOV_INT_dissolve_the_constituent_assembly }
+		x = 0
+		y = 1
+		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
 		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_decree_on_separation_of_church_and_state
+		icon = GFX_goal_SOV_sovnarkom
+		relative_position_id = SOV_INT_cheka
+		prerequisite = { focus = SOV_INT_cheka }
+		x = 6
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_let_crowns_roll
+		icon = GFX_SOV_Moscow_Trials
+		relative_position_id = SOV_INT_decree_on_separation_of_church_and_state
+		prerequisite = { focus = SOV_INT_decree_on_separation_of_church_and_state }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		#available only if controls certain area, or if not RUS has the flag RUS_tsar_rescued
+		completion_reward = {  #News
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_expropriate_clergy_property
+		icon = GFX_goal_SOV_secularization_n
+		relative_position_id = SOV_INT_decree_on_separation_of_church_and_state
+		prerequisite = { focus = SOV_INT_decree_on_separation_of_church_and_state }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_exile_priests
+		icon = GFX_goal_SOV_fire_on_peoples_commissars
+		relative_position_id = SOV_INT_expropriate_clergy_property
+		prerequisite = { focus = SOV_INT_expropriate_clergy_property }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_seize_church_gold_reserves
+		icon = GFX_goal_SOV_monopoly_on_noble_metals
+		relative_position_id = SOV_INT_expropriate_clergy_property
+		prerequisite = { focus = SOV_INT_expropriate_clergy_property }
+		prerequisite = { focus = SOV_INT_let_crowns_roll }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_shut_down_cathedrals
+		icon = GFX_SOV_Direct_Rule_from_Moscow
+		relative_position_id = SOV_INT_let_crowns_roll
+		prerequisite = { focus = SOV_INT_let_crowns_roll }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_renovationist_church
+		icon = GFX_SOV_Russification_Policies
+		relative_position_id = SOV_INT_seize_church_gold_reserves
+		prerequisite = { focus = SOV_INT_seize_church_gold_reserves }
+		prerequisite = { focus = SOV_INT_shut_down_cathedrals }
+		prerequisite = { focus = SOV_INT_exile_priests }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_the_red_patriarch
+		icon = GFX_SOV_Russification_Policies
+		relative_position_id = SOV_INT_renovationist_church
+		prerequisite = { focus = SOV_INT_renovationist_church }
+		mutually_exclusive = { focus = SOV_INT_arrest_patriarch_tikhon }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_arrest_patriarch_tikhon
+		icon = GFX_SOV_Russification_Policies
+		relative_position_id = SOV_INT_renovationist_church
+		prerequisite = { focus = SOV_INT_renovationist_church }
+		mutually_exclusive = { focus = SOV_INT_the_red_patriarch }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_the_anarchist_threat
+		icon = GFX_goal_SOV_anarchism
+		relative_position_id = SOV_INT_cheka
+		prerequisite = { focus = SOV_INT_cheka }
+		x = -6
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_the_green_rebellions
+		icon = GFX_goal_SOV_rural_counterrevolution
+		relative_position_id = SOV_INT_the_anarchist_threat
+		prerequisite = { focus = SOV_INT_the_anarchist_threat } 
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { #need to complete the war communism
+			factor = 1
+		}
+		completion_reward = { #event, choose to crush them or try to calm down the stirrings, which would come with harsh prices to the army org
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_crush_the_revolts
+		icon = GFX_goal_SOV_purge_dissenters
+		relative_position_id = SOV_INT_the_green_rebellions
+		prerequisite = { focus = SOV_INT_the_green_rebellions } 
+		mutually_exclusive = { focus = SOV_INT_calm_down_the_peasantry }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #need to complete the war communism
+			factor = 1
+		}
+		completion_reward = { #decisions to destroy the rebellions
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_calm_down_the_peasantry
+		icon = GFX_goal_SOV_working_peasantry_unions
+		relative_position_id = SOV_INT_the_green_rebellions
+		prerequisite = { focus = SOV_INT_the_green_rebellions } 
+		mutually_exclusive = { focus = SOV_INT_crush_the_revolts }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { #need to complete the war communism
+			factor = 1
+		}
+		completion_reward = { #decisions, lose org to alleviate the requesitioning from the rebels
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_grant_hryhoriv_military_positions
+		icon = GFX_goal_SOV_war_communism_n
+		relative_position_id = SOV_INT_calm_down_the_peasantry
+		prerequisite = { focus = SOV_INT_calm_down_the_peasantry }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #need to complete the war communism
+			factor = 1
+		}
+		completion_reward = { #Hryhoriv conscription
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_invite_tutyunnyk
+		icon = GFX_goal_SOV_war_communism_n
+		relative_position_id = SOV_INT_calm_down_the_peasantry
+		prerequisite = { focus = SOV_INT_calm_down_the_peasantry }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { #need to complete the war communism
+			factor = 1
+		}
+		completion_reward = { #Tutyunnyk, obv
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_united_against_whites
+		icon = GFX_goal_SOV_forest_brothers
+		relative_position_id = SOV_INT_the_anarchist_threat
+		prerequisite = { focus = SOV_INT_the_anarchist_threat }
+		mutually_exclusive = { focus = SOV_INT_two_ukrainian_enemies }
+		x = -3
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #maybe an boost on attack against denikin for both
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_ovseenko_meetings
+		icon = GFX_goal_SOV_fraternizing_with_proletariat
+		relative_position_id = SOV_INT_united_against_whites
+		prerequisite = { focus = SOV_INT_united_against_whites }
+		mutually_exclusive = { focus = SOV_INT_denounce_ukrainian_anarchism }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Events, or maybe even BY events
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_denounce_ukrainian_anarchism
+		icon = GFX_goal_SOV_forced_mobilization
+		relative_position_id = SOV_INT_united_against_whites
+		prerequisite = { focus = SOV_INT_united_against_whites }
+		mutually_exclusive = { focus = SOV_INT_ovseenko_meetings }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Events, or maybe even BY events
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_ease_ukrainian_food_requesitioning
+		icon = GFX_goal_SOV_fraternizing_with_proletariat
+		relative_position_id = SOV_INT_ovseenko_meetings
+		prerequisite = { focus = SOV_INT_ovseenko_meetings }
+		mutually_exclusive = { focus = SOV_INT_betray_makhno }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Debuff for the army
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_betray_makhno
+		icon = GFX_goal_SOV_forced_mobilization
+		relative_position_id = SOV_INT_denounce_ukrainian_anarchism
+		prerequisite = { focus = SOV_INT_denounce_ukrainian_anarchism focus = SOV_INT_ovseenko_meetings }
+		mutually_exclusive = { focus = SOV_INT_ease_ukrainian_food_requesitioning }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Declare War
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_punish_banditry_and_terror_in_ukraine
+		icon = GFX_goal_SOV_fraternizing_with_proletariat
+		relative_position_id = SOV_INT_ease_ukrainian_food_requesitioning
+		prerequisite = { focus = SOV_INT_ease_ukrainian_food_requesitioning }
+		mutually_exclusive = { focus = SOV_INT_suppress_anarchist_deviants }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #less stability maybe
+			factor = 1
+		}
+		completion_reward = { #Declare War
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_suppress_anarchist_deviants
+		icon = GFX_goal_SOV_forced_mobilization
+		relative_position_id = SOV_INT_betray_makhno
+		prerequisite = { focus = SOV_INT_betray_makhno }
+		mutually_exclusive = { focus = SOV_INT_punish_banditry_and_terror_in_ukraine }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #has completed the red terror focus
+			factor = 1
+		}
+		completion_reward = { #There you would kill most of the bois, and probably have the news that makhno fled
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_autonomous_makhnovschina_sr
+		icon = GFX_goal_SOV_fraternizing_with_proletariat
+		relative_position_id = SOV_INT_punish_banditry_and_terror_in_ukraine
+		prerequisite = { focus = SOV_INT_punish_banditry_and_terror_in_ukraine }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Ukraine SR loses all of its east Ukraine Cores, Makhno becomes a general for USSR, and Makhnovschina is integrated (pretty ahistorical)
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_red_terror
+		icon = GFX_goal_SOV_red_terror_n
+		relative_position_id = SOV_INT_cheka
+		prerequisite = { focus = SOV_INT_cheka }
+		x = 0
+		y = 4
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_execute_kaplan
+		icon = GFX_goal_SOV_red_banditry
+		relative_position_id = SOV_INT_red_terror
+		prerequisite = { focus = SOV_INT_red_terror }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Prolly an news event
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_execute_kannegisser
+		icon = GFX_goal_SOV_red_banditry
+		relative_position_id = SOV_INT_red_terror
+		prerequisite = { focus = SOV_INT_red_terror }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Prolly an news event
+		}
+	}
+
+	focus = { #Kulak Purges
+		id = SOV_INT_kulak_purges
+		icon = GFX_goal_SOV_strike_to_centers_of_crystallization
+		relative_position_id = SOV_INT_red_terror
+		prerequisite = { focus = SOV_INT_red_terror }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {  #
+		}
+	}
+
+	focus = { #GULAG
+		id = SOV_INT_gulag_system
+		icon = GFX_SOV_Gulag
+		relative_position_id = SOV_INT_kulak_purges
+		prerequisite = { focus = SOV_INT_kulak_purges }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = {  #
+		}
+	}
+
+	focus = { #Left SR in the Cheka
+		id = SOV_INT_left_sr_cheka
+		icon = GFX_goal_SOV_spiridonova
+		relative_position_id = SOV_INT_gulag_system
+		prerequisite = { focus = SOV_INT_gulag_system }
+		mutually_exclusive = { focus = SOV_INT_dzerzhinsky_rule }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { #maybe autocomplete via event
+			factor = 1
+		}
+		completion_reward = {  #
+		}
+	}
+
+	focus = { #Dzerzhinsky Alone
+		id = SOV_INT_dzerzhinsky_rule
+		icon = GFX_goal_SOV_vchk
+		relative_position_id = SOV_INT_gulag_system
+		prerequisite = { focus = SOV_INT_gulag_system }
+		mutually_exclusive = { focus = SOV_INT_left_sr_cheka }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { #maybe autocomplete via event
+			factor = 1
+		}
+		completion_reward = {  #
 		}
 	}
 
 	focus = { #1906 constitution
 		id = SOV_INT_abolish_the_russian_constitution
 		icon = GFX_SOV_Constitution
-		relative_position_id = SOV_INT_revolutionary_government
-		prerequisite = { focus = SOV_INT_revolutionary_government }
+		relative_position_id = SOV_INT_dissolve_the_constituent_assembly
+		prerequisite = { focus = SOV_INT_dissolve_the_constituent_assembly }
+		x = -20
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #There will be an National Spirit for the 1906 constitution, this will remove it
+		}
+	}
+
+	focus = { #Decree on Peace
+		id = SOV_INT_respect_decree_on_peace
+		icon = GFX_goal_SOV_red_separate_peace_n
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		mutually_exclusive = { focus = SOV_INT_end_brest_litovsk_talks }
+		x = -5
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #events of negotiating the treaty, you can still refuse those absurd proposals, youll lose some things, but less than rejecting it at the start
+		}
+	}
+
+	focus = { #Break Brest-Litovsk
+		id = SOV_INT_break_brest_litovsk
+		icon = GFX_goal_SOV_revolutionary_war_n
+		relative_position_id = SOV_INT_respect_decree_on_peace
+		prerequisite = { focus = SOV_INT_respect_decree_on_peace focus = SOV_INT_end_brest_litovsk_talks }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #only after the first ww end, i think..
+			factor = 1
+		}
+		completion_reward = { #war goals against Poland, Ukraine, those brest states.
+		}
+	}
+
+	focus = { #No Brest-Litovsk
+		id = SOV_INT_end_brest_litovsk_talks
+		icon = GFX_goal_SOV_break_brest_peace
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		mutually_exclusive = { focus = SOV_INT_respect_decree_on_peace }
+		x = -3
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Just event for germany, or news, saying that the Bolsheviks wont negotiate
+		}
+	}
+
+	focus = { #Left SRs
+		id = SOV_INT_invite_left_sr
+		icon = GFX_goal_SOV_left_eser_focus_n
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		mutually_exclusive = { focus = SOV_INT_bolshevik_congress }
+		x = 6
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #makes the left SR advisors available
+		}
+	}
+
+	focus = { #Ban Left SR
+		id = SOV_INT_bolshevik_congress
+		icon = GFX_goal_SOV_soviet_power_n
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		mutually_exclusive = { focus = SOV_INT_invite_left_sr }
+		x = 3
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {  #prob make those disappear from the bar
+		}
+	}
+
+	focus = { #Peasant Support
+		id = SOV_INT_gain_volost_soviets_support
+		icon = GFX_goal_SOV_reorganization_of_labor_armies_n
+		relative_position_id = SOV_INT_invite_left_sr
+		prerequisite = { focus = SOV_INT_invite_left_sr }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_left_sr_in_sovnarkom
+		icon = GFX_goal_SOV_red_interbrigades
+		relative_position_id = SOV_INT_invite_left_sr
+		prerequisite = { focus = SOV_INT_invite_left_sr }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe add advisors like Kolegayev, Proshian, etc, or if they will already be there, add them as ideas
+		}
+	}
+
+	focus = { #Bring Back old Mensheviks and SRs
+		id = SOV_INT_bring_back_old_mensheviks_and_srs
+		icon = GFX_goal_SOV_recruit_old_bureaucrats_to_state_apparatus
+		relative_position_id = SOV_INT_left_sr_in_sovnarkom
+		prerequisite = { focus = SOV_INT_left_sr_in_sovnarkom }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #U'll have to survive the split between the SRs, for that you would need to give the Cheka to them, or not sign the brest-litovsk, so then you could do this focus as a stable coalition with the SRs
+			factor = 1
+		}
+		completion_reward = { #Make some advisors available, maybe use a news, but basically, those i know rn that could be added being Kropotkin, Tchaikovsky, Martov, Chernov??, Plekhanov (maybe popular figurehead) (if alive), Parvus, Ivanovich, and maybe Axelrod
+		}
+	}
+
+	focus = { #Hinder SR support
+		id = SOV_INT_hinder_sr_support
+		icon = GFX_goal_SOV_crush_down_the_bolsheviks_left_eser
+		relative_position_id = SOV_INT_bolshevik_congress
+		prerequisite = { focus = SOV_INT_bolshevik_congress }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #
+		}
+	}
+
+	focus = { #Agitprop
+		id = SOV_INT_agitprop
+		icon = GFX_goal_SOV_cultural_revolution
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe some propaganda ideas, like vanilla one
+		}
+	}
+
+	focus = { #Prokekult
+		id = SOV_INT_prolekult
+		icon = GFX_goal_SOV_pioneer_organization_n
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #national spirit
+		}
+	}
+
+	focus = { #1918 constitution
+		id = SOV_INT_1918_constitution
+		icon = GFX_SOV_Constitution
+		relative_position_id = SOV_INT_abolish_the_russian_constitution
+		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+		x = 0
+		y = 2
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #national Spirit
+		}
+	}
+
+	focus = { #8th Congress of the Russian Communist Party
+		id = SOV_INT_8th_congress
+		icon = GFX_goal_SOV_extraordinary_party_congress
+		relative_position_id = SOV_INT_1918_constitution
+		prerequisite = { focus = SOV_INT_1918_constitution }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #some events regarding the decisions of the congress
+		}
+	}
+
+	focus = { #Soviet Cultural Revolution
+		id = SOV_INT_soviet_cultural_revolution
+		icon = GFX_goal_SOV_cultural_revolution
+		relative_position_id = SOV_INT_8th_congress
+		prerequisite = { focus = SOV_INT_8th_congress }
+		x = 4
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_expand_komsomol
+		icon = GFX_SOV_Promote_the_Young_Pioneers
+		relative_position_id = SOV_INT_soviet_cultural_revolution
+		prerequisite = { focus = SOV_INT_soviet_cultural_revolution }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe a komsomol national spirit
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_likbez
+		icon = GFX_goal_SOV_Likbez
+		relative_position_id = SOV_INT_soviet_cultural_revolution
+		prerequisite = { focus = SOV_INT_soviet_cultural_revolution }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #another mission, but diferent of the GOELRO one, just with decisions, timed ones, that will check at the end of the time expected, the quotas of literacy are met by this time, if not, it fails, but if does, you lose the low-literacy thing, and gain some buffs, youll chose between minor, medium, or major literacy programs, in certain areas maybe,  female or male, child, eldritch (with possibilities to add more or less percentages of literacy rate, depending on the percentage, elder people literacy programs are harder to give higher rates, while child ones are more likely to do it)
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_atheistic_propaganda
+		icon = GFX_SOV_Arise_for_Sacred_War
+		relative_position_id = SOV_INT_expand_komsomol
+		prerequisite = { focus = SOV_INT_expand_komsomol }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe timed national spirit
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_goelro
+		icon = GFX_goal_SOV_GOELRO
+		relative_position_id = SOV_INT_likbez
+		prerequisite = { focus = SOV_INT_likbez }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #decisions, a mission to be specific, in which you can electrify states, those will appear on map, like those circles as missions
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_vkhutemas
+		icon = GFX_goal_SOV_cultural_revolution
+		relative_position_id = SOV_INT_likbez
+		prerequisite = { focus = SOV_INT_likbez }
+		prerequisite = { focus = SOV_INT_expand_komsomol }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #add a national spirit
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_criticize_anarchist_and_syndicalist_deviances
+		icon = GFX_goal_SOV_struggle_against_counterrevolution
+		relative_position_id = SOV_INT_8th_congress
+		prerequisite = { focus = SOV_INT_8th_congress }
+		mutually_exclusive = { focus = SOV_INT_listen_to_the_decists }
+		x = -3
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Removal of previous non-bolsheviks revolutionaries
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_listen_to_the_decists
+		icon = GFX_goal_SOV_decentralization
+		relative_position_id = SOV_INT_8th_congress
+		prerequisite = { focus = SOV_INT_8th_congress }
+		mutually_exclusive = { focus = SOV_INT_criticize_anarchist_and_syndicalist_deviances }
+		x = -6
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #this will be fundamental to the new path, maybe this will just add a news, and political power, but the end of the path will lead to in my op the best path
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_workers_in_the_party_apparatus
+		icon = GFX_goal_SOV_organization_of_the_war_industry_council
+		relative_position_id = SOV_INT_listen_to_the_decists
+		prerequisite = { focus = SOV_INT_listen_to_the_decists }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Maybe to add some advisors, like Medvedev, or smth like that, maybe just production changes
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_cut_party_privileges
+		icon = GFX_goal_SOV_compromise_working_control
+		relative_position_id = SOV_INT_listen_to_the_decists
+		prerequisite = { focus = SOV_INT_listen_to_the_decists }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Maybe add smth about party privileges, and remove it 
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_denounce_cult_of_leadership
+		icon = GFX_goal_SOV_new_power_division
+		relative_position_id = SOV_INT_cut_party_privileges
+		prerequisite = { focus = SOV_INT_cut_party_privileges }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Idk
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_retake_first_international_precepts
+		icon = GFX_SOV_Reinforce_the_Third_Periodist_Theory
+		relative_position_id = SOV_INT_cut_party_privileges
+		prerequisite = { focus = SOV_INT_cut_party_privileges }
+		prerequisite = { focus = SOV_INT_workers_in_the_party_apparatus }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe an idea
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_open_cc_meetings_to_party_members
+		icon = GFX_SOV_Peoples_Front_Theory
+		relative_position_id = SOV_INT_workers_in_the_party_apparatus
+		prerequisite = { focus = SOV_INT_workers_in_the_party_apparatus }
+		prerequisite = { focus = SOV_INT_cut_party_privileges }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #maybe an idea
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_the_true_democratic_centralism
+		icon = GFX_focus_SOV_the_supreme_soviet
+		relative_position_id = SOV_INT_denounce_cult_of_leadership
+		prerequisite = { focus = SOV_INT_denounce_cult_of_leadership }
+		prerequisite = { focus = SOV_INT_retake_first_international_precepts }
+		mutually_exclusive = { focus = SOV_INT_all_power_to_the_soviets }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Will set a flag, that will make able a new focus tree for the future, the democratic centralist tree, in which whatever after lenins death, instead of the event popping up that would lead to the fight for power focuses, trotsky will be chosen as the leader, and the decist focus tree, instead of only Trotsky or Stalin would be used, no purges, only revolution, lol (it would lead to another event tho, instead of the fight for power, only one telling about trotsky chosen as the leader of the party)
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_all_power_to_the_soviets
+		icon = GFX_focus_generic_workers_and_farmers_rise
+		relative_position_id = SOV_INT_open_cc_meetings_to_party_members
+		prerequisite = { focus = SOV_INT_open_cc_meetings_to_party_members }
+		prerequisite = { focus = SOV_INT_retake_first_international_precepts }
+		mutually_exclusive = { focus = SOV_INT_the_true_democratic_centralism }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Will change the leader to the supreme soviet after the death of lenin, instead of the fight for power. but with other name, All-Soviet Congress.
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_expell_syndicalist_and_anarchist_members
+		icon = GFX_goal_SOV_split_of_sovnarkom
+		relative_position_id = SOV_INT_criticize_anarchist_and_syndicalist_deviances
+		prerequisite = { focus = SOV_INT_criticize_anarchist_and_syndicalist_deviances }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #prob just... remove Syndicalists, SRs, and Anarchists as advisors/militaries
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_criticize_left_communists
+		icon = GFX_goal_SOV_split_of_sovnarkom
+		relative_position_id = SOV_INT_expell_syndicalist_and_anarchist_members
+		prerequisite = { focus = SOV_INT_expell_syndicalist_and_anarchist_members }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #A newspaper, and political power i think
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_bolshevization_of_the_comintern
+		icon = GFX_SOV_Portray_A_Global_Soviet_Image
+		relative_position_id = SOV_INT_criticize_anarchist_and_syndicalist_deviances
+		prerequisite = { focus = SOV_INT_criticize_anarchist_and_syndicalist_deviances }
+		prerequisite = { focus = SOV_INT_the_comintern }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Will work just like the 8th congress, lots of choices, that will lead to the foundation of the Comintern, maybe work this as a dynamic modifier working as a national spirit, in which the choices would change its benefits
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_the_comintern
+		icon = GFX_SOV_Portray_A_Global_Soviet_Image
+		relative_position_id = SOV_INT_8th_congress
+		prerequisite = { focus = SOV_INT_8th_congress }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Will work just like the 8th congress, lots of choices, that will lead to the foundation of the Comintern, maybe work this as a dynamic modifier working as a national spirit, in which the choices would change its benefits
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_ban_factionalism
+		icon = GFX_goal_SOV_soviet_power_n
+		relative_position_id = SOV_INT_the_comintern
+		prerequisite = { focus = SOV_INT_the_comintern }
+		x = 0
+		y = 2
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Factionalism is already a national spirit, will be removed.
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_10th_congress
+		icon = GFX_goal_SOV_extraordinary_party_congress
+		relative_position_id = SOV_INT_ban_factionalism
+		prerequisite = { focus = SOV_INT_ban_factionalism }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Same as the 8th.
+		}
+	}
+
+	focus = { 
+		id = SOV_INT_form_the_ussr
+		icon = GFX_goal_SOV_form_USSR
+		relative_position_id = SOV_INT_10th_congress
+		prerequisite = { focus = SOV_INT_10th_congress }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #after the war, only
+			factor = 1
+		}
+		completion_reward = { #Will pop to the soviet republics a event to join the union, in which they would all accept, except for Finland and Poland, as ahistorical, and well.. will form the union-
+		}
+	}
+
+	focus = { #Stalin Nationalities hehe
+		id = SOV_INT_stalin_minister_of_nationalities
+		icon = GFX_SOV_Stalin_Outmaneuvered
+		relative_position_id = SOV_INT_form_the_ussr
+		prerequisite = { focus = SOV_INT_form_the_ussr }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { 
+		}
+	}
+
+	focus = { #Korenizatsiaa
+		id = SOV_INT_korenizatsiia
+		icon = GFX_SOV_Reverse_Korenizatsiya
+		relative_position_id = SOV_INT_stalin_minister_of_nationalities
+		prerequisite = { focus = SOV_INT_stalin_minister_of_nationalities }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Not Only a National Spirit, but a mission aswell
+		}
+	}
+
+	focus = { #Korenizatsiaa
+		id = SOV_INT_sr_autonomism
+		icon = GFX_SOV_Reverse_Korenizatsiya
+		relative_position_id = SOV_INT_korenizatsiia
+		prerequisite = { focus = SOV_INT_korenizatsiia }
+		mutually_exclusive = { focus = SOV_INT_hinder_skrypnyk_autonomists_influence }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Change the korenizatsiia thing, and prob do smth with Skrypnyk
+		}
+	}
+
+	focus = { #Korenizatsiaa
+		id = SOV_INT_hinder_skrypnyk_autonomists_influence
+		icon = GFX_SOV_Reverse_Korenizatsiya
+		relative_position_id = SOV_INT_korenizatsiia
+		prerequisite = { focus = SOV_INT_korenizatsiia }
+		mutually_exclusive = { focus = SOV_INT_sr_autonomism }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Remove skrypnyk as advisor, and other autonomists, aswell as changing the korenizatsiia nationa spirit
+		}
+	}
+
+	focus = { #Basmachi
+		id = SOV_INT_shut_down_the_basmachi_sun
+		icon = GFX_SOV_Reverse_Korenizatsiya
+		relative_position_id = SOV_INT_cheka
+		prerequisite = { focus = SOV_INT_cheka }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Allow some decisions against basmachi movement
+		}
+	}
+
+	focus = { #Basmachi
+		id = SOV_INT_assassinate_enver_pasha
+		icon = GFX_SOV_Reverse_Korenizatsiya
+		relative_position_id = SOV_INT_cheka
+		prerequisite = { focus = SOV_INT_cheka }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Decisions to try to assassinate the boy, like trotsky.
+		}
+	}
+
+	focus = { #Stalins Path
+		id = SOV_INT_stalins_rise_to_power
+		icon = GFX_goal_SOV_stalin
+		relative_position_id = SOV_INT_form_the_ussr
+		prerequisite = { focus = SOV_INT_form_the_ussr }
+		mutually_exclusive = { focus = SOV_INT_trotskys_succession }
+		x = 4
+		y = 1
+		cost = 1
+		ai_will_do = { #completed via focus
+			factor = 1
+		}
+		completion_reward = { #Basically goes down the Stalins branch
+		}
+	}
+
+	focus = { #Trotksy's Path
+		id = SOV_INT_trotskys_succession
+		icon = GFX_goal_SOV_trotsky
+		relative_position_id = SOV_INT_form_the_ussr
+		prerequisite = { focus = SOV_INT_form_the_ussr }
+		mutually_exclusive = { focus = SOV_INT_stalins_rise_to_power }
+		x = 10
+		y = 1
+		cost = 1
+		ai_will_do = { #completed via focus
+			factor = 1
+		}
+		completion_reward = { #Down the Trotkys branch
+		}
+	}
+
+	focus = { #Align Zinoviev
+		id = SOV_INT_align_zinoviev
+		icon = GFX_focus_SOV_ally_zinovyevists
+		relative_position_id = SOV_INT_stalins_rise_to_power
+		prerequisite = { focus = SOV_INT_stalins_rise_to_power focus = SOV_INT_trotskys_succession }
+		x = 2
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Align with him in the Succession mision, will give more support, and wont remove those supporters of him from the advisors
+		}
+	}
+
+	focus = { #Align Kamenev
+		id = SOV_INT_align_kamenev
+		icon = GFX_focus_SOV_ally_zinovyevists
+		relative_position_id = SOV_INT_trotskys_succession
+		prerequisite = { focus = SOV_INT_stalins_rise_to_power focus = SOV_INT_trotskys_succession }
+		x = -2
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Align with him in the Succession mision, will give more support, and wont remove those supporters of him from the advisors
+		}
+	}
+
+	focus = { #Align Bukharin
+		id = SOV_INT_align_bukharin
+		icon = GFX_focus_SOV_ally_bukharinists
+		relative_position_id = SOV_INT_align_zinoviev
+		prerequisite = { focus = SOV_INT_align_zinoviev }
+		prerequisite = { focus = SOV_INT_align_kamenev }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Align with him in the Succession mision, will give more support, and wont remove those supporters of him from the advisors
+		}
+	}
+
+	focus = { #Stalinists in the Party Apparatus
+		id = SOV_INT_stalinists_in_the_party_apparatus
+		icon = GFX_goal_SOV_red_interbrigades
+		relative_position_id = SOV_INT_stalins_rise_to_power
+		prerequisite = { focus = SOV_INT_stalins_rise_to_power }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { # maybe add stalinist advisors and change leaders of the SRs to other ones, aswell as raise support
+		}
+	}
+
+	focus = { #Antisemitic Propaganda
+		id = SOV_INT_antisemitic_propaganda
+		icon = GFX_goal_SOV_strike_to_centers_of_crystallization
+		relative_position_id = SOV_INT_stalinists_in_the_party_apparatus
+		prerequisite = { focus = SOV_INT_stalinists_in_the_party_apparatus }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { # add support for Stalin
+		}
+	}	
+
+	focus = { #Lenin's Testament
+		id = SOV_INT_publish_lenins_testament
+		icon = GFX_SOV_Constitution
+		relative_position_id = SOV_INT_trotskys_succession
+		prerequisite = { focus = SOV_INT_trotskys_succession }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #News and more support
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_criticize_stalins_position_on_georgia
+		icon = GFX_goal_SOV_old_army_demobilisation
+		relative_position_id = SOV_INT_publish_lenins_testament
+		prerequisite = { focus = SOV_INT_publish_lenins_testament }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #News and more support
+		}
+	}
+
+	focus = { #Soviet Navy
+		id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_war_communism
+		x = 10
+		y = -1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		allow_branch = {
+            date > 1918.12.31
+            date < 1924.1.1
+        }
+		completion_reward = {
+			add_political_power = 150
+		}
+	}
+
+	focus = { #Kronstadt Rebellion
+		id = SOV_INT_dealing_with_the_red_sailors
+		icon = GFX_goal_SOV_sailors_of_revolution
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		prerequisite = { focus = SOV_INT_ice_cruise_of_the_baltic_fleet }
+		mutually_exclusive = { focus = SOV_INT_crush_rebel_saillors }
+		x = -4
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Do something, maybe an event that will lead to other focuses, idk
+		}
+	}
+
+	focus = { #Kronstadt Rebellion
+		id = SOV_INT_crush_rebel_saillors
+		icon = GFX_goal_SOV_destruction_of_savings
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		prerequisite = { focus = SOV_INT_ice_cruise_of_the_baltic_fleet }
+		mutually_exclusive = { focus = SOV_INT_dealing_with_the_red_sailors focus = SOV_INT_the_red_power_in_the_seas }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Do something, maybe an event that will lead to other focuses, idk
+		}
+	}
+
+	focus = { #Stronk Red Fleet
+		id = SOV_INT_the_red_power_in_the_seas
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		prerequisite = { focus = SOV_INT_ice_cruise_of_the_baltic_fleet }
+		mutually_exclusive = { focus = SOV_INT_sell_old_fleet_for_economic_relief }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Allow the branch to make the fleet powerfull, maybe add some benefits to the Red Fleet spirit
+		}
+	}
+
+	focus = { #Need for economic relief lol
+		id = SOV_INT_sell_old_fleet_for_economic_relief
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		prerequisite = { focus = SOV_INT_ice_cruise_of_the_baltic_fleet }
+		mutually_exclusive = { focus = SOV_INT_the_red_power_in_the_seas  }
+		x = 4
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Event in germany, to accept the old fleet scrap, which would help them to develop naval technology faster, in exchange of some factories. will give bad modifiers for fleet, but yk.. economic
+		}
+	}
+
+	focus = { #Wrangel's Fleet
+		id = SOV_INT_assault_wrangels_fleet
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		prerequisite = { focus = SOV_INT_the_red_power_in_the_seas focus = SOV_INT_crush_rebel_saillors }
+		mutually_exclusive = { focus = SOV_INT_the_red_power_in_the_seas  }
+		x = 0
+		y = 2
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Event, in which, depending on what path you take, you liberate different outcomes, if you crush the saillors, the mass purge will happen, if you stronk navy, no purge, some benefits for the navy
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_attack_kronstadt
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_crush_rebel_saillors
+		prerequisite = { focus = SOV_INT_crush_rebel_saillors }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Prolly working as a national spirit or idea that gives you debuffs, and enable decisions to fight it, and with that, remove it, you have a certain time for it not to burst and end in another civ war
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_fund_the_red_fleet_reconstruction
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_the_red_power_in_the_seas
+		prerequisite = { focus = SOV_INT_the_red_power_in_the_seas }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Production boost and research boost for navy things.
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_listen_to_rebels_demands
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_dealing_with_the_red_sailors
+		prerequisite = { focus = SOV_INT_dealing_with_the_red_sailors }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Basically, can only do this if completed the democratic centralists thing, the anarchist ones, the NEP, and the Left SRs in the party, if not, it will be blocked by the first focus to deal with them, and then, this focus will add some things, in an news/event, will lower the press repression, and shit like that, and maybe buffs for the naval thingies
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_focus_on_the_land
+		icon = GFX_SOV_Red_Fleet
+		relative_position_id = SOV_INT_sell_old_fleet_for_economic_relief
+		prerequisite = { focus = SOV_INT_sell_old_fleet_for_economic_relief }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Add some military factory boost
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_rkka
+		icon = GFX_goal_SOV_WPRA
+		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
+		allow_branch = {
+            date > 1918.12.31
+            date < 1924.1.1
+        }
+		x = 10
+		y = 0
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Add the national spirit of the Red Army.. with lotta debuffs
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_democratize_the_army
+		icon = GFX_goal_SOV_cancellation_of_election_of_officers
+		relative_position_id = SOV_INT_rkka
+		prerequisite = { focus = SOV_INT_rkka }
+		mutually_exclusive = { focus = SOV_INT_retake_army_hierarchy }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Organizational debuffs, aswell as defensive and attack debuffs, but buffs on external influence, stability, and ideology drift, aswell as maybe other army minor buffs
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_red_guard_primacy
+		icon = GFX_goal_SOV_mobilization_of_red_guard
+		relative_position_id = SOV_INT_democratize_the_army
+		prerequisite = { focus = SOV_INT_democratize_the_army }
+		x = -2
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Some buffs to organization, and ill read more about the red guards to see which other buffs could it give
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_instensify_propaganda
+		icon = GFX_SOV_Proletariat_Dictatorship
+		relative_position_id = SOV_INT_red_guard_primacy
+		prerequisite = { focus = SOV_INT_red_guard_primacy }
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #More ideological drift defense, less enemy organization, more defense
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_socialist_militias
+		icon = GFX_goal_SOV_council_of_workers_and_peasants_defense
+		relative_position_id = SOV_INT_instensify_propaganda
+		prerequisite = { focus = SOV_INT_instensify_propaganda }
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Add more troops maybe
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_retake_army_hierarchy
+		icon = GFX_goal_SOV_WPRA_demobilisation
+		relative_position_id = SOV_INT_rkka
+		prerequisite = { focus = SOV_INT_rkka }
+		mutually_exclusive = { focus = SOV_INT_democratize_the_army }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Lessen some major debuffs of the red army effect, in attack, defense, organization, and others.
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_call_former_tsarist_officers
+		icon = GFX_goal_SOV_atamanshina
+		relative_position_id = SOV_INT_retake_army_hierarchy
+		prerequisite = { focus = SOV_INT_retake_army_hierarchy }
+		x = 2
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Make some officers of the army available, such as Brusilov, Polivanov
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_assassinate_white_generals
+		icon = GFX_goal_SOV_attempt_on_the_leader_of_the_white
+		relative_position_id = SOV_INT_call_former_tsarist_officers
+		prerequisite = { focus = SOV_INT_call_former_tsarist_officers }
+		mutually_exclusive = { focus = SOV_INT_brusilov_appeal }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = { # decisions to kill ppl 
+			factor = 1
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_brusilov_appeal
+		icon = GFX_goal_SOV_mobilization_of_red_guard
+		relative_position_id = SOV_INT_call_former_tsarist_officers
+		prerequisite = { focus = SOV_INT_call_former_tsarist_officers }
+		mutually_exclusive = { focus = SOV_INT_assassinate_white_generals }
+		x = -1
+		y = 1
+		cost = 1
+		ai_will_do = { # decision to convert ppl to us
+			factor = 1
+		}
+		completion_reward = { #
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_expand_red_cossacks
+		icon = GFX_goal_SOV_mobile_military_formations
+		relative_position_id = SOV_INT_brusilov_appeal
+		prerequisite = { focus = SOV_INT_brusilov_appeal }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { #
+			factor = 1
+		}
+		completion_reward = { #Make some ppl able to be converted
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_begin_decossackization
+		icon = GFX_SOV_decossackization
+		relative_position_id = SOV_INT_assassinate_white_generals
+		prerequisite = { focus = SOV_INT_assassinate_white_generals }
+		x = 0
+		y = 1
+		cost = 1
+		ai_will_do = { # Idk how would decossackization work tbh
+			factor = 1
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_special_punitive_department
+		icon = GFX_goal_SOV_no_mercy_to_deserters
+		relative_position_id = SOV_INT_rkka
+		prerequisite = { focus = SOV_INT_democratize_the_army focus = SOV_INT_retake_army_hierarchy }
 		x = 0
 		y = 2
 		cost = 1
@@ -197,21 +2484,398 @@ focus_tree = {
 		}
 	}
 
-	focus = { #1918 constitution
-		id = SOV_INT_1918_constitution
-		icon = GFX_SOV_Constitution
-		relative_position_id = SOV_INT_abolish_the_russian_constitution
-		prerequisite = { focus = SOV_INT_abolish_the_russian_constitution }
+	focus = { #
+		id = SOV_INT_repatriate_deserters
+		icon = GFX_goal_SOV_fight_against_deserters
+		relative_position_id = SOV_INT_special_punitive_department
+		prerequisite = { focus = SOV_INT_special_punitive_department }
 		x = 0
 		y = 1
 		cost = 1
 		ai_will_do = {
 			factor = 1
 		}
-		completion_reward = { 
+		completion_reward = { #more manpower maybe
 		}
 	}
 
+	focus = { #
+		id = SOV_INT_gru
+		icon = GFX_focus_prc_agrarian_socialism
+		relative_position_id = SOV_INT_repatriate_deserters
+		prerequisite = { focus = SOV_INT_socialist_militias focus = SOV_INT_expand_red_cossacks focus = SOV_INT_begin_decossackization }
+		x = 0
+		y = 2
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #National Spirit. maybe similar to the prince of terror benefits.
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_ethnic_regiments
+		icon = GFX_goal_SOV_schools_of_red_cadets
+		relative_position_id = SOV_INT_gru
+		prerequisite = { focus = SOV_INT_gru }
+		x = 3
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #National Spirit. maybe similar to the prince of terror benefits.
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_general_staff_academy_of_the_red_army
+		icon = GFX_goal_SOV_schools_of_red_cadets
+		relative_position_id = SOV_INT_gru
+		prerequisite = { focus = SOV_INT_gru }
+		x = 1
+		y = 1
+		cost = 1
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #National Spirit. maybe similar to the prince of terror benefits.
+		}
+	}
+
+	focus = { #Vsevobuch
+		id = SOV_INT_vsevobuch
+		icon = GFX_goal_SOV_village_self-defense_groups
+		relative_position_id = SOV_INT_gru
+		prerequisite = { focus = SOV_INT_gru }
+		x = -1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #conscription, and more divs
+		}
+	}
+
+	focus = { #Partisans
+		id = SOV_INT_red_partisanism
+		icon = GFX_goal_SOV_red_partisanism
+		relative_position_id = SOV_INT_gru
+		prerequisite = { focus = SOV_INT_gru }
+		x = -3
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Choices across the enemy territory maybe to add troops of ours there, in minor cities, idk
+		}
+	}
+
+	focus = { #Demobilize
+		id = SOV_INT_red_army_demobilization
+		icon = GFX_goal_SOV_old_army_demobilisation
+		relative_position_id = SOV_INT_vsevobuch
+		prerequisite = { focus = SOV_INT_vsevobuch focus = SOV_INT_red_partisanism focus = SOV_INT_ethnic_regiments focus = SOV_INT_general_staff_academy_of_the_red_army }
+		x = 1
+		y = 1
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Loses many troops, lower the conscription rate, and maybe give some buffs to industrial, or just unconscript
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_international_affairs
+		icon = GFX_goal_SOV_comintern
+		relative_position_id = SOV_INT_gulag_system
+		allow_branch = {
+            date > 1918.12.31
+            date < 1924.1.1
+        }
+		x = 0
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Add the national spirit of the Red Army.. with lotta debuffs
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_form_the_polrewkom
+		icon = GFX_focus_POL_the_four_year_plan
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		x = -6
+		y = 1
+		cost = 10
+		ai_will_do = { #Has war with Poland
+			factor = 1
+		}
+		completion_reward = { #Will make an event if poland capitulates, in which the polish territory is transferred to the commies, or maybe create an territory that takes all the land the soviets took
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_the_bulgarian_question
+		icon = GFX_focus_BUL_the_fatherland_front
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		x = -8
+		y = 1
+		cost = 10
+		ai_will_do = { #Has war with Poland
+			factor = 1
+		}
+		completion_reward = { #Will make an event if poland capitulates, in which the polish territory is transferred to the commies, or maybe create an territory that takes all the land the soviets took
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_ignite_tataburnay_uprising
+		icon = GFX_goal_SOV_appoint_pro_soviet_government
+		relative_position_id = SOV_INT_the_bulgarian_question
+		prerequisite = { focus = SOV_INT_the_bulgarian_question }
+		prerequisite = { focus = SOV_INT_form_the_polrewkom }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = { #Has war with Poland
+			factor = 1
+		}
+		completion_reward = { #Will make an event if poland capitulates, in which the polish territory is transferred to the commies, or maybe create an territory that takes all the land the soviets took
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_aid_finnish_reds
+		icon = GFX_focus_SWE_finnish_communists
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		x = -4
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Give guns for the  finnish reds
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_intervene_in_finland
+		icon = GFX_focus_SWE_finnish_communists
+		relative_position_id = SOV_INT_aid_finnish_reds
+		prerequisite = { focus = SOV_INT_aid_finnish_reds }
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #War goal against Finland of Mannerheim
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_advise_the_delay_of_german_revolution
+		icon = GFX_goal_SOV_generic_stalinism
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		mutually_exclusive = { focus = SOV_INT_bolshevik_brigades }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Give guns for the  finnish reds
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_bolshevik_brigades
+		icon = GFX_goal_SOV_red_interbrigades
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		mutually_exclusive = { focus = SOV_INT_advise_the_delay_of_german_revolution }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Loses troops, and germans get more troops
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_invite_kapd_to_comintern
+		icon = GFX_goal_SOV_kapd
+		relative_position_id = SOV_INT_advise_the_delay_of_german_revolution
+		prerequisite = { focus = SOV_INT_bolshevik_brigades focus = SOV_INT_advise_the_delay_of_german_revolution }
+		mutually_exclusive = { focus = SOV_INT_back_kpd }
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Loses troops, and germans get more troops
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_back_kpd
+		icon = GFX_focus_SOV_comintern
+		relative_position_id = SOV_INT_bolshevik_brigades
+		prerequisite = { focus = SOV_INT_bolshevik_brigades focus = SOV_INT_advise_the_delay_of_german_revolution }
+		mutually_exclusive = { focus = SOV_INT_invite_kapd_to_comintern }
+		x = 0
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Loses troops, and germans get more troops
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_intervene_in_hungarian_invasion
+		icon = GFX_goal_SOV_hungarian_peoples_army_shine
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		mutually_exclusive = { focus = SOV_INT_back_bela_kun }
+		x = 4
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #War goal against romania, and others
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_romanian_ultimatum
+		icon = GFX_focus_generic_attack_romania
+		relative_position_id = SOV_INT_intervene_in_hungarian_invasion
+		prerequisite = { focus = SOV_INT_intervene_in_hungarian_invasion }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #War goal against romania, and others
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_french_ultimatum
+		icon = GFX_focus_attack_france
+		relative_position_id = SOV_INT_intervene_in_hungarian_invasion
+		prerequisite = { focus = SOV_INT_intervene_in_hungarian_invasion }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #War goal against romania, and others
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_back_bela_kun
+		icon = GFX_goal_SOV_hungarian_peoples_army_shine
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		mutually_exclusive = { focus = SOV_INT_intervene_in_hungarian_invasion }
+		x = 6
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #More support for the communists in hungary
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_arm_mongol_revolutionaries
+		icon = GFX_goal_SOV_mon_cavalry
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		x = 8
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #More support for the communists in hungary
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_aid_jangal_movement
+		icon = GFX_goal_SOV_recreate_the_persian_socialist_soviet_republic
+		relative_position_id = SOV_INT_international_affairs
+		prerequisite = { focus = SOV_INT_international_affairs }
+		x = 10
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Troops for the jangali
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_deepen_jangali_help
+		icon = GFX_focus_generic_attack_iran
+		relative_position_id = SOV_INT_aid_jangal_movement
+		prerequisite = { focus = SOV_INT_aid_jangal_movement }
+		mutually_exclusive = { focus = SOV_INT_russo_persian_treaty_of_friendship }
+		x = 1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #war goal oniran
+		}
+	}
+
+	focus = { #
+		id = SOV_INT_russo_persian_treaty_of_friendship
+		icon = GFX_focus_generic_attack_iran
+		relative_position_id = SOV_INT_aid_jangal_movement
+		prerequisite = { focus = SOV_INT_aid_jangal_movement }
+		mutually_exclusive = { focus = SOV_INT_deepen_jangali_help }
+		x = -1
+		y = 1
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = { #Event for iran, in which you gain military access in iran, and the whites lose their access to it
+		}
+	}
+	
+#event could trigger once controlls a bit of territory in crimea, in which you have certain few days to reach Sevastopol/Complete the focus of assault, if you reach within the estimated time, the Wrangel's fleet won't be evacuated, and if not, you won't have those ships
+#maybe the wrangel's fleet one can be achieved or if you crush the rebel saillors, or if you focus on being powerful in navy
+
+
+##########################################################################################################
 
 	#Focus for Second Five Year plan
 	focus = {
