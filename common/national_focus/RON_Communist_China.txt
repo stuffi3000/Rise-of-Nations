@@ -9193,5 +9193,289 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			add_ideas = of_the_people_by_the_people_for_the_people
 		}
 	}
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################COLD WAR FOCUS##################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+	###############################################################################################################################
+
+
+	#Strike the KMT
+	focus = {
+		id = PRC_strike_the_kmt
+		icon = GFX_PRC_strike_the_kmt
+		x = 5
+		y = 1
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		allow_branch = {
+			date > 1949.1.1
+			NOT = {
+				is_puppet_of = JAP
+			}
+		}
+		bypass = {
+			has_war_with = CHI
+		}
+		completion_reward = {
+			            declare_war_on = {
+                target = CHI
+                type = annex_everything
+            set_global_flag = PRC_restart_chinese_civil_war
+			}
+		}
+	}
+
+	#Every man must fight
+	focus = {
+		id = PRC_every_man_must_fight
+		icon = GFX_PRC_every_man_must_fight
+		x = 4
+		y = 2
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_strike_the_kmt  }
+	}
+
+	#Mao is the only way!
+	focus = {
+		id = PRC_maoistheonlyway
+		icon = GFX_PRC_maoistheonlyway
+		x = 6
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		cost = 10
+		completion_reward = {
+			add_ideas = mao_the_way
+		}
+		prerequisite = { focus = PRC_strike_the_kmt  }
+	}
+
+	#Secure the coast
+	focus = {
+		id = PRC_secure_the_coast
+		icon = GFX_PRC_secure_the_coast
+		x = 3
+		y = 3
+		cost = 13
+		cancel_if_invalid = yes
+		available = {
+			controls_state = 596
+			controls_state = 595
+			controls_state = 592
+		}
+		completion_reward = {
+			add_war_support = 0.05
+		}
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
+	}
+
+	#Mainland Secured
+	focus = {
+		id = PRC_mainland_secured
+		icon = GFX_PRC_mainland_secured
+		x = 3
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		available = {
+			NOT = {
+				country_exists = QIN
+				country_exists = CFT
+    			country_exists = CZL
+    			country_exists = CAH
+    			country_exists = CGX
+    			country_exists = CYN
+    			country_exists = CSC
+    			country_exists = CSX
+    			country_exists = CXJ
+    			country_exists = CGD
+    			country_exists = CHN
+    			country_exists = CGZ
+    			country_exists = CJG
+    			country_exists = CEX
+    			country_exists = CYX
+    			country_exists = CSD
+    			country_exists = CCS
+    			country_exists = CQY
+    			country_exists = CHH
+    			country_exists = CFJ
+    			country_exists = CCH
+    			country_exists = CRH
+    			country_exists = CJX
+    			country_exists = CJS
+    			country_exists = CHB
+    			country_exists = CZJ
+    			country_exists = CHJ
+    			country_exists = CJL
+    			country_exists = CGS
+    			country_exists = CNX
+    			country_exists = CQH
+    			country_exists = CSY
+    			country_exists = CXK
+    			country_exists = CXZ
+    			country_exists = CBJ
+    			country_exists = CSH
+    			country_exists = CTW
+    			country_exists = CLS
+    			country_exists = CXG
+    			country_exists = CAO
+    			country_exists = CWH
+				country_exists = ANH
+				country_exists = SHA
+				country_exists = ZHI
+				country_exists = SHX
+				country_exists = MAN
+				country_exists = XSM
+				country_exists = FEN
+				country_exists = YUN
+				country_exists = GUC
+				country_exists = SIK
+				country_exists = CHI
+				country_exists = SIC
+				country_exists = GUI
+			}
+		}
+		completion_reward = {
+	
+			remove_ideas = PRC_defeatism_1
+			add_ideas = struggling_economy			
+			hidden_effect = {
+				remove_ideas = PRC_defeatism_2
+			}
+		}
+		prerequisite = { focus = PRC_secure_the_coast  }
+	}
+
+	#No progress
+	focus = {
+		id = PRC_no_progress
+		icon = GFX_PRC_no_progress
+		x = 7
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		cost = 13
+
+		available = {	
+			OR = {
+				AND = {
+			CHI = {
+			controls_state = 596
+			controls_state = 595
+			controls_state = 592				
+			}		
+			date > 1950.4.1
+				}
+				surrender_progress > 0.3
+			}
+		}
+		completion_reward = {
+			remove_ideas = mao_the_way
+			add_manpower = -10000
+		}
+		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
+		mutually_exclusive = { focus = PRC_secure_the_coast  }
+	}
+
+	#Invade Taiwan
+	focus = {
+		id = PRC_invade_taiwan
+		icon = GFX_PRC_invade_taiwan
+		x = 2
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_mainland_secured  }
+		available = {
+			NOT = {
+				has_ideas = RAJ_rebuilding_the_nation
+			}
+		}
+		completion_reward = {
+		     declare_war_on = {
+                target = TWN
+                type = annex_everything
+            }
+		}
+		mutually_exclusive = { focus = PRC_ingore_the_island  }
+	}
+
+	#Ingore the island
+	focus = {
+		id = PRC_ingore_the_island
+		icon = GFX_PRC_ingore_the_island
+		x = 4
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_mainland_secured  }
+		completion_reward = {
+			add_stability = 0.03
+			add_war_support = 0.03
+			add_timed_idea = {
+				days = 2000
+				idea = RAJ_rebuilding_the_nation
+			}					
+		}
+		mutually_exclusive = { focus = PRC_invade_taiwan  }
+	}
+
+	#Beg stalin
+	focus = {
+		id = PRC_beg_stalin
+		icon = GFX_PRC_beg_stalin
+		x = 7
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_no_progress  }
+	}
+
+	#Stalin's puppet
+	focus = {
+		id = PRC_stalinspuppet
+		icon = GFX_PRC_stalinspuppet
+		x = 6
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_beg_stalin  }
+		mutually_exclusive = { focus = PRC_all_alone  }
+	}
+
+	#All alone
+	focus = {
+		id = PRC_all_alone
+		icon = GFX_PRC_all_alone
+		x = 8
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = PRC_beg_stalin  }
+		mutually_exclusive = { focus = PRC_stalinspuppet  }
+	}
+
 
 }
