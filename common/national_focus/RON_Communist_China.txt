@@ -9209,11 +9209,11 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_strike_the_kmt
 		icon = GFX_PRC_strike_the_kmt
-		x = 5
+		x = 7
 		y = 1
-		cost = 10
+		cost = 4
 		search_filters = {
-			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_ANNEXATION
 		}
 		allow_branch = {
 			date > 1949.1.1
@@ -9242,9 +9242,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_every_man_must_fight
 		icon = GFX_PRC_every_man_must_fight
-		x = 4
+		x = 5
 		y = 2
-		cost = 10
+		cost = 4
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
@@ -9267,12 +9267,12 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_maoistheonlyway
 		icon = GFX_PRC_maoistheonlyway
-		x = 6
+		x = 9
 		y = 2
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
-		cost = 10
+		cost = 4
 		available = {
 			has_war_with = CHI
 		}
@@ -9319,6 +9319,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		search_filters = {
 			FOCUS_FILTER_MANPOWER
 		}
+		mutually_exclusive = { focus = PRC_no_progress }
 		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
 	}
 
@@ -9329,8 +9330,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		x = 3
 		y = 4
 		search_filters = {
-			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
 		}
+		cost = 5
 		available = {
 			NOT = {
 				country_exists = QIN
@@ -9409,7 +9411,8 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
-		cost = 10
+		cost = 5
+		mutually_exclusive = { focus = PRC_secure_the_coast }
 
 		bypass = {
 			NOT = {
@@ -9448,8 +9451,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		x = 2
 		y = 5
 		search_filters = {
-			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_ANNEXATION
 		}
+		cost = 10
 		prerequisite = { focus = PRC_mainland_secured  }
 		available = {
 			NOT = {
@@ -9474,6 +9478,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
+		cost = 10
 		prerequisite = { focus = PRC_mainland_secured  }
 		completion_reward = {
 			add_stability = 0.03
@@ -9492,15 +9497,173 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_PRC_beg_stalin
 		x = 7
 		y = 4
+		cost = 5
 		search_filters = {
-			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_WAR_SUPPORT
 		}
 		prerequisite = { focus = PRC_no_progress  }
 		completion_reward = {
 		PRC = {	country_event = wtt_warlord_vs_prc.37 }
 		}
 	}
-
+	#Save korea
+	focus = {
+		id = PRC_save_korea
+		icon = GFX_goal_Korea_flag
+		x = 11
+		y = 3
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+		}
+		available = {
+			country_exists = DPK
+			OR = {
+			DPK = {
+				has_war_with = USA
+			}		
+			DPK = {
+				surrender_progress > 0.4
+			}
+			}
+			NOT = {
+				has_completed_focus = PRC_beg_stalin
+			}
+		}
+		prerequisite = { focus = PRC_maoistheonlyway  }
+		completion_reward = {
+		PRC = {	country_event = CW_Expansion_country.206 }
+		}
+	}
+focus = {
+		id = PRC_declare_war
+		icon = GFX_goal_generic_attack_allies
+		x = 10
+		y = 4
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+		}
+		mutually_exclusive = { focus = PRC_material_support  }
+		available = {
+			has_war_together_with = DPK
+		}
+		prerequisite = { focus = PRC_save_korea  }
+		completion_reward = {
+		add_war_support = 0.03
+		add_stability = 0.03
+		KOR = {
+			add_timed_idea = {
+				idea = surprise_attack
+				days = 400
+			}
+		}
+		}
+	}	
+focus = {
+		id = PRC_stalemate
+		icon = GFX_focus_chi_one_china_policy
+		x = 12
+		y = 5
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+				DPK = {
+					has_capitulated = yes
+			}
+			date > 1953.1.1
+			has_war_with = USA
+			}
+		prerequisite = { focus = PRC_declare_war  focus = PRC_material_support}
+		completion_reward = {
+					add_popularity = {
+						ideology = communism
+						popularity = -0.2
+					}			
+		add_war_support = -0.03
+		add_stability = -0.03
+	every_country = {
+				limit = {
+					has_war_with = PRC
+					NOT = {
+						tag = CHI
+					}
+				}
+				white_peace = PRC
+			}
+		}
+	}	
+focus = {
+		id = PRC_victory
+		icon = GFX_focus_generic_army_tanks2
+		x = 10
+		y = 5
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+			has_war_together_with = DPK
+			OR = {
+			KOR = {
+				has_capitulated = yes
+			}
+			ROK = {
+				has_capitulated = yes
+			}
+			NOT = {
+				country_exists = KOR
+				country_exists = ROK
+			}
+			}
+		}
+		mutually_exclusive = { focus = PRC_stalemate  }
+		prerequisite = { focus = PRC_declare_war  focus = PRC_material_support}
+		completion_reward = {
+		add_war_support = 0.03
+		add_stability = 0.03
+		USA = {
+		add_popularity = {
+			ideology = communism
+			popularity = 0.3
+		}			
+		add_war_support = -0.03
+		add_stability = -0.03
+		}
+	every_country = {
+				limit = {
+					has_war_with = PRC
+					NOT = {
+						tag = CHI
+					}
+				}
+				white_peace = PRC
+			}		
+		}
+	}			
+focus = {
+		id = PRC_material_support
+		icon = GFX_focus_generic_army_tanks2
+		x = 12
+		y = 4
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+			has_war_together_with = DPK
+		}
+		mutually_exclusive = { focus = PRC_declare_war  }
+		prerequisite = { focus = PRC_save_korea  }
+		completion_reward = {
+		custom_effect_tooltip = "If any other country has a war with North Korea We Will Be Obligated To Defend it"
+		add_war_support = 0.03
+		add_stability = 0.03
+		give_guarantee = DPK		
+		}
+	}		
 	#Stalin's puppet
 	focus = {
 		id = PRC_stalinspuppet
@@ -9510,6 +9673,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
+		cost = 10
 		available = {
 			has_war_together_with = SOV
 		}
@@ -9529,6 +9693,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_PRC_all_alone
 		x = 8
 		y = 5
+		cost = 10
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
