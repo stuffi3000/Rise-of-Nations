@@ -9211,7 +9211,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_PRC_strike_the_kmt
 		x = 7
 		y = 1
-		cost = 4
+		cost = 10
 		search_filters = {
 			FOCUS_FILTER_ANNEXATION
 		}
@@ -9244,7 +9244,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_PRC_every_man_must_fight
 		x = 5
 		y = 2
-		cost = 4
+		cost = 10
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
@@ -9272,7 +9272,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
-		cost = 4
+		cost = 10
 		available = {
 			has_war_with = CHI
 		}
@@ -9282,6 +9282,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}		
 		completion_reward = {
+			add_manpower = 50000			
 			add_ideas = mao_the_way
 		}
 		prerequisite = { focus = PRC_strike_the_kmt  }
@@ -9315,6 +9316,10 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		}
 		completion_reward = {
 			add_war_support = 0.1
+remove_ideas = PRC_defeatism_1
+			hidden_effect = {
+				remove_ideas = PRC_defeatism_2
+			}			
 		}
 		search_filters = {
 			FOCUS_FILTER_MANPOWER
@@ -9392,12 +9397,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		completion_reward = {
-	
-			remove_ideas = PRC_defeatism_1
-			add_ideas = struggling_economy			
-			hidden_effect = {
-				remove_ideas = PRC_defeatism_2
-			}
+			add_ideas = struggling_economy		
 		}
 		prerequisite = { focus = PRC_secure_the_coast  }
 	}
@@ -9439,6 +9439,15 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 						ideology = communism
 						popularity = -0.35
 					}			
+					if = {
+						limit = {
+						has_ideas = PRC_defeatism_1
+					}
+					swap_ideas = {
+						remove_idea = PRC_defeatism_1
+						add_idea = PRC_defeatism_2
+					}
+					}
 		}
 		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
 		mutually_exclusive = { focus = PRC_secure_the_coast  }
@@ -9512,22 +9521,23 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_Korea_flag
 		x = 11
 		y = 3
-		cost = 5
+		cost = 3
 		search_filters = {
 			FOCUS_FILTER_ANNEXATION
 		}
 		available = {
-			country_exists = DPK
-			OR = {
-			DPK = {
-				has_war_with = USA
-			}		
+			country_exists = DPK	
 			DPK = {
 				surrender_progress > 0.4
 			}
-			}
 			NOT = {
 				has_completed_focus = PRC_beg_stalin
+			}
+		}
+		bypass = {
+			OR = {
+			has_war_with = ROK
+			has_war_with = KOR
 			}
 		}
 		prerequisite = { focus = PRC_maoistheonlyway  }
@@ -9570,11 +9580,10 @@ focus = {
 			FOCUS_FILTER_POLITICAL
 		}
 		available = {
-				DPK = {
-					has_capitulated = yes
-			}
+			country_exists = DPK
+			country_exists = ROK
+			ROK = {has_war_with = DPK}
 			date > 1953.1.1
-			has_war_with = USA
 			}
 		prerequisite = { focus = PRC_declare_war  focus = PRC_material_support}
 		completion_reward = {
@@ -9606,6 +9615,7 @@ focus = {
 		}
 		available = {
 			has_war_together_with = DPK
+			has_war_with = USA
 			OR = {
 			KOR = {
 				has_capitulated = yes
@@ -9653,7 +9663,8 @@ focus = {
 			FOCUS_FILTER_POLITICAL
 		}
 		available = {
-			has_war_together_with = DPK
+			NOT = {has_war_together_with = DPK }
+			country_exists = DPK
 		}
 		mutually_exclusive = { focus = PRC_declare_war  }
 		prerequisite = { focus = PRC_save_korea  }
@@ -9708,6 +9719,350 @@ focus = {
 		prerequisite = { focus = PRC_beg_stalin  }
 		mutually_exclusive = { focus = PRC_stalinspuppet  }
 	}
+	
+	focus = {
+		id = PRC_rebuilding_china
+		icon = GFX_LEP_tea_trade
+		x = 7
+		y = 6
+		cost = 10
+		prerequisite = {focus = PRC_victory focus = PRC_stalemate focus = PRC_ingore_the_island focus = PRC_invade_taiwan}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			OR = {
+			has_idea = workers_paradise
+			has_idea = workers_paradise2
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = CHI
+				country_exists = CHI
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = "Don't worry if you have done these focuses already, they will bypass!"
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+			add_ideas = workers_paradise			
+		}
+	}
+
+	focus = {
+		id = PRC_Hundred_Flowers_Campaign
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = PRC_rebuilding_china }
+		x = -1
+		y = 1
+		relative_position_id = PRC_rebuilding_china
+		cost = 50
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
 
 
+		
+		ai_will_do = {
+			factor = 2
+		}
+
+		bypass = {
+			has_completed_focus = KMT_hundred_flowers_campaign
+		}
+
+
+
+		completion_reward = {
+			custom_effect_tooltip = KMT_hundred_flowers_tt
+			hidden_effect = {
+				country_event = { id = kmt.37 }
+			}	
+		}
+	}
+
+	focus = {
+		id = PRC_Cultural_Revolution
+		icon = GFX_PRC_Census
+		prerequisite = { focus = PRC_rebuilding_china }
+		x = 1
+		y = 1
+		relative_position_id = PRC_rebuilding_china
+		cost = 10
+		bypass = {
+			has_completed_focus = PRC_the_cultural_revolution
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2			
+		}
+
+		bypass = {
+			custom_trigger_tooltip = {
+				tooltip = production_effort_tt
+				all_owned_state = {
+					free_building_slots = {
+						building = arms_factory
+						size < 1
+						include_locked = yes
+					}
+				}
+			}
+		}
+
+		complete_tooltip = {		
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+
+		completion_reward = {
+			add_manpower = -50000
+			swap_ideas = {
+				remove_idea = workers_paradise
+				add_idea = workers_paradise2
+			}
+			hidden_effect = {
+				news_event = jos_news.50
+			}				
+			
+		}
+	}
+
+	focus = {
+		id = PRC_Four_Modernizations
+		icon = GFX_focus_prc_proclaim_the_peoples_republic
+		prerequisite = { focus = PRC_Hundred_Flowers_Campaign }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Hundred_Flowers_Campaign
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = industrial_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Industry"
+			add_tech_bonus = {
+				name = electronics_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Science"
+			add_tech_bonus = {
+				name = jet_rocket_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Technology"
+			add_tech_bonus = {
+				name = HOL_cornerstone_of_colonial_defense
+				ahead_reduction = 2
+				category = naval_doctrine
+			}				
+			custom_effect_tooltip = "Defense"
+			}
+	}
+		
+	
+
+	focus = {
+		id = PRC_Great_Leap_Forward
+		icon = GFX_goal_generic_soviet_construction
+		prerequisite = { focus = PRC_Cultural_Revolution }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Cultural_Revolution
+		cost = 10
+		
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+
+		bypass = {
+			has_completed_focus = KMT_great_leap_forawrd
+		}
+
+		complete_tooltip = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}		
+
+		completion_reward = {
+			country_event = { id = kmt.39 days = 1 }
+			add_ideas = KMT_three_red_banner
+			set_country_flag = KMT_great_leap_started
+			hidden_effect = {
+				country_event = { id = kmt.46 days = 365 }
+				country_event = { id = kmt.47 days = 175 }
+			}			
+			
+		}
+	}
+
+	focus = {
+		id = PRC_Socialist_Transformation
+		icon = GFX_PRC_Industrialization
+		prerequisite = { focus = PRC_Four_Modernizations }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Four_Modernizations
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		
+		available_if_capitulated = yes
+
+		completion_reward = {
+	random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = arms_factory
+					level = 5
+					instant_build = yes
+				}
+			}			
+			add_timed_idea = { idea = agrarian_exports days = 1200 }
+			605 = {
+			add_manpower = -50000
+			}
+			608 = {
+			add_manpower = 50000		
+			}
+			add_ideas = industralization_1
+605 = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 5 }				
 }
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+custom_effect_tooltip = "We will destroy agrarian buildings and begin to export all our grain in order to industrialize"
+		}
+	}
+
+	focus = {
+		id = PRC_Great_Leap_Outward
+		icon = GFX_goal_generic_military_deal
+		prerequisite = { focus = PRC_Great_Leap_Forward }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Great_Leap_Forward
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+		completion_reward = {
+			every_other_country = {
+			limit = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+				has_government = communism
+			}
+				add_opinion_modifier = {
+					target = PRC
+					modifier = huge_increase
+				}
+		}						
+		}
+		}	
+		
+	
+
+	focus = {
+		id = PRC_First_Five-Year_Plan
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = PRC_Socialist_Transformation }
+		prerequisite = { focus = PRC_Great_Leap_Outward }
+		x = 1
+		y = 1
+		relative_position_id = PRC_Socialist_Transformation
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		
+		available_if_capitulated = yes
+
+
+
+
+		completion_reward = {
+			custom_effect_tooltip = "If we have already done a five year plan we will move onto the second"
+			country_event = umc_man.60
+			swap_ideas = {
+				remove_idea = industralization_1
+				add_idea = industralization_2
+			}
+			}
+		}
+	}
