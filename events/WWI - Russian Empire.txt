@@ -550,7 +550,7 @@ country_event = {
 			}
 			}
 			date > 1916.1.1
-			date < 1920.1.1 
+			date < 1928.1.1 
 		#	NOT = { has_global_flag = player_wants_custom_peacedeals } # this is not a custom peace deal
 		}
 
@@ -572,11 +572,12 @@ country_event = {
 			democratic = 45
 			communism = 35
 		}
+		add_ideas = nicholas_ii
 		retire_country_leader = yes
 		create_country_leader = {
 			name = "Prince Lvov"
 			desc = "POLITICS_GEORGY_LVOV_DESC"
-			picture = "RUS/WW1/Portrait_Russia_Georgy_Lvov.dds"
+			picture = "gfx/leaders/RUS/WW1/fixed_Portrait_Russia_Georgy_Lvov.png"
 			expire = "1943.5.16"
 			ideology = conservatism
 			traits = {
@@ -611,6 +612,7 @@ country_event = {
 		name = ww1_russia.25.a
 		news_event = { hours = 6 id = endsieg_news.218 }
 		add_stability = 0.05
+		remove_ideas = nicholas_ii
 		set_global_flag = nicholas_abdicated1
 		hidden_effect = {
 			country_event = { id = ww1_russia.31 days = 30 }
@@ -764,14 +766,27 @@ country_event = {
 
 	trigger = {
 		#NOT = { has_global_flag = welcome_event_1918 }
+		OR = {
 		tag = RUS
+		AND = {
+			tag = SOV
+			NOT = {
+			has_government = communism
+			}
+		}
+		}
+		has_start_date < 1911.1.1
 		OR = {
 		RUS = { surrender_progress > 0.20 }
 		RUS = {
 			communism > 0.4
 		}
+		has_stability < 0.3
 		}
-		has_global_flag = february_revolution1
+		OR = {
+			has_government = democratic
+			has_global_flag = february_revolution1
+		}
 		has_global_flag = lenin_in_russia
 		date > 1910.1.1
 	}
@@ -818,6 +833,10 @@ country_event = {
 	option = {
 		name = ww1_russia.35.a
 		add_political_power = -300
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.10
+		}
 		set_global_flag = constituent_assembly_held
 		hidden_effect = {
 			country_event = { id = ww1_russia.36 days = 10 }
@@ -969,6 +988,7 @@ country_event = {
         is_controlled_by = RUS
     }
     SOV = { transfer_state = PREV }
+	PREV = {add_core_of = SOV}
 		}
 		KUB = {
 			transfer_state = 245
@@ -1010,8 +1030,7 @@ country_event = {
 			SOV = { load_oob = SOV_1918 }
 		}
 		RUS = {
-			declare_war_on = { target = sov type = civil_war }
-			add_civil_war_target = SOV
+			declare_war_on = { target = sov type = annex_everything }
 		}
 	}
 	option = {

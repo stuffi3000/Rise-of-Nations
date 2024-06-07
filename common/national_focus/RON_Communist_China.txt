@@ -7789,7 +7789,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 				}
 				country_event = { id = chi.74 }
 			}
-			unlock_decision_category_tooltip = CHI_integrate_the_warlords
+			#unlock_decision_category_tooltip = CHI_integrate_the_warlords
 			unlock_decision_tooltip = PRC_integrate_the_kuomintang_generals
 		}
 	}
@@ -9209,11 +9209,11 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_strike_the_kmt
 		icon = GFX_PRC_strike_the_kmt
-		x = 5
-		y = 1
+		x = 7
+		y = 0
 		cost = 10
 		search_filters = {
-			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_ANNEXATION
 		}
 		allow_branch = {
 			date > 1949.1.1
@@ -9222,7 +9222,12 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		bypass = {
-			has_war_with = CHI
+			OR = {
+			NOT = {
+				country_exists = CHI
+			}
+			has_war_with = CHI				
+			}
 		}
 		completion_reward = {
 			            declare_war_on = {
@@ -9237,26 +9242,105 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_every_man_must_fight
 		icon = GFX_PRC_every_man_must_fight
-		x = 4
-		y = 2
+		x = 5
+		y = 1
 		cost = 10
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
+		available = {
+			has_war_with = CHI
+		}
+		bypass = {
+			NOT = {
+				country_exists = CHI
+			}
+		}		
+		completion_reward = {
+			add_manpower = 50000
+			add_war_support = 0.1
+			add_ideas = martial_law
+		}		
 		prerequisite = { focus = PRC_strike_the_kmt  }
 	}
-
+focus = {
+		id = PRC_offensive_strategy
+		icon = GFX_PRC_Mass_Assault
+		x = 3
+		y = 1
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+			has_war_with = CHI
+		}
+		bypass = {
+			NOT = {
+				country_exists = CHI
+			}
+		}		
+		completion_reward = {
+			add_timed_idea = { idea = chinese_offensive days = 320 }
+		}		
+		prerequisite = { focus = PRC_strike_the_kmt  }
+	}	
+focus = {
+		id = PRC_integrate_army
+		icon = GFX_goal_generic_communist_officer
+		x = 7
+		y = 1
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+			add_ideas = SHX_peoples_liberation_army
+		}		
+		prerequisite = { focus = PRC_strike_the_kmt  }
+	}
+	focus = {
+		id = PRC_unified_military_command
+		icon = GFX_goal_generic_communist_loyalty
+		x = 11
+		y = 1
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+			has_war_with = CHI
+		}
+		bypass = {
+			NOT = {
+				country_exists = CHI
+			}
+		}		
+		completion_reward = {
+			add_ideas = PRC_proper_frontline_command 
+		}		
+		prerequisite = { focus = PRC_strike_the_kmt  }
+	}
 	#Mao is the only way!
 	focus = {
 		id = PRC_maoistheonlyway
 		icon = GFX_PRC_maoistheonlyway
-		x = 6
-		y = 2
+		x = 9
+		y = 1
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
 		cost = 10
+		available = {
+			has_war_with = CHI
+		}
+		bypass = {
+			NOT = {
+				country_exists = CHI
+			}
+		}		
 		completion_reward = {
+			add_manpower = 50000			
 			add_ideas = mao_the_way
 		}
 		prerequisite = { focus = PRC_strike_the_kmt  }
@@ -9267,20 +9351,39 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_secure_the_coast
 		icon = GFX_PRC_secure_the_coast
 		x = 3
-		y = 3
-		cost = 13
+		y = 2
+		cost = 10
 		cancel_if_invalid = yes
 		available = {
 			controls_state = 596
 			controls_state = 595
 			controls_state = 592
+			has_war_with = CHI
+			NOT = {
+				CHI = {
+			controls_state = 596
+			controls_state = 595
+			controls_state = 592
+				}
+			}
+		}
+		bypass = {
+			NOT = {
+				country_exists = CHI
+			}
 		}
 		completion_reward = {
-			add_war_support = 0.05
+			remove_country_leader_trait = cornered_fox
+			add_war_support = 0.1
+remove_ideas = PRC_defeatism_1
+			hidden_effect = {
+				remove_ideas = PRC_defeatism_2
+			}			
 		}
 		search_filters = {
 			FOCUS_FILTER_MANPOWER
 		}
+		mutually_exclusive = { focus = PRC_no_progress }
 		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
 	}
 
@@ -9289,10 +9392,11 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_mainland_secured
 		icon = GFX_PRC_mainland_secured
 		x = 3
-		y = 4
+		y = 3
 		search_filters = {
-			FOCUS_FILTER_WAR_SUPPORT
+			FOCUS_FILTER_POLITICAL
 		}
+		cost = 5
 		available = {
 			NOT = {
 				country_exists = QIN
@@ -9352,12 +9456,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		completion_reward = {
-	
-			remove_ideas = PRC_defeatism_1
-			add_ideas = struggling_economy			
-			hidden_effect = {
-				remove_ideas = PRC_defeatism_2
-			}
+			add_ideas = struggling_economy		
+			add_ideas = idea_URG_traditionalism
+			add_Ideas = shaky_government
 		}
 		prerequisite = { focus = PRC_secure_the_coast  }
 	}
@@ -9367,13 +9468,15 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_no_progress
 		icon = GFX_PRC_no_progress
 		x = 7
-		y = 3
+		y = 2
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
-		cost = 13
+		cost = 5
+		mutually_exclusive = { focus = PRC_secure_the_coast }
 
 		available = {	
+			country_exists = CHI
 			OR = {
 				AND = {
 			CHI = {
@@ -9389,6 +9492,19 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		completion_reward = {
 			remove_ideas = mao_the_way
 			add_manpower = -10000
+					add_popularity = {
+						ideology = communism
+						popularity = -0.35
+					}			
+					if = {
+						limit = {
+						has_ideas = PRC_defeatism_1
+					}
+					swap_ideas = {
+						remove_idea = PRC_defeatism_1
+						add_idea = PRC_defeatism_2
+					}
+					}
 		}
 		prerequisite = { focus = PRC_every_man_must_fight  } prerequisite = { focus = PRC_maoistheonlyway  }
 		mutually_exclusive = { focus = PRC_secure_the_coast  }
@@ -9399,10 +9515,11 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_invade_taiwan
 		icon = GFX_PRC_invade_taiwan
 		x = 2
-		y = 5
+		y = 4
 		search_filters = {
-			FOCUS_FILTER_POLITICAL
+			FOCUS_FILTER_ANNEXATION
 		}
+		cost = 10
 		prerequisite = { focus = PRC_mainland_secured  }
 		available = {
 			NOT = {
@@ -9412,7 +9529,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		completion_reward = {
 		     declare_war_on = {
                 target = TWN
-                type = annex_everything
+                type = civil_war
             }
 		}
 		mutually_exclusive = { focus = PRC_ingore_the_island  }
@@ -9423,10 +9540,11 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_ingore_the_island
 		icon = GFX_PRC_ingore_the_island
 		x = 4
-		y = 5
+		y = 4
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
+		cost = 10
 		prerequisite = { focus = PRC_mainland_secured  }
 		completion_reward = {
 			add_stability = 0.03
@@ -9444,21 +9562,203 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_beg_stalin
 		icon = GFX_PRC_beg_stalin
 		x = 7
+		y = 3
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = PRC_no_progress  }
+		completion_reward = {
+		PRC = {	country_event = wtt_warlord_vs_prc.37 }
+		}
+	}
+	#Save korea
+	focus = {
+		id = PRC_save_korea
+		icon = GFX_goal_Korea_flag
+		x = 11
+		y = 2
+		cost = 1
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+		}
+		available = {
+			country_exists = DPK	
+			DPK = {
+				surrender_progress > 0.3
+			}
+			NOT = {
+				has_completed_focus = PRC_beg_stalin
+			}
+		}
+		bypass = {
+			OR = {
+			has_war_with = ROK
+			has_war_with = KOR
+			}
+		}
+		prerequisite = { focus = PRC_maoistheonlyway  }
+		completion_reward = {
+		PRC = {	country_event = CW_Expansion_country.206 }
+		}
+	}
+focus = {
+		id = PRC_declare_war
+		icon = GFX_goal_generic_attack_allies
+		x = 10
+		y = 3
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+		}
+		mutually_exclusive = { focus = PRC_material_support  }
+		available = {
+			has_war_together_with = DPK
+		}
+		prerequisite = { focus = PRC_save_korea  }
+		completion_reward = {
+		add_war_support = 0.03
+		add_stability = 0.03
+		KOR = {
+			add_timed_idea = {
+				idea = surprise_attack
+				days = 400
+			}
+		}
+		}
+	}	
+focus = {
+		id = PRC_stalemate
+		icon =  GFX_goal_korean_occupation
+		x = 12
 		y = 4
+		cost = 5
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
-		prerequisite = { focus = PRC_no_progress  }
-	}
-
+		available = {
+			country_exists = DPK
+			country_exists = ROK
+			ROK = {has_war_with = DPK}
+			date > 1953.1.1
+			}
+		prerequisite = { focus = PRC_declare_war  focus = PRC_material_support}
+		completion_reward = {
+					add_popularity = {
+						ideology = communism
+						popularity = -0.2
+					}			
+		add_war_support = -0.03
+		add_stability = -0.03
+	every_country = {
+				limit = {
+					has_war_with = PRC
+					NOT = {
+						tag = CHI
+					}
+				}
+				white_peace = PRC
+			}
+		}
+	}	
+focus = {
+		id = PRC_victory
+		icon = GFX_goal_korean_independence
+		x = 10
+		y = 4
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		mutually_exclusive = { focus = PRC_stalemate  }
+		available = {
+			has_war_together_with = DPK
+			has_war_with = USA
+			OR = {
+			KOR = {
+				has_capitulated = yes
+			}
+			ROK = {
+				has_capitulated = yes
+			}
+			NOT = {
+				country_exists = KOR
+				country_exists = ROK
+			}
+			AND = {
+				ROK = {
+					has_government = communism
+				}
+				KOR = {
+					has_government = communism
+				}
+			}
+			}
+		}
+		mutually_exclusive = { focus = PRC_stalemate  }
+		prerequisite = { focus = PRC_declare_war  focus = PRC_material_support}
+		completion_reward = {
+		add_war_support = 0.03
+		add_stability = 0.03
+		USA = {
+		add_popularity = {
+			ideology = communism
+			popularity = 0.3
+		}			
+		add_war_support = -0.03
+		add_stability = -0.03
+		}
+	every_country = {
+				limit = {
+					has_war_with = PRC
+					NOT = {
+						tag = CHI
+					}
+				}
+				white_peace = PRC
+			}		
+		}
+	}			
+focus = {
+		id = PRC_material_support
+		icon = GFX_focus_generic_army_tanks2
+		x = 12
+		y = 3
+		cost = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		available = {
+			NOT = {has_war_together_with = DPK }
+			country_exists = DPK
+		}
+		mutually_exclusive = { focus = PRC_declare_war  }
+		prerequisite = { focus = PRC_save_korea  }
+		completion_reward = {
+		custom_effect_tooltip = "If any other country has a war with North Korea We Will Be Obligated To Defend it"
+		add_war_support = 0.03
+		add_stability = 0.03
+		give_guarantee = DPK		
+		}
+	}		
 	#Stalin's puppet
 	focus = {
 		id = PRC_stalinspuppet
 		icon = GFX_PRC_stalinspuppet
 		x = 6
-		y = 5
+		y = 4
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
+		}
+		cost = 10
+		available = {
+			has_war_together_with = SOV
+		}
+		completion_reward = {
+			add_war_support = -0.03
+			add_stability = -0.03
+			add_country_leader_trait = permanent_revolutionary
+			add_country_leader_trait = stalins_puppet
 		}
 		prerequisite = { focus = PRC_beg_stalin  }
 		mutually_exclusive = { focus = PRC_all_alone  }
@@ -9469,13 +9769,1599 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_all_alone
 		icon = GFX_PRC_all_alone
 		x = 8
-		y = 5
+		y = 4
+		cost = 10
 		search_filters = {
 			FOCUS_FILTER_POLITICAL
 		}
+		available = {
+			NOT = {
+				has_war_together_with = SOV
+			}
+		}
+	completion_reward = {
+		add_war_support = 0.3
+		add_political_power = 300
+		add_stability = 0.3
+		add_country_leader_trait = leftist_intellectual
+	}		
 		prerequisite = { focus = PRC_beg_stalin  }
 		mutually_exclusive = { focus = PRC_stalinspuppet  }
 	}
+	
+	focus = {
+		id = PRC_rebuilding_china
+		icon = GFX_LEP_tea_trade
+		x = 7
+		y = 5
+		cost = 10
+		prerequisite = {focus = PRC_victory focus = PRC_stalemate focus = PRC_ingore_the_island focus = PRC_invade_taiwan}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			OR = {
+			has_idea = workers_paradise
+			has_idea = workers_paradise2
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = CHI
+				country_exists = CHI
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = "Don't worry if you have done these focuses already, they will bypass!"
+			add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 1.0
+				uses = 1
+				category = industry
+			}
+			add_ideas = workers_paradise			
+		}
+	}
+
+	focus = {
+		id = PRC_Hundred_Flowers_Campaign
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = PRC_rebuilding_china }
+		x = -1
+		y = 1
+		relative_position_id = PRC_rebuilding_china
+		cost = 50
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
 
 
+		
+		ai_will_do = {
+			factor = 2
+		}
+
+		bypass = {
+			has_completed_focus = KMT_hundred_flowers_campaign
+		}
+
+
+
+		completion_reward = {
+			custom_effect_tooltip = KMT_hundred_flowers_tt
+			hidden_effect = {
+				country_event = { id = kmt.37 }
+			}	
+		}
+	}
+focus = {
+		id = PRC_reclaim_treaty_ports
+		icon = GFX_goal_treaty_peoples
+		x = 11
+		y = 5
+		cost = 10
+		prerequisite = {focus = PRC_victory focus = PRC_stalemate focus = PRC_ingore_the_island focus = PRC_invade_taiwan}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = CHI
+				country_exists = CHI
+			}
+		}
+		completion_reward = {
+			add_war_support = 0.05
+		}
+	}	
+focus = {
+		id = PRC_prepare_for_military_action
+		icon = GFX_goal_PRC_focus_on_red_army
+		x = 10
+		y = 6
+		cost = 10
+		prerequisite = {focus = PRC_reclaim_treaty_ports}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+
+		}
+		completion_reward = {
+			add_command_power = 100
+			add_war_support = 0.3
+		}
+	}		
+focus = {
+		id = PRC_diplomatic_pressure
+		icon = GFX_goal_generic_major_diplo
+		x = 12
+		y = 6
+		cost = 10
+		prerequisite = {focus = PRC_reclaim_treaty_ports}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+
+		}
+		completion_reward = {
+			add_country_leader_trait = international_revolutionary
+		}
+	}	
+focus = {
+		id = PRC_demand_hong_kong
+		icon = GFX_SIA_bowringtreatyoffer
+		x = 10
+		y = 7
+		cost = 10
+		prerequisite = {focus = PRC_diplomatic_pressure}
+		prerequisite = {focus = PRC_prepare_for_military_action}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		bypass = {
+			OR = {
+							326 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+						326 = {
+							owner = {
+								tag = HKG
+							} 
+						}		
+			}
+		}		
+		available = {
+			OR = {
+
+				NOT = {
+						326 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+						326 = {
+							owner = {
+								tag = HKG
+							} 
+						}						
+					}
+			}
+		}
+		completion_reward = {
+if = {
+					limit = {
+						326 = {
+							owner = {
+								is_puppet = no
+							} 
+						}
+					}
+					326 = {
+						owner = {
+							country_event = { id = prc.89 }
+						}
+					}
+					else = {
+						326 = {
+							owner = {
+								overlord = {
+									country_event = { id = prc.89 }
+								}
+							}
+						}
+					}
+				}		}
+	}	
+focus = {
+		id = PRC_demand_macau
+		icon = GFX_goal_support_the_braganzas
+		x = 12
+		y = 7
+		cost = 10
+		prerequisite = {focus = PRC_prepare_for_military_action}
+		prerequisite = {focus = PRC_diplomatic_pressure}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+
+		available = {
+			OR = {
+
+			NOT = {
+						729 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+					}
+			}
+		}
+		bypass = {
+						OR = {
+
+						729 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+	
+					729 = {
+						owner = {
+								tag = MCU
+						}
+					}			
+						}
+		}
+		completion_reward = {
+				if = {
+					limit = {
+						729 = {
+							owner = {
+								is_puppet = no
+							} 
+						}
+					}
+					729 = {
+						owner = {
+							country_event = { id = prc.89 }
+						}
+					}
+					else = {
+						729 = {
+							owner = {
+								overlord = {
+									country_event = { id = prc.89 }
+								}
+							}
+						}
+					}
+				}
+			}
+	}	
+focus = {
+		id = PRC_reclaim_ports_complete
+		icon = GFX_focus_chi_one_china_policy
+		x = 11
+		y = 8
+		cost = 10
+		prerequisite = {focus = PRC_demand_hong_kong}
+		prerequisite = {focus = PRC_demand_macau}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+			OR = {
+						326 = {
+							owner = {
+								tag = HKG
+							} 
+						}
+						326 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+			}			
+	OR = {
+
+						729 = {
+							owner = {
+								tag = PRC
+							} 
+						}
+						729 = {
+							owner = {
+								tag = MCU
+							} 
+						}						
+					}
+		}
+
+		
+		completion_reward = {
+			add_stability = 0.05
+		}
+	}					
+focus = {
+		id = PRC_integrate_ports_economy
+		icon = GFX_goal_trade_pact
+		x = 12
+		y = 9
+		cost = 10
+		prerequisite = {focus = PRC_reclaim_ports_complete}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+
+		}
+		completion_reward = {
+			add_ideas = PRC_economic_hub  
+		}
+	}			
+
+focus = {
+		id = PRC_ports_as_trade_hubs
+		icon = GFX_goal_generic_trade_interdiction
+		x = 10
+		y = 9
+		cost = 10
+		prerequisite = {focus = PRC_reclaim_ports_complete}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+
+		}
+		completion_reward = {
+			add_ideas = PRC_oceanic_trade_gateways  
+		}
+	}			
+focus = {
+		id = PRC_Unite_the_Nation
+		icon = GFX_CHI_Unity_Through_Peace
+		x = 3
+		y = 5
+		cost = 10
+		prerequisite = {focus = PRC_victory focus = PRC_stalemate focus = PRC_ingore_the_island focus = PRC_invade_taiwan}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = CHI
+				country_exists = CHI
+			}
+		}
+		completion_reward = {
+			add_stability = 0.05
+		}
+	}
+focus = {
+		id = PRC_Invasion_of_East_Turkestan
+		icon = GFX_goal_demand_sudetenland
+		x = 2
+		y = 6
+		cost = 10
+		prerequisite = {focus = PRC_Unite_the_Nation}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			NOT = {
+				country_exists = ETR
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = ETR
+			}
+		}
+		completion_reward = {
+diplomatic_relation = { country = ETR relation = non_aggression_pact active = no }			
+					create_wargoal = {			
+						expire = 300
+						target = ETR
+						type = annex_everything
 }
+		}
+	}	
+focus = {
+		id = PRC_Indian_Claims
+		icon = GFX_goal_generic_political_pressure
+		x = 2
+		y = 7
+		cost = 10
+		prerequisite = {focus = PRC_Invasion_of_East_Turkestan }
+		prerequisite = {focus = PRC_Invasion_of_Tibet}
+		mutually_exclusive = { focus = PRC_Intervene_in_South_East_Asia }
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			NOT = {
+				country_exists = ETR
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = ETR
+			}
+		}
+		completion_reward = {
+			PRC = { add_state_claim = 441 }
+			PRC = { add_state_claim = 984 }
+			PRC = { add_state_claim = 985 }
+		}
+	}		
+focus = {
+		id = PRC_Intervene_in_South_East_Asia
+		icon = GFX_PRC_red_army
+		x = 4
+		y = 7
+		cost = 10
+		mutually_exclusive = { focus = PRC_Indian_Claims }
+		prerequisite = {focus = PRC_Invasion_of_East_Turkestan }
+		prerequisite = {focus = PRC_Invasion_of_Tibet}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			NOT = {
+				country_exists = ETR
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = ETR
+			}
+		}
+		completion_reward = {
+every_other_country = {
+	limit = {
+		capital_scope = {
+			OR = {
+				region = 189
+				region = 142
+				region = 671
+				region = 1084
+				region = 188
+			}
+		}
+		NOT = {
+			tag = CHI
+		}
+	}
+	add_ideas = PRC_influence
+}
+		}
+	}			
+focus = {
+		id = PRC_Invasion_of_Tibet
+		icon = GFX_goal_PRC_liberate_tibet
+		x = 4
+		y = 6
+		cost = 10
+		prerequisite = {focus = PRC_Unite_the_Nation}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			NOT = {
+				country_exists = TIB
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				has_war_with = TIB
+			}
+		}
+		completion_reward = {
+diplomatic_relation = { country = TIB relation = non_aggression_pact active = no }			
+country_event = CW_Expansion_country.205
+TIB = {
+	country_event = CW_Expansion_country.205
+}			
+					create_wargoal = {			
+						expire = 300
+						target = TIB
+						type = annex_everything
+}
+		}
+	}		
+focus = {
+		id = PRC_Soviet_Deal
+		icon = GFX_goal_generic_soviet_construction
+		x = 2
+		y = 8
+		cost = 10
+		prerequisite = {focus = PRC_Indian_Claims}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			MON = {is_puppet_of = PRC }
+		}
+		available_if_capitulated = yes
+		available = {
+			NOT = {
+				MON ={is_puppet_of = PRC }
+			}
+		}
+		completion_reward = {
+			country_event = china.214
+		}
+	}	
+focus = {
+		id = PRC_Lift_Martial_Law
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 3
+		y = 9
+		cost = 10
+		prerequisite = {focus = PRC_Soviet_Deal focus = PRC_Secure_Burma}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+
+		available_if_capitulated = yes
+		available = {
+			has_war = no
+		}
+		completion_reward = {
+			remove_ideas = martial_law
+		}
+	}		
+focus = {
+		id = PRC_Secure_Burma
+		icon = GFX_focus_spr_crush_the_revolution
+		x = 4
+		y = 8
+		cost = 10
+		prerequisite = {focus = PRC_Intervene_in_South_East_Asia}
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_RESEARCH }
+		bypass = {
+			BRM = {is_puppet_of = PRC }
+			NOT = {
+				country_exists = BRM
+			}
+		}
+		available_if_capitulated = yes
+		available = {
+			country_exists = BRM
+			NOT ={
+				BRM = {
+					is_puppet_of = ENG
+				}
+			}
+			NOT = {
+				BRM ={is_puppet_of = PRC }
+			}
+		}
+		completion_reward = {
+					create_wargoal = {			
+						expire = 300
+						target = BRM
+						type = annex_everything
+}		}
+	}		
+
+	focus = {
+		id = PRC_Cultural_Revolution
+		icon = GFX_PRC_Census
+		prerequisite = { focus = PRC_rebuilding_china }
+		x = 1
+		y = 1
+		relative_position_id = PRC_rebuilding_china
+		cost = 10
+		bypass = {
+			has_completed_focus = PRC_the_cultural_revolution
+		}
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2			
+		}
+
+
+
+		complete_tooltip = {		
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+
+		completion_reward = {
+			add_manpower = -50000
+			swap_ideas = {
+				remove_idea = workers_paradise
+				add_idea = workers_paradise2
+			}
+			hidden_effect = {
+				news_event = jos_news.50
+			}				
+			
+		}
+	}
+
+	focus = {
+		id = PRC_Four_Modernizations
+		icon = GFX_focus_prc_proclaim_the_peoples_republic
+		prerequisite = { focus = PRC_Hundred_Flowers_Campaign }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Hundred_Flowers_Campaign
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+
+		completion_reward = {
+			add_tech_bonus = {
+				name = industrial_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Industry"
+			add_tech_bonus = {
+				name = electronics_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Science"
+			add_tech_bonus = {
+				name = jet_rocket_bonus
+				ahead_reduction = 2
+				category = nuclear
+			}
+			custom_effect_tooltip = "Technology"
+			add_tech_bonus = {
+				name = HOL_cornerstone_of_colonial_defense
+				ahead_reduction = 2
+				category = naval_doctrine
+			}				
+			custom_effect_tooltip = "Defense"
+			}
+	}
+		
+	
+
+	focus = {
+		id = PRC_Great_Leap_Forward
+		icon = GFX_goal_generic_soviet_construction
+		prerequisite = { focus = PRC_Cultural_Revolution }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Cultural_Revolution
+		cost = 10
+		
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+
+		bypass = {
+			has_completed_focus = KMT_great_leap_forawrd
+		}
+
+
+
+		completion_reward = {
+			country_event = { id = kmt.39 days = 1 }
+			add_ideas = KMT_three_red_banner
+			set_country_flag = KMT_great_leap_started
+			hidden_effect = {
+				country_event = { id = kmt.46 days = 365 }
+				country_event = { id = kmt.47 days = 175 }
+			}			
+			
+		}
+	}
+
+	focus = {
+		id = PRC_Socialist_Transformation
+		icon = GFX_PRC_Industrialization
+		prerequisite = { focus = PRC_Four_Modernizations }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Four_Modernizations
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		
+		available_if_capitulated = yes
+
+		completion_reward = {
+	random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = arms_factory
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 5
+				add_building_construction = {
+					type = arms_factory
+					level = 5
+					instant_build = yes
+				}
+			}			
+			add_timed_idea = { idea = agrarian_exports days = 1200 }
+			605 = {
+			add_manpower = -50000
+			}
+			608 = {
+			add_manpower = 50000		
+			}
+			add_ideas = industralization_1
+605 = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 5 }				
+}
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+random_owned_controlled_state = { 
+	limit = { industrial_complex > 0 }
+	remove_building = { type = industrial_complex level = 3 }				
+}
+custom_effect_tooltip = "We will destroy agrarian buildings and begin to export all our grain in order to industrialize"
+		}
+	}
+	
+
+	focus = {
+		id = PRC_Great_Leap_Outward
+		icon = GFX_goal_generic_military_deal
+		prerequisite = { focus = PRC_Great_Leap_Forward }
+		x = 0
+		y = 1
+		relative_position_id = PRC_Great_Leap_Forward
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY  }
+		
+		available_if_capitulated = yes
+
+
+		ai_will_do = {
+			factor = 2
+		}
+		completion_reward = {
+			every_other_country = {
+			limit = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+				has_government = communism
+			}
+				add_opinion_modifier = {
+					target = PRC
+					modifier = huge_increase
+				}
+		}						
+		}
+		}	
+		
+	
+
+	focus = {
+		id = PRC_First_Five-Year_Plan
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = PRC_Socialist_Transformation }
+		prerequisite = { focus = PRC_Great_Leap_Outward }
+		x = 1
+		y = 1
+		relative_position_id = PRC_Socialist_Transformation
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		
+		available_if_capitulated = yes
+
+
+
+
+		completion_reward = {
+			custom_effect_tooltip = "If we have already done a five year plan we will move onto the second"
+			country_event = umc_man.60
+			swap_ideas = {
+				remove_idea = industralization_1
+				add_idea = industralization_2
+			}
+			}
+		}
+
+
+	# Root focus
+	focus = {
+		id = Solidify_Leadership
+		icon = GFX_focus_prc_maoism
+		x = 24
+		y = 0
+		cost = 10
+		available = {
+			NOT = {
+				country_exists = CHI
+				has_idea = martial_law
+			}
+		}
+		completion_reward = {
+			add_popularity = {
+    ideology = communism
+    popularity = 0.3
+}
+		}
+		allow_branch = {
+			date > 1949.1.1
+			NOT = {
+				is_puppet_of = JAP
+			}
+		}	
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Consolidate_Power
+		icon = GFX_goal_generic_council_communism
+		x = 27
+		y = 1
+		cost = 10
+		prerequisite = { focus = Solidify_Leadership }
+		completion_reward = {
+			add_ideas = PRC_power_consolidation
+
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Cult_of_Personality
+		icon = GFX_PRC_great_leap_forwards
+		x = 20
+		y = 1
+		cost = 10
+		prerequisite = { focus = Solidify_Leadership }
+		completion_reward = {
+			add_ideas = progress_cult_focus
+			add_ideas = workers_culture
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Purge_Dissenters
+		icon = GFX_Communist_Purge2
+		x = 24
+		y = 4
+		cost = 10
+		prerequisite = { focus = Ideological_Unity  }
+		prerequisite = {focus = Party_Loyalty_Programs}
+		prerequisite = {focus = Strengthen_the_Red_Army}
+		prerequisite = {focus = Womens_Liberation}
+		prerequisite = {focus = Education_for_All}
+		prerequisite = {focus = Healthcare_Initiatives}
+		completion_reward = {
+			remove_ideas = shaky_government 
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Strengthen_the_Party
+		icon = GFX_goal_spread_communism
+		x = 20
+		y = 2
+		cost = 10
+		prerequisite = { focus = Cult_of_Personality }
+		completion_reward = {
+			add_country_leader_trait = gre_bastion_of_socialism
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Ideological_Unity
+		icon = GFX_goal_SOV_red_banditry
+		x = 18
+		y = 3
+		cost = 20
+		prerequisite = { focus = Strengthen_the_Party }
+		completion_reward = {
+			country_event = china.217
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Party_Loyalty_Programs
+		icon = GFX_PRC_Indoctrination
+		x = 20
+		y = 3
+		cost = 10
+		prerequisite = { focus = Strengthen_the_Party }
+		completion_reward = {
+			add_ideas = NRWB
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Strengthen_the_Red_Army
+		icon = GFX_SOV_Human_Wave
+		x = 22
+		y = 3
+		cost = 10
+		prerequisite = { focus = Strengthen_the_Party }
+		completion_reward = {
+			add_ideas = KMT_chi_general_staff
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Modernize_the_Economy
+		icon = GFX_focus_generic_industry_effort
+		x = 34
+		y = 2
+		cost = 10
+		prerequisite = {focus = Industrial_Expansion}
+		prerequisite = {focus = Technological_Advancement}
+		completion_reward = {
+			add_ideas = GER_collectivization_idea
+			country_event = { 
+				days = 182
+				id = erwache.18
+			}
+			}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Agrarian_Reform
+		icon = GFX_focus_generic_agriculture_effort
+		x = 34
+		y = 0
+		cost = 10
+		completion_reward = {
+			add_political_power = 100
+		}
+		allow_branch = {
+			date > 1949.1.1
+			NOT = {
+				is_puppet_of = JAP
+			}
+		}		
+		available = {
+			has_idea = industralization_2
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Industrial_Expansion
+		icon = GFX_focus_generic_industry_effort
+		x = 33
+		y = 1
+		cost = 10
+		prerequisite = { focus = Agrarian_Reform }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Technological_Advancement
+		icon = GFX_focus_generic_science_effort
+		x = 35
+		y = 1
+		cost = 10
+		prerequisite = { focus = Agrarian_Reform }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Improve_Infrastructure
+		icon = GFX_focus_generic_construction_effort
+		x = 34
+		y = 3
+		cost = 10
+		prerequisite = { focus = Modernize_the_Economy }
+		completion_reward = {
+			add_political_power = 150
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Build_Railways
+		icon = GFX_focus_generic_construction_effort
+		x = 36
+		y = 4
+		cost = 10
+		prerequisite = { focus = Improve_Infrastructure }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Expand_Road_Networks
+		icon = GFX_focus_generic_construction_effort
+		x = 32
+		y = 4
+		cost = 10
+		prerequisite = { focus = Improve_Infrastructure }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Develop_Urban_Centers
+		icon = GFX_focus_generic_urbanization_effort
+		x = 34
+		y = 4
+		cost = 10
+		prerequisite = { focus = Improve_Infrastructure }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Social_Reforms
+		icon = GFX_goal_generic_worker_support
+		x = 27
+		y = 2
+		cost = 10
+		prerequisite = { focus = Consolidate_Power }
+		completion_reward = {
+		step_back_economy = yes
+		add_stability = 0.05
+		add_political_power = -10
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Education_for_All
+		icon = GFX_goal_SOV_education_initiative
+		x = 27
+		y = 3
+		cost = 10
+		prerequisite = { focus = Social_Reforms }
+		completion_reward = {
+			add_research_slot = 1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Healthcare_Initiatives
+		icon = GFX_goal_christianity_and_state
+		x = 29
+		y = 3
+		cost = 10
+		prerequisite = { focus = Social_Reforms }
+		completion_reward = {
+			add_ideas = free_healthcare
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Womens_Liberation
+		icon = GFX_goal_womens_rights
+		x = 25
+		y = 3
+		cost = 10
+		prerequisite = { focus = Social_Reforms }
+		completion_reward = {
+			add_ideas = BRA_proletarian_equality
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Diplomatic_Maneuvers
+		icon = GFX_focus_generic_diplomacy_effort
+		x = 21
+		y = 7
+		cost = 10
+		mutually_exclusive = {focus = Military_Campaigns}
+		prerequisite = { focus = Promote_Socialist_Realism }
+		prerequisite = { focus = Launch_Cultural_Revolution }
+		prerequisite = { focus = Eliminate_Traditionalism }
+		completion_reward = {
+			add_political_power = 150
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Form_Alliances
+		icon = GFX_focus_generic_alliances_effort
+		x = 23
+		y = 8
+		cost = 10
+		prerequisite = { focus = Diplomatic_Maneuvers }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Non_Aligned_Movement
+		icon = GFX_focus_generic_non_aligned_effort
+		x = 19
+		y = 8
+		cost = 10
+		prerequisite = { focus = Diplomatic_Maneuvers }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Strengthen_Sino_Soviet_Relations
+		icon = GFX_focus_generic_soviet_relations_effort
+		x = 21
+		y = 8
+		cost = 10
+		prerequisite = { focus = Diplomatic_Maneuvers }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Military_Campaigns
+		icon = GFX_focus_generic_military_effort
+		x = 27
+		y = 7
+		cost = 10
+		mutually_exclusive = {focus = Diplomatic_Maneuvers}
+		prerequisite = { focus = Tibet_Integration }
+		prerequisite = { focus = Xinjiang_Development }
+		prerequisite = { focus = Strengthen_Coastal_Defenses }
+		completion_reward = {
+			add_political_power = 150
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Support_for_Vietnam
+		icon = GFX_focus_generic_support_effort
+		x = 29
+		y = 8
+		cost = 10
+		prerequisite = { focus = Military_Campaigns }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Border_Defense
+		icon = GFX_focus_generic_border_defense_effort
+		x = 25
+		y = 8
+		cost = 10
+		prerequisite = { focus = Military_Campaigns }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Modernize_Military_Tactics
+		icon = GFX_focus_generic_military_effort
+		x = 27
+		y = 8
+		cost = 10
+		prerequisite = { focus = Military_Campaigns }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Cultural_Campaigns
+		icon = GFX_focus_generic_cultural_effort
+		x = 21
+		y = 5
+		cost = 10
+		prerequisite = { focus = Purge_Dissenters }
+		completion_reward = {
+			add_country_leader_trait = cultural_hegemony_theorist
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Launch_Cultural_Revolution
+		icon = GFX_focus_generic_cultural_revolution_effort
+		x = 21
+		y = 6
+		cost = 10
+		prerequisite = { focus = Cultural_Campaigns }
+		completion_reward = {
+			add_ideas = ra_cultural_homogenization
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Promote_Socialist_Realism
+		icon = GFX_focus_generic_socialist_realism_effort
+		x = 19
+		y = 6
+		cost = 10
+		prerequisite = { focus = Cultural_Campaigns }
+		completion_reward = {
+			add_ideas = socialist_realism
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Eliminate_Traditionalism
+		icon = GFX_focus_generic_eliminate_traditionalism_effort
+		x = 23
+		y = 6
+		cost = 10
+		prerequisite = { focus = Cultural_Campaigns }
+		completion_reward = {
+			remove_ideas = idea_URG_traditionalism
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Securing_Borders
+		icon = GFX_focus_generic_border_control_effort
+		x = 27
+		y = 5
+		cost = 10
+		completion_reward = {
+			add_political_power = 150
+		}
+		prerequisite = { focus = Purge_Dissenters }
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Tibet_Integration
+		icon = GFX_focus_generic_tibet_integration_effort
+		x = 25
+		y = 6
+		cost = 10
+		prerequisite = { focus = Securing_Borders }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Xinjiang_Development
+		icon = GFX_focus_generic_xinjiang_development_effort
+		x = 27
+		y = 6
+		cost = 10
+		prerequisite = { focus = Securing_Borders }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Strengthen_Coastal_Defenses
+		icon = GFX_focus_generic_coastal_defense_effort
+		x = 29
+		y = 6
+		cost = 10
+		prerequisite = { focus = Securing_Borders }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Economic_Policies
+		icon = GFX_focus_generic_economic_policies_effort
+		x = 34
+		y = 5
+		cost = 10
+		prerequisite = { focus = Expand_Road_Networks }
+		prerequisite = {focus = Develop_Urban_Centers}
+		prerequisite = {focus = Build_Railways}
+		completion_reward = {
+			add_political_power = 150
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Great_Leap_Forward
+		icon = GFX_focus_generic_great_leap_forward_effort
+		x = 32
+		y = 6
+		cost = 10
+		prerequisite = { focus = Economic_Policies }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Rural_Commune_System
+		icon = GFX_focus_generic_rural_commune_system_effort
+		x = 34
+		y = 6
+		cost = 10
+		prerequisite = { focus = Economic_Policies }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Urban_Industry_Growth
+		icon = GFX_focus_generic_urban_industry_growth_effort
+		x = 36
+		y = 6
+		cost = 10
+		prerequisite = { focus = Economic_Policies }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Legacy_Projects
+		icon = GFX_focus_generic_legacy_projects_effort
+		x = 34
+		y = 7
+		cost = 10
+		completion_reward = {
+			add_political_power = 150
+		}
+		prerequisite = { focus = Great_Leap_Forward }
+		prerequisite = {focus = Rural_Commune_System}
+		prerequisite = {focus = Urban_Industry_Growth}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Establish_SEZ
+		icon = GFX_focus_generic_establish_sez_effort
+		x = 36
+		y = 8
+		cost = 10
+		prerequisite = { focus = Legacy_Projects }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Plan_for_the_Future
+		icon = GFX_focus_generic_plan_for_the_future_effort
+		x = 32
+		y = 8
+		cost = 10
+		prerequisite = { focus = Legacy_Projects }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Encourage_Innovation
+		icon = GFX_focus_generic_encourage_innovation_effort
+		x = 34
+		y = 8
+		cost = 10
+		prerequisite = { focus = Legacy_Projects }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Future_Leadership
+		icon = GFX_focus_generic_future_leadership_effort
+		x = 24
+		y = 9
+		cost = 10
+		prerequisite = { focus = Strengthen_Sino_Soviet_Relations focus = Modernize_Military_Tactics }
+		completion_reward = {
+			add_political_power = 150
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Prepare_for_the_21st_Century
+		icon = GFX_focus_generic_prepare_for_21st_century_effort
+		x = 22
+		y = 10
+		cost = 10
+		prerequisite = { focus = Future_Leadership }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Global_Ambitions
+		icon = GFX_focus_generic_global_ambitions_effort
+		x = 24
+		y = 10
+		cost = 10
+		prerequisite = { focus = Future_Leadership }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	focus = {
+		id = Secure_the_Future
+		icon = GFX_focus_generic_secure_the_future_effort
+		x = 26
+		y = 10
+		cost = 10
+		prerequisite = { focus = Future_Leadership }
+		completion_reward = {
+			add_political_power = 100
+		}
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+
+	}
