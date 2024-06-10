@@ -267,12 +267,24 @@ focus = {
 		cost = 10
 
 		available = {
+			OR = {
+				
 			RUS = {
 				owns_state = 716
 				owns_state = 328
 				owns_state = 717
 			}
-
+			MAN = {
+				owns_state = 716
+				owns_state = 328
+				owns_state = 717				
+			}
+			FEN = {
+				owns_state = 716
+				owns_state = 328
+				owns_state = 717				
+			}
+			}
 			has_war = no
 			date > 1903.1.1
 		}
@@ -295,13 +307,14 @@ focus = {
 
 		
 		completion_reward = { 
+			add_war_support = 0.2			
 			RUS = { country_event = { id = dnc_japan.5 days = 1 } }
 		}
 	}
 
 	focus = {
 		id = JAP_concede_our_sphere_of_influence
-		icon = GFX_jap_concede_our_sphere_of_influence
+		icon = GFX_goal_chinese_sun
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 20
 		y = 1
@@ -315,7 +328,8 @@ focus = {
 		}
 		
 		completion_reward = { 
-			
+			add_stability = 0.2
+			add_war_support = -0.2
 		}
 	}
 
@@ -686,7 +700,7 @@ focus = {
 
 	focus = {
 		id = JAP_combat_russian_heavy_ships
-		icon = GFX_goal_generic_large_fleet
+		icon = GFX_goal_generic_multiple_ships
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 18
 		y = 4
@@ -758,7 +772,7 @@ focus = {
 
 	focus = {
 		id = JAP_honorable_defeat
-		icon = GFX_jap_honorable_defeat
+		icon = GFX_goal_JAP_army_expansion
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 16
 		y = 4
@@ -767,24 +781,48 @@ focus = {
 		prerequisite = { focus = JAP_military_intervention }
 		mutually_exclusive = { focus = JAP_the_unthinkable_victory }
 		available = {
-			has_war = no
+			RUS = {
+				surrender_progress < .8
+			}			
+			has_war_with = RUS
 			OR = {
 			RUS = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
 			}
 			MAN = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
-			}									
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
+			}
+			FEN = {
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
+			}													
 			}
 			NOT = {
 			JAP = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
 			}	
 			MAN = {
 				is_puppet_of = JAP
@@ -792,6 +830,15 @@ focus = {
 			KOR = {
 				is_puppet_of = JAP
 			}
+			FEN = {
+				is_puppet_of = JAP
+			}
+			FEN = {
+				is_puppet = no
+			}	
+			MAN = {
+				is_puppet = no
+			}				
 			}
 		}
 		
@@ -799,7 +846,9 @@ focus = {
 			716 = { remove_claim_by = JAP }
 			328 = { remove_claim_by = JAP }
 			717 = { remove_claim_by = JAP }
-
+		country_event = {
+					id = ron_diplomatic.97
+				}
 			add_war_support = -0.10
 			add_stability = -0.10
 		}
@@ -807,7 +856,7 @@ focus = {
 
 	focus = {
 		id = JAP_lick_our_wounds
-		icon = GFX_jap_lick_our_wounds
+		icon = GFX_goal_generic_army_purges
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 16
 		y = 5
@@ -835,7 +884,7 @@ focus = {
 
 	focus = {
 		id = JAP_fortify_korea
-		icon = GFX_JAP_fortiy_korea
+		icon = GFX_goal_KOR_the_korean_question
 		#search_filters = { FOCUS }
 		x = 18
 		y = 7
@@ -958,7 +1007,7 @@ focus = {
 
 	focus = {
 		id = JAP_take_a_backseat_in_chinese_affairs
-		icon = GFX_jap_take_a_backseat_in_chinese_affairs
+		icon = GFX_goal_MAN_back_to_the_basics
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 16
 		y = 6
@@ -992,7 +1041,7 @@ add_ai_strategy = {
 
 	focus = {
 		id = JAP_look_elsewhere_for_expansion
-		icon = GFX_jap_look_elsewhere_for_expansion
+		icon = GFX_dutch_east_indies
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 16
 		y = 7
@@ -1004,6 +1053,7 @@ add_ai_strategy = {
 			OR = {
 				country_exists = SRE
 				country_exists = DER
+				country_exists = INS
 				GER = {
 					has_war_with = FRA
 				}
@@ -1030,12 +1080,18 @@ add_ai_strategy = {
 			}
 			if = {
 				limit = {
+					country_exists = INS
+				}
+						create_wargoal = {			
+				expire = 100 type = annex_everything target = INS }
+			}			
+			if = {
+				limit = {
 					country_exists = DER
 				}
 						create_wargoal = {			
 				expire = 100 type = annex_everything target = DER }
 			}
-
 		}
 	}
 
@@ -1051,23 +1107,48 @@ add_ai_strategy = {
 		mutually_exclusive = { focus = JAP_honorable_defeat }
 
 		available = {
+			has_war_with = RUS
+			RUS = {
+				surrender_progress > .3
+			}
 			OR = {
 			JAP = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
+ 			controls_state = 716
+ 			controls_state = 1025
+ 			controls_state = 1023 
+ 			controls_state = 1022 
+ 			controls_state = 1026 
+ 			controls_state = 1024 
+ 			controls_state = 328 
 			}
 			MAN = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
-			}									
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
+			}	
+			FEN = {
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328 
+			}													
 			}
 			NOT = {
 			RUS = {
-				owns_state = 716
-				owns_state = 745
-				owns_state = 1022
+ 				controls_state = 716
+ 				controls_state = 1025
+ 				controls_state = 1023 
+ 				controls_state = 1022 
+ 				controls_state = 1026 
+ 				controls_state = 1024 
+ 				controls_state = 328
 			}	
 			MAN = {
 				is_puppet_of = RUS
@@ -1075,6 +1156,15 @@ add_ai_strategy = {
 			KOR = {
 				is_puppet_of = RUS
 			}
+			FEN = {
+				is_puppet_of = RUS
+			}	
+			FEN = {
+				is_puppet = no
+			}	
+			MAN = {
+				is_puppet = no
+			}				
 			}
 		}
 		
@@ -1083,12 +1173,19 @@ add_ai_strategy = {
 				add_war_support = 0.05
 				add_stability = 0.15
 			}
+	RUS = {
+				country_event = {
+					id = DNC_Expansion_country.147
+				}
+			}
+			set_global_flag = DNC_RJW_Japanese_Victory
+	
 		}
 	}
 
 	focus = {
 		id = JAP_assert_our_dominance
-		icon = GFX_jap_assert_our_dominance
+		icon = GFX_goal_ENG_reassess_continental_commitments
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 13
 		y = 5
@@ -1108,7 +1205,7 @@ add_ai_strategy = {
 
 	focus = {
 		id = JAP_repurpose_russian_ports
-		icon = GFX_jap_repurpose_russian_ports
+		icon = GFX_goal_MAN_support_hoshino
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 12
 		y = 6
@@ -1139,7 +1236,7 @@ add_ai_strategy = {
 
 	focus = {
 		id = JAP_befriend_western_powers
-		icon = GFX_jap_befriend_western_powers
+		icon = GFX_goal_ROM_appoint_allied_friendly_government
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 14
 		y = 6
@@ -1174,13 +1271,11 @@ add_ai_strategy = {
 
 		available = {
 			has_war = no
+			country_exists = FEN
 		}
 		
 		completion_reward = { 
-			MAN = { transfer_state = 716 transfer_state = 328 transfer_state = 717 }
-			716 = { add_core_of = MAN }
-			328 = { add_core_of = MAN }
-			717 = { add_core_of = MAN }	
+		declare_war_on = { target = FEN type = annex_everything }			
 		}
 	}
 
@@ -1329,7 +1424,7 @@ add_popularity = {
 
 	focus = {
 		id = JAP_continue_the_government_reforms
-		icon = GFX_jap_continue_the_government_reforms
+		icon = GFX_focus_POL_agrarian_reform
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 38
 		y = 0
@@ -1805,7 +1900,7 @@ add_timed_idea = {
 
 	focus = {
 		id = JAP_continue_industrial_build-up
-		icon = GFX_jap_continue_industrial_build-up
+		icon = GFX_goal_generic_light_industry
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 29
 		y = 1
@@ -1851,7 +1946,7 @@ add_timed_idea = {
 
 	focus = {
 		id = JAP_tool_procurement
-		icon = GFX_jap_tool_procurement
+		icon = GFX_goal_generic_construction_tools
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 28
 		y = 2
@@ -1875,7 +1970,7 @@ add_timed_idea = {
 
 	focus = {
 		id = JAP_imperial_universities
-		icon = GFX_jap_imperial_universities
+		icon = GFX_goal_EGY_universty
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		x = 30
 		y = 2
@@ -10018,12 +10113,20 @@ remove_from_faction =  GUI
 		}
 
 		available = {
-			MAN = { NOT = { has_government = democratic } }
+			OR = {
+			country_exists = MAN
+			country_exists = FEN	
+			}
+			
 		}
 
 		bypass = {
 			OR = {
-				NOT = { country_exists = MAN }
+			NOT = { country_exists = FEN }
+			FEN = { has_government = democratic }				
+			}
+			OR = {
+				NOT = { country_exists = MAN }				
 				MAN = { has_government = democratic }
 			}
 		}
@@ -10053,6 +10156,23 @@ remove_from_faction =  GUI
 			}
 			if = {
 				limit = {
+					FEN = {
+						exists = yes
+						OR = {
+							has_government = fascism
+							has_government = communism
+						}
+					}
+				}
+						create_wargoal = {			
+				expire = 100
+					type = topple_government
+					target = FEN
+					
+				}
+			}			
+			if = {
+				limit = {
 					SOV = {
 						owns_state = 610
 						owns_state = 716
@@ -10079,12 +10199,6 @@ remove_from_faction =  GUI
             target = MAN
 			type = annex_everything
 					}
-		}
-			if = {
-			limit = {
-			NOT = {	country_exists = MAN }
-			}
-			release = MAN
 		}		
 	}
 	}
