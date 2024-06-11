@@ -1,4 +1,14 @@
 formable_nations_mod_category = {
+	refresh_formables = {
+		visible = {
+			is_ai = no
+			check_variable = { possible_formable_array^num = 0}
+		}
+		days_re_enable = 150
+		complete_effect = {
+			RON_handle_formables = yes
+		}
+	}
 	###### OPTIONS ######
 	hide_decisions = {
 		ai_will_do = {
@@ -27,7 +37,7 @@ formable_nations_mod_category = {
 		visible = {
 			is_ai = no
 			has_country_flag = hide_formable_nations
-		}
+		} 
 		days_re_enable = 0
 		icon = generic_nationalism
 		complete_effect = {
@@ -136,42 +146,41 @@ formable_nations_mod_category = {
 			hidden_effect = {
 				clr_country_flag = unform_available
 			}
+			every_state = {
+				limit = {
+					is_core_of = ROOT
+					NOT = {is_in_array = { ROOT.initial_cored_states = THIS }}
+				}
+				remove_core_of = ROOT
+			}
+			clear_array = ROOT.initial_cored_states
 			drop_cosmetic_tag = yes
 			add_stability = -0.2
-			
+		
 			if = {
 				limit = {
 					tag = USA
-					has_game_rule = {
-						rule = axis_vs_allies_game
-						option = WW2_AXIS_VS_ALLIES
-					}
+					has_global_flag = axis_vs_allies_flag
 				}
 				set_cosmetic_tag = USA_Allied_Powers	
 			}
-			
+		
 			if = {
 				limit = {
 					tag = GER
-					has_game_rule = {
-						rule = axis_vs_allies_game
-						option = WW2_AXIS_VS_ALLIES
-					}
+					has_global_flag = axis_vs_allies_flag
 				}
 				set_cosmetic_tag = GER_Axis_Powers	
 			}
-			
+		
 			if = {
 				limit = {
 					tag = LON
-					has_game_rule = {
-						rule = axis_vs_allies_game
-						option = WW2_AXIS_VS_ALLIES
-					}
+					has_global_flag = axis_vs_allies_flag
 				}
 				set_cosmetic_tag = LON_Neutral_Countries
 			}
-			
+		
 		}
 	}
 	###### END OF OPTIONS ######
@@ -251,12 +260,14 @@ formable_nations_mod_category = {
 			OR = {
 				has_global_flag = no_limit
 				original_tag = GER
-				original_tag = AUS
+				original_tag = AUS 
 				original_tag = AUH
 			}
 		}
 		available = {
+			
 			is_subject = no
+			
 			custom_trigger_tooltip = {
 				tooltip = RON_Formable_Decision0_tt
 				RON_Formable_Decision0_trigger = yes
@@ -267,6 +278,7 @@ formable_nations_mod_category = {
 			country_event = {
 				id = RON_Formable_Country.0
 			}
+			set_country_flag = RON_Greater_Germany
 		}
 		ai_will_do = {
 			factor = 1
@@ -284,8 +296,11 @@ formable_nations_mod_category = {
 		cost = 1000
 		days_re_enable = 0
 		visible = {
-			NOT = {
-				has_country_flag = unform_available
+			OR = {
+				NOT = {
+					has_country_flag = unform_available
+				}
+				has_country_flag = RON_Greater_Germany
 			}
 			NOT = {
 				has_country_flag = hide_formable_nations
@@ -676,6 +691,11 @@ formable_nations_mod_category = {
 				factor = 0
 				has_global_flag = ai_disabled
 			}
+			modifier = {
+				add = 10000
+				tag = SPR
+				has_global_flag = RON_Axis_Victory
+			}
 		}
 		cost = 400
 		days_re_enable = 0
@@ -754,7 +774,7 @@ formable_nations_mod_category = {
 		}
 	}
 	#Arab League
-	RON_Formable_Decision12 = {
+	RON_Formable_Decision12 = { 
 		ai_will_do = {
 			factor = 1
 			modifier = {
@@ -764,6 +784,26 @@ formable_nations_mod_category = {
 		}
 		cost = 600
 		days_re_enable = 0
+		highlight_states = {
+    		highlight_states_trigger = {
+    			OR = {
+					is_core_of = SAU
+					is_core_of = YEM 
+					is_core_of = OMA  
+					is_core_of = IRQ  
+					is_core_of = LEB  
+					is_core_of = SYR  
+					is_core_of = JOR  
+					is_core_of = PAL  
+					is_core_of = KUW  
+					is_core_of = UAE
+					is_core_of = QAT
+				}
+				NOT = {
+					is_controlled_by = ROOT
+				}
+    		}
+		}
 		visible = {
 			NOT = {
 				has_country_flag = unform_available
@@ -4004,6 +4044,18 @@ formable_nations_mod_category = {
 		}
 		icon = generic_form_nation
 		complete_effect = {
+			set_country_flag = chi_new_leader_ron
+			if = {
+			limit = {
+		NOT = {
+			OR = {
+			tag = CHI
+			tag = PRC
+			}
+			}
+			}
+				load_focus_tree = { tree = RON_Nationalist_China keep_completed = yes }
+			}
 			country_event = {
 				id = RON_Formable_Country.86
 			}
@@ -4739,10 +4791,8 @@ formable_nations_mod_category = {
 			}
 			OR = {
 				has_global_flag = no_limit
-				original_tag = RUE
-				original_tag = SOV
 				original_tag = RUS
-				original_tag = WHR
+				original_tag = SOV
 			}
 		}
 		available = {
@@ -5740,8 +5790,6 @@ formable_nations_mod_category = {
 				has_global_flag = no_limit
 				original_tag = SOV
 				original_tag = RUS
-				original_tag = RUE
-				original_tag = WHR
 				original_tag = UKR
 				original_tag = BLR
 				original_tag = POL
@@ -6236,10 +6284,8 @@ formable_nations_mod_category = {
 			}
 			OR = {
 				has_global_flag = no_limit
-				original_tag = RUE
-				original_tag = SOV
 				original_tag = RUS
-				original_tag = WHR
+				original_tag = SOV
 			}
 		}
 		available = {
@@ -6321,9 +6367,7 @@ formable_nations_mod_category = {
 			}
 			OR = {
 				has_global_flag = no_limit
-				original_tag = RUE
 				original_tag = RUS
-				original_tag = WHR
 				AND = {
 					original_tag = SOV
 					date > 1948.12.31
@@ -6368,10 +6412,8 @@ formable_nations_mod_category = {
 			}
 			OR = {
 				has_global_flag = no_limit
-				original_tag = RUE
-				original_tag = SOV
 				original_tag = RUS
-				original_tag = WHR
+				original_tag = SOV
 			}
 		}
 		available = {
@@ -6385,6 +6427,265 @@ formable_nations_mod_category = {
 		complete_effect = {
 			country_event = {
 				id = RON_Formable_Country.141
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Anglo_Dutch_Union
+	RON_Formable_Decision142 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 600
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = ENG
+				original_tag = ELD
+				original_tag = SCO
+				original_tag = WLS
+				original_tag = HOL
+				original_tag = BEL
+				original_tag = LUX
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision142_tt
+				RON_Formable_Decision142_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.142
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Austro_Spain
+	RON_Formable_Decision143 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 1000
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = AUS
+				original_tag = SPR
+				original_tag = AUH
+				original_tag = HUN
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision143_tt
+				RON_Formable_Decision143_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.143
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Franco_Spanish_Union
+	RON_Formable_Decision144 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 1000
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = FRA
+				original_tag = SPR
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision144_tt
+				RON_Formable_Decision144_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.144
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Romania_Bulgaria_Union
+	RON_Formable_Decision145 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 400
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = ROM
+				original_tag = BUL
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision145_tt
+				RON_Formable_Decision145_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.145
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Romania_Hungary_Union
+	RON_Formable_Decision146 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 400
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = ROM
+				original_tag = HUN
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision146_tt
+				RON_Formable_Decision146_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.146
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	
+	#Form_Portugal_Brazil_Union
+	RON_Formable_Decision147 = {
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				has_global_flag = ai_disabled
+			}
+		}
+		cost = 600
+		days_re_enable = 0
+		visible = {
+			NOT = {
+				has_country_flag = unform_available
+			}
+			NOT = {
+				has_country_flag = hide_formable_nations
+			}
+			OR = {
+				has_global_flag = no_limit
+				original_tag = POR
+				original_tag = BRA
+			}
+		}
+		available = {
+			is_subject = no
+			custom_trigger_tooltip = {
+				tooltip = RON_Formable_Decision147_tt
+				RON_Formable_Decision147_trigger = yes
+			}
+		}
+		icon = generic_form_nation
+		complete_effect = {
+			country_event = {
+				id = RON_Formable_Country.147
 			}
 		}
 		ai_will_do = {

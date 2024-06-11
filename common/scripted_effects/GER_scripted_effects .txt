@@ -335,3 +335,131 @@ give_SOV_armor_research_bonuses = {
 		category = armor
 	}
 }
+
+
+initiate_GER_cw = {
+	drop_cosmetic_tag = yes
+	create_dynamic_country = {
+	    original_tag = GER
+	    add_political_power = 100
+	    set_cosmetic_tag = GER_Wehrmart_Germany
+		set_popularities = {
+			democratic = 0
+			neutrality = 45
+			fascism = 55
+			communism = 0
+		}
+		set_politics = {
+			ruling_party = fascism
+		    elections_allowed = no
+		    last_election = "1935.12.17"
+		    election_frequency = 48
+		}
+		reserve_dynamic_country = yes
+	}
+	create_dynamic_country = {
+	    original_tag = GER
+	    add_political_power = 100
+	    set_cosmetic_tag = GER_Ordenstaat
+		set_popularities = {
+			democratic = 0
+			neutrality = 0
+			fascism = 100
+			communism = 0
+		}
+		set_politics = {
+			ruling_party = fascism
+		    elections_allowed = no
+		    last_election = "1935.12.17"
+		    election_frequency = 48
+		}
+		reserve_dynamic_country = yes
+	}
+	every_country = {
+		limit = {
+			is_subject_of = GER
+		}
+		GER = {
+			end_puppet = PREV
+		}
+	}
+	GER = {
+		every_state = {
+			limit = {
+				has_state_flag = civil_war_state_OSS
+			}
+			OSS = {
+				transfer_state = PREV
+			}
+		}
+		every_state = {
+			limit = {
+				has_state_flag = civil_war_state_WER
+			}
+			WER = {
+				transfer_state = PREV
+			}
+		}
+		
+		transfer_units_fraction = {
+			target = WER
+			size = 0.33
+		}
+		transfer_units_fraction = {
+			target = OSS
+			size = 0.5
+		}
+	}
+
+	GGR = {
+		declare_war_on = {
+			target = OSS
+			type = civil_war
+		}
+		add_civil_war_target = OSS
+		declare_war_on = {
+			target = WER
+			type = civil_war
+		}
+		add_civil_war_target = WER
+	}
+	OSS = {
+
+		declare_war_on ={
+			target = WER
+			type = civil_war
+		}
+		add_civil_war_target = WER
+	}
+	every_country = {
+		limit = {
+			is_subject_of = GGR
+
+		}
+
+		start_civil_war = {
+    		ruling_party = fascism
+			ideology = communism
+    		size = 0.5
+		}
+		random_country = {
+			limit = {
+				original_tag = PREV
+				has_government = communism
+			}
+			set_popularities = {
+				democratic = 0
+				neutrality = 0
+				fascism = 0 
+				communism = 100
+			}
+			SOV = {
+				add_ai_strategy = {
+   					type = support
+    				id = PREV
+    				value = 100
+				}
+			}
+		}
+	}
+}

@@ -1,115 +1,6 @@
 add_namespace = cw_sov
 
-#Space program report
-country_event = {
-	id = cw_sov.1
-	title = cw_sov.1.t
-	desc = cw_sov.1.d
 
-
-	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
-
-	option = {
-		name = cw_sov.1.a
-		#increase spendings
-		custom_effect_tooltip = SOV_sp_prog_increase_spending_tt
-	}
-	option = {
-		name = cw_sov.1.b
-		#keep the current spendings
-		custom_effect_tooltip = SOV_sp_prog_keep_spending_tt
-	}
-	option = {
-		name = cw_sov.1.c
-		#reduce spendings
-		custom_effect_tooltip = SOV_sp_prog_decrease_spending_tt
-	}
-}
-
-#Sputnik launch
-country_event = {
-	id = cw_sov.2
-	title = cw_sov.2.t
-	desc = cw_sov.2.d
-
-
-	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
-	option = {
-		name = cw_sov.2.a
-	}
-
-
-}
-
-#Gagarine launch
-country_event = {
-	id = cw_sov.3
-	title = cw_sov.3.t
-	desc = cw_sov.3.d
-
-
-	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
-	option = {
-		name = cw_sov.3.a
-	}
-
-
-}
-
-#First Spacewalk
-country_event = {
-	id = cw_sov.4
-	title = cw_sov.4.t
-	desc = cw_sov.4.d
-
-
-	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
-	option = {
-		name = cw_sov.4.a
-	}
-
-
-}
-
-#N1 Program 
-country_event = {
-	id = cw_sov.5
-	title = cw_sov.5.t
-	desc = cw_sov.5.d
-
-
-	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
-	option = {
-		name = cw_sov.5.a
-	}
-
-
-}
 
 #N1 fail
 country_event = {
@@ -119,11 +10,7 @@ country_event = {
 
 
 	is_triggered_only = yes
-
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
+	fire_only_once = yes
 	option = {
 		name = cw_sov.6.a
 	}
@@ -140,10 +27,6 @@ country_event = {
 
 	is_triggered_only = yes
 
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
-	}
 	option = {
 		name = cw_sov.7.a
 	}
@@ -154,15 +37,14 @@ country_event = {
 #A Red Moon
 country_event = {
 	id = cw_sov.8
-	title = cw_sov.8.t
-	desc = cw_sov.8.d
+	title = space_race.3.t
+	desc = space_race.3.d
 
 
 	is_triggered_only = yes
 
-	trigger = {
-		tag = SOV
-		has_global_flag = SOV_started_space_program
+	option = {
+		name = space_race.3.b
 	}
 
 
@@ -228,4 +110,263 @@ country_event = {
 		name = cw_sov.11.a
 	}
 
+}
+#Stalin dies
+country_event = {
+	id= cw_sov.12
+	title = cw_sov.12.t
+	desc = cw_sov.12.d
+
+	is_triggered_only = yes
+	fire_only_once = yes
+	trigger = {
+		tag = SOV
+		has_country_leader = {
+			character = joseph_stalin
+			ruling_only = yes
+		}
+		date > 1953.3.5
+		date < 1953.4.5
+	}
+	immediate = {
+		DDR = {
+			country_event = {
+				id = CW_Expansion_country.296
+				days = 103 
+			}
+		}
+	}
+	option = {
+		name = cw_sov.12.a
+		if = {
+			limit = {
+				has_country_leader = {
+					character = joseph_stalin
+					ruling_only = yes
+				}
+			}
+			kill_country_leader = yes
+			
+		}
+		set_variable = { malenkov_influence = 30}
+		set_variable = { beria_influence = 80}
+		set_variable = { khrushchev_influence = 35 }
+		set_variable = { zhukov_influence = 10}
+		set_variable = { bulganin_influence = 15 }
+		set_variable = { kaganovich_influence = 15 }
+	}
+}
+
+country_event = { #TITO ASSASSINATION
+	id = cw_sov.13
+	title = cw_sov.13.t
+	desc = cw_sov.13.d
+
+	is_triggered_only = yes
+	picture = GFX_Tito_death
+	
+	option = {
+		name = cw_sov.13.a
+		if = {
+			limit = {
+				ALB = {
+					has_government = communism
+				}
+			}
+			ALB = {
+				leave_faction = yes
+			}
+		}
+		YUG = {
+			kill_country_leader = yes
+			create_country_leader = {
+				name = "Vasily Stalin"
+			
+				picture = "gfx/leaders/SOV/Portrait_Soviet_Vasily_Stalin.dds"
+	
+				ideology = stalinism
+			}
+			set_country_leader_description = {
+				ideology = communism
+				desc = Vasily_Stalin_desc
+			}
+			drop_cosmetic_tag = yes
+			leave_faction = yes
+			create_faction = "Balkan Union"
+			if = {
+				limit = {
+					ALB = {
+						has_government = communism
+					}
+				}
+				add_to_faction = ALB
+				ALB = {
+					if = {
+						limit = {
+							country_exists = GRC 
+						}
+						add_to_war = {
+    						targeted_alliance = GRC
+    						enemy = GRE
+    						hostility_reason = asked_to_join
+						}
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = GRC
+				}
+				add_to_war = {
+    				targeted_alliance = GRC
+    				enemy = GRE
+    				hostility_reason = asked_to_join
+				}
+				add_to_faction = GRC
+			}
+		}		
+		
+	}
+
+	option = {
+		name = cw_sov.13.b
+		YUG = {kill_country_leader = yes}
+	}
+}
+
+country_event = {
+	#Beria discovers the plot (BERIA)
+	id = cw_sov.14
+	title = cw_sov.14.t
+	desc = cw_sov.14.d
+
+	is_triggered_only = yes
+	immediate = {
+		if = {
+			limit = {
+				is_historical_focus_on = yes
+			}
+			set_country_flag = khrushchev_joined_plot
+			add_to_temp_variable = {total_plot_influence = khrushchev_influence}
+			set_country_flag = malenkov_joined_plot
+			add_to_temp_variable = {total_plot_influence = malenkov_influence}
+			if = {
+				limit = {
+					has_country_flag = zhukov_in_moscow
+				}
+				set_country_flag = zhukov_joined_plot
+				add_to_temp_variable = {total_plot_influence = zhukov_influence}
+			}
+				
+			set_country_flag = kaganovich_joined_plot
+			add_to_temp_variable = {total_plot_influence = kaganovich_influence}
+		}
+		if = {
+			limit= {
+				is_historical_focus_on = no
+			}
+			set_country_flag = khrushchev_joined_plot
+			add_to_temp_variable = {total_plot_influence = khrushchev_influence}
+
+			random_list = {
+				75 = {
+				}
+				25 = {
+					set_country_flag = malenkov_joined_plot
+					add_to_temp_variable = {total_plot_influence = malenkov_influence}
+				}
+			}
+			if = {
+				limit = {
+					has_country_flag = zhukov_in_moscow
+				}
+				random_list = {
+					75 = {
+
+					}
+					25 = {
+						set_country_flag = zhukov_joined_plot
+						add_to_temp_variable = {total_plot_influence = zhukov_influence}
+					}
+				}
+			}
+			
+			random_list = {
+				10 = {
+
+				}
+				90 = {
+					set_country_flag = kaganovich_joined_plot
+					add_to_temp_variable = {total_plot_influence = kaganovich_influence}
+				}
+			}
+		}
+	}
+	option = {
+		#Arrest them immediately
+		country_event = cw_sov.15
+		
+	}
+	option = {
+		#Wait a bit...
+	}
+
+}
+
+country_event = {
+	#Beria discovers the plot
+	id = cw_sov.15
+	title = cw_sov.15.t
+	desc = cw_sov.15.d
+
+	is_triggered_only = yes
+	immediate = {
+		set_country_flag = beria_discovers_plot
+	}
+	option = {
+		
+
+		if = {
+			limit = {
+				has_country_flag = khrushchev_joined_plot
+			}
+			set_country_flag = khrushchev_purged
+		}
+		if = {
+			limit = {
+				has_country_flag = bulganin_joined_plot
+			}
+			set_country_flag = bulganin_purged
+		}
+		if = {
+			limit = {
+				has_country_flag = zhukov_joined_plot
+			}
+			set_country_flag = zhukov_purged
+		}
+		if = {
+			limit = {
+				has_country_flag = malenkov_joined_plot
+			}
+			set_country_flag = malenkov_purged
+		}
+		if = {
+			limit = {
+				has_country_flag = kaganovich_joined_plot
+			}
+			set_country_flag = kaganovich_purged
+		}
+	}
+}
+
+country_event = {
+	#Shootout
+	id = cw_sov.16
+	title = cw_sov.16.t
+	desc = cw_sov.16.d
+	is_triggered_only = yes
+
+	option = {
+
+	}
 }

@@ -272,6 +272,7 @@ on_actions = {
 
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
+		
 	}
 
 	# called a country fully decrypts cipher of a target country
@@ -301,6 +302,12 @@ on_actions = {
 	# called when a country send volunteers to another
 	# ROOT is sender, FROM is receiver
 	on_send_volunteers = {
+		effect = {
+			FROM = {
+				add_to_array = { sender_country_array = ROOT }
+				country_event = {id = volunteer_event.1 days = 15}
+			}
+		}
 	}
 
 	#FROM is war target
@@ -308,14 +315,88 @@ on_actions = {
 	}
 	#ROOT is winner #FROM gets annexed - This fires just before FROM gets annexed, meaning the country and everything it owns still exists. It will also fire on_annex and on_civil_war_end
 	on_civil_war_end_before_annexation = {
+		
 	}
 
 	#ROOT is winner #FROM gets annexed - This will also fire on_annex
 	on_civil_war_end = {
+		effect = {
+			if = {
+				limit = {
+					FROM = {
+						original_tag = REB
+					}
+				}
+				every_state = {
+					limit = {
+						is_core_of = FROM
+					}
+					remove_core_of = FROM
+				}
+				
+			}
+		}
 	}
 
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = SPR
+					}
+					FROM = {
+						original_tag = SPR
+					}
+					has_global_flag = spanish_civil_war
+					NOT = {
+						has_global_flag = scw_over
+					}
+				}
+				subtract_from_variable = { global.scw_factions_num = 1 }
+				ROOT = {
+					transfer_units_fraction = {
+						target = FROM
+						size = 0
+						stockpile_ratio = 0.5
+						army_ratio = 0
+						navy_ratio = 0
+						air_ratio = 0
+					}
+				}
+				FROM = {
+					annex_country = {
+						target = ROOT
+					}	
+				}
+				
+				every_state = {
+					limit = {
+						is_core_of = ROOT
+					}
+					remove_core_of = ROOT # ROOT really lost man
+				}
+			}
+			if = {
+				limit = {
+					check_variable = { global.scw_factions_num = 1 }
+
+
+				}
+				set_global_flag = scw_over
+				FROM = { country_event = ww2_spain.6 }
+			}
+			if = {
+				limit = {
+					check_variable = { global.scw_factions_num = 2}
+					country_exists = SPB
+					country_exists = SPF
+				}
+				set_global_flag = scw_over
+				FROM = {country_event = ww2_spain.62}
+			}
+		}
 	}
 
 
@@ -325,6 +406,67 @@ on_actions = {
 
 	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID
 	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					has_global_flag = spanish_civil_war
+					NOT = {
+						has_global_flag = scw_over
+					}
+					ROOT = { original_tag = SPR }
+					FROM.FROM = {
+
+						has_state_flag = is_scw_state
+						NOT = {
+							has_state_flag = state_recently_changed_controller
+						}
+					}
+				}
+				random_list = {
+
+					80 = {
+						FROM.FROM = { save_event_target_as = state_target }
+						ROOT = { country_event = { id = ww2_spain.4 } }#Weapon cache found
+					}
+					20 = {
+
+					}
+				}
+
+			}
+			if = {
+				limit = {
+					has_global_flag = spanish_civil_war
+					NOT = {
+						has_global_flag = scw_over
+					}
+					original_tag = SPR
+					NOT = {
+						FROM = {
+							any_controlled_state = {
+								has_state_flag = is_scw_state
+								NOT = {
+									OR = {
+										state = 177
+										state = 290
+									}
+								}
+							}
+						}
+					}
+					
+				}
+				FROM = {
+					if = {
+						limit = {
+							has_idea = SPR_no_surrender
+						}
+						remove_ideas = SPR_no_surrender
+						add_ideas = SPR_capitulate
+					}
+				}
+			}
+		}
 	}
 
 	#THIS is country that has just gotten into a war

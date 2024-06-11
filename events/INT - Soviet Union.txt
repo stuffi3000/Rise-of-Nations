@@ -32,7 +32,7 @@ country_event = {
 		create_country_leader = {
 			name = "Joseph Stalin"
 			desc = "POLITICS_JOSEPH_STALIN_DESC"
-			picture = "Portrait_Soviet_Joseph_Stalin.dds"
+			picture = "gfx/leaders/SOV/Portrait_Soviet_Joseph_Stalin.dds"
 			expire = "1953.5.16"
 			ideology = stalinism
 			traits = {
@@ -192,7 +192,7 @@ country_event = {
 
 	option = {
 		name = interwar_soviet.5.a
-		declare_war_on = { target = FNN type = annex_everything }
+		declare_war_on = { target = FIN type = annex_everything }
 		add_to_faction = FNR
 	}
 }
@@ -380,7 +380,7 @@ country_event = {
 
 	option = {
 		name = interwar_soviet.14.a
-		FNN = {
+		FIN = {
 			transfer_state = 147
 		}
 	}
@@ -802,7 +802,7 @@ country_event = {
 		date > 1918.8.30
 		tag = SOV
 		NOT = {
-			WHR = {
+			RUS = {
 				controls_state = 653
 			}
 		}
@@ -863,9 +863,9 @@ country_event = {
 
 	trigger = {
 		NOT = { date > 1932.12.1 }
-		tag = WHR
+		tag = RUS
 		AND = {
-			WHR = {
+			RUS = {
 				controls_state = 219
 				controls_state = 195
 				controls_state = 217
@@ -882,8 +882,8 @@ country_event = {
 		name = interwar_soviet.39.a
 		news_event = { hours = 6 id = endsieg_news.44 }
 		set_global_flag = whites_win
-		set_global_flag = RUE_CW_Over
-		WHR = {
+		set_global_flag = RUS_CW_Over
+		RUS = {
 			annex_country = { target = SOV transfer_troops = no }
 			change_tag_from = SOV
 		}
@@ -930,10 +930,10 @@ country_event = {
 		name = interwar_soviet.40.a
 		news_event = { hours = 6 id = endsieg_news.46 }
 		set_global_flag = reds_win
-		set_global_flag = RUE_CW_Over
+		set_global_flag = RUS_CW_Over
 		SOV = {
-			annex_country = { target = WHR transfer_troops = no }
-			change_tag_from = WHR
+			annex_country = { target = RUS transfer_troops = no }
+			change_tag_from = RUS
 		}
 	}
 }
@@ -1099,14 +1099,8 @@ country_event = {
 		has_war_with = EST
 		EST = {
 			OR = {
-				AND = {
-					date > 1919.8.20
-					has_capitulated = no
-				}
-				AND = {
-					191 = { is_fully_controlled_by = EST }
-					has_capitulated = no
-				}
+				date > 1920.2.2
+				has_capitulated = no
 			}
 		}
 	}
@@ -1120,7 +1114,7 @@ country_event = {
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.46.a
+		name = interwar_soviet.46.b
 		ai_chance = { factor = 0 }
 	}
 }
@@ -1139,17 +1133,8 @@ country_event = {
 		tag = SOV
 		has_war_with = LIT
 		LIT = {
-			OR = {
-				AND = {
-					date > 1920.2.2
-					has_capitulated = no
-				}
-				AND = {
-					controls_state = 784
-					11 = { is_fully_controlled_by = LIT }
-					has_capitulated = no
-				}
-			}
+			date > 1919.8.30
+			has_capitulated = no
 		}
 	}
 
@@ -1158,11 +1143,14 @@ country_event = {
 	option = { #yes we want peace
 		name = interwar_soviet.47.a
 		ai_chance = { factor = 100 }
-		LIT = { country_event = { id = INT_baltics.1 days = 1 } }
+		LIT = { 
+			country_event = { id = INT_baltics.1 days = 1}
+			give_military_access = SOV
+		}
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.47.a
+		name = interwar_soviet.47.b
 		ai_chance = { factor = 0 }
 	}
 }
@@ -1177,20 +1165,11 @@ country_event = {
 	fire_only_once = yes
 
 	trigger = {
-		NOT = { date > 1932.12.1 }
 		tag = SOV
 		has_war_with = LAT
 		LAT = {
-			OR = {
-				AND = {
-					date > 1920.8.11
-					has_capitulated = no
-				}
-				AND = {
-					12 = { is_fully_controlled_by = LAT }
-					has_capitulated = no
-				}
-			}
+			date > 1920.8.11
+			has_capitulated = no
 		}
 	}
 
@@ -1203,7 +1182,399 @@ country_event = {
 	}
 
 	option = { #no, we will annex all
-		name = interwar_soviet.48.a
+		name = interwar_soviet.48.b
 		ai_chance = { factor = 0 }
+	}
+}
+
+#Pavel Dybenko's fate
+country_event = {
+	id = interwar_soviet.49
+	title = interwar_soviet.49.t
+	desc = interwar_soviet.49.d
+	picture = GFX_report_event_dybenko
+
+	fire_only_once = yes
+
+	trigger = {
+		NOT = {
+			has_character = SOV_pavel_dybenko
+		}
+		has_war = yes
+		date > 1919.8.1
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = { #the man is needed
+		name = interwar_soviet.49.a
+		ai_chance = { factor = 0 }
+		add_stability = -0.02
+		
+		SOV_pavel_dybenko = {
+			set_character_flag = SOV_dybenko_pardoned
+		}
+	}
+
+	option = { #fuck him
+		name = interwar_soviet.49.b
+		ai_chance = { factor = 100 }
+	}
+}
+
+news_event = {
+	id = interwar_soviet.50
+	title = interwar_soviet.50.t
+	desc = interwar_soviet.50.d
+	picture = GFX_news_event_frunze
+
+	fire_only_once = yes
+
+	trigger = {
+		has_character = SOV_mikhail_frunze
+		SOV_mikhail_frunze = {
+			is_country_leader = no
+		}
+		TAG = SOV
+		date > 1925.10.31
+	}
+
+	mean_time_to_happen = { days = 1 }
+
+	option = { #F Frunze
+		name = interwar_soviet.50.a
+		
+		retire_character = SOV_mikhail_frunze
+	}
+}
+
+news_event = {
+	id = interwar_soviet.51
+
+	fire_only_once = yes
+
+	trigger = {
+		TAG = SOV
+		date = 1930.1.1
+	}
+	
+	hidden = yes
+
+	option = { #Dynamic Portraits
+		
+		SOV_INT_dynamic_portraits = yes
+		
+	}
+}
+
+
+news_event = {
+	id = interwar_soviet.52
+
+	fire_only_once = yes
+
+	trigger = {
+		has_character = joseph_stalin
+		TAG = SOV
+		date = 1920.1.1
+	}
+	
+	hidden = yes
+
+	option = { #Stalin Dynamic Portraits 1
+		
+		SOV_stalin_dynamic_portraits_1 = yes
+		
+	}
+}
+
+news_event = {
+	id = interwar_soviet.53
+
+	fire_only_once = yes
+
+	trigger = {
+		has_character = joseph_stalin
+		TAG = SOV
+		date = 1920.1.1
+	}
+	
+	hidden = yes
+
+	option = { #Stalin Dynamic Portraits 1
+		
+		SOV_stalin_dynamic_portraits_1 = yes
+		
+	}
+}
+
+news_event = {
+	id = interwar_soviet.54
+
+	fire_only_once = yes
+
+	trigger = {
+		TAG = SOV
+		date = 1933.1.1
+	}
+	
+	hidden = yes
+
+	option = { #1933 Dynamic portraits
+		
+		SOV_INT_1933_dynamic_portraits = yes
+		
+	}
+}
+
+news_event = {
+	id = interwar_soviet.55
+
+	fire_only_once = yes
+
+	trigger = {
+		TAG = SOV
+		date = 1945.1.1
+	}
+	
+	hidden = yes
+
+	option = { #1945 Dynamic portraits
+		
+		SOV_1945_dynamic_portraits = yes
+		
+	}
+}
+
+news_event = {
+	id = interwar_soviet.56
+	title = interwar_soviet.56.t
+	desc = interwar_soviet.56.d
+	picture = GFX_news_event_marshals
+
+	fire_only_once = yes
+
+	trigger = {
+		TAG = SOV
+	}
+
+	hidden = yes
+
+	option = { #The Five Field Marshals
+		name = interwar_soviet.56.a
+		
+		if = {
+			limit = {
+				NOT = {
+					SOV_semyon_budyonny = { 
+						is_field_marshal = no
+					}
+				}
+			}
+			
+			SOV_semyon_budyonny = {
+				add_field_marshal_role = {
+					traits = { old_guard inflexible_strategist cavalry_leader red_army_trait }
+					skill = 1
+					attack_skill = 1
+					defense_skill = 1
+					planning_skill = 1
+					logistics_skill = 1
+					visible = { 
+						NOT = { has_character_flag = SOV_exiled_flag } 
+						NOT = { has_character_flag = SOV_character_purged_flag }
+						date < 1954.1.1
+					}
+				}
+			}
+			
+		}
+		if = {
+			limit = {
+				NOT = {
+					SOV_mikhail_tukhachevsky = { 
+						is_field_marshal = no
+					}
+				}
+			}		
+			SOV_mikhail_tukhachevsky = {
+				add_field_marshal_role = {
+					traits = {
+						red_army_trait
+						offensive_doctrine
+						brilliant_strategist
+						career_officer
+						infantry_officer
+						trait_reckless
+					}
+					skill = 4
+					attack_skill = 3
+					defense_skill = 4
+					planning_skill = 4
+					logistics_skill = 2
+					visible = {
+						date < 1970.1.1
+						NOT = { has_character_flag = SOV_character_purged_flag }
+					}
+				}
+			}
+		
+		}
+		if = {
+			limit = {
+				NOT = {
+					SOV_alexander_yegorov = { 
+						is_field_marshal = no
+					}
+				}
+			}
+			SOV_alexander_yegorov = {
+				add_field_marshal_role = {
+					traits = { career_officer inflexible_strategist trait_reckless }
+					skill = 3
+					attack_skill = 2
+					defense_skill = 2
+					planning_skill = 4
+					logistics_skill = 2
+					visible = { NOT = { has_character_flag = SOV_exiled_flag } }
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					SOV_vasily_blucher = { 
+						is_field_marshal = no
+					}
+				}
+			}
+
+			SOV_vasily_blucher = {
+				add_field_marshal_role = {
+					traits = { old_guard career_officer infantry_officer organizer }
+					skill = 3
+					attack_skill = 2
+					defense_skill = 1
+					planning_skill = 3
+					logistics_skill = 4
+					visible = { NOT = { has_character_flag = SOV_exiled_flag } }
+				}
+			}
+		}
+	
+	}
+}
+
+news_event = {
+	id = interwar_soviet.57
+
+	fire_only_once = yes
+
+	trigger = {
+		TAG = SOV
+		date = 1933.1.1
+	}
+	
+	hidden = yes
+
+	option = { #Yakir; Kork; Shaposhnikov; Primakov skill update
+		
+		if = {
+			limit = {
+				NOT = { 
+					SOV_iona_yakir = {
+						skill > 2
+					}
+				}
+			}
+			
+			SOV_iona_yakir = {
+				add_corps_commander_role = {
+					traits = { air_force_ties infantry_officer brilliant_strategist trickster red_army_trait }
+					skill = 4
+					attack_skill = 4
+					defense_skill = 3
+					planning_skill = 2
+					logistics_skill = 4
+					visible = { 
+						date < 1964.1.1
+						NOT = { has_character_flag = SOV_character_purged_flag }
+					}
+				}
+			}	
+		}
+		
+		if = {
+			limit = {
+				NOT = { 
+					SOV_august_kork = {
+						skill > 2
+					}
+				}
+			}
+			SOV_august_kork = {
+				add_corps_commander_role = {
+					traits = { old_guard career_officer organizer red_army_trait }
+					skill = 4
+					attack_skill = 4
+					defense_skill = 2
+					planning_skill = 4
+					logistics_skill = 3
+					visible = { NOT = { has_character_flag = SOV_exiled_flag } date < 1965.1.1 has_character_flag = SOV_character_purged_flag }
+				}
+			}		
+		}
+		if = {
+			limit = {
+				NOT = { 
+					SOV_boris_shaposhnikov = {
+						skill > 2
+					}
+				}
+			}
+			SOV_boris_shaposhnikov  = {
+				add_corps_commander_role = {
+					traits = { career_officer trait_cautious red_army_trait }
+					skill = 3
+					attack_skill = 2
+					defense_skill = 3
+					planning_skill = 2
+					logistics_skill = 3
+					legacy_id = 1408
+					visible = { 
+						date < 1945.3.26
+						NOT = { has_character_flag = SOV_exiled_flag } 
+						{ has_character_flag = SOV_character_purged_flag }
+					}
+
+				}
+			}			
+		
+		}
+		if = {
+			limit = {
+				NOT = { 
+					SOV_vitaly_primakov = {
+						skill > 1
+					}
+				}
+			}
+			SOV_vitaly_primakov = {
+				add_corps_commander_role = {
+					traits = { cavalry_officer trait_reckless war_hero cavalry_leader red_army_trait }
+					skill = 3
+					attack_skill = 3
+					defense_skill = 2
+					planning_skill = 2
+					logistics_skill = 3
+					visible = { 
+						NOT = { has_character_flag = SOV_exiled_flag } 
+						date < 1961.1.1  
+						NOT = { has_character_flag = SOV_character_purged_flag }
+					}
+				}
+			}		
+		
+		}
 	}
 }

@@ -108,12 +108,13 @@ country_event = {
 		add_political_power = -150
 		custom_effect_tooltip = "UNSC_SANCTION_OPTION_TT"
 		set_global_flag = UNSC_sanction_voting_ongoing
+		
 		event_target:sanctions_country = {
-			save_global_event_target_as = sanctions_country_target
-			set_variable = {
-				sanctions_country_target_var = THIS.id
-			}
-			set_country_flag = sanctions_country_target_flag
+		 	save_global_event_target_as = sanctions_country_target
+		 	set_variable = {
+		 		sanctions_country_target_var = THIS.id
+		 	}
+		 	set_country_flag = sanctions_country_target_flag
 		}
 		ROOT = {
 			save_global_event_target_as = sanctions_country_starter
@@ -124,25 +125,30 @@ country_event = {
 		}
 		hidden_effect = {
 			set_variable = { show_unsc_sanctions = 0 }
-			set_variable = {
-				global.UNSC_sanction_days_left = 21
-			}
+			# set_variable = {
+			# 	global.UNSC_sanction_days_left = 21
+			# }
 			start_sanctions_effect = yes
+			country_event = {id = unsc.6 days = 24}
 			every_country = {
-				limit = {
-					has_country_flag = member_of_united_nations_sc
-				}
-				set_variable = { show_unsc_alert = 1 }
+			 	limit = {
+			 		OR = {
+	 					has_idea = RON_United_Nations_Security_Council
+	 					has_idea = RON_United_Nations_Security_Council_NP
+	 				}
+			 	}
+			 	set_variable = { show_unsc_alert = 1 }
+			 	activate_mission = resolution_vote_timer
 			}
-			random_country = {
-				limit = {
-					has_country_flag = member_of_united_nations_sc
-				}
-				country_event = { id = unsc.4 days = 22 }
-			}
-			random_country = {
-				country_event = { id = unsc.31 days = 1 }
-			}
+			# random_country = {
+			# 	limit = {
+			# 		has_country_flag = member_of_united_nations_sc
+			# 	}
+			# 	country_event = { id = unsc.4 days = 22 }
+			# }
+			# random_country = {
+			# 	country_event = { id = unsc.31 days = 1 }
+			# }
 		}
 	}
 
@@ -167,147 +173,99 @@ country_event = {
 	}
 }
 
-country_event = {
-	id = unsc.31
-	hidden = yes
+# country_event = {
+# 	id = unsc.31
+# 	hidden = yes
 
-	is_triggered_only = yes
+# 	is_triggered_only = yes
 
-	immediate = {
-		if = {
-			limit = {
-				check_variable = {
-					var = global.UNSC_sanction_days_left
-					value = 0
-					compare = greater_than
-				}
-			}
-			subtract_from_variable = {
-				global.UNSC_sanction_days_left = 1
-			}
-			random_country = {
-				limit = {
-					has_country_flag = member_of_united_nations_sc
-				}
-				country_event = { id = unsc.31 days = 1 }
-			}
-		}
-		if = {
-			limit = {
-				check_variable = {
-					var = global.UNSC_sanction_days_left
-					value = 1
-					compare = less_than
-				}
-			}
-			UNSC_not_voted_on_time = yes
-		}
-	}
-}
+# 	immediate = {
+# 		if = {
+# 			limit = {
+# 				check_variable = {
+# 					var = global.UNSC_sanction_days_left
+# 					value = 0
+# 					compare = greater_than
+# 				}
+# 			}
+# 			subtract_from_variable = {
+# 				global.UNSC_sanction_days_left = 1
+# 			}
+# 			random_country = {
+# 				limit = {
+# 					has_country_flag = member_of_united_nations_sc
+# 				}
+# 				country_event = { id = unsc.31 days = 1 }
+# 			}
+# 		}
+# 		if = {
+# 			limit = {
+# 				check_variable = {
+# 					var = global.UNSC_sanction_days_left
+# 					value = 1
+# 					compare = less_than
+# 				}
+# 			}
+# 			UNSC_not_voted_on_time = yes
+# 		}
+# 	}
+# }
 
 
 country_event = {
 	id = unsc.4
-	hidden = yes
+	title = UNSC_VOTING_FAILED
+		
+	desc = UNSC_VOTING_FAILED_DESC
+	immediate = {
+		hidden_effect = {
+			if = {
+				limit = {
+					tag = USA
+				}
+				news_event = { id = unsc.7 hours = 6 }
+			}
+			#end_vote = yes
+		}
+	}
 
 	is_triggered_only = yes
-
-	immediate = {
-		if = {
-			limit = {
-				OR = {
-					check_variable = {
-						var = global.UNSC_negative_votes
-						value = global.UNSC_positive_votes
-						compare = greater_than
-					}
-					check_variable = {
-						var = global.UNSC_vetos
-						value = 0
-						compare = greater_than
-					}
-					check_variable = {
-						var = global.UNSC_negative_votes
-						value = global.UNSC_positive_votes
-						compare = equals
-					}
-				}
-			}
-			set_global_flag = UNSC_vote_failed
-			every_country = {
-				limit = {
-					OR = {
-						has_idea = RON_United_Nations_Security_Council
-						has_idea = RON_United_Nations_Security_Council_NP
-					}
-				}
-				country_event = unsc.5
-			}
-		}
-		if = {
-			limit = {
-				check_variable = {
-					var = global.UNSC_positive_votes
-					value = global.UNSC_negative_votes
-					compare = greater_than
-				}
-				check_variable = {
-					var = global.UNSC_vetos
-					value = 0
-					compare = equals
-				}
-			}
-			set_global_flag = UNSC_vote_successful
-			every_country = {
-				limit = {
-					OR = {
-						has_idea = RON_United_Nations_Security_Council
-						has_idea = RON_United_Nations_Security_Council_NP
-					}
-				}
-				country_event = unsc.5
-			}
-		}
+	picture = GFX_report_event_united_nations
+	option = {
+		name = "Okay, Moving on."
+		
+		
 	}
 }
 
 country_event = {
 	id = unsc.5
 	# title = Results
-	title = {
-		text = UNSC_VOTING_SUCCESSFUL
-		trigger = {
-			has_global_flag = UNSC_vote_successful
-		}
-	}
-	title = {
-		text = UNSC_VOTING_FAILED
-		trigger = {
-			has_global_flag = UNSC_vote_failed
-		}
-	}
-	desc = {
-		text = UNSC_VOTING_SUCCESSFUL_DESC
-		trigger = {
-			has_global_flag = UNSC_vote_successful
-		}
-	}
-	desc = {
-		text = UNSC_VOTING_FAILED_DESC
-		trigger = {
-			has_global_flag = UNSC_vote_failed
-		}
-	}
+	title = UNSC_VOTING_SUCCESSFUL
+		
+	
+	desc = UNSC_VOTING_SUCCESSFUL_DESC
+		
 
 	is_triggered_only = yes
 	picture = GFX_report_event_united_nations
 
 	immediate = {
+		
 		if = {
 			limit = {
-				has_global_flag = UNSC_vote_successful
+				
 				has_global_flag = UNSC_trade_sanctions
 				NOT = { has_global_flag = UNSC_sanctions_applied }
+			}
+			every_country = {
+				limit = {
+					OR = {
+	 					has_idea = RON_United_Nations_Security_Council
+	 					has_idea = RON_United_Nations_Security_Council_NP
+	 				}
+				}
+				send_embargo = event_target:sanctions_country_target
 			}
 			event_target:sanctions_country_target = {
 				add_timed_idea = {
@@ -327,7 +285,7 @@ country_event = {
 		}
 		if = {
 			limit = {
-				has_global_flag = UNSC_vote_successful
+				
 				has_global_flag = UNSC_security_risk
 				NOT = { has_global_flag = UNSC_sanctions_applied }
 			}
@@ -339,18 +297,21 @@ country_event = {
 			}
 			set_global_flag = UNSC_sanctions_applied
 		}
-		hidden_effect = {
-			if = {
-				limit = {
-					tag = USA
-				}
-				random_country = { country_event = { id = unsc.6 hours = 8 } }
-			}
-		}
+		#end_vote = yes
+		# hidden_effect = {
+		# 	if = {
+		# 		limit = {
+		# 			tag = USA
+		# 		}
+		# 		random_country = { country_event = { id = unsc.6 hours = 8 } }
+		# 	}
+		# }
+		
 	}
 
 	option = {
 		name = "Okay, Moving on."
+		
 	}
 }
 
@@ -362,6 +323,8 @@ country_event = {
 
 	immediate = {
 		UNSC_cleanup_effect = yes
+		end_vote = yes
+		clr_global_flag = UN_cleanup
 	}
 }
 
@@ -380,6 +343,8 @@ news_event = {
 				has_country_flag = sanctions_country_flag
 			}
 		}
+		clr_global_flag = UN_event_fired
+		
 	}
 
 	option = {
@@ -391,5 +356,7 @@ news_event = {
 				}
 			}
 		}
+		clr_global_flag = UN_event_fired
+		
 	}
 }

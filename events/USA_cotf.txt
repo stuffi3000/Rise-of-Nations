@@ -1,0 +1,242 @@
+add_namespace = usaa
+
+country_event = {
+	id = usaa.1
+	title = "The last question"
+	desc = usaa.1.d
+	picture = GFX_report_event_usa_macarthur_speech
+	timeout_days = 14
+	
+	is_triggered_only = yes
+
+	fire_only_once = yes
+	
+	option = {
+		name = usaa.1.a
+		ai_chance = { factor = 100 }
+		add_stability = -0.1
+		add_popularity = { ideology = democratic popularity = 0.15 }
+		army_experience = 25
+		create_corps_commander = {
+			name = "George S. Patton"
+			picture = "Portrait_USA_George_S_Patton.dds"
+			traits = {  trickster armor_officer panzer_leader war_hero trait_reckless }
+			skill = 5
+		
+			attack_skill = 7 
+			defense_skill = 3
+			planning_skill = 2
+			logistics_skill = 4
+		}
+		
+		create_corps_commander = {
+			name = "Omar Bradley"
+			picture = "Portrait_USA_Omar_Bradley.dds"
+			traits = {  trait_engineer trait_cautious brilliant_strategist harsh_leader }
+			skill = 5
+		
+			attack_skill = 3
+			defense_skill = 5
+			planning_skill = 4
+			logistics_skill = 4
+		}
+		
+		create_field_marshal = {
+			name = "Dwight D. Eisenhower"
+			picture = "Portrait_USA_Dwight_D_Eisenhower.dds"
+			traits = { logistics_wizard organizer offensive_doctrine trait_cautious armor_officer politically_connected }
+			skill = 5
+			attack_skill = 3
+			defense_skill = 3
+			planning_skill = 5
+			logistics_skill = 5
+		}
+	}
+
+	option = {
+		name = usaa.1.b
+		ai_chance = { factor = 100 }
+	}
+
+}
+
+# Election of 1936: Roosevelt vs Borah
+country_event = {
+	id = usaa.2
+	title = "Election of [GetYear]"
+	desc = usaa.2.d
+	picture = GFX_report_event_usa_election_generic
+
+	#is_triggered_only = yes
+
+	trigger = {
+		tag = USA
+		democratic > 0.5
+		date > 1936.11.1
+		date < 1936.11.30
+		has_country_flag = borahwilllead
+	}
+
+	fire_only_once = yes
+
+	immediate = {
+		hidden_effect = {
+			# if = {
+			# 	limit = {
+			# 		OR = {
+			# 			#has_completed_focus = USA_voter_registration_act
+			# 			has_completed_focus = USA_union_representation_act
+			# 		}
+			# 	}
+			# 	country_event = { id = usa.32 days = 730 } # midterms
+			# }
+			#else = {
+				country_event = { id = usa.35 days = 730 } # midterms
+			#}
+		}
+	}
+
+	option = { 	
+		name = usaa.2.a
+		ai_chance = {
+			factor = 75
+			modifier = {
+				OR = {
+					has_game_rule = {
+						rule = USA_ai_behavior
+						option = FASCIST
+					}
+					has_country_flag = USA_AI_RANDOM_FASCIST
+				}
+				has_dlc = "Man the Guns"
+				factor = 0
+			}
+		}		
+		add_ideas = new_deal
+		# if = {
+		# 	limit = {
+		# 		OR = {
+		# 			#has_completed_focus = USA_voter_registration_act
+		# 			has_completed_focus = USA_union_representation_act
+		# 		}
+		# 	}
+		# 	country_event = usa.32
+		# }
+		else = {
+			set_variable = { election_factor = random }
+			add_to_variable = { election_factor = -0.5 }
+			USA_election_senate = yes
+			USA_election_house = yes
+			custom_effect_tooltip = usa_congress_elections_tt_bad
+			country_event = usa.30
+		}
+	}
+
+	option = { 
+		name = usaa.2.b
+		ai_chance = {
+			factor = 25
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				has_game_rule = {
+					rule = USA_ai_behavior
+					option = DEFAULT
+				}
+			}
+		}		
+		set_party_name = { ideology = democratic long_name = USA_republican_party name = USA_republican_party }
+		set_variable = { election_factor = random }
+		add_to_variable = { election_factor = -0.6 }
+		USA_election_senate = yes
+		USA_election_house = yes
+		USA_flip_support = yes
+		custom_effect_tooltip = usa_congress_elections_tt_good
+		add_political_power = 120
+		if = {
+			limit = {
+				has_idea = standard_oil_california
+			}
+			add_political_power = 150
+		}
+		if = {
+			limit = {
+				NOT = { has_idea = standard_oil_california }
+			}
+			add_ideas = standard_oil_california
+		}
+		create_country_leader = {
+			name = "William Borah"
+			desc = "POLITICS_ALF_LANDON_DESC"
+			picture = "gfx/leaders/USA/Portrait_USA_william_borah.tga"
+			expire = "1965.1.1"
+			ideology = conservatism
+			traits = {
+				staunch_constitutionalist
+			}
+		}
+		country_event = usa.31
+	}
+}
+
+# Republican presidential primaries Election of 1936: Landon vs Borah
+country_event = {
+	id = usaa.3
+	title = "Republican presidential primaries of [GetYear]"
+	desc = usaa.3.d
+	picture = GFX_report_event_usa_election_generic
+
+	#is_triggered_only = yes
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = USA
+		democratic > 0.5
+		date > 1936.3.1
+		date < 1936.5.1
+	}
+
+	option = { 	
+		name = usaa.3.a
+		ai_chance = {
+			factor = 100
+			modifier = {
+				OR = {
+					has_game_rule = {
+						rule = USA_ai_behavior
+						option = FASCIST
+					}
+					has_country_flag = USA_AI_RANDOM_FASCIST
+				}
+				has_dlc = "Man the Guns"
+				factor = 0
+			}
+		}
+		hidden_effect = {
+			country_event = { id = usa.6 days = 240 }
+		}
+	}
+
+	option = { 	
+		name = usaa.3.b
+		ai_chance = {
+			factor = 0
+			modifier = {
+				OR = {
+					has_game_rule = {
+						rule = USA_ai_behavior
+						option = FASCIST
+					}
+					has_country_flag = USA_AI_RANDOM_FASCIST
+				}
+				has_dlc = "Man the Guns"
+				add = 100
+			}
+		}
+		set_country_flag = borahwilllead
+		hidden_effect = {
+			country_event = { id = usaa.2 days = 240 }
+		}
+	}
+}

@@ -59,6 +59,90 @@ disband_twenty_percent_units = {
 		target = XXB
 		transfer_troops = no
 	}
+	every_state = {
+		limit = {
+			has_state_flag = is_XXB_state
+		}
+		transfer_state_to = XXB
+	}
+	XXB = {
+		transfer_state = 1129
+	}
+	event_target:disband_country = {
+		set_temp_variable = { num_equipment@infantry_equipment = equipment_old}
+	}
+}
+
+disband_all_units = {
+	save_event_target_as = disband_country
+	event_target:disband_country = {
+		set_temp_variable = {equipment_old = num_equipment@infantry_equipment}
+	}
+	XXB = {
+		set_temp_variable = {
+			old_manpower = manpower_k
+		}
+	}
+	random_state = {
+		limit = {
+			impassable = yes
+			is_fully_controlled_by = owner
+		}
+		owner = { save_event_target_as = disband_state_owner }
+		save_event_target_as = disband_state
+		XXB = { set_state_owner = PREV }
+	}
+	transfer_units_fraction = {
+		target = XXB
+		size = 0
+		army_ratio = 1
+		keep_unit_leaders_trigger = {
+			always = yes
+		}
+	}
+	XXB = {
+		delete_unit = {
+			disband = yes
+		}
+		set_equipment_fraction = 0
+		set_temp_variable = {
+			manpower_diff = manpower_k
+		}
+		subtract_from_temp_variable = {
+			manpower_diff = old_manpower
+		}
+		while_loop_effect = { #avoid overflows
+			limit = { check_variable = { manpower_diff > 1 } }
+			subtract_from_temp_variable = { manpower_diff = 1 }
+			event_target:disband_country = { add_manpower = 1000 }
+			add_manpower = -1000
+		}
+		multiply_temp_variable = {
+			manpower_diff = 1000
+		}
+		event_target:disband_country = { add_manpower = PREV.manpower_diff }
+		multiply_temp_variable = {
+			manpower_diff = -1
+		}
+		add_manpower = manpower_diff
+		
+	}
+	event_target:disband_state = {
+		event_target:disband_state_owner = { set_state_owner = PREV }
+	}
+	annex_country = {
+		target = XXB
+		transfer_troops = no
+	}
+	every_state = {
+		limit = {
+			has_state_flag = is_XXB_state
+		}
+		transfer_state_to = XXB
+	}
+	XXB = {
+		transfer_state = 1129
+	}
 	event_target:disband_country = {
 		set_temp_variable = { num_equipment@infantry_equipment = equipment_old}
 	}

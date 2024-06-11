@@ -1,0 +1,403 @@
+# MEX = 6 
+# MDR = 5 
+# CNT = 2 
+# MEB = 1 
+# ZAP = 4 
+# VIL = 3 
+MEX_revolution_cat = {
+    ZAP_initiate_border_clash_with_MDR = {
+        cost = 20
+        allowed = {
+            tag = ZAP
+        }
+        state_target = yes
+        target_trigger = {
+            FROM = {
+                is_controlled_by = MDR	
+                any_neighbor_state = { is_controlled_by = ZAP }    
+            }
+
+        }
+        available = {
+            NOT = {
+                has_country_flag = border_war_in_progress
+            }
+        }
+        complete_effect = {
+            random_state = {
+				limit = {
+					is_fully_controlled_by = ROOT
+					
+					any_neighbor_state = {
+						state = FROM
+					}
+				}
+				
+				set_variable = { FROM.attacker_state = id }
+			    set_temp_variable = { FROM.attacker_state_temp = id }
+				
+			}
+            ROOT = {
+                set_country_flag = border_war_in_progress
+            }
+        }
+        days_remove = 5
+        remove_effect = {
+            start_border_war = {
+                change_state_after_war = yes
+                attacker = {
+                    state = var:FROM.attacker_state
+                    num_provinces = 4
+                    on_win = ww1_mexico.25
+                    on_cancel = ww1_mexico.27
+                    on_lose = ww1_mexico.27
+                }
+				
+                defender = {
+                    state = FROM
+                    num_provinces = 4
+        
+                }
+            }
+            FROM = {
+                save_global_event_target_as = defender_state
+            }
+            var:FROM.attacker_state = {
+                save_global_event_target_as = attacker_state
+            }
+            clear_variable = FROM.attacker_state
+        }
+    }
+    
+    MEX_put_madero_in_house_arrest = {
+        cost = 50
+        fire_only_once = yes
+        allowed = {
+            tag = MEX
+        }
+        ai_will_do = {
+            base = 100
+           
+        }
+        visible = {
+            has_completed_focus = MEX_WW1_prepare_election_rigging
+        }
+        days_remove = 5
+        remove_effect = {
+            set_country_flag = madero_arrested
+        }
+    }
+    MEX_WW1_anti_reelection_party_AI = {
+        is_good = no
+        activation = {
+            has_country_flag = MEX_WW1_path_of_democracy_AI_done
+        }
+        fire_only_once = yes
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        days_mission_timeout = 70
+
+        timeout_effect = {
+            add_popularity = {
+                ideology = democratic
+                popularity = 0.1
+            }
+        }
+    }
+    MEX_WW1_path_of_democracy_AI = {
+        is_good = no
+        fire_only_once = yes
+        activation = {
+            has_completed_focus = MEX_WW1_pressure_aristocracy
+
+        }
+        days_mission_timeout = 1
+        available = {
+            hidden_trigger = {   
+                always = no
+            }
+        }
+        timeout_effect = {
+            480 = {
+                
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+			482 = {
+               
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+            set_country_flag = MEX_WW1_path_of_democracy_AI_done
+        }
+    }
+    MEX_WW1_pressure_aristocracy_AI = {
+        is_good = no
+        available = {
+            hidden_trigger = {   
+                always = no
+            }
+        }
+        fire_only_once = yes
+        activation = {
+            has_completed_focus = MEX_WW1_path_of_democracy
+        }
+        days_mission_timeout = 1
+        timeout_effect = {
+            effect_tooltip = {
+                unlock_decision_tooltip = MEX_pressure_aristocracy_in_FROM
+            }
+            set_country_flag = pressure_aristocracy_ai_done
+        }
+    }
+    MEX_WW1_prepare_election_rigging_AI = {
+        is_good = no
+        activation = {
+            has_country_flag = pressure_aristocracy_ai_done
+        }
+        fire_only_once = yes
+        days_mission_timeout = 70
+        available = {
+            hidden_trigger = {
+                always = no
+            }
+        }
+        timeout_effect = {
+            set_country_flag = madero_arrested
+            if = {
+				limit = {
+					capital_scope = {
+						check_variable = {
+							revolution_alignment = 5
+						}
+					}
+				}
+				capital_scope = {
+					set_temp_variable = { faction = 6 }
+                	MEX_change_state_aligment = yes
+				}
+				else = {
+					random_owned_state = {
+						limit = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+						set_temp_variable = { faction = 6 }
+                		MEX_change_state_aligment = yes
+					}
+				}
+			}
+        }
+    }
+    MEX_campaign_in_FROM = {
+        state_target = yes
+        target_trigger = {
+            FROM = {
+                is_owned_by = MEX
+                NOT = {
+                    check_variable = {
+                        revolution_alignment = 5
+                    }
+                }
+            }
+        }
+        visible = {
+            ROOT = {
+                has_completed_focus = MEX_WW1_path_of_democracy
+            }
+            NOT = {
+                ROOT = {
+                    has_completed_focus = WW1_MEX_election_day
+                }
+            }
+        }
+        ai_will_do = {
+            base = 10
+            modifier = {
+                factor = 10
+                FROM = {
+                    OR = {
+                        state = 482
+                        state = 483
+                        state = 480
+                    }
+                }
+            }
+        }
+        available = {
+            NOT = {
+                ROOT = {has_country_flag = campaign_in_progress}
+            }
+        }
+        days_remove = 20
+        complete_effect = {
+            ROOT = {set_country_flag = campaign_in_progress}
+        }
+        remove_effect = {
+            ROOT = {clr_country_flag = campaign_in_progress}
+            FROM = {
+                save_event_target_as = state_changing_aligment
+                set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+            }
+        }
+    }
+    MEX_pressure_aristocracy_in_FROM = {
+        state_target = yes
+        ai_will_do = {
+            base = 100
+        }
+        target_trigger = {
+            FROM = {
+                is_owned_by = MEX
+                NOT = {
+                    check_variable = {
+                        revolution_alignment = 6
+                    }
+                }
+            }
+        }
+        visible = {
+            ROOT = {
+                has_completed_focus = MEX_WW1_pressure_aristocracy
+            }
+            NOT = {
+                ROOT = {
+                    has_completed_focus = WW1_MEX_election_day
+                }
+            }
+        }
+        available = {
+            NOT = {
+                ROOT = {has_country_flag = pression_in_progress}
+            }
+        }
+        days_remove = 30
+        complete_effect = {
+            ROOT = {set_country_flag = pression_in_progress}
+        }
+        remove_effect = {
+            ROOT = {clr_country_flag = pression_in_progress}
+            FROM = {
+                save_event_target_as = state_changing_aligment 
+                set_temp_variable = { faction = 6 }
+                MEX_change_state_aligment = yes
+            }
+        }
+    }
+    MEX_madero_campaigns = {
+        activation = {
+            date > 1909.1.1
+            tag = MEX
+            NOT = {
+                has_country_flag = madero_arrested
+            }
+            NOT = {
+                has_government = democratic
+            }
+            has_completed_focus = MEX_WW1_prepare_1910_elections
+            NOT = {
+                has_completed_focus = MEX_WW1_path_of_democracy
+            }
+            NOT = {
+                ROOT = {
+                    has_completed_focus = WW1_MEX_election_day
+                }
+            }
+        }
+        available = {
+            hidden_trigger = {   
+                always = no
+            }
+        }
+        days_mission_timeout = 20
+
+
+        timeout_effect = {
+            random_owned_state = {
+                prioritize = { 482 483 480 }
+                limit = {
+                    NOT = {
+                        check_variable = {
+                            revolution_alignment = 5
+                        }
+                    }
+                }
+                save_event_target_as = state_changing_aligment
+                set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+            }
+
+        }
+    }
+
+    MEX_porfirist_pressure = {
+        activation = {
+            date > 1909.1.1
+            tag = MEX
+            has_completed_focus = MEX_WW1_path_of_democracy
+            NOT = {
+                has_completed_focus = MEX_WW1_pressure_aristocracy
+            }
+            NOT = {
+                ROOT = {
+                    has_completed_focus = WW1_MEX_election_day
+                }
+            }
+        }
+        available = {
+            hidden_trigger = {   
+                always = no
+            }
+        }
+        days_mission_timeout = 30
+
+
+        timeout_effect = {
+            if = {
+                limit= {
+                    is_historical_focus_on = yes
+                }
+                random_owned_state = {
+                
+                    limit = {
+                        NOT = {
+                            OR = {
+                                state = 482
+                                check_variable = {
+                                    revolution_alignment = 6
+                                }
+                            }
+                            
+                        }
+                    }
+                    save_event_target_as = state_changing_aligment
+                    set_temp_variable = { faction = 6 }
+                    MEX_change_state_aligment = yes
+                }
+
+            }
+            else = {
+                random_owned_state = {
+                
+                    limit = {
+                        NOT = {
+                            check_variable = {
+                                revolution_alignment = 6
+                            }
+                        }
+                    }
+                    save_event_target_as = state_changing_aligment
+                    set_temp_variable = { faction = 6 }
+                    MEX_change_state_aligment = yes
+                }
+            }
+            
+
+        }
+    }
+}

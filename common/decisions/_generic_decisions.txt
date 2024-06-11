@@ -1,9 +1,909 @@
+AI_paradrops = {
+	paradrop_in_FROM = {
+		visible = {
+			has_global_flag = test_features
+			ROOT = {
+				is_major = yes
+				has_war_with = FROM.CONTROLLER
+				has_tech = paratroopers
+			}
+			any_enemy_country = {
+				FROM = {
+					is_controlled_by = PREV
+				}
+			}
+			FROM = {
+				NOT = {
+					has_state_flag = paradrop
+				}
+			 	check_variable = {
+			 		days_since_last_strategic_bombing < 1
+			 	}
+			}
+			ROOT = {
+			 	any_country_division = {
+			 		division_has_battalion_in_template = paratrooper
+			 	}
+			}
+			
+		}
+		available = {
+			NOT = {
+				has_country_flag = is_paradropping
+			}
+		}
+		target_trigger = {
+			
+		}
+		state_target = yes
+		
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 0.8
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 100
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 200
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0.5
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 200
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 400
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0.2
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 400
+    					type = fighter
+					}
+					has_deployed_air_force_size = {
+    					size < 500
+    					type = fighter
+					}
+				}
+			}
+			modifier = {
+				factor = 0
+				
+				FROM.CONTROLLER = {
+					has_deployed_air_force_size = {
+    					size > 500
+    					type = fighter
+					}
+				}
+			}
+			
+		}
+		cancel_trigger = {
+			FROM = {
+					
+				check_variable = {
+					days_since_last_strategic_bombing > 1
+				}
+			}
+			ROOT = {
+				NOT = {
+					has_war_with = FROM.CONTROLLER
+				}
+			}
+		}
+		complete_effect = {
+			ROOT = {
+				set_country_flag = is_paradropping
+			}
+			FROM = {
+				set_state_flag = paradrop
+			}
+			FROM.CONTROLLER = {
+				set_variable = { state_ai_paradrop = FROM.id}
+			}
+		}
+		days_remove = 5
+		remove_effect = {
+			FROM = {
+				clr_state_flag = paradrop
+			}
+			if = {
+				limit ={
+					ROOT = {
+						NOT = { has_template = "Paratroopers AI"}
+					}
+				}
+				division_template = {
+  					name = "Paratroopers AI"
+					division_cap = 5
+  					is_locked = yes
+  					priority = 2
+  					regiments = {
+  					    paratrooper = { x = 0 y = 0 }
+  					    paratrooper = { x = 0 y = 1 }
+  					    paratrooper = { x = 0 y = 2 }
+  					   
+  					}
+				}
+			}
+			FROM = {
+				create_unit = {
+   					division = "name = \"Artie\" division_template = \"Paratroopers AI\" start_manpower_factor = 0.3"
+   					owner = ROOT
+   					count = 1
+   					allow_spawning_on_enemy_provs = yes
+    			}
+			}
+			ROOT = {
+				clr_country_flag = is_paradropping
+			}
+			FROM.CONTROLLER = {
+				clear_variable = state_ai_paradrop
+			}
+		}
+		cancel_effect = {
+			ROOT = {clr_country_flag = is_paradropping}
+			FROM.CONTROLLER = {
+				clear_variable = state_ai_paradrop
+			}
+			FROM = {
+				clr_state_flag = paradrop
+			}
+		}
+	} 
+}
+generic_maritime_blockade = {
+	blockade_timer = {
+		is_good = yes
+		days_mission_timeout = 150
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			has_global_flag = SPR_POR_blockade_lifted
+			POR = {
+				NOT = {
+					OR = {
+						controls_state = 702
+						controls_state = 296
+					}
+				}
+			}
+		}
+	}
+	blockade_issue_warning_salve = {
+		cost = 20
+		visible = {
+			has_country_flag = POR_navy_spotted
+		}
+		complete_effect = {
+			POR = {
+				country_event = ww2_spain.16
+			}
+		}
+	}
+	lift_blockade = {
+		cost = 5
+		visible = {
+			has_active_mission = blockade_timer
+		}
+		complete_effect = {
+			add_war_support = -0.1
+			set_global_flag = SPR_POR_blockade_lifted
+		}
+	}
+	blockade_timer_bad = {
+		is_good = no
+		days_mission_timeout = 30
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			POR = {
+				ships_in_area = { 
+					area = 61 size > 0
+				} 
+			}
+		}
+		complete_effect = {
+			SPB = {
+				country_event = ww2_spain.13
+				set_country_flag = POR_navy_spotted
+			}
+		}
+		timeout_effect = {
+			SPB ={
+				transfer_state = 702
+				transfer_state = 296
+			}
+		}
+	}
+	blockade_timer_bad_2 = {
+		is_good = no
+		days_mission_timeout = 30
+		activation = { 
+			always = no
+		}
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = 702
+					state = 296
+				}
+			}
+		}
+		available = {
+			POR = {
+				ships_in_area = { 
+					area = 61 size > 4
+				} 
+			}
+		}
+		complete_effect = {
+			SPB = {
+				country_event = ww2_spain.15
+				
+			}
+		}
+		timeout_effect = {
+			SPB ={
+				transfer_state = 702
+				transfer_state = 296
+			}
+		}
+	}
+}
+UNSC_decision_cat = {
+	resolution_vote_timer = {
+		icon = GFX_UN_decisions
+		days_mission_timeout = 21
+		
+		# activation = {
+		#   	#has_global_flag = UNSC_sanction_voting_ongoing
+		# 	always = no
+		# }
+		allowed = { always = no}
+		days_remove = 0
+		cancel_trigger = {
+		 	OR = {
+		 		NOT = {
+		 			has_global_flag = UNSC_sanction_voting_ongoing
+		 		}
+		# 		# check_variable = {
+		# 		# 	global.negative_disp > 50
+		# 		# }
+		# 		# check_variable = {
+		# 		# 	global.positive_disp > 50
+		# 		# }
+		 	}
+		}
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+		timeout_effect = {
+			#country_event = {id = unsc.5}
+			if = {
+				limit = {
+					check_variable = {global.UNSC_vetos = 0 }
+				}
+				if = {
+					limit= {
+						check_variable = { global.negative_disp > global.positive_disp }
+					}
+					country_event = { id = unsc.4 }
+				}
+				if = {
+					limit = {
+						check_variable = { global.negative_disp < global.positive_disp }
+					}
+					country_event = { id = unsc.5 }
+				}
+			}
+			if = {
+				limit = {
+					check_variable = {global.UNSC_vetos > 0 }
+				}
+				country_event = { id = unsc.4 }
+			}
+			
+			#clr_global_flag = UNSC_sanction_voting_ongoing
+			
+		}
+		cancel_effect = {
+			
+			#end_vote = yes
+			#country_event = {id = unsc.5}
+		}
+	} 
+	
+	ai_veto_resolution = {
+		visible = {
+			OR = {
+				is_ai = yes
+				is_debug = yes
+			}
+		}
+		available = {
+			has_global_flag = UNSC_sanction_voting_ongoing
+			NOT = {
+				has_country_flag = UN_has_voted
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_global_flag = UNSC_sanction_voting_ongoing
+			}
+		}
+		complete_effect = {
+			set_variable_to_random = {
+    			var = random_num
+    			max = 20
+    			integer = yes
+			}
+			set_country_flag = UN_has_voted
+		}
+		days_remove = var:random_num
+		remove_effect = {
+			add_to_variable = { global.UNSC_vetos = 1 }
+			calculate_voting_bar = yes
+			set_variable = {global.UNSC_veto_origin = ROOT}
+		}
+		ai_will_do = {
+			factor = 0
+
+			modifier = {
+				var:global.UN_sanctions_target = {
+					is_in_faction_with = ROOT
+				}
+				add = 100
+			}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					has_war_with = ROOT
+				}
+				add = -100
+			}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					has_non_aggression_pact_with = ROOT
+				}
+				add = 25
+			}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					is_guaranteed_by = ROOT
+				}
+				add = 25
+			}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					is_subject_of = ROOT
+				}
+				add = 1000
+			}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					tag = ROOT
+				}
+				add = 10000
+			}
+		}
+	}
+	
+	ai_abstain_resolution = {
+		visible = {
+			OR = {
+				is_ai = yes
+				is_debug = yes
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_global_flag = UNSC_sanction_voting_ongoing
+			}
+		}
+		available = {
+			has_global_flag = UNSC_sanction_voting_ongoing
+			NOT = {
+				has_country_flag = UN_has_voted
+			}
+		}
+		complete_effect = {
+			set_variable_to_random = {
+    			var = random_num
+    			max = 20
+    			integer = yes
+			}
+			set_country_flag = UN_has_voted
+		}
+		days_remove = var:random_num
+		remove_effect = {
+			add_to_variable = { global.UNSC_abstain_votes = 1 }
+			calculate_voting_bar = yes
+			set_country_flag = UN_has_voted
+			set_country_flag = UNSC_voted_abstain
+		}
+		ai_will_do = {
+			factor = 0
+
+			modifier = {
+				has_government = neutrality
+				add = 25
+			}
+		}
+	}
+	ai_vote_against_resolution = {
+		visible = {
+			OR = {
+				is_ai = yes
+				is_debug = yes
+			}
+		}
+		available = {
+			has_global_flag = UNSC_sanction_voting_ongoing
+			NOT = {
+				has_country_flag = UN_has_voted
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_global_flag = UNSC_sanction_voting_ongoing
+			}
+		}
+		complete_effect = {
+			set_variable_to_random = {
+    			var = random_num
+    			max = 20
+    			integer = yes
+			}
+			set_country_flag = UN_has_voted
+		}
+		days_remove = var:random_num
+		remove_effect = {
+			add_to_variable = { global.UNSC_negative_votes = 1 }
+			calculate_voting_bar = yes
+			set_country_flag = UN_has_voted
+			set_country_flag = UNSC_voted_against
+		}
+		ai_will_do = {
+			factor = 0
+
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 4 }
+			#	add = 5
+			#}
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 5 }
+			#	add = 10
+			#}
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 6 }
+			#	add = 20
+			#}
+			modifier = {
+				var:global.UN_sanctions_target = {
+					is_puppet_of = JAP 
+					OR = {
+					ROOT = {
+						has_government = communism
+					}
+					ROOT = {
+						has_government = democratic
+					}
+				}
+				}
+				add = 80
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { is_neighbor_of = ROOT }
+					OR = {
+						has_war_with = ROOT
+						NOT = { check_variable = { united_nations_generated_threat < 20 } }
+						ROOT = {
+							has_opinion = {
+								target = PREV
+								value < 0
+							}
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				any_neighbor_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = {
+						OR = {
+							has_war_with = ROOT
+							NOT = { check_variable = { united_nations_generated_threat < 20 } }
+							ROOT = {
+								has_opinion = {
+									target = PREV
+									value < 0
+								}
+							}
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { is_neighbor_of = ROOT }
+					NOT = {
+						OR = {
+							has_war_with = ROOT
+							NOT = { check_variable = { united_nations_generated_threat < 20 } }
+							ROOT = {
+								has_opinion = {
+									target = PREV
+									value < 0
+								}
+							}
+						}
+					}
+				}
+				add = 15
+			}
+			modifier = {
+				any_neighbor_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 0 }
+				}
+				add = 2
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 1 }
+				}
+				add = 2
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 2 }
+				}
+				add = 2
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 3 }
+				}
+				add = 3
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 4 }
+				}
+				add = 3
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 5 }
+				}
+				add = 5
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 6 }
+				}
+				add = 5
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 7 }
+				}
+				add = 5
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					check_variable = { num_of_active_united_nations_trade_sanctions > 8 }
+				}
+				add = 5
+			}
+			modifier = {
+				is_subject = yes
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					ROOT = { is_subject_of = PREV }
+				}
+				add = 1000
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					has_capitulated = yes
+				}
+				add = 10
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					has_government = ROOT
+				}
+				add = 10
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					is_in_faction_with = ROOT
+				}
+				add = 100
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { has_war_with = ROOT }
+				}
+				NOT = {
+					any_neighbor_country = {
+						OR = {
+							has_country_flag = sanctions_country_target_flag
+							any_neighbor_country = {
+								OR = {
+									has_country_flag = sanctions_country_target_flag
+									any_neighbor_country = {
+										OR = {
+											has_country_flag = sanctions_country_target_flag
+											any_neighbor_country = {
+												has_country_flag = sanctions_country_target_flag
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
+				add = 20
+			}
+			modifier = {
+				has_global_flag = united_nations_always_vote_no_cheat_flag
+				add = 10000
+			}
+		}
+			
+
+	}
+
+	ai_vote_for_resolution = {
+		available = {
+			has_global_flag = UNSC_sanction_voting_ongoing
+			NOT = {
+				has_country_flag = UN_has_voted
+			}
+		}
+		cancel_trigger = {
+			NOT = {
+				has_global_flag = UNSC_sanction_voting_ongoing
+			}
+		}
+		visible = {
+			OR = {
+				is_ai = yes
+				is_debug = yes
+			}
+		}
+		complete_effect = {
+			set_variable_to_random = {
+    			var = random_num
+    			max = 20
+    			integer = yes
+			}
+			set_country_flag = UN_has_voted
+		}
+		days_remove = var:random_num
+		remove_effect = {
+			add_to_variable = { global.UNSC_positive_votes = 1 }
+				calculate_voting_bar = yes
+				set_country_flag = UN_has_voted
+				set_country_flag = UNSC_voted_for
+		}
+		ai_will_do = {
+			factor = 0
+			
+			modifier = {
+				surrender_progress > 0.5
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					has_war_with = ROOT
+				}
+				add = 100
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					has_offensive_war = yes
+				}
+				add = 20
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					ROOT = {
+						has_opinion = {
+							target = PREV
+							value < 0
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_starter_flag
+					ROOT = {
+						has_opinion = {
+							target = PREV
+							value > 50
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				has_capitulated = yes
+				any_owned_state = {
+					NOT = { is_controlled_by = ROOT }
+					controller = {
+						has_war_with = ROOT
+						has_country_flag = sanctions_country_target_flag
+					}
+				}
+				add = 100
+			}
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 1 }
+			#	add = 5
+			#}
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 2 }
+			#	add = 10
+			#}
+			#modifier = {
+			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 3 }
+			#	add = 20
+			#}
+			modifier = {
+				any_neighbor_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { check_variable = { united_nations_generated_threat < 40 } }
+				}
+				add = 10
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { is_neighbor_of = ROOT }
+					NOT = { check_variable = { united_nations_generated_threat < 40 } }
+				}
+				add = 5
+			}
+			modifier = {
+				any_neighbor_country = {
+					has_country_flag = sanctions_country_target_flag
+					OR = {
+						has_war_with = ROOT
+						NOT = { check_variable = { united_nations_generated_threat < 20 } }
+						ROOT = {
+							has_opinion = {
+								target = PREV
+								value < 0
+							}
+						}
+					}
+				}
+				add = 10
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					NOT = { is_neighbor_of = ROOT }
+					OR = {
+						has_war_with = ROOT
+						NOT = { check_variable = { united_nations_generated_threat < 20 } }
+						ROOT = {
+							has_opinion = {
+								target = PREV
+								value < 0
+							}
+						}
+					}
+				}
+				add = 5
+			}
+			modifier = {
+				has_global_flag = ITA_ETH_voting
+				add = 4
+			}
+			modifier = {
+				any_country = {
+					has_country_flag = sanctions_country_target_flag
+					has_country_flag = last_united_nations_threat_static_change
+					has_country_flag = {
+						flag = last_united_nations_threat_static_change
+						days < 40
+					}
+					OR = {
+						check_variable = { last_united_nations_threat_static_change = 1 }
+						check_variable = { last_united_nations_threat_static_change = 2 }
+					}
+				}
+				add = 3
+			}
+			modifier = {
+				has_global_flag = united_nations_always_vote_yes_cheat_flag
+				add = 10000
+			}
+			modifier = {
+				any_other_country = {
+					is_justifying_wargoal_against = UNA
+				}
+				add = 100
+			}
+		}
+	}
+}
 demobilization = {
 	public_asks_for_demob = {
 		days_mission_timeout = 60
 		icon = revolt
 		activation = {
-
+			NOT = {
+				OR = {
+					has_country_flag = show_settings
+					has_country_flag = show_recent_changes
+					has_global_flag = KR_no_unit_limits
+				}
+			}
 			has_war = no
 			num_divisions > 4
 			NOT = {
@@ -28,20 +928,30 @@ demobilization = {
 				}
 			}
 		}
-		available = {
-			OR = {
-				custom_trigger_tooltip = {
-					tooltip = army_demobilization_requirement_tt
-					has_reached_maximum_divisions = no
+		cancel_if_not_visible = yes
+		visible = {
+			NOT = {
+				OR = {
+					has_country_flag = show_settings
+					has_country_flag = show_recent_changes
+					has_global_flag = KR_no_unit_limits
 				}
-				has_reached_maximum_divisions = no
-				has_war = yes
-				any_other_country = {
-					OR = {
-						is_justifying_wargoal_against = ROOT
-						has_wargoal_against = ROOT
-						ROOT = { is_justifying_wargoal_against = PREV }
-						ROOT = { has_wargoal_against = PREV }
+			}
+			NOT = {
+				OR = {
+					custom_trigger_tooltip = {
+						tooltip = army_demobilization_requirement_tt
+						has_reached_maximum_divisions = no
+					}
+					has_reached_maximum_divisions = no
+					has_war = yes
+					any_other_country = {
+						OR = {
+							is_justifying_wargoal_against = ROOT
+							has_wargoal_against = ROOT
+							ROOT = { is_justifying_wargoal_against = PREV }
+							ROOT = { has_wargoal_against = PREV }
+						}
 					}
 				}
 			}
@@ -66,6 +976,47 @@ demobilization = {
 
 
 political_actions = {
+	rebel_against_sov = {
+		visible = {
+			OR = {
+			is_puppet_of = SOV
+			is_subject_of = SOV
+			}
+		}
+		available = {
+			OR = {
+			is_puppet_of = SOV
+			is_subject_of = SOV
+			}
+			NOT = {
+				has_government = communism
+			}
+		}
+		cost = 50
+		ai_will_do = {
+			factor = 100000
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		complete_effect = {
+SOV = {
+	set_autonomy = {
+    target = ROOT
+    autonomous_state = autonomy_free
+    end_wars = yes
+    end_civil_wars = yes
+}	
+	create_wargoal = {
+    type = puppet_wargoal_focus
+    target = ROOT
+	expire = 50
+}
+}
+
+		}		
+	}
 	ask_for_more_divisions = {
 		allowed = {
 			#Comment by TK No need as maximum decisions are generous as is, also im not sure if you'd be asking "the people" rather than ongress/parliament.
@@ -1877,6 +2828,35 @@ war_measures = {
 }
 
 foreign_politics = {
+
+	sending_troops_to_SPR_timer = {
+		days_mission_timeout = 30
+		is_good = no
+		activation = {
+			always = no
+		}
+		available = {
+			SPR = {
+				has_volunteers_amount_from = {
+    				tag = ROOT
+    				count > 0
+				}
+			}
+		}
+		cancel_trigger = {
+			OR = {
+				NOT = {
+					country_exists = SPR
+				}
+				has_global_flag = scw_over
+			}
+		}
+		timeout_effect = {
+			add_political_power = -50
+		}
+
+	}
+
 	object_to_attaches = {
 
 		allowed = {

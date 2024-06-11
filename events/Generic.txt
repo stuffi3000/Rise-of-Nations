@@ -1,9 +1,126 @@
 ###########################
 # turkey Events
 ###########################
-
+add_namespace = volunteer_event
 add_namespace = generic
+add_namespace = propaganda_campaign
+country_event = {
+	id = propaganda_campaign.1
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = {propaganda_poster_left_frame = 2}
+	}
+}
+country_event = {
+	id = propaganda_campaign.2
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = {propaganda_poster_center_frame = 2}
+	}
+}
+country_event = {
+	id = propaganda_campaign.3
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		set_variable = {propaganda_poster_right_frame = 2}
+	}
+}
+country_event = {
 
+	#someone is putting propaganda against us
+	id = propaganda_campaign.4
+	title = propaganda_campaign.4.t
+	desc = propaganda_campaign.4.d
+	is_triggered_only = yes
+
+	option = {
+		name = propaganda_campaign.4.a
+		add_political_power = -150
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				has_political_power < 150
+			}
+		}
+	}
+	option = {
+		name = propaganda_campaign.4.b
+		add_political_power = -50
+		ai_chance = {
+			base = 3
+			modifier = {
+				factor = 0
+				has_political_power < 50
+			}
+		}
+	}
+	option = {
+		name = propaganda_campaign.4.c
+		ai_chance = {
+			base = 1
+		}
+		random_list = {
+			33 = {
+				set_variable = { propaganda_poster_left_frame = poster_frame}
+			}
+			33 = {
+				set_variable = { propaganda_poster_center_frame = poster_frame}
+			}
+			33 = {
+				set_variable = { propaganda_poster_right_frame = poster_frame}
+			}
+		}
+	}
+}
+country_event = {
+
+	#Event is used to count the amount of volunteer sent, because variablefor this doesn't exist thx Paradox
+	id = volunteer_event.1
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		
+		var:sender_country_array^0 = { 
+			save_event_target_as = sender_country
+		}
+		
+		event_target:sender_country = {
+			ROOT = {
+				clear_variable = num_volunteer_received_from_@PREV #initialisation
+			}
+			every_country = {
+				limit = {
+					has_war_with = ROOT
+				}
+				every_state = {
+					limit = {
+						is_owned_by = PREV
+						NOT = { is_fully_controlled_by = PREV }
+					}
+					ROOT = {
+						add_to_variable = { num_volunteer_received_from_@PREV.PREV.PREV = event_target:sender_country.num_armies_in_state@PREV }
+					}
+				}
+			}
+			every_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				ROOT = {
+					add_to_variable = { num_volunteer_received_from_@PREV.PREV = event_target:sender_country.num_armies_in_state@PREV }
+				}
+			}
+		}
+		remove_from_array = {
+			array = sender_country_array
+			index = 0
+		}
+	}
+}
 # President dies
 country_event = {
 	id = generic.1
@@ -1992,7 +2109,8 @@ country_event = {
 						target = FROM
 						autonomy_state = autonomy_free
 					}
-					create_wargoal = {
+							create_wargoal = {			
+				expire = 100
 						target = ROOT
 						type = puppet_wargoal_focus
 					}
@@ -2132,54 +2250,54 @@ country_event = {
 
 add_namespace = kr.political
 # Check after a war whether we should be demobilizing
-country_event = {
-	id = kr.political.120
-	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.120" }
+# country_event = {
+# 	id = kr.political.120
+# 	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.120" }
 
-	hidden = yes
-	is_triggered_only = yes
+# 	hidden = yes
+# 	is_triggered_only = yes
 
-	trigger = {
-		is_ai = yes
-		has_war = no
-		OR = {
-			has_unsupported_economic_law_ai = yes
-			has_unsupported_manpower_law_ai = yes
-		}
-		NOT = {
-			has_global_flag = KR_no_demob
-			any_other_country = {
-				OR = {
-					is_justifying_wargoal_against = ROOT
-					has_wargoal_against = ROOT
-					ROOT = { is_justifying_wargoal_against = PREV }
-					ROOT = { has_wargoal_against = PREV }
-				}
-			}
-		}
-	}
+# 	trigger = {
+# 		is_ai = yes
+# 		has_war = no
+# 		OR = {
+# 			has_unsupported_economic_law_ai = yes
+# 			has_unsupported_manpower_law_ai = yes
+# 		}
+# 		NOT = {
+# 			has_global_flag = KR_no_demob
+# 			any_other_country = {
+# 				OR = {
+# 					is_justifying_wargoal_against = ROOT
+# 					has_wargoal_against = ROOT
+# 					ROOT = { is_justifying_wargoal_against = PREV }
+# 					ROOT = { has_wargoal_against = PREV }
+# 				}
+# 			}
+# 		}
+# 	}
 
-	immediate = {
-		clr_country_flag = has_demobilization_check
+# 	immediate = {
+# 		clr_country_flag = has_demobilization_check
 
-		if = {
-			limit = {
-				NOT = { has_country_flag = has_reduce_units_check }
-			}
-			set_country_flag = has_reduce_units_check
-			country_event = { id = kr.political.121 days = 4 random = 96 }
-		}
-	}
-}
+# 		if = {
+# 			limit = {
+# 				NOT = { has_country_flag = has_reduce_units_check }
+# 			}
+# 			set_country_flag = has_reduce_units_check
+# 			country_event = { id = kr.political.121 days = 4 random = 96 }
+# 		}
+# 	}
+# }
 
 country_event = {
 	id = kr.political.121
-	immediate = { log = "[GetDateText]: [Root.GetName]: event kr.political.121" }
 
 	hidden = yes
 	is_triggered_only = yes
 
 	immediate = {
+		log = "[GetDateText]: [Root.GetName]: event kr.political.121"		
 		calculate_maximum_divisions = yes
 		if = {
 			limit = {
@@ -2274,17 +2392,17 @@ country_event = {
 		}
 	}
 }
-country_event = {
-	id = kr.political.124
-	is_triggered_only = yes
-	immediate = {
-		BEL = {
-			country_event = kr.political.121
-		}
-	}
-}
+# country_event = {
+# 	id = kr.political.124
+# 	is_triggered_only = yes
+# 	immediate = {
+# 		BEL = {
+# 			country_event = kr.political.121
+# 		}
+# 	}
+# }
 
-Generic invitaton to join major Alliance When The Other Country is a faction leader
+#Generic invitaton to join major Alliance When The Other Country is a faction leader
 country_event = {
 	id = generic.205
 	title = generic.5.t
@@ -2640,3 +2758,441 @@ country_event = {
 	}
 
 }
+
+unit_leader_event = {
+	id = generic.206
+	title = generic.206.t
+	desc = generic.206.d
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.206.a
+		
+		remove_unit_leader_role = yes
+		ai_chance = {
+			base = 20
+		}
+	}
+	option = {
+		name = generic.206.b
+		trigger = {
+			OR = {
+				ROOT = { has_war = yes }
+				NOT = {
+					THIS = {
+						has_character_flag = retirement_denied
+					}
+				}
+			}
+		}
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 100
+				has_war = yes
+			}
+		}
+		THIS = {
+			unit_leader_event = {id = generic.206 days = 365}
+		}
+		THIS = {
+			set_character_flag = retirement_denied
+		}
+	}
+}
+
+unit_leader_event = {
+	id = generic.207
+	title = generic.207.t
+	desc = generic.207.d
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.207.a
+		custom_effect_tooltip = unit_leader_killed_tt
+		hidden_effect = {
+			THIS = {
+				retire = yes
+			}
+		}
+	}
+}
+
+#Unit leader dies peacefully
+unit_leader_event = {
+	id = generic.208
+	title = generic.208.t
+	desc = generic.208.d
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.208.a
+		custom_effect_tooltip = unit_leader_dies_tt
+		hidden_effect = {
+			THIS = {
+				retire = yes
+			}
+		}
+
+	}
+}
+########
+#Become a puppet
+
+#Become a puppet
+country_event = { 
+	id = generic.2088
+	title = generic.2008.t
+	desc = {
+		text = generic.2008.d_friends
+		trigger = {
+			has_opinion = {
+				target = FROM
+				value = 150
+			}
+		}
+	}
+	desc = {
+		text = generic.2008.d_enemies
+		trigger = {
+			NOT = { 
+				has_opinion = {
+					target = FROM
+					value = 150
+				}
+			}
+		}
+	}
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+
+	option = {
+		name = generic.2008.a
+		trigger = {
+			NOT = { 
+				has_opinion = {
+					target = FROM
+					value = 150
+				}
+			}
+		}
+		ai_chance = {
+			factor = 20
+			modifier = {
+				threat > 20
+				factor = 2
+			}
+			modifier = {
+				is_in_faction = no
+				factor = 2
+			}
+			modifier = {
+				is_in_faction_with = FROM
+				factor = 2
+			}
+			modifier = {
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+				factor = 0.5
+			}
+		}
+		effect_tooltip = { 
+			FROM = { puppet = ROOT }
+			if = {
+				limit = {
+					FROM = { is_in_faction = yes }
+				}
+				random_country = {
+					limit = { 
+						is_in_faction_with = FROM 
+						is_faction_leader = yes
+					}
+					add_to_faction = ROOT
+				}
+			}
+		}
+		hidden_effect = {
+			FROM = { country_event = { id = generic.21 hours = 6 } }
+		}
+	}
+
+	option = {
+		name = generic.2008.b
+		trigger = {
+			has_opinion = {
+				target = FROM
+				value = 150
+			}
+		}
+		ai_chance = {
+			factor = 25
+			modifier = {
+				threat > 20
+				factor = 2
+			}
+			modifier = {
+				is_in_faction = no
+				factor = 2
+			}
+			modifier = {
+				is_in_faction_with = FROM
+				factor = 2
+			}
+			modifier = {
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+				factor = 0.5
+			}
+		}
+		effect_tooltip = { 
+			FROM = { puppet = ROOT }
+			if = {
+				limit = {
+					FROM = { is_in_faction = yes }
+				}
+				random_country = {
+					limit = { 
+						is_in_faction_with = FROM 
+						is_faction_leader = yes
+					}
+					add_to_faction = ROOT
+				}
+			}
+		}
+		hidden_effect = {
+			FROM = { country_event = { id = generic.21 hours = 6 } }
+		}
+	}
+
+	option = {
+		name = generic.2008.c
+		ai_chance = {
+			factor = 30
+			modifier = {
+				is_in_faction = yes
+				NOT = { is_in_faction_with = FROM }
+				factor = 2
+			}
+			modifier = {
+				threat < 20
+				factor = 2
+			}
+		}
+		effect_tooltip = { 
+			FROM = { 
+						create_wargoal = {			
+				expire = 100
+					type = puppet_wargoal_focus
+					target = ROOT
+				}
+			}
+		}
+		hidden_effect = {
+			FROM = { country_event = { id = generic.210 hours = 6 } }
+		}
+	}
+
+}
+
+#Denied puppet
+country_event = {
+	id = generic.210
+	title = generic.22.t
+	desc = generic.22.d
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+
+	option = {
+		name = generic.22.a
+		ai_chance = {
+			factor = 1
+		}
+		ROOT = { 
+					create_wargoal = {			
+				expire = 100
+				type = puppet_wargoal_focus
+				target = FROM
+			}
+		}
+	}
+
+}
+
+# generic event for demanding territory
+country_event = {
+	id = generic.211
+	title = generic.23.t
+	desc = generic.23.d
+	
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.23.a
+		ai_chance = {
+			factor = 90
+			modifier = { # If they stand a chance they will fight
+				factor = 0
+				strength_ratio = {
+					tag = FROM
+					ratio > 0.75
+				}
+				NOT = {
+					any_neighbor_country = {
+						NOT = { tag = FROM }
+						is_in_faction_with = FROM
+					}
+				}
+			}
+			modifier = {
+				factor = 0 #if you lead a faction, fight
+				is_faction_leader = yes
+			}
+			modifier = {
+				factor = 0.5 #if you are in a faction, maybe fight
+				is_faction_leader = no
+				is_in_faction = yes
+			}
+			modifier = { # Increase it again if other bordering nations are in the enemy faction
+				any_neighbor_country = {
+					NOT = { tag = FROM }
+					is_in_faction_with = FROM
+				}
+				factor = 2.0
+			}
+		}
+		effect_tooltip = {
+			FROM = { transfer_state = event_target:demanded_prov_target }
+			if = {
+				limit = {
+					event_target:demanded_prov_target = { has_state_flag = give_core_to_state_flag }
+				}
+			event_target:demanded_prov_target = { add_core_of = FROM }
+			}
+		}
+		hidden_effect = {
+			FROM = { country_event = generic.212 }
+		}
+	}
+
+	option = {
+		name = generic.23.b
+		ai_chance = { 
+			factor = 10 
+			modifier = {
+				factor = 0.5
+				strength_ratio = {
+					tag = FROM
+					ratio < 0.5
+				}
+			}
+		}
+		custom_effect_tooltip = maybe_war_tt
+		hidden_effect = {
+			FROM = { country_event = generic.213 }
+		}
+	}
+}
+
+# accepted demands
+country_event = {
+	id = generic.212
+	title = generic.24.t
+	desc = generic.24.d
+	
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = {
+		name = excellent
+		THIS = { transfer_state = event_target:demanded_prov_target }
+		if = {
+			limit = {
+				event_target:demanded_prov_target = { has_state_flag = give_core_to_state_flag }
+			}
+			event_target:demanded_prov_target = { 
+				add_core_of = THIS
+				clr_state_flag = give_core_to_state_flag
+			}
+		}
+		hidden_effect = { clear_global_event_target = demanded_prov_target }
+	}
+}
+
+# accepted demands
+country_event = {
+	id = generic.213 
+	title = generic.25.t
+	desc = generic.25.d
+	
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.25.a
+		ai_chance = {
+			factor = 90
+		}
+				create_wargoal = {			
+				expire = 100
+			type = annex_everything 
+			target = FROM
+		}
+		hidden_effect = { clear_global_event_target = demanded_prov_target }
+	}
+}
+# accepted demands
+country_event = {
+	id = generic.214
+	title = generic.214.t
+	desc = generic.214.d
+	
+	picture = GFX_report_event_czech_soldiers_01
+
+	is_triggered_only = yes
+
+	option = {
+		name = generic.214.a # TODO fix this to be generic just use for usa for now
+		USA = {
+			add_to_faction = ROOT }
+		}
+	
+	option = {
+		name = generic.214.b
+	}	
+}
+
+# accepted demands
+country_event = {
+	id = generic.215 #THIS IS A DEBUG EVENT PLEASE FIX RUSSIA CORE ISSUE
+	title = generic.215.t
+	desc = generic.215.d
+	hidden = yes
+	picture = GFX_report_event_czech_soldiers_01
+	trigger = {
+		tag = RUS #temp solution for now
+	}
+	fire_only_once = yes
+
+	option = {
+		name = generic.215.a 
+every_state = {
+				limit = {
+					is_owned_and_controlled_by = RUS
+				}
+				set_state_flag = original_RU_core
+				add_core_of = RUS
+				
+			}
+	}
+ 
+}
+ 

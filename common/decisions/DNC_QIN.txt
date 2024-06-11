@@ -1,3 +1,171 @@
+
+
+war_measures = { #TODO move this to its own seprate boxer decision folder AND GIVE LOCALIZATION!!!!
+give_russia_landbox = {
+		ai_will_do = {
+			factor = 100000
+		}
+		icon = mon
+
+		allowed = {
+			tag = BOX
+		}
+
+		available = {
+			is_subject = no
+			country_exists = SOV
+			date > 1910.1.1
+			date < 1920.1.1
+			tag = BOX
+			SOV = { owns_state = 329}
+			SOV = { is_puppet_of = BOX}
+		}
+
+		visible = {
+			SOV = { is_puppet_of = BOX}
+			date > 1910.1.1
+			date < 1916.1.1
+			tag = BOX
+		}
+			priority = 99999
+	
+
+		fire_only_once = yes
+		complete_effect = {
+			add_stability = .30
+			add_political_power = 300
+			RUS = {transfer_state = 329 }
+		}
+	}
+}
+political_actions = {	
+box_victory_in_war = { 
+		icon = RNM_RUS
+		fire_only_once = yes
+		allowed = {
+			tag = BOX
+		}
+		cost = 10
+		visible = {
+			tag = BOX
+		}
+		available = {
+				OR = {
+
+		not = {
+			country_exists = chi
+			country_exists = qin
+		}
+		QIN = {is_puppet_of = ROOT }
+		CHI = {is_puppet_of = ROOT }
+		}		
+		}
+	
+		
+		ai_will_do = {
+			factor = 10000
+		}
+	 
+		complete_effect = { 
+			load_focus_tree = RON_Qing_China
+			complete_national_focus = DNC_QIN_ally_with_boxers 
+			set_country_flag = china_leader
+			add_ideas = {
+				QIN_outdated_army 
+				QIN_low_legitimacy
+			} 
+			set_cosmetic_tag = ZEM
+			unlock_national_focus = DNC_QIN_empress_opinion
+			unlock_national_focus = DNC_QIN_boxers
+			unlock_national_focus = DNC_QIN_seymour_expedition
+			unlock_national_focus = DNC_QIN_supply_arms
+			unlock_national_focus = DNC_QIN_seize_weapons
+			unlock_national_focus = DNC_QIN_mobilize_the_bannermen
+			unlock_national_focus = DNC_QIN_stunning_victory
+			unlock_national_focus = DNC_QIN_chinese_politics
+			unlock_national_focus = DNC_QIN_end_imperial_rule
+		}
+	}		
+	
+
+guc_victory_in_war = {  #AI will only see this
+		icon = RNM_RUS
+		fire_only_once = yes
+		allowed = {
+			tag = GUC
+		}
+		cost = 10
+		visible = {
+			tag = GUC
+		}
+		available = {
+		OR = {
+
+		not = {
+			country_exists = chi
+			country_exists = qin
+		}
+		QIN = {is_puppet_of = ROOT }
+		CHI = {is_puppet_of = ROOT }
+		}
+		}
+	
+		
+		ai_will_do = {
+			factor = 10000
+		}
+		complete_effect = { 
+			load_focus_tree = RON_Qing_China
+			complete_national_focus = DNC_QIN_ally_with_boxers 
+			set_country_flag = china_leader
+			add_ideas = {
+				QIN_outdated_army 
+				QIN_low_legitimacy
+			}
+			unlock_national_focus = DNC_QIN_empress_opinion
+			unlock_national_focus = DNC_QIN_boxers
+			unlock_national_focus = DNC_QIN_seymour_expedition
+			unlock_national_focus = DNC_QIN_supply_arms
+			unlock_national_focus = DNC_QIN_seize_weapons
+			unlock_national_focus = DNC_QIN_mobilize_the_bannermen
+			unlock_national_focus = DNC_QIN_stunning_victory
+			unlock_national_focus = DNC_QIN_chinese_politics
+		}
+	}		
+	
+
+guc_war_declare = {  #AI will only see this
+		icon = RNM_RUS
+		fire_only_once = yes
+		allowed = {
+			tag = GUC
+		}
+		cost = 100
+		visible = {
+			tag = GUC
+			FUJ = {is_puppet_of = GUC}
+		}
+		available = {
+			tag = GUC
+			OR = {
+			FUJ = {is_puppet_of = GUC}
+			SHA = {is_puppet_of = GUC}
+			}
+		}
+	
+		
+		ai_will_do = { 
+			factor = 10000
+		}
+		complete_effect = { 
+            declare_war_on = {
+                target = QIN
+                type = annex_everything
+            }
+		}
+	}		
+	
+}
 fight_boxer_resistance_decision_cat = {
 	put_out_the_boxers_in_STATE = {
 		state_target = yes
@@ -8,6 +176,7 @@ fight_boxer_resistance_decision_cat = {
 			}
 		}
 		days_remove = 25
+		cost = 10
 		ai_will_do = {
 			base = 10000
 		}
@@ -899,13 +1068,56 @@ QIN_smuggling_weapons = {
 }
 
 QIN_boxer_war_mission = {
+
+    QIN_Steady_Progress = {
+		icon = generic_nationalism
+		allowed = {
+			tag = QIN
+		}
+		days_mission_timeout = 300
+		available = {
+			NOT = { date > 1909.12.12 }
+            controls_state = 441
+            controls_state = 787
+            controls_state = 985
+            controls_state = 439
+            controls_state = 408
+			has_country_flag = rejectedboxerpeace
+		}
+		
+		activation = {
+            has_completed_focus = DNC_QIN_seymour_expedition
+		 	NOT = { date > 1909.12.12 }
+		}
+		visible = {
+			NOT = { date > 1909.12.12 }
+			#has_completed_focus = DNC_QIN_taku_forts
+		}
+		fire_only_once = yes
+		is_good = no
+		timeout_effect = {
+			add_manpower = 40000
+			add_timed_idea = { idea = Total_War days = 300 }
+			load_oob = BOX_1900
+			load_oob = BOX_1900
+		}
+        complete_effect = {                    # What happens when we activate the mission i.e. mission success?
+         declare_war_on = {
+				target = ANH
+				type = civil_war
+			}
+         declare_war_on = {
+				target = ANH
+				type = civil_war
+			}			
+        }
+	}	
     QIN_seize_concessions = {
 		icon = generic_nationalism
 		allowed = {
 			tag = QIN
-			NOT = { date > 1909.12.12 }
 		}
-		days_mission_timeout = 300
+		days_mission_timeout = 600
 		available = {
 			NOT = { date > 1909.12.12 }
             controls_state = 902
@@ -916,22 +1128,27 @@ QIN_boxer_war_mission = {
 		}
 		
 		activation = {
-            has_completed_focus = DNC_QIN_taku_forts
-			NOT = { date > 1909.12.12 }
+            has_completed_focus = DNC_QIN_seymour_expedition
+		 	NOT = { date > 1909.12.12 }
+			NOT = {
+				has_country_flag = rejectedboxerpeace
+			}
 		}
 		visible = {
 			NOT = { date > 1909.12.12 }
-			has_completed_focus = DNC_QIN_taku_forts
+			#has_completed_focus = DNC_QIN_taku_forts
 		}
 		fire_only_once = yes
 		is_good = no
 		timeout_effect = {
             country_event = dnc_china.11
+			load_focus_tree = RON_Qing_China
 		}
         complete_effect = {                    # What happens when we activate the mission i.e. mission success?
         	country_event = dnc_china.9
         }
 	}
+ 
 }
 QIN_fight_warlords = {
 	ANH_Question = {
@@ -1433,18 +1650,365 @@ china_influence_sphere = {
 	show_map = {
 		visible = {
 			date < 1920.1.1
-			OR = {
-				tag = QIN
-				tag = JAP
-				tag = RUE
-				tag = FRA
-				tag = ENG
-				tag = GER
+			is_in_array = {
+    			array = QIN.influence_array
+    			value = ROOT
 			}
+			
 		}
 		complete_effect = {
 			set_country_flag = show_QIN_influence_map 
 		}
+	}
+	exploit_FROM_resources = {
+		cost = 25
+		state_target = yes
+		target_trigger = {
+			FROM = {
+				is_core_of = QIN
+				is_controlled_by = QIN
+			}
+		}
+		visible = {
+			FROM = {
+				is_controlled_by = QIN
+			}
+			OR = {
+				check_variable = {FROM.resource@steel > 0 }
+				check_variable = {FROM.resource@tungsten > 0 }
+				check_variable = {FROM.resource@chromium > 0 }
+				check_variable = {FROM.resource@rubber > 0 }
+				check_variable = {FROM.resource@oil > 0 }
+			}
+			OR = {
+				AND = {
+					FROM = {
+						state = 329
+					}
+					check_variable = { QIN.color_array^1 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 330
+							state = 1016
+						}
+					}
+					check_variable = { QIN.color_array^2 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 1018
+							state = 1019
+						}
+					}
+					check_variable = { QIN.color_array^3 = ROOT}
+				}
+				AND = {
+					FROM = {
+						state = 761
+					}
+					check_variable = { QIN.color_array^4 = ROOT}
+				}
+				AND = {
+					FROM = {
+						state = 714
+					}
+					check_variable = { QIN.color_array^5 = ROOT}
+				}
+				AND = {
+					FROM = {
+						state = 717
+					}
+					check_variable = { QIN.color_array^6 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 328
+							state = 1024
+						}
+					}
+					check_variable = { QIN.color_array^7 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 1025
+							state = 1026
+						}
+					}
+					check_variable = { QIN.color_array^8 = ROOT}
+				}
+				AND = {
+					FROM = {
+						state = 715
+					}
+					check_variable = { QIN.color_array^9 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 610
+							state = 611
+							state = 612
+						}
+					}
+					check_variable = { QIN.color_array^10 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 1020
+							state = 1021
+							state = 1017
+						}
+					}
+					check_variable = { QIN.color_array^11 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 1015
+							state = 760
+						}
+					}
+					check_variable = { QIN.color_array^12 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 617
+							state = 618
+						}
+					}
+					check_variable = { QIN.color_array^13 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 287
+							state = 619
+						}
+					}
+					check_variable = { QIN.color_array^14 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 755
+							state = 756
+							state = 759
+						}
+					}
+					check_variable = { QIN.color_array^15 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 616
+							state = 283
+							state = 746
+							state = 622
+						}
+					}
+					check_variable = { QIN.color_array^16 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 614
+							state = 615
+							state = 1029
+							state = 1027
+						}
+					}
+					check_variable = { QIN.color_array^17 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 716
+							state = 1023
+							state = 1022
+							
+						}
+					}
+					check_variable = { QIN.color_array^18 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 597
+						}
+					}
+					check_variable = { QIN.color_array^19 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 598
+							state = 607
+							state = 620
+						}
+					}
+					check_variable = { QIN.color_array^20 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 1030
+							state = 606
+							state = 749
+							state = 613
+						}
+					}
+					check_variable = { QIN.color_array^21 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 744
+							state = 605
+							state = 753
+							state = 754
+							state = 752
+						}
+					}
+					check_variable = { QIN.color_array^22 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 757
+							state = 601
+							
+						}
+					}
+					check_variable = { QIN.color_array^23 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 751
+							state = 603
+							
+						}
+					}
+					check_variable = { QIN.color_array^24 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 748
+							state = 750
+							state = 602
+						}
+					}
+					check_variable = { QIN.color_array^25 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 600
+							state = 593
+							
+						}
+					}
+					check_variable = { QIN.color_array^26 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 596
+							state = 613
+							state = 1028
+						}
+					}
+					check_variable = { QIN.color_array^27 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 595
+						}
+					}
+					check_variable = { QIN.color_array^28 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 591
+							state = 594
+							state = 592
+							state = 599
+						}
+					}
+					check_variable = { QIN.color_array^29 = ROOT}
+				}
+				AND = {
+					FROM = {
+						OR = {
+							state = 325
+							state = 747
+						}
+					}
+					check_variable = { QIN.color_array^30 = ROOT}
+				}
+			}
+		}
+
+		complete_effect = {
+			hidden_effect = {
+				every_country = {
+					limit = {
+						has_resources_rights = {    # Used in country scope
+    						state = FROM 
+    
+						}
+					}
+					THIS = { remove_resource_rights = FROM }
+				}
+			}
+			if = {
+				limit = {
+					NOT = {
+						ROOT = {
+							tag =QIN
+						}
+					}
+				}
+				give_resource_rights = { receiver = ROOT state = FROM }
+			}
+			
+		}
+	}
+	open_to_china= {
+		remove_effect = {
+		
+		
+			add_to_array = {
+    			array = QIN.influence_array
+    			value = ROOT
+			}
+		}
+		cost = 100
+		days_remove = 25
+		visible = {
+			date < 1920.1.1
+			date > 1899.1.1
+			NOT = {
+				is_in_array = {
+    				array = QIN.influence_array
+    				value = ROOT
+				}
+			}
+			NOT = {
+				tag = CHI
+			}
+		}
+		fire_only_once = yes
 	}
 	set_up_new_government = {
 		visible = {
@@ -1452,12 +2016,12 @@ china_influence_sphere = {
 				has_global_flag = foreign_power_assumed_control_over_china
 			}
 			date < 1920.1.1
-			OR = {
-				tag = FRA
-				tag = ENG
-				tag = GER
-				tag = RUE
-				tag = JAP
+			is_in_array = {
+    			array = QIN.influence_array
+    			value = ROOT
+			}
+			NOT= {
+				tag = QIN
 			}
 		}
 		available = {
@@ -1473,7 +2037,252 @@ china_influence_sphere = {
 		complete_effect = {
 			set_global_flag = foreign_power_assumed_control_over_china
 			
-
+			create_dynamic_country = {
+				original_tag = QIN
+    			copy_tag = QIN
+    			add_political_power = 100
+				
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^1 = ROOT}
+					}
+					transfer_state = 329
+				}
+				if = {
+					limit = {	
+						check_variable = { QIN.color_array^1 = ROOT}
+					}
+					
+					transfer_state = 329
+					
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^2 = ROOT}
+					}
+					
+					transfer_state = 330
+					transfer_state = 1016
+				}
+						
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^3 = ROOT}
+					}
+					transfer_state = 1018
+					transfer_state = 1019
+					
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^4 = ROOT}
+					}
+					transfer_state = 761
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^5 = ROOT}
+					}
+					transfer_state = 714
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^6 = ROOT}
+					}
+					transfer_state = 717
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^7 = ROOT}
+					}
+					transfer_state = 328
+					transfer_state = 1024
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^8 = ROOT}
+					}
+					transfer_state = 1025
+					transfer_state = 1026
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^9 = ROOT}
+					}
+					transfer_state = 715
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^10 = ROOT}
+					}
+					transfer_state = 610
+					transfer_state = 611
+					transfer_state = 612
+					transfer_state = 621
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^11 = ROOT}
+					}
+					transfer_state = 1020
+					transfer_state = 1021
+					transfer_state = 1017
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^12 = ROOT}
+					}
+					transfer_state = 1015
+					transfer_state = 760
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^13 = ROOT}
+					}
+					transfer_state = 617
+					transfer_state = 618
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^14 = ROOT}
+					}
+					transfer_state = 287
+					transfer_state = 619
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^15 = ROOT}
+					}
+					transfer_state = 755
+					transfer_state = 756
+					transfer_state = 759
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^16 = ROOT}
+					}
+					transfer_state = 616
+					transfer_state = 283
+					transfer_state = 746
+					transfer_state = 622
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^17 = ROOT}
+					}
+					transfer_state = 614
+					transfer_state = 615
+					transfer_state = 1029
+					transfer_state = 1027
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^18 = ROOT}
+					}
+					transfer_state = 716
+					transfer_state = 1023
+					transfer_state = 1022
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^19 = ROOT}
+					}
+					transfer_state = 597
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^20 = ROOT}
+					}
+					transfer_state = 598
+					transfer_state = 607
+					transfer_state = 620
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^21 = ROOT}
+					}
+					transfer_state = 1030
+					transfer_state = 606
+					transfer_state = 749
+					transfer_state = 613
+					
+					# transfer_state = 744
+					# transfer_state = 605
+					# transfer_state = 753
+					# transfer_state = 754
+					# transfer_state = 752
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^22 = ROOT}
+					}
+					transfer_state = 604
+					transfer_state = 322
+					transfer_state = 758
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^23 = ROOT}
+					}
+					transfer_state = 757
+					transfer_state = 601
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^24 = ROOT}
+					}
+					transfer_state = 751
+					transfer_state = 603
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^25 = ROOT}
+					}
+					transfer_state = 748
+					transfer_state = 750
+					transfer_state = 602
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^26 = ROOT}
+					}
+					transfer_state = 600
+					transfer_state = 593
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^27 = ROOT}
+					}
+					transfer_state = 596
+					transfer_state = 613
+					transfer_state = 1028
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^28 = ROOT}
+					}
+					transfer_state = 595
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^29 = ROOT}
+					}
+					transfer_state = 591
+					transfer_state = 594
+					transfer_state = 592
+					transfer_state = 599
+				}
+				if = {
+					limit = {
+						check_variable = { QIN.color_array^30 = ROOT}
+					}
+					transfer_state = 325
+					transfer_state = 747
+				}
+				ROOT = {
+					puppet = PREV
+				}
+			}
 		}
 	}
 
@@ -1483,249 +2292,32 @@ china_influence_sphere = {
 			NOT = {
 				tag = QIN
 			}
-			OR = {
-				has_country_flag = QIN_1_selected
-				has_country_flag = QIN_2_selected
-				has_country_flag = QIN_3_selected
-				has_country_flag = QIN_4_selected
-				has_country_flag = QIN_5_selected
-				has_country_flag = QIN_6_selected
-				has_country_flag = QIN_7_selected
-				has_country_flag = QIN_8_selected
-				has_country_flag = QIN_9_selected
-				has_country_flag = QIN_10_selected
-				has_country_flag = QIN_11_selected
-				has_country_flag = QIN_12_selected
-				has_country_flag = QIN_13_selected
-				has_country_flag = QIN_14_selected
-				has_country_flag = QIN_15_selected
-				has_country_flag = QIN_16_selected
-				has_country_flag = QIN_17_selected
-				has_country_flag = QIN_18_selected
-				has_country_flag = QIN_19_selected
-				has_country_flag = QIN_20_selected
-				has_country_flag = QIN_21_selected
-				has_country_flag = QIN_22_selected
-				has_country_flag = QIN_23_selected
-				has_country_flag = QIN_24_selected
-				has_country_flag = QIN_25_selected
-				has_country_flag = QIN_26_selected
-				has_country_flag = QIN_27_selected
-				has_country_flag = QIN_28_selected
-				has_country_flag = QIN_29_selected
-				has_country_flag = QIN_30_selected
-			}
+			has_variable = selected_zone
 		}
 		available = {
+			
 			NOT = {
-					custom_trigger_tooltip = {
-				tooltip = has_no_influence_over_ZONE_tt
-				OR = {
-					AND = {
-						has_country_flag = QIN_1_selected
-						event_target:QIN_1_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_2_selected
-						event_target:QIN_2_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_3_selected
-						event_target:QIN_3_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_4_selected
-						event_target:QIN_4_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_5_selected
-						event_target:QIN_5_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_6_selected
-						event_target:QIN_6_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_7_selected
-						event_target:QIN_7_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_8_selected
-						event_target:QIN_8_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_9_selected
-						event_target:QIN_9_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_10_selected
-						event_target:QIN_10_influencer= {
-							tag = ROOT
-						}
-					}	
-
-					AND = {
-						has_country_flag = QIN_11_selected
-						event_target:QIN_11_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_12_selected
-						event_target:QIN_12_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_13_selected
-						event_target:QIN_13_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_14_selected
-						event_target:QIN_14_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_15_selected
-						event_target:QIN_15_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_16_selected
-						event_target:QIN_16_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_17_selected
-						event_target:QIN_17_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_18_selected
-						event_target:QIN_18_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_19_selected
-						event_target:QIN_19_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_20_selected
-						event_target:QIN_20_influencer= {
-							tag = ROOT
-						}
-					}
-
-					AND = {
-						has_country_flag = QIN_21_selected
-						event_target:QIN_21_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_22_selected
-						event_target:QIN_22_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_23_selected
-						event_target:QIN_23_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_24_selected
-						event_target:QIN_24_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_25_selected
-						event_target:QIN_25_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_26_selected
-						event_target:QIN_26_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_27_selected
-						event_target:QIN_27_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_28_selected
-						event_target:QIN_28_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_29_selected
-						event_target:QIN_29_influencer= {
-							tag = ROOT
-						}
-					}
-					AND = {
-						has_country_flag = QIN_30_selected
-						event_target:QIN_30_influencer= {
-							tag = ROOT
-						}
-					}
-				}
+				custom_trigger_tooltip = {
+					tooltip = has_no_influence_over_ZONE_tt
+					check_variable = { QIN.color_array^selected_zone = ROOT }
 				}
 			}
 		}
-		complete_effect = {
+		remove_effect = {
 			if = {
 				limit = {
-					has_country_flag = QIN_1_selected
-					event_target:QIN_1_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
+					
+					NOT = {
+						check_variable = { QIN.color_array^selected_zone = ROOT }
 					}
 				}
 				if = {
 					limit = {
-						event_target:QIN_1_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
+						NOT = {
+							check_variable = { QIN.color_array^selected_zone = QIN }
 						}
 					}
-					event_target:QIN_1_influencer = {
+					var:QIN.color_array^selected_zone = {
 						country_event = dnc_china.17
 					}
 				}
@@ -1736,818 +2328,7 @@ china_influence_sphere = {
 				}
 				
 			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_2_selected
-					event_target:QIN_2_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_2_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_2_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_3_selected
-					event_target:QIN_3_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_3_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_3_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_4_selected
-					event_target:QIN_4_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_4_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_4_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_5_selected
-					event_target:QIN_5_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_5_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_5_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_6_selected
-					event_target:QIN_6_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_6_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_6_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_7_selected
-					event_target:QIN_7_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_7_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_7_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_8_selected
-					event_target:QIN_8_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_8_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_8_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_9_selected
-					event_target:QIN_9_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_9_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_9_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_10_selected
-					event_target:QIN_10_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_10_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_10_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_11_selected
-					event_target:QIN_11_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_11_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_11_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_12_selected
-					event_target:QIN_12_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_12_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_12_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_13_selected
-					event_target:QIN_13_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_13_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_13_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_14_selected
-					event_target:QIN_14_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_14_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_14_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_15_selected
-					event_target:QIN_5_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_15_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_15_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_16_selected
-					event_target:QIN_16_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_16_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_16_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_17_selected
-					event_target:QIN_17_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_17_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_17_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_18_selected
-					event_target:QIN_18_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_18_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_18_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_19_selected
-					event_target:QIN_19_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_19_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_19_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_20_selected
-					event_target:QIN_20_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_20_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_20_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_21_selected
-					event_target:QIN_21_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_21_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_21_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_22_selected
-					event_target:QIN_22_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_22_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_22_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_23_selected
-					event_target:QIN_23_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_23_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_23_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_24_selected
-					event_target:QIN_24_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_24_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_24_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_25_selected
-					event_target:QIN_25_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_25_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_25_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_26_selected
-					event_target:QIN_26_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_26_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_26_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_27_selected
-					event_target:QIN_27_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_27_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_27_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_28_selected
-					event_target:QIN_28_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_28_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_28_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_29_selected
-					event_target:QIN_29_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_29_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_29_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_30_selected
-					event_target:QIN_30_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				if = {
-					limit = {
-						event_target:QIN_30_influencer = {
-							NOT = {
-								tag = QIN # if another european power
-							}
-						}
-					}
-					event_target:QIN_30_influencer = {
-						country_event = dnc_china.17
-					}
-				}
-				else = {
-					QIN = {
-						country_event = dnc_china.18
-					}
-				}
-				
-			}
+ 
 		}
 	}
 
@@ -2560,395 +2341,16 @@ china_influence_sphere = {
 		complete_effect = {
 			if = {
 				limit = {
-					has_country_flag = QIN_1_selected
-					event_target:QIN_1_influencer = {
+					var:QIN.color_array^ROOT.selected_zone = {
 						NOT = {
 							tag = ROOT  #cannot take over something you already have
 						}
 					}
 				}
-				event_target:QIN_1_influencer = {
+				var:QIN.color_array^ROOT.selected_zone = {
 					country_event = dnc_china.20
 				}
 			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_2_selected
-					event_target:QIN_2_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_2_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_3_selected
-					event_target:QIN_3_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_3_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_4_selected
-					event_target:QIN_4_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_4_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_5_selected
-					event_target:QIN_5_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_5_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_6_selected
-					event_target:QIN_6_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_6_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_7_selected
-					event_target:QIN_7_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_7_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_8_selected
-					event_target:QIN_8_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_8_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_9_selected
-					event_target:QIN_9_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_9_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_10_selected
-					event_target:QIN_10_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_10_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_11_selected
-					event_target:QIN_11_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_11_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_12_selected
-					event_target:QIN_12_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_12_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_13_selected
-					event_target:QIN_13_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_13_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_14_selected
-					event_target:QIN_14_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_14_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_15_selected
-					event_target:QIN_15_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_15_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_16_selected
-					event_target:QIN_16_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_16_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_17_selected
-					event_target:QIN_17_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_17_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_18_selected
-					event_target:QIN_18_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_18_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_19_selected
-					event_target:QIN_19_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_19_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_20_selected
-					event_target:QIN_20_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_20_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_21_selected
-					event_target:QIN_21_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_21_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_22_selected
-					event_target:QIN_22_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_22_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_23_selected
-					event_target:QIN_23_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_23_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_24_selected
-					event_target:QIN_24_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_24_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_25_selected
-					event_target:QIN_25_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_25_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_26_selected
-					event_target:QIN_26_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_26_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_27_selected
-					event_target:QIN_27_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_27_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_28_selected
-					event_target:QIN_28_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_28_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_29_selected
-					event_target:QIN_29_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_29_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-			else_if = {
-				limit = {
-					has_country_flag = QIN_30_selected
-					event_target:QIN_30_influencer = {
-						NOT = {
-							tag = ROOT  #cannot take over something you already have
-						}
-					}
-				}
-				event_target:QIN_30_influencer = {
-					country_event = dnc_china.20
-				}
-			}
-
 		}
 	}
 }
@@ -3147,7 +2549,6 @@ chinese_revolution = {
 		}
 		available = {
 			hidden_trigger = { always = no }
-
 		}
 		visible = { always = yes }
 		cancel_if_not_visible = yes
@@ -3156,111 +2557,21 @@ chinese_revolution = {
 		days_mission_timeout = CHI_days_until_uprising?2700
 
 		timeout_effect = {
-			#				CHI = {add_ideas = {CHI_uprising}}
-			#				QIN = {add_ideas = {QIN_uprising}}
-			#				QIN = {set_country_flag = revolution_started}
-			#
-			#			if = {
-			#				limit = {
-			#					check_variable = {
-			#						var = uprising_strengh
-			#						value = 0.8
-			#						compare = greater_than
-			#					}
-			#
-			#				}
-			#
-			#			}
-			#			if = {
-			#				limit = {
-			#					check_variable = {
-			#						var = uprising_preparing
-			#						value = 0.05
-			#						compare = less_than
-			#					}
-			#
-			#				}
-			#
-			#			}
-			#			else = {
-			#
-			#
-			#			}
-			#			594 = {add_core_of = CHI}
-			#			592 = {add_core_of = CHI}
-			#			747 = {add_core_of = CHI}
-			#			325 = {add_core_of = CHI}
-			#			603 = {add_core_of = CHI}
-			#			752 = {add_core_of = CHI}
-			#			751 = {add_core_of = CHI}
-			#			748 = {add_core_of = CHI}
-			#			596 = {add_core_of = CHI}
-			#			613 = {add_core_of = CHI}
-			#			1028 = {add_core_of = CHI}
-			#			753 = {add_core_of = CHI}
-			#			615 = {add_core_of = CHI}
-			#			623 = {add_core_of = CHI}
-			#			622 = {add_core_of = CHI}
-			#			750 = {add_core_of = CHI}
-			#			749 = {add_core_of = CHI}
-			#			744 = {add_core_of = CHI}
-			#			1030 = {add_core_of = CHI}
-			#			606 = {add_core_of = CHI}
-			#			620 = {add_core_of = CHI}
-			#			1031 = {add_core_of = CHI}
-			#			902 = {add_core_of = CHI}
-			#			600 = {add_core_of = CHI}
-			#			602 = {add_core_of = CHI}
-			#			744 = {add_core_of = CHI}
-			#			598 = {add_core_of = CHI}
-			#			599 = {add_core_of = CHI}
-			#			595 = {add_core_of = CHI}
-			#			593 = {add_core_of = CHI}
-			#			597 = {add_core_of = CHI}
-			#			605 = {add_core_of = CHI}
-			#			QIN = {release = CHI}
-			#			CHI = {set_province_controller = 1519}
-			#			CHI = {set_province_controller = 1319}
-			#			CHI = {set_province_controller = 7014}
-			#			CHI = {set_province_controller = 4504}
-			#			QIN = {
-			#				transfer_units_fraction= {
-			#					target = CHI
-			#					size = uprising_strengh
-			#					stockpile_ratio = uprising_strengh
-			#					army_ratio = uprising_strengh
-			#					navy_ratio = 0
-			#					air_ratio = 0
-			#				}
-			#			}
-			#			QIN = {
-			#				declare_war_on = {
-			#					target = CHI
-			#					type = civil_war
-			#				}
-			#			}
-			#			CHI = {set_cosmetic_tag = CHI_first_republic}
-			#			CHI = {
-			#				create_country_leader = {
-			#					name = "Zhongguo Tongmenghui"
-			#					picture = "chinese_junta.dds"
-			#					expire = "1965.1.1"
-			#					ideology = despotism
-			#
-			#				}
-			#			}
-			#			QIN = {country_event = {id = chinese_empire.16 days = 10}}
-			#
-			#			if = {
-			#				limit = {
-			#					AND = {
-			#						QIN = {has_country_flag = side_with_CHI}
-			#						QIN = {is_ai = no}
-			#					}
-			#				}
-			#				CHI = { change_tag_from = QIN }
-			#			}
-			country_event = ww1_china.3
+					every_state = {
+    limit = {
+        is_controlled_by = QIN
+    }
+    remove_core_of = BOX
+		}
+						CHI = {add_ideas = {CHI_uprising}}
+						QIN = {add_ideas = {QIN_uprising}}
+						QIN = {set_country_flag = revolution_started}
+						country_event = ww1_china.3
+						add_power_balance_value = {
+						    id = QIN_centralization_bop
+						    value = -0.30
+						    tooltip_side = QIN_centralization_bop_democracy
+						} 		
 		}
 
 
@@ -3279,8 +2590,16 @@ chinese_revolution = {
 			subtract_from_variable = {
 				var = uprising_strengh
 				value = 0.05
-
 			}
+			add_days_mission_timeout = {
+				mission = QIN_revolution_timer
+				days = 50
+			}
+						add_power_balance_value = {
+						    id = QIN_centralization_bop
+						    value = 0.1
+						    tooltip_side = QIN_centralization_bop_democracy
+						} 					
 		}
 	}
 	CHI_spread_uprising = {
@@ -3298,7 +2617,17 @@ chinese_revolution = {
 				var = uprising_strengh
 				value = 0.03
 			}
-
+			add_political_power = 100
+			add_stability = -0.05
+			add_days_mission_timeout = {
+				mission = QIN_revolution_timer
+				days = -50
+			}
+			add_power_balance_value = {
+			    id = QIN_centralization_bop
+			    value = -0.10
+			    tooltip_side = QIN_centralization_bop_democracy
+			} 					
 		}
 	}
 	QIN_arrest_leaders = {
@@ -3313,8 +2642,7 @@ chinese_revolution = {
 			set_country_flag = leader_arrested
 			add_days_mission_timeout = {
 				mission = QIN_revolution_timer
-				days = 50
-
+				days = 100
 			}
 		}
 	}

@@ -7,7 +7,7 @@ add_namespace = ww2_germany
 country_event = {
 	id = ww2_germany.33
 	title = ww2_germany.33.t
-	desc = ww2_germany.33.d
+	desc = ww2_germany.33.d 
 	picture = GFX_report_event_italian_social_republic
 	fire_only_once = yes
 	trigger = {
@@ -27,8 +27,15 @@ country_event = {
 	mean_time_to_happen = { days = 1 }
 	option = {
 		name = ww2_germany.33.a
+		
 		set_global_flag = RSI_Founded
 		RSI = {
+			every_state = {
+				limit = {
+					is_core_of = ITA
+				}
+				add_core_of = RSI
+			}
 			every_state = {
 				limit = {
 					is_core_of = RSI
@@ -38,7 +45,7 @@ country_event = {
 				}
 				RSI = { transfer_state = PREV }
 			}
-			#	load_oob = "RSI_1944"
+			load_oob = "ITR_1944"
 		}
 
 		GER = {
@@ -181,16 +188,24 @@ country_event = {
 	picture = GFX_report_event_hitler_dead
 	fire_only_once = yes
 	trigger = {
-		has_government = fascism
+		tag = GER
+		GER = { has_government = fascism }
 		NOT = { GER = { has_completed_focus = GER_alpenfestung } }
 		NOT = {
 			has_global_flag = deadhitler
 		}
+		GER = {has_war_with = SOV}
+		GER = {has_war_with = USA}
+		GER = {has_war_with = FRA}
+		GER = {has_war_with = ENG}
 		any_country = {
 			controls_state = 1105
 			has_war_with = GER
 			date > 1940.1.1
 			date < 1955.1.1
+			NOT = {
+				has_global_flag = RON_Axis_Victory
+			}
 		}
 		NOT = {
 			country_exists = DDR
@@ -216,14 +231,68 @@ country_event = {
 					stout_defender
 				}
 			}
-		}
+		} 
 	}
 }
-
+# Hitler Dead!
+country_event = {
+	id = ww2_germany.3902
+	title = ww2_germany.39.t
+	desc = ww2_germany.39.d
+	picture = GFX_report_event_hitler_dead
+	fire_only_once = yes
+	hidden = yes # so no text
+	is_triggered_only = yes
+	option = {
+		name = ww2_germany.39.a
+		GER = {
+			remove_state_claim = 152
+			remove_state_core = 152		
+			remove_state_claim = 807
+			remove_state_core = 807					
+			remove_state_claim = 4
+			remove_state_core = 4			
+			remove_state_claim = 810
+			remove_state_core = 810			
+			remove_state_claim = 1107
+			remove_state_core = 1107
+			remove_state_claim = 153
+			remove_state_core = 153
+			remove_state_claim = 806
+			remove_state_core = 806
+			remove_state_claim = 5
+			remove_state_core = 5
+			remove_state_claim = 865
+			remove_state_core = 865
+			remove_state_claim = 67
+			remove_state_core = 67
+			remove_state_claim = 803
+			remove_state_core = 803	
+			remove_state_claim = 801
+			remove_state_core = 801	
+			remove_state_claim = 86
+			remove_state_core = 86	
+			remove_state_claim = 66
+			remove_state_core = 66	
+			remove_state_claim = 68
+			remove_state_core = 68	
+			remove_state_claim = 63
+			remove_state_core = 63	
+			remove_state_claim = 17
+			remove_state_core = 17			
+			remove_state_claim = 816
+			remove_state_core = 816
+			remove_state_claim = 814
+			remove_state_core = 814
+			remove_state_claim = 28
+			remove_state_core = 28
+	}
+}
+}
 #Jodel and Keitl Surrender All German Forces
 country_event = {
 	id = ww2_germany.3901
-	title = ww2_germany.3901.t
+	title = ww2_germany.3901.t  
 	desc = ww2_germany.3901.d
 	picture = GFX_report_event_german_surrender_ww2
 	trigger = {
@@ -232,7 +301,19 @@ country_event = {
 		has_global_flag = deadhitler
 		NOT = { GER = { has_completed_focus = GER_alpenfestung } }
 		NOT = {
+			has_global_flag = wwtwoisoverhistorical
+		}
+		NOT = {
 			has_global_flag = player_wants_custom_peacedeals
+		}
+		NOT = {
+			OR = {
+			SOV = {
+				has_war_with = FRA
+				has_war_with = ENG
+				has_war_with = USA
+			}
+			}
 		}
 	}
 	mean_time_to_happen = {
@@ -240,6 +321,7 @@ country_event = {
 	}
 	option = {
 		name = ww2_germany.3901.a
+		set_global_flag = wwtwoisoverhistorical
 		news_event = {
 			hours = 6
 			id = news.236
@@ -263,12 +345,39 @@ country_event = {
 			leave_faction = yes
 		}
 		remove_from_faction = GER
+		hidden_effect = {
+			USA = { country_event = ww2_germany.3902 }
+		}
 		every_country = {
 			limit = {
 				has_war_with = GER
 			}
 			white_peace = GER
 		}
+		ENG = {
+			white_peace = SOV
+		}		
+		USA = {
+			white_peace = SOV
+		}	
+		DEN = {
+			white_peace = SOV
+		}	
+		HOL = {
+			white_peace = SOV
+		}
+		BEL = {
+			white_peace = SOV
+		}
+		POR = {
+			white_peace = SOV
+		}		
+		SOV = {
+			white_peace = FRA
+		}			
+		SOV = {
+			white_peace = PER
+		}															
 		release = ENG
 		GER = {
 			drop_cosmetic_tag = yes
@@ -326,18 +435,12 @@ country_event = {
 			end_puppet = POR
 		}
 		GER = {
-			release = RUE
-			end_puppet = RUE
+			release = RUS
+			end_puppet = RUS
 		}
 		SOV = {
 			annex_country = {
-				target = RUE
-				transfer_troops = yes
-			}
-		}
-		SOV = {
-			annex_country = {
-				target = WHR
+				target = RUS
 				transfer_troops = yes
 			}
 		}
@@ -479,7 +582,7 @@ country_event = {
 			transfer_state = 155
 		}
 		USA = {
-			dismantle_faction = yes
+		#	dismantle_faction = yes
 			transfer_state = 54
 			transfer_state = 50
 			transfer_state = 791
@@ -542,7 +645,7 @@ country_event = {
 			transfer_state = 1059
 		}
 		ENG = {
-			dismantle_faction = yes
+		#	dismantle_faction = yes
 			transfer_state = 796
 			transfer_state = 58
 			transfer_state = 59
@@ -609,7 +712,7 @@ country_event = {
 			transfer_state = 88
 		}
 		SOV = {
-			dismantle_faction = yes
+			#dismantle_faction = yes
 			transfer_state = 61
 			transfer_state = 62
 			transfer_state = 794
@@ -751,6 +854,7 @@ country_event = {
 		}
 	}
 }
+
 
 # German-Turk relations
 country_event = {
@@ -2916,6 +3020,8 @@ country_event = {
 		tag = GER
 		has_government = fascism
 		date > 1945.4.28
+		has_start_date < 1949.1.1
+		GER = { surrender_progress > 0.01 }
 		#has_global_flag = welcome_event_1945
 		NOT = {
 			has_global_flag = hiterstillkickin
@@ -2924,6 +3030,7 @@ country_event = {
 		NOT = {
 			has_global_flag = deadhitler
 		}
+		
 	}
 	mean_time_to_happen = {
 		days = 1
@@ -5332,17 +5439,17 @@ country_event = {
 		}
 		RUS = {
 			annex_country = {
-				target = WHR
+				target = RUS
 				transfer_troops = no
 			}
-			change_tag_from = WHR
+			change_tag_from = RUS
 		}
 		GER = {
 			puppet = RUS
 		}
 		RUS = {
 			set_politics = {
-				ruling_party = paternal_autocrat
+				ruling_party = neutrality
 				elections_allowed = no
 			}
 			set_popularities = {
@@ -5445,7 +5552,7 @@ country_event = {
 		name = ww2_germany.254.a
 		RUS = {
 			set_politics = {
-				ruling_party = social_democrat
+				ruling_party = democratic
 				elections_allowed = no
 			}
 			set_popularities = {
@@ -5482,7 +5589,7 @@ country_event = {
 		name = ww2_germany.254.c
 		RUS = {
 			set_politics = {
-				ruling_party = social_democrat
+				ruling_party = democratic
 				elections_allowed = no
 			}
 			set_popularities = {
@@ -5512,7 +5619,7 @@ country_event = {
 		name = ww2_germany.254.dd
 		RUS = {
 			set_politics = {
-				ruling_party = social_democrat
+				ruling_party = democratic
 				elections_allowed = no
 			}
 			set_popularities = {
@@ -5628,6 +5735,9 @@ country_event = {
 	trigger = {
 		tag = GER
 		date > 1943.3.3
+		has_start_date < 1949.1.1
+		GER = { surrender_progress > 0.01 }
+		has_government = fascism
 	}
 	mean_time_to_happen = {
 		days = 1
@@ -5775,18 +5885,18 @@ country_event = {
 			end_puppet = POR
 		}
 		GER = {
-			release = RUE
-			end_puppet = RUE
+			release = RUS
+			end_puppet = RUS
 		}
 		SOV = {
 			annex_country = {
-				target = RUE
+				target = RUS
 				transfer_troops = yes
 			}
 		}
 		SOV = {
 			annex_country = {
-				target = WHR
+				target = RUS
 				transfer_troops = yes
 			}
 		}
@@ -6182,5 +6292,148 @@ country_event = {
 			transfer_state = 866
 			transfer_state = 993
 		}
+	}
+}
+country_event = { 
+	id = ww2_germany.3909
+	title = ww2_germany.3901.t  
+	desc = ww2_germany.3901.d
+	picture = GFX_report_event_german_surrender_ww2
+	is_triggered_only = yes
+	fire_only_once = yes 
+	
+	option = {
+		name = ww2_germany.3901.a
+		set_global_flag = wwtwoisoverhistorical
+		news_event = {
+			hours = 6
+			id = news.236
+		}
+		set_global_flag = german_surrender
+		add_threat = -140
+		every_country = {
+			limit = {
+				OR = {
+					is_in_faction_with = GER
+					RON_ww2_axis = yes
+				}
+				NOT = { tag = JAP }
+				NOT = { tag = MAN }
+				NOT = { tag = MEN }
+				NOT = { is_in_faction_with = ENG }
+			}
+			white_peace = USA
+			white_peace = ENG
+			white_peace = SOV
+			leave_faction = yes
+		}
+		remove_from_faction = GER
+		hidden_effect = {
+			USA = { country_event = ww2_germany.3902 }
+		}
+		every_country = {
+			limit = {
+				has_war_with = GER
+			}
+		}
+		GER = {
+			add_ideas = GER_mefo_bills_23
+			remove_ideas = nuremberg_laws 
+			remove_ideas = fascist_propaganda_surrender  
+			remove_ideas = persecute_scientists 
+uncomplete_national_focus = {
+  focus = GER_poltical_sphere
+  uncomplete_children = yes
+  refund_political_power = no
+}	
+uncomplete_national_focus = {
+  focus = GER_rhineland
+  uncomplete_children = yes
+  refund_political_power = no
+}					
+unlock_national_focus = GER_oppose_hitler
+unlock_national_focus = GER_arrest_hitler
+unlock_national_focus = GER_eliminate_facist_resistance
+unlock_national_focus = GER_fascism_censorship_campaigns
+unlock_national_focus = GER_consolidate_the_new_state
+unlock_national_focus = GER_new_german_constitution
+complete_national_focus = GER_restore_hohenzollern
+			release = FRA
+			release = DEN
+			release = NOR
+			release = POL
+			release = RSI			
+			release = LIT
+			release = LAT
+			release = EST
+			release = BEL
+			release = HOL
+			release = LIT
+			release = LUX
+			release = AUS
+			release = SOV
+			release = HUN
+			release = ALB
+			release = GRE
+			release = CZE
+			release = MNT
+			release = SER
+			release = SLO
+			release = ITA
+			release = YUG
+		}
+		ITA = {
+			transfer_state = 157
+			transfer_state = 2
+			transfer_state = 990
+		}
+		POL = {
+			transfer_state = 5
+			transfer_state = 763
+		}
+		SOV = {
+			transfer_state = 210
+			transfer_state = 209
+			puppet = POL
+			puppet = HUN
+			puppet = BUL
+			puppet = SER
+			puppet = CRO
+			puppet = MNT
+			puppet = YUG
+			puppet = SLO
+			puppet = ROM
+			puppet = SER
+			puppet = LIT
+			puppet = LAT
+			puppet = EST
+			puppet = CZE
+			transfer_state = 803
+			transfer_state = 66
+			transfer_state = 68
+			transfer_state = 63
+			transfer_state = 67
+			transfer_state = 801
+			transfer_state = 802
+			transfer_state = 64
+			transfer_state = 65
+			transfer_state = 797
+			transfer_state = 1105
+			transfer_state = 794
+			transfer_state = 61
+			transfer_state = 795
+			transfer_state = 62
+		}
+		42 = {set_demilitarized_zone = yes }
+		789 = {set_demilitarized_zone = yes }
+		51 = {set_demilitarized_zone = yes }
+		788 = {set_demilitarized_zone = yes }
+		57 = {set_demilitarized_zone = yes }
+		979 = {set_demilitarized_zone = yes }
+		241 = {set_demilitarized_zone = yes }
+		791 = {set_demilitarized_zone = yes }
+		56 = {set_demilitarized_zone = yes }
+		792 = {set_demilitarized_zone = yes }
+
 	}
 }

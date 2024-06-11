@@ -4,41 +4,51 @@
 
 add_namespace = JAP_1941
 
-#Pearl harbor ON_ACTION
-#country_event = {
-#	id = JAP_1941.1
-#	title = JAP_1941.1.t
-#	desc = JAP_1941.1.d
-#	picture = GFX_1941_event_fall_of_pearl_harbor
-#
-#	fire_only_once = yes
-#	mean_time_to_happen = { days = 1 }
-#
-#	trigger = {
-#		tag = JAP
-#		date > 1941.12.7
-#		date < 1942.1.1
-#		country_exists = USA
-#		NOT = { JAP = { is_in_faction_with = USA } }
-#		JAP = {
-#			OR = {
-#				has_government = fascism
-#			}
-#		}
-#	}
-#
-#	option = { #declare war on filty american oppressors
-#		name = JAP_1941.1.a
-#		hidden_effect = {
-#			ENG = { add_to_faction = USA }
-#			news_event = { id = news_1941.150 days = 1 }
-#		}
-#		declare_war_on = { target = USA type = annex_everything }
-#		GER = { country_event = { id = JAP_1941.2 days = 3 } }
-#	}
-#}
+#Pearl harbor 
+country_event = {
+	id = JAP_1941.1
+	title = JAP_1941.1.t
+	desc = JAP_1941.1.d
+	picture = GFX_1941_event_fall_of_pearl_harbor
 
-#Pearl harbor germany
+	fire_only_once = yes
+	mean_time_to_happen = { days = 1 }
+	is_triggered_only = yes
+
+	option = { #declare war on filty american oppressors
+		name = JAP_1941.1.a
+		hidden_effect = {
+			news_event = { id = news_1941.150 days = 1 }
+		}
+		declare_war_on = { target = USA type = annex_everything }
+		GER = { country_event = { id = JAP_1941.2 days = 3 } }
+		add_timed_idea = {
+    idea = surprise_attack
+    days = 150
+}
+	}
+	option = { #do not declare war 
+		name = JAP_1941.1.b
+			add_opinion_modifier = {
+							target = USA
+							modifier = embargo
+						}
+			add_opinion_modifier = {
+							target = ENG
+							modifier = embargo
+						}
+			add_opinion_modifier = {
+							target = FRA
+							modifier = embargo
+						}	
+			add_opinion_modifier = {
+							target = INS
+							modifier = embargo
+						}					
+	}
+}
+
+##Pearl harbor germany
 country_event = {
 	id = JAP_1941.2
 	title = JAP_1941.2.t
@@ -46,11 +56,23 @@ country_event = {
 	picture = GFX_report_event_german_speech
 
 	is_triggered_only = yes
-
+ 
 	option = { #declare war on filty american oppressors
 		name = JAP_1941.2.a
+		ai_chance = { factor = 100 }
 		declare_war_on = { target = USA type = annex_everything }
 		ITA = { declare_war_on = { target = USA type = annex_everything } }
+	}
+	
+	option = { #It is not in our interest
+		name = "Not In Our Best Interest"
+		ai_chance = {
+			factor = 50
+			modifier = {
+				is_historical_focus_on = yes
+				factor = 0
+			}
+		}
 	}
 }
 

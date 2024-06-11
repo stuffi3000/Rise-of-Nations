@@ -1,5 +1,153 @@
 #IMPORTANT NOTE:
 #These effects use one another. If you want to truly understand the whole context, you might want to read this file custom effect to custom effect, BUT from bottom to top and not from top to bottom.
+end_vote = {
+	clear_array = global.vote_chunk_array
+	set_variable = {global.UNSC_positive_votes = 0}
+	set_variable = {global.UNSC_abstain_votes = 0}
+	set_variable = {global.UNSC_negative_votes = 0}
+	set_variable = {global.UNSC_vetos = 0}
+	set_variable = { global.positive_disp = 0}
+	set_variable = { global.negative_disp = 0}
+	set_variable = { global.abstain_disp = 0 }
+	every_country = {
+		limit = {
+			has_country_flag = UN_has_voted
+		}
+		clr_country_flag = UN_has_voted
+		clr_country_flag = UNSC_voted_for
+		clr_country_flag = UNSC_voted_abstain
+		clr_country_flag = UNSC_voted_against
+	}
+	
+	clr_global_flag = UNSC_sanction_voting_ongoing
+	set_global_flag = UNSC_vote_over
+}
+
+clear_voting_array = {
+	clear_array = global.vote_chunk_array
+	
+}
+
+calculate_voting_bar = {
+	clear_voting_array = yes
+	if = {
+		limit = {
+			check_variable = { global.UNSC_num = 0 }
+		}
+		every_country = {
+			limit = {
+				OR = {
+	 				has_idea = RON_United_Nations_Security_Council
+	 				has_idea = RON_United_Nations_Security_Council_NP
+	 			}
+			}
+			add_to_variable = {global.UNSC_num = 1}
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { global.UNSC_vetos > 0}
+
+		}
+		set_temp_variable = { global.temp = 100}
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.temp >0}
+			}
+			add_to_array = { global.vote_chunk_array = 3 }
+			subtract_from_temp_variable = { global.temp = 1}
+		}
+		#end_vote = yes
+	}
+	if = {
+		limit = {
+			check_variable = {global.UNSC_vetos = 0 }
+		}
+		set_temp_variable = { global.positive_percent = global.UNSC_positive_votes }
+		set_temp_variable = { global.negative_percent = global.UNSC_negative_votes }
+		set_temp_variable = { global.abstain_percent = global.UNSC_abstain_votes }
+
+		divide_temp_variable = { global.positive_percent = global.UNSC_num }
+		divide_temp_variable = { global.negative_percent = global.UNSC_num }
+		divide_temp_variable = { global.abstain_percent = global.UNSC_num }
+
+		multiply_temp_variable = { global.positive_percent = 100 }
+		multiply_temp_variable = { global.negative_percent = 100 }
+		multiply_temp_variable = { global.abstain_percent = 100 }
+
+
+		round_temp_variable = global.positive_percent
+		round_temp_variable = global.negative_percent
+		round_temp_variable = global.abstain_percent
+		set_variable = { global.positive_disp = global.positive_percent}
+		set_variable = { global.negative_disp = global.negative_percent}
+		set_variable = { global.abstain_disp = global.abstain_percent }
+		set_temp_variable = {
+			global.diff = 100
+		}
+		subtract_from_temp_variable = { global.diff = global.positive_percent}
+		subtract_from_temp_variable = { global.diff = global.negative_percent}
+		subtract_from_temp_variable = { global.diff = global.abstain_percent }
+
+
+		divide_temp_variable = { global.diff = 2 }
+		round_temp_variable = global.diff
+
+
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.positive_percent >0}
+			}
+			add_to_array = { global.vote_chunk_array = 1 }
+			subtract_from_temp_variable = { global.positive_percent = 1}
+		}
+		set_temp_variable = {global.diff2 = global.diff}
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.diff >0}
+			}
+			add_to_array = { global.vote_chunk_array = 4 }
+			subtract_from_temp_variable = { global.diff = 1}
+		}
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.abstain_percent >0}
+			}
+			add_to_array = { global.vote_chunk_array = 2 }
+			subtract_from_temp_variable = { global.abstain_percent = 1}
+		}
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.diff2 >0}
+			}
+			add_to_array = { global.vote_chunk_array = 4 }
+			subtract_from_temp_variable = { global.diff2 = 1}
+		}
+		while_loop_effect = {
+			limit = {
+				check_variable = {global.negative_percent >0}
+			}
+			add_to_array = { global.vote_chunk_array = 3 }
+			subtract_from_temp_variable = { global.negative_percent = 1}
+		}
+		if = {
+			limit = {
+				check_variable = {global.vote_chunk_array^num > 100}
+			}
+			remove_from_array = {
+				array = global.vote_chunk_array
+				value = 4
+			}
+		}
+	}
+	
+	print_variables = {
+	    file = my_file
+	    text = "These variables are printed at [GetDateText]"
+	    append = yes
+	    print_global = yes
+	}
+}
 
 united_nations_count_council_members = {
 	set_global_flag = {
@@ -1698,12 +1846,12 @@ create_united_nations_effect = {
 				}
 				if = {
 					limit = {
-						country_exists = CHI
-						CHI = {
+						country_exists = TWN
+						TWN = {
 							has_idea = RON_United_Nations
 						}
 					}
-					CHI = {
+					TWN = {
 						remove_ideas = RON_United_Nations
 						clr_country_flag = member_of_united_nations
 					}
@@ -2387,7 +2535,7 @@ create_united_nations_effect = {
 						country_exists = INS
 					}
 					INS = {
-						leave_league_of_nations_effect = yes
+						#leave_league_of_nations_effect = yes
 					}
 				}
 			}
@@ -2421,7 +2569,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_permanent_unsc_seat2
 					add_ideas = RON_United_Nations_Security_Council
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_permanent_unsc_seat
 					save_global_event_target_as = united_nations_permanent_unsc_seat3
 					add_ideas = RON_United_Nations_Security_Council
@@ -2713,7 +2861,7 @@ create_united_nations_effect = {
 					date > 1951.12.31
 					date < 1952.12.31
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -2749,7 +2897,7 @@ create_united_nations_effect = {
 					date > 1952.12.31
 					date < 1953.12.31
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -3042,7 +3190,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat2
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -3078,7 +3226,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat1
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat2
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -4934,7 +5082,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat5
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -4990,7 +5138,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat5
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -5331,7 +5479,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat7
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -5387,7 +5535,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat7
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -5942,7 +6090,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat5
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP
@@ -5998,7 +6146,7 @@ create_united_nations_effect = {
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat5
 					add_ideas = RON_United_Nations_Security_Council_NP
 				}
-				CHI = {
+				TWN = {
 					set_country_flag = united_nations_non_permanent_unsc_seat
 					save_global_event_target_as = united_nations_non_permanent_unsc_seat6
 					add_ideas = RON_United_Nations_Security_Council_NP

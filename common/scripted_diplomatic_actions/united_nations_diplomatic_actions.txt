@@ -476,6 +476,18 @@ scripted_diplomatic_actions = {
 				tooltip = "No United Nations Security Council voting ongoing "
 				NOT = { has_global_flag = UNSC_sanction_voting_ongoing }
 			}
+			FROM = {
+				OR = {
+					NOT = {
+						has_country_flag = received_UN_sanctions
+					}
+					has_country_flag = {
+						flag = received_UN_sanctions
+						days > 30
+					}
+				}
+			}
+
 		}
 		requires_acceptance = no
 		show_acceptance_on_action_button = no
@@ -485,12 +497,17 @@ scripted_diplomatic_actions = {
 			ROOT = {
 				set_variable = { show_unsc_sanctions = 1 }
 			}
+			FROM = {
+				clr_country_flag = received_UN_sanctions
+				set_country_flag = received_UN_sanctions
+			}
 		}
 
 		complete_effect = {
 			FROM = {
 				country_event = unsc.1
 				set_variable = { ROOT.UN_sanctions_target = THIS.id }
+				set_variable = { global.UN_sanctions_target = THIS.id }
 			}
 			ROOT = {
 				set_variable = { show_unsc_sanctions = 1 }
@@ -512,6 +529,20 @@ scripted_diplomatic_actions = {
 
 		ai_desire = {
 			base = 0
+			modifier = {
+				factor = 0
+				FROM = {
+					OR = {
+						NOT = {
+							has_country_flag = received_UN_sanctions
+						}
+						has_country_flag = {
+							flag = received_UN_sanctions
+							days > 30
+						}
+					}
+				}
+			}
 			modifier = {
 				has_war_with = ROOT
 				add = 30

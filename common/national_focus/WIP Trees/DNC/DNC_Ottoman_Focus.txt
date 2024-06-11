@@ -1,1144 +1,1158 @@
-focus = {
-	id = OTT_the_state_of_the_army
-	icon = GFX_goal_generic_army_artillery
-	x = 10
-	y = 0
-	allow_branch = {
-		date > 1899.12.31
-		date < 1910.1.1
-	}
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	completion_reward = {
-		army_experience = 10
-	}
-}
-
-#Reduce Armed forces
-focus = {
-	id = OTT_reduce_armed_forces
-	icon = GFX_focus_hol_war_on_pacifism
-	x = 11
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_the_state_of_the_army }
-	mutually_exclusive = { focus = OTT_increase_fundings_to_the_army }
-	completion_reward = {
-		add_stability = 0.1
-		add_war_support = -0.1
-	}
-}
-
-#Increase Fundings to the Army
-focus = {
-	id = OTT_increase_fundings_to_the_army
-	icon = small_arms
-	x = 9
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_the_state_of_the_army }
-	mutually_exclusive = { focus = OTT_reduce_armed_forces }
-	completion_reward = {
-		add_stability = -0.1
-		add_war_support = 0.1
-		custom_effect_tooltip = OTT_increase_militarist_influence
-		add_to_variable = {
-			var = mili_influence
-			value = 20
+focus_tree = {
+	id = ottoman_focus_1900
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = OTT
 		}
 	}
-}
+	default = no
 
-#A Political Stalemate
-focus = {
-	id = OTT_a_political_stalemate
-	icon = GFX_goal_anschluss
-	x = 4
-	y = 0
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	allow_branch = {
-		date > 1899.12.31
-		date < 1910.1.1
-	}
-	completion_reward = {
-		add_political_power = -25
-		add_stability = -0.05
-	}
-}
-
-#Deal with the Mutinies
-focus = {
-	id = OTT_deal_with_the_mutinies
-	icon = GFX_focus_generic_little_entente
-	x = 10
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_increase_fundings_to_the_army }
-	prerequisite = { focus = OTT_reduce_armed_forces }
-	completion_reward = {
-		custom_effect_tooltip = TO_DO_mutinies_tt
-	}
-}
-
-#The Greek Question
-focus = {
-	id = OTT_the_greek_question
-	icon = GFX_focus_GRE_bedrock_of_balkan_stability
-	x = 7
-	y = 9
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_a_new_military_council }
-	will_lead_to_war_with = {
-		GRE
-	}
-	completion_reward = {
-		create_wargoal = {
-			type = annex_everything
-			target = GRE
+	continuous_focus_position = { x = 200 y = 3000 }
+	focus = {
+		id = OTT_the_state_of_the_army
+		icon = GFX_goal_generic_army_artillery
+		x = 10
+		y = 0
+		allow_branch = {
+			date > 1899.12.31
+			date < 1910.1.1
 		}
-	}
-}
-
-#Keep the Sultan
-focus = {
-	id = OTT_keep_the_sultan
-	icon = GFX_focus_TUR_loosen_the_laws_on_secularism
-	x = 4
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	mutually_exclusive = { focus = OTT_a_political_stalemate }
-	mutually_exclusive = { focus = OTT_the_military_plot }
-	mutually_exclusive = { focus = OTT_the_1876_constitution }
-	completion_reward = {
-		add_country_leader_trait = unpopular_monarch
-	}
-}
-
-#the 1876 Constitution
-focus = {
-	id = OTT_the_1876_constitution
-	icon = GFX_focus_generic_treaty
-	x = 2
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	mutually_exclusive = { focus = OTT_a_political_stalemate }
-	mutually_exclusive = { focus = OTT_keep_the_sultan }
-	mutually_exclusive = { focus = OTT_the_military_plot }
-	completion_reward = {
-		hold_election = ROOT
-	}
-}
-
-#Pursue Ottomanism
-focus = {
-	id = OTT_pursue_ottomanism
-	icon = GFX_focus_TUR_treaty_of_saadabad
-	x = 2
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_the_1876_constitution }
-	completion_reward = {
-		every_owned_state = {
-			add_compliance = 10
-		}
-	}
-}
-
-#Pursue PanIslamism
-focus = {
-	id = OTT_pursue_panislamism
-	icon = GFX_OTT_pursue_panislamism-320
-	x = 4
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_keep_the_sultan }
-	completion_reward = {
-		every_owned_state = {
-			add_compliance = 5
-		}
-	}
-}
-
-#Independent but United
-focus = {
-	id = OTT_independent_but_united
-	icon = GFX_focus_generic_befriend_turkey
-	x = 2
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_pursue_ottomanism }
-	completion_reward = {
-		leave_faction = yes
-		create_faction = OTT_Union_faction
-		release = ARM
-		add_to_faction = ARM
-		release = KUR
-		add_to_faction = KUR
-	}
-}
-
-#Maintain Centralisation
-focus = {
-	id = OTT_maintain_centralisation
-	icon = GFX_focus_eng_move_to_secure_the_dominions
-	x = 5
-	y = 4
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_purge_the_opposition }
-	prerequisite = { focus = OTT_reduce_military_influence }
-	completion_reward = {
-		add_to_variable = {
-			var = mili_influence
-			value = 5
-		}
-		custom_effect_tooltip = OTT_increase_militarist_influence
-		every_owned_state = {
-			add_resistance = -5
-		}
-	}
-}
-
-#The Military Plot
-focus = {
-	id = OTT_the_military_plot
-	icon = GFX_goal_generic_military_deal
-	x = 6
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-
-	prerequisite = { focus = OTT_a_political_stalemate }
-	mutually_exclusive = { focus = OTT_keep_the_sultan }
-	prerequisite = { focus = OTT_the_1876_constitution }
-	completion_reward = {
-		custom_effect_tooltip = OTT_increase_militarist_influence
-		add_to_variable = {
-			var = mili_influence
-			value = 20
+		search_filters = {
+			FOCUS_FILTER_STABILITY
 		}
 		completion_reward = {
+			army_experience = 10
+		}
+	}
+
+	#Reduce Armed forces
+	focus = {
+		id = OTT_reduce_armed_forces
+		icon = GFX_focus_hol_war_on_pacifism
+		x = 11
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_the_state_of_the_army }
+		mutually_exclusive = { focus = OTT_increase_fundings_to_the_army }
+		completion_reward = {
+			add_stability = 0.1
+			add_war_support = -0.1
+		}
+	}
+
+	#Increase Fundings to the Army
+	focus = {
+		id = OTT_increase_fundings_to_the_army
+		icon = small_arms
+		x = 9
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_the_state_of_the_army }
+		mutually_exclusive = { focus = OTT_reduce_armed_forces }
+		completion_reward = {
+			add_stability = -0.1
+			add_war_support = 0.1
+			custom_effect_tooltip = OTT_increase_militarist_influence
+			add_to_variable = {
+				var = mili_influence
+				value = 20
+			}
+		}
+	}
+
+	#A Political Stalemate
+	focus = {
+		id = OTT_a_political_stalemate
+		icon = GFX_goal_anschluss
+		x = 4
+		y = 0
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		allow_branch = {
+			date > 1899.12.31
+			date < 1910.1.1
+		}
+		completion_reward = {
+			add_political_power = -25
 			add_stability = -0.05
 		}
 	}
-}
 
-#Seize Power
-focus = {
-	id = OTT_seize_power
-	icon = GFX_focus_generic_support_the_left_right
-	x = 6
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_STABILITY
+	#Deal with the Mutinies
+	focus = {
+		id = OTT_deal_with_the_mutinies
+		icon = GFX_focus_generic_little_entente
+		x = 10
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_increase_fundings_to_the_army }
+		prerequisite = { focus = OTT_reduce_armed_forces }
+		completion_reward = {
+			custom_effect_tooltip = TO_DO_mutinies_tt
+		}
 	}
-	available = {
-		custom_trigger_tooltip = {
-			tooltip = has_high_mili_influence_tt
-			check_variable = {
+
+	#The Greek Question
+	focus = {
+		id = OTT_the_greek_question
+		icon = GFX_focus_GRE_bedrock_of_balkan_stability
+		x = 7
+		y = 9
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_a_new_military_council }
+		will_lead_to_war_with = {
+			GRE
+		}
+		completion_reward = {
+					create_wargoal = {			
+				expire = 100
+				type = annex_everything
+				target = GRE
+			}
+		}
+	}
+
+	#Keep the Sultan
+	focus = {
+		id = OTT_keep_the_sultan
+		icon = GFX_focus_TUR_loosen_the_laws_on_secularism
+		x = 4
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		mutually_exclusive = { focus = OTT_a_political_stalemate }
+		mutually_exclusive = { focus = OTT_the_military_plot }
+		mutually_exclusive = { focus = OTT_the_1876_constitution }
+		completion_reward = {
+			add_country_leader_trait = unpopular_monarch
+		}
+	}
+
+	#the 1876 Constitution
+	focus = {
+		id = OTT_the_1876_constitution
+		icon = GFX_focus_generic_treaty
+		x = 2
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		mutually_exclusive = { focus = OTT_a_political_stalemate }
+		mutually_exclusive = { focus = OTT_keep_the_sultan }
+		mutually_exclusive = { focus = OTT_the_military_plot }
+		completion_reward = {
+			hold_election = ROOT
+		}
+	}
+
+	#Pursue Ottomanism
+	focus = {
+		id = OTT_pursue_ottomanism
+		icon = GFX_focus_TUR_treaty_of_saadabad
+		x = 2
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_the_1876_constitution }
+		completion_reward = {
+			every_owned_state = {
+				add_compliance = 10
+			}
+		}
+	}
+
+	#Pursue PanIslamism
+	focus = {
+		id = OTT_pursue_panislamism
+		icon = GFX_OTT_pursue_panislamism-320
+		x = 4
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_keep_the_sultan }
+		completion_reward = {
+			every_owned_state = {
+				add_compliance = 5
+			}
+		}
+	}
+
+	#Independent but United
+	focus = {
+		id = OTT_independent_but_united
+		icon = GFX_focus_generic_befriend_turkey
+		x = 2
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_pursue_ottomanism }
+		completion_reward = {
+			leave_faction = yes
+			create_faction = OTT_Union_faction
+			release = ARM
+			add_to_faction = ARM
+			release = KUR
+			add_to_faction = KUR
+		}
+	}
+
+	#Maintain Centralisation
+	focus = {
+		id = OTT_maintain_centralisation
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 5
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_purge_the_opposition }
+		prerequisite = { focus = OTT_reduce_military_influence }
+		completion_reward = {
+			add_to_variable = {
 				var = mili_influence
-				value = 75
-				compare = greater_than_or_equals
+				value = 5
+			}
+			custom_effect_tooltip = OTT_increase_militarist_influence
+			every_owned_state = {
+				add_resistance = -5
 			}
 		}
-
 	}
-	prerequisite = { focus = OTT_the_military_plot }
-	completion_reward = {
-		retire_country_leader = yes
-		create_country_leader = {
-			name = "Ahmed Djemal Pasha"
-			picture = "DNC/Portrait_Turkey_Ahmed_Djemal_Pasha.dds"
-			expire = "2060.1.1"
-			ideology = despotism
+
+	#The Military Plot
+	focus = {
+		id = OTT_the_military_plot
+		icon = GFX_goal_generic_military_deal
+		x = 6
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+
+		prerequisite = { focus = OTT_a_political_stalemate }
+		mutually_exclusive = { focus = OTT_keep_the_sultan }
+		prerequisite = { focus = OTT_the_1876_constitution }
+		completion_reward = {
+			custom_effect_tooltip = OTT_increase_militarist_influence
+			add_to_variable = {
+				var = mili_influence
+				value = 20
+			}
+			completion_reward = {
+				add_stability = -0.05
+			}
 		}
 	}
-}
 
-#The Ottoman Trade Union
-focus = {
-	id = OTT_the_ottoman_trade_union
-	icon = GFX_goal_generic_intelligence_exchange
-	x = 2
-	y = 4
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
+	#Seize Power
+	focus = {
+		id = OTT_seize_power
+		icon = GFX_focus_generic_support_the_left_right
+		x = 6
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = has_high_mili_influence_tt
+				check_variable = {
+					var = mili_influence
+					value = 75
+					compare = greater_than_or_equals
+				}
+			}
+
+		}
+		prerequisite = { focus = OTT_the_military_plot }
+		completion_reward = {
+			retire_country_leader = yes
+			create_country_leader = {
+				name = "Ahmed Djemal Pasha"
+				picture = "DNC/Portrait_Turkey_Ahmed_Djemal_Pasha.dds"
+				expire = "2060.1.1"
+				ideology = despotism
+			}
+		}
 	}
-	prerequisite = { focus = OTT_independent_but_united }
-	completion_reward = {
-		add_idea = OTT_trade_union
-		ARM = {
+
+	#The Ottoman Trade Union
+	focus = {
+		id = OTT_the_ottoman_trade_union
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 2
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		prerequisite = { focus = OTT_independent_but_united }
+		completion_reward = {
 			add_idea = OTT_trade_union
-		}
-		KUR = {
-			add_idea = OTT_trade_union
-		}
-
-	}
-}
-
-#A New Military Council
-focus = {
-	id = OTT_a_new_military_council
-	icon = GFX_goal_generic_army_artillery
-	x = 8
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_push_for_reforms }
-	completion_reward = {
-		custom_effect_tooltip = OTT_reduce_militarist_influence
-		subtract_from_variable = {
-			var = mili_influence
-			value = 20
-		}
-	}
-}
-
-#Approach Bulgaria
-focus = {
-	id = OTT_approach_bulgaria
-	icon = GFX_focus_generic_befriend_bulgaria
-	x = 14
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_open_to_the_world }
-	completion_reward = {
-		BUL = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_friendly_foreign_policy
+			ARM = {
+				add_idea = OTT_trade_union
 			}
-		}
-		add_opinion_modifier = {
-			target = BUL
-			modifier = RI_friendly_foreign_policy
-		}
-	}
-}
+			KUR = {
+				add_idea = OTT_trade_union
+			}
 
-#Open To the World
-focus = {
-	id = OTT_open_to_the_world
-	icon = GFX_OTT_open_to_the_world-290
-	x = 15
-	y = 0
-	allow_branch = {
-		date > 1899.12.31
-		date < 1910.1.1
+		}
 	}
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
-	}
-	completion_reward = {
-		add_political_power = 50
-		add_stability = 0.05
-	}
-}
 
-#Military Maneuvers near Suez
-focus = {
-	id = OTT_military_maneuvers_near_suez
-	icon = GFX_focus_generic_manpower
-	x = 8
-	y = 8
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_a_new_military_council }
-	completion_reward = {
-		army_experience = 10
-		ENG = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_hostile_foreign_policy
+	#A New Military Council
+	focus = {
+		id = OTT_a_new_military_council
+		icon = GFX_goal_generic_army_artillery
+		x = 8
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_push_for_reforms }
+		completion_reward = {
+			custom_effect_tooltip = OTT_reduce_militarist_influence
+			subtract_from_variable = {
+				var = mili_influence
+				value = 20
 			}
 		}
 	}
-}
 
-#Agrarian Socialism
-focus = {
-	id = OTT_agrarian_socialism
-	icon = GFX_focus_TUR_misak_i_milli
-	x = 0
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_the_1876_constitution }
-	completion_reward = {
-		add_idea = OTT_agrarian_socialism
-	}
-}
-
-#Invite Foreign Advisors
-focus = {
-	id = OTT_invite_foreign_advisors
-	icon = GFX_goal_tripartite_pact
-	x = 11
-	y = 4
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_balkan_mutinies }
-	prerequisite = { focus = OTT_anatolian_mutinies }
-	completion_reward = {
-		army_experience = 10
-		add_political_power = 50
-	}
-}
-
-#Guerilla Warfare
-focus = {
-	id = OTT_guerilla_warfare
-	icon = GFX_OTT_guerilla_warfare-280
-	x = 9
-	y = 4
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_balkan_mutinies }
-	prerequisite = { focus = OTT_anatolian_mutinies }
-	completion_reward = {
-		add_idea = OTT_Guerilla_fighters
-	}
-}
-
-#Develop cotton plantations
-focus = {
-	id = OTT_develop_cotton_plantations
-	icon = GFX_OTT_develop_cotton_plantations-382
-	x = 0
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
-	}
-	prerequisite = { focus = OTT_agrarian_socialism }
-	completion_reward = {
-		swap_ideas = {
-			remove_idea = OTT_agrarian_socialism
-			add_idea = OTT_agrarian_socialism_2
+	#Approach Bulgaria
+	focus = {
+		id = OTT_approach_bulgaria
+		icon = GFX_focus_generic_befriend_bulgaria
+		x = 14
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
-	}
-}
-
-#Approach Russia
-focus = {
-	id = OTT_approach_russia
-	icon = GFX_OTT_approach_russia-445
-	x = 15
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_open_to_the_world }
-	completion_reward = {
-		RUE = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_friendly_foreign_policy
-			}
-		}
-		add_opinion_modifier = {
-			target = RUE
-			modifier = RI_friendly_foreign_policy
-		}
-	}
-}
-
-#Approach Persia
-focus = {
-	id = OTT_approach_persia
-	icon = GFX_OTT_approach_persia-445
-	x = 16
-	y = 1
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_open_to_the_world }
-	completion_reward = {
-		PER = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_friendly_foreign_policy
-			}
-		}
-		add_opinion_modifier = {
-			target = PER
-			modifier = RI_friendly_foreign_policy
-		}
-	}
-}
-
-#French Advisors
-focus = {
-	id = OTT_french_advisors
-	icon = GFX_align_to_france
-	x = 11
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_invite_foreign_advisors }
-	completion_reward = {
-		add_idea = OTT_FRA_advisors
-	}
-}
-
-#German Advisors
-focus = {
-	id = OTT_german_advisors
-	icon = GFX_focus_ger_return_of_the_kaiser
-	x = 12
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_invite_foreign_advisors }
-	completion_reward = {
-		add_idea = OTT_GER_advisors
-	}
-}
-
-#The Bosphorus Pact
-focus = {
-	id = OTT_the_bosphorus_pact
-	icon = GFX_goal_tripartite_pact
-	x = 15
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_approach_russia }
-	completion_reward = {
-		diplomatic_relation = {
-			country = RUE
-			relation = non_aggression_pact
-			active = yes
-		}
-	}
-}
-
-#Joint Research
-focus = {
-	id = OTT_joint_research
-	icon = GFX_OTT_joint_research-440
-	x = 14
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_RESEARCH
-	}
-	prerequisite = { focus = OTT_approach_bulgaria }
-	completion_reward = {
-		BUL = {
-			add_to_tech_sharing_group = OTT_BUL_research_group
-		}
-	}
-}
-
-#Trade Deals
-focus = {
-	id = OTT_trade_deals
-	icon = GFX_goal_generic_neutrality_focus
-	x = 16
-	y = 2
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
-	}
-	prerequisite = { focus = OTT_approach_persia }
-	completion_reward = {
-		PER = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_took_investment
-			}
-		}
-	}
-}
-
-#Reduce Military Influence
-focus = {
-	id = OTT_reduce_military_influence
-	icon = GFX_goal_generic_military_sphere
-	x = 4
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_pursue_panislamism }
-	completion_reward = {
-		custom_effect_tooltip = OTT_reduce_militarist_influence
-		subtract_from_variable = {
-			var = mili_influence
-			value = 20
-		}
-	}
-}
-
-#Buy Brittish Ships
-focus = {
-	id = OTT_buy_brittish_ships
-	icon = GFX_focus_generic_navy_battleship2
-	x = 10
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_weapon_modernization }
-	mutually_exclusive = { focus = OTT_buy_german_artillery }
-	mutually_exclusive = { focus = OTT_buy_french_planes }
-	completion_reward = {
-		add_equipment_production = {
-			equipment = {
-				type = ww1_destroyer0
-			}
-			requested_factories = 5
-			progress = 0.99
-			amount = 3
-
-		}
-	}
-}
-
-#Ties With European Democracies
-focus = {
-	id = OTT_ties_with_european_democracies
-	icon = GFX_focus_generic_self_management
-	x = 1
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_the_grain_silo_of_europe  focus = OTT_the_ottoman_trade_union }
-	completion_reward = {
-		FRA = {
-			add_opinion_modifier = {
-				target = OTT
-				modifier = RI_friendly_foreign_policy
-			}
-		}
-	}
-}
-
-#Balkan Mutinies
-focus = {
-	id = OTT_balkan_mutinies
-	icon = GFX_focus_eng_move_to_secure_the_dominions
-	x = 11
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_deal_with_the_mutinies }
-	completion_reward = {
-		custom_effect_tooltip = TO_DO_mutinies_tt
-	}
-}
-
-#Anatolian Mutinies
-focus = {
-	id = OTT_anatolian_mutinies
-	icon = GFX_focus_eng_move_to_secure_the_dominions
-	x = 9
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_deal_with_the_mutinies }
-	completion_reward = {
-		custom_effect_tooltip = TO_DO_mutinies_tt
-	}
-}
-
-#The Grain Silo of Europe
-focus = {
-	id = OTT_the_grain_silo_of_europe
-	icon = GFX_focus_hol_abandon_the_gold_standard
-	x = 0
-	y = 4
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_develop_cotton_plantations }
-	completion_reward =
-	{
-		add_offsite_building = { type = industrial_complex level = 2 }
-	}
-}
-
-#Economic Reforms
-focus = {
-	id = OTT_economic_reforms
-	icon = GFX_focus_hol_abandon_the_gold_standard
-	x = 15
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	completion_reward = {
-		add_timed_idea = {
-			idea = OTT_economic_reforms_idea
-			days = 350
-		}
-	}
-}
-
-#Purge the Opposition
-focus = {
-	id = OTT_purge_the_opposition
-	icon = GFX_OTT_purge_the_opposition-280
-	x = 6
-	y = 3
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_seize_power }
-	completion_reward = {
-		add_idea = OTT_Purge_opposition
-	}
-}
-
-#Push for Reforms
-focus = {
-	id = OTT_push_for_reforms
-	icon = GFX_OTT_push_for_reforms-149
-	x = 8
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_WAR_SUPPORT
-	}
-	prerequisite = { focus = OTT_french_advisors  focus = OTT_german_advisors  focus = OTT_brittish_advisors  focus = OTT_guerilla_warfare }
-	completion_reward = {
-		add_political_power = 150
-	}
-
-}
-
-#Brittish Advisors
-focus = {
-	id = OTT_brittish_advisors
-	icon = GFX_OTT_brittish_advisors-44
-	x = 10
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_invite_foreign_advisors }
-	completion_reward = {
-		add_idea = OTT_ENG_advisors
-	}
-}
-
-#Weapon Modernization
-focus = {
-	id = OTT_weapon_modernization
-	icon = GFX_OTT_weapon_modernization-445
-	x = 11
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_french_advisors }
-	prerequisite = { focus = OTT_german_advisors }
-	prerequisite = { focus = OTT_brittish_advisors }
-	completion_reward = {
-		add_tech_bonus = {
-			bonus = 1
-			uses = 1
-			category = infantry_weapons
-		}
-	}
-}
-
-#Buy French Planes
-focus = {
-	id = OTT_buy_french_planes
-	icon = GFX_goal_poland_goal
-	x = 11
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_weapon_modernization }
-	prerequisite = { focus = OTT_buy_german_artillery }
-	prerequisite = { focus = OTT_buy_brittish_ships }
-	completion_reward = {
-		add_equipment_to_stockpile = {
-			type = early_fighter_equipment_0
-			amount = 25
-		}
-	}
-}
-
-#Buy German Artillery
-focus = {
-	id = OTT_buy_german_artillery
-	icon = GFX_goal_generic_army_artillery2
-	x = 12
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_MANPOWER
-	}
-	prerequisite = { focus = OTT_weapon_modernization }
-	prerequisite = { focus = OTT_buy_french_planes }
-	prerequisite = { focus = OTT_buy_brittish_ships }
-	completion_reward = {
-		add_equipment_to_stockpile = {
-			type = heavy_field_gun_equipment_2
-			amount = 50
-		}
-	}
-}
-
-#Turkish Petroleum Company
-focus = {
-	id = OTT_turkish_petroleum_company
-	icon = GFX_goal_generic_oil_refinery
-	x = 14
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
-	}
-	prerequisite = { focus = OTT_economic_reforms }
-	completion_reward = {
-		add_idea = OTT_oil_company
-	}
-}
-
-#The Berlin-Bagdad Railway
-focus = {
-	id = OTT_the_berlinbagdad_railway
-	icon = GFX_goal_generic_construct_infrastructure
-	x = 16
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_INDUSTRY
-	}
-	prerequisite = { focus = OTT_economic_reforms }
-	completion_reward = {
-		random_owned_state = {
-			add_building_construction = {
-				type = infrastructure
-				level = 2
-				instant_build = yes
-			}
-		}
-	}
-}
-
-#Persian Incursion
-focus = {
-	id = OTT_persian_incursion
-	icon = GFX_OTT_persian_incursion-412
-	x = 9
-	y = 9
-	search_filters = {
-		FOCUS_FILTER_ANNEXATION
-	}
-	prerequisite = { focus = OTT_a_new_military_council }
-	will_lead_to_war_with = {
-		PER
-	}
-	completion_reward = {
-		create_wargoal = {
-			type = annex_everything
-			target = PER
-		}
-	}
-}
-
-#The Authority Decline
-focus = {
-	id = OTT_the_authority_decline
-	icon = GFX_focus_rom_abdicate
-	x = 5
-	y = 5
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_maintain_centralisation }
-	completion_reward = {
-		add_political_power = -10
-		add_stability = -0.07
-	}
-}
-
-#Send Troops in Macedonia
-focus = {
-	id = OTT_send_troops_in_macedonia
-	icon = GFX_focus_generic_little_entente
-	x = 5
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_the_young_turks_movement  focus = OTT_the_impending_revolution }
-	completion_reward = {
-		if = {
-			limit = {
-				AND = {
-					hidden_trigger = {
-						is_ai = no
-					}
-					check_variable = {
-						var = num_armies_in_state@106
-						value = 1
-						compare = greater_than_or_equals
-					}
+		prerequisite = { focus = OTT_open_to_the_world }
+		completion_reward = {
+			BUL = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_friendly_foreign_policy
 				}
 			}
-			custom_effect_tooltip = OTT_Macedonia_rebellion_tt
-			random_list = {
-				80 = {
-					custom_effect_tooltip = OTT_Macedonia_rebellion_fail_tt
-					delete_unit = {
-						state = 106
-						disband = no
-					}
-				}
-				20 = {
-					custom_effect_tooltip = OTT_Macedonia_rebellion_success_tt
+			add_opinion_modifier = {
+				target = BUL
+				modifier = RI_friendly_foreign_policy
+			}
+		}
+	}
 
+	#Open To the World
+	focus = {
+		id = OTT_open_to_the_world
+		icon = GFX_OTT_open_to_the_world-290
+		x = 15
+		y = 0
+		allow_branch = {
+			date > 1899.12.31
+			date < 1910.1.1
+		}
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_stability = 0.05
+		}
+	}
+
+	#Military Maneuvers near Suez
+	focus = {
+		id = OTT_military_maneuvers_near_suez
+		icon = GFX_focus_generic_manpower
+		x = 8
+		y = 8
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_a_new_military_council }
+		completion_reward = {
+			army_experience = 10
+			ENG = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_hostile_foreign_policy
 				}
+			}
+		}
+	}
+
+	#Agrarian Socialism
+	focus = {
+		id = OTT_agrarian_socialism
+		icon = GFX_focus_TUR_misak_i_milli
+		x = 0
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_the_1876_constitution }
+		completion_reward = {
+			add_idea = OTT_agrarian_socialism
+		}
+	}
+
+	#Invite Foreign Advisors
+	focus = {
+		id = OTT_invite_foreign_advisors
+		icon = GFX_goal_tripartite_pact
+		x = 11
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_balkan_mutinies }
+		prerequisite = { focus = OTT_anatolian_mutinies }
+		completion_reward = {
+			army_experience = 10
+			add_political_power = 50
+		}
+	}
+
+	#Guerilla Warfare
+	focus = {
+		id = OTT_guerilla_warfare
+		icon = GFX_OTT_guerilla_warfare-280
+		x = 9
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_balkan_mutinies }
+		prerequisite = { focus = OTT_anatolian_mutinies }
+		completion_reward = {
+			add_idea = OTT_Guerilla_fighters
+		}
+	}
+
+	#Develop cotton plantations
+	focus = {
+		id = OTT_develop_cotton_plantations
+		icon = GFX_OTT_develop_cotton_plantations-382
+		x = 0
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		prerequisite = { focus = OTT_agrarian_socialism }
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = OTT_agrarian_socialism
+				add_idea = OTT_agrarian_socialism_2
+			}
+		}
+	}
+
+	#Approach Russia
+	focus = {
+		id = OTT_approach_russia
+		icon = GFX_OTT_approach_russia-445
+		x = 15
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_open_to_the_world }
+		completion_reward = {
+			RUS = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+			add_opinion_modifier = {
+				target = RUS
+				modifier = RI_friendly_foreign_policy
+			}
+		}
+	}
+
+	#Approach Persia
+	focus = {
+		id = OTT_approach_persia
+		icon = GFX_OTT_approach_persia-445
+		x = 16
+		y = 1
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_open_to_the_world }
+		completion_reward = {
+			PER = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_friendly_foreign_policy
+				}
+			}
+			add_opinion_modifier = {
+				target = PER
+				modifier = RI_friendly_foreign_policy
+			}
+		}
+	}
+
+	#French Advisors
+	focus = {
+		id = OTT_french_advisors
+		icon = GFX_align_to_france
+		x = 11
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_invite_foreign_advisors }
+		completion_reward = {
+			add_idea = OTT_FRA_advisors
+		}
+	}
+
+	#German Advisors
+	focus = {
+		id = OTT_german_advisors
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 12
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_invite_foreign_advisors }
+		completion_reward = {
+			add_idea = OTT_GER_advisors
+		}
+	}
+
+	#The Bosphorus Pact
+	focus = {
+		id = OTT_the_bosphorus_pact
+		icon = GFX_goal_tripartite_pact
+		x = 15
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_approach_russia }
+		completion_reward = {
+			diplomatic_relation = {
+				country = RUS
+				relation = non_aggression_pact
+				active = yes
+			}
+		}
+	}
+
+	#Joint Research
+	focus = {
+		id = OTT_joint_research
+		icon = GFX_OTT_joint_research-440
+		x = 14
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_RESEARCH
+		}
+		prerequisite = { focus = OTT_approach_bulgaria }
+		completion_reward = {
+			BUL = {
+				add_to_tech_sharing_group = OTT_BUL_research_group
+			}
+		}
+	}
+
+	#Trade Deals
+	focus = {
+		id = OTT_trade_deals
+		icon = GFX_goal_generic_neutrality_focus
+		x = 16
+		y = 2
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		prerequisite = { focus = OTT_approach_persia }
+		completion_reward = {
+			PER = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_took_investment
+				}
+			}
+		}
+	}
+
+	#Reduce Military Influence
+	focus = {
+		id = OTT_reduce_military_influence
+		icon = GFX_goal_generic_military_sphere
+		x = 4
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_pursue_panislamism }
+		completion_reward = {
+			custom_effect_tooltip = OTT_reduce_militarist_influence
+			subtract_from_variable = {
+				var = mili_influence
+				value = 20
+			}
+		}
+	}
+
+	#Buy Brittish Ships
+	focus = {
+		id = OTT_buy_brittish_ships
+		icon = GFX_focus_generic_navy_battleship2
+		x = 10
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_weapon_modernization }
+		mutually_exclusive = { focus = OTT_buy_german_artillery }
+		mutually_exclusive = { focus = OTT_buy_french_planes }
+		completion_reward = {
+			add_equipment_production = {
+				equipment = {
+					type = ww1_destroyer0
+				}
+				requested_factories = 5
+				progress = 0.99
+				amount = 3
 
 			}
 		}
 	}
-}
 
-#The Impending Revolution
-focus = {
-	id = OTT_the_impending_revolution
-	icon = GFX_focus_generic_provoke_border_clashes
-	x = 4
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_the_authority_decline }
-	completion_reward = {
-		activate_mission = OTT_impending_revolution
-	}
-}
-
-#Istambul Colonial Conference
-#focus = {
-#	id = OTT_istambul_colonial_conference
-#	icon = GFX_focus_generic_treaty
-#	x = 2
-#	y = 6
-#	search_filters = {
-#		FOCUS_FILTER_POLITICAL
-#	}
-#	prerequisite = { focus = OTT_ties_with_european_democracies  }
-#}
-
-#The Young Turks Movement
-focus = {
-	id = OTT_the_young_turks_movement
-	icon = GFX_focus_generic_military_academy
-	x = 6
-	y = 6
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_the_authority_decline }
-	completion_reward = {
-		hidden_effect = {
-			news_event = rondncnews.65
+	#Ties With European Democracies
+	focus = {
+		id = OTT_ties_with_european_democracies
+		icon = GFX_focus_generic_self_management
+		x = 1
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
 		}
-		country_event = ww1_turkey.35
-	}
-}
-
-#Proclaim the New Constitution
-focus = {
-	id = OTT_proclaim_the_new_constitution
-	icon = GFX_focus_generic_treaty
-	x = 5
-	y = 8
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_send_troops_in_macedonia }
-	completion_reward = {
-		country_event = ww1_turkey.37
-	}
-}
-
-#Accomodate the Sultan
-focus = {
-	id = OTT_accomodate_the_sultan
-	icon = GFX_OTT_accomodate_the_sultan-59
-	x = 4
-	y = 10
-	search_filters = {
-		FOCUS_FILTER_STABILITY
-	}
-	prerequisite = { focus = OTT_prepare_a_counter_revolution }
-	mutually_exclusive = { focus = OTT_a_new_sultan }
-	completion_reward = {
-		swap_ruler_traits = { remove = unpopular_monarch add = autocratic_imperialist }
-
-	}
-}
-
-#Prepare A Counter Revolution
-focus = {
-	id = OTT_prepare_a_counter_revolution
-	icon = GFX_focus_generic_support_the_left_right
-	x = 5
-	y = 9
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_proclaim_the_new_constitution }
-	completion_reward = {
-		add_political_power = -50
-		add_stability = -0.05
-
-		hidden_effect = {
-			country_event = { id = ww1_turkey.30 days = 30 }
+		prerequisite = { focus = OTT_the_grain_silo_of_europe  focus = OTT_the_ottoman_trade_union }
+		completion_reward = {
+			FRA = {
+				add_opinion_modifier = {
+					target = OTT
+					modifier = RI_friendly_foreign_policy
+				}
+			}
 		}
 	}
-}
 
-#A New Sultan
-focus = {
-	id = OTT_a_new_sultan
-	icon = GFX_OTT_a_new_sultan-211
-	x = 6
-	y = 10
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
+	#Balkan Mutinies
+	focus = {
+		id = OTT_balkan_mutinies
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 11
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_deal_with_the_mutinies }
+		completion_reward = {
+			custom_effect_tooltip = TO_DO_mutinies_tt
+		}
 	}
-	prerequisite = { focus = OTT_prepare_a_counter_revolution }
-	mutually_exclusive = { focus = OTT_accomodate_the_sultan }
-	completion_reward = {
-		retire_country_leader = yes
-		create_country_leader = {
-			name = "Mehmed V"
-			picture = "WWI/Portrait_Turkey_Mehmed_V.dds"
-			expire = "2060.1.1"
-			ideology = despotism
+
+	#Anatolian Mutinies
+	focus = {
+		id = OTT_anatolian_mutinies
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 9
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_deal_with_the_mutinies }
+		completion_reward = {
+			custom_effect_tooltip = TO_DO_mutinies_tt
+		}
+	}
+
+	#The Grain Silo of Europe
+	focus = {
+		id = OTT_the_grain_silo_of_europe
+		icon = GFX_focus_hol_abandon_the_gold_standard
+		x = 0
+		y = 4
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_develop_cotton_plantations }
+		completion_reward =
+		{
+			add_offsite_building = { type = industrial_complex level = 2 }
+		}
+	}
+
+	#Economic Reforms
+	focus = {
+		id = OTT_economic_reforms
+		icon = GFX_focus_hol_abandon_the_gold_standard
+		x = 15
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = OTT_economic_reforms_idea
+				days = 350
+			}
+		}
+	}
+
+	#Purge the Opposition
+	focus = {
+		id = OTT_purge_the_opposition
+		icon = GFX_OTT_purge_the_opposition-280
+		x = 6
+		y = 3
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_seize_power }
+		completion_reward = {
+			add_idea = OTT_Purge_opposition
+		}
+	}
+
+	#Push for Reforms
+	focus = {
+		id = OTT_push_for_reforms
+		icon = GFX_OTT_push_for_reforms-149
+		x = 8
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_WAR_SUPPORT
+		}
+		prerequisite = { focus = OTT_french_advisors  focus = OTT_german_advisors  focus = OTT_brittish_advisors  focus = OTT_guerilla_warfare }
+		completion_reward = {
+			add_political_power = 150
+		}
+
+	}
+
+	#Brittish Advisors
+	focus = {
+		id = OTT_brittish_advisors
+		icon = GFX_OTT_brittish_advisors-44
+		x = 10
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_invite_foreign_advisors }
+		completion_reward = {
+			add_idea = OTT_ENG_advisors
+		}
+	}
+
+	#Weapon Modernization
+	focus = {
+		id = OTT_weapon_modernization
+		icon = GFX_OTT_weapon_modernization-445
+		x = 11
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_french_advisors }
+		prerequisite = { focus = OTT_german_advisors }
+		prerequisite = { focus = OTT_brittish_advisors }
+		completion_reward = {
+			add_tech_bonus = {
+				bonus = 1
+				uses = 1
+				category = infantry_weapons
+			}
+		}
+	}
+
+	#Buy French Planes
+	focus = {
+		id = OTT_buy_french_planes
+		icon = GFX_goal_poland_goal
+		x = 11
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_weapon_modernization }
+		prerequisite = { focus = OTT_buy_german_artillery }
+		prerequisite = { focus = OTT_buy_brittish_ships }
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = early_fighter_equipment_0
+				amount = 25
+			}
+		}
+	}
+
+	#Buy German Artillery
+	focus = {
+		id = OTT_buy_german_artillery
+		icon = GFX_goal_generic_army_artillery2
+		x = 12
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+		prerequisite = { focus = OTT_weapon_modernization }
+		prerequisite = { focus = OTT_buy_french_planes }
+		prerequisite = { focus = OTT_buy_brittish_ships }
+		completion_reward = {
+			add_equipment_to_stockpile = {
+				type = heavy_field_gun_equipment_2
+				amount = 50
+			}
+		}
+	}
+
+	#Turkish Petroleum Company
+	focus = {
+		id = OTT_turkish_petroleum_company
+		icon = GFX_goal_generic_oil_refinery
+		x = 14
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		prerequisite = { focus = OTT_economic_reforms }
+		completion_reward = {
+			add_idea = OTT_oil_company
+		}
+	}
+
+	#The Berlin-Bagdad Railway
+	focus = {
+		id = OTT_the_berlinbagdad_railway
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 16
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_INDUSTRY
+		}
+		prerequisite = { focus = OTT_economic_reforms }
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = infrastructure
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	#Persian Incursion
+	focus = {
+		id = OTT_persian_incursion
+		icon = GFX_OTT_persian_incursion-412
+		x = 9
+		y = 9
+		search_filters = {
+			FOCUS_FILTER_ANNEXATION
+		}
+		prerequisite = { focus = OTT_a_new_military_council }
+		will_lead_to_war_with = {
+			PER
+		}
+		completion_reward = {
+					create_wargoal = {			
+				expire = 100
+				type = annex_everything
+				target = PER
+			}
+		}
+	}
+
+	#The Authority Decline
+	focus = {
+		id = OTT_the_authority_decline
+		icon = GFX_focus_rom_abdicate
+		x = 5
+		y = 5
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_maintain_centralisation }
+		completion_reward = {
+			add_political_power = -10
+			add_stability = -0.07
+		}
+	}
+
+	#Send Troops in Macedonia
+	focus = {
+		id = OTT_send_troops_in_macedonia
+		icon = GFX_focus_generic_little_entente
+		x = 5
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_the_young_turks_movement  focus = OTT_the_impending_revolution }
+		completion_reward = {
+			if = {
+				limit = {
+					AND = {
+						hidden_trigger = {
+							is_ai = no
+						}
+						check_variable = {
+							var = num_armies_in_state@106
+							value = 1
+							compare = greater_than_or_equals
+						}
+					}
+				}
+				custom_effect_tooltip = OTT_Macedonia_rebellion_tt
+				random_list = {
+					80 = {
+						custom_effect_tooltip = OTT_Macedonia_rebellion_fail_tt
+						delete_unit = {
+							state = 106
+							disband = no
+						}
+					}
+					20 = {
+						custom_effect_tooltip = OTT_Macedonia_rebellion_success_tt
+
+					}
+
+				}
+			}
+		}
+	}
+
+	#The Impending Revolution
+	focus = {
+		id = OTT_the_impending_revolution
+		icon = GFX_focus_generic_provoke_border_clashes
+		x = 4
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_the_authority_decline }
+		completion_reward = {
+			activate_mission = OTT_impending_revolution
+		}
+	}
+
+	#Istambul Colonial Conference
+	#focus = {
+	#	id = OTT_istambul_colonial_conference
+	#	icon = GFX_focus_generic_treaty
+	#	x = 2
+	#	y = 6
+	#	search_filters = {
+	#		FOCUS_FILTER_POLITICAL
+	#	}
+	#	prerequisite = { focus = OTT_ties_with_european_democracies  }
+	#}
+
+	#The Young Turks Movement
+	focus = {
+		id = OTT_the_young_turks_movement
+		icon = GFX_focus_generic_military_academy
+		x = 6
+		y = 6
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_the_authority_decline }
+		completion_reward = {
+			hidden_effect = {
+				news_event = rondncnews.65
+			}
+			country_event = ww1_turkey.35
+		}
+	}
+
+	#Proclaim the New Constitution
+	focus = {
+		id = OTT_proclaim_the_new_constitution
+		icon = GFX_focus_generic_treaty
+		x = 5
+		y = 8
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_send_troops_in_macedonia }
+		completion_reward = {
+			country_event = ww1_turkey.37
+		}
+	}
+
+	#Accomodate the Sultan
+	focus = {
+		id = OTT_accomodate_the_sultan
+		icon = GFX_OTT_accomodate_the_sultan-59
+		x = 4
+		y = 10
+		search_filters = {
+			FOCUS_FILTER_STABILITY
+		}
+		prerequisite = { focus = OTT_prepare_a_counter_revolution }
+		mutually_exclusive = { focus = OTT_a_new_sultan }
+		completion_reward = {
+			swap_ruler_traits = { remove = unpopular_monarch add = autocratic_imperialist }
+
+		}
+	}
+
+	#Prepare A Counter Revolution
+	focus = {
+		id = OTT_prepare_a_counter_revolution
+		icon = GFX_focus_generic_support_the_left_right
+		x = 5
+		y = 9
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_proclaim_the_new_constitution }
+		completion_reward = {
+			add_political_power = -50
+			add_stability = -0.05
+
+			hidden_effect = {
+				country_event = { id = ww1_turkey.30 days = 30 }
+			}
+		}
+	}
+
+	#A New Sultan
+	focus = {
+		id = OTT_a_new_sultan
+		icon = GFX_OTT_a_new_sultan-211
+		x = 6
+		y = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_prepare_a_counter_revolution }
+		mutually_exclusive = { focus = OTT_accomodate_the_sultan }
+		completion_reward = {
+			retire_country_leader = yes
+			create_country_leader = {
+				name = "Mehmed V"
+				picture = "WWI/Portrait_Turkey_Mehmed_V.dds"
+				expire = "2060.1.1"
+				ideology = despotism
+			}
+		}
+	}
+
+	#Traditionalist Movements
+	focus = {
+		id = OTT_traditionalist_movements
+		icon = GFX_goal_continuous_increase_nu
+		x = 4
+		y = 11
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_accomodate_the_sultan }
+		completion_reward = {
+			add_timed_idea = {
+				idea = OTT_Traditionalism
+				days = 120
+			}
+		}
+	}
+
+	#Occidentalist Movements
+	focus = {
+		id = OTT_occidentalist_movements
+		icon = GFX_focus_generic_self_management
+		x = 6
+		y = 11
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_a_new_sultan }
+		completion_reward = {
+			add_timed_idea = {
+				idea = OTT_Occidentalism
+				days = 120
+			}
+		}
+	}
+
+	#Parliamentary Elections
+	focus = {
+		id = OTT_parliamentary_elections
+		icon = GFX_focus_generic_military_academy
+		x = 1
+		y = 7
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_ties_with_european_democracies }
+		completion_reward = {
+			add_political_power = 100
+		}
+	}
+
+	#Nationalism Resurgence
+	focus = {
+		id = OTT_nationalism_resurgence
+		icon = GFX_OTT_nationalism_resurgence-303
+		x = 0
+		y = 8
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_parliamentary_elections }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.1
+			}
+		}
+	}
+
+	#Socialist Roots
+	focus = {
+		id = OTT_socialist_roots
+		icon = GFX_focus_por_workers_of_iberia
+		x = 2
+		y = 8
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		prerequisite = { focus = OTT_parliamentary_elections }
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.1
+			}
 		}
 	}
 }
-
-#Traditionalist Movements
-focus = {
-	id = OTT_traditionalist_movements
-	icon = GFX_goal_continuous_increase_nu
-	x = 4
-	y = 11
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_accomodate_the_sultan }
-	completion_reward = {
-		add_timed_idea = {
-			idea = OTT_Traditionalism
-			days = 120
-		}
-	}
-}
-
-#Occidentalist Movements
-focus = {
-	id = OTT_occidentalist_movements
-	icon = GFX_focus_generic_self_management
-	x = 6
-	y = 11
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_a_new_sultan }
-	completion_reward = {
-		add_timed_idea = {
-			idea = OTT_Occidentalism
-			days = 120
-		}
-	}
-}
-
-#Parliamentary Elections
-focus = {
-	id = OTT_parliamentary_elections
-	icon = GFX_focus_generic_military_academy
-	x = 1
-	y = 7
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_ties_with_european_democracies }
-	completion_reward = {
-		add_political_power = 100
-	}
-}
-
-#Nationalism Resurgence
-focus = {
-	id = OTT_nationalism_resurgence
-	icon = GFX_OTT_nationalism_resurgence-303
-	x = 0
-	y = 8
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_parliamentary_elections }
-	completion_reward = {
-		add_popularity = {
-			ideology = fascism
-			popularity = 0.1
-		}
-	}
-}
-
-#Socialist Roots
-focus = {
-	id = OTT_socialist_roots
-	icon = GFX_focus_por_workers_of_iberia
-	x = 2
-	y = 8
-	search_filters = {
-		FOCUS_FILTER_POLITICAL
-	}
-	prerequisite = { focus = OTT_parliamentary_elections }
-	completion_reward = {
-		add_popularity = {
-			ideology = communism
-			popularity = 0.1
-		}
-	}
-}
-
 ###1910 Focuses
 
 
@@ -2296,7 +2310,7 @@ focus = {
 		FRA = { country_event = { id = ww1_turkey.73 hours = 6 } }
 		ENG = { country_event = { id = ww1_turkey.73 hours = 6 } }
 		GER = { country_event = { id = ww1_turkey.73 hours = 6 } }
-		RUE = { country_event = { id = ww1_turkey.73 hours = 6 } }
+		RUS = { country_event = { id = ww1_turkey.73 hours = 6 } }
 		country_event = ww1_turkey.74
 
 	}

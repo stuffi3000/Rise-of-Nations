@@ -312,10 +312,8 @@ SPR_Puppet_decisions = {
 		
 		allowed = {
 			OR = {
-				tag = RUE
-				tag = WHR
-				tag = SOV
 				tag = RUS
+				tag = SOV
 			}
 		}
 
@@ -574,7 +572,7 @@ SPR_Puppet_decisions = {
 				}
 				OR = {
 					FRL = { is_subject_of = ROOT }
-					all_state = { if = { limit = { is_core_of = FRL } is_controlled_by = ROOT } }
+					all_state = { is_core_of = FRL  is_controlled_by = ROOT } 
 				}
 			}	
 		}
@@ -610,8 +608,6 @@ SPR_Puppet_decisions = {
 				tag = ELD
 				tag = FRA
 				tag = VIF
-				tag = RUE
-				tag = WHR
 				tag = SOV
 				tag = RUS
 			}
@@ -619,18 +615,17 @@ SPR_Puppet_decisions = {
 
 		available = {
 			OR = {
-				all_state = { if = { limit = { is_core_of = USA } is_controlled_by = ROOT } }
+				all_state = { is_core_of = USA  is_controlled_by = ROOT } 
 				AND = {
 					USA = { is_subject_of = ROOT }
-					all_state = { if = { limit = { is_core_of = USA } is_controlled_by = USA } }
+					all_state = { is_core_of = USA is_controlled_by = USA }
 				}
 			}
 			NOT = { has_war_with = SPR }
 			NOT = { has_war_with = ENG }
 			NOT = { has_war_with = FRA }
-			NOT = { has_war_with = RUE }
-			NOT = { has_war_with = SOV }
 			NOT = { has_war_with = RUS }
+			NOT = { has_war_with = SOV }
 		}
 		
 		visible = {
@@ -640,12 +635,10 @@ SPR_Puppet_decisions = {
 				tag = ELD
 				tag = FRA
 				tag = VIF
-				tag = RUE
-				tag = WHR
 				tag = SOV
 				tag = RUS
 				SPR = { is_subject_of = ROOT }
-				all_state = { if = { limit = { is_core_of = SPR } is_owned_by = ROOT } }
+				all_state = { is_core_of = SPR  is_owned_by = ROOT }
 				has_country_flag = ERA_formed_iberian_union
 			}
 		}
@@ -734,7 +727,7 @@ SPR_Puppet_decisions = {
 			OR = {
 				tag = SPR
 				SPR = { is_subject_of = ROOT }
-				all_state = { if = { limit = { is_core_of = SPR } is_owned_by = ROOT } }
+				all_state = {  is_core_of = SPR  is_owned_by = ROOT }
 				has_country_flag = ERA_formed_iberian_union
 			}
 		}
@@ -1008,7 +1001,102 @@ SPR_Puppet_decisions = {
 			country_event = { id = DNC_Spain.17 }
 		}	
 	}
+	GER_fate_of_AUS = {
+		icon = ger_reichskommissariats
+		
+		allowed = {
+			tag = GER
+		}
+
+		available = {
+			OR = {
+			AUH = { is_puppet_of = GER}
+			all_state = { if = { limit = { is_core_of = AUH } is_controlled_by = GER } }
+			}
+ 		}
+		
+		visible = {
+			OR = {
+				NOT = { country_exists = KSI }
+				NOT = { country_exists = NAP }
+				NOT = { country_exists = KLV }
+				NOT = { country_exists = PST }
+				NOT = { country_exists = KSA }
+				NOT = { country_exists = GDT }
+			}
+			OR = {
+				tag = GER
+				SPR = { is_subject_of = ROOT }
+				all_state = { if = { limit = { is_core_of = AUH } is_owned_by = ROOT } }
+			}
+		}
+
+		cost = 0
+		
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { has_government = neutrality }
+			}
+		}
+		
+		complete_effect = {
+			release_on_controlled = YUG
+			release_on_controlled = SLO
+			release_on_controlled = ROM
+			release_on_controlled = UKR
+			release_on_controlled = HUN
+			release_on_controlled = AUS
+			hidden_effect = {
+				GER = {
+					puppet = HUN
+					puppet = YUG
+				}
+				AUH = {
+					annex_country = {
+    					target = AUS
+    					transfer_troops = yes
+					}
+					annex_country = {
+    					target = HUN
+    					transfer_troops = yes
+					}
+				}
+				puppet = AUH
+				RUS = { 
+					declare_war_on = {
+    					target = UKR
+    					type = annex_everything
+					} 	
+				}
+
+				SLO = { create_faction = "Danubian Alliance" }
+				SLO = { add_to_faction = ROM }
+				SLO = { add_to_faction = BUL }
+				SLO = { add_to_faction = SER }
+				add_threat = 30
+				SLO = {
+					create_country_leader = {
+						name = "Karl I"
+						picture = "gfx/leaders/AUH/WW1/Archduke_Karl_I.dds"
 	
+						ideology = constitutional_monarchism
+					}
+					create_country_leader = {
+						name = "Karl I"
+						picture = "gfx/leaders/AUH/WW1/Archduke_Karl_I.dds"
+	
+						ideology = nazism
+					}
+					add_country_leader_trait = exiled
+
+				}
+			}						
+		}
+	}	
 	FRA_fate_of_italy = {
 		icon = ger_reichskommissariats
 		
@@ -1020,7 +1108,21 @@ SPR_Puppet_decisions = {
 		}
 
 		available = {
-			all_state = { if = { limit = { is_core_of = ITA NOT = { is_core_of = VCT } NOT = { is_core_of = AUH }  NOT = { is_core_of = YUG } } OR = { ROOT = { controls_state = PREV } any_other_country = { is_subject_of = ROOT controls_state = PREV } } } }
+			all_state = { 
+				is_core_of = ITA 
+				NOT = { is_core_of = VCT } 
+				NOT = { is_core_of = AUH }  
+				NOT = { is_core_of = YUG } 
+				OR = { 
+					ROOT = { 
+						controls_state = PREV
+					} 
+					any_other_country = {
+						is_subject_of = ROOT 
+						controls_state = PREV 
+					} 
+				} 
+			} 
 		}
 		
 		visible = {
@@ -1121,6 +1223,52 @@ SPR_Puppet_decisions = {
 		
 		complete_effect = {
 			country_event = { id = DNC_Spain.19 }
+		}	
+	}
+	
+	GER_fate_of_austria = {
+		icon = ger_reichskommissariats
+		
+		allowed = {
+			tag = GER
+		}
+
+		available = {
+			all_state = {
+				if = {
+					limit = {
+						is_core_of = AUH
+					}
+					is_owned_by = GER
+				}
+			}
+		}
+		
+		visible = {
+			AND = {
+				NOT = { country_exists = AUH }
+				NOT = { country_exists = AUS }
+			}
+		}
+
+		cost = 0
+		
+		fire_only_once = yes
+
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				NOT = { has_government = neutrality }
+			}
+			modifier = {
+				factor = 0
+				NOT = { has_completed_focus = GERDNC_erfurt_union }
+			}
+		}
+		
+		complete_effect = {
+			country_event = { id = dnctree.42 }
 		}	
 	}
 	

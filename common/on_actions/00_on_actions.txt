@@ -1,4 +1,130 @@
 on_actions = {
+	on_monthly_XXB = {
+		effect = {
+			if = {
+				limit = {
+					date > 1949.1.1
+					date < 2000.1.1
+				}
+				set_variable = { global.number_of_commies = 0}
+				set_variable = { global.number_of_democraties = 0}
+				every_country = {
+					limit = {
+						has_government = communism
+					}
+					add_to_variable = { global.number_of_commies = 1}
+				}
+				every_country = {
+					limit = {
+						has_government = democratic
+					}
+					add_to_variable = { global.number_of_democraties = 1}
+				}
+
+			}
+			if = {
+				# Checks for if it is Janurary (Year of previous month is a different year of current year)
+				limit = { NOT = { check_variable = { global.last_year = global.year } } }
+				set_variable = { global.last_year = global.year }
+				
+				# KDE System (System that fires pre-determined events with specified dates)
+				add_to_variable = { global.kde_counter = 1 }
+				log = "0: [?global.year]"
+				
+				if = {
+					limit = { check_variable = { global.kde_counter = 2 } }
+					meta_effect = {
+						text = {
+							KDE_bi_yearly_event_fire_[ID] = yes
+						}
+						ID = "[?global.year]"
+					}
+					
+					log = "1: [?global.year]"
+					set_variable = { global.kde_counter = 0 }
+				}
+			}
+		}
+	}
+	on_monthly = {
+		
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_decision = interplanetary_transfer_decision
+						has_decision = martian_orbit_decision
+					}
+				}
+				random_list = {
+					30 = {
+						modifier = {
+							factor = 0.5
+							check_variable = { life_support_test_count > 5}
+						}
+						modifier = {
+							factor = 0.1
+							check_variable = { life_support_test_count > 7}
+						}
+						#RIP, accident happen
+
+						random_list = {
+							50 = {
+								#decompression
+								country_event = {
+									id = space_race.12
+								}
+							}
+							50 = {
+								#signal lost
+								country_event = {
+									id = space_race.13
+								}
+							}
+							50 = {
+								#fire
+								country_event = {
+									id = space_race.14
+								}
+							}
+						}
+					}
+
+					70 = {
+
+					}
+				}
+			}
+			if = {
+				# Checks for if it is Janurary (Year of previous month is a different year of current year)
+				limit = { NOT = { check_variable = { global.last_year = global.year } } }
+					
+				set_variable = { global.last_year = global.year }
+
+				every_character = {
+					limit = {
+						has_character_flag = recruited_unit_leader
+					}
+					if = {
+						limit = {
+							check_variable = {
+								years_of_service < 1
+							}
+						}
+						set_variable_to_random = {
+    						var = days_before_retire
+							min = 0
+    						max = 360
+    						integer = yes
+						}
+						unit_leader_event = { id = generic.206 days = var:THIS.days_before_retire}
+					}
+					subtract_from_variable = { years_of_service = 1 }
+					log = "[THIS.GetName] number of years remaining: [?THIS.years_of_service]"
+				}
+			}
+		}
+	}
 	# country 
 	on_daily = {
 		effect = {
@@ -43,9 +169,29 @@ on_actions = {
 	}
 	on_new_term_election = {
 		effect = {
+			
 			if = {
 				limit = { tag = USA }
 				RON_handle_American_Elections = yes
+			}
+			else_if = {
+				limit = {
+					tag = FRA
+					date < 1945.1.1
+				}
+				RON_handle_French_Elections = yes
+			}
+			else_if = {
+				limit = { tag = ARG }
+				RON_handle_Argentine_Elections = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = SPR
+					date > 1936.1.1
+					date < 1936.3.3
+				}
+				
 			}
 			else = {
 				country_event = { id = election.1 }
@@ -264,23 +410,23 @@ on_actions = {
 
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
-	 	effect = {
-	 		### Naval transfers
-	 		if = {
-	 			limit = {
-	 				ROOT = {
-	 					is_mexican_revolution_tag = yes
-	 					is_in_faction = no
-	 				}
-	 				FROM = { is_mexican_revolution_tag = yes }
-	 			}
-	 			transfer_navy = { target = FROM }
-	 			#Border cleanup
-	 			FROM = {
-	 				annex_country = ROOT
-	 			}
-	 		}
-	 	}
+	 	# effect = {
+	 	# 	### Naval transfers
+	 	# 	if = {
+	 	# 		limit = {
+	 	# 			ROOT = {
+	 	# 				is_mexican_revolution_tag = yes
+	 	# 				is_in_faction = no
+	 	# 			}
+	 	# 			FROM = { is_mexican_revolution_tag = yes }
+	 	# 		}
+	 	# 		transfer_navy = { target = FROM }
+	 	# 		#Border cleanup
+	 	# 		FROM = {
+	 	# 			annex_country = ROOT
+	 	# 		}
+	 	# 	}
+	 	# }
 	}
 
 	# ROOT is previously capitulated country
@@ -330,6 +476,36 @@ on_actions = {
 	#Not run on a specific country.
 	on_startup = {
 		effect = {
+			# every_unit_leader = {
+			# 	set_character_flag = recruited_unit_leader
+			# 	set_variable_to_random = {
+    		# 		var = years_of_service
+			# 		min = 30
+    		# 		max = 35
+    		# 		integer = yes
+			# 	}
+			# }
+			if = {
+				limit = {
+					date > 1949.1.1
+					date < 2000.1.1
+				}
+				set_variable = { global.number_of_commies = 0}
+				set_variable = { global.number_of_democraties = 0}
+				every_country = {
+					limit = {
+						has_government = communism
+					}
+					add_to_variable = { global.number_of_commies = 1}
+				}
+				every_country = {
+					limit = {
+						has_government = democratic
+					}
+					add_to_variable = { global.number_of_democraties = 1}
+				}
+
+			}
 			every_state = {
 				limit = {
 					is_core_of = MOR
@@ -345,11 +521,39 @@ on_actions = {
 				remove_core_of = SSA
 				remove_core_of = JSA
 			}
+
+			if = {
+				limit = {
+					has_start_date < 1918.1.1
+				}
+				BEL = {
+					give_resource_rights = { receiver = ENG state = 295 }
+				}
+			}
 		}
 
 	}
 
 	on_unit_leader_created = {
+		effect = {
+			character = {
+				set_character_flag = recruited_unit_leader
+				set_variable_to_random = {
+    				var = years_of_service
+					min = 30
+    				max = 35
+    				integer = yes
+				}
+			}
+		}
+	}
+	on_army_leader_promoted = {
+		effect = {
+			character = {
+			
+				add_to_variable = { years_of_service = 5 }
+			}
+		}
 	}
 
 	#ROOT is new controller #FROM is old controller #FROM.FROM is state ID

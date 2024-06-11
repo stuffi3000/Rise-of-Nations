@@ -6,11 +6,12 @@ focus_tree = {
 
 		modifier = {
 			add = 10
-			tag = LIB
+			original_tag = LIB
 		}
 	}
 
-	default = no
+	default = no 
+ reset_on_civilwar = no
 
 	###############################################################################################################################
 	###############################################################################################################################
@@ -23,7 +24,41 @@ focus_tree = {
 	###############################################################################################################################
 	###############################################################################################################################
 
-
+	#The Will of the People
+	focus = {
+		id = LIB1933_the_will_of_the_people
+		icon = GFX_goal_support_communism
+		x = 38
+		y = 0
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			date < 1936.1.1
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				NOT = {
+					has_government = communism
+				}
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = RI_commies_rise
+				days = 1095
+			}
+		}
+		mutually_exclusive = { focus = LIB1933_strenghten_the_government  focus = LIB1933_fascism_leads_the_way }
+	}
 	#Fight the Great Depresion
 	focus = {
 		id = LIB1933_fight_the_great_depresion
@@ -79,41 +114,7 @@ focus_tree = {
 		ai_will_do = { factor = 100 }
 	}
 
-	#The Will of the People
-	focus = {
-		id = LIB1933_the_will_of_the_people
-		icon = GFX_goal_support_communism
-		x = 38
-		y = 0
-		cost = 10
-		search_filters = {
-			FOCUS_FILTER_POLITICAL
-		}
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-		available = {
-			date < 1936.1.1
-		}
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				is_historical_focus_on = yes
-				NOT = {
-					has_government = communism
-				}
-			}
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = RI_commies_rise
-				days = 1095
-			}
-		}
-		mutually_exclusive = { focus = LIB1933_strenghten_the_government  focus = LIB1933_fascism_leads_the_way }
-	}
+	
 
 	#Fascism leads the way
 	focus = {
@@ -1131,7 +1132,7 @@ focus_tree = {
 			date < 1936.1.1
 		}
 		completion_reward = {
-			army_experience = 25
+			army_experience = 100
 		}
 	}
 
@@ -1567,7 +1568,7 @@ focus_tree = {
 			date < 1936.1.1
 		}
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 		}
 	}
 
@@ -1597,7 +1598,7 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
-			navy_experience = 25
+			navy_experience = 100
 		}
 	}
 
@@ -2109,7 +2110,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			army_experience = 10
+			army_experience = 100
 			USA = {
 				give_guarantee = LIB
 			}
@@ -2638,7 +2639,7 @@ focus_tree = {
 		}
 
 		complete_tooltip = {
-			air_experience = 25
+			air_experience = 100
 			if = { limit = { has_country_flag = aviation_effort_AB }
 				add_building_construction = {
 					type = air_base
@@ -2655,7 +2656,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 
 			if = {
 				limit = {
@@ -2739,7 +2740,7 @@ focus_tree = {
 		}
 
 		complete_tooltip = {
-			navy_experience = 25
+			navy_experience = 100
 			add_extra_state_shared_building_slots = 3
 			add_building_construction = {
 				type = dockyard
@@ -2749,7 +2750,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_ideas = freeport_of_monrovia
-			navy_experience = 25
+			navy_experience = 100
 			if = {
 				limit = {
 					NOT = {
@@ -3212,36 +3213,6 @@ focus_tree = {
 	}
 
 	focus = {
-		id = LIB_us_defense_pact
-		icon = GFX_goal_generic_defence
-		prerequisite = { focus = LIB_war_preparations }
-		x = 0
-		y = 1
-		relative_position_id = LIB_war_preparations
-		cost = 10
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			country_exists = USA
-			NOT = {
-				has_war_with = USA
-			}
-		}
-
-		completion_reward = {
-			army_experience = 10
-			USA = {
-				give_guarantee = LIB
-			}
-
-			diplomatic_relation = { country = USA relation = non_aggression_pact }
-			give_military_access = USA
-		}
-	}
-
-	focus = {
 		id = LIB_purchase_sierra
 		icon = GFX_focus_generic_diplomatic_treaty
 		prerequisite = { focus = LIB_integration_effort }
@@ -3520,7 +3491,25 @@ focus_tree = {
 			}
 		}
 	}
+	focus = {
+		id = LIB_military_academies
+		icon = GFX_goal_generic_military_sphere
+		prerequisite = { focus = LIB_silver_coup }
+		x = 0
+		y = 1
+		relative_position_id = LIB_silver_coup
+		cost = 10
+		ai_will_do = {
+			factor = 10
+		}
 
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_ideas = militarism_focus
+			army_experience = 20
+		}
+	}
 	focus = {
 		id = LIB_end_migration
 		icon = GFX_goal_generic_forceful_treaty
@@ -3567,25 +3556,7 @@ focus_tree = {
 		}
 	}
 
-	focus = {
-		id = LIB_military_academies
-		icon = GFX_goal_generic_military_sphere
-		prerequisite = { focus = LIB_silver_coup }
-		x = 0
-		y = 1
-		relative_position_id = LIB_silver_coup
-		cost = 10
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		completion_reward = {
-			add_ideas = militarism_focus
-			army_experience = 20
-		}
-	}
+	
 
 	focus = {
 		id = LIB_liberian_lebensraum
@@ -3923,7 +3894,7 @@ focus_tree = {
 
 
 		complete_tooltip = {
-			air_experience = 25
+			air_experience = 100
 			if = { limit = { has_country_flag = aviation_effort_AB }
 				add_building_construction = {
 					type = air_base
@@ -3934,7 +3905,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 
 			if = {
 				limit = {
@@ -3979,6 +3950,23 @@ focus_tree = {
 					}
 				}
 			}
+		}
+	}
+	focus = {
+		id = LIB_purchase_foreign
+		icon = GFX_goal_generic_improve_relations
+		prerequisite = { focus = LIB_construct_air_strips }
+		x = 0
+		y = 1
+		relative_position_id = LIB_construct_air_strips
+		cost = 10
+
+		available = {
+			num_of_factories > 5
+		}
+
+		completion_reward = {
+			country_event = { id = liberia.1 } #usagereng
 		}
 	}
 
@@ -4033,24 +4021,7 @@ focus_tree = {
 		}
 	}
 
-	focus = {
-		id = LIB_purchase_foreign
-		icon = GFX_goal_generic_improve_relations
-		prerequisite = { focus = LIB_construct_air_strips }
-		x = 0
-		y = 1
-		relative_position_id = LIB_construct_air_strips
-		cost = 10
-
-		available = {
-			num_of_factories > 5
-		}
-
-		completion_reward = {
-			country_event = { id = liberia.1 } #usagereng
-		}
-	}
-
+	
 	focus = {
 		id = LIB_naturalize_sierra
 		icon = GFX_goal_generic_major_alliance
@@ -4169,12 +4140,14 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = take_state_focus
 				target = ENG
 				generator = { 700 }
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = take_state_focus
 				target = FRA
 				generator = { 780 }
@@ -4202,12 +4175,14 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = take_state_focus
 				target = ENG
 				generator = { 700 }
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = take_state_focus
 				target = FRA
 				generator = { 779 }
@@ -4260,7 +4235,7 @@ focus_tree = {
 		}
 
 		complete_tooltip = {
-			navy_experience = 10
+			navy_experience = 100
 			add_extra_state_shared_building_slots = 1
 			add_building_construction = {
 				type = dockyard
@@ -4270,7 +4245,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			navy_experience = 25
+			navy_experience = 100
 			if = {
 				limit = {
 					NOT = {
@@ -4539,7 +4514,7 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			navy_experience = 25
+			navy_experience = 100
 			add_tech_bonus = {
 				name = capital_ships_bonus
 				bonus = 1.0

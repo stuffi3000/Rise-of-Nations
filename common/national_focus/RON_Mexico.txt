@@ -4,11 +4,828 @@ focus_tree = {
 		factor = 0
 		modifier = {
 			add = 10
-			tag = MEX
+			original_tag = MEX
 		}
 	}
-	default = no
+	default = no 
+ reset_on_civilwar = no
 
+	#WW1 Focus 
+ 
+	focus = {
+		id = MEX_WW1_prepare_1910_elections
+		icon = elections
+		x = 15
+		y = 1
+		cost = 1
+		allow_branch = {
+			date < 1919.1.1
+			date > 1909.12.31
+		}
+		available = {
+			NOT = {
+				has_global_flag = had_1910_election
+			}
+		} 
+		completion_reward = {
+			add_political_power = 50
+			
+		}
+
+	}
+
+	focus = {
+		id = MEX_WW1_path_of_democracy
+		relative_position_id = MEX_WW1_prepare_1910_elections
+		x = 1
+		y = 1
+		cost = 9
+		icon = democracy
+		prerequisite = {
+			focus = MEX_WW1_prepare_1910_elections
+		}
+		mutually_exclusive = {
+			focus = MEX_WW1_pressure_aristocracy
+		}
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.5
+				is_historical_focus_on = no
+			}
+		}
+		completion_reward = {
+			unlock_decision_tooltip = MEX_campaign_in_FROM
+			480 = {
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+			482 = {
+				set_temp_variable = { faction = 5 }
+                MEX_change_state_aligment = yes
+			}
+		}
+	}
+	focus = {
+		id = MEX_WW1_anti_reelection_party
+		relative_position_id = MEX_WW1_path_of_democracy
+		icon = democracy2
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = MEX_WW1_path_of_democracy
+		}
+		completion_reward = {
+			add_popularity = {
+                ideology = democratic
+                popularity = 0.1
+            }
+		}
+	}
+	focus = {
+		id = MEX_WW1_pressure_aristocracy
+		icon = political_pressure
+		relative_position_id = MEX_WW1_prepare_1910_elections
+		x = -1
+		y = 1
+		ai_will_do = {
+			factor = 100
+			modifier = {
+				factor = 0.5
+				is_historical_focus_on = no
+			}
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		prerequisite = {
+			focus = MEX_WW1_prepare_1910_elections
+		}
+		mutually_exclusive = { 
+			focus = MEX_WW1_path_of_democracy
+		}
+		cost = 9
+		completion_reward = {
+			unlock_decision_tooltip = MEX_pressure_aristocracy_in_FROM
+		}
+	}
+	focus = {
+		id = MEX_WW1_prepare_election_rigging
+		relative_position_id = MEX_WW1_pressure_aristocracy
+		icon = GFX_goal_authoritarian_democracy2
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = MEX_WW1_pressure_aristocracy
+		}
+		completion_reward = {
+			unlock_decision_tooltip = MEX_put_madero_in_house_arrest
+			hidden_effect = {
+				if = {
+					limit = {
+						any_owned_state = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+					}
+					country_event = ww1_mexico.4
+				}
+			}
+			if = {
+				limit = {
+					capital_scope = {
+						check_variable = {
+							revolution_alignment = 5
+						}
+					}
+				}
+				capital_scope = {
+					set_temp_variable = { faction = 6 }
+                	MEX_change_state_aligment = yes
+				}
+				else = {
+					random_owned_state = {
+						limit = {
+							check_variable = {
+								revolution_alignment = 5
+							}
+						}
+						set_temp_variable = { faction = 6 }
+                		MEX_change_state_aligment = yes
+					}
+				}
+			}
+		}
+		cost = 10
+	}
+	focus = {
+		id = WW1_MEX_election_day
+		icon = GFX_generic_hold_elections
+		relative_position_id = MEX_WW1_prepare_election_rigging
+		x = 1
+		y = 1
+		cost = 5
+		prerequisite = {
+			focus = MEX_WW1_prepare_election_rigging
+			focus = MEX_WW1_anti_reelection_party
+		}
+		completion_reward = {
+			country_event = ww1_mexico.3
+			mark_focus_tree_layout_dirty = yes
+			set_global_flag = had_1910_election
+		}
+	}
+
+	## PORFIRIST PATH 
+
+	focus = {
+		id = WW1_MEX_continue_economic_policies
+		x = 20
+		y = 1 
+		cost = 5
+		allow_branch = {	
+			has_completed_focus = WW1_MEX_election_day
+			has_completed_focus = MEX_WW1_pressure_aristocracy
+		}
+		completion_reward = {
+			add_ideas = tax_high
+			add_ideas = fdi_banned
+			add_ideas = foreign_isolationism
+			add_ideas = tariffs_low
+		}
+	}
+	
+	focus = {
+		id = WW1_MEX_launch_pacification_expedition
+		relative_position_id = WW1_MEX_continue_economic_policies
+		x = 0
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = WW1_MEX_continue_economic_policies
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					480 = {
+						check_variable = {
+							revolution_alignment = 6
+						}
+					}
+				}
+				480 = {
+					set_temp_variable = { faction = 6 }
+                	MEX_change_state_aligment = yes
+				}
+			}
+		}
+	}
+	focus = {
+		id = WW1_MEX_pursue_romero_policy
+		relative_position_id = WW1_MEX_launch_pacification_expedition
+		x = 1
+		y = 1
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		prerequisite = {
+			focus = WW1_MEX_launch_pacification_expedition
+		}
+		mutually_exclusive = {
+			focus = WW1_MEX_pursue_limantour_policy
+		}
+		completion_reward = {
+			add_popularity = {
+    ideology = fascism
+    popularity = -0.2
+}
+		}
+		cost = 10
+	}
+	focus = {
+		id = WW1_MEX_pursue_limantour_policy
+		relative_position_id = WW1_MEX_launch_pacification_expedition
+		x = -1
+		y = 1
+		ai_will_do = {
+			factor = 10
+		}
+		mutually_exclusive = {
+			focus = WW1_MEX_pursue_romero_policy
+		}
+		prerequisite = {
+			focus = WW1_MEX_launch_pacification_expedition
+		}
+		completion_reward = {
+			add_popularity = {
+    ideology = fascism
+    popularity = 0.3
+}
+		}
+		cost = 10
+	}
+	focus = {
+		id = WW1_MEX_expand_rubber_farms
+		relative_position_id = WW1_MEX_pursue_romero_policy
+		x = -2
+		y = 1
+
+		prerequisite = {
+			focus = WW1_MEX_pursue_romero_policy
+			focus = WW1_MEX_pursue_limantour_policy
+		}
+		cost = 7
+		completion_reward = {
+			277 = {
+				add_building_construction = {
+	type = synthetic_refinery
+	level = 2
+	instant_build = yes
+}
+			}
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_expand_northern_mines
+		relative_position_id = WW1_MEX_expand_rubber_farms
+		x = 2
+		y = 0
+		prerequisite ={
+			focus = WW1_MEX_pursue_romero_policy
+			focus = WW1_MEX_pursue_limantour_policy
+		}
+		completion_reward = {
+			random_owned_controlled_state = { #placeholder bc idk this mod's strategic regions lmao
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		cost = 7
+	}
+
+	focus = {
+		id = WW1_MEX_Maderos_ultimatum
+		relative_position_id = WW1_MEX_expand_rubber_farms
+		x = 1
+		y = 1
+		available = {
+			always = no
+		}
+		prerequisite = {
+			focus = WW1_MEX_expand_northern_mines
+		}
+		prerequisite = {
+			focus = WW1_MEX_expand_rubber_farms
+		}
+		completion_reward = {
+			ZAP = {
+			transfer_state = 447
+			transfer_state = 485
+			transfer_state = 476
+			transfer_state = 475
+			transfer_state = 474						
+			}
+		if = {
+			limit = {
+				country_exists = ZAP
+			}
+			MEX = {
+				declare_war_on = {
+					target = ZAP
+					type = civil_war
+				}
+				load_oob = ZAP_1914
+				load_oob = ZAP_1914
+				add_civil_war_target = ZAP
+			}
+		}
+		} 
+	}
+
+	### MADERIST PATH  44 Weeks
+	focus = {
+		id = WW1_MEX_organise_escape
+		icon = GFX_goal_continuous_boost_freedom
+		x = 20
+		y = 1
+		cost = 5
+		allow_branch = {
+			has_completed_focus = WW1_MEX_election_day
+			has_completed_focus = MEX_WW1_path_of_democracy
+		}
+		completion_reward = {
+		add_stability = -.2
+		add_country_leader_trait = missing_leader
+		}
+	} 
+	focus = {
+		id = WW1_MEX_plan_revolts
+		relative_position_id = WW1_MEX_organise_escape
+		icon = GFX_focus_ron_MEX_politicised_army
+		prerequisite = {
+			focus = WW1_MEX_organise_escape
+		}
+		x = -1
+		y = 1
+		cost = 2
+		completion_reward = {
+			add_ideas = strike_movement_1
+			
+		}
+	}
+	focus = {
+		id = WW1_MEX_criticize_diaz
+		relative_position_id = WW1_MEX_organise_escape
+		icon = propaganda
+		prerequisite = {
+			focus = WW1_MEX_organise_escape
+		}
+		x = 1
+		y = 1
+		cost = 2
+		completion_reward = {
+			add_political_power = -50 
+		}
+
+	}
+	focus = {
+		id = WW1_MEX_flee_to_the_us
+		relative_position_id = WW1_MEX_organise_escape
+		icon = GFX_USA_fate_of_our_nation
+
+		prerequisite = {
+			focus = WW1_MEX_criticize_diaz
+		}
+		prerequisite = {
+			focus = WW1_MEX_plan_revolts
+		}
+		x = 0
+		y = 2
+		cost = 2
+		allow_branch = {
+			
+		}
+		completion_reward = {
+			country_event = ww1_mexico.5
+		}
+	}
+	focus = {
+		id = WW1_MEX_ask_for_support
+		icon = GFX_USA_American_Shield
+		relative_position_id = WW1_MEX_flee_to_the_us
+		x = -1
+		y = 1
+		cost = 6
+		prerequisite = {
+			focus = WW1_MEX_flee_to_the_us
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_building_construction = {
+					type = arms_factory
+					level = 3
+					instant_build = yes
+				} 
+			}
+		}
+	}
+	focus = {
+		id = WW1_MEX_contact_mexican
+		icon = GFX_focus_contact_mexican_rebels 
+		relative_position_id = WW1_MEX_flee_to_the_us
+		x = 1
+		y = 1
+		cost = 6
+		prerequisite = {
+			focus = WW1_MEX_flee_to_the_us
+		}
+		completion_reward = {
+			485 = {
+				set_temp_variable = {
+					faction = 4
+				}
+				MEX_change_state_aligment = yes
+			}
+		}
+	}
+	focus = {
+		id = WW1_MEX_san_luis_potosi_plan
+		icon = GFX_RON_rally
+		relative_position_id = WW1_MEX_flee_to_the_us
+		x = 0
+		y = 2
+		cost = 5
+		prerequisite = {
+			focus = WW1_MEX_contact_mexican
+		}
+		prerequisite ={
+			focus = WW1_MEX_ask_for_support
+		}
+		completion_reward = {
+			country_event = ww1_mexico.6
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_northern_provinces
+		relative_position_id = WW1_MEX_san_luis_potosi_plan
+		icon = GFX_focus_generic_provoke_border_clashes
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = WW1_MEX_san_luis_potosi_plan
+		}
+		cost = 5
+		ai_will_do = {
+			factor = 100
+		}
+		completion_reward = {
+			every_state = {
+				limit = {
+					OR ={
+						state = 480
+						state = 482
+						state = 483
+					}
+					THIS = {
+						check_variable = {
+							revolution_alignment = 5
+						}
+					}
+				}
+				MDR = {
+					transfer_state = PREV
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_solidify_control
+		relative_position_id = WW1_MEX_san_luis_potosi_plan
+		icon = ITA_com_pressure_TUR
+		x = 1
+		y = 1
+		prerequisite= {
+			focus = WW1_MEX_san_luis_potosi_plan
+		}
+		cost = 5
+		completion_reward = {
+			every_owned_state = {
+				limit = {
+					is_core_of = MEX
+				}
+				add_core_of = MDR
+			}
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_prepare_for_civil_war
+		icon = small_arms_dnc
+		relative_position_id = WW1_MEX_solidify_control
+		x = -1
+		y = 1
+		cost = 6
+		prerequisite = {
+			focus = WW1_MEX_solidify_control
+		}
+		prerequisite = {
+			focus = WW1_MEX_northern_provinces
+		}
+		completion_reward = {
+			MEX = {
+				country_event = ww1_mexico.21
+			}
+		}
+	}
+	### ZAPATIST PATH
+
+	#20 fev 1911
+	focus = {
+		id = WW1_MEX_resolve_peasant_conflicts
+		x = 20
+		y = 1
+		cost = 4
+		allow_branch = {
+			tag = ZAP
+		}
+		completion_reward = {
+			add_ideas = workers_compromise
+		}
+	}
+	focus= {
+		id = WW1_MEX_restitute_haciendas
+		relative_position_id = WW1_MEX_resolve_peasant_conflicts
+		x = -1
+		y = 1
+		cost = 4
+		prerequisite = {
+			focus = WW1_MEX_resolve_peasant_conflicts
+		}
+		completion_reward = {
+			add_popularity = {
+    ideology = communism
+    popularity = .3
+}
+add_ideas = worker_conscripts 
+		}
+	}
+	focus = {
+		id = WW1_MEX_fight_juarez_police
+		relative_position_id = WW1_MEX_resolve_peasant_conflicts
+		x = 1
+		y = 1
+		cost = 4
+		prerequisite = {
+			focus = WW1_MEX_resolve_peasant_conflicts
+		}
+		completion_reward = {
+			add_ideas = MEX_abolished_police
+		}
+	}
+
+	# 8 June
+	focus = {
+		id = WW1_MEX_meet_with_madero
+		relative_position_id = WW1_MEX_fight_juarez_police
+		x = -1
+		y = 1
+		cost = 4
+		prerequisite = {
+			focus = WW1_MEX_fight_juarez_police
+		}
+		prerequisite = {
+			focus = WW1_MEX_restitute_haciendas
+		}
+		completion_reward = {
+			MDR = {
+				country_event = ww1_mexico.9
+			}
+		}
+	}
+	#20 June
+	focus = {
+		id = WW1_MEX_seize_arms
+		relative_position_id = WW1_MEX_meet_with_madero
+		x = -1
+		y = 1
+		cost = 2
+		prerequisite = {
+			focus = WW1_MEX_meet_with_madero
+		}
+		completion_reward = {
+			add_equipment_to_stockpile = {
+    type = infantry_equipment
+    amount = 1500
+    producer = USA
+}
+	USA = {		add_equipment_to_stockpile = {
+    type = infantry_equipment
+    amount = -1500
+    producer = USA
+}
+	}
+add_opinion_modifier = { target = USA modifier = large_decrease }
+		}
+	}
+	focus = {
+		id = WW1_MEX_mobilizing_troops
+		relative_position_id = WW1_MEX_meet_with_madero
+		x = 1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = WW1_MEX_meet_with_madero
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_war = yes
+				}
+				add_ideas = total_war
+			}
+			add_ideas = limited_conscription
+			load_oob = ZAP_1914
+		}
+	}
+	focus = {
+		id= WW1_MEX_second_madero_meeting
+		relative_position_id = WW1_MEX_mobilizing_troops
+		x = -1
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = WW1_MEX_mobilizing_troops
+			focus = WW1_MEX_seize_arms
+		}
+		completion_reward = {
+			MDR = {
+				country_event = ww1_mexico.15
+			}
+		}
+	}
+	#5 Dec 1911
+	focus = {
+		id = WW1_MEX_Ayala_plan
+		relative_position_id = WW1_MEX_second_madero_meeting
+		x = 0
+		y = 1
+		cost = 4
+		prerequisite = {
+			focus = WW1_MEX_second_madero_meeting
+		}
+		completion_reward = {
+			482 = {
+				set_temp_variable ={
+					faction = 4
+				}
+				MEX_change_state_aligment = yes
+			}
+			country_event = ww1_mexico.26
+			MDR = {
+				country_event = { id = ww1_mexico.10 days = 87}
+			}
+			
+			
+		}
+	}
+
+
+	focus = {
+		id = WW1_MEX_start_expropriation
+		relative_position_id = WW1_MEX_Ayala_plan
+		x= -2
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = WW1_MEX_Ayala_plan
+		}
+		completion_reward = {
+			set_politics = {
+	ruling_party = communism
+    elections_allowed = no
+}
+add_stability = -.10
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_nationalize_coentificos_haciendas
+		relative_position_id = WW1_MEX_Ayala_plan
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = WW1_MEX_Ayala_plan
+		}
+		completion_reward = {
+			add_popularity = {
+    ideology = fascism
+    popularity = 0.3
+}
+add_ideas = key_industries
+add_offsite_building  = {
+	type = industrial_complex
+	level = 3
+	instant_build = yes
+}
+add_offsite_building  = {
+	type = industrial_complex
+	level = 2
+	instant_build = yes
+}
+		}
+	}
+	focus = {
+		id = WW1_MEX_organise_incursions
+		relative_position_id = WW1_MEX_Ayala_plan
+		x = 2
+		y = 1
+		prerequisite = {
+			focus = WW1_MEX_Ayala_plan
+		}
+		completion_reward = {
+			add_political_power = -100
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_get_american_support
+		relative_position_id = WW1_MEX_organise_incursions
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = WW1_MEX_organise_incursions
+			focus = WW1_MEX_nationalize_coentificos_haciendas
+			focus = WW1_MEX_start_expropriation
+		}
+		completion_reward = {
+			add_opinion_modifier = { target = USA modifier = medium_increase }
+			declare_war_on = {
+				target = MEX
+			}
+			USA = {give_guarantee = ZAP}
+		}
+	}
+
+	focus = {
+		id = WW1_MEX_modernize_agriculture
+		relative_position_id = WW1_MEX_organise_incursions
+		x = -3
+		y = 1
+		prerequisite = {
+			focus = WW1_MEX_organise_incursions
+			focus = WW1_MEX_nationalize_coentificos_haciendas
+			focus = WW1_MEX_start_expropriation
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	## AFTER DIAZ GIVES UP POWER
+
+	focus = {
+		id = WW1_MEX_A_new_mexico
+		x = 20
+		y = 1
+		cost = 1
+		allow_branch = {
+			always = no
+		}
+		completion_reward = {
+			add_political_power = 100
+		}
+
+	}
+	focus = {
+		id = WW1_MEX_our_first_measures
+		relative_position_id = WW1_MEX_A_new_mexico
+		prerequisite = {
+			focus = WW1_MEX_A_new_mexico
+		}
+		cost = 10
+		x = 0
+		y = 1
+
+	}
 	###############################################################################################################################
 	###############################################################################################################################
 	###############################################################################################################################
@@ -19,7 +836,41 @@ focus_tree = {
 	###############################################################################################################################
 	###############################################################################################################################
 	###############################################################################################################################
-
+#The Will of the People
+	focus = {
+		id = MEX1933_the_will_of_the_people
+		icon = GFX_goal_support_communism
+		x = 41
+		y = 0
+		cost = 10
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			date < 1936.1.1
+		}
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+				NOT = {
+					has_government = communism
+				}
+			}
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = RI_commies_rise
+				days = 1095
+			}
+		}
+		mutually_exclusive = { focus = MEX1933_strenghten_the_government  focus = MEX1933_fascism_leads_the_way }
+	}
 
 	#Fight the Great Depresion
 	focus = {
@@ -76,41 +927,7 @@ focus_tree = {
 		ai_will_do = { factor = 100 }
 	}
 
-	#The Will of the People
-	focus = {
-		id = MEX1933_the_will_of_the_people
-		icon = GFX_goal_support_communism
-		x = 41
-		y = 0
-		cost = 10
-		search_filters = {
-			FOCUS_FILTER_POLITICAL
-		}
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-		available = {
-			date < 1936.1.1
-		}
-		ai_will_do = {
-			factor = 10
-			modifier = {
-				factor = 0
-				is_historical_focus_on = yes
-				NOT = {
-					has_government = communism
-				}
-			}
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = RI_commies_rise
-				days = 1095
-			}
-		}
-		mutually_exclusive = { focus = MEX1933_strenghten_the_government  focus = MEX1933_fascism_leads_the_way }
-	}
+	
 
 	#Fascism leads the way
 	focus = {
@@ -1128,7 +1945,7 @@ focus_tree = {
 			date < 1936.1.1
 		}
 		completion_reward = {
-			army_experience = 25
+			army_experience = 100
 		}
 	}
 
@@ -1564,7 +2381,7 @@ focus_tree = {
 			date < 1936.1.1
 		}
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 		}
 	}
 
@@ -1594,7 +2411,7 @@ focus_tree = {
 			factor = 10
 		}
 		completion_reward = {
-			navy_experience = 25
+			navy_experience = 100
 		}
 	}
 
@@ -2342,7 +3159,7 @@ focus_tree = {
 			factor = 70
 		}
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 			add_tech_bonus = {
 				name = air_doc_bonus
 				bonus = 0.50
@@ -3589,7 +4406,7 @@ focus_tree = {
 		mutually_exclusive = { focus = MEX_FASC }
 		mutually_exclusive = { focus = MEX_NUE }
 		bypass = {
-			MEX = { has_government = democracy }
+			MEX = { has_government = democratic }
 		}
 		x = 34
 		y = 3
@@ -3953,7 +4770,7 @@ focus_tree = {
 		}
 		completion_reward = {
 			# add fleet logistics advisor, add 2 shipyards
-			navy_experience = 50
+			navy_experience = 100
 			if = {
 				limit = {
 					has_dlc = "Together for Victory"
@@ -4346,7 +5163,8 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = topple_government
 				target = GER
 			}
@@ -4431,7 +5249,7 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
-			air_experience = 25
+			air_experience = 100
 			swap_ideas = {
 				remove_idea = MEX_small_aviation_industry
 				add_idea = MEX_small_aviation_industry2
@@ -4508,7 +5326,7 @@ focus_tree = {
 					category = artillery
 				}
 			}
-			army_experience = 10
+			army_experience = 100
 		}
 	}
 	focus = {
@@ -5003,7 +5821,7 @@ focus_tree = {
 			factor = 100
 		}
 		completion_reward = {
-			army_experience = 50
+			army_experience = 100
 		}
 	}
 	focus = {
@@ -6760,11 +7578,13 @@ focus_tree = {
 		completion_reward = {
 			custom_effect_tooltip = tt_Placeholder
 			#Durango, Guerrero, Chihuahua
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = topple_government
 				target = USA
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = PHI
 			}
@@ -6810,7 +7630,8 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = tt_Placeholder
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = topple_government
 				target = ENG
 			}
@@ -6833,27 +7654,33 @@ focus_tree = {
 		}
 		completion_reward = {
 			custom_effect_tooltip = tt_Placeholder
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = RAJ
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = SAF
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = AST
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = CAN
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = NZL
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				type = puppet_wargoal_focus
 				target = MAL
 			}

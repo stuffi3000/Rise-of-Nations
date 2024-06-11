@@ -413,6 +413,22 @@ country_event = {
 		}
 
 		set_global_flag = eight_nation_alliance_disbanded
+		
+		#French Faction
+		if = {
+			limit = {
+				FRA = { is_subject = no }
+			}	
+			FRA = { country_event = { id = dnctree.20 hours = 1 } }
+		}
+		
+		#German Faction
+		if = {
+			limit = {
+				GER = { is_subject = no }
+			}	
+			GER = { country_event = { id = dnctree.21 hours = 1 } }
+		}
 
 	}
 }
@@ -436,7 +452,7 @@ country_event = {
 
 		create_faction = TripleEntente
 		hidden_effect = {
-			RUE = { country_event = { id = generic.5 days = 1 } }
+			RUS = { country_event = { id = generic.5 days = 1 } }
 		}
 	}
 }
@@ -466,7 +482,7 @@ country_event = {
 }
 
 
-##Disband Central Powers
+##Disband WW1 Factions
 country_event = {
 	id = dnctree.22
 	picture = GFX_report_event_military_planning
@@ -474,20 +490,7 @@ country_event = {
 	desc = dnctree.22.desc
 	fire_only_once = yes
 	hidden = yes
-	trigger = {
-		tag = GER
-		is_faction_leader = yes
-		NOT = { has_war_with = FRA }
-		OR = {
-			is_in_faction_with = BUL
-			is_in_faction_with = AUH
-			is_in_faction_with = OTT
-		}
-		date > 1918.1.1
-		date < 1921.1.1
-		has_start_date < 1919.01.01
-
-	}
+	is_triggered_only = yes
 
 	option = {
 		name = dnctree.22.a
@@ -495,54 +498,62 @@ country_event = {
 			factor = 1000
 		}
 
-		every_other_country = {
-			limit = { is_in_faction_with = GER }
+		every_country = {
+			limit = { is_in_faction = yes is_faction_leader = no }
 			leave_faction = yes
 		}
-
-		GER = { dismantle_faction = yes }
+		
+		every_country = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
+		}
+		
+		set_global_flag = WW1_Factions_Disbanded
+		
+		#Comintern
+		if = {
+			limit = {
+				SOV = { is_subject = no }
+			}	
+			SOV = { country_event = { id = dnctree.24 hours = 1 } }
+		}
+		
+		#White Movement
+		if = {
+			limit = {
+				RUS = { is_subject = no }
+			}	
+			RUS = { country_event = { id = dnctree.25 hours = 1 } }
+		}
+		
+		#Treaty of Warsaw
+		if = {
+			limit = {
+				POL = { is_subject = no }
+			}	
+			POL = { country_event = { id = dnctree.26 hours = 1 } }
+		}
+		
+		#British Faction
+		if = {
+			limit = {
+				ENG = { is_subject = no }
+			}	
+			ENG = { country_event = { id = dnctree.27 hours = 1 } }
+		}
+		
+		#French Faction
+		if = {
+			limit = {
+				FRA = { is_subject = no }
+			}	
+			FRA = { country_event = { id = dnctree.28 hours = 1 } }
+		}
+		
 
 	}
 }
 
-
-##Disband Entente
-country_event = {
-	id = dnctree.23
-	picture = GFX_report_event_military_planning
-	title = dnctree.23.title
-	desc = dnctree.23.desc
-	fire_only_once = yes
-	hidden = yes
-	trigger = {
-		tag = FRA
-		is_faction_leader = yes
-		NOT = { has_war_with = GER }
-		OR = {
-			is_in_faction_with = ENG
-			is_in_faction_with = USA
-			is_in_faction_with = RUE
-		}
-		date > 1918.1.1
-		date < 1921.1.1
-		has_start_date < 1919.01.01
-	}
-
-	option = {
-		name = dnctree.23.a
-		ai_chance = {
-			factor = 1000
-		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = FRA }
-			leave_faction = yes
-		}
-
-		FRA = { dismantle_faction = yes }
-
-	}
-}
 
 
 #Create Comintern
@@ -552,16 +563,8 @@ country_event = {
 	title = dnctree.24.title
 	desc = dnctree.24.desc
 
-	trigger = {
-		tag = SOV
-		is_in_faction = no
-		date > 1919.1.1
-		date < 1920.1.1
-		has_start_date < 1919.01.01
-		NOT = { has_country_flag = DNC_Create_Comintern }
-		has_government = communism
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_Create_Comintern
 	}
@@ -598,15 +601,8 @@ country_event = {
 	title = dnctree.25.title
 	desc = dnctree.25.desc
 
-	trigger = {
-		tag = WHR
-		is_in_faction = no
-		date > 1919.1.1
-		date < 1920.1.1
-		has_start_date < 1919.01.01
-		NOT = { has_country_flag = DNC_White_Movement }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_White_Movement
 	}
@@ -642,16 +638,8 @@ country_event = {
 	title = dnctree.26.title
 	desc = dnctree.26.desc
 
-	trigger = {
-		tag = POL
-		is_in_faction = no
-		date > 1919.1.1
-		date < 1920.1.1
-		has_start_date < 1919.01.01
-		NOT = { has_country_flag = DNC_Treaty_Of_Warsaw }
-		NOT = { has_government = communism }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_Treaty_Of_Warsaw
 	}
@@ -687,16 +675,8 @@ country_event = {
 	title = dnctree.27.title
 	desc = dnctree.27.desc
 
-	trigger = {
-		tag = ENG
-		is_in_faction = no
-		date > 1919.1.1
-		date < 1920.1.1
-		has_start_date < 1919.01.01
-		NOT = { has_country_flag = DNC_British_Empire }
-		NOT = { has_government = communism }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_British_Empire
 	}
@@ -737,16 +717,8 @@ country_event = {
 	title = dnctree.28.title
 	desc = dnctree.28.desc
 
-	trigger = {
-		tag = FRA
-		is_in_faction = no
-		date > 1919.1.1
-		date < 1920.1.1
-		has_start_date < 1919.01.01
-		NOT = { has_country_flag = DNC_French_Republic }
-		NOT = { has_government = communism }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_French_Republic
 	}
@@ -773,7 +745,7 @@ country_event = {
 
 }
 
-##Disband Treaty of Warsaw
+##Disband Interwar Factions
 country_event = {
 	id = dnctree.29
 	picture = GFX_report_event_military_planning
@@ -781,18 +753,8 @@ country_event = {
 	desc = dnctree.29.desc
 	fire_only_once = yes
 	hidden = yes
-	trigger = {
-		tag = POL
-		is_faction_leader = yes
-		NOT = { has_war_with = SOV }
-		NOT = { has_war_with = RUE }
-		NOT = { has_war_with = WHR }
-		is_in_faction_with = UKR
-		date > 1921.3.18
-		date < 1933.1.1
-		has_start_date < 1933.01.01
-
-	}
+	
+	is_triggered_only = yes
 
 	option = {
 		name = dnctree.29.a
@@ -800,79 +762,51 @@ country_event = {
 			factor = 1000
 		}
 
-		every_other_country = {
-			limit = { is_in_faction_with = POL }
+		every_country = {
+			limit = { is_in_faction = yes is_faction_leader = no }
 			leave_faction = yes
 		}
-
-		POL = { dismantle_faction = yes }
-
-	}
-}
-
-##Disband British Faction
-country_event = {
-	id = dnctree.30
-	picture = GFX_report_event_military_planning
-	title = dnctree.30.title
-	desc = dnctree.30.desc
-	fire_only_once = yes
-	hidden = yes
-	trigger = {
-		tag = ENG
-		is_faction_leader = yes
-		date > 1932.1.1
-		date < 1933.1.1
-		has_start_date < 1933.01.01
-		has_government = democratic
-	}
-
-	option = {
-		name = dnctree.30.a
-		ai_chance = {
-			factor = 1000
+		
+		every_country = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = ENG }
-			leave_faction = yes
+		
+		set_global_flag = INT_Factions_Disbanded
+		
+		#Comintern
+		if = {
+			limit = {
+				SOV = { is_subject = no }
+			}	
+			SOV = { country_event = { id = dnctree.24 hours = 1 } }
 		}
-
-		ENG = { dismantle_faction = yes }
-
-	}
-}
-
-##Disband French Faction
-country_event = {
-	id = dnctree.31
-	picture = GFX_report_event_military_planning
-	title = dnctree.31.title
-	desc = dnctree.31.desc
-	fire_only_once = yes
-	hidden = yes
-	trigger = {
-		tag = FRA
-		is_faction_leader = yes
-		date > 1932.1.1
-		date < 1933.1.1
-		has_start_date < 1933.01.01
-		has_government = democratic
-
-	}
-
-	option = {
-		name = dnctree.31.a
-		ai_chance = {
-			factor = 1000
+		
+		#Allies
+		if = {
+			limit = {
+				ENG = { is_subject = no }
+			}	
+			ENG = { country_event = { id = dnctree.32 hours = 1 } }
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = FRA }
-			leave_faction = yes
+		
+		#Japanese Faction
+		if = {
+			limit = {
+				JAP = { is_subject = no }
+			}	
+			JAP = { country_event = { id = dnctree.36 hours = 1 } }
 		}
+		
+		#Axis
+		if = {
+			limit = {
+				GER = { is_subject = no }
+			}	
+			GER = { country_event = { id = dnctree.48 hours = 1 } }
+		}
+		
 
-		FRA = { dismantle_faction = yes }
 
 	}
 }
@@ -884,16 +818,8 @@ country_event = {
 	title = dnctree.32.title
 	desc = dnctree.32.desc
 
-	trigger = {
-		tag = ENG
-		is_in_faction = no
-		date > 1933.1.1
-		date < 1936.1.1
-		has_start_date < 1933.01.01
-		has_government = democratic
-		NOT = { has_country_flag = DNC_Allies }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_Allies
 	}
@@ -926,7 +852,7 @@ country_event = {
 
 }
 
-##Disband WW2 Factions
+##Disband WW2 Factions END OF WW2 Event
 country_event = {
 	id = dnctree.33
 	picture = GFX_report_event_military_planning
@@ -934,71 +860,97 @@ country_event = {
 	desc = dnctree.33.desc
 	fire_only_once = yes
 	hidden = yes
-	trigger = {
-		OR = {
-			tag = ENG
-			tag = FRA
-			tag = USA
-			tag = GER
-			tag = JAP
-			tag = ITA
-			tag = SOV
-		}
-		is_faction_leader = yes
-		date > 1949.1.1
-		date < 1950.1.1
-		has_start_date < 1949.01.01
-
-	}
+	is_triggered_only = yes
 
 	option = {
 		name = dnctree.33.a
 		ai_chance = {
 			factor = 1000
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = ENG }
+		
+		every_country = {
+			limit = { is_in_faction = yes is_faction_leader = no }
 			leave_faction = yes
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = FRA }
-			leave_faction = yes
+		
+		every_country = {
+			limit = { is_faction_leader = yes }
+			dismantle_faction = yes
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = USA }
-			leave_faction = yes
+		
+		set_global_flag = WW2_Factions_Disbanded
+		
+		#Nato
+		if = {
+			limit = {
+				USA = { is_subject = no }
+			}	
+			USA = { country_event = { id = dnctree.34 hours = 1 } }
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = GER }
-			leave_faction = yes
+		
+		#Comintern Again
+		if = {
+			limit = {
+				has_global_flag = RON_Axis_Victory
+				SOV = { is_subject = no }
+			}	
+			SOV = { country_event = { id = dnctree.24 hours = 1 } }
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = ITA }
-			leave_faction = yes
+		
+		#Warsaw Pact
+		if = {
+			limit = {
+				NOT = { has_global_flag = RON_Axis_Victory }
+				SOV = { is_subject = no }
+				SOV = {
+					has_government = communism
+				}
+			}	
+			SOV = { country_event = { id = dnctree.35 hours = 1 } }
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = JAP }
-			leave_faction = yes
+		
+		#Greater East Asian Co-Prosperity Sphere
+		if = {
+			limit = {
+				has_global_flag = RON_Axis_Victory
+				JAP = { is_subject = no }
+				OR = {
+					JAP = { has_government = fascism }
+					JAP = { has_government = neutrality }
+				}
+			}	
+			JAP = { 
+				country_event = { id = dnctree.36 hours = 1 } 
+			}
 		}
-
-		every_other_country = {
-			limit = { is_in_faction_with = SOV }
-			leave_faction = yes
+		
+		#German Faction
+		if = {
+			limit = {
+				has_global_flag = RON_Axis_Victory
+				GER = { is_subject = no }
+				OR = {
+					GER = { has_government = fascism }
+					GER = { has_government = neutrality }
+				}
+			}	
+			GER = { country_event = { id = dnctree.46 hours = 1 } }
 		}
+		
+		#Italian Faction
+		if = {
+			limit = {
+				has_global_flag = RON_Axis_Victory
+				ITA = { is_subject = no }
+				OR = {
+					ITA = { has_government = fascism }
+					ITA = { has_government = neutrality }
+				}
+			}	
+			ITA = { country_event = { id = dnctree.47 hours = 1 } }
+		}
+		
 
-		ENG = { dismantle_faction = yes }
-		FRA = { dismantle_faction = yes }
-		USA = { dismantle_faction = yes }
-		ITA = { dismantle_faction = yes }
-		JAP = { dismantle_faction = yes }
-		GER = { dismantle_faction = yes }
-		SOV = { dismantle_faction = yes }
 
 	}
 }
@@ -1010,21 +962,7 @@ country_event = {
 	title = dnctree.34.title
 	desc = dnctree.34.desc
 
-	trigger = {
-		tag = USA
-		is_in_faction = no
-		date > 1949.1.1
-		date < 1960.1.1
-		has_start_date < 1949.01.01
-		has_government = democratic
-		NOT = { has_country_flag = DNC_NATO }
-		Second_World_War_Allied_Victory = yes
-		RON_SOV_Defeated = no
-		is_subject = no
-	}
-	immediate = {
-		set_country_flag = DNC_NATO
-	}
+	is_triggered_only = yes
 
 
 	option = {
@@ -1034,17 +972,38 @@ country_event = {
 		}
 
 		create_faction = "NATO"
-		BEL = { country_event = { id = generic.5 hours = 1 } }
+		
 		CAN = { country_event = { id = generic.5 hours = 1 } }
-		DEN = { country_event = { id = generic.5 hours = 1 } }
-		FRA = { country_event = { id = generic.5 hours = 1 } }
-		ICE = { country_event = { id = generic.5 hours = 1 } }
-		ITA = { country_event = { id = generic.5 hours = 1 } }
-		LUX = { country_event = { id = generic.5 hours = 1 } }
-		HOL = { country_event = { id = generic.5 hours = 1 } }
-		NOR = { country_event = { id = generic.5 hours = 1 } }
-		POR = { country_event = { id = generic.5 hours = 1 } }
 		ENG = { country_event = { id = generic.5 hours = 1 } }
+		ICE = { country_event = { id = generic.5 hours = 1 } }
+		
+		if = {
+			limit = {
+				OR = {
+					NOT = { has_global_flag = RON_Axis_Victory }
+					NOT = { country_exists = GER }
+				}
+			}	
+			BEL = { country_event = { id = generic.5 hours = 1 } }
+			DEN = { country_event = { id = generic.5 hours = 1 } }
+			FRA = { country_event = { id = generic.5 hours = 1 } }
+			ITA = { country_event = { id = generic.5 hours = 1 } }
+			LUX = { country_event = { id = generic.5 hours = 1 } }
+			HOL = { country_event = { id = generic.5 hours = 1 } }
+			NOR = { country_event = { id = generic.5 hours = 1 } }
+			POR = { country_event = { id = generic.5 hours = 1 } }
+		}
+		
+		if = {
+			limit = {
+				has_global_flag = RON_Axis_Victory
+			}	
+			SAF = { country_event = { id = generic.5 hours = 1 } }
+			AST = { country_event = { id = generic.5 hours = 1 } }
+			NZL = { country_event = { id = generic.5 hours = 1 } }
+			GRL = { country_event = { id = generic.5 hours = 1 } }
+			IRE = { country_event = { id = generic.5 hours = 1 } }
+		}
 
 		news_event = {
 			id = roncw_news.71
@@ -1071,21 +1030,8 @@ country_event = {
 	title = dnctree.35.title
 	desc = dnctree.35.desc
 
-	trigger = {
-		tag = SOV
-		is_in_faction = no
-		date > 1949.1.1
-		date < 1960.1.1
-		has_start_date < 1949.01.01
-		has_government = communism
-		NOT = { has_country_flag = DNC_WARSAW_PACT }
-		Second_World_War_Allied_Victory = yes
-		RON_SOV_Defeated = no
-		is_subject = no
-	}
-	immediate = {
-		set_country_flag = DNC_WARSAW_PACT
-	}
+	is_triggered_only = yes
+	
 
 
 	option = {
@@ -1093,7 +1039,7 @@ country_event = {
 		ai_chance = {
 			factor = 1000
 		}
-
+		
 		create_faction = "Warsaw Pact"
 		ALB = { country_event = { id = generic.5 hours = 1 } }
 		BUL = { country_event = { id = generic.5 hours = 1 } }
@@ -1129,19 +1075,8 @@ country_event = {
 	title = dnctree.36.title
 	desc = dnctree.36.desc
 
-	trigger = {
-		tag = JAP
-		is_in_faction = no
-		date > 1933.1.1
-		date < 1936.1.1
-		has_start_date < 1936.01.01
-		OR = {
-			has_government = fascism
-			has_government = neutrality
-		}
-		NOT = { has_country_flag = DNC_Sphere }
-		is_subject = no
-	}
+	is_triggered_only = yes
+	
 	immediate = {
 		set_country_flag = DNC_Sphere
 	}
@@ -1188,7 +1123,7 @@ country_event = {
 		set_country_flag = DNC_CSTO
 	}
 
-
+	fire_only_once = yes
 	option = {
 		name = dnctree.37.a
 		ai_chance = {
@@ -1234,7 +1169,7 @@ country_event = {
 	immediate = {
 		set_country_flag = DNC_Shield_Force
 	}
-
+	fire_only_once = yes
 
 	option = {
 		name = dnctree.38.a
@@ -1348,6 +1283,210 @@ country_event = {
 		}
 
 		set_global_flag = eight_nation_alliance_denied
+
+	}
+
+
+}
+
+##Disband French Faction
+country_event = {
+	id = dnctree.41
+	picture = GFX_report_event_military_planning
+	title = dnctree.41.title
+	desc = dnctree.41.desc
+	fire_only_once = yes
+	hidden = yes
+	trigger = {
+		tag = FRA
+		is_faction_leader = yes
+		date > 1902.1.1
+		date < 1903.1.1
+		has_start_date < 1905.01.01
+		has_war_with = BOX
+		NOT = { has_war_with = QIN }
+		BOX = { is_ai = yes }
+		NOT = { has_global_flag = eight_nation_alliance_disbanded }
+	}
+
+	option = {
+		name = dnctree.41.a
+		ai_chance = {
+			factor = 1000
+		}
+		
+		QIN = {
+			annex_country = {
+				target = BOX
+				transfer_troops = yes
+			}
+		}
+		
+		CHI = {
+			annex_country = {
+				target = BOX
+				transfer_troops = yes
+			}
+		}
+
+		FRA = {
+			country_event = {
+				id = dnctree.19
+			}
+		}
+
+	}
+}
+
+##Disband AUH-GER
+country_event = {
+	id = dnctree.42
+	picture = GFX_report_event_DNC_Partition_of_Austria
+	title = dnc_germany.27.t
+	desc = dnc_germany.27.d
+	fire_only_once = yes
+	trigger = {
+		tag = GER
+		date < 1910.1.1
+		has_start_date < 1910.01.01
+		NOT = { has_completed_focus = GERDNC_erfurt_union }
+		
+		all_state = {
+			if = {
+				limit = {
+					is_core_of = AUH
+				}
+				is_owned_by = GER
+			}
+		}
+		
+
+	}
+
+	option = {
+		name = "Autonomy For Minorities"
+		ai_chance = {
+			factor = 1000
+		}
+
+		RON_partition_AUH_Ahistorically = yes
+		
+		annex_country = { target = AUS transfer_troops = no }
+
+	}
+	
+	option = {
+		name = "Maintain Status Quo"
+		ai_chance = {
+			factor = 0
+		}
+
+		add_ideas = {
+			multi_ethnic
+			AUH_unequal_union
+		}
+
+		add_political_power = -300
+		add_stability = -0.3
+
+	}
+}
+
+##Create German Faction
+country_event = {
+	id = dnctree.46
+	picture = GFX_report_event_welcome_axis_victory
+	title = dnctree.46.title
+	desc = dnctree.46.desc
+
+	is_triggered_only = yes
+
+
+	option = {
+		name = dnctree.46.a
+		ai_chance = {
+			factor = 1000
+		}
+
+		create_faction = "Greater Germanic Unity Pact"
+		BEL = { country_event = { id = generic.5 hours = 1 } }
+		HOL = { country_event = { id = generic.5 hours = 1 } }
+		DEN = { country_event = { id = generic.5 hours = 1 } }
+		NOR = { country_event = { id = generic.5 hours = 1 } }
+
+	}
+
+	option = {
+		name = dnctree.46.b
+		ai_chance = {
+			factor = 0
+		}
+
+	}
+
+
+}
+
+##Create Italian Faction
+country_event = {
+	id = dnctree.47
+	picture = GFX_report_event_welcome_axis_victory
+	title = dnctree.47.title
+	desc = dnctree.47.desc
+
+	is_triggered_only = yes
+
+
+	option = {
+		name = dnctree.47.a
+		ai_chance = {
+			factor = 1000
+		}
+
+		create_faction = "Pact of Rome"
+		
+		SPR = { country_event = { id = generic.5 hours = 1 } }
+		GRE = { country_event = { id = generic.5 hours = 1 } }
+		BUL = { country_event = { id = generic.5 hours = 1 } }
+
+	}
+
+	option = {
+		name = dnctree.47.b
+		ai_chance = {
+			factor = 0
+		}
+
+	}
+
+
+}
+
+##Create Axis
+country_event = {
+	id = dnctree.48
+	picture = GFX_report_event_ron_welcome_to_WW2
+	title = dnctree.48.title
+	desc = dnctree.48.desc
+
+	is_triggered_only = yes
+
+
+	option = {
+		name = dnctree.48.a
+		ai_chance = {
+			factor = 1000
+		}
+
+		create_faction = Axis
+
+	}
+
+	option = {
+		name = dnctree.48.b
+		ai_chance = {
+			factor = 0
+		}
 
 	}
 

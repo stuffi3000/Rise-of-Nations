@@ -1,0 +1,1320 @@
+add_namespace = ger
+
+#hitler does a pro gamer move
+
+country_event = {
+	id = ger.1
+	title = "Hitler commits suicide"
+	desc = ger.1.d
+	picture = GFX_report_event_german_reichstag_bombed
+	timeout_days = 14
+	
+	#is_triggered_only = yes
+
+	trigger = { 
+		original_tag = GER
+		has_country_leader = { ruling_only = yes name = "Adolf Hitler" }
+		has_completed_focus = GER_rhineland
+		has_war = yes
+		surrender_progress > 0.5
+		NOT = {
+			controls_state = 64
+		}
+		is_ai = yes
+	}
+
+	fire_only_once = yes
+
+	mean_time_to_happen = {
+		days = 7
+	}
+	
+	option = {
+		name = ger.1.a
+		ai_chance = { factor = 100 }
+		kill_ideology_leader = fascism
+		create_country_leader = {
+			name = "Karl Dönitz"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Karl_Donitz.dds"
+			expire = "1965.1.1"
+			ideology = fascism_ideology
+			traits = {
+				realistic_reichsprasident
+			}
+		}
+		hidden_effect = {
+			news_event = jos_news.12
+		}
+	}
+
+}
+
+#hitler asks for sudtirol
+
+country_event = {
+	id = ger.2
+	title = "German Ultimatum"
+	desc = ger.2.d
+	picture = GFX_report_event_german_italian_pact
+	timeout_days = 14
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.2.a
+		ai_chance = {
+			factor = 70
+			modifier = {
+				GER = { NOT = { owns_state = 153 } }
+				factor = 0
+			}
+			modifier = {
+				ITA = { NOT = { has_government = communism } }
+				GER = { has_government = communism }
+				factor = 0
+			}
+			modifier = {
+				GER = { NOT = { has_government = fascism } }
+				ITA = { has_government = fascism }
+				factor = 0
+			}
+		}
+		GER = { transfer_state = 39 }
+	}
+
+	option = {
+		name = ger.2.b
+		ai_chance = {
+			factor = 30
+			modifier = {
+				GER = { surrender_progress > 0.25 }
+				factor = 2 #seems safe
+			}
+			modifier = {
+				NOT = { has_government = fascism }
+				factor = 2
+			}
+			modifier = {
+			
+				AND = {
+					ENG = { 
+						has_capitulated = no 
+						has_war_with = GER
+					}
+					SOV = { 
+						has_capitulated = no 
+						has_war_with = GER
+					}
+					USA = { 
+						has_capitulated = no 
+						has_war_with = GER
+					}
+				}
+			
+				factor = 3 #lol come at me bro
+			}
+		}
+		GER = {
+					create_wargoal = {			
+				expire = 100
+				type = take_state_focus
+				target = ITA
+				
+				generator = { 39 }
+			}
+		}
+	}
+
+}
+
+### Oster Conspiracy rumours
+country_event = {
+	id = ger.3
+	title = "The Oster Conspiracy"
+	desc = ger.3.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			CZE = { has_capitulated = no }
+			country_exists = CZE # Should only trigger if CZE hasn't fallen
+		}
+		has_war_with = CZE
+	}
+	
+	mean_time_to_happen = {
+		days = 100
+	}
+	
+	option = {
+		name = ger.3.a
+		add_to_variable = { var = wehrmacht_anger value = 5 }
+	}
+}
+
+### Oster Conspiracy rumours 2
+country_event = {
+	id = ger.4
+	title = "Protests in Berlin"
+	desc = ger.4.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			POL = { has_capitulated = no }
+			country_exists = POL # Should only trigger if POL hasn't fallen
+		}
+		OR = {
+			has_war_with = FRA
+			has_war_with = ENG
+		}
+		has_war_with = POL
+	}
+	
+	mean_time_to_happen = {
+		days = 150
+	}
+	
+	option = {
+		name = ger.4.a
+		add_to_variable = { var = wehrmacht_anger value = 5 }
+	}
+}
+
+### Oster Conspiracy rumours 3
+country_event = {
+	id = ger.5
+	title = "Worried Wehrmacht"
+	desc = ger.5.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			FRA = { has_capitulated = no }
+			country_exists = FRA # Should only trigger if POL hasn't fallen
+		}
+		has_war_with = FRA
+	}
+	
+	mean_time_to_happen = {
+		days = 365
+	}
+	
+	option = {
+		name = ger.5.a
+		set_country_flag = takeparisyoumoron
+		add_to_variable = { var = wehrmacht_anger value = 10 }
+	}
+}
+
+### Oster Conspiracy rumours 4
+country_event = {
+	id = ger.6
+	title = "Growing discontent among the Wehrmacht"
+	desc = ger.6.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			SOV = { has_capitulated = no }
+			country_exists = SOV
+		}
+		has_offensive_war_with = SOV
+		NOT = { controls_state = 206 }
+		NOT = { controls_state = 202 }
+	}
+	
+	mean_time_to_happen = {
+		days = 365
+	}
+	
+	option = {
+		name = ger.6.a
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_to_variable = { var = wehrmacht_anger value = 5 }
+	}
+}
+
+### Operation Valkyrie rumours
+country_event = {
+	id = ger.7
+	title = "Defeatism among the Wehrmacht"
+	desc = ger.7.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			SOV = { has_capitulated = no }
+			country_exists = SOV
+		}
+		has_war_with = SOV
+		OR = {
+			has_war_with = ENG
+			has_war_with = USA
+		}
+		surrender_progress > 0.1
+	}
+	
+	mean_time_to_happen = {
+		days = 150
+	}
+	
+	option = {
+		name = ger.7.a
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_to_variable = { var = wehrmacht_anger value = 10 }
+		SS_resolve_effects_wehrmacht = yes
+	}
+}
+
+### Operation Valkyrie rumours
+country_event = {
+	id = ger.8
+	title = "Defeatism among the Wehrmacht"
+	desc = ger.8.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			SOV = { has_capitulated = no }
+			country_exists = SOV
+		}
+		has_war_with = SOV
+		OR = {
+			has_war_with = ENG
+			has_war_with = USA
+		}
+		has_war_with = FRA
+		#FRA = { has_completed_focus = FRA_appeal_to_the_french_nation }
+		16 = {
+			CONTROLLER = {
+				NOT = { is_in_faction_with = GER }
+			}
+		}
+		surrender_progress > 0.1
+	}
+	
+	mean_time_to_happen = {
+		days = 30
+	}
+	
+	option = {
+		name = ger.7.a
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_to_variable = { var = wehrmacht_anger value = 10 }
+		SS_resolve_effects_wehrmacht = yes
+	}
+}
+
+### Operation Valkyrie rumours
+country_event = {
+	id = ger.9
+	title = "Defeatism among the Wehrmacht"
+	desc = ger.9.d
+	picture = GFX_report_event_german_reichstag_gathering
+	
+	fire_only_once = yes
+
+	trigger = {
+		has_country_leader = { name = "Adolf Hitler" }
+		tag = GER
+		AND = {
+			SOV = { has_capitulated = no }
+			country_exists = SOV
+		}
+		has_war_with = SOV
+		OR = {
+			has_war_with = ENG
+			has_war_with = USA
+		}
+		AND = {
+			OR = {
+				is_in_faction_with = ITA
+				ITA = { has_government = fascism }
+			}
+			ITA = { has_capitulated = yes }
+			country_exists = ITA
+		}
+	}
+	
+	mean_time_to_happen = {
+		days = 60
+	}
+	
+	option = {
+		name = ger.7.a
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_to_variable = { var = wehrmacht_anger value = 5 }
+		SS_resolve_effects_wehrmacht = yes
+	}
+}
+
+#fate of the netherlands
+
+country_event = {
+	id = ger.10
+	title = "Fate of the Netherlands"
+	desc = ger.10.d
+	picture = GFX_report_event_german_italian_pact
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.10.a
+		ai_chance = {
+			factor = 0
+		}
+		set_country_flag = claimed_the_dutch
+
+		add_state_claim = 36
+		add_state_claim = 7
+		add_state_claim = 35
+		add_state_claim = 6
+
+		hidden_effect = {
+			country_event = ger.11
+		}
+	}
+
+	option = {
+		name = ger.10.b
+		ai_chance = {
+			factor = 100
+		}
+
+		RKH  = {
+			hidden_effect = { 
+				set_state_controller = 36
+				transfer_state = 7
+				set_state_controller = 35
+
+				add_state_core = 36
+				add_state_core = 7
+				add_state_core = 35
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}
+		}
+
+		hidden_effect = {
+			country_event = ger.11
+		}
+	}
+
+	option = {
+		name = ger.10.c
+		ai_chance = {
+			factor = 0
+		}
+		
+		set_country_flag = weaker_belgium_reichs
+
+		effect_tooltip = { RKH = { add_state_core = 6 } }
+
+		RKH  = {
+			hidden_effect = { 
+				set_state_controller = 36
+				transfer_state = 7
+				set_state_controller = 35
+				set_state_controller = 6
+
+				add_state_core = 36
+				add_state_core = 7
+				add_state_core = 35
+				add_state_core = 6
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}
+		}
+
+		hidden_effect = {
+			country_event = ger.11
+		}
+	}
+
+}
+
+#fate of belgium
+
+country_event = {
+	id = ger.11
+	title = "Fate of Belgium"
+	desc = ger.11.desc
+	picture = GFX_report_event_german_italian_pact
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.11.a #annex belgium, I don't want more lag you moron
+		ai_chance = {
+			factor = 50
+		}
+		if = { limit = { has_country_flag = claimed_the_dutch }
+			add_state_claim = 6
+		}
+
+		hidden_effect = {
+			if = { limit = { NOT = { has_country_leader = { name = "Heinrich Himmler" } } }
+				country_event = ger.12
+			}
+		}
+	}
+
+	option = {
+		name = ger.11.b #only common belgium
+		ai_chance = {
+			factor = 0
+		}
+		trigger = {
+			NOT = { has_country_flag = weaker_belgium_reichs }
+		}
+
+		RKB  = {
+			hidden_effect = { 
+				set_state_controller = 34
+				transfer_state = 6
+
+				add_state_core = 34
+				add_state_core = 6
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}
+		}
+
+		hidden_effect = {
+			if = { limit = { NOT = { has_country_leader = { name = "Heinrich Himmler" } } }
+			country_event = ger.12
+			}
+		}
+	}
+
+	option = {
+		name = ger.11.c # common belgium + pa de calais
+		ai_chance = {
+			factor = 50
+		}
+
+		trigger = {
+			NOT = { has_country_flag = weaker_belgium_reichs }
+		}
+		
+		set_country_flag = weaker_belgium_reichs
+
+		RKB  = {
+			hidden_effect = { 
+				set_state_controller = 34
+				transfer_state = 6
+				transfer_state = 29
+
+				add_state_core = 34
+				add_state_core = 6
+				add_state_core = 29
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}
+		}
+
+		hidden_effect = {
+			if = { limit = { NOT = { has_country_leader = { name = "Heinrich Himmler" } } }
+				country_event = ger.12
+			}
+		}
+	}
+
+	option = {
+		name = ger.11.d #all of eastern france
+		ai_chance = {
+			factor = 0
+		}
+		
+		RKB  = {
+			set_cosmetic_tag = RBL2
+			hidden_effect = { 
+				if = { limit = { RKH = { NOT = { controls_state = 6 owns_state = 6 } } }
+					set_state_controller = 6
+
+					add_state_core = 6
+				}
+				set_state_controller = 34
+				transfer_state = 29
+				transfer_state = 785
+				transfer_state = 18
+				transfer_state = 17
+
+				add_state_core = 34
+				add_state_core = 29
+				add_state_core = 785
+				add_state_core = 18
+				add_state_core = 17
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_integrated_puppet }
+			}
+		}
+
+		subtract_from_variable = { var = wehrmacht_anger value = 5 }
+		add_to_variable = { var = SS_anger value = 5 }
+		SS_resolve_effects_ss = yes
+	}
+
+}
+
+#BURGUNDY??? GAMER HIMMLER????? WE DID IT REDDIT!!!!!!!!!
+
+country_event = {
+	id = ger.12
+	title = "An SS-Staat?"
+	desc = ger.12.d
+	picture = GFX_report_event_germany_politician_handshake
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.12.a
+		ai_chance = {
+			factor = 100
+		}
+		effect_tooltip = { SSB = { add_ideas = the_shadow_state } }
+		SSB  = {
+			hidden_effect = {
+				if = { limit = { RKH = { NOT = { controls_state = 6 owns_state = 6 } } RKB = { NOT = { controls_state = 6 owns_state = 6 } } }
+					set_state_controller = 6
+
+					add_state_core = 6
+				}
+				if = { limit = { RKB = { NOT = { controls_state = 6 controls_state = 29 controls_state = 34 owns_state = 6 owns_state = 29 owns_state = 34 } } }
+					annex_country = { target = RKB transfer_troops = yes }
+					set_state_controller = 34
+					transfer_state = 29
+
+					add_state_core = 34
+					add_state_core = 29
+				}
+
+				transfer_state = 785
+				transfer_state = 18
+				transfer_state = 17
+				transfer_state = 27
+
+				add_state_core = 785
+				add_state_core = 18
+				add_state_core = 17
+				add_state_core = 27
+
+				add_state_claim = 20
+				add_state_claim = 32
+				add_state_claim = 21
+				inherit_technology = GER
+			}
+			add_timed_idea = { idea = ss_recruitment days = 365 }
+			GER = {
+				hidden_effect = { puppet = PREV }
+				set_autonomy = { target = PREV autonomy_state = autonomy_satellite }
+			}
+		}
+
+		subtract_from_variable = { var = SS_anger value = 10 }
+		add_to_variable = { var = wehrmacht_anger value = 10 }
+		SS_resolve_effects_wehrmacht = yes
+	}
+
+	option = {
+		name = ger.12.b
+		ai_chance = {
+			factor = 0
+		}
+
+		subtract_from_variable = { var = wehrmacht_anger value = 5 }
+		add_to_variable = { var = SS_anger value = 5 }
+		SS_resolve_effects_ss = yes
+	}
+
+}
+
+#russian leader
+
+country_event = {
+	id = ger.13
+	title = "The new leader of Russia"
+	desc = ger.13.desc
+	picture = GFX_report_event_por_return_of_the_monarchy
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.13.a #governed by the duma
+		ai_chance = {
+			factor = 0
+		}
+
+		SOV = {
+			add_stability = 0.05
+			create_country_leader = {
+				name = "Provisional Government"
+				desc = ""
+				picture = "gfx/leaders/PAR/portrait_eng_fallen_government.dds"
+				expire = "1965.1.1"
+				ideology = despotism
+				traits = {
+					#
+				}
+			}
+			hidden_effect = { 
+				set_party_name = { 
+					ideology = neutrality
+					long_name = GER_neutrality_party_civil_war
+					name = GER_neutrality_party_civil_war
+				}
+			}
+		}
+
+	}
+
+	option = {
+		name = ger.13.b #baltic german regent
+		ai_chance = {
+			factor = 1
+		}
+
+		SOV = {
+			add_stability = 0.05
+			create_country_leader = {
+				name = "Eugen Ludwig Müller"
+				desc = ""
+				picture = "gfx/leaders/SIK/Portrait_RUS_Yevgeny_Miller.dds"
+				expire = "1965.1.1"
+				ideology = despotism
+				traits = {
+					
+				}
+			}
+			hidden_effect = { 
+				set_party_name = { 
+					ideology = neutrality
+					long_name = GER_neutrality_party_civil_war
+					name = GER_neutrality_party_civil_war
+				}
+			}
+		}
+
+	}
+
+	option = {
+		name = ger.13.c #the guy from the baltics in kaiserreich 
+		ai_chance = {
+			factor = 1
+		}
+		trigger = {
+			always = no
+		}
+
+		SOV = {
+			add_stability = -0.05
+			create_country_leader = {
+				name = "Adolf Friedich"
+				desc = ""
+				picture = "gfx/leaders/GER/Portrait_BAT_Adolf_Friedrich.tga"
+				expire = "1965.1.1"
+				ideology = monarchism
+				traits = {
+					imperial_connections
+				}
+			}
+			hidden_effect = { 
+				set_party_name = { 
+					ideology = neutrality
+					long_name = GER_neutrality_party_kaiserreich_long
+					name = GER_neutrality_party_kaiserreich_long
+				}
+			}
+		}
+
+	}
+
+	option = {
+		name = ger.13.d #restore a tsar
+		ai_chance = {
+			factor = 0
+		}
+
+		SOV = {
+			create_country_leader = {
+				name = "Vladimir Romanov"
+				desc = ""
+				picture = "gfx/leaders/SIK/Portrait_RUS_Vladimir_Romanov2.tga"
+				expire = "1965.1.1"
+				ideology = monarchism
+				traits = {
+					memories_of_the_red_nightmare
+				}
+			}
+			
+			hidden_effect = { 
+				set_party_name = { 
+					ideology = neutrality 
+					name = RUS_neutrality_Dmitri 
+					long_name = RUS_neutrality_Dmitri_long
+				}
+			}
+		}
+	}
+}
+
+#actual elections
+
+country_event = {
+	id = ger.14
+	title = "Holding the elections"
+	desc = ger.14.d
+	picture = GFX_report_event_generic_rally_3
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.14.a
+		ai_chance = {
+			factor = 1
+		}
+		add_popularity = { ideology = democratic popularity = 0.1 }
+		add_stability = 0.05
+		add_political_power = 75
+		create_country_leader = {
+			name = "Konrad Adenauer"
+			desc = "POLITICS_KONRAD_ADENAUER_DESC"
+			picture = "Portrait_Germany_Konrad_Adenauer.dds"
+			expire = "1965.1.1"
+			ideology = conservatism
+			traits = {
+				anti_communist
+			}
+		}
+		country_event = ger.15
+	}
+
+	option = {
+		name = ger.14.b
+		ai_chance = {
+			factor = 0
+		}
+		add_popularity = { ideology = democratic popularity = 0.1 }
+		add_stability = 0.1
+		create_country_leader = {
+			name = "Otto Wels"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Otto_Wels.tga"
+			expire = "1965.1.1"
+			ideology = socialism
+			traits = {
+				democratic_reformer
+			}
+		}
+		set_party_name = { ideology = democratic long_name = GER_socialism_long name = GER_socialism }
+		country_event = ger.15
+	}
+
+	option = {
+		name = ger.14.c
+		ai_chance = {
+			factor = 0
+		}
+		add_popularity = { ideology = democratic popularity = 0.1 }
+		add_ideas = GER_wilhelm_iii
+		add_ideas = authoritarian_democracy
+		create_country_leader = {
+			name = "Alfred Hugenberg"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_Germany_Alfred_Hugenberg.tga"
+			expire = "1965.1.1"
+			ideology = conservatism
+			traits = {
+				
+			}
+		}
+		set_party_name = { ideology = democratic long_name = GER_neutrality_party_kaiserreich_long name = GER_neutrality_party_kaiserreich }
+		hidden_effect = {
+			set_cosmetic_tag = GER_german_monarchy
+		}
+	}
+
+}
+
+#monarchy or not
+
+country_event = {
+	id = ger.15
+	title = "The monarchy debate"
+	desc = ger.15.d
+	picture = GFX_report_event_por_return_of_the_monarchy
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.15.a
+		ai_chance = {
+			factor = 1
+		}
+		add_ideas = GER_wilhelm_iii2
+		hidden_effect = {
+			country_event = { id = ger.16 days = 60 }
+		}
+	}
+
+	option = {
+		name = ger.15.b
+		ai_chance = {
+			factor = 0
+		}
+		add_stability = -0.05
+		add_popularity = { ideology = democratic popularity = -0.05 }
+		add_popularity = { ideology = neutrality popularity = 0.1 }
+	}
+}
+
+#let's roast the government hehehehehe
+
+country_event = {
+	id = ger.16
+	title = "Wilhelm III speaks against the government"
+	desc = ger.16.d
+	picture = GFX_report_event_por_return_of_the_monarchy
+	timeout_days = 7
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = ger.16.a
+		ai_chance = {
+			factor = 1
+		}
+		add_stability = -0.05
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		hidden_effect = {
+			country_event = { id = ger.17 days = 90 }
+		}
+	}
+}
+
+#the chad louis vs the virgin wilhelm
+
+country_event = {
+	id = ger.17
+	title = "Wilhelm III abdicates"
+	desc = ger.17.d
+	picture = GFX_report_event_por_return_of_the_monarchy
+	timeout_days = 7
+	
+	is_triggered_only = yes
+
+	option = {
+		name = ger.17.a
+		ai_chance = {
+			factor = 1
+		}
+		remove_ideas = GER_wilhelm_iii2
+		add_ideas = GER_louis_ferdinand
+		add_popularity = { ideology = democratic popularity = 0.1 }
+	}
+}
+
+#sudetenland for economy
+
+country_event = {
+	id = ger.18
+	title = "German concern over the Sudetenland"
+	desc = ger.18.d
+	picture = GFX_report_event_tur_politician_march
+	timeout_days = 7
+	
+	is_triggered_only = yes
+
+	option = {
+		name = ger.18.a
+		ai_chance = {
+			factor = 100
+			modifier = { CZE = { NOT = { has_government = democratic } } add = 0 }
+		}
+		GER = { transfer_state = 69 }
+		if = {
+			limit = {
+				owns_state = 74
+			}
+			GER = { transfer_state = 74 }
+		}
+		random_state = {
+			prioritize = { 9 }
+			limit = {
+				is_owned_by = CZE
+				is_core_of = CZE
+			}
+			add_extra_state_shared_building_slots = 4
+			add_building_construction = {
+				type = industrial_complex
+				level = 4
+				instant_build = yes
+			}
+		}
+		add_ideas = CZE_german_investments
+	}
+
+	option = {
+		name = ger.18.b
+		ai_chance = {
+			base = 0
+			modifier = { CZE = { NOT = { has_government = democratic } } add = 100 }
+		}
+		GER = {
+			if = { limit = { is_in_faction_with = CZE }
+				remove_from_faction = CZE
+			}
+					create_wargoal = {			
+				expire = 100
+				type = take_state_focus
+				target = CZE
+				generator = { 69 }
+			}
+		}
+	}
+}
+
+#commie or not
+
+# country_event = {
+# 	id = ger.19
+# 	title = "Antifaschistische Aktion offers support"
+# 	desc = ger.19.d
+# 	picture = GFX_report_event_spr_spanish_civil_war
+# 	timeout_days = 7
+	
+# 	is_triggered_only = yes
+	
+# 	option = {
+# 		name = ger.19.a
+# 		ai_chance = {
+# 			factor = 0
+# 		}
+# 		set_country_flag = GER_has_commie_support
+# 		add_manpower = 20000
+# 		add_war_support = 0.05
+# 		army_experience = 5
+# 		add_popularity = { ideology = communism popularity = 0.1 }
+# 	}
+
+# 	option = {
+# 		name = ger.19.b
+# 		ai_chance = {
+# 			factor = 1
+# 		}
+# 		add_popularity = { ideology = communism popularity = -0.15 }
+# 		custom_effect_tooltip = commie_revolt_ignited
+# 		hidden_effect = {
+# 			every_state = {
+# 				limit = {
+# 					is_core_of = GER
+# 				}
+# 				add_core_of = GRR
+# 			}
+# 			if = {
+# 				limit = {
+# 					51 = {
+# 						CONTROLLER = {
+# 							original_tag = GER
+# 						}
+# 					}
+# 				}
+# 				GRR = {
+# 					transfer_state = 51
+# 				}
+# 			}
+# 			if = {
+# 				limit = {
+# 					42 = {
+# 						CONTROLLER = {
+# 							original_tag = GER
+# 						}
+# 					}
+# 				}
+# 				GRR = {
+# 					transfer_state = 42
+# 				}
+# 			}
+# 			if = {
+# 				limit = {
+# 					65 = {
+# 						CONTROLLER = {
+# 							original_tag = GER
+# 						}
+# 					}
+# 				}
+# 				GRR = {
+# 					transfer_state = 65
+# 				}
+# 			}
+# 			if = {
+# 				limit = {
+# 					60 = {
+# 						CONTROLLER = {
+# 							original_tag = GER
+# 						}
+# 					}
+# 				}
+# 				GRR = {
+# 					transfer_state = 60
+# 				}
+# 			}
+# 			GRR = { inherit_technology = GER }
+# 			GRR  = { division_template = {
+# 				name = "Roter Frontkämpferbund"
+			
+# 				regiments = {
+# 					infantry = { x = 0 y = 0 }
+# 					infantry = { x = 0 y = 1 }
+# 					infantry = { x = 0 y = 2 }
+# 					infantry = { x = 1 y = 0 }
+# 					infantry = { x = 1 y = 1 }
+# 					infantry = { x = 1 y = 2 }
+			
+# 				}
+# 			  }	
+# 			}
+# 			GRR = { random_owned_controlled_state = {
+# 				prioritize = { 51 }
+# 				create_unit = {
+# 					division = "name = \"Roter Frontkämpferbund\" division_template = \"Roter Frontkämpferbund\" start_experience_factor = 0.3" 
+# 					owner = GRR
+# 					allow_spawning_on_enemy_provs = yes
+# 					count = 4
+# 				}
+# 			  }
+# 			}
+# 			GRR = { random_owned_controlled_state = {
+# 				prioritize = { 42 }
+# 				create_unit = {
+# 					division = "name = \"Roter Frontkämpferbund\" division_template = \"Roter Frontkämpferbund\" start_experience_factor = 0.3" 
+# 					owner = GRR
+# 					allow_spawning_on_enemy_provs = yes
+# 					count = 4
+# 				}
+# 			  }
+# 			}
+# 			GRR = { random_owned_controlled_state = {
+# 				prioritize = { 60 }
+# 				create_unit = {
+# 					division = "name = \"Roter Frontkämpferbund\" division_template = \"Roter Frontkämpferbund\" start_experience_factor = 0.3" 
+# 					owner = GRR
+# 					allow_spawning_on_enemy_provs = yes
+# 					count = 4
+# 				}
+# 			  }
+# 			}
+# 			GRR = { random_owned_controlled_state = {
+# 				prioritize = { 65 }
+# 				create_unit = {
+# 					division = "name = \"Roter Frontkämpferbund\" division_template = \"Roter Frontkämpferbund\" start_experience_factor = 0.3" 
+# 					owner = GRR
+# 					allow_spawning_on_enemy_provs = yes
+# 					count = 4
+# 				}
+# 			  }
+# 			}
+# 			GRR = { 
+# 				add_timed_idea = {
+# 					idea = rotrontkampferbund
+# 					days = 365
+# 				}
+# 				add_timed_idea = {
+# 					idea = GER_unrecognized_state
+# 					days = 365
+# 				}
+# 			}
+# 			every_country = {
+# 				limit = {
+# 					original_tag = GER
+# 				}
+# 				declare_war_on = { target = GRR type = annex_everything }
+# 			}
+# 			set_global_flag = GRR_remove_cores
+# 		}
+# 	}
+# }
+
+country_event = {
+	id = ger.20
+	title = "First council of Berlin"
+	desc = ger.20.desc
+	picture = GFX_report_event_german_reichstag_gathering
+	timeout_days = 7
+	
+	is_triggered_only = yes
+
+	option = {
+		name = ger.20.a
+		ai_chance = {
+			factor = 1
+		}
+		create_country_leader = {
+			name = "Ernst Thälmann"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_GER_ernst_thalmann.tga"
+			expire = "1956.1.1"
+			ideology = stalinism
+			traits = {
+				
+			}
+		}
+	}
+
+	option = {
+		name = ger.20.b
+		trigger = {
+			always = no
+		}
+		ai_chance = {
+			factor = 1
+		}
+		create_country_leader = {
+			name = "Wilhelm Pieck"
+			desc = ""
+			picture = "Portrait_Germany_Wilhelm_Pieck.dds"
+			expire = "1965.1.1"
+			ideology = stalinism
+			traits = {
+				
+			}
+		}
+	}
+
+	option = {
+		name = ger.20.c
+		ai_chance = {
+			factor = 1
+		}
+		create_country_leader = {
+			name = "Karl Korsch"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_GER_Karl_Korsch.tga"
+			expire = "1965.1.1"
+			ideology = marxism
+			traits = {
+				
+			}
+		}
+		hidden_effect = {
+			set_cosmetic_tag = GER_commie3
+			set_party_name = {
+				ideology = communism
+				long_name = GER_commie_2_long
+				name = GER_commie_2
+			}
+		}
+	}
+
+	option = {
+		name = ger.20.d
+		ai_chance = {
+			factor = 1
+		}
+		create_country_leader = {
+			name = "Erich Mielke"
+			desc = ""
+			picture = "gfx/leaders/GER/Portrait_GER_Erich_Mielke.tga"
+			expire = "1965.1.1"
+			ideology = stalinism
+			traits = {
+				
+			}
+		}
+		hidden_effect = {
+			set_cosmetic_tag = GER_commie2
+		}
+	}
+}
+
+#guarantee poland
+# country_event = {
+# 	id = ger.21
+# 	title = "A message form Wilhelm III"
+# 	desc = ger.21.d
+# 	picture = GFX_report_event_german_reichstag_gathering
+
+# 	is_triggered_only = yes
+
+# 	option = {
+# 		name = ger.21.a
+# 		ai_chance = {
+# 			base = 100
+# 		}
+# 		diplomatic_relation = {
+# 			country = GRR
+# 			relation = guarantee
+# 			active = yes
+# 		}
+# 		GRR = {
+# 			diplomatic_relation = {
+# 				country = POL
+# 				relation = guarantee
+# 				active = yes
+# 			}
+# 		}
+# 	}
+
+# 	option = {
+# 	name = ger.21.b
+# 		ai_chance = {
+# 			base = 100
+# 		}
+# 		GRR = { 
+# 			add_opinion_modifier = { target = POL modifier = large_decrease  } 
+# 		}
+# 	}
+# }
+

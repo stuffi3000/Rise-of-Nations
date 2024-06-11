@@ -4,10 +4,11 @@ focus_tree = {
 		factor = 0
 		modifier = {
 			add = 10
-			tag = OTT
+			original_tag  = OTT
 		}
 	}
-	default = no
+	default = no 
+ reset_on_civilwar = no
 
 	continuous_focus_position = { x = 200 y = 3000 }
 
@@ -48,7 +49,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			navy_experience = 10
+			navy_experience = 100
 			every_navy_leader = {
 
 				add_attack = 1
@@ -227,16 +228,46 @@ focus_tree = {
 				idea = recovering_industry
 				days = 365
 			}
+			remove_ideas = OTT_unprofitable_companies 
+		}
+	}
+	#Focus for The State of the Industry
+	focus = {
+		id = OTT1_the_state_of_the_industry
+		icon = GFX_goal_generic_production
+		x = 70
+		y = 1
+		cost = 5
+		available_if_capitulated = yes
+
+		allow_branch = {
+			date > 1909.12.31 date < 1919.1.1
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			341 = {
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+
+				}
+			}
+
 		}
 	}
 	#Focus for Switch to a Modern Industry 
 	focus = {
 		id = OTT1_switch_to_a_modern_industry
 		icon = GFX_goal_generic_construct_civ_factory
-		x = 58
-		y = 2
+		x = 2
+		y = 1
 		cost = 10
 		available_if_capitulated = yes
+		relative_position_id = OTT1_the_state_of_the_industry
 		prerequisite = { focus = OTT1_the_state_of_the_industry }
 		mutually_exclusive = { focus = OTT1_reform_the_cottage_industry }
 		ai_will_do = {
@@ -256,9 +287,10 @@ focus_tree = {
 	focus = {
 		id = OTT1_reform_the_cottage_industry
 		icon = GFX_focus_generic_industry_2
-		x = 54
-		y = 2
+		x = -2
+		y = 1
 		cost = 10
+		relative_position_id = OTT1_the_state_of_the_industry
 		available_if_capitulated = yes
 		prerequisite = { focus = OTT1_the_state_of_the_industry }
 		mutually_exclusive = {
@@ -304,9 +336,10 @@ focus_tree = {
 	focus = {
 		id = OTT1_revise_the_law_of_the_encouragement_of_industry
 		icon = GFX_goal_generic_construct_civ_factory
-		x = 58
-		y = 3
+		x = -1
+		y = 1
 		cost = 10
+		relative_position_id = OTT1_switch_to_a_modern_industry
 		available_if_capitulated = yes
 		prerequisite = { focus = OTT1_switch_to_a_modern_industry }
 		ai_will_do = {
@@ -333,10 +366,13 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			swap_ideas = {
-				remove_idea = disjointed_railways1
-				add_idea = disjointed_railways2
-
+			every_owned_state = {
+				remove_dynamic_modifier={
+					modifier = OTT_modifier_disjointed_railways
+				}
+				add_dynamic_modifier = {
+					modifier = OTT_modifier_disjointed_railways2
+				}
 			}
 
 		}
@@ -345,9 +381,10 @@ focus_tree = {
 	focus = {
 		id = OTT1_raise_import_taxes
 		icon = GFX_goal_generic_trade
-		x = 61
-		y = 3
+		x = 2
+		y = 1
 		cost = 10
+		relative_position_id = OTT1_switch_to_a_modern_industry
 		available_if_capitulated = yes
 		prerequisite = { focus = OTT1_switch_to_a_modern_industry }
 		ai_will_do = {
@@ -361,9 +398,10 @@ focus_tree = {
 	focus = {
 		id = OTT1_reimplement_internal_taxes_on_goods
 		icon = GFX_goal_generic_trade
-		x = 52
-		y = 3
+		x = -2
+		y = 1
 		cost = 10
+		relative_position_id =OTT1_reform_the_cottage_industry
 		available_if_capitulated = yes
 		prerequisite = { focus = OTT1_reform_the_cottage_industry }
 		ai_will_do = {
@@ -403,7 +441,7 @@ focus_tree = {
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { focus = OTT1_act_on_the_1909_coup }
-		mutually_exclusive = { focus = OTT1_memory_of_the_young_turk_rebellion }
+		#mutually_exclusive = { focus = OTT1_memory_of_the_young_turk_rebellion }
 		ai_will_do = {
 			factor = 1
 		}
@@ -554,7 +592,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			navy_experience = 10
+			navy_experience = 100
 		}
 	}
 	#Focus for Moderise the support equipment
@@ -598,6 +636,429 @@ focus_tree = {
 			}
 		}
 	}
+	focus = {
+		id = OTT1_no_foreign_help
+		cost = 1
+		x = 56
+		y = 1
+		allow_branch = {
+			date > 1909.12.31 date < 1919.1.1
+			is_debug = yes
+		}
+		mutually_exclusive = {
+			focus = OTT1_the_offer_of_foreign_aid
+		}
+		completion_reward = {
+			add_stability = -0.1
+			add_political_power = 150
+		}
+		
+	}
+	focus = {
+		id = OTT1_get_rid_of_unprofitable_compagnies
+		cost = 10
+		relative_position_id = OTT1_no_foreign_help
+		icon = industry_close
+		x = -1
+		y = 1
+		prerequisite ={
+			focus = OTT1_no_foreign_help
+		}
+		completion_reward = {
+			random_owned_state = {
+				remove_building = {
+    				type = industrial_complex
+    				level = 3
+				}
+			}
+		}
+
+	}
+	focus = {
+		id = OTT1_focus_on_corruption
+		cost = 10
+		icon = constitution
+		relative_position_id = OTT1_no_foreign_help
+		x = 1
+		y = 1
+		prerequisite ={
+			focus = OTT1_no_foreign_help
+		}
+		completion_reward = {
+			remove_ideas = OTT_corupt_politicians
+		}
+	}
+
+	focus = {
+		id = OTT1_get_rid_of_foreign_influence
+		cost = 10
+		relative_position_id = OTT1_focus_on_corruption
+		icon = dangerous_laws
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = OTT1_get_rid_of_unprofitable_compagnies
+			focus = OTT1_focus_on_corruption
+		}
+		completion_reward = {
+			add_ideas = OTT_isolationism			
+			GER = {
+				add_opinion_modifier = {
+					modifier = RI_hostile_foreign_policy
+					target = OTT
+				}
+			}
+			AUH = {
+				add_opinion_modifier = {
+					modifier = RI_hostile_foreign_policy
+					target = OTT
+				}
+			}
+			FRA = {
+				add_opinion_modifier = {
+					modifier = RI_hostile_foreign_policy
+					target = OTT
+				}
+			}
+			ENG = {
+				add_opinion_modifier = {
+					modifier = RI_hostile_foreign_policy
+					target = OTT
+				}
+			}
+		}
+
+	}
+
+	focus = {
+		id = OTT1_give_soldiers_salary
+		cost = 5
+		relative_position_id = OTT1_get_rid_of_foreign_influence
+		icon = GFX_goal_Generic_Coalition_Army
+		x = -1
+		y = 1
+		prerequisite ={
+			focus = OTT1_get_rid_of_foreign_influence
+		}
+		completion_reward = {
+			remove_ideas = OTT_badly_paid_soldiers
+		}
+	}
+	focus = {
+		id = OTT1_tackle_internal_issues
+		cost = 3
+		relative_position_id = OTT1_give_soldiers_salary
+		
+		x=-1
+		y = 1
+
+		prerequisite = {
+			focus = OTT1_give_soldiers_salary
+		}
+		completion_reward = {
+			add_ideas = RI_isolationism  
+		}
+	}
+	focus = {
+		id = OTT1_force_integration
+		cost = 10
+		icon = political_pressure
+		relative_position_id = OTT1_tackle_internal_issues
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = OTT1_tackle_internal_issues
+		}
+		mutually_exclusive = {
+			focus = OTT1_a_change_to_the_core
+		}
+		completion_reward = {
+			custom_effect_tooltip = "These focuses will help stop uprisings"
+		}
+	}
+	focus = {
+		id = OTT1_great_turkic_nation
+		cost = 10
+		relative_position_id = OTT1_force_integration
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = OTT1_force_integration
+		}
+
+		completion_reward = {
+			add_popularity = {
+    ideology = democratic
+    popularity = 0.3
+}
+
+		}
+
+	}
+	focus = {
+		id = OTT1_strike_persia
+		cost = 7
+		relative_position_id = OTT1_great_turkic_nation
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = OTT1_great_turkic_nation
+		}
+		completion_reward = {
+					create_wargoal = {			
+				expire = 100
+				target = PER
+				type = annex_everything
+			}
+		}
+		will_lead_to_war_with = PER
+	}
+	focus = {
+		id = OTT1_liberate_turks
+		cost = 15
+		relative_position_id = OTT1_strike_persia
+		x = -1
+		y = 1
+		prerequisite ={
+			focus = OTT1_great_turkic_nation
+		}
+		available = { 
+			OR = {
+			NOT = {
+				country_exists = PER 
+		}
+		PER = {is_puppet_of = OTT}
+			}
+		} 		
+		will_lead_to_war_with = RUS
+		completion_reward = {
+					create_wargoal = {			
+				expire = 100
+				target = RUS
+				type = liberate_wargoal
+			}
+		}
+	}
+	focus = {
+		id = OTT1_unite_arabia
+		cost = 7
+		relative_position_id = OTT1_strike_persia
+		x = 1
+		y = 1
+		prerequisite ={
+			focus = OTT1_great_turkic_nation
+		}
+		completion_reward = {
+			initiate_arabian_war = yes
+		}
+	}
+	focus = {
+		id = OTT1_a_change_to_the_core
+		cost = 10
+		relative_position_id = OTT1_tackle_internal_issues
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = OTT1_tackle_internal_issues
+		}
+		mutually_exclusive = {
+			focus = OTT1_force_integration
+		}
+		completion_reward = {
+						add_popularity = {
+    ideology = communism
+    popularity = 0.3
+}
+		start_civil_war = {
+    ideology = democratic
+    size = 0.3
+	    ruling_party = communism
+
+		}
+		}	
+
+		}
+	
+	focus = {
+		id = OTT1_clamp_down_on_the_young_turks
+		cost = 10
+		relative_position_id = OTT1_a_change_to_the_core
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = OTT1_a_change_to_the_core
+		}
+		available = {
+			has_civil_war = no
+			has_government = communism
+		}
+		completion_reward = {
+						add_popularity = {
+    ideology = democratic
+    popularity = -0.2
+}
+		add_stability = 0.3
+		add_ideas = OTT_democratic_opression
+		}
+	}
+	focus = {
+		id = OTT1_limited_autonomy
+		cost = 10
+		relative_position_id = OTT1_clamp_down_on_the_young_turks
+		x = 0
+		y = 1
+		prerequisite ={
+			focus = OTT1_clamp_down_on_the_young_turks
+		}
+		completion_reward = {
+			custom_effect_tooltip = "This will effectivly decolonize the ottoman empire!"
+			remove_ideas = disjointed_railways1
+			remove_ideasq = sick_man_europe
+			release_on_controlled = ISS
+			release_on_controlled = SYR
+			release_on_controlled = LIB
+			release_on_controlled = LYB
+			release_on_controlled = JOR
+			release_on_controlled = LEB
+			release_on_controlled = PAL
+			release_on_controlled = SAU
+			release_on_controlled = GRE
+			release_on_controlled = LBA
+			release_on_controlled = YEM
+			release_on_controlled = QAT
+			release_on_controlled = BHR
+			release_on_controlled = HJZ
+			release_on_controlled = BUL
+			release_on_controlled = SER
+			release_on_controlled = ALB
+			release_on_controlled = MAC
+			release_puppet = KUR
+			release_puppet = GEO
+			hidden_effect = {
+				ISS = {
+			set_politics = {
+    ruling_party = islamism
+    elections_allowed = no
+		}	
+			add_popularity = {
+				ideology = islamism
+				popularity = 0.3
+			}		
+			}
+						PAL = {
+			set_politics = {
+    ruling_party = islamism
+    elections_allowed = no
+		}	
+			add_popularity = {
+				ideology = islamism
+				popularity = 0.6
+			}		
+			}			
+			}
+
+		}
+	}
+	focus = {
+		id = OTT1_invite_morocco
+		cost = 10
+		relative_position_id = OTT1_limited_autonomy
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = OTT1_limited_autonomy
+		}
+		completion_reward = {
+			MOR = {
+				country_event = generic.2088
+			}
+		}
+	}
+	focus = {
+		id = OTT1_istambul_university
+		cost = 10
+		relative_position_id = OTT1_get_rid_of_foreign_influence
+		icon = research
+		x = 2
+		y= 1
+		prerequisite ={
+			focus = OTT1_get_rid_of_foreign_influence
+		}
+		completion_reward = {
+			add_research_slot = 1
+		}
+	}
+
+	focus = {
+		id = OTT1_civil_engineering
+		cost = 10
+		relative_position_id = OTT1_istambul_university
+		icon = continuous_non_factory_construct
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = OTT1_istambul_university
+		}
+		completion_reward = {
+					add_tech_bonus = {
+				name = industrial_bonus
+				bonus = 0.5
+				uses = 2
+				category = industry
+			}	
+		}
+	}
+	focus = {
+		id = OTT1_irrigation_projects
+		cost = 10
+		relative_position_id = OTT1_civil_engineering
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = OTT1_civil_engineering 
+		}
+		icon = GFX_goal_Focus_Wheat_Field
+		completion_reward = {
+			custom_effect_tooltip = unlock_irrigation_projects_tt
+		}
+	}
+	focus = {
+		id = OTT1_railroad_projects
+		cost = 10
+		relative_position_id = OTT1_civil_engineering
+		icon = GFX_generic_focus_rail_construction
+		x = 1
+		y = 1
+		prerequisite = {
+			focus = OTT1_civil_engineering
+		}
+		completion_reward = {
+			custom_effect_tooltip = unlocks_railroad_decisions_tt
+		}
+	}
+	focus = {
+		id = OTT1_arms_race
+		cost = 10
+		relative_position_id = OTT1_railroad_projects
+		x = -1
+		y = 1
+		prerequisite = {
+			focus = OTT1_railroad_projects
+		}
+		prerequisite ={
+			focus = OTT1_irrigation_projects
+		}
+		icon = small_arms_dnc
+		completion_reward = {
+			random_owned_state = {
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		} 
+	}
 	#Focus for The Offer of Foreign Aid
 	focus = {
 		id = OTT1_the_offer_of_foreign_aid
@@ -611,7 +1072,9 @@ focus_tree = {
 		allow_branch = {
 			date > 1909.12.31 date < 1919.1.1
 		}
-
+		mutually_exclusive = {
+			focus = OTT1_no_foreign_help
+		}
 		ai_will_do = {
 			factor = 1
 		}
@@ -620,6 +1083,7 @@ focus_tree = {
 
 		}
 	}
+	
 	#Focus for French Aid
 	focus = {
 		id = OTT1_french_aid
@@ -791,7 +1255,7 @@ focus_tree = {
 
 				}
 			}
-			army_experience = 10
+			army_experience = 100
 			air_experience = 5
 		}
 	}
@@ -953,34 +1417,7 @@ focus_tree = {
 			}
 		}
 	}
-	#Focus for The State of the Industry
-	focus = {
-		id = OTT1_the_state_of_the_industry
-		icon = GFX_goal_generic_production
-		x = 56
-		y = 1
-		cost = 5
-		available_if_capitulated = yes
-
-		allow_branch = {
-			date > 1909.12.31 date < 1919.1.1
-		}
-
-		ai_will_do = {
-			factor = 1
-		}
-		completion_reward = {
-			341 = {
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-
-				}
-			}
-
-		}
-	}
+	
 	#Focus for Look into submarines
 	focus = {
 		id = OTT1_look_into_submarines
@@ -1130,7 +1567,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			army_experience = 10
+			army_experience = 100
 		}
 	}
 	#Focus for Improve caverly
@@ -1189,7 +1626,7 @@ focus_tree = {
 			FRA = { country_event = { id = ww1_turkey.73 hours = 6 } }
 			ENG = { country_event = { id = ww1_turkey.73 hours = 6 } }
 			GER = { country_event = { id = ww1_turkey.73 hours = 6 } }
-			RUE = { country_event = { id = ww1_turkey.73 hours = 6 } }
+			RUS = { country_event = { id = ww1_turkey.73 hours = 6 } }
 			country_event = ww1_turkey.74
 
 		}
@@ -1349,16 +1786,11 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					has_idea = disjointed_railways1
-				}
-				remove_ideas = disjointed_railways1
-			}
-			else = {
-				remove_ideas = disjointed_railways2
-			}
+			
 			every_owned_state = {
+				remove_dynamic_modifier = {
+					modifier = OTT_modifier_disjointed_railways2
+				}
 				add_building_construction = {
 					type = infrastructure
 					level = 1
@@ -1371,8 +1803,9 @@ focus_tree = {
 	focus = {
 		id = OTT1_research_new_construction_methods
 		icon = GFX_goal_generic_construct_infrastructure
-		x = 55
-		y = 3
+		relative_position_id = OTT1_reform_the_cottage_industry
+		x = 1
+		y = 1
 		cost = 5
 		available_if_capitulated = yes
 		prerequisite = {

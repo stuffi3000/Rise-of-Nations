@@ -53,7 +53,8 @@ GER_military_staff_decision_category = {
 				limit = { GER = { is_ai = no } }
 				add_command_power = -10
 			}
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				target = BEL
 				type = annex_everything
 			}
@@ -71,8 +72,10 @@ GER_military_staff_decision_category = {
 		available = {
 			tag = GER
 			command_power > 10
-			#has_global_flag = rupprecht_plan
-
+			has_global_flag = rupprecht_plan
+			NOT = {
+				has_global_flag = rupprecht_plan1
+			}
 		}
 		visible = {
 			has_country_flag = military_preparation_finished
@@ -91,9 +94,10 @@ GER_military_staff_decision_category = {
 		war_with_on_complete = SWI
 		complete_effect = {
 			hidden_effect = { news_event = { hours = 6 id = endsieg_news.130 } }
+			set_global_flag = rupprecht_plan1
 			GER = {
 				declare_war_on = { target = SWI type = annex_everything }
-				declare_war_on = { target = RUE type = annex_everything }
+				declare_war_on = { target = RUS type = annex_everything }
 				declare_war_on = { target = FRA type = annex_everything }
 			}
 			FRA = {
@@ -117,17 +121,21 @@ GER_military_staff_decision_category = {
 				command_power > 10
 			}
 		}
+		fire_only_once = yes
 		custom_cost_text = command_power_more_than_10
 		available = {
 			tag = GER
 			command_power > 10
 			has_global_flag = kronprinz_plan
+			NOT = {
+				has_global_flag = kronprinz_plan1
+			}
 		}
 		visible = {
 			has_country_flag = military_preparation_finished
 		}
 		war_with_on_complete = FRA
-		war_with_on_complete = RUE
+		war_with_on_complete = RUS
 		ai_will_do = {
 			base = 0
 			modifier = {
@@ -141,10 +149,10 @@ GER_military_staff_decision_category = {
 		}
 		complete_effect = {
 			hidden_effect = { news_event = { hours = 6 id = endsieg_news.132 } }
-
+			set_country_flag = kronprinz_plan1
 			GER = {
 				declare_war_on = { target = FRA type = annex_everything }
-				declare_war_on = { target = RUE type = annex_everything }
+				declare_war_on = { target = RUS type = annex_everything }
 			}
 			FRA = {
 				add_to_faction = SER
@@ -191,7 +199,8 @@ GER_military_staff_decision_category = {
 		war_with_on_complete = HOL
 		complete_effect = {
 			add_command_power = -10
-			create_wargoal = {
+					create_wargoal = {			
+				expire = 100
 				target = HOL
 				type = annex_everything
 			}
@@ -237,14 +246,51 @@ GER_military_staff_decision_category = {
 
 		}
 	}
+	GER_turkish_peace = {
+		available = {
+			tag = GER
+			surrender_progress < 0.01
+			TUR = { surrender_progress < 0.01 }
+			NOT = {RUS = { has_war_with = GER}}
+			OR = {
+			NOT = { is_in_faction_with  = ITA }
+			NOT = {ITA = { has_war_with = TUR}}
+			}
+			NOT = {FRA = { has_war_with = GER}}
+		}
+		cost = 20
+		visible = {
+			has_country_flag = military_preparation_finished
+		}
+		ai_will_do = {
+			base = 100
+			modifier = {
+				is_historical_focus_on = no
+				add = 10
+			}
+			modifier = {
+				any_country = {
+					AND = {
+						is_major = yes
+						has_war_with = GER
+					}
+				}
+				factor = 0
+			}
+		}
+		fire_only_once = yes
+		complete_effect = {
+			white_peace = TUR
+		}
+
+	}
+	
 	GER_operation_nixe = {
 		available = {
 			tag = GER
-			check_variable = {
-				var = num_ships
-				value = 10
-				compare = greater_than
-			}
+            #threat = 1
+			has_war_support > .8
+			surrender_progress < 0.01
 		}
 		visible = {
 			has_country_flag = military_preparation_finished
@@ -254,6 +300,15 @@ GER_military_staff_decision_category = {
 			modifier = {
 				is_historical_focus_on = no
 				add = 100
+			}
+			modifier = {
+				any_country = {
+					AND = {
+						is_major = yes
+						has_war_with = GER
+					}
+				}
+				factor = 0
 			}
 		}
 		fire_only_once = yes
@@ -271,12 +326,12 @@ GER_military_staff_decision_category = {
 					}
 				}
 			}
-			set_province_controller = 6732
 			declare_war_on = {
 				target = USA
 				type = annex_everything
 
 			}
+			set_province_controller = 6732
 		}
 
 	}
@@ -293,8 +348,14 @@ political_actions = {
 		}
 		available = {
 			tag = GER
-			has_war_with = RUE
-			date > 1917.1.1
+			OR = {
+			NOT = {
+				is_in_faction_with = RUS
+			}
+			has_war_with = RUS				
+			}
+			date > 1910.1.1
+			date < 1920.1.1
 			NOT = {
 				has_completed_focus = GER1_general_secretary_lenin
 			}

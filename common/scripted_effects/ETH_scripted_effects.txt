@@ -1,0 +1,1626 @@
+#	Example:
+#
+#	example_effect = {
+#		add_political_power = 66
+#		add_popularity = {
+#			ideology = fascism
+#			popularity = 0.33
+#		}
+#	}
+#
+#
+#	In a script file:
+#
+#	effect = {
+#		example_effect = yes
+#	}
+#
+ETH_escalate_the_war_effect = {
+	custom_effect_tooltip = ETH_war_escalation_inc_tt
+	add_to_variable = { ETH.ETH_war_escalation_level = 1 }
+	#hidden_effect = {
+	#	ITA = {
+	#		add_named_threat = { 
+	#			threat = 0.2
+	#			name = ETH_war_escalation_threat
+	#		}
+	#	}
+	#}
+}
+
+ETH_deescalate_the_war_effect = {
+	custom_effect_tooltip = ITA_war_deescalation_inc_tt #Change or use scripted loc if ETH ever has effects to de-escalate
+	subtract_from_variable = { ETH.ETH_war_escalation_level = 1 }
+}
+
+ETH_electrify_state_remove_effect = {
+	clr_country_flag = ETH_investments_in_progress_flag
+	FROM = {
+		clr_state_flag = ETH_can_electrify_state_flag
+		set_state_flag = ETH_state_is_electrified_flag #State has already been electrified (either by ETH or by ITA)
+	}
+	custom_effect_tooltip = ETH_electrify_state_tt
+	FROM = {
+		add_to_variable = { ETH_state_development_production_speed = 0.1 }
+			add_to_variable = { ETH_state_development_local_building_slots_factor = 0.1 }
+	}
+	IF = {
+		limit = { 
+			FROM = {
+				check_variable = { ETH_state_development_production_speed < -0.1 } 
+			}
+		}
+		FROM = { set_state_flag = ETH_can_improve_communication_state_flag }
+	}
+	IF = {
+		limit = { 
+			FROM = {
+				check_variable = { ETH_state_development_local_building_slots_factor < -0.1 } 
+			}
+		}
+		FROM = { set_state_flag = ETH_can_invest_local_industry_state_flag }
+	}
+}
+
+# Effect for removing the Dynamic modifier when it no longer has any impact on things
+ETH_check_remove_corrupt_bureaucracy = {
+	IF = {
+		limit = {
+			check_variable = { ETH_bureaucracy_research_speed_factor = 0 }
+			check_variable = { ETH_bureaucracy_production_speed_buildings_factor = 0 }
+			check_variable = { ETH_bureaucracy_production_factory_max_efficiency_factor = 0 }
+		}
+		# No need to show, as it will then pop up in every place where it might have been used 
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_corrupt_bureaucracy_dynamic_modifier } 
+		}
+	}
+}
+
+ETH_random_character = {
+	random_character = {
+		limit = {
+			OR = {
+				is_character = ETH_random_leader_1
+				is_character = ETH_random_leader_2
+				is_character = ETH_random_leader_3
+				is_character = ETH_random_leader_4
+				is_character = ETH_random_leader_5
+				is_character = ETH_random_leader_6
+			}
+			NOT = {
+				has_character_flag = ETH_visible_advisor_flag
+			}
+		}
+		set_character_flag = ETH_visible_advisor_flag
+		#ETH_assign_random_advisor_traits = yes 
+		#TODO_ASD remove or re-enable
+	}
+}
+
+ETH_random_general = {
+	random_character = {
+		limit = {
+			OR = {
+				is_character = ETH_random_general_1
+				is_character = ETH_random_general_2
+				is_character = ETH_random_general_3
+				is_character = ETH_random_general_4
+				is_character = ETH_random_general_5
+				is_character = ETH_random_general_6
+			}
+			NOT = {
+				has_character_flag = ETH_visible_random_general_flag
+			}
+		}
+		set_character_flag = ETH_visible_random_general_flag
+		#ETH_assign_random_advisor_traits = yes 
+		#TODO_ASD remove or re-enable
+	}
+}
+
+ETH_random_general_male_only = {
+	random_character = {
+		limit = {
+			OR = {
+				is_character = ETH_random_general_1
+				is_character = ETH_random_general_3
+				is_character = ETH_random_general_5
+			}
+			NOT = {
+				has_character_flag = ETH_visible_random_general_flag
+			}
+		}
+		set_character_flag = ETH_visible_random_general_flag
+		#ETH_assign_random_advisor_traits = yes 
+		#TODO_ASD remove or re-enable
+	}
+}
+
+#ETH_assign_random_advisor_traits = { #TODO_ASD rem0ove or #re-enable
+#	#fixed_random_seed = no
+#
+#	set_variable = { global.var_name_whatever = 1 }
+#		random_list = {
+#			#seed = global.var_name_whatever
+#			20 = {
+#				modifier = {
+#					factor = 0
+#					ETH = {
+#						has_country_flag = random_trait_1
+#					}
+#					
+#				}
+#				add_trait = {
+#					# character = THIS
+#					slot = political_advisor
+#					trait = marxist_fundamentalist
+#				}
+#				set_country_flag = random_trait_1
+#				#add_to_variable = { #global.var_name_whatever = 1}
+#			}
+#			20 = {	
+#				modifier = {
+#					factor = 0
+#					has_country_flag = random_trait_2
+#				}			
+#				add_trait = {
+#					# character = THIS
+#					slot = political_advisor
+#					trait = leftist_intellectual
+#				}
+#				set_country_flag = random_trait_2
+#				#add_to_variable = { #global.var_name_whatever = 1}
+#			}
+#			20 = {
+#				modifier = {
+#					factor = 0
+#					has_country_flag = random_trait_3
+#				}
+#				add_trait = {
+#					# character = THIS
+#					slot = political_advisor
+#					trait = anti_bolshevik_leftist
+#				}
+#				set_country_flag = random_trait_3
+#				#add_to_variable = { #global.var_name_whatever = 1}
+#			}
+#			20 = {
+#				modifier = {
+#					factor = 0
+#					has_country_flag = random_trait_4
+#				}
+#				add_trait = {
+#					# character = THIS
+#					slot = political_advisor
+#					trait = international_anarchist
+#				}
+#				set_country_flag = random_trait_4
+#				#add_to_variable = { #global.var_name_whatever = 1}
+#			}
+#			20 = {
+#				modifier = {
+#					factor = 0
+#					has_country_flag = random_trait_5
+#				}
+#				add_trait = {
+#					# character = THIS
+#					slot = political_advisor
+#					trait = revolutionary_culture_minister
+#				}
+#				set_country_flag = random_trait_5
+#				#add_to_variable = { #global.var_name_whatever = 1 }
+#			}
+#		}
+#}
+
+ETH_improve_army_spirit_effect = {
+	add_to_variable = { ETH_army_improvements = 1 }
+	IF = {
+		limit = {
+			check_variable = { ETH_army_improvements > 1 }
+			has_dynamic_modifier = {
+				modifier = ETH_army_1_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_army_1_dynamic_modifier }
+			add_dynamic_modifier = {
+				modifier = ETH_army_2_dynamic_modifier
+			}
+			# Fake update to get the other ones in the correct place 
+			# Navy
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier }
+			}
+			# Airforce
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+			}
+		}
+	}
+	ELSE_IF = {
+		limit = {
+			check_variable = { ETH_army_improvements > 3 }
+			has_dynamic_modifier = {
+				modifier = ETH_army_2_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_army_2_dynamic_modifier }
+			add_dynamic_modifier = { modifier = ETH_army_3_dynamic_modifier	}
+			# Fake update to get the other ones in the correct place 
+			# Navy
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_navy_3_dynamic_modifier }
+			}
+			# Airforce
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+			}
+		}
+	}
+}
+ETH_improve_navy_spirit_effect = {
+	add_to_variable = { ETH_navy_improvements = 1 }
+	IF = {
+		limit = {
+			check_variable = { ETH_navy_improvements > 1 }
+			has_dynamic_modifier = {
+				modifier = ETH_navy_1_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_navy_1_dynamic_modifier }
+			add_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+			# Fake update to get the other ones in the correct place 
+			# Airforce
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+			}
+		}
+	}
+	ELSE_IF = {
+		limit = {
+			check_variable = { ETH_navy_improvements > 3 }
+			has_dynamic_modifier = {
+				modifier = ETH_navy_2_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_navy_2_dynamic_modifier }
+			add_dynamic_modifier = {
+				modifier = ETH_navy_3_dynamic_modifier
+			}
+			# Fake update to get the other ones in the correct place 
+			# Airforce
+			IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+			}
+			ELSE_IF = {
+				limit = {
+					has_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier	}
+				}
+				remove_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+				add_dynamic_modifier = { modifier = ETH_airforce_3_dynamic_modifier }
+			}
+		}
+	}
+}
+ETH_improve_airforce_spirit_effect = {
+	add_to_variable = { ETH_airforce_improvements = 1 }
+	IF = {
+		limit = {
+			check_variable = { ETH_airforce_improvements > 1 }
+			has_dynamic_modifier = {
+				modifier = ETH_airforce_1_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_airforce_1_dynamic_modifier }
+			add_dynamic_modifier = {
+				modifier = ETH_airforce_2_dynamic_modifier
+			}
+		}
+	}
+	ELSE_IF = {
+		limit = {
+			check_variable = { ETH_airforce_improvements > 3 }
+			has_dynamic_modifier = {
+				modifier = ETH_airforce_2_dynamic_modifier
+			}
+		}
+		hidden_effect = {
+			remove_dynamic_modifier = { modifier = ETH_airforce_2_dynamic_modifier }
+			add_dynamic_modifier = {
+				modifier = ETH_airforce_3_dynamic_modifier
+			}
+		}
+	}
+}
+
+
+ETH_upgrade_state_category = {
+	IF = {
+		limit = { has_state_category = wasteland }
+		set_state_category = pastoral
+	}
+	ELSE_IF = {
+		limit = { has_state_category = pastoral }
+		set_state_category = rural
+	}
+	ELSE_IF = {
+		limit = { has_state_category = rural }
+		set_state_category = town
+	}
+	ELSE_IF = {
+		limit = { has_state_category = town }
+		set_state_category = large_town
+	}
+	ELSE_IF = {
+		limit = { has_state_category = large_town }
+		set_state_category = city
+	}
+	ELSE_IF = {
+		limit = { has_state_category = city }
+		set_state_category = large_city
+	}
+}
+
+ETH_no_longer_alone = {
+	IF = {
+		limit = { 
+			has_idea = ETH_on_our_own_idea
+		}
+		remove_ideas = ETH_on_our_own_idea
+	}
+}
+
+ETH_upgrade_main_city = {
+	IF = {
+		limit = { state = 271 }
+		add_victory_points = {
+			province = 5010
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 843 }
+		add_victory_points = {
+			province = 5097
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 842 }
+		add_victory_points = {
+			province = 2072
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 841 }
+		add_victory_points = {
+			province = 1948
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 840 }
+		add_victory_points = {
+			province = 13242
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 839 }
+		add_victory_points = {
+			province = 2009
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 838 }
+		add_victory_points = {
+			province = 13244
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 837 }
+		add_victory_points = {
+			province = 13246
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 836 }
+		add_victory_points = {
+			province = 10775
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 835 }
+		add_victory_points = {
+			province = 7980
+			value = 2
+		}
+	}
+	ELSE_IF = {
+		limit = { state = 908 }
+		add_victory_points = {
+			province = 13240
+			value = 2
+		}
+	}
+}
+
+# Local resistance fighters rising up (historically some 50000 or so rose up in the North )
+ETH_arbegnoch_uprising = {
+	
+	# ensure noone has tried creating a template in advance 
+	delete_unit_template_and_units = {
+		division_template = "Arbegnoch Fighters"
+		disband = yes #will refund equipment and manpower
+	}
+
+	# Create the template 
+	division_template = {
+		name = "Arbegnoch Fighters"
+		is_locked = yes
+		division_names_group = ETH_ARB
+		priority = 0
+		template_counter = 0
+		regiments = {
+			irregular_infantry = { x = 0 y = 0 }
+			irregular_infantry = { x = 0 y = 1 }
+			irregular_infantry = { x = 0 y = 2 }
+		}
+	}
+	every_owned_state = {
+		limit = {
+			check_variable = { ETH_resistance_force_strength > 0 }
+		}
+		create_unit = { 
+			# unit detauls 
+			division = "division_template = \"Arbegnoch Fighters\" start_experience_factor = 0.2  start_equipment_factor = 0.75" 
+			# country to spawn unit for 
+			owner = ROOT  
+			allow_spawning_on_enemy_provs = yes 
+			count = ETH_resistance_force_strength
+		}
+	}
+}
+
+ETH_set_up_african_resistance_states = {
+	
+	hidden_effect = {
+		for_each_scope_loop = {
+			array = global.countries 
+			IF = {
+				limit = {
+					# Find countries with cores in africa that do not already exist as free or puppeted nations
+					exists = no 
+					any_state = { 
+						is_core_of = PREV
+						is_on_continent = africa 
+						OWNER = {
+							NOT = { is_in_faction_with = ROOT }
+							NOT = { tag = ROOT }
+						}
+					}
+				}
+
+				# add African st ate of theirs to the array
+				every_core_state = {
+					limit = {  
+						OR = {
+							is_on_continent = africa 
+							is_core_of = EGY
+						}	
+						has_resistance = yes
+						NOT = { # no point adding if already in there
+							is_in_array = {
+								array = ETH.african_colonial_states_array
+								value = THIS 
+							}
+						}
+					}
+					add_to_array = { ETH.african_colonial_states_array = THIS }
+				}
+			}
+			
+		}
+	}
+}
+
+ETH_setup_freedom_at_gunpoint_array = {
+	hidden_effect = {
+		for_each_scope_loop = {
+			array = global.countries 
+			IF = {
+				limit = {
+					exists = no 
+					any_state = { 
+						is_core_of = PREV
+						is_on_continent = africa
+						OWNER = {
+							NOT = { is_in_faction_with = ROOT }
+							NOT = { tag = ROOT }
+						}
+					}
+				}
+				#log = "[THIS.GetName]"
+				add_to_array = { ETH.freedom_at_gunpoint_array = THIS }
+			}
+			
+		}
+	}
+}
+
+ETH_set_up_middle_east_resistance_states = {
+	
+	hidden_effect = {
+		for_each_scope_loop = {
+			array = global.countries 
+			IF = {
+				limit = {
+					# Find countries with cores in the middle east that do not already exist as free or puppeted nations
+					exists = no 
+					any_state = { 
+						is_core_of = PREV
+						OR = {
+							region = 238 # East Arabia
+							region = 236 # South Arabia
+							region = 196 # Central Arabia
+							region = 237 # Hejaz
+							region = 28 # Middle East 
+						}
+						OWNER = {
+							NOT = { is_in_faction_with = ROOT }
+							NOT = { tag = ROOT }
+						}
+					}
+				}
+				# add one state of theirs to the array
+				random_state = {
+					limit = {  
+						is_core_of = PREV 
+						OR = {
+							region = 238 # East Arabia
+							region = 236 # South Arabia
+							region = 196 # Central Arabia
+							region = 237 # Hejaz
+							region = 28 # Middle East 
+						} 
+						NOT = {
+							is_in_array = {
+								array = ETH.african_colonial_states_array
+								value = THIS 
+							}
+						}
+					}
+					add_to_array = { ETH.african_colonial_states_array = THIS }
+				}
+			}
+			
+		}
+	}
+}
+
+ETH_create_federation = {
+	hidden_effect = {
+		every_owned_state = {
+			limit = {
+				has_dynamic_modifier = {
+					modifier = ETH_state_decentralization_dynamic_modifier
+					scope = ROOT 
+				}
+			}
+			remove_dynamic_modifier = { modifier = ETH_state_decentralization_dynamic_modifier } 
+		}
+		# Doing this one by one rather than "every_country" to manage state core overlaps in the "right" way
+		# IF = {
+		# 	limit = { HAR = { exists = no } any_owned_state = {is_core_of = HAR }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = HAR 
+		# 		}
+		# 		HAR = {
+		# 			transfer_state = PREV 
+		# 		}
+			
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = HAR
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = HAR
+		# 	}
+		# 	HAR = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { TIG = { exists = no } any_owned_state = {is_core_of = TIG }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = TIG 
+		# 		}
+		# 		TIG = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = TIG
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = TIG
+		# 	}
+		# 	TIG = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { AFA = { exists = no }any_owned_state = {is_core_of = AFA }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = AFA 
+		# 		}
+		# 		AFA = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = AFA
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = AFA
+		# 	}
+		# 	AFA = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { BEG = { exists = no }any_owned_state = {is_core_of = BEG }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = BEG 
+		# 		}
+		# 		BEG = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = BEG
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = BEG
+		# 	}
+		# 	BEG = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { GBA = { exists = no } any_owned_state = {is_core_of = GBA }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = GBA 
+		# 		}
+		# 		GBA = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = GBA
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = GBA
+		# 	}
+		# 	GBA = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { SID = { exists = no } any_owned_state = {is_core_of = SID }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = SID 
+		# 		}
+		# 		SID = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = SID
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = SID
+		# 	}
+		# 	SID = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { QEM = { exists = no }any_owned_state = {is_core_of = QEM }}	
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = QEM 
+		# 		}
+		# 		QEM = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = QEM
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = QEM
+		# 	}
+		# 	QEM = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		# IF = {
+		# 	limit = { ORO = { exists = no } any_owned_state = {is_core_of = ORO }}
+		# 	every_owned_state = {
+		# 		limit = {
+		# 			is_core_of = ORO 
+		# 			NOT = { state = 271 } # Avoid transferring Addis
+		# 		}
+		# 		ORO = {
+		# 			transfer_state = PREV 
+		# 		}
+		# 	}
+		# 	IF = {
+		# 		limit = { has_dlc = "Together for Victory" }
+		# 		set_autonomy = {
+		# 			target = ORO
+		# 			autonomy_state = autonomy_integrated_puppet
+		# 			freedom_level = 0.2
+		# 			end_wars = no
+		# 			end_civil_wars = no
+		# 		}
+		# 	}
+		# 	ELSE = {
+		# 		puppet = ORO
+		# 	}
+		# 	ORO = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		# }
+		IF = {
+			limit = { SOM = { exists = no }any_owned_state = {is_core_of = SOM }}
+			every_owned_state = {
+				limit = {
+					is_core_of = SOM 
+				}
+				SOM = {
+					transfer_state = PREV 
+				}
+			}
+			IF = {
+				limit = { has_dlc = "Together for Victory" }
+				set_autonomy = {
+					target = SOM
+					autonomy_state = autonomy_integrated_puppet
+					freedom_level = 0.2
+					end_wars = no
+					end_civil_wars = no
+				}
+			}
+			ELSE = {
+				puppet = SOM
+			}
+			SOM = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		}
+		IF = {
+			limit = { ERI = { exists = no } any_owned_state = {is_core_of = ERI }}
+			every_owned_state = {
+				limit = {
+					is_core_of = ERI 
+				}
+				ERI = {
+					transfer_state = PREV 
+				}
+			}
+			IF = {
+				limit = { has_dlc = "Together for Victory" }
+				set_autonomy = {
+					target = ERI
+					autonomy_state = autonomy_integrated_puppet
+					freedom_level = 0.2
+					end_wars = no
+					end_civil_wars = no
+				}
+			}
+			ELSE = {
+				puppet = ERI
+			}
+			ERI = { set_cosmetic_tag = ETH_Ethiopian_Federation }
+		}
+		every_other_country = {
+			limit = {
+				has_cosmetic_tag = ETH_Ethiopian_Federation
+			}
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+}
+
+# make Hailu Tekle hayamot Party Leader
+ETH_promote_ETH_hailu_tekle_haymanot = {
+	ETH_hailu_tekle_haymanot = {
+		add_country_leader_role = {
+			promote_leader = yes 
+			country_leader = {
+				ideology = fascism_ideology 
+				expire = "1965.1.1.1"
+				traits = { tainted_ras }
+				id = -1
+			}
+		}
+	}
+}
+# Make Abba Jofir Party Leader
+ETH_promote_ETH_abba_jofir = {
+	ETH_abba_jofir = {
+		add_country_leader_role = {
+			promote_leader = yes 
+			country_leader = {
+				ideology = fascism_ideology 
+				expire = "1965.1.1.1"
+				traits = { inexperienced_sultan }
+				id = -1
+			}
+		}
+	}
+}
+
+
+###   ##  #    ##  #  #  ##  ###      ##  ###     ###   ##  #   # ### ###  
+#  # #  # #   #  # ## # #  # #       #  # #       #  # #  # #   # #   #  # 
+###  #### #   #### # ## #    ##      #  # ##      ###  #  # # # # ##  ###  
+#  # #  # #   #  # #  # #  # #       #  # #       #    #  # # # # #   #  # 
+###  #  # ### #  # #  #  ##  ###      ##  #       #     ##   # #  ### #  # 
+
+
+ETH_BOP_centralization_small_effect = {
+	add_power_balance_value = {
+		id = ETH_centralization_balance
+		value = 0.05
+	}
+
+}
+ETH_BOP_centralization_large_effect = {
+	add_power_balance_value = {
+		id = ETH_centralization_balance
+		value = 0.1
+	}
+}
+ETH_BOP_decentralization_small_effect = {
+	add_power_balance_value = {
+		id = ETH_centralization_balance
+		value = -0.05
+	}
+}
+ETH_BOP_decentralization_large_effect = {
+	add_power_balance_value = {
+		id = ETH_centralization_balance
+		value = -0.1
+	}
+}
+
+
+
+ETH_provisional_government_effect = {
+	set_politics = { ruling_party = communism elections_allowed = no }
+		set_party_name = { 
+			ideology = communism 
+			long_name = ETH_provisonal_government_long 
+			name = ETH_provisonal_government
+		}
+		set_rule = {
+			can_generate_female_unit_leaders  = yes
+		}
+		set_rule = {
+			can_generate_female_country_leaders = yes
+		}
+}
+
+ETH_make_random_general_leader = {
+	random_character = {
+		limit = {
+			has_character_flag = ETH_visible_random_general_flag
+		}
+		add_country_leader_role = {
+			country_leader = {
+				ideology = stalinism
+				traits = { patriotic_socialist }
+				expire = "1965.1.1.1"
+			}
+			promote_leader = yes
+		}		
+	}
+}
+
+#ROOT = {
+#				random_unit_leader = {
+#					limit = { 
+#						NOT = { has_trait = trait_SOV_stalinist }
+#					}
+#					add_country_leader_role = {
+#						country_leader = {
+#							ideology = marxism
+#							traits = { }
+#							expire = "1965.1.1.1"
+#						}
+#						promote_leader = yes 
+#					}
+#				}
+#			}
+#
+
+on_daily = {
+
+}
+
+#on_daily_USA = {
+#	# you can specify an on daily action for a specific country
+#}
+
+ETH_add_random_building_slot_effect = {
+	random_owned_controlled_state = {
+		limit = {
+			NOT = {
+				has_state_flag = ETH_has_random_building_slot_added
+			}
+			free_building_slots = {
+				building = arms_factory
+				size > 0
+				include_locked = yes
+			}
+			OR = {
+				is_in_home_area = yes
+				NOT = {
+					owner = {
+						any_owned_state = {
+							free_building_slots = {
+								building = arms_factory
+								size > 0
+								include_locked = yes
+							}
+							is_in_home_area = yes
+						}
+					}
+				}
+			}
+		}
+		add_extra_state_shared_building_slots = 1
+		set_state_flag = ETH_has_random_building_slot_added
+	}
+}
+
+ETH_add_random_civ_factory_effect = {
+		random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+					OR = {
+						is_in_home_area = yes
+						NOT = {
+							owner = {
+								any_owned_state = {
+									free_building_slots = {
+										building = industrial_complex
+										size > 0
+										include_locked = yes
+									}
+									is_in_home_area = yes
+								}
+							}
+						}
+					}
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+}
+
+ETH_add_random_mil_factory_effect = {
+	random_owned_controlled_state = {
+		limit = {
+			free_building_slots = {
+				building = arms_factory
+				size > 0
+				include_locked = yes
+			}
+			OR = {
+				is_in_home_area = yes
+				NOT = {
+					owner = {
+						any_owned_state = {
+							free_building_slots = {
+								building = arms_factory
+								size > 0
+								include_locked = yes
+							}
+							is_in_home_area = yes
+						}
+					}
+				}
+			}
+		}
+		add_extra_state_shared_building_slots = 2
+		add_building_construction = {
+			type = arms_factory
+			level = 2
+			instant_build = yes
+		}
+	}
+}
+
+ETH_haile_selassie_returns = {
+	IF = {
+		limit = {
+			ETH = {
+				has_country_leader = {
+					ruling_only = yes
+					character = ETH_haile_selassie
+				}
+			}
+		}
+		custom_effect_tooltip = ETH_haile_selassie_returns_tt
+		add_war_support = 0.1
+		ETH = { remove_country_leader_trait = imperator_absentis }
+		
+		ETH_haile_selassie = {
+			gain_xp = 500 
+		}
+		IF = {
+			limit = {
+				is_in_faction_with = ENG 
+			}
+			set_portraits = {
+				character = ETH_haile_selassie
+				army = { large = "GFX_portrait_ETH_haile_selassie_field_marshal_uk" }
+			}	
+		}
+	}
+}
+
+ETH_get_ships_from_country = { #MOved this here from event in ETH. This works with events where FROM is the country making the ships and ROOT is the country receiving it. Check which country it is and transfers an appropriate amount of ships of a template depending on the country. Currently only works with USA, ENG, GER and SOV.
+	IF = {
+		limit = {
+			 FROM = {
+			 	tag = ENG
+			 }
+		}
+		IF = {
+			limit = {
+				has_dlc = "Man the Guns"
+			}
+			ENG = {
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class I"
+				}
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class II"
+				}
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class III"
+				}
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class IV"
+				}
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class V"
+				}
+				create_ship = {
+					type = ship_hull_light_1
+					equipment_variant = "S Class"
+					creator = ENG
+					name = "S Class VI"
+				}
+				
+			
+				#Transfer British Destroyers
+				transfer_ship={
+				  prefer_name = "S Class I"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+				transfer_ship={
+				  prefer_name = "S Class II"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+				transfer_ship={
+				  prefer_name = "S Class III"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+				transfer_ship={
+				  prefer_name = "S Class IV"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+				transfer_ship={
+				  prefer_name = "S Class V"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+				transfer_ship={
+				  prefer_name = "S Class VI"
+				  type = destroyer
+				  target = ROOT
+				  exclude_refitting = no
+				}
+			}
+		}
+		ELSE = {
+			ROOT = {
+				create_ship = {
+					type = destroyer_1
+					creator = "ENG"
+				}
+			}
+		}	
+		ENG = { set_country_flag = sold_ships_to_us@ROOT }
+	}
+	ELSE_IF = {
+		limit = {
+			 FROM = {
+			 	tag = SOV
+			 }
+		}
+		SOV = {
+			create_ship = {
+				type = ship_hull_heavy_1
+				equipment_variant = "Marat Class"
+				creator = SOV
+				name = "Marat Class BB I"
+			}
+			create_ship = {
+				type = ship_hull_heavy_1
+				equipment_variant = "Marat Class"
+				creator = SOV
+				name = "Marat Class BB II"
+			}
+			transfer_ship={
+			  prefer_name = "Marat Class BB I"
+			  type = battleship
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Marat Class BB II"
+			  type = battleship
+			  target = ROOT
+			  exclude_refitting = no
+			}
+		}
+		SOV = { set_country_flag = sold_ships_to_us@ROOT }
+		
+	}
+	ELSE_IF = {
+		limit = {
+			 FROM = {
+			 	tag = GER
+			 }
+		}
+		GER = {
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-1"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-1"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-2"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-2"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-3"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-3"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-4"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-4"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-5"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-5"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-6"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-6"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-7"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-7"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-8"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-8"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-9"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-9"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			create_ship = {
+				type = ship_hull_submarine_1
+				equipment_variant = "Type II Class"
+				creator = GER
+				name = "Type IIA U-10"
+			}
+			transfer_ship={
+			  prefer_name = "Type IIA U-10"
+			  type = submarine
+			  target = ROOT
+			  exclude_refitting = no
+			}
+		}
+		GER = { set_country_flag = sold_ships_to_us@ROOT }
+	}
+	ELSE_IF = {
+		limit = {
+			 FROM = {
+			 	tag = USA
+			 }
+		}
+		USA = {
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class I"
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class II"
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class III"
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class IV"
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class V"
+			}
+			create_ship = {
+				type = ship_hull_light_1
+				equipment_variant = "Clemson Class"
+				creator = USA
+				name = "Clemson Class VI"
+			}
+		
+			#Transfer US Destroyers
+			transfer_ship={
+			  prefer_name = "Clemson Class I"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Clemson Class II"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Clemson Class III"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Clemson Class IV"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Clemson Class V"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			transfer_ship={
+			  prefer_name = "Clemson Class VI"
+			  type = destroyer
+			  target = ROOT
+			  exclude_refitting = no
+			}
+			USA = { set_country_flag = sold_ships_to_us@ROOT }
+		}
+	}
+}
+
+ETH_transfer_promised_states = {
+	for_each_scope_loop = {
+		array = ETH.ETH_promised_states_array	
+		IF = { 
+			limit = {
+				owner = {
+					tag = ETH
+				}
+			}
+			remove_dynamic_modifier = { modifier = ETH_arranged_expansion_modifier } 
+		}
+		# If states are taken by e.g. host nation in the peace conference, transfer them to Ethiopia (to deal with cases where they come frmom a country that Ethiopia is not at war with)
+		ELSE_IF = {
+			limit = {
+				owner = {
+					OR = {
+						is_in_faction_with = ETH
+						ETH = { is_subject_of = PREV }  
+						check_variable = { ETH.host_nation = THIS }
+					}
+				}
+			}
+			ETH = { 
+				transfer_state = PREV 
+			}
+			remove_dynamic_modifier = { modifier = ETH_arranged_expansion_modifier } 
+		}
+	}
+}
