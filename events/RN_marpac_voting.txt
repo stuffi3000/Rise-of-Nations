@@ -75,7 +75,7 @@ country_event = {        #######Resolution 51: Operation Juin
 	}	
 }
 
-country_event = {        #######Resolution 51: hidden check 
+country_event = {        #######Resolution: hidden check 
 	id = marpac.2
 	title = marpac.1.t
 	desc = marpac.1
@@ -113,7 +113,7 @@ country_event = {        #######Resolution 51: hidden check
 	}	
 }
 }
-news_event = {        #######Resolution 51 passed
+news_event = {        #######Resolution  passed
 	id = marpac.3
 	title = marpac.3.t
 	desc = marpac.3.d
@@ -132,7 +132,7 @@ news_event = {        #######Resolution 51 passed
 	}	
 }
 
-news_event = {        #######Resolution 51 not passed
+news_event = {        #######Resolution  not passed
 	id = marpac.4
 	title = marpac.4.t
 	desc = marpac.4.d
@@ -187,10 +187,23 @@ country_event = {
 			has_global_flag = MARPAC_resolution_10
 			has_war_support < .5			
 			}
-				
+			OR = { # Resolution 80
+			has_global_flag = MARPAC_resolution_80
+			NOT = {
+			OR = {
+				has_ideas = isolation
+				has_ideas = foreign_isolationism
+				has_government = communism	
+				has_ideas = superstate_size3
+				has_ideas = superstate_size2
+				has_ideas = superstate_size1			
+			}
+			}
+			}
+
 			}
 		
-		}
+		}		
 		if = { 
 			limit = { 
 				has_global_flag = MARPAC_resolution_1
@@ -199,6 +212,14 @@ country_event = {
 				add_to_faction = ROOT
 			}
 		}
+		if = { 
+			limit = { 
+				has_global_flag = MARPAC_resolution_80
+			}
+			ROOT = {
+				set_country_flag = anti_korea
+			}
+		}		
 			set_country_flag = MARPAC_voted	 
 		    add_to_array = {
 	        array = global.marpac_countries_for
@@ -227,6 +248,14 @@ country_event = {
 		country_event = {
 		id = marpac.5
 		days = 4
+		}
+	}
+	option = {
+		name = marpac.5.d
+		trigger = {
+			OR = {
+				has_ideas = foreign_neutral
+			}
 		}
 	}
 }
@@ -420,6 +449,83 @@ country_event = {        #######Resolution 10: End Great War
 		}			
 		}
 		
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+
+country_event = {        #######Resolution 80: Korean War
+	id = marpac.80
+	title = marpac.80.t
+	desc = marpac.80.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+	hidden = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			has_ideas = RON_United_Nations
+			OR = {
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+				tag = LON
+			}					
+			}				
+			}
+
+		
+		}
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.2.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_80
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			AND = {
+			has_ideas = RON_United_Nations
+			OR = {
+			NOT = {
+				tag = UNA
+				tag = DPK
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+				tag = LON
+			}					
+			}				
+			}		
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		set_country_flag = currentl
 		}	
 		
 		country_event = {
