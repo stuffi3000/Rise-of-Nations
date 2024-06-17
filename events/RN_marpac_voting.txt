@@ -1,0 +1,276 @@
+﻿add_namespace = marpac
+
+country_event = {        #######Resolution 51: Operation Juin
+	id = marpac.1
+	title = marpac.1.t
+	desc = marpac.1.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+		OR = {
+		has_ideas = superstate_size7
+		has_ideas = superstate_size6
+		has_ideas = superstate_size5
+		AND = {
+			NOT = {
+				has_idea = foreign_isolationism
+				has_idea = isolation
+			}
+			is_major = yes
+		}
+		has_ideas = RON_United_Nations_Security_Council_NP
+		has_ideas = RON_United_Nations_Security_Council		
+		}
+		}
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.1.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_51
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+		every_country = {
+		limit = { 
+		OR = {
+		has_ideas = superstate_size7
+		has_ideas = superstate_size6
+		has_ideas = superstate_size5
+		AND = {
+			NOT = {
+				has_ideas = foreign_isolationism
+				has_ideas = isolation
+			}
+			is_major = yes
+		}
+		has_ideas = RON_United_Nations_Security_Council_NP
+		has_ideas = RON_United_Nations_Security_Council		
+		}
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+
+country_event = {        #######Resolution 51: hidden check 
+	id = marpac.2
+	title = marpac.1.t
+	desc = marpac.1
+	picture = GFX_FRA_may_pustch
+    hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		name = marpac.1.b
+		if = {
+		limit = {
+		check_variable = {
+	    var = global.marpac_for_vote
+	    value = global.marpac_against_vote
+	    compare = greater_than_or_equals
+}
+	}
+	news_event = marpac.3
+	FRA = { 
+	country_event = {
+	id = africa.2
+	days = 1
+	}
+}	
+    else = {
+	news_event = marpac.4
+	}		
+	clr_global_flag = MARPAC_resolution_1
+	clr_global_flag = MARPAC_resolution_51
+	clr_global_flag = MARPAC_voting_in_process	
+	clear_array = global.marpac_countries_against
+	clear_array = global.marpac_countries_for
+
+	}	
+}
+}
+news_event = {        #######Resolution 51 passed
+	id = marpac.3
+	title = marpacnews.t
+	desc = marpac.3.d
+	picture = GFX_germany_occupation_ends
+    major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = marpacnews	
+	    clr_country_flag = show_marpac_menu
+		clr_country_flag = show_faction_power_menu		
+		clr_country_flag = MARPAC_voted	
+		clear_array = global.marpac_countries_against
+		clear_array = global.marpac_countries_for
+
+	}	
+}
+
+news_event = {        #######Resolution 51 not passed
+	id = marpac.4
+	title = marpac.4.t
+	desc = marpac.4.d
+	picture = GFX_germany_occupation_ends
+    major = yes
+	is_triggered_only = yes
+
+	option = {
+		name = marpacnews
+		add_political_power = 5
+		clr_country_flag = show_marpac_menu
+		clr_country_flag = show_faction_power_menu
+		clr_country_flag = MARPAC_voted		
+		clear_array = global.marpac_countries_against
+		clear_array = global.marpac_countries_for
+	}	
+}
+
+#######AI voting
+country_event = {        
+	id = marpac.5
+	title = marpacnews.t
+	desc = marpac.5.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+	option = {
+		name = marpac.5.a	
+		trigger = {
+			has_global_flag = MARPAC_resolution_1
+			OR = {
+			has_war = no
+			has_government = neutrality			
+			has_war_support > .6	
+			owns_state = 729
+			owns_state = 326
+			owns_state = 1028
+			owns_state = 745
+			owns_state = 743
+			owns_state = 902
+			}
+			NOT = {
+				has_ideas = isolation
+				has_ideas = foreign_isolationism
+			}
+		}
+		trigger = {
+			has_global_flag = MARPAC_resolution_10
+			has_war_support < .5
+		}
+			set_country_flag = MARPAC_voted	 
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}		
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }	
+	}	
+	option = {
+		name = marpac.5.b			
+
+			set_country_flag = MARPAC_voted	
+			add_to_variable = {
+	        var = global.marpac_against_vote
+	        value = 1
+			}
+		    add_to_array = {
+	        array = global.marpac_countries_against
+            value = THIS.id
+		}				
+	}	
+}
+
+country_event = {        #######Resolution 51: hidden check 
+	id = marpac.52
+	title = marpac.1.t
+	desc = marpac.1
+	picture = GFX_FRA_may_pustch
+    hidden = yes
+	is_triggered_only = yes
+
+	option = {
+		name = marpac.1.b	
+		RN_faction_power_calculation = yes	
+}
+}
+country_event = {        #######Resolution 51: Operation Juin
+	id = marpac.7
+	title = marpac.2.t
+	desc = marpac.2.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			OR = {
+			has_war_with = GER
+			tag = GER				
+			}		}
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.2.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_10
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			OR = {
+			has_war_with = GER
+			tag = GER				
+			}
+
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
