@@ -114,14 +114,14 @@ country_event = {        #######Resolution 51: hidden check
 }
 news_event = {        #######Resolution 51 passed
 	id = marpac.3
-	title = marpacnews.t
+	title = marpac.3.t
 	desc = marpac.3.d
 	picture = GFX_germany_occupation_ends
     major = yes
 	is_triggered_only = yes
 
 	option = {
-		name = marpacnews	
+		name = marpac.3.d	
 	    clr_country_flag = show_marpac_menu
 		clr_country_flag = show_faction_power_menu		
 		clr_country_flag = MARPAC_voted	
@@ -160,13 +160,17 @@ country_event = {
 	option = {
 		name = marpac.5.a	
 		trigger = {
+			OR = {
+	OR = { # Resolution 1
 			has_global_flag = MARPAC_resolution_1
 			OR = {
 			has_war = no
 			has_government = neutrality			
 			has_war_support > .6	
 			owns_state = 729
+			owns_state = 728
 			owns_state = 326
+			is_on_continent = asia
 			owns_state = 1028
 			owns_state = 745
 			owns_state = 743
@@ -175,11 +179,23 @@ country_event = {
 			NOT = {
 				has_ideas = isolation
 				has_ideas = foreign_isolationism
+			}			
 			}
-		}
-		trigger = {
+			OR = { # Resolution 10
 			has_global_flag = MARPAC_resolution_10
-			has_war_support < .5
+			has_war_support < .5			
+			}
+				
+			}
+		
+		}
+		if = { 
+			limit = { 
+				has_global_flag = MARPAC_resolution_1
+			}
+			FRA = {
+				add_to_faction = ROOT
+			}
 		}
 			set_country_flag = MARPAC_voted	 
 		    add_to_array = {
@@ -204,6 +220,13 @@ country_event = {
             value = THIS.id
 		}				
 	}	
+	option = {
+		name = marpac.5.c # simulate deciding on a vote
+		country_event = {
+		id = marpac.5
+		days = 2
+		}
+	}
 }
 
 country_event = {        #######Resolution 51: hidden check 
@@ -219,7 +242,137 @@ country_event = {        #######Resolution 51: hidden check
 		RN_faction_power_calculation = yes	
 }
 }
-country_event = {        #######Resolution 51: Operation Juin
+country_event = {        #######Resolution 10: Great war peace
+	id = marpac.8
+	title = marpac.8.t
+	desc = marpac.8.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			OR = {
+			has_war_with = GER
+			tag = GER				
+			}		}
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.8.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_10
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			OR = {
+			has_war_with = GER
+			tag = GER				
+			}
+
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+country_event = {        #######Resolution 1: Boxer War Rebellion
+	id = marpac.9
+	title = marpac.8.t
+	desc = marpac.8.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+	hidden_effect = {
+	every_country = {
+		limit = { 
+			OR = {
+			tag = AUH
+			tag = ENG
+			tag = FRA
+			tag = GER
+			tag = ITA
+			tag = JAP
+			is_major = yes
+			tag = RUS					
+			}				
+			}
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
+		}			
+	}
+	
+	}
+	option = {
+		name = marpac.8.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_1
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			OR = {
+			tag = AUH
+			tag = ENG
+			tag = FRA
+			tag = GER
+			tag = ITA
+			tag = JAP
+			tag = RUS		
+			is_major = yes			
+			}		
+			NOT = {
+				tag = QIN
+				tag = CHI
+			}
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+
+country_event = {        #######Resolution 10: End Great War
 	id = marpac.7
 	title = marpac.2.t
 	desc = marpac.2.d

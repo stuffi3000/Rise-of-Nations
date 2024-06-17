@@ -1255,27 +1255,88 @@ country_event = {
 	desc = dnctree.40.desc
 
 	is_triggered_only = yes
-
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+	hidden_effect = {
+	every_country = {
+		limit = { 
+			OR = {
+			tag = AUH
+			tag = ENG
+			tag = FRA
+			tag = GER
+			tag = ITA
+			tag = JAP
+			is_major = yes
+			tag = RUS					
+			}			
+			NOT = {
+				tag = QIN
+				tag = CHI
+			}				
+			}
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
+		}			
+	}
+	
+	}
 	option = {
 		name = dnctree.40.a
-		ai_chance = {
-			factor = 1000
-		}
-
-		create_faction = faction_eight_nations
-
-		ENG = { country_event = { id = generic.5 hours = 1 } }
-		JAP = { country_event = { id = generic.5 hours = 1 } }
-		GER = { country_event = { id = generic.5 hours = 1 } }
-		USA = { country_event = { id = generic.5 hours = 1 } }
-		ITA = { country_event = { id = generic.5 hours = 1 } }
-		AUH = { country_event = { id = generic.5 hours = 1 } }
-		DEL = { country_event = { id = generic.5 hours = 1 } }
-
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_1
+        set_country_flag = show_marpac_menu			
 		set_global_flag = eight_nation_alliance_created
-
+		create_faction = faction_eight_nations
+			set_country_flag = MARPAC_voted	 
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}		
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }		
+		hidden_effect = {
+		every_country = {
+		limit = {  
+			OR = {
+			tag = AUH
+			tag = ENG
+			tag = FRA
+			tag = GER
+			tag = ITA
+			tag = JAP
+			tag = RUS		
+			is_major = yes			
+			}		
+			NOT = {
+				tag = QIN
+				tag = CHI
+			}
+		}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
 	}
-
 	option = {
 		name = dnctree.40.b
 		ai_chance = {
