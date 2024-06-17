@@ -105,6 +105,8 @@ country_event = {        #######Resolution: hidden check
 	}		
 	clr_global_flag = MARPAC_resolution_1
 	clr_global_flag = MARPAC_resolution_51
+	clr_global_flag = MARPAC_resolution_80
+	clr_global_flag = MARPAC_resolution_10
 	clr_global_flag = MARPAC_voting_in_process	
 	clr_country_flag = currently_voting
 	clear_array = global.marpac_countries_against
@@ -128,7 +130,6 @@ news_event = {        #######Resolution  passed
 		clr_country_flag = MARPAC_voted	
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
-
 	}	
 }
 
@@ -185,7 +186,16 @@ country_event = {
 			}
 			OR = { # Resolution 10
 			has_global_flag = MARPAC_resolution_10
-			has_war_support < .5			
+			OR = {
+				casualties > 2000000
+				has_capitulated = yes
+				AND = {
+					has_stability < .5
+					has_government = democratic
+				}
+				has_war_support < .5
+			}
+						
 			}
 			OR = { # Resolution 80
 			has_global_flag = MARPAC_resolution_80
@@ -283,17 +293,25 @@ country_event = {        #######Resolution 10: Great war peace
 	set_variable = { global.marpac_for_vote = 0 }
 	set_variable = { global.marpac_against_vote = 0 }		
 	clear_array = global.marpac_executive_array
+	hidden_effect = {
 		every_country = {
 		limit = { 
 			OR = {
 			has_war_with = GER
 			tag = GER				
-			}		}
+			}
+			NOT = {
+				tag = REB
+			}		
+			}
+			set_country_flag = currently_voting
 		add_to_array = {
     	array = global.marpac_executive_array
     	value = THIS.id
 		}
-		}	
+				
+	}
+}	
 	}
 	option = {
 		name = marpac.8.a
@@ -307,7 +325,9 @@ country_event = {        #######Resolution 10: Great war peace
 			has_war_with = GER
 			tag = GER				
 			}
-
+			NOT = {
+				tag = REB
+			}
 		}
 		if = {
 			limit = {
