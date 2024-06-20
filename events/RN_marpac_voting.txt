@@ -94,11 +94,6 @@ country_event = {        #######Resolution: hidden check
 }
 	}
 	news_event = marpac.3
-	FRA = { 
-	country_event = {
-	id = africa.2
-	days = 1
-	}
 }	
     else = {
 	news_event = marpac.4
@@ -114,7 +109,7 @@ country_event = {        #######Resolution: hidden check
 
 	}	
 }
-}
+
 news_event = {        #######Resolution  passed
 	id = marpac.3
 	title = marpac.3.t
@@ -130,6 +125,7 @@ news_event = {        #######Resolution  passed
 		clr_country_flag = MARPAC_voted	
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
+		clr_global_flag = MARPAC_resolution_40
 	}	
 }
 
@@ -149,6 +145,18 @@ news_event = {        #######Resolution  not passed
 		clr_country_flag = MARPAC_voted		
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
+		if = {
+		limit = {
+			has_global_flag = MARPAC_resolution_40
+		}
+		USA = {
+			set_country_flag = failedvoteres40
+		}
+		}
+
+		clr_global_flag = MARPAC_resolution_40
+
+
 	}	
 }
 
@@ -213,7 +221,12 @@ country_event = {
 			}
 			}
 			}
-
+			OR = { # Resolution 40
+			has_global_flag = MARPAC_resolution_40
+			NOT = {
+				has_government = fascism
+			}			
+			}
 			}
 		
 		}		
@@ -248,10 +261,14 @@ country_event = {
 
 			set_country_flag = MARPAC_voted	
 			trigger = {
-									NOT = {
-	has_country_flag = MARPAC_voted 
+
+				NOT = {
+						has_country_flag = MARPAC_voted 
 					}
-			}
+
+		
+					}
+
 			add_to_variable = {
 	        var = global.marpac_against_vote
 	        value = 1
@@ -375,7 +392,7 @@ country_event = {        #######Resolution 1: Boxer War Rebellion
 	every_country = {
 		limit = { 
 			OR = {
-			tag = AUH
+			tag = AUH 
 			tag = ENG
 			tag = FRA
 			tag = GER
@@ -506,8 +523,10 @@ country_event = {        #######Resolution 80: Korean War
 		every_country = {
 		limit = { 
 			AND = {
-			has_idea = RON_United_Nations
 			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			}
 			not = {
 				tag = UNA
 				tag = DPK
@@ -518,10 +537,7 @@ country_event = {        #######Resolution 80: Korean War
 				tag = LON
 			}					
 			}				
-			}
-
-		
-		}
+			}	
 		add_to_array = {
     	array = global.marpac_executive_array 
     	value = THIS.id
@@ -548,20 +564,112 @@ country_event = {        #######Resolution 80: Korean War
 		every_country = {
 		limit = { 
 			AND = {
-			has_idea = RON_United_Nations
 			OR = {
-			NOT = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			}
+			not = {
 				tag = UNA
 				tag = DPK
-				tag = KOR
 				tag = XXB
+				tag = KOR
 				tag = ZOM
 				tag = EUR
 				tag = LON
 			}					
 			}				
-			}		
+			}
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 5
+		}			
 		}
+		set_country_flag = currently_voting
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+
+
+country_event = {        #######Resolution 40: Neurenburg Trials
+	id = marpac.40
+	title = marpac.80.t
+	desc = marpac.80.d
+	picture = GFX_FRA_may_pustch
+	is_triggered_only = yes
+	hidden = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+				tag = LON
+			}					
+			}				
+			}	
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.2.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_40
+        set_country_flag = show_marpac_menu			
+		hidden_effect = {
+			USA = {
+			set_country_flag = MARPAC_voted	 
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}		
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }			
+			}
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+				tag = LON
+			}					
+			}				
+			}	
 		if = {
 			limit = {
 				is_ai = yes
