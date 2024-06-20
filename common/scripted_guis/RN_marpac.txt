@@ -86,7 +86,7 @@ scripted_gui = {
 	        var = global.marpac_for_vote
 	        value = 1
         }			
-		}	
+		}
 			marpac_against_button_click = {			
 			
 			set_country_flag = MARPAC_voted
@@ -148,11 +148,67 @@ has_country_flag = currently_voting
 		memberstate_flag_small_click = {
 		set_variable = { ROOT.selected_marpac = THIS.id }
 		}
-		diplomacy_button_click = {
-		var:ROOT.selected_marpac = { add_political_power = 100 }
+		beg_button_click = {
+			if = {
+				limit = {
+				has_political_power > 150
+				var:ROOT.selected_marpac = { 
+					NOT = {
+	has_country_flag = MARPAC_voted 
+					}
+				}
+				var:ROOT.selected_marpac = { is_ai = yes}
+				}
+			add_political_power = -150
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_1
+			}
+			FRA = {
+				add_to_faction = var:ROOT.selected_marpac
+			}
+		}			
+			var:ROOT.selected_marpac = {
+			set_country_flag = MARPAC_voted
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}
+			set_country_flag = MARPAC_voted
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }						
+			}
+			}
+		}		
+		anti_beg_button_click = {
+			if = {
+				limit = {
+				has_political_power > 150
+				var:ROOT.selected_marpac = { 
+					NOT = {
+	has_country_flag = MARPAC_voted 
+					}
+				}
+				var:ROOT.selected_marpac = { is_ai = yes}
+				}
+			add_political_power = -150
+						var:ROOT.selected_marpac = {
 
+			set_country_flag = MARPAC_voted
+		    add_to_array = {
+	        array = global.marpac_countries_against
+            value = THIS.id
+		}
+			add_to_variable = {
+	        var = global.marpac_against_vote
+	        value = 1
+			}
+						}				
+			}
+			}
 		}
 		}		
 	}
 
-}
