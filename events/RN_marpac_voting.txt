@@ -104,6 +104,7 @@ country_event = {        #######Resolution: hidden check
 	clr_global_flag = MARPAC_resolution_10
 	clr_global_flag = MARPAC_resolution_240
 	clr_global_flag = MARPAC_resolution_130
+	clr_global_flag = MARPAC_resolution_50
 	clr_global_flag = MARPAC_voting_in_process	
 	clr_country_flag = currently_voting
 	clear_array = global.marpac_countries_against
@@ -265,6 +266,17 @@ country_event = {
 				}
 			}
 			}			
+			modifier = {
+			add = 40000
+			AND = {
+				has_global_flag = MARPAC_resolution_50
+				NOT = {
+					has_government = fascism
+					has_government = neutrality
+				}
+				has_war_support > .5
+			}
+			}			
 		}
 	
 		trigger = {
@@ -296,7 +308,18 @@ country_event = {
 			ROOT = {
 				set_country_flag = anti_korea
 			}
-		}		
+		}	
+		if = { 
+			limit = { 
+				has_global_flag = MARPAC_resolution_50
+			}
+			ROOT = {
+				declare_war_on = {
+				    target = GER
+				    type = annex_everything
+				}
+			}
+		}			
 			set_country_flag = MARPAC_voted	 
 		    add_to_array = {
 	        array = global.marpac_countries_for
@@ -768,7 +791,95 @@ country_event = {        #######Resolution 40: Neurenburg Trials
 		}
 	}	
 }
-
+country_event = {        #######Resolution 50: Destroy Monarchist Germany
+	id = marpac.50
+	title = marpac.80.t
+	desc = marpac.80.d
+	picture = GFX_report_event_comintern
+	is_triggered_only = yes
+	hidden = yes
+    immediate = {
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = GER
+				tag = ZOM
+				tag = EUR
+				tag = LON
+			}				
+			OR = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+			}				
+			}				
+			}	
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}	
+	}
+	option = {
+		name = marpac.2.a
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = MARPAC_resolution_50
+        set_country_flag = show_marpac_menu		
+		news_event = marpac.1000	
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			AND = {
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+				tag = LON
+				tag = GER
+			}				
+			OR = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+			}				
+			}				
+			}	
+		if = {
+			limit = {
+				is_ai = yes
+			}
+		country_event = { 
+		id = marpac.5
+		days = 5
+		}			
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			set_country_flag = currently_voting
+		}
+			
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+	}	
+}
+}
 country_event = {        #######Resolution 130: Unifacation Of China
 	id = marpac.130
 	title = marpac.80.t
