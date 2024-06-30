@@ -1,9 +1,6 @@
  scripted_diplomatic_actions = {
  	RON_add_to_sphere = {
  		visible = {
-            always = yes
- 		}
- 		selectable = {
  		ROOT = {
             OR = {
                 tag = RUS
@@ -21,38 +18,165 @@
                 tag = AUH
                 tag = CHI
                 }
-            }								
+            }
+ 		}
+ 		selectable = {								
                         country_exists = ROOT
                         ROOT = { is_subject = no}
  FROM = {            
-    NOT = {
-        has_idea = sov_economic_help
-        has_idea = usa_economic_help
-        has_idea = rus_economic_help
-        has_idea = eng_economic_help
-        has_idea = ger_economic_help
-        has_idea = jap_economic_help
-        has_idea = ita_economic_help
-        has_idea = ott_economic_help
-        has_idea = fra_economic_help
-        has_idea = spr_economic_help
-        has_idea = spa_economic_help
-        has_idea = auh_economic_help
-        has_idea = chi_economic_help
-    }
-                            has_opinion = {
-                                target = ROOT
-                                value > -1
-                            }                                 
+                             
                                 OR = {
                                     is_puppet_of = ROOT
                                     is_subject_of = ROOT
                             has_idea = superstate_size1
-                            has_idea = superstate_size2                                                   
-							is_neighbor_of = ROOT
+                            has_idea = superstate_size2 
+                            has_idea = superstate_size3
+                            has_stability < 0.2
+							is_neighbor_of = ROOT               
                                 }
                             }
-                       
+NOT = { # can't use hidden effect here 
+    AND = {
+        ROOT = {
+            tag = SOV
+        }
+        FROM = {
+            has_idea = sov_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = USA
+        }
+        FROM = {
+            has_idea = usa_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = RUS
+        }
+        FROM = {
+            has_idea = rus_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = ENG
+        }
+        FROM = {
+            has_idea = eng_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = GER
+        }
+        FROM = {
+            has_idea = ger_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = JAP
+        }
+        FROM = {
+            has_idea = jap_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = ITA
+        }
+        FROM = {
+            has_idea = ita_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = OTT
+        }
+        FROM = {
+            has_idea = ott_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = FRA
+        }
+        FROM = {
+            has_idea = fra_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = SPR
+        }
+        FROM = {
+            has_idea = spr_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = SPA
+        }
+        FROM = {
+            has_idea = spa_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = AUH
+        }
+        FROM = {
+            has_idea = auh_economic_help
+        }
+    }
+}
+
+NOT = {
+    AND = {
+        ROOT = {
+            tag = CHI
+        }
+        FROM = {
+            has_idea = chi_economic_help
+        }
+    }
+}
 	 		
         }
  		requires_acceptance = yes
@@ -535,26 +659,75 @@ if = {
  		reject_effect = {
  			log = "[ROOT.GetName] proposed [THIS.GetName] join their sphere but it was refused"
  		}
- 		send_description = PROPOSE_PEACE_SEND_DESC
- 		receive_description = PROPOSE_PEACE_RECEIVE_DESC
- 		accept_title = PROPOSE_PEACE_ACCEPT_TITLE
- 		accept_description = PROPOSE_PEACE_ACCEPT_DESC
- 		reject_title = PROPOSE_PEACE_REJECT_TITLE
- 		reject_description = PROPOSE_PEACE_REJECT_DESC
+ 		send_description = ADD_TO_SPHERE_SEND_DESC
+ 		receive_description = ADD_TO_SPHERE_RECEIVE_DESC
+ 		accept_title = ADD_TO_SPHERE_ACCEPT_TITLE
+ 		accept_description = ADD_TO_SPHERE_ACCEPT_DESC
+ 		reject_title = ADD_TO_SPHERE_REJECT_TITLE
+ 		reject_description = ADD_TO_SPHERE_REJECT_DESC
  		#AI 
  		ai_acceptance = {
  			base_desire = {
- 				base = 5
+ 				base = 10
  				modifier = {
  					add = -15
  				}
  			}
+            not_weak = {
+                base = 0
+                modifier = {
+                    add = -5
+                    FROM = {
+                              NOT = {
+                        has_idea = superstate_size3
+                        has_idea = superstate_size2
+                        has_idea = superstate_size1
+                              }
+                            }
+                    }
+                }
+            
             share_ideology = {
                 base = 0
                 modifier = {
-                    add = 60
-                    FROM = {
-                    has_ideology_group = ROOT
+                    add = 10
+                    OR = {
+AND = {
+    ROOT = { 
+        has_government =  democratic
+    }
+    FROM = {
+        has_government =  democratic
+    }
+}
+
+AND = {
+    ROOT = { 
+        has_government =  fascism
+    }
+    FROM = {
+        has_government =  fascism
+    }
+}
+
+AND = {
+    ROOT = { 
+        has_government =  neutrality
+    }
+    FROM = {
+        has_government =  neutrality
+    }
+}
+
+AND = {
+    ROOT = { 
+        has_government =  communism
+    }
+    FROM = {
+        has_government =  communism
+    }
+}
+
                     }
                 }
             }
@@ -562,10 +735,13 @@ if = {
                 base = 0
                 modifier = {
                     add = 1000000
+                    OR = {
                     is_puppet_of = ROOT
-                    is_subject_of = ROOT
+                    is_subject_of = ROOT                        
+                    }
                 }
             }
+
             economic_block_member = {
                 base = 0
                 modifier = {
@@ -584,23 +760,34 @@ if = {
             is_friend ={
                 base = 0 
                 modifier = {
-                            AND = {   							
+                    add = 10
+                            OR = {   							
                             has_opinion = {
                                 target = ROOT
                                 value > 80
                             }    
-                            OR = {
                             is_in_faction_with = ROOT
-                            }
                             }                    
                 }       
             }    
+            is_alright ={
+                base = 0 
+                modifier = {
+                    add = 5
+                            AND = {   							
+                            has_opinion = {
+                                target = ROOT
+                                value > 30
+                            }    
+                            }                    
+                }       
+            }            
  			major_nation = {
  				base = 0
  				modifier = {
  					add = -50
- 					ROOT = {
-                        is_major = no
+ 					FROM = {
+                        is_major = yes
  					}
  				}
  			}
@@ -652,6 +839,20 @@ if = {
 					}
 				}
 			}
+            is_a_puppet = {
+                base = 0
+                modifier = {
+                    add = -50
+                    AND = {
+                    is_puppet = yes
+                    is_subject = yes
+                    NOT = {
+                        is_puppet_of = ROOT
+                        is_subject_of = ROOT
+                    }                        
+                    }
+                }
+            }
 			is_part_of_sphere = {
 				base = 0
 				modifier = {
@@ -678,15 +879,12 @@ if = {
 				}
 			}			
         }
- 		ai_desire = {			
- 			base = 1000
- 			major_nation = {
- 				base = 0
- 				modifier = {
- 					add = -50
- 					ROOT = {
-                     NOT = {
-                        OR = {
+ 		ai_desire = {			            
+	base_desire = {
+		base = 100
+		modifier = {
+			ROOT = {
+                OR = {
                 tag = RUS
                 tag = USA
                 tag = ENG
@@ -700,124 +898,58 @@ if = {
                 tag = SPR
                 tag = SPA
                 tag = AUH
-                tag = CHI                            
-                        }
-                        }
- 					}
- 				}
- 			}
-        
-			is_part_of_sphere = {
-				base = 0
-				modifier = {
-					add = -10
-                    OR = {
-                        FROM = {
-					has_country_flag = USA_influnced
-                    has_country_flag = RUS_influnced
-                    has_country_flag = ENG_influnced
-                    has_country_flag = GER_influnced
-                    has_country_flag = JAP_influnced
-                    has_country_flag = SOV_influnced
-                    has_country_flag = ITA_influnced
-                    has_country_flag = OTT_influnced
-                    has_country_flag = FRA_influnced
-                    has_country_flag = SPR_influnced
-                    has_country_flag = SPA_influnced
-                    has_country_flag = AUH_influnced
-                    has_country_flag = CHI_influnced
-                        }
-                    }
-				}
-			}
-            is_a_puppet = {
-                base = 0
-                modifier = {
-                    add = 1000000
-                    OR = {
-                    is_puppet_of = ROOT
-                    is_subject_of = ROOT
-                    }
+                tag = CHI   
                 }
-            }
-            economic_block_member = {
-                base = 0
-                modifier = {
-                    add = 30
-                    OR = {
-                            AND = {
-                                OR = {
-                                tag = SOV
-                                has_country_flag = comeconmember 
-                                }
-                            }
-                    }
                 }
-            }
- 			base_desire = {
- 				base = 5
- 				modifier = {
- 					add = -15
- 				}
- 			}
-            share_ideology = {
-                base = 0
-                modifier = {
-                    add = 60
-                    FROM = {
-                    has_ideology_group = ROOT
-                    }
-                }
-            }                    
-             weak = {
-                base = 0
-                modifier = {
-                    add = 300
-                    OR = {
-                        has_idea = superstate_size1
-                        has_idea = superstate_size2
-                    }
-                }
-            }         
-             close = {
-                base = 0
-                modifier = {
-                    add = 300
-                    OR = {
-							is_neighbor_of = ROOT
-                    }
+			tag = FROM
+            OR = {
+            has_idea = superstate_size1
+            has_idea = superstate_size2
+            has_idea = superstate_size3
+            is_in_faction_with = ROOT
+            is_guaranteed_by = ROOT
+            has_idea = superstate_size3         
+AND = {
+    ROOT = { 
+        has_government =  democratic
+    }
+    FROM = {
+        has_government =  democratic
+    }
+}
 
-                }
-            }       
-             puppet = {
-                base = 0
-                modifier = {
-                    add = 300
-                    OR = {
-							is_puppet_of = ROOT
-                            is_subject_of = ROOT
-                    }
+AND = {
+    ROOT = { 
+        has_government =  fascism
+    }
+    FROM = {
+        has_government =  fascism
+    }
+}
 
-                }
-            }                                       
- 			has_strong_allies = {
- 				base = 0
- 				modifier = {
- 					add = -50
- 					THIS = {
-						NOT = {
-							is_puppet_of = ROOT
-						}
- 						is_faction_leader = yes
- 						any_allied_country = {
- 							strength_ratio = {
- 								tag = ROOT
- 								ratio > 0.8
- 							}
- 						}
- 					}
- 				}
- 			} 		
- 		}
+AND = {
+    ROOT = { 
+        has_government =  neutrality
+    }
+    FROM = {
+        has_government =  neutrality
+    }
+}
+
+AND = {
+    ROOT = { 
+        has_government =  communism
+    }
+    FROM = {
+        has_government =  communism
+    }
+}
+
+            }
+			add = 1000
+		}
+	}
+
  	}
+ }
  }
