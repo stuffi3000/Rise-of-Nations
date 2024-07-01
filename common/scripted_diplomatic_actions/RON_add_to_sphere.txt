@@ -48,12 +48,19 @@
         
  		cost = 100
 on_sent_effect = {
-  #  add_timed_idea = {
-  #      idea = sent_sphere_request
-  #      days = 50
-  #  }
-}
+    ROOT = {
+set_variable = { waiting_for_response = 1 } }
+    }
+
+		reject_effect = {
+            ROOT = {
+                clear_variable = waiting_for_response
+            }
+        }
  		complete_effect = {
+			ROOT = {
+				clear_variable = waiting_for_response
+            }
 if = {
     limit = {
         ROOT = {
@@ -586,9 +593,7 @@ if = {
 			
        
  		}
- 		reject_effect = {
- 			log = "[ROOT.GetName] proposed [THIS.GetName] join their sphere but it was refused"
- 		}
+
  		send_description = ADD_TO_SPHERE_SEND_DESC
  		receive_description = ADD_TO_SPHERE_RECEIVE_DESC
  		accept_title = ADD_TO_SPHERE_ACCEPT_TITLE
@@ -1013,6 +1018,7 @@ AND = {
 		base = 0
 		modifier = {
 			ROOT = {
+                check_variable = { waiting_for_response = 0 }
                 OR = {
                 tag = RUS
                 tag = USA
@@ -1032,9 +1038,10 @@ AND = {
                 }
                 }
 			tag = FROM
-NOT = {
-   # has_idea = sent_sphere_request        
-}
+            NOT = {
+                has_war = yes
+                has_capitulated = yes
+            }
     OR = {
                              is_puppet_of = ROOT
                             is_subject_of = ROOT
@@ -1049,7 +1056,7 @@ NOT = {
                                 value > 30
                             }      
 		}
-			add = 0
+			add = 100
 	}
  }
  }
