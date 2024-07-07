@@ -1,0 +1,239 @@
+scripted_gui = {
+
+	marpac_executive_button = {
+        context_type = player_context
+		parent_window_token = politics_tab
+		window_name = "marpac_executive_button"
+		
+		effects = {
+			open_button_click = {
+				if = {
+					limit = { NOT = { has_country_flag = show_marpac_menu } }
+					set_country_flag =  show_marpac_menu
+				}
+				else_if = {
+					limit = { has_country_flag = show_marpac_menu }
+					clr_country_flag = show_marpac_menu
+				}
+				if = {
+					limit = { has_country_flag = show_faction_power_menu }
+					clr_country_flag =  show_faction_power_menu
+				}				
+			}
+		}
+		triggers = {
+        }
+        visible = {
+		has_global_flag = MARPAC_voting_in_process
+        }
+    }
+    marpac_executive_window = {
+        context_type = player_context
+       # parent_window_token = politics_tab
+        window_name = "marpac_executive_bg"
+        visible = {
+            has_country_flag = show_marpac_menu
+        }
+   		properties = {
+		
+		memberstate_flag = {
+		image = [This.GetFlag]
+		}
+
+    	}
+		dynamic_lists = {
+		marpac_countries_for_grid = {
+		array = global.marpac_countries_for
+		entry_container = marpac_countries_for_list_entry
+		change_scope = yes
+		}
+		marpac_countries_against_grid = {
+		array = global.marpac_countries_against
+		entry_container = marpac_countries_against_list_entry
+		change_scope = yes
+		}	
+		}
+    	effects = {
+			open_button_click = {
+				if = {
+					limit = { NOT = { has_country_flag = show_marpac_menu } }
+					set_country_flag =  show_marpac_menu
+				}
+				else_if = {
+					limit = { has_country_flag = show_marpac_menu }
+					clr_country_flag = show_marpac_menu
+				}
+					if = {
+					limit = { has_country_flag = show_faction_power_menu }
+					clr_country_flag =  show_faction_power_menu
+				}
+			}
+			marpac_for_button_click = {
+			set_country_flag = MARPAC_voted
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_1
+			}
+			FRA = {
+				add_to_faction = ROOT
+			}
+		}			
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_50
+			}
+declare_war_on = {
+    target = GER
+    type = annex_everything
+}
+		}			
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }			
+		}
+			marpac_against_button_click = {			
+			
+			set_country_flag = MARPAC_voted
+		    add_to_array = {
+	        array = global.marpac_countries_against
+            value = THIS.id
+		}
+			add_to_variable = {
+	        var = global.marpac_against_vote
+	        value = 1
+			}		
+		}
+		mapac_faction_power_graphic_click = {
+			if = {
+					limit = { NOT = { has_country_flag = show_faction_power_menu } }
+					set_country_flag =  show_faction_power_menu
+				}
+			else_if = {
+					limit = { has_country_flag = show_faction_power_menu }
+					clr_country_flag = show_faction_power_menu
+				}		
+		}
+		
+}
+triggers = {
+marpac_for_button_click_enabled = {
+NOT = { has_country_flag = MARPAC_voted }
+has_country_flag = currently_voting
+}
+marpac_against_button_click_enabled = {
+NOT = { has_country_flag = MARPAC_voted }
+has_country_flag = currently_voting
+}
+}
+} 
+    MARPAC_faction_power = {
+        window_name = marpac_executive_bg_2
+        context_type = player_context         
+        visible = {
+        has_country_flag = show_faction_power_menu
+        }
+
+   		properties = {
+		
+		memberstate_flag_small = {
+		image = [This.GetFlag]
+		}
+
+    	}
+		
+		dynamic_lists = {
+		marpac_countries_council_grid = {
+		array = global.marpac_executive_array 
+		entry_container = marpac_countries_council_entry
+		change_scope = yes
+		}		
+		}	
+    	effects = {
+		memberstate_flag_small_click = {
+		set_variable = { ROOT.selected_marpac = THIS.id }
+		}
+		beg_button_click = {
+			if = {
+				limit = {
+				has_political_power > 150
+				var:ROOT.selected_marpac = { 
+					NOT = {
+	has_country_flag = MARPAC_voted 
+					}
+				}
+				var:ROOT.selected_marpac = { is_ai = yes}
+				}
+			add_political_power = -150
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_1
+			}
+			FRA = {
+				add_to_faction = var:ROOT.selected_marpac
+			}
+		}		
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_130
+			}
+			CHI = {
+				puppet = var:ROOT.selected_marpac
+			}
+		}			
+			var:ROOT.selected_marpac = {
+			set_country_flag = MARPAC_voted
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}
+			set_country_flag = MARPAC_voted
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }						
+			}
+			}
+		}		
+		anti_beg_button_click = {
+			if = {
+				limit = {
+				has_political_power > 150
+				var:ROOT.selected_marpac = { 
+					NOT = {
+	has_country_flag = MARPAC_voted 
+					}
+				}
+				var:ROOT.selected_marpac = { is_ai = yes}
+				}
+			add_political_power = -150
+		if = {
+			limit = {
+				has_global_flag = MARPAC_resolution_130
+			}
+			CHI = {
+				create_wargoal = { type = annex_everything target = var:ROOT.selected_marpac days = 300 }
+			}
+		}			
+						var:ROOT.selected_marpac = {
+
+			set_country_flag = MARPAC_voted
+		    add_to_array = {
+	        array = global.marpac_countries_against
+            value = THIS.id
+		}
+			add_to_variable = {
+	        var = global.marpac_against_vote
+	        value = 1
+			}
+						}				
+			}
+			}
+		}
+		}		
+	}
+
