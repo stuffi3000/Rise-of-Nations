@@ -103,7 +103,7 @@ USA_modify_democratic_campaign_running_effect = {
 		add_to_variable = { USA.democratic_vote = vote_value }
 		subtract_from_variable = { USA.republican_vote = vote_value }
 		subtract_from_variable = { USA.socialist_vote = vote_value }
-	}
+	} 
 }
 
 USA_modify_socialist_campaign_running_effect = {
@@ -169,14 +169,20 @@ USA_campaign_vars_setup = {
 USA_campaign_timeout_effect = {
 	if = {
 		limit = {
+			OR = {
 			check_variable = { republican_vote > 270 }
+			check_variable = { republican_vote > democratic_vote }				
+			}
 		}
 		set_country_flag = republican_wins_election_1900
 		country_event = RON_American_Elections.1
 	}
 	else_if = {
-		limit = {
+		limit = { 
+			OR = {
 			check_variable = { democratic_vote > 270 }
+			check_variable = { democratic_vote > republican_vote }				
+			}
 		}
 		set_country_flag = democratic_wins_election_1900
 		country_event = RON_American_Elections.1
@@ -184,12 +190,17 @@ USA_campaign_timeout_effect = {
 	else_if = {
 		limit = {
 			check_variable = { socialist_vote > 270 }
+			OR = {
+			check_variable = { socialist_vote > republican_vote }
+			check_variable = { socialist_vote > democratic_vote }
+			}
 		}
 		set_country_flag = socialist_wins_election_1900
 		country_event = RON_American_Elections.1
 	}
 	else = {
 		country_event = RON_American_Elections.1
+		add_political_power = -100
 	}
 	set_country_flag = USA_campaigns_over
 }
