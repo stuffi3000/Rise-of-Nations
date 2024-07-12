@@ -3301,7 +3301,7 @@ country_event = {
 			base = 100
 		}
  add_ideas = foreign_isolationism 
- 	 add_ideas =  usa_capitalist_economy 
+ 	 add_ideas =usa_capitalist_economy 
 			every_country = {
 				limit = {
 					is_guaranteed_by = USA
@@ -4548,18 +4548,391 @@ country_event = {
 
 	fire_only_once = yes
 	is_triggered_only = yes
-
 	option = { 
 		name = usa.300.a
 		ai_chance = {
 			base = 100
 		}
-	}
+	} 
 
 }
+country_event = { # begin house election
+	id = usa.301
+	title = usa.301.t 
+	desc = usa.301.d
+	picture = GFX_report_event_german_reichstag_gathering
 
+	fire_only_once = no
+	is_triggered_only = yes
+	
+	option = {
+		set_variable = { HOUSE_party1_seats = 0 }
+set_variable = { halfgop = republican_vote }
+set_variable = { halfdem = democratic_vote } 
+divide_variable = {halfgop = 2}
+divide_variable = {halfdem = 2}
+round_variable = halfgop
+round_variable = halfdem
+set_variable = { HOUSE_party1_seats = 0 }
+set_variable = { HOUSE_party2_seats = halfgop }
+set_variable = { HOUSE_party3_seats = halfdem } 
+set_variable = { HOUSE_party4_seats = 0 }
+set_variable = { states_remaining_house = 435  }
+subtract_from_variable = { states_remaining_house = halfgop  }
+subtract_from_variable = { states_remaining_house = halfdem  }
 
+		name = usa.301.a 
+		country_event = usa.302
+		HOUSE_init_parliament = yes
+		}
+		}
 
+country_event = { # 1
+	id = usa.302
+	title = usa.302.t 
+	desc = usa.302.d
+	picture = GFX_report_event_german_reichstag_gathering
+	hidden = yes
+	fire_only_once = no
+	is_triggered_only = yes
+	option = {
+		name = usa.302.b
+			trigger = {
+		check_variable = {
+    var = states_remaining_house
+    value = 8
+    compare = less_than_or_equals
+}		
+			}		
+		country_event = usa.350
+	}
+	option = {
+			trigger = {
+		check_variable = {
+    var = states_remaining_house
+    value = 9
+    compare = greater_than
+}		
+			}
+		name = usa.301.a
+		country_event = usa.303
+		random_list = {
+			49 = {
+				add_to_variable = { HOUSE_party3_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }
+			}
+			49 = {
+				add_to_variable = { HOUSE_party2_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }
+			}	
+			1 = {
+				add_to_variable = { HOUSE_party1_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }				
+			}					
+			1 = {
+				add_to_variable = { HOUSE_party4_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }				
+			}
+		}
+		}
+	}
+	
+country_event = { # 2
+	id = usa.303
+	title = usa.303.t 
+	desc = usa.303.d
+	picture = GFX_report_event_german_reichstag_gathering
+	hidden = yes
+	fire_only_once = no
+	is_triggered_only = yes
+	option = {
+		name = usa.302.b
+			trigger = {
+		check_variable = {
+    var = states_remaining_house
+    value = 8
+    compare = less_than_or_equals
+}		
+			}		
+		country_event = usa.350
+	}
+	option = {
+			trigger = {
+		check_variable = {
+    var = states_remaining_house
+    value = 9
+    compare = greater_than_or_equals
+}		
+			}
+		name = usa.303.a
+		country_event = usa.302
+		HOUSE_init_parliament = yes
+		random_list = {
+			50 = {
+				add_to_variable = { HOUSE_party3_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }
+			}
+			50 = {
+				add_to_variable = { HOUSE_party2_seats = 8 }
+				add_to_variable = { states_remaining_house = -8 }
+			}			
+		}		
+		}
+	}
+
+country_event = { # Tally Results
+	id = usa.350 
+	title = usa.350.t
+	desc = usa.350.d
+	picture = GFX_report_event_german_reichstag_gathering
+
+	fire_only_once = no
+	is_triggered_only = yes 
+	option = { 
+		name = usa.350.a
+				add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+						subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+		
+		ai_chance = {
+			base = 100
+		}
+		HOUSE_init_parliament = yes
+		trigger = {
+			check_variable = {
+    var = HOUSE_party1_seats
+    value = 218
+    compare = greater_than_or_equals
+}
+		}
+		custom_effect_tooltip = "Left Wing Populists Have A Majority"
+				if = {
+					limit ={
+						has_country_flag = dempres
+					}
+					set_variable = { representatives_support = HOUSE_party3_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes					
+				}
+				if = {
+					limit ={
+						has_country_flag = goppres
+					}
+					custom_effect_tooltip = mtg_usa_senate_small_support_tt
+					set_variable = { representatives_support = HOUSE_party2_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes				
+					}				
+	}
+	option = { 
+		HOUSE_init_parliament = yes
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+		subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+		ai_chance = {
+			base = 100
+		}
+		trigger = {
+			check_variable = { 
+    var = HOUSE_party2_seats
+    value = 218
+    compare = greater_than_or_equals 
+}		}
+		custom_effect_tooltip = "The Republican Party Has A Majority"
+			name = usa.350.a
+			hidden_effect = {
+				if = {
+					limit ={
+						has_country_flag = dempres
+					}
+					set_variable = { representatives_support = HOUSE_party3_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes					
+				}
+				if = {
+					limit ={
+						has_country_flag = goppres
+					}
+					custom_effect_tooltip = mtg_usa_senate_small_support_tt
+					set_variable = { representatives_support = HOUSE_party2_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes				
+					}		
+			}				
+
+	}	
+	option = { 
+		name = usa.350.a
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+				subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+
+		ai_chance = {
+			base = 100
+		}
+		HOUSE_init_parliament = yes
+		trigger = {
+			check_variable = {
+    var = HOUSE_party3_seats
+    value = 218
+    compare = greater_than_or_equals
+}		}
+		custom_effect_tooltip = "The Democrat Party Has A Majority"
+					hidden_effect = {
+					set_variable = { representatives_support = HOUSE_party3_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes					
+				if = {
+					limit ={
+						has_country_flag = goppres
+					}
+					custom_effect_tooltip = mtg_usa_senate_small_support_tt
+					set_variable = { representatives_support = HOUSE_party2_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes				
+					}				
+			}
+	}		
+	option = { 
+		name = usa.350.a
+		HOUSE_init_parliament = yes
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+				subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+			
+		ai_chance = {
+			base = 100
+		}
+		trigger = {
+			check_variable = {
+    var = HOUSE_party4_seats
+    value = 218
+    compare = greater_than_or_equals
+}		}
+		custom_effect_tooltip = "Right Wing Populists Have A Majority"
+				if = {
+					limit ={
+						has_country_flag = dempres
+					}
+					set_variable = { representatives_support = HOUSE_party3_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes					
+				}
+				if = {
+					limit ={
+						has_country_flag = goppres
+					}
+					custom_effect_tooltip = mtg_usa_senate_small_support_tt
+					set_variable = { representatives_support = HOUSE_party2_seats }
+					clamp_variable = { var = representatives_support max = representatives_total min = 0 }
+					USA_recalc_congress_icon_frames = yes				
+					}				
+	}		
+	option = { 
+		name = usa.350.a
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+				subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+		
+		ai_chance = {
+			base = 100
+		}
+		HOUSE_init_parliament = yes
+		trigger = {
+			has_political_power < 0
+			check_variable = {
+    var = HOUSE_party1_seats
+    value = 218
+    compare = less_than
+}		
+			check_variable = {
+    var = HOUSE_party2_seats
+    value = 218
+    compare = less_than
+}
+			check_variable = {
+    var = HOUSE_party3_seats
+    value = 218
+    compare = less_than
+}
+			check_variable = {
+    var = HOUSE_party4_seats
+    value = 218
+    compare = less_than
+}
+		}
+		custom_effect_tooltip = "No Majority Was Formed"
+	}
+		option = { 
+		name = usa.350.c
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+				subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+
+		ai_chance = {
+			base = 100
+		}
+		HOUSE_init_parliament = yes
+		trigger ={
+		has_political_power > 20
+			check_variable = {
+    var = HOUSE_party2_seats
+    value = 218 
+    compare = less_than
+}		
+has_country_flag = dempres
+			check_variable = {
+    var = HOUSE_party3_seats
+    value = 218 
+    compare = less_than
+}		
+	}
+		add_political_power = -20
+		country_event = usa.351
+		add_to_variable = { HOUSE_party2_seats = -10 }
+		add_to_variable = { HOUSE_party3_seats = 10 }
+		}		
+		option = { 
+		name = usa.350.b
+		add_to_variable = { HOUSE_party3_seats = states_remaining_house }
+				subtract_from_variable  = { states_remaining_house = - states_remaining_house }			
+		
+		ai_chance = {
+			base = 100
+		}
+		HOUSE_init_parliament = yes
+		trigger ={
+		has_political_power > 20
+		
+			check_variable = {
+    var = HOUSE_party2_seats
+    value = 218 
+    compare = less_than
+}		
+has_country_flag = goppres
+			check_variable = {
+    var = HOUSE_party3_seats
+    value = 218 
+    compare = less_than
+}
+		}
+		add_political_power = -20
+		country_event = usa.351
+		add_to_variable = { HOUSE_party3_seats = -10 }
+		add_to_variable = { HOUSE_party2_seats = 10 }
+		}			
+}
+
+country_event = {
+	id = usa.351
+	title = usa.351.t
+	desc = usa.351.desc
+	hidden = yes
+	picture = GFX_report_event_german_reichstag_gathering
+	is_triggered_only = yes
+	fire_only_once = no
+		option = { #unfortunate!
+		name = usa.351.a
+		ai_chance = {
+			base = 100
+		}
+		country_event = usa.350
+	}
+}
 country_event = {
 	id = usa.666
 	title = usa.666.t
