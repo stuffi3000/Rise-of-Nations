@@ -128,11 +128,30 @@ news_event = {        #######Resolution  passed
 				has_country_flag = UNVotingcountry
 			}
 				add_ideas = RON_United_Nations
-		}		
+				clr_country_flag = UNVotingcountry
+		}
+		if = {
+			limit = {
+				has_country_flag = UNceasefire_call_country
+			}
+			every_country = {
+				limit = {
+					has_war_with = ROOT
+				}
+				white_peace = ROOT
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = ROOT
+				}
+				white_peace = PREV
+			}			
+			clr_country_flag = UNceasefire_call_country
+		}
+		clr_global_flag = UNceasefire_call_country
 	    clr_country_flag = show_marpac_menu
 		clr_country_flag = show_faction_power_menu		
 		clr_country_flag = MARPAC_voted	
-		clr_country_flag = UNVotingcountry
 		clr_global_flag = voting_add_new_UN_member
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
@@ -277,6 +296,55 @@ country_event = {
 			}
 			modifier = {
 			add = 40000
+			NOT = {
+				has_war_with = global.UN_call_for_ceasefire
+				has_war_support < .6
+			}
+			OR = {
+			AND = {
+				has_global_flag = UNceasefire_call_country
+   				global.UN_call_for_ceasefire = {
+					has_government = neutrality
+				}
+				has_government = neutrality	
+				has_war_support < .6
+			}							
+			AND = {
+				has_global_flag = UNceasefire_call_country
+   				global.UN_call_for_ceasefire = {
+					has_government = democratic
+				}
+				has_government = democratic	
+				has_war_support < .6
+			}		
+			AND = {
+				has_global_flag = UNceasefire_call_country
+				has_opinion = {
+                     target = global.UN_call_for_ceasefire
+                     value < 60
+                } 		
+				has_war_support > .6
+			}				
+			AND = {
+				has_global_flag = UNceasefire_call_country
+   				global.UN_call_for_ceasefire = {
+					has_government = communism
+				}
+				has_government = communism
+				has_war_support < .6
+			}
+			}
+			}			
+			modifier = {
+			add = 40000
+			OR = {
+			NOT = {
+				has_idea = superstate_size2
+			}			
+			NOT = {
+				has_idea = superstate_size1		
+			}
+			}
 			OR = {
 			AND = {
 				has_global_flag = voting_add_new_UN_member
