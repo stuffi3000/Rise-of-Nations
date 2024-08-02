@@ -123,11 +123,39 @@ news_event = {        #######Resolution  passed
 
 	option = {
 		name = marpac.3.d	
+		if = {
+			limit = {
+				has_country_flag = UNVotingcountry
+			}
+				clr_country_flag = UNVotingcountry
+				add_ideas = RON_United_Nations
+		}
+		if = {
+			limit = {
+				has_country_flag = UNceasefire_call_country
+			}
+			every_country = {
+				limit = {
+					has_war_with = ROOT
+				}
+				white_peace = ROOT
+			}
+			every_country = {
+				limit = {
+					is_in_faction_with = ROOT
+				}
+				white_peace = PREV
+			}			
+			clr_country_flag = UNceasefire_call_country
+		}
+		clr_global_flag = UNceasefire_call_country
 	    clr_country_flag = show_marpac_menu
 		clr_country_flag = show_faction_power_menu		
 		clr_country_flag = MARPAC_voted	
+		clr_global_flag = voting_add_new_UN_member
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
+		set_variable = { global.UN_adding_target = 0 }
 		clr_global_flag = MARPAC_resolution_40
 	}	
 }
@@ -147,6 +175,7 @@ news_event = {        #######Resolution  not passed
 		clr_country_flag = show_faction_power_menu
 		clr_country_flag = MARPAC_voted		
 		clear_array = global.marpac_countries_against
+		clr_country_flag = UNceasefire_call_country
 		clear_array = global.marpac_countries_for
 		if = {
 		limit = {
@@ -156,7 +185,12 @@ news_event = {        #######Resolution  not passed
 			set_country_flag = failedvoteres40
 		}
 		}
-
+		if = {
+			limit = {
+				has_country_flag = UNVotingcountry
+			}
+				clr_country_flag = UNVotingcountry
+		}
 		clr_global_flag = MARPAC_resolution_40
 
 
@@ -265,7 +299,36 @@ country_event = {
 					has_government = communism
 				}
 			}
-			}			
+			}
+			modifier = {
+			add = 40000
+			AND = {
+			has_global_flag = UNceasefire_call_country
+			OR = {
+			global.UN_adding_target = {
+			has_opinion = {
+                 target = ROOT
+                 value > 0
+            }	
+			}	
+				has_war_support < .5
+			} 
+			}
+			}
+						
+			modifier = {
+			add = 40000
+			AND = {
+			has_global_flag = voting_add_new_UN_member
+			global.UN_adding_target = {
+			has_opinion = {
+                 target = ROOT
+                 value > 0
+            }	
+			}
+			}	
+			}		
+			
 			modifier = {
 			add = 40000
 			AND = {
@@ -577,7 +640,10 @@ country_event = {        #######Resolution 10: End Great War
 			has_war_with = GER
 			tag = GER				
 			}
-
+		add_to_array = {
+    	array = global.marpac_executive_array
+    	value = THIS.id
+		}
 		}
 		if = {
 			limit = {

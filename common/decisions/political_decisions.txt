@@ -1,3 +1,32 @@
+RON_game_settings = {
+
+	reject_all_sphere_requests = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+			is_ai = no
+			NOT = {
+				has_country_flag = rejectspheresystem
+			}
+		}
+
+		available = {
+			has_stability > .7
+		}
+		fire_only_once = yes
+		complete_effect = {
+			set_country_flag = rejectspheresystem
+		}
+
+
+		ai_will_do = {
+			base = 0
+		}
+	}	
+}
+
 fascism_on_the_rise = {
 	prepare_for_fascist_civil_war = {
 
@@ -5,8 +34,7 @@ fascism_on_the_rise = {
 
 		available = {
 			fascism > 0.1
-		}
-
+		} 
 		visible = {
 			NOT = { has_country_flag = preparation_for_fascist_civil_war }
 			has_idea_with_trait = fascist_demagogue
@@ -1513,10 +1541,241 @@ communism_on_the_rise = {
 		}
 	}
 }
-
+united_nations = {
+	call_for_ceasefire = {
+		priority = 100
+		available = {
+			surrender_progress > 0.3
+			has_war = yes
+			has_civil_war = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+			NOT = {
+				has_global_flag = MARPAC_voting_in_process
+				has_country_flag = UNcooldownunvotecountry
+				has_global_flag = UNcooldownunvoteglobal
+			}
+		}
+		visible = {
+			has_idea = RON_United_Nations 
+			USA = {
+				has_idea = RON_United_Nations
+			}
+		}
+		cost = 100
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 100 value = 1}
+				set_global_flag = { flag = UNcooldownunvoteglobal value = 1 days = 85 }
+			hidden_effect = {
+				set_country_flag = UNceasefire_call_country
+	set_variable = { global.UN_call_for_ceasefire = THIS.id }
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			has_idea = RON_United_Nations
+			has_guaranteed = UNA
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}		 
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = UNceasefire_call_country
+        set_country_flag = show_marpac_menu		
+		news_event = marpac.1000	
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			has_idea = RON_United_Nations
+			has_guaranteed = UNA			
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = XXB
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		if = {
+			limit = {
+				is_ai = yes
+			} 
+		country_event = { 
+		id = marpac.5
+		days = 5
+		}			
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			set_country_flag = currently_voting
+		}
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+		}	
+	}
+	}
+}
 political_actions = {
-
-
+	
+	join_the_un = {
+		priority = 100
+		available = {
+			has_stability > 0.6
+			has_war = no
+			NOT = {
+				has_global_flag = MARPAC_voting_in_process
+				has_country_flag = UNcooldownunvotecountry
+				has_global_flag = UNcooldownunvoteglobal
+			}
+			not = {
+				tag = UNA
+				tag = XXB
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}							
+		}
+		visible = {
+			NOT = {
+				has_idea = RON_United_Nations 
+			}
+			USA = {
+				has_idea = RON_United_Nations
+			}
+		}
+		cost = 100
+		ai_will_do = {
+			factor = 1
+		}
+		complete_effect = {
+			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 100 value = 1}
+				set_global_flag = { flag = UNcooldownunvoteglobal value = 1 days = 85 }
+			hidden_effect = {
+				set_country_flag = UNVotingcountry
+	set_variable = { global.UN_adding_target = THIS.id }
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			has_idea = RON_United_Nations
+			has_guaranteed = UNA
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}		
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = voting_add_new_UN_member
+        set_country_flag = show_marpac_menu		
+		news_event = marpac.1000	
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_United_Nations_Security_Council
+			has_idea = RON_United_Nations_Security_Council_NP
+			has_idea = RON_United_Nations
+			has_guaranteed = UNA			
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		if = {
+			limit = {
+				is_ai = yes
+			} 
+		country_event = { 
+		id = marpac.5
+		days = 5
+		}			
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			set_country_flag = currently_voting
+		}
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+		}	
+	}
+	}
 	give_refuge_ger = {
 
 		icon = generic_research
