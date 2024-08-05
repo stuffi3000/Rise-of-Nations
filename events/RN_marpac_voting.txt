@@ -1,6 +1,6 @@
 ﻿add_namespace = marpac
 
-country_event = {        #######Resolution 51: Operation Juin
+country_event = {    
 	id = marpac.1
 	title = marpac.1.t
 	desc = marpac.1.d
@@ -100,6 +100,7 @@ country_event = {        #######Resolution: hidden check
 	}		
 	clr_global_flag = MARPAC_resolution_1
 	clr_global_flag = MARPAC_resolution_51
+	clr_global_flag = UNaidcallaidcountry
 	clr_global_flag = MARPAC_resolution_80
 	clr_global_flag = MARPAC_resolution_10
 	clr_global_flag = MARPAC_resolution_240
@@ -136,26 +137,26 @@ news_event = {        #######Resolution  passed
 			}
 			every_country = {
 				limit = {
-					has_war_with = ROOT
+					has_war_with = global.UN_call_for_ceasefire
 				}
-				white_peace = ROOT
+				white_peace = global.UN_call_for_ceasefire
 			}
 			every_country = {
 				limit = {
-					is_in_faction_with = ROOT
+					is_in_faction_with = global.UN_call_for_ceasefire
 				}
 				white_peace = PREV
 			}			
 			clr_country_flag = UNceasefire_call_country
 		}
 		clr_global_flag = UNceasefire_call_country
+		clr_global_flag = UNaidcallaidcountry
 	    clr_country_flag = show_marpac_menu
 		clr_country_flag = show_faction_power_menu		
 		clr_country_flag = MARPAC_voted	
 		clr_global_flag = voting_add_new_UN_member
 		clear_array = global.marpac_countries_against
 		clear_array = global.marpac_countries_for
-		set_variable = { global.UN_adding_target = 0 }
 		clr_global_flag = MARPAC_resolution_40
 	}	
 }
@@ -303,29 +304,33 @@ country_event = {
 			modifier = {
 			add = 40000
 			AND = {
-			has_global_flag = UNceasefire_call_country
-			OR = {
-			global.UN_adding_target = {
+			has_global_flag = UNvoteforceceasefire
 			has_opinion = {
-                 target = ROOT
-                 value > 0
+                 target = FROM
+                 value > 50
             }	
-			}	
-				has_war_support < .5
-			} 
+				has_war_support > .3
 			}
 			}
-						
+			modifier = {
+			add = 40000
+			has_global_flag = UNaidcallaidcountry
+			AND = {
+			has_opinion = {
+                 target = FROM
+                 value > 19
+            }	
+				has_war_support < .4
+			}
+			}						
 			modifier = {
 			add = 40000
 			AND = {
 			has_global_flag = voting_add_new_UN_member
-			global.UN_adding_target = {
 			has_opinion = {
-                 target = ROOT
-                 value > 0
-            }	
-			}
+                 target = FROM
+                 value > 10
+            }
 			}	
 			}		
 			
@@ -347,7 +352,6 @@ country_event = {
 	has_country_flag = MARPAC_voted 
 					}			
 		}
-			
 		if = { 
 			limit = { 
 				has_global_flag = MARPAC_resolution_130
@@ -371,6 +375,12 @@ country_event = {
 			ROOT = {
 				set_country_flag = anti_korea
 			}
+		}
+		if = {
+			limit = {
+				has_global_flag = UNaidcallaidcountry
+			}
+			set_country_flag = votedyesinaid					
 		}	
 		if = { 
 			limit = { 
@@ -1115,5 +1125,35 @@ news_event = {        #######NEWS EVENT TO CHECK VOTING
 	option = {
 		name = marpac.voting.a
 		set_country_flag = show_marpac_menu		
+}
+}
+
+country_event = {     
+	id = marpac.23
+	title = marpac.voting.t
+	desc = marpac.voting.d
+	picture = GFX_news_event_chi_wu_peifu_jos
+    hidden = yes
+	is_triggered_only = yes
+	fire_only_once = no
+	option = {
+		name = marpac.voting.a
+		every_country = {
+			limit = {
+				has_country_flag = votedyesinaid
+			}
+			clr_country_flag = votedyesinaid
+  add_ai_strategy = {
+    type = send_volunteers_desire
+    id = ROOT
+    value = 100000
+  }
+  add_ai_strategy = {
+    type = support
+    id = ROOT
+    value = 10000
+  }		
+set_rule = {can_send_volunteers = yes }  
+		}
 }
 }
