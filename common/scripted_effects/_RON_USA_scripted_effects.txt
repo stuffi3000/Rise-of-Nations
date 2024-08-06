@@ -22,6 +22,51 @@ USA_government_spending_level_clear_all = {
 		USA_government_spending_level_xix
 	}
 }
+update_wounded_veterians = {
+
+	add_to_variable = { ROOT.woundedsoldiers = casualties  }
+round_variable = ROOT.woundedsoldiers
+
+clamp_variable = {
+    var = ROOT.woundedsoldiers
+    min = 0
+}	
+set_variable = { ROOT.consumergoodsfromwounded = ROOT.woundedsoldiers }
+divide_variable = { ROOT.consumergoodsfromwounded = 2500 }
+round_variable = ROOT.consumergoodsfromwounded
+
+set_variable = { ROOT.consumergoodsfromwoundedactual = ROOT.consumergoodsfromwounded }
+
+
+clamp_variable = {
+    var = ROOT.consumergoodsfromwoundedactual
+    min = 0
+}
+clamp_variable = {
+    var = ROOT.consumergoodsfromwounded
+    min = 0
+}
+if = {
+	limit = {
+		ROOT.woundedsoldiers > 0 
+		has_war = no
+		NOT = {
+		has_dynamic_modifier = dynamic_consumer_goods_cau 
+		}
+	}	
+add_dynamic_modifier = { modifier = dynamic_consumer_goods_cau }	
+}	
+if = {
+	limit = {
+		OR = {
+		ROOT.woundedsoldiers = 0	
+		has_dynamic_modifier = dynamic_consumer_goods_cau 
+		has_war = yes
+		}
+	}
+remove_dynamic_modifier  = { modifier = dynamic_consumer_goods_cau }	
+}	
+}
 setup_gop_vote ={
   set_country_flag = vote_in_progress
         set_variable = { negative_usa_total_vote = 0 }
