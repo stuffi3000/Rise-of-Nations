@@ -1570,6 +1570,7 @@ united_nations = {
 has_equipment = {
     infantry_equipment > 25000
 }			
+				has_war = no
 		}
 
 		visible = {
@@ -1585,14 +1586,54 @@ send_equipment = {
     amount = 25000
     target = UNA
 }		
+add_to_variable = {UNA.storedarms = 25000}
+}
+		days_remove = 60
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				has_war = no
+				threat < 0.3
+				factor = 1
+			}
+		}
+	}
+	release_arms = {
+
+		icon = generic_prepare_civil_war
+
+		available = {
+			country_exists = UNA
+			surrender_progress > 0.5
+			has_war = yes
+			custom_trigger_tooltip = {
+			tooltip = "There are arms in storage"
+			check_variable = {UNA.storedarms > 0}
+			 }
+		}
+
+		visible = {
+			has_idea = RON_United_Nations
+		}
+		days_remove = 15
+		cost = 20
+
+		complete_effect = {
+			UNA = {
+send_equipment = {
+    equipment = infantry_equipment
+    amount = 25000
+    target = ROOT
+}		
+subtract_from_variable = {UNA.storedarms = 25000}
+			}
 }
 
 		ai_will_do = {
 			factor = 0
 			modifier = {
-				has_war_support > .6
-				has_war = no
-				factor = 10
+
+				factor = 1
 			}
 		}
 	}	
@@ -1604,7 +1645,11 @@ send_equipment = {
 			NOT = {
 				has_global_flag = MARPAC_voting_in_process
 				has_country_flag = UNcooldownunvotecountry
-			}			
+			}		
+			OR = {
+			is_faction_leader = yes
+			is_in_faction = no
+			}	
 		}
  
 		visible = {
@@ -1613,7 +1658,7 @@ send_equipment = {
 
 
 
-		cost = 100
+		cost = 50
  
 		complete_effect = {
 			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 100 value = 1}
@@ -1719,7 +1764,7 @@ tag = TGR
 		}		
 	}
 	call_for_ceasefire = {
-		priority = 100 
+		priority = 120 
 		available = {
 			has_war = yes
 			has_civil_war = no
@@ -1738,7 +1783,7 @@ tag = TGR
 				has_idea = RON_United_Nations
 			}
 		}
-		cost = 300
+		cost = 130
 		ai_will_do = {
 			factor = 1
 		}
