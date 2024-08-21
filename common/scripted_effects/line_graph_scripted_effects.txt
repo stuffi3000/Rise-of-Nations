@@ -1,0 +1,174 @@
+SAMPLE_add_random_point_to_line = {
+	# Adds a random point to the line graph
+set_variable = { yesterdays_trade = daily_trading }
+set_variable = { resource_consumeda = resource_consumed@rubber }
+add_to_variable = { resource_consumeda = resource_consumed@iron }
+add_to_variable = { resource_consumeda = resource_consumed@oil }
+add_to_variable = { resource_consumeda = resource_consumed@aluminum }
+add_to_variable = { resource_consumeda = resource_consumed@tungsten }
+add_to_variable = { resource_consumeda = resource_consumed@chromium }
+set_variable = { resource_produceda = resource_produced@rubber }
+add_to_variable = { resource_produceda = resource_produced@iron }
+add_to_variable = { resource_produceda = resource_produced@oil }
+add_to_variable = { resource_produceda = resource_produced@aluminum }
+add_to_variable = { resource_produceda = resource_produced@tungsten }
+add_to_variable = { resource_produceda = resource_produced@chromium }
+add_to_variable = { resource_produceda = num_of_factories }
+
+	# This count is displayed as an x-axis label, increment it
+	add_to_variable = { SAMPLE_count = 1 }
+
+	# We keep track of the last y position so we can calculate the slope
+	set_variable = { SAMPLE_last_y_position = SAMPLE_y_position }
+	# Random new y position, 10-90
+set_variable = { SAMPLE_y_position = num_of_civilian_factories } 
+set_variable = { halfc = num_of_civilian_factories } 
+divide_variable = { halfc = 2 }
+set_variable = { num_of_controlled_statesc = num_of_controlled_states }
+
+set_variable = { randomthrough50s = stability }
+clamp_variable = {
+    var = randomthrough50s
+    max = 25
+    min = 0 
+}
+divide_variable = { randomthrough50s = 2 }
+clamp_variable = {
+    var = randomthrough50s
+    max = 50
+    min = 0 
+}
+add_to_variable = { SAMPLE_y_position = num_of_controlled_statesc }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 50
+    min = 0 
+}
+add_to_variable = { SAMPLE_y_position = num_of_military_factories  }  # Boost from military factories
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 75
+    min = 0 
+}
+add_to_variable = { SAMPLE_y_position = resource_produceda }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 250
+    min = 0 
+}
+add_to_variable = { SAMPLE_y_position = stability }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 100
+    min = 0 
+}
+subtract_from_variable = { SAMPLE_y_position = resource_consumeda }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 250
+    min = 0 
+}
+subtract_from_variable = { SAMPLE_y_position = num_occupied_states }
+
+subtract_from_variable = { SAMPLE_y_position = surrender_progress }
+
+set_variable_to_random = {
+    var = randomthrough50
+    max = stability 
+    min = randomthrough50s
+    integer = yes
+}
+set_variable = { resource_consumedb = resource_consumeda }
+divide_variable = { resource_consumedb = 2 }
+round_variable =  resource_consumedb 
+add_to_variable = { resource_consumedb = num_divisions }
+add_to_variable = { resource_consumedb = amount_manpower_in_deployment_queue }
+
+add_to_variable = { resource_consumedb = max_manpower_k }
+divide_variable = { resource_consumedb = 1000 }
+round_variable =  resource_consumedb
+round_variable =  resource_consumeda
+set_variable = { fuelk = fuel_k  }
+divide_variable = { fuelk = 4 }
+clamp_variable = {
+    var = fuelk
+    max = 10
+    min = 0 
+}
+add_to_variable = { resource_consumeda = fuelk  }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 100
+    min = 0 
+}
+if = {
+    limit = {
+        check_variable = { resource_consumedb > resource_consumeda }
+    }
+    add_to_variable = { resource_consumeda = resource_consumedb }
+round_variable =  resource_consumeda
+set_variable_to_random = {
+    var = daily_trading
+    max =  resource_consumeda
+    min = resource_consumedb
+    integer = yes
+}      
+}
+if = {
+    limit = {
+        check_variable = { resource_consumeda > resource_consumedb }
+    }
+set_variable_to_random = {
+    var = daily_trading
+    max =  resource_consumeda
+    min = resource_consumedb
+    integer = yes
+}
+    
+}
+
+clamp_variable = {
+    var = randomthrough50
+    max = 100
+    min = 0 
+}
+
+
+subtract_from_variable = { SAMPLE_y_position = randomthrough50 }
+
+add_to_variable = { SAMPLE_y_position = daily_trading }
+divide_variable = { SAMPLE_y_position = 10 }
+clamp_variable = {
+    var = SAMPLE_y_position
+    max = 100
+    min = 0 
+}
+	 
+	# Prune arrays so they hold at most 20 elements 
+	if = { 
+		limit = { 
+			check_variable = { SAMPLE_count > 20 } 
+		} 
+		remove_from_array = { array = SAMPLE_graph_offsets index = 0 } 
+		remove_from_array = { array = SAMPLE_graph_slopes index = 0 }
+		clear_array = SAMPLE_graph_offsets
+		clear_array = SAMPLE_graph_slopes 
+		set_variable = { SAMPLE_count = 1 }
+		remove_from_array = { array = SAMPLE_numbers index = 0 }
+	}
+
+	# The y position offset is the inverse of the y position
+	set_temp_variable = { offset = SAMPLE_last_y_position }
+	multiply_temp_variable = { offset = -1 }
+	add_to_array = { SAMPLE_graph_offsets = offset }
+
+	# The 'slope' here is simply the difference between the current y value and the last one, divided by 2 plus 50
+	# These last two changes are needed for the shader
+	set_temp_variable = { diff = SAMPLE_y_position }
+	subtract_from_temp_variable = { diff = SAMPLE_last_y_position }
+	divide_temp_variable = { diff = 2 }
+	add_to_temp_variable = { diff = 50 }
+	add_to_array = { SAMPLE_graph_slopes = diff }
+	
+	add_to_array = { SAMPLE_numbers = SAMPLE_count }
+}
