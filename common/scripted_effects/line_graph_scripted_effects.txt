@@ -14,6 +14,7 @@ add_to_variable = { resource_produceda = resource_produced@aluminum }
 add_to_variable = { resource_produceda = resource_produced@tungsten }
 add_to_variable = { resource_produceda = resource_produced@chromium }
 add_to_variable = { resource_produceda = num_of_factories }
+add_to_variable = { resource_produceda = stimulated_boost }
 if = {
     limit = {
         has_idea = bonds_peace
@@ -644,117 +645,29 @@ if = {
 
 	# We keep track of the last y position so we can calculate the slope
 	set_variable = { SAMPLE_last_y_position = SAMPLE_y_position }
-	# Random new y position, 10-90
-set_variable = { SAMPLE_y_position = num_of_civilian_factories } 
-set_variable = { halfc = num_of_civilian_factories } 
-divide_variable = { halfc = 2 }
-set_variable = { num_of_controlled_statesc = num_of_controlled_states }
-
-set_variable = { randomthrough50s = stability }
-clamp_variable = {
-    var = randomthrough50s
-    max = 25
-    min = 0 
-}
-divide_variable = { randomthrough50s = 2 }
-clamp_variable = {
-    var = randomthrough50s
-    max = 50
-    min = 0 
-}
-add_to_variable = { SAMPLE_y_position = num_of_controlled_statesc }
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 50
-    min = 0 
-}
-add_to_variable = { SAMPLE_y_position = num_of_military_factories  }  # Boost from military factories
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 75
-    min = 0 
-}
-add_to_variable = { SAMPLE_y_position = resource_produceda }
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 250
-    min = 0 
-}
-add_to_variable = { SAMPLE_y_position = stability }
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 100
-    min = 0 
-}
-subtract_from_variable = { SAMPLE_y_position = resource_consumeda }
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 250
-    min = 0 
-}
-subtract_from_variable = { SAMPLE_y_position = num_occupied_states }
-
-subtract_from_variable = { SAMPLE_y_position = surrender_progress }
-
-set_variable_to_random = {
-    var = randomthrough50
-    max = stability 
-    min = randomthrough50s
-    integer = yes
-}
-set_variable = { resource_consumedb = resource_consumeda }
-divide_variable = { resource_consumedb = 2 }
-round_variable =  resource_consumedb 
-add_to_variable = { resource_consumedb = num_divisions }
-add_to_variable = { resource_consumedb = amount_manpower_in_deployment_queue }
-
-add_to_variable = { resource_consumedb = max_manpower_k }
-divide_variable = { resource_consumedb = 1000 }
-round_variable =  resource_consumedb
-round_variable =  resource_consumeda
-set_variable = { fuelk = fuel_k  }
-divide_variable = { fuelk = 4 }
-clamp_variable = {
-    var = fuelk
-    max = 10
-    min = 0 
-}
-add_to_variable = { resource_consumeda = fuelk  }
-clamp_variable = {
-    var = SAMPLE_y_position
-    max = 100
-    min = 0 
-}
+ 
 if = {
     limit = {
-        check_variable = { resource_consumedb > resource_consumeda }
+        check_variable = { resource_produceda > resource_consumeda }
     }
-    add_to_variable = { resource_consumeda = resource_consumedb }
-round_variable =  resource_consumeda
 set_variable_to_random = {
     var = daily_trading
-    max =  resource_consumeda
-    min = resource_consumedb
+    max =  resource_produceda
+    min = resource_consumeda
     integer = yes
 }      
 }
 if = {
     limit = {
-        check_variable = { resource_consumeda > resource_consumedb }
+        check_variable = { resource_consumeda > resource_produceda }
     }
 set_variable_to_random = {
     var = daily_trading
     max =  resource_consumeda
-    min = resource_consumedb
+    min = resource_produceda
     integer = yes
 }
     
-}
-
-clamp_variable = {
-    var = randomthrough50
-    max = 100
-    min = 0 
 }
 
 
@@ -767,7 +680,12 @@ clamp_variable = {
     max = 100
     min = 0 
 }
-	 
+subtract_from_variable = { stimulated_boost = 1 }
+	 clamp_variable = {
+    var = stimulated_boost
+    max = 100
+    min = 0 
+}
 	# Prune arrays so they hold at most 20 elements 
 	if = { 
 		limit = { 
