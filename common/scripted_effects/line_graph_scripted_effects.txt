@@ -1,4 +1,6 @@
 SAMPLE_add_random_point_to_line = {
+set_variable = { GDP = 0 }
+
 	# Adds a random point to the line graph
 set_variable = { yesterdays_trade = daily_trading }
 set_variable = { resource_consumeda = resource_consumed@rubber }
@@ -7,6 +9,8 @@ add_to_variable = { resource_consumeda = resource_consumed@oil }
 add_to_variable = { resource_consumeda = resource_consumed@aluminum }
 add_to_variable = { resource_consumeda = resource_consumed@tungsten }
 add_to_variable = { resource_consumeda = resource_consumed@chromium }
+add_to_variable = { resource_consumeda = consumtion_boost }
+add_to_variable = { resource_consumeda = consumtion_boost }
 set_variable = { resource_produceda = resource_produced@rubber }
 add_to_variable = { resource_produceda = resource_produced@iron }
 add_to_variable = { resource_produceda = resource_produced@oil }
@@ -15,6 +19,49 @@ add_to_variable = { resource_produceda = resource_produced@tungsten }
 add_to_variable = { resource_produceda = resource_produced@chromium }
 add_to_variable = { resource_produceda = num_of_factories }
 add_to_variable = { resource_produceda = stimulated_boost }
+add_to_variable = { resource_produceda = stimulated_boost } #2x boost
+
+if = {
+    limit = {
+        check_variable = { SAMPLE_y_position < 15 }
+        NOT = {
+            has_ideas = economic_recession
+        }
+    }
+    remove_ideas = economic_boom
+    remove_ideas = economic_stability
+    add_ideas = economic_recession
+}
+
+else_if = {
+    limit = {
+        check_variable = { SAMPLE_y_position > 75 }        
+        NOT = {
+            has_ideas = economic_boom
+        }
+    }
+    remove_ideas = economic_recession
+    remove_ideas = economic_stability
+    add_ideas = economic_boom
+}
+else_if = {
+    limit = {
+        check_variable = { SAMPLE_y_position > 40 }
+        check_variable = { SAMPLE_y_position < 75 }        
+        NOT = {
+            has_ideas = economic_stability
+        }
+    }
+    remove_ideas = economic_recession
+    add_ideas = economic_stability
+    remove_ideas = economic_boom
+}
+else = {
+    remove_ideas = economic_recession
+    remove_ideas = economic_stability
+    remove_ideas = economic_boom
+}
+
 if = {
     limit = {
         has_idea = bonds_peace
@@ -28,7 +75,83 @@ if = {
     }
     add_to_variable = { resource_consumeda = 15 }
 }
+if = {
+    limit = {
+        OR = {
+        has_idea = great_depression
+        has_idea = CHI_hyper_inflation_5
+        }
+    }
+    divide_variable = { resource_produceda = 8 }
+    divide_variable = { resource_consumeda = 8 }    
+    clamp_variable = {
+        var = resource_produceda
+        min = 0
+    }    
+    clamp_variable = {
+        var = resource_consumeda
+        min = 0
+    }    
+}
+if = {
+    limit = {
+        OR = {
+        has_idea = great_depression_2
+        has_idea = economic_effects_of_versailles 
+       has_idea = CHI_hyper_inflation_3
+        }
+    }
+    divide_variable = { resource_produceda = 4 }
+    divide_variable = { resource_consumeda = 4 }   
 
+    clamp_variable = {
+        var = resource_produceda
+        min = 0
+    }    
+    clamp_variable = {
+        var = resource_consumeda
+        min = 0
+    }
+}
+if = {
+    limit = {
+        OR = {
+         has_idea = POL_great_depression
+       has_idea = CHI_hyper_inflation_2
+         }
+    }
+    subtract_from_variable = { resource_produceda = 315 }
+    subtract_from_variable = { resource_consumeda = 150 }    
+    clamp_variable = {
+        var = resource_produceda
+        min = 0
+    }    
+    clamp_variable = {
+        var = resource_consumeda
+        min = 0
+    }
+}
+if = {
+    limit = {
+        OR = {
+        has_idea = great_depression_3
+        has_idea = CHI_hyper_inflation_1
+        has_idea = SOV_great_purge
+        has_idea = SPR_failing_republic
+        has_idea = QIN_great_purge
+        }
+    }
+    subtract_from_variable = { resource_produceda = 450 }
+    subtract_from_variable = { resource_consumeda = 240 }    
+    clamp_variable = {
+        var = resource_produceda
+        min = 0
+    }    
+    clamp_variable = {
+        var = resource_consumeda
+        min = 0
+    }
+}
 if = {
     limit = {
         has_idea = bonds_war_domestic
@@ -681,11 +804,27 @@ clamp_variable = {
     min = 0 
 }
 subtract_from_variable = { stimulated_boost = 1 }
+subtract_from_variable = { consumtion_boost = 1 }
 	 clamp_variable = {
     var = stimulated_boost
     max = 100
     min = 0 
 }
+ clamp_variable = {
+    var = consumtion_boost
+    max = 100
+    min = 0 
+}
+add_to_variable = { GDP = daily_trading }
+subtract_from_variable = { GDP = resource_consumeda }
+ clamp_variable = {
+    var = GDP
+    min = 0 
+}
+set_variable = { modifier_of_econonmy = SAMPLE_y_position }
+divide_variable = { modifier_of_econonmy = 100 }
+set_variable = { modifier_of_econonmyh = modifier_of_econonmy }
+divide_variable = { modifier_of_econonmyh = 4 }
 	# Prune arrays so they hold at most 20 elements 
 	if = { 
 		limit = { 
@@ -713,4 +852,5 @@ subtract_from_variable = { stimulated_boost = 1 }
 	add_to_array = { SAMPLE_graph_slopes = diff }
 	
 	add_to_array = { SAMPLE_numbers = SAMPLE_count }
+    
 }
