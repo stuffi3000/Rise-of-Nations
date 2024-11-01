@@ -22,6 +22,109 @@ USA_government_spending_level_clear_all = {
 		USA_government_spending_level_xix
 	}
 }
+update_wounded_veterians = {
+
+	add_to_variable = { ROOT.woundedsoldiers = casualties_k  }
+round_variable = ROOT.woundedsoldiers
+
+clamp_variable = {
+    var = ROOT.woundedsoldiers
+    min = 0
+}	
+set_variable = { ROOT.consumergoodsfromwounded = ROOT.woundedsoldiers }
+divide_variable = { ROOT.consumergoodsfromwounded = 25000 }
+round_variable = ROOT.consumergoodsfromwounded
+
+set_variable = { ROOT.consumergoodsfromwoundedactual = ROOT.consumergoodsfromwounded }
+
+
+clamp_variable = {
+    var = ROOT.consumergoodsfromwoundedactual
+    min = 0
+}
+clamp_variable = {
+    var = ROOT.consumergoodsfromwounded
+    min = 0
+}
+if = {
+	limit = {
+		ROOT.woundedsoldiers > 0 
+		has_war = no
+		NOT = {
+		has_dynamic_modifier = dynamic_consumer_goods_cau 
+		}
+	}	
+add_dynamic_modifier = { modifier = dynamic_consumer_goods_cau }	
+}	
+if = {
+	limit = {
+		NOT = {
+		has_dynamic_modifier = dynamic_economy_helper 
+		}		
+	}
+	add_dynamic_modifier = { modifier = dynamic_economy_helper }
+}
+if = {
+	limit = {
+		OR = {
+		ROOT.woundedsoldiers = 0	
+		has_war = yes
+		}
+		has_dynamic_modifier = dynamic_consumer_goods_cau 
+	}
+remove_dynamic_modifier  = { modifier = dynamic_consumer_goods_cau }	
+}	
+}
+setup_gop_vote ={
+  set_country_flag = vote_in_progress
+        set_variable = { negative_usa_total_vote = 0 }
+        set_variable = { independent_against_vote = 0 }
+        set_variable = { democratic_against_vote = 0 }
+        set_variable = { republican_against_vote = 0 }
+        set_variable = { HOUSE_party2_seatsfor = 0 }
+        set_variable = { independent_vote = 0 }
+        set_variable = { votes_required_house = 218 }
+        #
+        set_variable = { HOUSE_party2_seatsfor = HOUSE_party2_seats }
+		add_to_variable = { republican_against_vote = HOUSE_party2_seatsmoderate }
+        set_variable = { democratic_against_vote = HOUSE_party3_seats } 
+        subtract_from_variable = { HOUSE_party2_seatsfor = HOUSE_party2_seatsmoderate }
+        set_variable = { independent_vote = HOUSE_party4_seats } # Silver GOP did not like this
+        set_variable = { independent_against_vote = HOUSE_party1_seats } 
+        set_variable = { usa_total_vote = HOUSE_party2_seatsfor } 
+		add_to_variable = { usa_total_vote = HOUSE_party3_seatsfor }
+		add_to_variable = { usa_total_vote = independent_vote }
+        set_variable = { usa_total_vote_against = democratic_against_vote } 
+		add_to_variable = { usa_total_vote_against = republican_against_vote }
+		add_to_variable = { usa_total_vote_against = independent_against_vote }	
+}
+#
+setup_dem_vote ={
+  set_country_flag = vote_in_progress
+        set_variable = { negative_usa_total_vote = 0 }
+        set_variable = { independent_against_vote = 0 }
+        set_variable = { democratic_against_vote = 0 }
+        set_variable = { republican_against_vote = 0 }
+        set_variable = { HOUSE_party2_seatsfor = 0 }
+        set_variable = { independent_vote = 0 }
+        set_variable = { votes_required_house = 218 }
+        #
+	  	set_variable = { republican_against_vote = HOUSE_party2_seats }
+       	set_variable = { HOUSE_party3_seatsfor = HOUSE_party3_seats } 
+		set_variable = { democratic_against_vote = HOUSE_party3_seatsmoderate }
+		#
+		set_variable = { independent_vote = HOUSE_party1_seats } 
+        set_variable = { independent_against_vote = HOUSE_party4_seats } 
+		#
+        set_variable = { usa_total_vote = HOUSE_party2_seatsfor } 
+		add_to_variable = { usa_total_vote = HOUSE_party3_seatsfor }
+		add_to_variable = { usa_total_vote = independent_vote }
+		#
+        set_variable = { usa_total_vote_against = democratic_against_vote } 
+		add_to_variable = { usa_total_vote_against = republican_against_vote }
+		add_to_variable = { usa_total_vote_against = independent_against_vote }	
+}
+#
 initiate_american_cw ={
 	set_temp_variable = {div_created = 0}
 	while_loop_effect = {
