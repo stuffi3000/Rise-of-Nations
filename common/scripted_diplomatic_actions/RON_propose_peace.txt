@@ -19,29 +19,29 @@
  				}
  				tooltip = is_on_peace_cooldown_tt
  			}
- 			hidden_trigger = {
- 				if = {
- 					limit = {
- 						ROOT = {
- 							AND = {
- 								check_variable = { peace_cost = 0 }
- 							}
- 						}
- 					}
- 					AND = {
- 						has_stability > 0.05
- 						has_war_support > 0.05
- 					}
- 				}
- 				else = {
- 					set_temp_variable = { peace_cost_temp = peace_cost }
- 					divide_temp_variable = { peace_cost_temp = 100 }
- 					AND = {
- 						has_stability > peace_cost_temp
- 						has_war_support > peace_cost_temp
- 					}
- 				}
- 			}
+ 			#hidden_trigger = {
+ 			#	if = {
+ 			#		limit = {
+ 			#			ROOT = {
+ 			#				AND = {
+ 			#					check_variable = { peace_cost = 0 }
+ 			#				}
+ 			#			}
+ 			#		}
+ 			#		AND = {
+ 			#			has_stability > 0.05
+ 			#			has_war_support > 0.05
+ 			#		}
+ 			#	}
+ 			#	else = {
+ 			#		set_temp_variable = { peace_cost_temp = peace_cost }
+ 			#		divide_temp_variable = { peace_cost_temp = 100 }
+ 			#		AND = {
+ 			#			has_stability > peace_cost_temp
+ 			#			has_war_support > peace_cost_temp
+ 			#		}
+ 			#	}
+ 			#}
  		}
  		requires_acceptance = yes
  		show_acceptance_on_action_button = yes
@@ -51,7 +51,12 @@
 					limit = {
 						is_in_faction = no
 					}
-					create_faction = Neutral_Bloc
+					# create_faction = Neutral_Bloc bad idea, the world gets cluttered with Neutral_Bloc factions
+					add_timed_idea = {
+						idea = RI_Peace_prop_no_faction_joining
+						days = 100
+					}
+					
 				}			
 		ROOT = {
 			add_threat = -100
@@ -397,69 +402,68 @@
  			}
  		}
  		ai_desire = {			
- 			base = -10			
- 			assured_victory = {
- 				base = 0
- 				modifier = {
- 					add = 10
- 					ROOT = {
- 						surrender_progress > 0.4
- 						surrender_progress < 0.8
- 					}
+ 			
+			base = -10
+			
+ 			modifier = {
+ 				
+ 				
+ 				add = 10
+ 				ROOT = {
+ 					surrender_progress > 0.4
+ 					surrender_progress < 0.8
  				}
+ 				
  			}
- 			crushing_victory = {
- 				base = 0
- 				modifier = {
- 					add = 20
- 					ROOT = {
- 						surrender_progress > 0.8
- 					}
+ 			modifier = {
+ 				
+ 				
+ 				add = 20
+ 				ROOT = {
+ 					surrender_progress > 0.8
  				}
+ 				
  			}
- 			defeat = {
- 				modifier = {
- 					add = 10
- 					THIS = {
- 						surrender_progress > 0.4
- 						surrender_progress < 0.8
- 					}
- 				}
- 			}
- 			crushing_defeat = {
- 				base = 0
- 				modifier = {
- 					add = 20
- 					THIS = {
- 						surrender_progress > 0.8
- 					}
- 				}
- 			}
- 			has_strong_allies = {
- 				base = 0
- 				modifier = {
- 					add = -50
- 				}
+ 			
+ 			modifier = {
+ 				add = 10
  				THIS = {
- 					is_faction_leader = yes
- 					any_allied_country = {
- 						strength_ratio = {
- 							tag = ROOT
- 							ratio > 0.8
- 						}
- 					}
+ 					surrender_progress > 0.4
+ 					surrender_progress < 0.8
  				}
  			}
- 			long_war = {
- 				base = 0
- 				modifier = {
- 					add = 15
- 					has_country_flag = {
- 						flag = has_war_with_@ROOT
- 						days > 2000
- 					}
+ 			
+ 			
+ 			modifier = {
+ 				add = 20
+ 				THIS = {
+ 					surrender_progress > 0.8
  				}
  			}
- 		}
+ 			
+ 			
+ 			modifier = {
+ 				add = -50
+				THIS = {
+					is_faction_leader = yes
+					any_allied_country = {
+						strength_ratio = {
+							tag = ROOT
+							ratio > 0.8
+						}
+					}
+				}
+ 			}
+			modifier = {
+				add = 15
+				has_country_flag = {
+					flag = has_war_with_@ROOT
+					days > 2000
+				}
+			}
+ 				
+ 		}	
+ 			
  	}
- }
+}
+

@@ -991,6 +991,58 @@ on_actions = {
 
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
+		effect = {
+			ROOT = {
+			if = {
+				limit = {
+					has_global_flag = disable_border_gore
+					OR = {
+					is_puppet = yes
+					is_subject = yes
+					}
+					NOT = {
+						tag = REB
+						tag = ZOM
+					}
+				}
+			OVERLORD = { set_autonomy = { target = ROOT autonomy_state = autonomy_free } }
+			}
+			}
+		FROM = { 
+			if = {
+				limit = {
+					has_global_flag = disable_border_gore
+				}
+			
+			white_peace = ROOT
+
+			every_state = {
+				limit = {
+					OR = {
+					is_core_of = FROM
+					is_claimed_by = FROM
+					}
+					is_controlled_by = ROOT
+					is_owned_by = ROOT
+					NOT = {
+						tag = REB
+						tag = ZOM
+					}					
+				}
+				transfer_state_to = FROM
+			}
+			puppet = ROOT
+			if = {
+				limit = {
+					FROM = {
+						is_in_faction = yes
+					}
+				}
+				add_to_faction = ROOT
+			}
+			}
+		}# winner
+	}
 	}
 
 	#ROOT is winner #FROM is loser

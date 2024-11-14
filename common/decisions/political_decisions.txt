@@ -10,8 +10,24 @@ RON_game_settings = {
 		fire_only_once = yes
 		complete_effect = {
 			set_global_flag = closede
+				remove_ideas = economic_crisis			
+   			remove_ideas = economic_boom
+   			remove_ideas = economic_recession
+   			remove_ideas = economic_stability
+   			remove_ideas = rubber_shortage
+   			remove_ideas = oil_shortage
+   			remove_ideas = iron_shortage
+   			remove_ideas = aluminum_shortage
+   			remove_ideas = tungsten_shortage
+   			remove_ideas = chromium_shortage
+   			remove_ideas = production_boost
+   			remove_ideas = austerity_measures
+   			remove_ideas = wartime_economy
+   			remove_ideas = war_damages
+   			remove_ideas = war_economy_boost
+   			remove_ideas = economic_recovery			
 		}
-		priority = -100
+		priority = 30
 
 		ai_will_do = {
 			base = 0
@@ -99,12 +115,12 @@ RON_economy = {
 			if = {
 				limit = {
 			OR = {
-				has_ideas = economic_stability
-				has_ideas = economic_boom
+				has_idea = economic_stability
+				has_idea = economic_boom
 				AND = {
 					NOT = {
-				has_ideas = economic_stability
-				has_ideas = economic_boom						
+						has_idea = economic_stability
+						has_idea = economic_boom						
 					}
 				}
 			}							
@@ -123,8 +139,8 @@ RON_economy = {
 			}
 			always = yes
 		}
-		days_re_enable = 100
-		days_mission_timeout = 91
+		days_re_enable = 370
+		days_mission_timeout = 370
 		available = {
 				has_global_flag = closede
 		}	
@@ -188,16 +204,8 @@ RON_economy = {
     remove_ideas = economic_recovery
 }
 
-6 = {
+18 = {
     
-}
-
-6 = {
-
-}
-
-6 = {
-  
 }
 
 6 = {
@@ -723,7 +731,87 @@ check_variable = { ROOT.woundedsoldiers > 0 }
 		ai_will_do = {
 			base = 0
 		}		
-	}		
+	}
+weaken_economy = {
+	icon = generic_army_support
+
+	visible = {
+		NOT = {
+			has_global_flag = closede
+		}
+	}
+
+	complete_effect = {
+		add_to_variable = { stimulated_boost = -10 }
+		add_to_variable = { consumtion_boost = -10 }
+	}
+	days_remove = 10
+	cost = 5
+	ai_will_do = {
+		base = 0
+	}
+}
+
+boost_inflation = {
+	icon = GFX_decision_eng_propaganda_campaigns
+
+	visible = {
+		NOT = {
+			has_global_flag = closede
+		}
+	}
+
+	complete_effect = {
+		add_to_variable = { stimulated_boost = -20 }
+		add_to_variable = { consumtion_boost = 20 }
+	}
+	days_remove = 20
+	cost = 10
+	ai_will_do = {
+		base = 0
+	}
+}
+
+drain_investments = {
+	icon = generic_army_support
+
+	visible = {
+		NOT = {
+			has_global_flag = closede
+		}
+	}
+
+	complete_effect = {
+		add_to_variable = { stimulated_boost = -30 }
+		add_to_variable = { consumtion_boost = 15 }
+	}
+	days_remove = 30
+	cost = 15
+	ai_will_do = {
+		base = 0
+	}
+}
+
+stabilize_infrastructure = {
+	icon = GFX_decision_eng_propaganda_campaigns
+
+	visible = {
+		NOT = {
+			has_global_flag = closede
+		}
+	}
+
+	complete_effect = {
+		add_to_variable = { stimulated_boost = 40 }
+		add_to_variable = { stimulated_boost = -40 }
+	}
+	days_remove = 40
+	cost = 20
+	ai_will_do = {
+		base = 0
+	}
+}
+
 }	
 
 fascism_on_the_rise = {
@@ -2270,7 +2358,7 @@ add_to_variable = {UNA.storedarms = 1000}
 }
 		days_remove = 60
 		ai_will_do = {
-			factor = 0
+			base = 0
 			modifier = {
 				has_war = no
 				threat < 0.3
@@ -2310,9 +2398,9 @@ subtract_from_variable = {UNA.storedarms = 1000}
 }
 
 		ai_will_do = {
-			factor = 0
+			base = 0
 			modifier = {
-
+				is_major = yes
 				factor = 1
 			}
 		}
@@ -2442,10 +2530,9 @@ tag = TGR
 		}
 		}	
 		}
-
-		ai_will_do = {
-			factor = 210
-		}		
+	ai_will_do = {
+			base = 200
+		}
 	}
 	call_for_ceasefire = {
 		priority = 120 
@@ -2470,7 +2557,11 @@ tag = TGR
 		}
 		cost = 130
 		ai_will_do = {
-			factor = 1
+			base = 10
+			modifier = {
+				factor = 100
+				has_idea = superstate_size1
+			}
 		}
 		complete_effect = {
 			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 230 value = 1}
@@ -2571,9 +2662,328 @@ tag = TGR
 		}	
 	}
 	}
+win_war = {
+		is_good = no 
+		priority = 100
+		fire_only_once = no
+		activation = {
+			OR = {
+			AND = {
+			tag = SOV
+			DDR = {
+				OR = {
+				is_puppet_of = SOV
+				is_subject_of = SOV
+				}
+			}
+			}
+			tag = RUS
+			}
+			has_war_with = USA
+		}
+		days_mission_timeout = 100
+		available = {
+			POR = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}			
+			BEL = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				OR = {
+				is_subject_of = RUS
+				is_puppet_of = SOV
+				}
+				}
+			}	
+			LUX = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}	
+			DEN = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}							
+			HOL = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}			
+			FRA = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}
+			SPR = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}						
+			GER = {
+				OR = {
+				has_capitulated = yes
+				has_war = no
+				is_puppet_of = SOV
+				is_subject_of = RUS
+				}
+			}
+			}
+
+		complete_effect = {
+			if = {
+				limit = {
+					country_exists = RUS
+				}
+			
+			every_country = {
+				limit = {
+					has_war_with = RUS
+				}
+				white_peace = RUS
+			}
+			
+			every_country = {
+				limit = {
+					has_capitulated = yes
+					has_war_with = RUS
+					has_idea = RON_nato
+				}
+				remove_ideas = RON_nato
+				white_peace = RUS
+				leave_faction = yes
+
+				RUS = {
+					puppet = ROOT
+				}				
+			}
+			ITA = {
+				transfer_state = 1107
+			}
+			}			
+			if = {
+				limit = {
+					country_exists = SOV
+				}
+			
+			every_country = {
+				limit = {
+					has_war_with = SOV
+				}
+				white_peace = SOV
+			}
+			
+			every_country = {
+				limit = {
+					has_capitulated = yes
+					has_war_with = SOV
+					has_idea = RON_nato
+				}
+				remove_ideas = RON_nato
+				white_peace = SOV
+				leave_faction = yes
+
+				SOV = {
+					puppet = ROOT
+				}				
+			}
+			 DDR = {
+				transfer_state = 152
+				transfer_state = 806
+				transfer_state = 153
+			}
+			ITA = {
+				transfer_state = 1107
+			}
+			}
+		}
+		timeout_effect = {
+			add_war_support = -0.1
+			activate_mission = win_war
+			}
+		}
+
+
+war_expands = {
+		is_good = yes
+		priority = 100
+		fire_only_once = yes
+		activation = {
+			OR = {
+			tag = SOV
+			tag = RUS
+			}
+			has_war_with = USA
+			OR = {
+			DDR = {
+				is_puppet_of = SOV
+			}
+			tag = RUS
+			}
+		}
+		days_mission_timeout = 15
+		available = {
+			always = no
+		}
+		timeout_effect = {
+
+			if = {
+				limit = {
+					USA = {
+						is_in_faction = no
+					}
+				}
+				USA = {
+				create_faction = NATO	
+				}				
+			}				
+			if = {
+				limit = {
+			NOT = {
+						has_war_with = POR
+					}
+				}
+            declare_war_on = {
+                target = POR
+                type = annex_everything
+            }					
+			}				
+			if = {
+				limit = {
+			NOT = {
+						has_war_with = SPR
+					}
+				}
+            declare_war_on = {
+                target = SPR
+                type = annex_everything
+            }					
+			}				
+			if = {
+				limit = {
+			NOT = {
+						has_war_with = FRA
+					}
+				}
+            declare_war_on = {
+                target = FRA
+                type = annex_everything
+            }					
+			}			
+			if = {
+				limit = {
+					NOT = {
+						has_war_with = GER
+					} 
+				}
+            declare_war_on = {
+                target = GER
+                type = annex_everything
+            }					
+			}
+			every_country = {
+				limit = {
+					has_idea = ron_nato
+					NOT = {
+						OR = {
+						has_war_with = SOV
+						has_war_with = RUS
+						}
+					}
+				}
+            declare_war_on = {
+                target = ROOT
+                type = annex_everything
+            }				
+			}
+		}
+}
 }
 political_actions = {
-	
+	unite_germany = {
+
+		icon = generic_research
+
+
+
+		visible = {
+			OR = {
+				tag = GER
+				tag = DDR
+			}
+			country_exists = DDR
+		}
+		cost = 100
+		fire_only_once = yes
+		priority = 100
+		available = {
+			OR = {
+				GER = {
+					is_puppet_of = SOV
+				}
+				DDR = {
+					is_puppet_of = USA
+				}				
+			}
+		}
+
+
+
+		complete_effect = {
+			if = {
+				limit = {
+					tag = DDR
+					GER = {
+						is_puppet_of = SOV
+					}
+				}
+				DDR = {
+					annex_country = {
+					    target = GER
+					    transfer_troops = yes
+					}					
+				}
+			}			
+			if = {
+				limit = {
+					tag = GER
+					DDR = {
+						is_puppet_of = USA
+					}
+				}
+				GER = {
+					annex_country = {
+					    target = DDR
+					    transfer_troops = yes
+					}					
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1000
+		}
+	}	
 	join_the_un = {
 		priority = 100
 		available = {			
@@ -2601,15 +3011,15 @@ tag = TGR
 				has_idea = RON_United_Nations
 			}
 		}
-		cost = 100
+		cost = 250
 		ai_will_do = {
-			factor = 1
+			factor = 90
 		}
 		cancel_trigger = {
 			has_global_flag = MARPAC_voting_in_process
 		}
 		cancel_effect  = {
-			add_political_power = 100
+			add_political_power = 250
 		}
 		days_remove = 10
 		remove_effect = {
