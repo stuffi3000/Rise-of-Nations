@@ -1,5 +1,7 @@
 @SOV_destalinisation_cost = 4
 @SOV_liberate_doctors_cost = 2
+@SOV_gulag_reforms_cost = 2
+@SOV_minority_recognition_cost = 2
 focus_tree = {
 	id = soviet_focus
 	country = {
@@ -26095,6 +26097,11 @@ focus_tree = {
 					character = SOV_joseph_stalin
 				}
 			}
+			hidden_trigger = {
+				
+					has_country_flag = beria_path
+				
+			}
 		}
 	}
 
@@ -26126,6 +26133,11 @@ focus_tree = {
 					always = no 
 				}
 			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
 		}
 	}
 
@@ -26156,6 +26168,11 @@ focus_tree = {
 					}
 					always = no 
 				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
 			}
 		}
 	}
@@ -26191,6 +26208,11 @@ focus_tree = {
 					always = no 
 				}
 			}
+			hidden_trigger = {
+				
+					has_country_flag = beria_path
+				
+			}
 		}
 		completion_reward = {
 			every_state = {
@@ -26225,9 +26247,38 @@ focus_tree = {
 		relative_position_id = SOV_minority_recognition
 		x = 0
 		y = 1
+		cost = @SOV_consolidate_power_cost
 		prerequisite = {
 			focus = SOV_minority_recognition
 
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_consolidate_power_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_consolidate_power_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_consolidate_power_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = unlock_critics_commitee_tt
 		}
 	}
 	focus = {
@@ -26237,6 +26288,48 @@ focus_tree = {
 		y = 0
 		prerequisite = {
 			focus = SOV_minority_recognition
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_establishing_control_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_establishing_control_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_establishing_control_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = beria_path
+					}
+				}
+				add_to_variable = {
+					beria_influence = 15
+					tooltip = beria_influence_increased_to_tt	
+				}
+			}
+			#add_to_variable = {
+			#	beria_influence = 15
+			#	tooltip = beria_influence_increased_to_tt	
+			#}
 		}
 	}
 
@@ -26248,8 +26341,52 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_minority_recognition
 		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_ideological_purges_control_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_ideological_purges_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_ideological_purges_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = unlock_purges_for_the_commitee_tt
+			hidden_effect = {
+				unlock_decision_tooltip = purge_khrushchev_decision
+				unlock_decision_tooltip = purge_malenkov_decision
+				unlock_decision_tooltip = purge_zhukov_decision
+				unlock_decision_tooltip = purge_bulganin_decision
+				unlock_decision_tooltip = purge_kaganovich_decision
+			}
+			if = {
+				limit = {
+					has_country_flag = non_beria_path
+					
+				}
+				custom_effect_tooltip = generic_skip_one_line_tt
+				custom_effect_tooltip = generic_skip_one_line_tt
+				custom_effect_tooltip = if_focus_is_completed_tt
+			}
+		}
 	}
-  
+
 	focus = {
 		id = SOV_beria_cult
 		icon = GFX_goal_beria_cult
@@ -26279,6 +26416,9 @@ focus_tree = {
 		}
 		prerequisite = {
 			focus = SOV_consolidate_power
+		}
+		completion_reward = {
+			unlock_decision_category_tooltip = SOV_secret_police
 		}
 	}
 	

@@ -992,6 +992,7 @@ on_actions = {
 	# ROOT is capitulated country, FROM is winner
 	on_capitulation = {
 		effect = {
+			
 			ROOT = {
 			if = {
 				limit = {
@@ -1002,6 +1003,7 @@ on_actions = {
 					}
 					NOT = {
 						tag = REB
+						tag = FRA # vichy france needs to form
 						tag = ZOM
 					}
 				}
@@ -1009,12 +1011,43 @@ on_actions = {
 			}
 			}
 		FROM = { 
+
 			if = {
 				limit = {
 					has_global_flag = disable_border_gore
+					NOT = {
+					has_global_flag = player_wants_custom_peacedeals
+					}
+					OR = {
+						tag = ZOM
+						tag = REB
+					}					
 				}
 			
-			white_peace = ROOT
+
+			every_state = {
+				limit = {
+					OR = {
+					has_core_of = ROOT
+					is_claimed_by = ROOT		
+					is_owned_by = ROOT
+					}
+					OR = {
+					is_controlled_by = FROM
+					is_owned_by = FROM
+					}
+				}
+				transfer_state_to = FROM
+			}
+			}			
+			if = {
+				limit = {
+					has_global_flag = disable_border_gore
+					NOT = {
+					has_global_flag = player_wants_custom_peacedeals
+					}
+				}
+			
 
 			every_state = {
 				limit = {
@@ -1022,12 +1055,10 @@ on_actions = {
 					is_core_of = FROM
 					is_claimed_by = FROM
 					}
+					OR = {
 					is_controlled_by = ROOT
-					is_owned_by = ROOT
-					NOT = {
-						tag = REB
-						tag = ZOM
-					}					
+					is_owned_by = ROOT	
+					}
 				}
 				transfer_state_to = FROM
 			}
@@ -1055,7 +1086,22 @@ on_actions = {
 
 	on_nuke_drop = {
 	}
-
+on_peace = {
+    effect = { 
+		if = {
+			limit = {
+				THIS = {
+					is_in_faction = yes
+					has_idea = RON_nato 
+					has_war = no
+				}
+			}
+			THIS ={
+				leave_faction = yes
+			}
+		}
+	 }
+}
 	# FROM is the sinker, ROOT is the owner of the ship being sunk
 	on_pride_of_the_fleet_sunk = {
 	}
