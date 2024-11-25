@@ -257,6 +257,80 @@ dgk_usa_statehood_policies_category = {
 		}
 	}	
 }
+southern_reconstruction = {
+		southern_reconstruction_end_era_of_suffering = {
+		icon = generic_political_actions
+
+		fire_only_once = yes
+		visible = {
+			country_exists = PUE
+		}
+
+
+		available = {
+			tag = USA
+			custom_trigger_tooltip = {
+				tooltip = southern_reconstruction_tooltip_fully_reconstructed
+			check_variable = { reconstruction_progress = 100 }
+						}		
+		}
+
+		cost = 25
+		
+		ai_will_do = {
+			factor = 30
+		}
+
+		complete_effect = {
+			remove_ideas = USA_scars_of_1865
+		}
+	}
+tensions_calm = {
+		icon = generic_political_actions
+
+		fire_only_once = yes
+		visible = {
+		OR = {
+has_idea = USA_scars_of_1865
+has_idea = USA_scars_of_1865_amplified
+has_idea = USA_scars_of_1865_lower			
+		}		
+		}
+
+
+		available = {
+			tag = USA
+			custom_trigger_tooltip = {
+				tooltip = southern_reconstruction_tooltip_fully_reconstructed
+			check_variable = { reconstruction_progress = 100 }
+						}		
+		}
+
+		cost = 25
+		is_good = yes
+		ai_will_do = {
+			factor = 30
+		}
+		days_mission_timeout = 30
+		activation ={
+			NOT = {
+			check_variable = { reconstruction_progress = 100 }				
+			}
+		OR = {
+has_idea = USA_scars_of_1865
+has_idea = USA_scars_of_1865_amplified
+has_idea = USA_scars_of_1865_lower			
+		}			
+		}
+		complete_effect = {
+			custom_effect_tooltip = "Reconstruction Will Continue"
+			add_to_variable = { reconstruction_progress = 5 }
+		subtract_from_variable = { blackanger = 5 }
+		activate_mission = tensions_calm
+		subtract_from_variable = { whiteanger = 5 }
+		}
+	}	
+}
 current_vote_going_on = {
 reorganizing_war_department_vote = {
 	priority = 100
@@ -287,7 +361,7 @@ reorganizing_war_department_vote = {
 				}
 			}
 			custom_effect_tooltip = votepassprojectionwar
-			clr_country_flag_country_flag = vote_in_progress
+			clr_country_flag = vote_in_progress
 		}
 		if = {
 			limit = {
@@ -297,7 +371,7 @@ reorganizing_war_department_vote = {
 				}
 			}
 			custom_effect_tooltip = votefailprojectionwar
-			clr_country_flag_country_flag = vote_in_progress
+			clr_country_flag = vote_in_progress
 		}			
 	}
 }
@@ -331,7 +405,7 @@ gold_standard_act_vote = {
 					}
 				}
 				custom_effect_tooltip = votepassprojectiongoldstandard
-				clr_country_flag_country_flag = vote_in_progress
+				clr_country_flag = vote_in_progress
 				swap_ideas ={
 					add_Idea = DNC_gold_standard
 					remove_idea = USA_the_gold_standard 
@@ -346,7 +420,7 @@ gold_standard_act_vote = {
 					}
 				}
 				custom_effect_tooltip = votefailprojectiongoldstandard
-				clr_country_flag_country_flag = vote_in_progress
+				clr_country_flag = vote_in_progress
 				remove_ideas = USA_the_gold_standard
 			}			
 		}
@@ -600,45 +674,52 @@ USA_congress = {
 		}
 		remove_effect = {
 			clr_country_flag = USA_already_campaigning_in_state
-	if = {
-		limit = {
-			has_country_flag = USA_support_democrats
-		}
-		event_target:USA_targeted_campaign_running_state = {
-			add_to_variable = { democratic_support = 1 }
-			custom_effect_tooltip = usa_dem_up
-			USA_modify_republican_campaign_running_effect = yes		
-		}
-		}
-	if = {
-		limit = {
-			has_country_flag = USA_support_republicans
-		}
-		event_target:USA_targeted_campaign_running_state = {
-
-	add_to_variable = { republican_support = 1 }
-USA_modify_republican_campaign_running_effect = yes
-custom_effect_tooltip = usa_gop_up
-		}	
-		}				
-	if = {
-		limit = {
-			has_country_flag = USA_support_socialists
-		}
-		event_target:USA_targeted_campaign_running_state = {
-
-		event_target:USA_targeted_campaign_running_state = {
-			custom_effect_tooltip = usa_soc_up
-	  		add_to_variable = { socialist_support = 1 }
-			USA_modify_republican_campaign_running_effect = yes			
-		}
-		}
-		}
-	
+			country_event = USA_republican_campaign_decisions.1
 		calcelccollage = yes
 
 	}
 	}
+USA_republican_campaign_in_west_south_central_states1 = {
+
+		available = {
+			NOT = {
+				has_government = democratic
+			}			
+		}
+		activation = {
+			tag = USA
+			OR = {
+			has_government = democratic
+			has_government = communism
+			}
+		}
+		visible = {
+			OR = {
+			has_country_flag = USA_support_republicans
+			has_country_flag = USA_support_democrats
+			has_country_flag = USA_support_socialists
+			}
+		}
+
+		allowed = {
+			tag = USA
+		}
+
+		icon = eng_propaganda_campaigns
+		#cost = 10
+		days_mission_timeout = 15
+		ai_will_do = {
+			factor = 20
+		}
+		is_good = yes
+		complete_effect = {
+		}
+		timeout_effect = {
+			activate_mission = USA_republican_campaign_in_west_south_central_states1
+			clr_country_flag = USA_already_campaigning_in_state
+			usa_civlian_campagins = yes
+	}
+	}	
 	#USA_small_lobby_effort = {
 	#	icon = generic_political_discourse
 	#	available = {
@@ -748,7 +829,8 @@ custom_effect_tooltip = usa_gop_up
 			}
 		}
 		visible = {
-			has_completed_focus = USA_empower_the_huac
+			#has_completed_focus = USA_empower_the_huac
+
 		}
 		cost = 10
 		ai_will_do = {
@@ -961,7 +1043,6 @@ USA_Marshall_plan = {
 			}
 		}
 	}
-}
 }
 political_actions = {
 

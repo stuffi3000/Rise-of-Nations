@@ -39,6 +39,55 @@ give_russia_landbox = {
 	}
 }
 political_actions = {	
+	JAP_consolidation_man = {
+
+		icon = jap_conquer_china
+
+		fire_only_once = yes
+		cost = 10
+
+		allowed = {
+			tag = MAN
+		}
+
+		available = {
+			controls_state = 608
+			controls_state = 755
+			controls_state = 604
+			OR = {
+			PRC = {
+				is_puppet_of = JAP
+			}
+			PRC = { is_subject_of = JAP }
+			CHI = { is_subject_of = JAP }
+			CHI = {is_puppet_of = JAP }
+			}
+			tag = MAN
+		}
+
+		visible = {
+			OR = {
+			is_puppet_of = JAP
+			is_subject_of = JAP
+			}
+			tag = MAN
+		}
+
+		ai_will_do = {
+			factor = 100
+		}
+
+		complete_effect = {
+annex_country = {
+    target = CHI
+    transfer_troops = yes
+}
+annex_country = {
+    target = PRC
+    transfer_troops = yes
+}			
+		}
+	}	
 box_victory_in_war = { 
 		icon = RNM_RUS
 		fire_only_once = yes
@@ -1770,6 +1819,164 @@ china_influence_sphere = {
 			set_country_flag = show_QIN_influence_map 
 }
 }
+
+increase_influence_zone_level = {
+    visible = {
+        OR = {
+            is_literally_china = yes
+            tag = CHI
+            tag = PRC
+            is_major = yes
+        }
+    }
+	cost = 40
+	available = {
+			custom_trigger_tooltip = {
+				tooltip = military_over_60
+		        check_variable = { zone_military_presence > 60 }
+			}		
+			custom_trigger_tooltip = {
+				tooltip = culture_over_60
+		        check_variable = { zone_cultural_influence > 60 }
+			}	
+			custom_trigger_tooltip = {
+				tooltip = resistance_under_30
+		        check_variable = { zone_resistance_level < 30 }
+			}			
+			custom_trigger_tooltip = {
+				tooltip = economic_impact_over_60
+		        check_variable = { zone_economic_impact > 60 }
+			}		
+			custom_trigger_tooltip = {
+				tooltip = zone_military_presence_over_90
+		        check_variable = { zone_military_presence > 10000 }
+			}											
+	}
+    complete_effect = {
+							random_owned_controlled_state = {
+						limit = { industrial_complex > 0 }
+						remove_building = {
+
+							type = industrial_complex
+							level = 1
+						}
+					}
+		613 = { CONTROLLER = {
+							random_owned_controlled_state = {
+						add_building_construction = {
+							type = industrial_complex
+							level = 1
+						}
+					}		}					
+        add_to_variable = {
+            var = zone_influence_level
+            value = 20
+        }
+    }
+}
+}
+increase_economic_impact_zone_level = { 
+    visible = {
+        OR = {
+            is_literally_china = yes
+            tag = CHI
+            tag = PRC
+            is_major = yes
+        }
+    }
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = "Has over $500 in GDP"
+				OR = {
+				check_variable = { GDP_real > 500 }
+				has_global_flag = hideeconomy
+				}
+			}
+		}	
+	cost = 15
+    complete_effect = {
+			custom_effect_tooltip = "Will Remove 500 from your GDP"
+			if = {
+				limit = {
+					NOT = {
+						has_global_flag = hideeconomy
+					}
+				}
+				subtract_from_variable = {
+					var = GDP_real
+					value = 500
+				}						
+			}
+
+        add_to_variable = {
+            var = zone_economic_impact
+            value = 5
+        }
+    }
+}
+
+increase_resistance_zone_level = {
+    visible = {
+        OR = {
+            is_literally_china = yes
+            tag = CHI
+            tag = PRC
+            is_major = yes
+        }
+    }
+	cost = 100
+    complete_effect = {
+		add_manpower = -1000
+        add_to_variable = {
+            var = zone_resistance_level
+            value = 5
+        }
+    }
+}
+
+
+increase_military_presence_zone_level = {
+    visible = {
+        OR = {
+            is_literally_china = yes
+            tag = CHI
+            tag = PRC
+            is_major = yes
+        }
+    }
+	cost = 36
+    complete_effect = {
+		add_manpower = -1000
+		613 = { CONTROLLER = {
+			add_manpower = 1000
+		}		
+        add_to_variable = {
+            var = zone_military_presence
+            value = 1000
+        }
+    }
+}
+}
+
+increase_cultural_influence_zone_level = {
+    visible = {
+        OR = {
+            is_literally_china = yes
+            tag = CHI
+            tag = PRC
+            is_major = yes
+        }
+    }
+	cost = 50
+    complete_effect = {
+		add_stability = -0.01
+        add_to_variable = {
+            var = zone_cultural_influence
+            value = 5
+        }
+    }
+}
+
 	exploit_FROM_resources = {
 		cost = 25
 		state_target = yes
@@ -2416,10 +2623,14 @@ china_influence_sphere = {
 			has_variable = selected_zone
 		}
 		available = {
+				custom_trigger_tooltip = {
+					tooltip = has_no_influence_over_ZONE_tt
+					check_variable = { zone_influence_level > 65}
+				}			
 			has_guaranteed = DEL
 			NOT = {
 				country_exists = CHI
-			}			
+			}
 			NOT = {
 				custom_trigger_tooltip = {
 					tooltip = has_no_influence_over_ZONE_tt

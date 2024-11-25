@@ -1,3 +1,7 @@
+@SOV_destalinisation_cost = 4
+@SOV_liberate_doctors_cost = 2
+@SOV_gulag_reforms_cost = 2
+@SOV_minority_recognition_cost = 2
 focus_tree = {
 	id = soviet_focus
 	country = {
@@ -108,6 +112,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = { 
+			unlock_decision_tooltip = SOV_dismantle_big_business
 		}
 	}
 
@@ -551,6 +556,9 @@ focus_tree = {
 		icon = GFX_goal_SOV_trudovaya_povinnost
 		relative_position_id = SOV_INT_workers_opposition
 		prerequisite = { focus = SOV_INT_workers_opposition }
+		mutually_exclusive = {
+			focus = SOV_INT_concessions_to_foreign_powers
+		}
 		x = 0
 		y = 1
 		cost = 1
@@ -1129,7 +1137,7 @@ focus_tree = {
 		icon = GFX_goal_SOV_forest_brothers
 		relative_position_id = SOV_INT_the_anarchist_threat
 		prerequisite = { focus = SOV_INT_the_anarchist_threat }
-		mutually_exclusive = { focus = SOV_INT_two_ukrainian_enemies }
+		#mutually_exclusive = { focus = SOV_INT_two_ukrainian_enemies }
 		x = -3
 		y = 1
 		cost = 1
@@ -1370,6 +1378,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = { #There will be an National Spirit for the 1906 constitution, this will remove it
+		set_country_flag = cossackssecured
 		}
 	}
 
@@ -2198,7 +2207,7 @@ focus_tree = {
 		icon = GFX_SOV_Red_Fleet
 		relative_position_id = SOV_INT_ice_cruise_of_the_baltic_fleet
 		prerequisite = { focus = SOV_INT_ice_cruise_of_the_baltic_fleet }
-		mutually_exclusive = { focus = SOV_INT_sell_old_fleet_for_economic_relief }
+		mutually_exclusive = { focus = SOV_INT_sell_old_fleet_for_economic_relief focus = SOV_INT_crush_rebel_saillors focus = SOV_INT_assault_wrangels_fleet}
 		x = 1
 		y = 1
 		cost = 10
@@ -2316,6 +2325,7 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = { #Add the national spirit of the Red Army.. with lotta debuffs
+		add_ideas = sov_red_army
 		}
 	}
 
@@ -2377,6 +2387,56 @@ focus_tree = {
 			factor = 1
 		}
 		completion_reward = { #Add more troops maybe
+	division_template = {
+					name = "Socialist Militia"
+					priority = 2
+					division_names_group = MAN_INF_01
+					regiments = {
+						infantry = {
+							x = 0
+							y = 0
+						}
+						infantry = {
+							x = 0
+							y = 1
+						}
+						infantry = {
+							x = 0
+							y = 2
+						}
+					}
+				}
+				random_owned_state = {
+					limit = {
+						ROOT = {
+							has_full_control_of_state = PREV
+						}
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}
+					create_unit = {
+						division = "name = \"Socialist Militia\" division_template = \"Socialist Militia\" start_experience_factor = 0"
+						owner = ROOT
+					}		
+		}
 		}
 	}
 
@@ -8631,17 +8691,17 @@ focus_tree = {
 			if = {
 				limit = {
 					OR = {
-						GER = { has_tech = decimetric_radar }
-						USA = { has_tech = decimetric_radar }
-						ENG = { has_tech = decimetric_radar }
-						FRA = { has_tech = decimetric_radar }
+						GER = { has_tech = cavity_magnatron }
+						USA = { has_tech = cavity_magnatron }
+						ENG = { has_tech = cavity_magnatron }
+						FRA = { has_tech = cavity_magnatron }
 					}
-					NOT = { has_tech = decimetric_radar }
+					NOT = { has_tech = cavity_magnatron }
 				}
 				add_tech_bonus = {
 					bonus = 0.75
 					uses = 1
-					technology = decimetric_radar
+					technology = cavity_magnatron
 				}
 			}
 			if = {
@@ -24841,17 +24901,15 @@ focus_tree = {
 			date > 1948.12.31
 			has_government = communism
 			NOT = {
+				has_global_flag = RON_Axis_Victory
 				GER = {
+					OR = {
 					has_completed_focus = GERCW_thousand_year_peace
 					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
 				}
 			}
-			#OR = {
-			#	GER = {
-			#		has_completed_focus = GER3_a_new_government
-			#		has_government = democratic
-			#	}
-			#}
+
 			date < 1980.1.1
 		}
 		available = {
@@ -24872,7 +24930,7 @@ focus_tree = {
 		icon = GFX_focus_crush_resistance
 		prerequisite = {
 			focus = SOV_ECW_COMECON
-		}
+		}		
 		relative_position_id = SOV_ECW_COMECON
 		x = -1
 		y = 1
@@ -24899,8 +24957,23 @@ focus_tree = {
 		cost = 7
 		relative_position_id = SOV_ECW_COMECON
 		x = 1
-		y = 1
+		y = 1		
+		allow_branch = {
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
+			}
+			date < 1980.1.1
+		}
 		completion_reward = {
+			set_global_flag = berlin_blockade_happened
 			every_country = {
 				limit = {
 					has_military_access_to = DDR
@@ -24922,6 +24995,20 @@ focus_tree = {
 			focus = SOV_ECW_operation_bripoi
 			focus = SOV_ECW_berlin_blockade
 		}
+		allow_branch = {
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
+			}
+			date < 1980.1.1
+		}		
 		icon = nuclear_weapons
 		relative_position_id = SOV_ECW_operation_bripoi
 		x = 1
@@ -24960,19 +25047,19 @@ focus_tree = {
 		completion_reward = {
 			add_war_support = -0.1
 			JAP = {
+				
 				add_opinion_modifier = {
-					add_opinion_modifier = {
-						target = SOV
-						modifier = RI_country_recognised
-					}
-				}
-			}
-			add_opinion_modifier = {
-				add_opinion_modifier = {
-					target = JAP
+					target = SOV
 					modifier = RI_country_recognised
 				}
+				
 			}
+			
+			add_opinion_modifier = {
+				target = JAP
+				modifier = RI_country_recognised
+			}
+			
 		}
 	}
 	focus = {
@@ -25116,7 +25203,7 @@ focus_tree = {
 		}
 		relative_position_id = SOV_ECW_atomic_research
 		x = 4
-		y = 1
+		y = 1		
 		completion_reward = {
 			add_political_power = 50
 		}
@@ -25264,6 +25351,9 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_ECW_yougoslav_question
 		}
+		mutually_exclusive = {
+			focus = SOV_reapproach_yugo
+		}
 		bypass = {
 			NOT = {
 				YUG = {
@@ -25305,22 +25395,21 @@ focus_tree = {
 		id = SOV_great_game
 		x = 14
 		y = 10
-	allow_branch = {
-		date > 1948.12.31
-		has_government = communism
-		NOT = {
-			GER = {
-			has_completed_focus = GERCW_thousand_year_peace
-			has_completed_focus = GERCW_the_new_age_of_europe		
+		allow_branch = {
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
 			}
+			date < 1980.1.1
 		}
-		#OR = {
-		#GER = {
-		#has_completed_focus = GER3_a_new_government
-		#has_government = democratic
-		#}
-		}
-		date < 1980.1.1
+		
 	
 		available = {
 			date > 1949.1.1
@@ -25331,6 +25420,8 @@ focus_tree = {
 			add_political_power = 25
 		}
 	}
+	
+	
 
 	focus = {
 		id = SOV_sell_weapons_to_afghanistan
@@ -25396,17 +25487,15 @@ focus_tree = {
 			date > 1948.12.31
 			has_government = communism
 			NOT = {
+				has_global_flag = RON_Axis_Victory
 				GER = {
-				has_completed_focus = GERCW_thousand_year_peace
-				has_completed_focus = GERCW_the_new_age_of_europe		
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
 				}
+				has_global_flag = RON_Axis_Victory
 			}
-			#OR = {
-				#GER = {
-				#has_completed_focus = GER3_a_new_government
-				#has_government = democratic
-				#}
-			#}
 			date < 1980.1.1
 		}
 		available = {
@@ -25538,17 +25627,15 @@ focus_tree = {
 			date > 1948.12.31
 			has_government = communism
 			NOT = {
+				has_global_flag = RON_Axis_Victory
 				GER = {
-				has_completed_focus = GERCW_thousand_year_peace
-				has_completed_focus = GERCW_the_new_age_of_europe		
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
 				}
+				has_global_flag = RON_Axis_Victory
 			}
-			#OR = {
-			#	GER = {
-			#		has_completed_focus = GER3_a_new_government
-			#		has_government = democratic
-			#	}
-			#}
 			date < 1980.1.1
 		}
 		available = {
@@ -25587,6 +25674,13 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_doctors_plot
 		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = doctors_purged
+				days = 250
+			}
+		}
+		
 	}
 	focus = {
 		id = SOV_stalins_death
@@ -25620,10 +25714,31 @@ focus_tree = {
 	focus = {
 		id = SOV_Beria_opposition
 		relative_position_id = SOV_power_struggle
-		x = 0
-		y = 1
+		mutually_exclusive = {
+			focus = SOV_destalinisation
+		}
+		x = 5
+		y = 2
 		allow_branch = {
-			has_country_flag = non_beria_path
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
+			}
+			date < 1980.1.1
+		}
+		available = {
+			NOT = {
+				has_country_leader = {
+					character = SOV_joseph_stalin
+				}
+			}
 		}
 	}
 	focus = {
@@ -25649,7 +25764,7 @@ focus_tree = {
 		completion_reward = {
 			activate_mission = Zhukov_enters_moscow
 		}
-	}
+	} 
 	focus = {
 		id = SOV_take_advantage_of_the_berlin_uprising
 		relative_position_id = SOV_call_the_army
@@ -25670,7 +25785,11 @@ focus_tree = {
 		x = 0
 		y = 1
 		prerequisite = {
-			focus = SOV_call_the_army
+			focus = SOV_take_advantage_of_the_berlin_uprising
+		}
+		completion_reward = {
+			add_ideas = SOV_trofim_lysenko
+			
 		}
 	}
 	focus = {
@@ -25750,6 +25869,9 @@ focus_tree = {
 			focus = SOV_solve_housing_crisis
 			focus = SOV_our_nuclear_doctrine
 		}
+		completion_reward = {
+			country_event = cw_sov.17
+		}
 	}
 	focus = {
 		id = SOV_20th_congress
@@ -25760,12 +25882,18 @@ focus_tree = {
 			focus = SOV_troops_review
 			focus = SOV_Khrushchev_Molotov_split
 		}
+		completion_reward = {
+			country_event = CW_Expansion_country.403
+		}
 	}
 	focus = {
 		id = SOV_the_coup
 		relative_position_id = SOV_20th_congress
 		x = 1
 		y = 1 
+		mutually_exclusive = {
+			focus = SOV_announce_destalinisation
+		}
 		prerequisite = {
 			focus = SOV_20th_congress
 		}
@@ -25781,6 +25909,9 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_the_coup
 		}
+		completion_reward = {
+			add_ideas = martial_law
+		}
 	}
 	focus = {
 		id = SOV_kholodnaya_noch
@@ -25789,6 +25920,26 @@ focus_tree = {
 		y = 1
 		prerequisite = {
 			focus = SOV_enact_martial_law
+		}
+		completion_reward = {
+			add_manpower = -10000
+			every_core_state = {
+				custom_effect_tooltip = remove_5_percent_population_tt
+				hidden_effect = {
+					ROOT = {
+						every_core_state = {
+							set_temp_variable = {
+								pop = state_population_k
+							} 
+							multiply_temp_variable = {
+								pop = -0.05
+							}
+							add_manpower = pop
+						}
+					
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -25812,15 +25963,34 @@ focus_tree = {
 			focus = SOV_fighting_corruption
 			focus = SOV_kholodnaya_noch
 		}
+		completion_reward = {
+			every_country = {
+				limit = {
+					is_in_faction_with = SOV
+				}
+				add_ideas = SOV_steel_wall
+				add_ideas = closed_economy
+			}
+		}
 
 	}
 	focus = {
 		id = SOV_announce_destalinisation
+		mutually_exclusive = {
+			focus = SOV_the_coup
+		}
 		relative_position_id = SOV_20th_congress
 		x = -1
 		y = 1
 		prerequisite = {
 			focus = SOV_20th_congress
+		}
+		completion_reward = {
+			hidden_effect = {
+				
+				country_event = CW_Expansion_country.422
+				
+			}
 		}
 	}
 	focus = {
@@ -25828,8 +25998,53 @@ focus_tree = {
 		relative_position_id = SOV_announce_destalinisation
 		x = -1
 		y = 1
+		cost = 5
 		prerequisite = {
 			focus = SOV_announce_destalinisation
+		}
+		select_effect = {
+			activate_mission = SOV_HUN_revolution
+		}
+		completion_reward = {
+			effect_tooltip = {
+				custom_effect_tooltip = effect_when_selected_tt
+				activate_mission = SOV_HUN_revolution
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = generic_skip_one_line_tt
+			effect_tooltip = {
+				custom_effect_tooltip =  has_divisions_in_budapest_for_effects_tt
+				add_threat = 2
+				HUN = {
+					add_stability = -0.1
+				}
+				add_political_power = 50
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = generic_skip_one_line_tt
+			effect_tooltip = {
+				custom_effect_tooltip = SOV_army_to_hungary_failed_tt
+				HUN = {
+					country_event = CW_Expansion_country.89
+				}
+			}
+			#The rewards are given by the mission
+			#hidden_effect = {
+			#	if= {
+			#		limit = {
+			#			
+			#			divisions_in_state = {
+			#				#type = infantry
+			#				size > 0
+			#				state = 43
+			#			}
+			#		}	
+			#		add_threat = 2
+			#		HUN = {
+			#			add_stability = -0.1
+			#		}
+			#	}
+			#} 
 		}
 	}
 	focus = {
@@ -25863,10 +26078,55 @@ focus_tree = {
 	focus = {
 		id = SOV_destalinisation
 		relative_position_id = SOV_power_struggle
-		x = 0
-		y = 1
+		x = -1
+		y = 2
+		mutually_exclusive = {
+			focus = SOV_Beria_opposition
+		}
 		allow_branch = {
-			has_country_flag = beria_path
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
+			}
+			date < 1980.1.1
+		}
+		cost = @SOV_destalinisation_cost
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_destalinisation_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_destalinisation_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_destalinisation_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			NOT = {
+				has_country_leader = {
+					character = SOV_joseph_stalin
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
 		}
 	}
 
@@ -25875,18 +26135,70 @@ focus_tree = {
 		relative_position_id = SOV_destalinisation
 		x = -1
 		y = 1
+		cost = @SOV_liberate_doctors_cost
 		prerequisite = {
 			focus = SOV_destalinisation
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_liberate_doctors_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_liberate_doctors_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_liberate_doctors_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
 		}
 	}
 
 	focus = {
 		id = SOV_gulag_reforms
 		relative_position_id = SOV_destalinisation
+		cost = @SOV_gulag_reforms_cost
 		x = 1
 		y = 1
 		prerequisite = {
 			focus = SOV_destalinisation
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_gulag_reforms_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_gulag_reforms_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_gulag_reforms_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
 		}
 	}
 
@@ -25895,12 +26207,37 @@ focus_tree = {
 		relative_position_id = SOV_gulag_reforms
 		x = -1
 		y = 1
-
+		cost = @SOV_minority_recognition_cost
 		prerequisite = {
 			focus = SOV_gulag_reforms
 		}
 		prerequisite = {
 			focus = SOV_liberate_doctors
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_minority_recognition_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_minority_recognition_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_minority_recognition_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+					has_country_flag = beria_path
+				
+			}
 		}
 		completion_reward = {
 			every_state = {
@@ -25935,9 +26272,38 @@ focus_tree = {
 		relative_position_id = SOV_minority_recognition
 		x = 0
 		y = 1
+		cost = @SOV_consolidate_power_cost
 		prerequisite = {
 			focus = SOV_minority_recognition
 
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_consolidate_power_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_consolidate_power_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_consolidate_power_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = unlock_critics_commitee_tt
 		}
 	}
 	focus = {
@@ -25947,6 +26313,48 @@ focus_tree = {
 		y = 0
 		prerequisite = {
 			focus = SOV_minority_recognition
+		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_establishing_control_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_establishing_control_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_establishing_control_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						has_country_flag = beria_path
+					}
+				}
+				add_to_variable = {
+					beria_influence = 15
+					tooltip = beria_influence_increased_to_tt	
+				}
+			}
+			#add_to_variable = {
+			#	beria_influence = 15
+			#	tooltip = beria_influence_increased_to_tt	
+			#}
 		}
 	}
 
@@ -25958,8 +26366,52 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_minority_recognition
 		}
+		available = {
+			if = {
+				limit = {
+					has_country_flag = SOV_ideological_purges_control_progress_flag
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_ideological_purges_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_focus_in_progress_tt
+						CHARACTER = SOV_lavrentiy_beria
+						FLAG_DAYS = [?SOV_ideological_purges_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			hidden_trigger = {
+				
+				has_country_flag = beria_path
+				
+			}
+		}
+		completion_reward = {
+			custom_effect_tooltip = unlock_purges_for_the_commitee_tt
+			hidden_effect = {
+				unlock_decision_tooltip = purge_khrushchev_decision
+				unlock_decision_tooltip = purge_malenkov_decision
+				unlock_decision_tooltip = purge_zhukov_decision
+				unlock_decision_tooltip = purge_bulganin_decision
+				unlock_decision_tooltip = purge_kaganovich_decision
+			}
+			if = {
+				limit = {
+					has_country_flag = non_beria_path
+					
+				}
+				custom_effect_tooltip = generic_skip_one_line_tt
+				custom_effect_tooltip = generic_skip_one_line_tt
+				custom_effect_tooltip = if_focus_is_completed_tt
+			}
+		}
 	}
-  
+
 	focus = {
 		id = SOV_beria_cult
 		icon = GFX_goal_beria_cult
@@ -25990,6 +26442,9 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_consolidate_power
 		}
+		completion_reward = {
+			unlock_decision_category_tooltip = SOV_secret_police
+		}
 	}
 	
 	focus = {
@@ -26002,7 +26457,31 @@ focus_tree = {
 			focus = SOV_beria_cult
 		}
 	}
-
+	focus = {
+		id = SOV_reapproach_yugo
+		relative_position_id = SOV_ECW_european_stance
+		x = 3
+		y = 1
+		mutually_exclusive = {
+			focus = SOV_ECW_get_rid_of_tito
+			focus = SOV_ECW_yougoslav_question
+		}
+		allow_branch = {
+			has_country_flag = beria_path
+		}
+		prerequisite = {
+			focus = SOV_ECW_european_stance
+		}
+	}
+	focus = {
+		id = SOV_promote_unity
+		relative_position_id = SOV_reapproach_yugo
+		x = 0
+		y = 1
+		prerequisite = {
+			focus = SOV_reapproach_yugo
+		}
+	}
 	focus = {
 		id = SOV_minsk_conference
 		relative_position_id = SOV_promote_unity
@@ -26018,30 +26497,8 @@ focus_tree = {
 		}
 	}
 
-	focus = {
-		id = SOV_promote_unity
-		relative_position_id = SOV_reapproach_yugo
-		x = 0
-		y = 1
-		prerequisite = {
-			focus = SOV_reapproach_yugo
-		}
-	}
-	focus = {
-		id = SOV_reapproach_yugo
-		relative_position_id = SOV_ECW_european_stance
-		x = 3
-		y = 1
-		mutually_exclusive = {
-			focus = SOV_ECW_get_rid_of_tito
-		}
-		allow_branch = {
-			has_country_flag = beria_path
-		}
-		prerequisite = {
-			focus = SOV_ECW_european_stance
-		}
-	}
+	
+	
 	focus = {
 		id = SOV_the_economy
 		x = 27
@@ -26050,17 +26507,15 @@ focus_tree = {
 			date > 1948.12.31
 			has_government = communism
 			NOT = {
+				has_global_flag = RON_Axis_Victory
 				GER = {
+					OR = {
 					has_completed_focus = GERCW_thousand_year_peace
 					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
 				}
+				has_global_flag = RON_Axis_Victory
 			}
-			#OR = {
-			#	GER = {
-			#	has_completed_focus = GER3_a_new_government
-			#	has_government = democratic
-			#	}
-			#}
 			date < 1980.1.1
 		}
 		available = {
@@ -26149,17 +26604,15 @@ focus_tree = {
 			date > 1948.12.31
 			has_government = communism
 			NOT = {
+				has_global_flag = RON_Axis_Victory
 				GER = {
-				has_completed_focus = GERCW_thousand_year_peace
-				has_completed_focus = GERCW_the_new_age_of_europe		
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
 				}
+				has_global_flag = RON_Axis_Victory
 			}
-			#OR = {
-			#	GER = {
-			#		has_completed_focus = GER3_a_new_government
-			#		has_government = democratic
-			#	}
-			#}
 			date < 1980.1.1
 		}
 		available = {
@@ -26405,7 +26858,7 @@ set_popularities = {
 			
 		}		
 		completion_reward = {
-			add_ideas = martial_law
+			add_ideas = martial_law 
 			custom_effect_tooltip = SOV_cw_perm_martial_law
 		}
 	}		
@@ -26599,7 +27052,7 @@ focus = {
 		add_stability = 0.1
     }
 }
-just move the y 
+#just move the y 
 focus = {
     id = SOV_CW_energy_independence
     icon = GFX_goal_generic_energy
@@ -26948,9 +27401,9 @@ focus = {
 	prerequisite = {
 		focus = SOV_CW_propoganda_campaign
 	}
-	prerequisite = {
-		focus = SOV_CW_dominate_the_skies
-	}
+	#prerequisite = {
+	#	focus = SOV_CW_dominate_the_skies
+	#}
 	prerequisite = {
 		focus = SOV_CW_alliance_building
 	}
@@ -27101,6 +27554,7 @@ focus = {
 			GER = {
 			NOT = {
 			has_completed_focus = GER3_a_new_government
+			has_global_flag = RON_Axis_Victory
 			}
 			has_government = fascism
 			owns_state = 28			
@@ -27274,23 +27728,20 @@ focus = {
 		relative_position_id = SOV_modernize_red_army
 		x = 0
 		y = 7
-	allow_branch = {
-		date > 1948.12.31
-		has_government = communism
-		NOT = {
-			GER = {
-			has_completed_focus = GERCW_thousand_year_peace
-			has_completed_focus = GERCW_the_new_age_of_europe		
+		allow_branch = {
+			date > 1948.12.31
+			has_government = communism
+			NOT = {
+				GER = {
+					OR = {
+					has_completed_focus = GERCW_thousand_year_peace
+					has_completed_focus = GERCW_the_new_age_of_europe		
+					}
+				}
+				has_global_flag = RON_Axis_Victory
 			}
+			date < 1980.1.1
 		}
-		OR = {
-		GER = {
-		has_completed_focus = GER3_a_new_government
-		has_government = democratic
-		}
-		}
-		date < 1980.1.1
-	}
 		cost = 10
 		available = { 
 			any_state = {
