@@ -2852,7 +2852,69 @@ war_measures = {
 	}
 }
 generic_veteran_wounded = {
+	war_exhaustiom = {
+		days_mission_timeout = 3
+		is_good = no
+		priority = 100
+		fire_only_once = no
+		activation = {
+			has_war = yes
+		}
+		available = {
+			has_war = no
+		}	
+		timeout_effect = {	
+			activate_mission = war_exhaustiom
+			add_war_support = -0.05
+			if = {
+				limit = {
+					is_ai = no
+				}
+				subtract_from_variable = {
+					var = ROOT.Coalition
+					value = 10
+				}
+				clamp_variable = {
+					var = FROM.Coalition
+					min = 0
+				}				
+			custom_effect_tooltip = "Our ruling coalition will experience a decline in popularity, while we gain support from capitulated nations. Each faction member will see a change in popularity: a loss of 10 from minor countries and a loss of 30 from major powers."
+			}
+			if = {
+				limit = {
+					is_faction_leader = yes
+					has_war_support < 80
+				}
+				every_country = {
+					limit = {
+						has_war_with = ROOT
+						NOT = {
+							is_in_faction_with = ROOT
+						}
+						is_faction_leader = yes
+					}
+				country_event = { id = unsc.11 hours = 6 }
+				}
+			}
+			if = {
+				limit = {
+					check_variable = {
+						var = ROOT.Coalition
+						value = 0
+					}
+				}
+			if ={
+				limit = {
+					is_ai = no
+				}
+				    break_coalition = yes
+					quickset_parliament = yes
+			        set_country_flag = forming_government_1		
+			}				
+			}
+		}
 
+	}
 	veterans_come_home = {
 		days_mission_timeout = 7
 		is_good = no
