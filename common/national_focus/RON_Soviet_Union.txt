@@ -2,6 +2,10 @@
 @SOV_liberate_doctors_cost = 2
 @SOV_gulag_reforms_cost = 2
 @SOV_minority_recognition_cost = 2
+@SOV_Beria_opposition_cost = 2
+@SOV_Malenkov_proposition_cost = 2
+@SOV_call_the_army_cost = 2
+@SOV_take_advantage_of_the_berlin_uprising_cost = 1
 focus_tree = {
 	id = soviet_focus
 	country = {
@@ -25719,6 +25723,7 @@ focus_tree = {
 		}
 		x = 5
 		y = 2
+		cost = @SOV_Beria_opposition_cost
 		allow_branch = {
 			date > 1948.12.31
 			has_government = communism
@@ -25739,6 +25744,52 @@ focus_tree = {
 					character = SOV_joseph_stalin
 				}
 			}
+			
+			if = {
+				limit = {
+					has_country_flag = SOV_Beria_opposition_progress_flag
+					has_country_flag = beria_discovers_plot
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_Beria_opposition_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_committee_focus_in_progress_tt
+						FLAG_DAYS = [?SOV_Beria_opposition_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			select_effect = {
+				
+				set_country_flag = { flag = SOV_destalinisation_progress_flag days = 28 value = 1}
+				
+				activate_shine_on_focus = SOV_destalinisation
+				hidden_effect = {
+					country_event = { id = cw_sov_opposition.1 days = 28}
+					random_list = {
+						50 = {
+							country_event = {id = cw_sov.15 days = 10}
+							modifier = {
+								factor = 0
+								is_historical_focus_on = yes
+							}
+						}
+						50 = {
+
+						}
+					}
+				}
+			}
+			custom_trigger_tooltip = {
+				tooltip = plot_against_beria_underway_tt
+				has_country_flag = non_beria_path
+				
+			}
+			
 		}
 	}
 	focus = {
@@ -25749,6 +25800,35 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_Beria_opposition
 		}
+		cost = @SOV_Malenkov_proposition_cost
+		available = {
+			
+			if = {
+				limit = {
+					has_country_flag = SOV_Malenkov_proposition_progress_flag
+					has_country_flag = beria_discovers_plot
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_Malenkov_proposition_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_committee_focus_in_progress_tt
+						FLAG_DAYS = [?SOV_Malenkov_proposition_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			 
+			hidden_trigger = {
+				
+				has_country_flag = non_beria_path
+				
+			}
+			
+		}
 		completion_reward = {
 			custom_effect_tooltip = malenkov_is_asked_to_join_the_plot_tt
 		}
@@ -25758,8 +25838,37 @@ focus_tree = {
 		relative_position_id = SOV_Beria_opposition
 		x = 1
 		y = 1
+		cost = @SOV_call_the_army_cost
 		prerequisite = {
 			focus = SOV_Beria_opposition
+		}
+		available = {
+			
+			if = {
+				limit = {
+					has_country_flag = SOV_call_the_army_progress_flag
+					has_country_flag = beria_discovers_plot
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_call_the_army_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_committee_focus_in_progress_tt
+						FLAG_DAYS = [?SOV_call_the_army_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			 
+			hidden_trigger = {
+				
+				has_country_flag = non_beria_path
+				
+			}
+			
 		}
 		completion_reward = {
 			activate_mission = Zhukov_enters_moscow
@@ -25773,6 +25882,34 @@ focus_tree = {
 		prerequisite = {
 			focus = SOV_call_the_army
 			focus = SOV_Malenkov_proposition
+		}
+		available = {
+			
+			if = {
+				limit = {
+					has_country_flag = SOV_take_advantage_of_the_berlin_uprising_progress_flag
+					has_country_flag = beria_discovers_plot
+				}
+
+				set_temp_variable = { temp_focus_days = @SOV_take_advantage_of_the_berlin_uprising_cost }
+				multiply_temp_variable = {
+					temp_focus_days = 7
+				}
+				custom_override_tooltip = {
+					tooltip = {
+						localization_key = SOV_power_struggle_committee_focus_in_progress_tt
+						FLAG_DAYS = [?SOV_take_advantage_of_the_berlin_uprising_progress_flag:days]
+					}
+					always = no 
+				}
+			}
+			 
+			hidden_trigger = {
+				
+				has_country_flag = non_beria_path
+				
+			}
+			
 		}
 		completion_reward = {
 			unlock_decision_tooltip = SOV_arrest_Beria	
@@ -26122,11 +26259,24 @@ focus_tree = {
 					character = SOV_joseph_stalin
 				}
 			}
-			hidden_trigger = {
-				
+			
+			custom_trigger_tooltip = {
 				has_country_flag = beria_path
+				tooltip = comittee_under_surveillance_tt
+			}	
+			
 				
+			
+		}
+		select_effect = {
+			
+			set_country_flag = { flag = SOV_Beria_opposition_progress_flag days = 14 value = 1}
+			hidden_effect = {
+				#activate_shine_on_focus = SOV_Beria_opposition
+				country_event = {id = cw_sov.14 days = 10}
+				country_event = {id = cw_sov_opposition.9 days = 14}
 			}
+			mark_focus_tree_layout_dirty = yes
 		}
 	}
 
@@ -26340,21 +26490,11 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = {
-						has_country_flag = beria_path
-					}
-				}
-				add_to_variable = {
-					beria_influence = 15
-					tooltip = beria_influence_increased_to_tt	
-				}
+			
+			add_to_variable = {
+				beria_influence = 15
+				tooltip = beria_influence_increased_to_tt	
 			}
-			#add_to_variable = {
-			#	beria_influence = 15
-			#	tooltip = beria_influence_increased_to_tt	
-			#}
 		}
 	}
 
