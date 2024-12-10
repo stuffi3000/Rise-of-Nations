@@ -1,59 +1,330 @@
+political_crisis_category = {
+	political_crisis_list_add = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			
+			clear_array = global.political_crisis_list_array
+			clear_array = global.crisis_originators
+			clear_array = global.crisis_receivers
+			clear_array = global.political_active_crisis_list
+			
+			add_to_array = {
+				array = global.political_active_crisis_list
+				value = 0
+			}
+			add_to_array = {
+				array = global.political_active_crisis_list
+				value = 1
+			}
+			add_to_array = {
+				array = global.crisis_originators 
+				value = RUS
+			}
+			add_to_array = {
+				array = global.crisis_receivers
+				value = ENG
+			}
+			add_to_array = {
+				array = global.political_crisis_list_array
+				value = 0
+			}
+			set_variable = {
+				global.crisis_progress^0 = 20
+			}
+			add_to_array = {
+				array = global.crisis_originators 
+				value = FRA
+			}
+			add_to_array = {
+				array = global.crisis_receivers
+				value = GER
+			}
+			add_to_array = {
+				array = global.political_crisis_list_array
+				value = 1
+			}
+			set_variable = {
+				global.crisis_progress^1 = 35
+			}
+			
+		}
+	}
+
+	testtttt_yhdspfg = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			
+		}
+	}
+
+	set_diplo_crisis_to_100 = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			set_variable = { global.crisis_progress^0 = 100 }
+			set_variable = { global.crisis_progress^1 = 100 }
+		}
+	}
+
+	issue_embargo_against_FROM = {
+		target_array = global.crisis_receivers
+
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 19 }
+				}
+				
+			}  
+
+		}
+		complete_effect = {
+			send_embargo = FROM
+			FROM = {
+				send_embargo = ROOT
+			}
+		}
+	}
+	initiate_border_war_against_FROM = {
+		
+		icon = border_war		
+		target_array = global.crisis_receivers
+		available = {
+			has_war = no
+			OR = { 
+				has_global_flag = warlordera
+				date < 1950.10.10 
+			}
+		
+	
+			FROM = {
+				any_owned_state = {
+					is_controlled_by = FROM
+					any_neighbor_state = {
+						is_fully_controlled_by = ROOT
+						set_temp_variable = { var:attacker_state_temp = id }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+					}
+					NOT = { has_state_flag = border_incident_active }
+					set_temp_variable = { var:defender_state_temp = id }
+				}
+			}
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { FROM = {is_puppet_of = ROOT} }
+		} 
+	
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 59 }
+				}
+				
+			}  
+
+		}
+
+			# VPI by Yard1
+		
+
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = FROM.defender_staWte_vs_@ROOT
+					AND = {
+						is_owned_and_controlled_by = FROM
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						any_neighbor_state = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							has_ROOT_at_least_1_div_in_current_state_scope = yes
+							is_fully_controlled_by = ROOT
+						}
+					}
+				}
+			}
+		}
+	
+	
+		cost = 20
+	
+		fire_only_once = no
+	
+		days_remove = 20
+		days_re_enable = 30
+	
+		war_with_target_on_remove = yes
+
+		complete_effect = {
+			hidden_effect = {
+				FROM = {
+					random_owned_controlled_state = {
+						limit = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							any_neighbor_state = {
+								hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+								has_ROOT_at_least_1_div_in_current_state_scope = yes
+								is_fully_controlled_by = ROOT
+							}
+						}
+						save_event_target_as = defender_state
+						set_variable = { FROM.defender_state_vs_@ROOT = id }
+						set_temp_variable = { defender_state_temp = id }
+						set_state_flag = border_incident_active
+					}
+				}
+				random_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						any_neighbor_state = {
+							state = var:FROM.defender_state_vs_@ROOT
+						}
+					}
+					save_event_target_as = attacker_state
+					set_variable = { FROM.attacker_state_vs_@ROOT = id }
+					set_temp_variable = { attacker_state_temp = id }
+					set_state_flag = border_incident_active
+				}
+			}
+			custom_effect_tooltip = WTT_border_incident_delay_until_new_incident_180
+			FROM = {
+				country_event = { id = wtt_border_incident_defender_warning.1 hours = 1 }
+				activate_targeted_decision = { target = ROOT decision = WTT_border_conflict_incident_warning_defender }				
+			}
+		}
+		remove_effect = {
+			hidden_effect = {
+				var:FROM.defender_state_vs_@ROOT = {
+					save_event_target_as = defender_state 
+				}
+				var:FROM.attacker_state_vs_@ROOT = {
+					save_event_target_as = attacker_state 
+				}
+				FROM = {
+					random_owned_controlled_state = {
+						limit = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							any_neighbor_state = {
+								is_fully_controlled_by = ROOT
+								has_ROOT_at_least_1_div_in_current_state_scope = yes
+								hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							}
+						}
+						set_temp_variable = { defender_state_temp = id }
+					}
+				}
+				random_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						any_neighbor_state = {
+							state = var:FROM.defender_state_vs_@ROOT
+						}
+					}
+					set_temp_variable = { attacker_state_temp = id }
+				}
+			}
+			activate_targeted_decision = { target = FROM decision = WTT_escalate_incident_to_border_conflict }
+		}
+		
+
+
+
+	}
+	organise_congress_with_FROM = {
+		target_array = global.crisis_originators
+		visible = {
+			
+			is_in_array = { global.crisis_receivers  = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+			
+				AND = {
+					check_variable = { global.crisis_receivers^i = ROOT}
+					check_variable = { global.crisis_originators^i = FROM}
+					check_variable = { global.crisis_progress^i > 0 }
+				}
+
+			}  
+
+		}
+
+		complete_effect = {
+			for_each_loop = {
+				array = global.political_active_crisis_list
+				if = {
+					limit = {
+						AND = {
+							check_variable = { global.crisis_receivers^i = ROOT} 
+							check_variable = { global.crisis_originators^i = FROM}
+						}
+					}
+					subtract_from_variable = {
+						global.crisis_progress^i = 10
+					}
+				}
+			}
+		}
+	}
+
+	escalate_diplo_crisis = {
+		target_array = global.crisis_receivers
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+				
+			}  
+
+		}
+		war_with_target_on_remove = yes
+		days_remove = 5
+		remove_effect = {
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		}
+
+	}
+}
 RON_game_settings = {
-	#political_crisis_list_add = {
-	#	complete_effect = {
-	#		
-	#		clear_array = global.political_crisis_list_array
-	#		clear_array = global.crisis_originators
-	#		clear_array = global.crisis_receivers
-	#		clear_array = global.political_active_crisis_list
-	#		
-	#		add_to_array = {
-	#			array = global.political_active_crisis_list
-	#			value = 0
-	#		}
-	#		add_to_array = {
-	#			array = global.political_active_crisis_list
-	#			value = 1
-	#		}
-	#		add_to_array = {
-	#			array = global.crisis_originators 
-	#			value = RUS
-	#		}
-	#		add_to_array = {
-	#			array = global.crisis_receivers
-	#			value = ENG
-	#		}
-	#		add_to_array = {
-	#			array = global.political_crisis_list_array
-	#			value = 0
-	#		}
-	#		set_variable = {
-	#			global.crisis_progress^0 = 20
-	#		}
-	#		add_to_array = {
-	#			array = global.crisis_originators 
-	#			value = FRA
-	#		}
-	#		add_to_array = {
-	#			array = global.crisis_receivers
-	#			value = GER
-	#		}
-	#		add_to_array = {
-	#			array = global.political_crisis_list_array
-	#			value = 1
-	#		}
-	#		set_variable = {
-	#			global.crisis_progress^1 = 35
-	#		}
-	#		
-	#	}
-	#}
-#
-	#testtttt_yhdspfg = {
-	#	complete_effect = {
-	#		
-	#	}
-	#}
+	
 	close_economy_page = {
 
 		icon = generic_civil_support
