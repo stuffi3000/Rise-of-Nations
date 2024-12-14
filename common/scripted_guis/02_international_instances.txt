@@ -1,16 +1,60 @@
 scripted_gui = {
-
-	international_politics = {
+	diplocrisis_warning = {
 		context_type = player_context
+
+		window_name = "diplocrisis_warning_container"
+		parent_window_token = top_bar
+		visible = {
+			has_country_flag = diplo_crisis_warn_flag
+		}
+	}
+	diplocrisis_button_open = {
+
+		window_name = "diplocrisis_button_container"
+		parent_window_name = "world_tension_popup"
+ 
+		effects = {
+			diplocrisis_button_click = {
+				if = {
+					limit = {
+						OR = {
+							check_variable = { diplocrisis_open = 0 }
+							check_variable = { diplocrisis_open = 2 }
+						}
+					}
+					set_variable = { diplocrisis_open = 1 }
+				}
+				else = {
+					set_variable = { diplocrisis_open = 2 }
+				}
+					
+				if = {
+					limit = {
+						has_country_flag = diplo_crisis_warn_flag
+					}
+					clr_country_flag = diplo_crisis_warn_flag
+				}
+				
+				
+			}
+		}
+		properties = {
+			diplocrisis_button = {
+				frame = var:diplocrisis_open
+			}
+		}
+	}
+	international_politics = {
+		#context_type = player_context 
 		#parent_window_token = selected_country_view_diplomacy
 		window_name = "international_instances_window_container"
-
-        dynamic_lists = {
+		parent_window_name = "world_tension_popup"
+        dynamic_lists = { 
             political_crisis = {
-                entry_container = political_crisis_entry  
+                entry_container = political_crisis_entry    
                 array = global.political_crisis_list_array
 				index = global.political_crisis_list_index    
-				#change_scope = yes
+				#change_scope = yes 
             }
 			originator_flag = {
 				entry_container = originator_flag_entry
@@ -26,11 +70,17 @@ scripted_gui = {
 			}
         }  
 		visible = {
-			has_country_flag = show_political_crisis   
+			check_variable = { diplocrisis_open = 1 } 
 		}
 		effects = { 
 			close_button_click = {
-				clr_country_flag = show_political_crisis
+				set_variable = { diplocrisis_open = 2 } 
+				if = {
+					limit = {
+						has_country_flag = diplo_crisis_warn_flag
+					}
+					clr_country_flag = diplo_crisis_warn_flag
+				}
 			}
 		} 
 		triggers = {
