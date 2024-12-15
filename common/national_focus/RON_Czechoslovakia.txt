@@ -9,13 +9,22 @@ focus_tree = {
 	}
 	default = no 
 	reset_on_civilwar = no
-	continuous_focus_position = { x = 850 y = 1500 }
+	continuous_focus_position = { x = 1500 y = 1600 }
 
 	#Focus Path shortcuts
 	shortcut = {
 		name = CZE_army_sc
 		target = CZE_army
 		scroll_wheel_factor = 0.8
+		trigger = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+	}
+	shortcut = {
+		name = CZE_war_prep_sc
+		target = CZE_war_preparations
+		scroll_wheel_factor = 1.0
 		trigger = {
 			date > 1932.12.31
 			date < 1949.1.1
@@ -2195,6 +2204,182 @@ focus_tree = {
 	}
 
 	focus = {
+		id = CZE_war_preparations
+		icon = GFX_goal_CZE_defense
+		bypass = {
+			has_war = yes
+		}
+		cancel = {
+			has_war = yes
+		}
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		x = 10
+		y = 10
+		cost = 7.2
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CZE_war_preparations_idea
+			custom_effect_tooltip = CZE_war_preparations_idea_future
+		}
+	}
+	focus = {
+		id = CZE_contingency_planning
+		icon = GFX_goal_generic_position_armies
+		prerequisite = {
+			focus = CZE_war_preparations
+		}
+		x = -1
+		y = 1
+		relative_position_id = CZE_war_preparations
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_tech_bonus = {
+				name = CZE_contingency_planning
+				bonus = 0.5
+				uses = 2
+				category = land_doctrine
+			}
+		}
+	}
+	focus = {
+		id = CZE_military_reservists
+		icon = GFX_goal_generic_military_sphere
+		prerequisite = {
+			focus = CZE_contingency_planning
+		}
+		x = 0
+		y = 2
+		relative_position_id = CZE_contingency_planning
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CZE_military_reservists_idea
+		}
+	}
+	focus = {
+		id = CZE_extensive_conscription
+		icon = GFX_goal_generic_military_sphere
+		available = {
+			NOT = {
+				CZE = {
+					has_idea = extensive_conscription
+				}
+			}
+		}
+		prerequisite = {
+			focus = CZE_war_preparations
+		}
+		x = 0
+		y = 2
+		relative_position_id = CZE_war_preparations
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = extensive_conscription
+			add_political_power = -80
+		}
+	}
+	focus = {
+		id = CZE_limit_exports
+		icon = GFX_goal_generic_trade
+		available = {
+			NOT = {
+				CZE = {
+					has_idea = limited_exports
+				}
+			}
+			OR = {
+				has_idea = export_focus
+				has_idea = free_trade
+			}
+		}
+		prerequisite = {
+			focus = CZE_extensive_conscription
+		}
+		x = 0
+		y = 2
+		relative_position_id = CZE_extensive_conscription
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = limited_exports
+			add_political_power = -80
+		}
+	}
+	focus = {
+		id = CZE_spanish_brigade
+		icon = small_arms
+		prerequisite = {
+			focus = CZE_war_preparations
+		}
+		available = {
+			has_global_flag = spanish_civil_war
+		}
+		bypass = {
+			has_global_flag = scw_over
+		}
+		x = 1
+		y = 1
+		relative_position_id = CZE_war_preparations
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = CZE_volunteer_legacy_idea
+			set_rule = {
+				can_send_volunteers = yes
+			}
+		}
+	}
+	focus = {
+		id = CZE_legacy_of_the_legions_generic
+		text = CZE_legacy_of_the_legions
+		icon = GFX_goal_CZE_legion
+		prerequisite = { focus = CZE_spanish_brigade }
+		x = 0
+		y = 2
+		relative_position_id = CZE_spanish_brigade
+
+		cost = 5
+
+		ai_will_do = {
+			factor = 0
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+			has_completed_focus = CZE_legacy_of_the_legions
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+		search_filters = {  }
+
+		completion_reward = {
+			add_ideas = CZE_legions_legacy
+		}
+	}
+
+	focus = {
 		id = CZE_rally_the_sudeten_support
 		icon = GFX_goal_CZE_sudeten_propaganda
 		mutually_exclusive = { focus = CZE_a_purple_way focus = CZE_full_soviet_protection focus = CZE_supress_sudeten_nationalism }
@@ -3110,7 +3295,7 @@ focus_tree = {
 		}
 
 		bypass = {
-
+			has_completed_focus = CZE_legacy_of_the_legions_generic
 		}
 
 		cancel_if_invalid = yes
