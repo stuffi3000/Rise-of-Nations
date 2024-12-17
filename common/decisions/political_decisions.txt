@@ -1,76 +1,250 @@
-political_crisis_category = {
-	political_crisis_list_add = {
+diplomatic_crisis_category = {
+	
+	RON_GER_Sudetenland_wargoal = {
+		target_trigger = {
+			FROM = { tag = CZE }
+		}
+		icon = GFX_decision_generic_ignite_civil_war
 		visible = {
-			is_debug = yes
+			is_in_array = { global.crisis_originators = ROOT }
+			is_in_array = { global.political_active_crisis_list = 3}
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = 69.owner}
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+			}
+		}
+		war_with_target_on_remove = yes
+		days_remove = 5
+		remove_effect = {
+			create_wargoal = {			
+				expire = 100
+				type = take_state_focus
+				target = CZE
+				generator = { 69 74 884 886 887 888 }
+			}
+			set_temp_variable = { crisis_id = 3 }
+			RON_end_crisis = yes 
+		}
+	}
+	RON_GER_Sudetenland_munich_conference = {
+		icon = GFX_decision_eng_trade_unions_support
+		target_trigger = {
+			FROM = { tag = ENG }
+		}
+		icon = GFX_decision_generic_ignite_civil_war
+		visible = {
+			owns_state = 69
+			is_in_array = { global.political_active_crisis_list = 3}
 		}
 		complete_effect = {
+			ENG = { 
+				country_event = germany.40
+			}
+		}
+		
+	}
+	remove_diplomatic_crisis_test = {
+
+		visible = {
+			is_debug = yes
+
+		}
+
+		complete_effect = {
+			set_temp_variable = { crisis_id = 2}
+			RON_end_crisis = yes
+			#remove_from_array = {
+			#	array = global.political_crisis_list_array
+			#	index = 0
+			#}
+			#remove_from_array = {
+			#	array = global.political_active_crisis_list
+			#	index = 0
+			#} 
+			#remove_from_array = {
+			#	array = global.crisis_receivers 
+			#	index = 0
+			#}
+			#remove_from_array = {
+			#	array = global.crisis_originators
+			#	index = 0  
+			#}
+			#set_variable = {global.crisis_progress^0 = global.crisis_progress^1}
+			#remove_from_array = {
+			#	array = global.crisis_progress
+			#	index = 0
+			#}
 			
+		}
+
+
+	}
+	debug_remove_all_crisis = {
+
+		complete_effect = {
 			clear_array = global.political_crisis_list_array
 			clear_array = global.crisis_originators
 			clear_array = global.crisis_receivers
 			clear_array = global.political_active_crisis_list
-			
-			add_to_array = {
-				array = global.political_active_crisis_list
-				value = 0
-			}
-			add_to_array = {
-				array = global.political_active_crisis_list
-				value = 1
-			}
-			add_to_array = {
-				array = global.crisis_originators 
-				value = RUS
-			}
-			add_to_array = {
-				array = global.crisis_receivers
-				value = ENG
-			}
-			add_to_array = {
-				array = global.political_crisis_list_array
-				value = 0
-			}
-			set_variable = {
-				global.crisis_progress^0 = 20
-			}
-			add_to_array = {
-				array = global.crisis_originators 
-				value = FRA
-			}
-			add_to_array = {
-				array = global.crisis_receivers
-				value = GER
-			}
-			add_to_array = {
-				array = global.political_crisis_list_array
-				value = 1
-			}
-			set_variable = {
-				global.crisis_progress^1 = 35
-			}
-			
+			clear_array = global.crisis_progress
+
+			 
+			#set_variable = {
+			#	global.crisis_progress^0 = 0
+			#}
+			#set_variable = {
+			#	global.crisis_progress^1 = 0
+			#}
+			#set_variable = {
+			#	global.crisis_progress^2 = 0
+			#}
 		}
 	}
-
-	testtttt_yhdspfg = {
-		visible = {
-			is_debug = yes
+	congress_timer_mission = {
+		icon = GFX_decision_eng_trade_unions_support
+		available = {
+			has_country_flag = congress_over_flag
 		}
+
+		days_mission_timeout = 10
+
+		activation = {
+			always = no
+		}
+
+		timeout_effect = {
+			add_political_power = 10
+
+			set_temp_variable = { aggressor_side = var:congress_aggressor_side }
+			set_temp_variable = { defender_side = var:congress_defender_side }  
+			set_temp_variable = { amount = 10 } 
+			RON_subtract_diplo_crisis_progress = yes
+			clear_variable = congress_aggressor_side
+			clear_variable = congress_defender_side
+		}
+
 		complete_effect = {
 			
 		}
 	}
-
-	set_diplo_crisis_to_100 = {
-		visible = {
+	political_crisis_list_add = {
+		visible = { 
 			is_debug = yes
 		}
 		complete_effect = {
-			set_variable = { global.crisis_progress^0 = 100 }
-			set_variable = { global.crisis_progress^1 = 100 }
+			
+			#clear_array = global.political_crisis_list_array
+			#clear_array = global.crisis_originators
+			#clear_array = global.crisis_receivers
+			#clear_array = global.political_active_crisis_list
+			#clear_array = global.crisis_progress
+			set_temp_variable = { crisis_id = 100} 
+			set_temp_variable = { originator = FRA }
+			set_temp_variable = { defender = FRA }
+			set_temp_variable = { progress = 85}
+			RON_initiate_crisis = yes
+			 
 		}
 	}
+	#political_crisis_list_add2 = {
+	#	visible = {
+	#		is_debug = yes
+	#	}
+	#	complete_effect = {
+	#		add_to_array = {
+	#			array = global.political_active_crisis_list
+	#			value = 2
+	#		} 
+	#		add_to_array = {
+	#			array = global.crisis_originators 
+	#			value = USA
+	#		}
+	#		add_to_array = {
+	#			array = global.crisis_receivers
+	#			value = PHI
+	#		}
+	#		add_to_array = {
+	#			array = global.political_crisis_list_array
+	#			value = 2
+	#		}
+	#		set_variable = {
+	#			global.crisis_progress^2 = 60
+	#		}
+	#	}
+	#} 
+	political_crisis_list_add3 = {
+		visible = {
+			is_debug = yes
+		}
 
+		complete_effect = {
+			#set_temp_variable = { crisis_id = 0}
+			#set_temp_variable = { originator = FRA }
+			#set_temp_variable = { defender = GER }
+			#set_temp_variable = { progress = 35}
+			#RON_initiate_crisis = yes
+
+			#set_temp_variable = { crisis_id = 2}
+			#set_temp_variable = { originator = FRA }
+			#set_temp_variable = { defender = RUS }
+			#set_temp_variable = { progress = 80}
+			#RON_initiate_crisis = yes
+ 
+
+			set_temp_variable = { crisis_id = 1} 
+			set_temp_variable = { originator = GER }
+			set_temp_variable = { defender = FRA }
+			set_temp_variable = { progress = 100}
+			RON_initiate_crisis = yes
+		}
+	}
+	military_exercices_on_border = {
+		target_array = global.crisis_receivers
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 0 }
+				}
+				
+			}  
+
+		}
+		available = {
+			FROM = {
+				any_owned_state = {
+					is_controlled_by = FROM
+					any_neighbor_state = {
+						is_fully_controlled_by = ROOT
+						
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						
+					}
+					
+				}
+			}
+		}
+		complete_effect = {
+			army_experience = 5
+			set_temp_variable = { aggressor_side = ROOT }
+			set_temp_variable = { defender_side = FROM }
+			set_temp_variable = { amount = 10}
+			set_temp_variable = { progress = 15 }
+			RON_add_diplo_crisis_progress = yes
+		}
+	}
 	issue_embargo_against_FROM = {
 		target_array = global.crisis_receivers
 
@@ -90,6 +264,15 @@ political_crisis_category = {
 				
 			}  
 
+		}
+		available = {
+			FROM = {
+				all_states = {
+					any_neighbor_state = {
+						is_controlled_by = ROOT
+					}
+				}
+			}
 		}
 		complete_effect = {
 			send_embargo = FROM
@@ -255,6 +438,7 @@ political_crisis_category = {
 
 	}
 	organise_congress_with_FROM = {
+		icon = GFX_decision_eng_trade_unions_support
 		target_array = global.crisis_originators
 		visible = {
 			
@@ -263,35 +447,31 @@ political_crisis_category = {
 			any_of = {
 				array = global.political_active_crisis_list
 				index = i
-			
-				AND = {
+				
+				AND = { 
+					NOT = {
+						check_variable = {global.political_active_crisis_list^i = 3}
+					}
 					check_variable = { global.crisis_receivers^i = ROOT}
 					check_variable = { global.crisis_originators^i = FROM}
-					check_variable = { global.crisis_progress^i > 0 }
+					check_variable = { global.crisis_progress^i > 9 }
 				}
 
 			}  
-
+  
+		}
+		available = {
+			NOT = {
+				has_active_mission = congress_timer_mission
+			}
 		}
 
 		complete_effect = {
-			for_each_loop = {
-				array = global.political_active_crisis_list
-				if = {
-					limit = {
-						AND = {
-							check_variable = { global.crisis_receivers^i = ROOT} 
-							check_variable = { global.crisis_originators^i = FROM}
-						}
-					}
-					subtract_from_variable = {
-						global.crisis_progress^i = 10
-					}
-				}
-			}
+			
+			activate_mission = congress_timer_mission
 		}
 	}
-
+  
 	escalate_diplo_crisis = {
 		target_array = global.crisis_receivers
 		icon = GFX_decision_generic_ignite_civil_war
@@ -319,6 +499,33 @@ political_crisis_category = {
 				target = FROM
 				type = annex_everything
 			}
+			for_each_loop = { 
+				array = global.political_crisis_list_array
+				index = i
+				value = v
+
+				if = {
+					limit = {
+						AND = {
+							check_variable = { global.crisis_originators^i = ROOT}
+							check_variable = { global.crisis_receivers^i = FROM}
+							check_variable = { global.crisis_progress^i > 99 }
+						}
+					}
+					add_to_temp_array = { 
+						array = temp_crisis
+						value = v
+					}
+					
+				}
+			}
+			for_each_loop = {
+				array = temp_crisis
+				value = v
+				set_temp_variable = { crisis_id = v }
+				RON_end_crisis = yes 
+			}
+			
 		}
 
 	}
