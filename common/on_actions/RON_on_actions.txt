@@ -5,6 +5,57 @@ on_actions = {
 				limit = { is_ai = no }
 				create_pie_chart = yes
 			}
+
+			# Exhaustion system
+
+			if = {
+				limit = { has_war = yes }
+				add_to_variable = { war_exhaustion_variable = war_exhaustion_daily }
+			}
+			else_if = {
+				limit = { has_war = no }
+				add_to_variable = { war_exhaustion_variable = peace_exhaustion_daily }
+			}
+
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable < 365 }
+				}
+				add_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = generic_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 365 }
+					check_variable = { war_exhaustion_variable < 730 }
+				}
+				add_ideas = slight_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = generic_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 730 }
+					check_variable = { war_exhaustion_variable < 1095 }
+				}
+				add_ideas = generic_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 1095 }
+				}
+				add_ideas = heavy_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = generic_war_exhaustion_gui
+			}
+			clamp_variable = { var = war_exhaustion_variable min = 0 max = war_exhaustion_max }
 		}
 	}
 	on_release_as_free = {
