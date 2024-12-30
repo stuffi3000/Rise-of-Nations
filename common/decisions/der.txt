@@ -1,27 +1,101 @@
-war_measures = {
-	vdir = { #its a rebel contry so no need to localize for AI
-		icon = RNM_RUS
-		fire_only_once = yes
-		allowed = {
-			original_tag = DER
-		}
-		cost = 100
-		visible = {
-			original_tag = DER
-			has_war_with = ENG
-		}
-		available = {
-			is_subject = no
-			date > 1912.1.1
+DER_dervish_war = {
+
+	# War escalates over time, no matter what 
+	DER_time_based_dervish_war_mission = {  
+		icon = GFX_decision_generic_ignite_civil_war
+		allowed = { 
+			original_tag = DER 
+		}    
+		available = { 
+			hidden_trigger = { always = no }
 		}
 	
-		
-		ai_will_do = {
-			factor = 10000
+		activation = { 
+			has_war = yes 
+			has_global_flag = dervish_war_flag
+			check_variable = { DER.DER_war_escalation_level < 5}
 		}
-		complete_effect = {
-			white_peace = ENG
+		visible = { hidden_trigger = { has_global_flag = dervish_war_flag } }
+		cancel_if_not_visible = yes 
+		is_good = yes 
+		fire_only_once = no
+		selectable_mission = no  
+		days_mission_timeout = DER_war_escalation_length
+		timeout_effect = {
+			DER_escalate_the_war_effect = yes 
+			add_to_variable = { DER.DER_escalation_time_increase_total = 1 }
+			# Increase timer after first six months of war
+			IF = {
+				limit = { check_variable = { DER_war_escalation_length < 170 } }
+				set_variable = { DER_war_escalation_length = 170 }
+			}
 		}
 	} 
+	# Same Mission for Bri'ish - but with correct colors and tooltips
+	ENG_time_based_dervish_war_mission = {  
+		name = DER_time_based_dervish_war_mission
+		icon = GFX_decision_generic_operation # TODO_TA set correct icon   
+		allowed = { 
+			original_tag = ENG
+		}    
+		available = { 
+			hidden_trigger = { always = no }
+		}
+	
+		activation = { 
+			has_war = yes 
+			has_global_flag = dervish_war_flag
+			check_variable = { DER.DER_war_escalation_level < 5}
+		}
+		visible = { hidden_trigger = { has_global_flag = dervish_war_flag } }
+		cancel_if_not_visible = yes 
+		is_good = yes 
+		fire_only_once = no
+		selectable_mission = no  
+		days_mission_timeout = DER_war_escalation_length
+		timeout_effect = {
+			effect_tooltip = {
+				ENG_escalate_the_war_effect = yes 
+				add_to_variable = { DER.DER_escalation_time_increase_total = 1 }
+				# Increase timer after first six months of war
+				IF = {
+					limit = { check_variable = { DER_war_escalation_length < 170 } }
+					set_variable = { DER_war_escalation_length = 170 }
+				}
+			}
+		}
+	} 
+
+	# Whitepeace
+	DER_peace_with_britain = {  
+		icon = GFX_decision_hol_draw_up_staff_plans
+		cost = 15
+		allowed = { 
+			original_tag = DER 
+		}    
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = DER_peace_with_britain_tt
+				check_variable = { DER.DER_war_escalation_level > 4 }
+			}
+		}
+
+		visible = { hidden_trigger = { has_global_flag = dervish_war_flag } }
+		fire_only_once = yes
+
+		complete_effect = {
+			white_peace = ENG
+			effect_tooltip = {
+				ENG = {
+					add_timed_idea = {
+						idea = DER_lost_dervish_war
+						days = 720
+					}
+				}
+			}
+			hidden_effect = {
+				news_event = DNC_DiplomacyNews.15
+			}
+		}
+	}
 }
-	 
