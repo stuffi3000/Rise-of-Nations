@@ -1,4 +1,150 @@
 diplomatic_crisis_category = {
+	
+	measures_against_weapon_smuggling = {
+		icon = ger_military_buildup
+		visible = {
+			original_tag = SER
+			is_in_array = { global.political_active_crisis_list = 2}
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = AUH}
+					check_variable = { global.crisis_receivers^i = SER}
+				}
+			}
+		}
+		cost = 20
+		fire_only_once = yes
+		complete_effect = {
+			
+			set_temp_variable = {crisis_id = 2 }
+			set_temp_variable = { amount = 5}
+			set_temp_variable = { aggressor_side = AUH}
+			set_temp_variable = { defender_side = SER }
+			RON_subtract_diplo_crisis_progress = yes
+		}
+	}
+	July_crisis_condemn_anti_austrian_sentiments = {
+		icon = eng_trade_unions_demand
+		visible = {
+			original_tag = SER
+			is_in_array = { global.political_active_crisis_list = 2}
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = AUH}
+					check_variable = { global.crisis_receivers^i = SER}
+				}
+			}
+		}
+		cost = 10
+		fire_only_once = yes
+		complete_effect = {
+			add_stability = -0.02
+			set_temp_variable = {crisis_id = 2 }
+			set_temp_variable = { amount = 5}
+			set_temp_variable = { aggressor_side = AUH}
+			set_temp_variable = { defender_side = SER }
+			RON_subtract_diplo_crisis_progress = yes
+		}
+	}
+	allow_austrian_police = {
+		icon = hol_exchange_intelligence_data
+		visible = {
+			original_tag = SER
+			is_in_array = { global.political_active_crisis_list = 2}
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = AUH}
+					check_variable = { global.crisis_receivers^i = SER}
+				}
+			}
+		}
+		cost = 50
+		fire_only_once = yes
+		complete_effect = {
+			add_stability = -0.15
+			set_temp_variable = {crisis_id = 2 }
+			set_temp_variable = { amount = 20}
+			set_temp_variable = { aggressor_side = AUH}
+			set_temp_variable = { defender_side = SER }
+			RON_subtract_diplo_crisis_progress = yes
+		}
+	}
+	RON_July_crisis_war = {
+		icon = generic_prepare_civil_war
+		target_trigger = {
+			FROM = {
+				tag = SER
+			}
+		}
+		visible = {
+			original_tag = AUH
+			is_in_array = { global.political_active_crisis_list = 2}
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = SER}
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+			}
+		}
+
+		war_with_on_complete = yes
+		ai_will_do = {
+			fdactor = 100
+		}
+		complete_effect = {
+			country_event = ww1_kuk.49
+		}
+	}
+	RON_July_crisis_timer = {
+		is_good = no
+		icon = generic_ignite_civil_war
+		days_mission_timeout = 10
+		activation = {
+			always = no
+		}
+		timeout_effect = {
+			effect_tooltip = {
+
+				set_temp_variable = { aggressor_side = AUH }
+				set_temp_variable = { defender_side = ROOT }
+				set_temp_variable = { amount = 100}
+				set_temp_variable = { crisis_id = 2}
+				RON_set_diplo_crisis_progress = yes
+			}
+			AUH = {
+				country_event = ww1_kuk.48
+			}
+		}
+		available = {
+
+			hidden_trigger = {
+				always = no
+			}
+		}
+		cancel_trigger = {
+			custom_trigger_tooltip = {
+				tooltip = july_crisis_cancel_tt
+				any_of = {
+					array = global.political_active_crisis_list
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = AUH}
+						check_variable = { global.crisis_receivers^i = ROOT}
+						check_variable = { global.crisis_progress^i < 51 }
+					}
+				}
+			}
+		}
+	}
 	RON_agadir_crisis_send_boat = {
 		visible = {
 			original_tag = GER
@@ -291,8 +437,8 @@ diplomatic_crisis_category = {
 			army_experience = 5
 			set_temp_variable = { aggressor_side = ROOT }
 			set_temp_variable = { defender_side = FROM }
+			
 			set_temp_variable = { amount = 10}
-			set_temp_variable = { progress = 15 }
 			RON_add_diplo_crisis_progress = yes
 		}
 	}
@@ -308,6 +454,9 @@ diplomatic_crisis_category = {
 				index = i
 
 				AND = {
+					NOT = {
+						check_variable = {global.political_active_crisis_list^i = 2}
+					}
 					check_variable = { global.crisis_originators^i = ROOT}
 					check_variable = { global.crisis_receivers^i = FROM}
 					check_variable = { global.crisis_progress^i > 19 }
@@ -370,6 +519,9 @@ diplomatic_crisis_category = {
 				index = i
 
 				AND = {
+					NOT = {
+						check_variable = {global.political_active_crisis_list^i = 2}
+					}
 					check_variable = { global.crisis_originators^i = ROOT}
 					check_variable = { global.crisis_receivers^i = FROM}
 					check_variable = { global.crisis_progress^i > 59 }
@@ -501,7 +653,10 @@ diplomatic_crisis_category = {
 				
 				AND = { 
 					NOT = {
-						check_variable = {global.political_active_crisis_list^i = 3}
+						OR = {
+							check_variable = {global.political_active_crisis_list^i = 3}
+							check_variable = {global.political_active_crisis_list^i = 2}
+						}
 					}
 					check_variable = { global.crisis_receivers^i = ROOT}
 					check_variable = { global.crisis_originators^i = FROM}
@@ -533,6 +688,9 @@ diplomatic_crisis_category = {
 			any_of = {
 				array = global.political_active_crisis_list
 				index = i
+				NOT = {
+					check_variable = {global.political_active_crisis_list^i = 2}
+				}
 
 				AND = {
 					check_variable = { global.crisis_originators^i = ROOT}
