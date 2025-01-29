@@ -954,9 +954,12 @@ focus_tree = {
 		complete_tooltip = { #Annexes France and cores it for Germany. Minus 10 stability and 200 PP. THIS IS ONLY AVAILABLE AFTER A FRENCH SURRENDER
 		}
 		completion_reward = {
-			annex_country = { target = FRA }
-			add_stability = -0.1
-			add_political_power = -200
+			every_state = {
+				limit = {
+					is_core_of = FRA
+				}
+				add_core_of = DDR
+			}
 		}
 	}
 	#Focus for Request Soviet Protection
@@ -1037,7 +1040,7 @@ focus_tree = {
 		id = DDR_reform_the_department_of_external_affairs
 		icon = GFX_goal_generic_position_armies
 		x = 20
-		y = 10
+		y = 11
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = {
@@ -1435,7 +1438,12 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gain national spirit "The Cradle of Communism" which grants them plus 0.5 communism daily and plus 5 stability. MUST ONLY BE AVAILABLE IF THE PERSON HAS COMPLETED THE "DEFY THE SOVIETS" FOCUS.
+		completion_reward = {
+			add_building_construction = {
+				type = industrial_complex
+				level = 3
+				instant_build = yes
+			}
 		}
 	}
 	#Focus for Proclaim An Independent Socialist Germany
@@ -1454,7 +1462,10 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Add 10 stability and remove 100 PP through event where it is a news paper article describing the anouncement of an independent Germany, I can do the text if nedeed.
+		completion_reward = { #Add 10 stability and remove 100 PP through event where it is a news paper article describing the anouncement of an independent Germany, I can do the text if nedeed.
+		add_ideas = SYR_independent_miltias2 
+		add_ideas = RI_decentralisation_of_army2
+		add_country_leader_trait = human_rights_activist
 		}
 	}
 	#Focus for Internationalism
@@ -1471,7 +1482,8 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Add national spirit "Internationalism", basically it lowers tension limit to send volunteers and also increases the recruitable population by 1% also give plus 3 base stability
+		completion_reward = {
+			add_ideas = BRA_ethical_internationalism_idea
 		}
 	}
 	#Focus for Reform The Education System
@@ -1652,7 +1664,8 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gets idea "Socialism in one country" which grants ideology drift defence plus 20 and plus 3 stability. If the person choosez this further on he will only be able to cooperate or stay neutral but no intervening option.
+		completion_reward = {
+			add_ideas = socialism_one_country_idea 
 		}
 	}
 	#Focus for Allow presence of Soviet troops
@@ -1756,8 +1769,9 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #The result will be an event with 3 options, Unificate into a socialist state, a democratic state or a neutral state. The chance for West Germany to agree to Communism is 25%, neutral is 50% and Democratic 75%. If the West Germans break off the negotiations then the GDR will have another event which anounces it and a choice either to stay divided or the second option which bascially declares war onto FRG.
-		}
+completion_reward = {
+		country_event = { id = DDR_leipzig_conference.1 days = 10 } # Event triggering the conference
+	}
 	}
 	#Focus for The German Question
 	focus = {
@@ -1816,8 +1830,10 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Minus 50 PP and increase relations between the Germanies by 40
+		completion_reward = {
+							add_opinion_modifier = { target = GER modifier = medium_increase }
 		}
+		
 	}
 	#Focus for The Direct Approach
 	focus = {
@@ -1884,6 +1900,8 @@ focus_tree = {
 			factor = 1
 		}
 		complete_tooltip = { #Plus 100 PP
+				add_opinion_modifier = { target = FRA modifier = medium_decrease }
+		
 		}
 	}
 	#Focus for Mobilize The Army
@@ -1941,7 +1959,10 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #West Germany gets national spirit "Socialist Agitators" which givea minus 5 stability and plus 0.3 daily communism support.
+		completion_reward = {
+			GER = {
+				add_ideas = underground_communism
+			}
 		}
 	}
 	#Focus for Prepare The Revolution
@@ -1957,8 +1978,18 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Starts a civil war in Germany with a communist rebelion in Bavaria and West Berlin. ONLY AVAILABLE IF COMMUNISM SUPPORT IS 45% OR MORE.
+		available = {
+			GER = {
+			communism > .8
+			}
 		}
+		completion_reward = {
+			declare_war_on = {
+				target = GER
+				type = civil_war
+			}
+		}
+		
 	}
 	#Focus for Our Stance In The Second World
 	focus = {
@@ -2003,7 +2034,7 @@ focus_tree = {
 		id = DDR_state_of_perpentual_warfare
 		icon = GFX_focus_spr_anarchism_knows_no_borders
 		x = 18
-		y = 11
+		y = 12
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { focus = DDR_internationalism }
@@ -2011,7 +2042,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gives a spirit "State of Perpentual Warfare" which gives plus 10 war support and minus 20 to war goal preparation time, also lowers the faction join tension limit. As well as further decrease the tension needed to send volunteers. THIS FOCUS UNLOCKS ALL INTERVENTION FOCUSES BUT BLOCKS ALL COOPERATION ONES.
+		completion_reward = {
+			add_war_support = 0.3
+			hidden_effect = {
+				            declare_war_on = {
+                target = LIE
+                type = annex_everything
+            }			
+			}
+	
 		}
 	}
 	#Focus for State Of Peace And Progress
@@ -2019,7 +2058,7 @@ focus_tree = {
 		id = DDR_state_of_peace_and_progress
 		icon = GFX_focus_por_workers_of_iberia
 		x = 22
-		y = 11
+		y = 12
 		cost = 10
 		available_if_capitulated = yes
 		prerequisite = { focus = DDR_socialism_in_one_country }
@@ -2027,7 +2066,15 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gives a spirit "State of Peace and Progress" which basically gives plus 15 base stability but raises by 50% time needed for war justification and 20% tension needed for volunteers send also minus 2% recuitable population. THIS FOCUS UNLOCKS ALL OF THE COOPERATION FOCUSES BUT BLOCKS ALL INTERVENTION FOCUSES.
+		available = {
+			has_war_with = LIE
+		}
+		completion_reward = {
+			add_stability = 0.3
+			add_war_support = -1
+			hidden_effect = {
+				white_peace = lie
+			}
 		}
 	}
 	#Focus for The American Question
@@ -2043,7 +2090,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Plus 100 PP
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Remain Neutral
@@ -2081,7 +2128,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #USA gets an event where they can choose whether to sign the pact or not, 50 by 50 chance.
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Cooperation With The States
@@ -2106,7 +2153,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #US gets event "GDR proposes cooperation" the chance to accept is 70 which will plus 50 opinion on both sides, also USSR get minus 30 relations with Germany. 30 chance to deny and if denied the opinion will lower by 20
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Propose Economical Cooperation
@@ -2122,7 +2169,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Increase trade relations with US by 30
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Invite American Investors
@@ -2138,7 +2185,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gets national spirit american investors which grants less consumer goods by 20 or something like that, not exactly sure how this works.
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Request Protection
@@ -2155,7 +2202,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #US get event, Germany requests protection which will be accpeted by 60% and if accepeted GDR will get a guarantee by the US and the relations with USSR will decrease by 50. If denied which is 40% then just minus 30 PP and 10 relations with USA and 10 with USSR
+		complete_tooltip = {
 		}
 	}
 	#Focus for Propose A Non-Agression Pact
@@ -2172,7 +2219,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Same as the one in the neutral path
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Denounce The States
@@ -2195,7 +2242,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #War support plus 2, US relations minus 50 and minus 10 all NATO members. How ever plus 10 to all WTO members.
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Prepair A Solution
@@ -2211,7 +2258,7 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gets event where the person decides on the aproac direct or indirect. direct is left, indirect is right
+		complete_tooltip = { 
 		}
 	}
 	#Focus for Infiltrate The States
@@ -2835,7 +2882,17 @@ focus_tree = {
 		ai_will_do = {
 			factor = 1
 		}
-		complete_tooltip = { #Gives new France a spirit called "German Political Assistance" which grants plus 10 base stability, plus 0.5 daily communism and a daily PP modifier.
+		completion_reward = {
+			every_state = {
+				limit = {
+					is_core_of = FRA
+					NOT = {
+						is_core_of = DDR
+					}
+				}
+				transfer_state_to = FRA
+			}
+			puppet = FRA					
 		}
 	}
 	#Focus for Infiltrate France
