@@ -6128,13 +6128,19 @@ remove_from_faction =  GUI
 
 	focus = {
 		id = JAP_Northern
-		x = -3
+		x = 3
 		y = 1
 		relative_position_id = JAP_develop_chinese_resources
 		cost = 10
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
+		}
+		available = {
+			power_balance_value = {
+				id = JAP_interservice_rivalry_bop
+				value > 0.35
+			}
 		}
 		icon = GFX_goal_generic_political_pressure
 		ai_will_do = {
@@ -6171,7 +6177,7 @@ remove_from_faction =  GUI
 
 	focus = {
 		id = JAP_Southern
-		x = 6
+		x = -6
 		y = 0
 		relative_position_id = JAP_Northern
 		prerequisite = { focus = JAP_develop_chinese_Resources }
@@ -6185,11 +6191,10 @@ remove_from_faction =  GUI
 			date < 1949.1.1
 		}
 		available = {
-			OR = {
-				has_completed_focus = JAP_purge_the_kodoha_faction
-				has_completed_focus = JAP_support_the_kodoha_faction
+			power_balance_value = {
+				id = JAP_interservice_rivalry_bop
+				value < -0.35
 			}
-			RON_can_do_focuses_1936 = yes
 		}
 		prerequisite = { focus = JAP_develop_chinese_resources }
 		mutually_exclusive = { focus = JAP_Northern }
@@ -13650,9 +13655,134 @@ remove_from_faction =  GUI
 	}
 
 	focus = {
+		id = JAP_reinforce_the_korean_garrisons
+		icon = GFX_KOR_military_government
+		x = 32
+		y = 7
+
+		cost = 2.7
+
+		ai_will_do = {
+			factor = 1
+		}
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+		available = {
+			has_country_flag = JAP_korea_rebelled_flag
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = JAP_korean_garrisons_war_I1
+				add_idea = JAP_korean_garrisons_war_I2
+			}
+		}
+	}
+
+	focus = {
+		id = JAP_crush_the_rebels
+		icon = GFX_goal_manpower
+		x = 0
+		y = 1
+		relative_position_id = JAP_reinforce_the_korean_garrisons
+
+		prerequisite = {
+			focus = JAP_reinforce_the_korean_garrisons
+		}
+
+		cost = 2.7
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = JAP_korean_garrisons_war_I2
+				add_idea = JAP_korean_garrisons_war_I3
+			}
+		}
+	}
+
+	focus = {
+		id = JAP_end_of_the_uprising
+		icon = GFX_goal_korean_occupation
+		x = 0
+		y = 1
+		relative_position_id = JAP_crush_the_rebels
+
+		prerequisite = {
+			focus = JAP_crush_the_rebels
+		}
+
+		cost = 2.7
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			hidden_trigger = {
+				always = no
+			}
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = JAP_korean_garrisons_war_I3
+				}
+				remove_ideas = JAP_korean_garrisons_war_I3
+				else_if = {
+					limit = {
+						has_idea = JAP_korean_garrisons_war_I2
+					}
+					remove_ideas = JAP_korean_garrisons_war_I2
+				}
+				else = {
+					remove_ideas = JAP_korean_garrisons_war_I1
+				}
+			}
+		}
+	}
+
+	focus = {
 		id = JAP_the_fading_sun
 		icon = GFX_focus_jap_showa_restoration
-		x = 30
+		x = 29
 		y = 7
 
 		cost = 5
@@ -13781,11 +13911,6 @@ focus = {
 	available = {
 		has_idea = great_famine
 	}
-		allow_branch = {
-		NOT = {
-			has_completed_focus = JAP_no_more_famines
-		}
-		}
 	bypass = {
 		has_idea = great_famine
 		OR = { 
@@ -13949,7 +14074,7 @@ focus = {
 	id = JAP_favour_the_army
 	icon = GFX_focus_generic_military_mission
 	x = -2
-	y = 2
+	y = 1
 	relative_position_id = JAP_emergency_land_reform
 	
 	prerequisite = { focus = JAP_emergency_land_reform }
@@ -13987,7 +14112,7 @@ focus = {
 	id = JAP_help_the_people
 	icon = GFX_focus_generic_concessions
 	x = 2
-	y = 2
+	y = 1
 	relative_position_id = JAP_emergency_land_reform
 	
 	prerequisite = { focus = JAP_emergency_land_reform }
