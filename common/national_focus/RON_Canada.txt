@@ -4027,6 +4027,310 @@ focus_tree = {
 		}
 	}
 
+	##########################
+	##### QUEBEC SECTION #####
+	##########################
+
+	focus = {
+		id = CAN_question_of_quebec # Plebiscite on Conscription
+		icon = GFX_goal_generic_national_unity
+
+		bypass = {
+			has_global_flag = que_independence_start
+		}
+
+		x = 38
+		y = 0
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			add_political_power = 60
+			country_event = { id = better_canada.4 }
+		}
+
+		search_filters = {
+			FOCUS_FILTER_POLITICAL
+		}
+	}
+
+	focus = {
+		id = CAN_reason_with_quebec # The Quebec Referendum
+		icon = GFX_goal_tfv_can_compromise_with_quebec
+
+		prerequisite = { focus = CAN_question_of_quebec }
+		mutually_exclusive = { focus = CAN_force_quebec }
+		bypass = {
+			has_global_flag = que_independence_start
+		}
+
+		x = 1
+		y = 1
+		relative_position_id = CAN_question_of_quebec
+		cost = 15
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			set_global_flag = quebecois_conscription
+			random_list = {
+				60 = {
+					CAN = {
+						country_event = { days = 1 id = better_canada.43 } # They were convinced
+						effect_tooltip = {
+							swap_ideas = {
+								remove_idea = quebecois_no_conscription
+								add_idea = quebecois_minor_conscription
+							}
+						}
+					}
+				}
+				40 = {
+					CAN = {
+						country_event = { days = 1 id = better_canada.44 } # They were unconvinced
+					}
+				}
+			}
+		}
+
+		search_filters = {
+			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = CAN_quebec_propaganda #Allons-y.. Canadiens!
+		icon = GFX_goal_generic_propaganda
+
+		prerequisite = { focus = CAN_reason_with_quebec }
+		bypass = {
+			has_global_flag = que_independence_start
+		}
+
+		x = 0
+		y = 1
+		relative_position_id = CAN_reason_with_quebec
+		cost = 15
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			set_global_flag = quebecois_propaganda
+			if = {
+				limit = { has_idea = quebecois_no_conscription }
+				swap_ideas = {
+					remove_idea = quebecois_no_conscription
+					add_idea = quebecois_minor_conscription
+				}
+			}
+			custom_effect_tooltip = quebecois_propaganda_tooltip
+		}
+
+		search_filters = {
+			FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = CAN_force_quebec # Place Quebec under Curfew
+		icon = GFX_goal_tfv_can_forced_quebec_conscription
+
+		prerequisite = { focus = CAN_question_of_quebec }
+		mutually_exclusive = { focus = CAN_reason_with_quebec }
+
+		x = -1
+		y = 1
+		relative_position_id = CAN_question_of_quebec
+		cost = 15
+
+		ai_will_do = {
+			factor = 4
+
+			modifier = {
+				factor = 15
+
+				OR = {
+					has_government = fascism
+					has_government = communism
+				}
+			}
+
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = quebecois_no_conscription
+				add_idea = quebecois_minor_conscription
+			}
+			add_stability = -0.05
+			random_list = {
+				70 = {
+					CAN = {
+						country_event = { id = better_canada.45 } # They were convinced by force
+					}
+				}
+				30 = {
+					CAN = {
+						country_event = { id = better_canada.46 } # They were angered
+					}
+					custom_effect_tooltip = quebec_angry
+					hidden_effect = {
+						set_global_flag = quebecois_independence_movement
+					}
+				}
+			}
+		}
+
+		search_filters = {
+			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = CAN_force_quebec_part_2 # Amend the War Measures Act
+		icon = GFX_goal_generic_attack_allies
+
+		prerequisite = { focus = CAN_force_quebec }
+		bypass = {
+			466 = { NOT = { is_owned_by = CAN } }
+		}
+
+		x = 0
+		y = 1
+		relative_position_id = CAN_force_quebec
+		cost = 15
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			remove_ideas = quebecois_minor_conscription
+			add_stability = -0.1
+			custom_effect_tooltip = quebec_extremely_angry
+			hidden_effect = {
+				set_global_flag = quebecois_independence_movement_angry
+			}
+		}
+
+		search_filters = {
+			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
+		}
+	}
+
+	focus = {
+		id = CAN_rouse_their_hearts # The North Thaws
+		icon = GFX_goal_generic_propaganda
+		prerequisite = { focus = CAN_quebec_propaganda focus = CAN_force_quebec_part_2 }
+
+		x = 1
+		y = 1
+		relative_position_id = CAN_force_quebec_part_2
+		cost = 20
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = canada_tepid_war_response
+				add_idea = canada_minor_war_response
+			}
+		}
+
+		search_filters = {
+			FOCUS_FILTER_MANPOWER
+		}
+	}
+
+	focus = {
+		id = CAN_our_home_and_native_land # Our Home and Native Land
+		icon = GFX_goal_generic_major_war
+		x = 0
+		y = 1
+		relative_position_id = CAN_rouse_their_hearts
+		cost = 25
+
+		prerequisite = { focus = CAN_rouse_their_hearts }
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		complete_tooltip = {
+
+		}
+
+		completion_reward = {
+			custom_effect_tooltip = home_and_native_land_other_effect
+			add_stability = 0.10
+			swap_ideas = {
+				remove_idea = canada_minor_war_response
+				add_idea = canada_vivid_war_response
+			}
+		}
+
+		search_filters = {
+			FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
+		}
+	}
+
 	############################
 	####### AIR SECTION ########
 	############################
@@ -4034,7 +4338,7 @@ focus_tree = {
 	focus = {
 		id = CAN_rcaf_station_borden
 		icon = GFX_goal_generic_build_airforce
-		x = 39
+		x = 42
 		y = 0
 
 		cost = 10
@@ -4499,7 +4803,7 @@ focus_tree = {
 	focus = {
 		id = CAN_halifax_shipyards
 		icon = GFX_goal_generic_construct_naval_dockyard
-		x = 43
+		x = 46
 		y = 0
 
 		cost = 10
@@ -4906,310 +5210,6 @@ focus_tree = {
 				}
 				set_state_flag = CAN_united_shipyards_DY
 			}
-		}
-	}
-
-	##########################
-	##### QUEBEC SECTION #####
-	##########################
-
-	focus = {
-		id = CAN_question_of_quebec # Plebiscite on Conscription
-		icon = GFX_goal_generic_national_unity
-
-		bypass = {
-			has_global_flag = que_independence_start
-		}
-
-		x = 47
-		y = 0
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			add_political_power = 60
-			country_event = { id = better_canada.4 }
-		}
-
-		search_filters = {
-			FOCUS_FILTER_POLITICAL
-		}
-	}
-
-	focus = {
-		id = CAN_reason_with_quebec # The Quebec Referendum
-		icon = GFX_goal_tfv_can_compromise_with_quebec
-
-		prerequisite = { focus = CAN_question_of_quebec }
-		mutually_exclusive = { focus = CAN_force_quebec }
-		bypass = {
-			has_global_flag = que_independence_start
-		}
-
-		x = 1
-		y = 1
-		relative_position_id = CAN_question_of_quebec
-		cost = 15
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			set_global_flag = quebecois_conscription
-			random_list = {
-				60 = {
-					CAN = {
-						country_event = { days = 1 id = better_canada.43 } # They were convinced
-						effect_tooltip = {
-							swap_ideas = {
-								remove_idea = quebecois_no_conscription
-								add_idea = quebecois_minor_conscription
-							}
-						}
-					}
-				}
-				40 = {
-					CAN = {
-						country_event = { days = 1 id = better_canada.44 } # They were unconvinced
-					}
-				}
-			}
-		}
-
-		search_filters = {
-			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
-		}
-	}
-
-	focus = {
-		id = CAN_quebec_propaganda #Allons-y.. Canadiens!
-		icon = GFX_goal_generic_propaganda
-
-		prerequisite = { focus = CAN_reason_with_quebec }
-		bypass = {
-			has_global_flag = que_independence_start
-		}
-
-		x = 0
-		y = 1
-		relative_position_id = CAN_reason_with_quebec
-		cost = 15
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			set_global_flag = quebecois_propaganda
-			if = {
-				limit = { has_idea = quebecois_no_conscription }
-				swap_ideas = {
-					remove_idea = quebecois_no_conscription
-					add_idea = quebecois_minor_conscription
-				}
-			}
-			custom_effect_tooltip = quebecois_propaganda_tooltip
-		}
-
-		search_filters = {
-			FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
-		}
-	}
-
-	focus = {
-		id = CAN_force_quebec # Place Quebec under Curfew
-		icon = GFX_goal_tfv_can_forced_quebec_conscription
-
-		prerequisite = { focus = CAN_question_of_quebec }
-		mutually_exclusive = { focus = CAN_reason_with_quebec }
-
-		x = -1
-		y = 1
-		relative_position_id = CAN_question_of_quebec
-		cost = 15
-
-		ai_will_do = {
-			factor = 4
-
-			modifier = {
-				factor = 15
-
-				OR = {
-					has_government = fascism
-					has_government = communism
-				}
-			}
-
-			modifier = {
-				factor = 0
-				is_historical_focus_on = yes
-			}
-
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = quebecois_no_conscription
-				add_idea = quebecois_minor_conscription
-			}
-			add_stability = -0.05
-			random_list = {
-				70 = {
-					CAN = {
-						country_event = { id = better_canada.45 } # They were convinced by force
-					}
-				}
-				30 = {
-					CAN = {
-						country_event = { id = better_canada.46 } # They were angered
-					}
-					custom_effect_tooltip = quebec_angry
-					hidden_effect = {
-						set_global_flag = quebecois_independence_movement
-					}
-				}
-			}
-		}
-
-		search_filters = {
-			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
-		}
-	}
-
-	focus = {
-		id = CAN_force_quebec_part_2 # Amend the War Measures Act
-		icon = GFX_goal_generic_attack_allies
-
-		prerequisite = { focus = CAN_force_quebec }
-		bypass = {
-			466 = { NOT = { is_owned_by = CAN } }
-		}
-
-		x = 0
-		y = 1
-		relative_position_id = CAN_force_quebec
-		cost = 15
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			remove_ideas = quebecois_minor_conscription
-			add_stability = -0.1
-			custom_effect_tooltip = quebec_extremely_angry
-			hidden_effect = {
-				set_global_flag = quebecois_independence_movement_angry
-			}
-		}
-
-		search_filters = {
-			FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
-		}
-	}
-
-	focus = {
-		id = CAN_rouse_their_hearts # The North Thaws
-		icon = GFX_goal_generic_propaganda
-		prerequisite = { focus = CAN_quebec_propaganda focus = CAN_force_quebec_part_2 }
-
-		x = 1
-		y = 1
-		relative_position_id = CAN_force_quebec_part_2
-		cost = 20
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = canada_tepid_war_response
-				add_idea = canada_minor_war_response
-			}
-		}
-
-		search_filters = {
-			FOCUS_FILTER_MANPOWER
-		}
-	}
-
-	focus = {
-		id = CAN_our_home_and_native_land # Our Home and Native Land
-		icon = GFX_goal_generic_major_war
-		x = 0
-		y = 1
-		relative_position_id = CAN_rouse_their_hearts
-		cost = 25
-
-		prerequisite = { focus = CAN_rouse_their_hearts }
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		complete_tooltip = {
-
-		}
-
-		completion_reward = {
-			custom_effect_tooltip = home_and_native_land_other_effect
-			add_stability = 0.10
-			swap_ideas = {
-				remove_idea = canada_minor_war_response
-				add_idea = canada_vivid_war_response
-			}
-		}
-
-		search_filters = {
-			FOCUS_FILTER_MANPOWER FOCUS_FILTER_STABILITY
 		}
 	}
 }
