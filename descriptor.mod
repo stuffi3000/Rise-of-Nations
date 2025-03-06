@@ -1,4 +1,6 @@
 version="1"
+replace_path="history/states"
+replace_path="map/strategicregions"
 tags={
 	"Alternative History"
 	"Balance"
