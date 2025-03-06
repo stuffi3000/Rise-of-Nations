@@ -1,0 +1,437 @@
+on_actions = {
+	on_capitulation = {
+		effect = {
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = INS
+						NOT = { has_government = fascism }
+					}
+					FROM = {
+						original_tag = INS
+						has_government = fascism
+					}
+					AST = {
+						has_completed_focus = AST_support_indonesian_uprising
+					}
+				}
+				AST = {
+					country_event = { 
+						id = tfv_australia.41 
+						hours = 12
+					}
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = FRA
+						has_government = democratic
+					}
+				}
+				set_cosmetic_tag = FRA_FREE
+			}
+		}
+		
+	}
+
+	#ROOT is subject FROM is previous overlord
+	on_subject_free = {
+		effect = {
+			#make sure Dominions lose the dominion tag
+			if = {
+				limit = {
+					OR = {
+						original_tag = CAN
+						original_tag = RAJ
+						original_tag = MAL
+						original_tag = INS
+						original_tag = JOR
+						original_tag = EGY
+						original_tag = PAL
+						original_tag = SYR
+						original_tag = LEB
+						original_tag = KUW
+					}
+				}
+				#abandon_colony_tag = yes
+			}
+
+			if = {
+				limit = {
+					TAG = INS
+				}
+				retire_country_leader = yes
+			}
+			if = {
+				limit = {
+					TAG = MAL
+				}
+				retire_country_leader = yes
+			}
+
+			if = {
+				limit = {
+					has_idea = RAJ_marginalized_muslim_community_happy
+				}
+				RAJ = {
+					release = PAK
+				}
+			}
+
+			if = {
+				limit = {
+					original_tag = RAJ
+				}				
+				remove_ideas = {
+					RAJ_quit_india_movement
+					RAJ_marginalized_muslim_community
+					RAJ_marginalized_muslim_community_angry
+					RAJ_marginalized_muslim_community_happy
+					RAJ_princely_states
+					RAJ_princely_states_donations
+					RAJ_princely_states_donations_troops
+				}
+			}
+		}
+	}
+
+	#ROOT is subject FROM is overlord
+	on_subject_autonomy_level_change = {
+		effect = {
+			#Achievement
+			if = {
+				limit = { tag = EGY }
+				if = {
+					limit = { has_autonomy_state = autonomy_colony }
+					set_country_flag = achievement_EGY_colony
+					log = EGY_colony
+				}
+				if = {
+					limit = { has_autonomy_state = autonomy_dominion }
+					set_country_flag = achievement_EGY_dominion
+					log = EGY_dominion
+				}
+			}
+
+			#Add to commonwealth tech group
+			if = {
+				limit = {
+					OR = {
+						has_autonomy_state = autonomy_colony
+						has_autonomy_state = autonomy_dominion
+					}
+					OVERLORD = { is_in_tech_sharing_group = commonwealth_research }
+				}
+				add_to_tech_sharing_group = commonwealth_research				
+			}
+
+			if = {
+				limit = {
+					tag = RAJ
+					has_autonomy_state = autonomy_dominion
+				}
+				set_politics = {
+					ruling_party = democratic
+					elections_allowed = yes
+				}
+				add_popularity = {
+					ideology = neutrality
+					popularity = -1
+				}
+			}
+		}
+	}
+
+	#ROOT is subject FROM is overlord
+	on_subject_annexed = {
+
+	}
+
+	#used when puppeting in a peace conference
+	#ROOT = nation being puppeted, FROM = overlord
+	on_puppet = {
+		effect = {
+			if = {
+				limit = { 
+					AND = { 
+						OR = {
+							TAG = SOV
+							TAG = GER
+						}
+						SOV = { has_idea = SOV_molotov_ribbentrop_pact }
+						}
+					 }
+				SOV = { remove_ideas = SOV_molotov_ribbentrop_pact } #the pact is OFF if one of them is a puppet
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = USA
+						is_subject_of = ENG
+						}
+					 }
+				set_cosmetic_tag = USA_UK
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = USA
+						is_subject_of = SAF
+						SAF = { has_idea = SAF_king_edward }
+						}
+					 }
+				set_cosmetic_tag = USA_SAF_EDW
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = UKR
+						is_subject_of = GER
+						GER = { has_government = fascism }
+						}
+					 }
+				set_cosmetic_tag = UKR_GER
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = UKR
+						is_subject_of = SOV
+						SOV = { has_government = communism }
+						}
+					 }
+				set_cosmetic_tag = UKR_SOV
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = BLR
+						is_subject_of = GER
+						GER = { has_government = fascism }
+						}
+					 }
+				set_cosmetic_tag = BLR_GER
+			}
+			if = {
+				limit = {
+					AND = {
+						TAG = CZE
+						SLO = { exists = yes }
+					}
+				}
+				CZE = { set_cosmetic_tag = CZE_ONLY } #cosmetic tag for CZE if Slovakia exists
+			}
+			if = {
+				limit = {
+					tag = CAN
+					NOT = {
+						FROM = {
+							tag = ENG
+						}
+					}
+				}
+				CAN = {
+					abandon_colony_tag = yes
+				}
+			}
+			if = {
+				limit = {
+					tag = CAN
+					FROM = {
+						tag = ENG
+					}
+				}
+				CAN = {
+					set_cosmetic_tag = CAN_UK
+				}
+			}
+		}
+	}
+
+	#used when puppeting through the occupied territories menu during peace time (or when releasing from non-core but owned territory, f.e. Britain releasing Egypt)
+	#ROOT = nation being released, FROM = overlord
+	on_release_as_puppet = {
+		effect = {
+			if = {
+				limit = { 
+					AND = { 
+						TAG = USA
+						is_subject_of = ENG
+					}
+				}
+				set_cosmetic_tag = USA_UK
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = UKR
+						is_subject_of = GER
+						GER = { has_government = fascism }
+					}
+				}
+				set_cosmetic_tag = UKR_GER
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = UKR
+						is_subject_of = SOV
+						SOV = { has_government = communism }
+					}
+				}
+				set_cosmetic_tag = UKR_SOV
+			}
+			if = {
+				limit = { 
+					AND = { 
+						TAG = BLR
+						is_subject_of = GER
+						GER = { has_government = fascism }
+					}
+				}
+				set_cosmetic_tag = BLR_GER
+			}
+			if = {
+				limit = {
+					AND = {
+						TAG = CZE
+						SLO = { exists = yes }
+					}
+				}
+				CZE = { set_cosmetic_tag = CZE_ONLY } #cosmetic tag for CZE if Slovakia exists
+			}
+			if = {
+				limit = {
+					tag = CAN
+					NOT = {
+						FROM = {
+							tag = ENG
+						}
+					}
+				}
+				CAN = {
+					abandon_colony_tag = yes
+				}
+			}
+			if = {
+				limit = {
+					tag = CAN
+					FROM = {
+						tag = ENG
+					}
+				}
+				CAN = {
+					set_cosmetic_tag = CAN_UK
+				}
+			}
+		}
+	}
+
+	#ROOT is free nation FROM is releaser
+	on_release_as_free = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						original_tag = CAN
+						original_tag = RAJ
+						original_tag = MAL
+						original_tag = INS
+					}
+				}
+				abandon_colony_tag = yes
+			}
+			if = {
+				limit = {
+					AND = {
+						TAG = CZE
+						SLO = { exists = yes }
+					}
+				}
+				CZE = { set_cosmetic_tag = CZE_ONLY } #cosmetic tag for CZE if Slovakia exists
+			}
+			if = {
+				limit = {
+					tag = CAN
+					NOT = {
+						FROM = {
+							tag = ENG
+						}
+					}
+				}
+				CAN = {
+					abandon_colony_tag = yes
+				}
+			}
+			if = {
+				limit = {
+					tag = CAN
+					FROM = {
+						tag = ENG
+					}
+				}
+				CAN = {
+					set_cosmetic_tag = CAN_UK
+				}
+			}
+		}
+	}
+
+	#ROOT is free nation FROM is releaser
+	on_release_as_free = { 
+
+		# Making sure Quebec City becomes the Capital of Quebec
+		effect = {
+			IF = {
+				limit = {
+					ROOT = {
+						tag = QUE
+						owns_state = 468
+					}
+				}
+				468 = {
+					set_victory_points = {
+						province = 4345
+						value = 15
+					}
+
+					set_victory_points = {
+						province = 12149
+						value = 20
+					}
+				}	
+			}
+		}
+
+	}
+
+	# ROOT is the nation being released, FROM is the overlord
+	on_release_as_puppet = {
+
+		# Making sure Quebec City becomes the Capital of Quebec
+	    effect = {
+	    	IF = {
+	    		limit = {
+	    			ROOT = {
+	    				tag = QUE
+	    				owns_state = 468
+	    			}
+	    		}
+	    		468 = {
+	    			set_victory_points = {
+	    				province = 4345
+	    				value = 15
+	    			}
+
+	    			set_victory_points = {
+	    				province = 12149
+	    				value = 20
+	    			}
+	    		}	
+	    	}
+	    }
+	}
+	
+
+}

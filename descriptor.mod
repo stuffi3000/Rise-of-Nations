@@ -1,4 +1,6 @@
 version="1"
+replace_path="common/ai_strategy"
+replace_path="common/on_actions"
 replace_path="history/states"
 replace_path="map/strategicregions"
 tags={
