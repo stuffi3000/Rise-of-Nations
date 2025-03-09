@@ -15,6 +15,7 @@ replace_path="events"
 replace_path="gfx/loadingscreens"
 replace_path="history/states"
 replace_path="map/strategicregions"
+replace_path="portraits"
 tags={
 	"Alternative History"
 	"Balance"
