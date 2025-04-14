@@ -1,0 +1,845 @@
+focus_tree = {
+	id = France_WW1
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = FRA
+			date > 1909.12.31
+			date < 1919.1.1
+		}
+	}
+	default = no
+
+	shared_focus = ww1_free_market
+	shared_focus = ww1_planned_economy
+	shared_focus = ww1_army_efforts
+	shared_focus = ww1_air_force
+	shared_focus = ww1_new_navy
+
+	focus = {
+		id = FRA_diplomatic_effort
+		icon = GFX_goal_generic_intelligence_exchange
+		cost = 10
+		x = 11
+		y = 0
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	focus = {
+		id = FRA_entente_diplomacy
+		icon = GFX_goal_generic_intelligence_exchange
+		cost = 10
+		prerequisite = {
+			focus = FRA_diplomatic_effort
+		}
+		x = -4
+		y = 1
+		relative_position_id = FRA_diplomatic_effort
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	focus = {
+		id = FRA_support_italian_claim
+		icon = GFX_goal_generic_position_armies
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		mutually_exclusive = {
+			focus = FRA_give_ita_savoy_corsica
+		}
+		x = -7
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		available = {
+			#date > 1914.7.1
+			NOT = {
+			#	has_global_flag = ITA_accept_deal_fra
+				has_war_with = ITA
+				is_in_faction_with = ITA
+			}
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.1
+			ITA = { country_event = { id = ww1_france.101 days = 1 } }
+		}
+	}
+	focus = {
+		id = FRA_give_ita_savoy_corsica
+		icon = GFX_goal_generic_dangerous_deal
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		mutually_exclusive = {
+			focus = FRA_support_italian_claim
+		}
+		x = -5
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		available = {
+			#date > 1914.7.1
+			NOT = {
+			#	has_global_flag = ITA_accept_deal_fra
+				has_war_with = ITA
+				is_in_faction_with = ITA
+			}
+		}
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			ITA = { country_event = { id = ww1_france.2 days = 1 } }
+			#country_event = ww1_france.2
+		}
+	}
+	#focus = {
+	#	id = FRA_invite_italy
+	#	icon = GFX_goal_generic_major_alliance
+	#	cost = 10
+	#	prerequisite = {
+	#		focus = FRA_give_ita_savoy_corsica
+	#		focus = FRA_support_italian_claim
+	#	}
+	#	x = 1
+	#	y = 1
+	#	relative_position_id = FRA_support_italian_claim
+	#	available = {
+	#		date > 1915.1.1
+	#		has_global_flag = IT_accept_deal_1
+	#		NOT = {
+	#			has_global_flag = IT1_deal_FRA
+	#		}
+	#		NOT = {
+	#			has_global_flag = IT_decline_deal_1
+	#		}
+	#	}
+	#	ai_will_do = {
+	#		factor = 10
+	#	}
+	#	completion_reward = {
+	#		country_event = ww1_france.3
+	#	}
+	#}
+	focus = {
+		id = FRA_send_troops_serbia
+		icon = GFX_goal_generic_military_deal
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		x = -3
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		available = {
+			#date > 1914.8.10
+			#has_global_flag = franz_dead
+			has_war_with = AUH
+			is_in_faction_with = SER
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.4
+			SER = {
+				country_event = ww1_france.4
+			}
+		}
+	}
+	focus = {
+		id = FRA_allied_blockade_greece
+		icon = GFX_goal_generic_trade
+		cost = 10
+		prerequisite = {
+			focus = FRA_send_troops_serbia
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_send_troops_serbia
+		available = {
+			#date > 1916.10.1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.5
+			set_global_flag = greece_naval_blockade
+			hidden_effect = {
+				news_event = { hours = 6 id = endsieg_news.1899 }
+			}
+		}
+	}
+	focus = {
+		id = FRA_invite_greece
+		icon = GFX_goal_generic_major_alliance
+		cost = 10
+		prerequisite = {
+			focus = FRA_allied_blockade_greece
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_allied_blockade_greece
+		available = {
+			#date > 1917.1.1
+			has_global_flag = constantine_abdicates
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.6
+			GRE = {
+				country_event = generic.5
+			}
+		}
+	}
+	focus = {
+		id = FRA_support_greece
+		icon = GFX_goal_generic_positive_trade_relations
+		cost = 10
+		prerequisite = {
+			focus = FRA_invite_greece
+		}
+		x = -1
+		y = 1
+		relative_position_id = FRA_invite_greece
+		available = {
+			#date > 1917.1.1
+			is_in_faction_with = GRE
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.7
+			send_equipment = {
+				equipment = infantry_equipment
+				amount = 7000
+				target = GRE
+			}
+		}
+	}
+	focus = {
+		id = FRA_troops_greece
+		icon = GFX_goal_generic_allies_build_infantry
+		cost = 10
+		prerequisite = {
+			focus = FRA_invite_greece
+		}
+		x = 1
+		y = 1
+		relative_position_id = FRA_invite_greece
+		available = {
+			#date > 1917.1.1
+			is_in_faction_with = GRE
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			GRE = {
+				country_event = ww1_france.8
+			}
+		}
+	}
+	focus = {
+		id = FRA_pro_russia
+		icon = GFX_goal_generic_improve_relations
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		x = -1
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			#country_event = ww1_france.16
+			FRA = {
+				add_opinion_modifier = { target = RUS modifier = russia_friend }
+			}
+			add_political_power = 50
+		}
+	}
+	focus = {
+		id = FRA_russian_reinforcement
+		icon = GFX_goal_generic_small_arms
+		cost = 10
+		prerequisite = {
+			focus = FRA_pro_russia
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_pro_russia
+		available = {
+			has_war = yes
+			is_in_faction_with = RUS
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			#country_event = ww1_france.10
+			custom_effect_tooltip = FRA_russian_reinforcement_tt
+			hidden_effect = {
+				load_oob = FRA_WW1_russian_expeditionary_force
+			}
+			add_manpower = 50000
+		}
+	}
+	focus = {
+		id = FRA_convince_romania
+		icon = GFX_goal_generic_position_armies
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		x = 1
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		available = {
+			#date > 1915.1.1
+			#AND = {
+			#	OR = {
+			#		RUS = {
+			#			controls_state = 78
+			#		}
+			#	}
+			#}
+			RUS = {
+				controls_state = 199
+				controls_state = 78
+				surrender_progress < 0.10
+			}
+		}
+		ai_will_do = {
+			factor = 8
+		}
+		completion_reward = {
+			#country_event = ww1_france.11
+			ROM = { country_event = { id = ww1_france.1101 days = 1 } }
+		}
+	}
+	focus = {
+		id = FRA_invite_romania
+		icon = GFX_goal_generic_major_alliance
+		cost = 10
+		prerequisite = {
+			focus = FRA_convince_romania
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_convince_romania
+		available = {
+			#date > 1916.3.1
+			has_global_flag = ROM_accept_deal
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.12
+			ROM = {
+				country_event = generic.5
+			}
+		}
+
+	}
+	#focus = {
+	#	id = FRA_invite_britain
+	#	icon = GFX_goal_generic_major_alliance
+	#	cost = 10
+	#	prerequisite = {
+	#		focus = FRA_entente_diplomacy
+	#	}
+	#	x = 3
+	#	y = 1
+	#	relative_position_id = FRA_entente_diplomacy
+	#	available = {
+	#		date > 1914.1.1
+	#		has_global_flag = franz_dead
+	#		has_global_flag = back_france
+	#		NOT = { has_global_flag = british_neutrality }
+	#		NOT = { has_global_flag = rupprecht_plan }
+	#		NOT = { has_global_flag = kronprinz_plan }
+	#	}
+	#	bypass = {
+	#		is_in_faction_with = ENG
+	#	}
+	#	ai_will_do = {
+	#		factor = 10
+	#	}
+	#	completion_reward = {
+	#		country_event = ww1_france.13
+	#	}
+	#}
+	focus = {
+		id = FRA_britain_reinforcement
+		icon = GFX_goal_generic_allies_build_infantry
+		cost = 10
+		prerequisite = {
+			focus = FRA_entente_diplomacy
+		}
+		x = 3
+		y = 1
+		relative_position_id = FRA_entente_diplomacy
+		available = {
+			is_in_faction_with = ENG
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.14
+			add_manpower = 750000
+		}
+	}
+	focus = {
+		id = FRA_european_diplomacy
+		icon = GFX_goal_generic_intelligence_exchange
+		cost = 10
+		prerequisite = {
+			focus = FRA_diplomatic_effort
+		}
+		x = 1
+		y = 1
+		relative_position_id = FRA_diplomatic_effort
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	focus = {
+		id = FRA_anti_german_propaganda
+		icon = GFX_goal_generic_forceful_treaty
+		cost = 10
+		prerequisite = {
+			focus = FRA_european_diplomacy
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_european_diplomacy
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			#country_event = ww1_france.15
+			FRA = {
+				add_opinion_modifier = { target = GER modifier = anti_german }
+			}
+			add_political_power = 50
+		}
+	}
+
+	focus = {
+		id = FRA_agadir_crisis
+		icon = GFX_goal_generic_position_armies
+		cost = 10
+		prerequisite = {
+			focus = FRA_anti_german_propaganda
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_anti_german_propaganda
+		available = {
+			#date > 1910.10.1
+		}
+		bypass = {
+			#OR = {
+			#	has_global_flag = agadir_crisis
+			#	has_global_flag = welcome_event_INT
+			#}
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = { #Idk what this focus should do, maybe use the crisis mechanic made by Ant ig?
+			#country_event = ww1_france.17
+		}
+	}
+	focus = {
+		id = FRA_prepare_for_war
+		icon = GFX_goal_generic_small_arms
+		cost = 10
+		prerequisite = {
+			focus = FRA_agadir_crisis
+		}
+		x = -1
+		y = 1
+		relative_position_id = FRA_agadir_crisis
+		available = {
+			#date > 1913.1.1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.18
+			add_manpower = 250000
+			add_political_power = 150
+		}
+	}
+	focus = {
+		id = FRA_defend_border
+		icon = GFX_goal_generic_construct_military
+		cost = 10
+		prerequisite = {
+			focus = FRA_agadir_crisis
+		}
+		prerequisite = {
+			focus = FRA_agadir_crisis
+		}
+		x = 1
+		y = 1
+		relative_position_id = FRA_agadir_crisis
+		available = {
+			#date > 1912.1.1
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.19
+			17 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 698
+						instant_build = yes
+					}
+				}
+			}
+			754 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 521
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 11516
+						instant_build = yes
+					}
+				}
+			}
+			755 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 5291
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 1664
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = bunker
+						level = 3
+						province = 3560
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = FRA_sacred_union
+		icon = GFX_goal_generic_national_unity
+		cost = 10
+		prerequisite = {
+			focus = FRA_defend_border
+			focus = FRA_prepare_for_war
+		}
+		x = 1
+		y = 1
+		relative_position_id = FRA_prepare_for_war
+		available = {
+			#has_global_flag = franz_dead
+			has_war_with = GER
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.20
+			add_stability = 0.05
+			add_political_power = 75
+		}
+	}
+	focus = {
+		id = FRA_defend_colonies
+		icon = GFX_goal_generic_construct_military
+		cost = 10
+		prerequisite = {
+			focus = FRA_diplomatic_effort
+		}
+		x = 4
+		y = 1
+		relative_position_id = FRA_diplomatic_effort
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			#country_event = ww1_france.21
+			539 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = trench
+						level = 3
+						province = 5139
+						instant_build = yes
+					}
+					add_building_construction = {
+						type = trench
+						level = 3
+						province = 8193
+						instant_build = yes
+					}
+				}
+			}
+			268 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = trench
+						level = 3
+						province = 8124
+						instant_build = yes
+					}
+				}
+			}
+			272 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = trench
+						level = 3
+						province = 4948
+						instant_build = yes
+					}
+				}
+			}
+			543 = {
+				if = {
+					limit = { is_controlled_by = FRA }
+					add_building_construction = {
+						type = trench
+						level = 3
+						province = 5222
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+	focus = {
+		id = FRA_volunteers_1
+		icon = GFX_goal_generic_allies_build_infantry
+		cost = 10
+		prerequisite = {
+			focus = FRA_defend_colonies
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_defend_colonies
+		available = {
+			#date > 1914.1.1
+			#has_global_flag = franz_dead
+			has_war_with = GER
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.22
+			add_manpower = 75000
+		}
+	}
+	focus = {
+		id = FRA_volunteers_2
+		icon = GFX_goal_generic_allies_build_infantry
+		cost = 10
+		prerequisite = {
+			focus = FRA_volunteers_1
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_volunteers_1
+		available = {
+			#date > 1915.1.1
+			#has_global_flag = franz_dead
+			has_war_with = GER
+			surrender_progress > 0.025
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.23
+			add_manpower = 75000
+		}
+	}
+	focus = {
+		id = FRA_volunteers_3
+		icon = GFX_goal_generic_allies_build_infantry
+		cost = 10
+		prerequisite = {
+			focus = FRA_volunteers_2
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_volunteers_2
+		available = {
+			#date > 1916.1.1
+			#has_global_flag = franz_dead
+			has_war_with = GER
+			surrender_progress > 0.05
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			#country_event = ww1_france.24
+			add_manpower = 75000
+		}
+	}
+	focus = {
+		id = FRA_political_effort
+		icon = GFX_goal_tripartite_pact
+		cost = 10
+		x = 18
+		y = 0
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	focus = {
+		id = FRA_democratism
+		icon = GFX_goal_support_democracy
+		cost = 10
+		prerequisite = {
+			focus = FRA_political_effort
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_political_effort
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			add_ideas = liberty_ethos_focus
+		}
+	}
+	focus = {
+		id = FRA_free_speech
+		icon = GFX_goal_generic_propaganda
+		cost = 10
+		prerequisite = {
+			focus = FRA_democratism
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_democratism
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+	focus = {
+		id = FRA_unity
+		icon = GFX_goal_generic_national_unity
+		cost = 10
+		prerequisite = {
+			focus = FRA_free_speech
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_free_speech
+		available = {
+			has_war = yes
+		}
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			#country_event = ww1_france.26
+			add_stability = 0.05
+			add_war_support = 0.075
+		}
+	}
+	focus = {
+		id = FRA_war_effort
+		icon = GFX_goal_generic_construct_mil_factory
+		cost = 10
+		prerequisite = {
+			focus = FRA_unity
+		}
+		x = 0
+		y = 1
+		relative_position_id = FRA_unity
+		available = {
+			has_war = yes
+		}
+		ai_will_do = {
+			factor = 9
+		}
+		completion_reward = {
+			#country_event = ww1_france.27
+			add_political_power = 25
+			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+					}
+				}
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+}
