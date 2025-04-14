@@ -1,0 +1,179 @@
+focus_tree = {
+    id = Brazil_DNC
+    country = {
+        factor = 0
+        modifier = {
+            add = 10
+            original_tag = BRA
+            date < 1910.1.1
+        }
+    }
+
+    default = no
+    reset_on_civilwar = no
+
+    continuous_focus_position = {
+        x = 100
+        y = 1750
+    }
+
+    #Shortcut to jump to the Political starting focus
+    shortcut = {
+        name = BRA_DNC_political_sc
+        target = BRA_cafe_con_leite_goverment
+        scroll_wheel_factor = 0.75
+    }
+
+    # ===  The Cafe com Leite Gouverment === #
+    focus = {
+        id = BRA_cafe_con_leite_government
+        desc = BRA_cafe_con_leite_government_desc 
+        icon = GFX_goal_generic_political_reform
+        x = 5
+        y = 1
+        cost = 5
+        completion_reward = {
+            add_stability = 0.05
+            add_political_power = 100
+            country_event = {id = dnc_brazil.1 day = 1}
+        }
+
+    }
+
+    #=== Debates at the Café Central ===#
+    focus = {
+    id = BRA_debates_at_cafe_central
+    icon = GFX_goal_generic_political_reform
+    x = 5
+    y = 2
+    cost = 5
+    prerequisite = {
+        focus = BRA_cafe_con_leite_government
+    }
+    available = {
+        has_country_flag = liberal_debate_ongoing
+    }
+    continue_if_unavailable = yes
+    visible = {
+        has_country_flag = liberal_debate_ongoing
+    }
+    desc = BRA_debates_at_cafe_central_desc
+
+        completion_reward = {
+            add_political_power = 50
+            add_popularity = {
+            ideology = democratic
+            popularity = 0.05
+            }
+            add_stability = 0.02
+            set_country_flag = debates_started
+            country_event = { id = dnc_brazil.3 days = 2 } 
+        }
+    }
+
+    #=== Constitutional Reforms ===#
+    focus = {
+    id = BRA_constitutional_reform
+    icon = GFX_goal_generic_political_reform
+    x = 5
+    y = 3
+    cost = 5
+
+        prerequisite = {
+            focus = BRA_debates_at_cafe_central
+        }
+
+        desc = BRA_constitutional_reform_desc
+
+        completion_reward = {
+            add_stability = 0.10
+            add_daily_political_power = 0.15
+            set_country_flag = constitutional_reform_started
+
+            if = {
+                limit = {
+                    has_country_flag = voice_debates_flourish
+                }
+            country_event = { id = dnc_brazil.4 days = 2 }
+            }
+            if = {
+                limit = {
+                has_country_flag = voice_guide_public_opinion
+                }
+                country_event = { id = dnc_brazil.5 days = 2 }
+            }
+        }
+    }
+
+    #=== Strenght the Republic ===#
+    focus = {
+    id = BRA_strengthen_the_republic
+    icon = GFX_goal_generic_constitution
+    x = 3
+    y = 4
+    cost = 10
+
+        prerequisite = {
+          
+        }
+
+        available = {
+            has_country_flag = prepare_constitutional_reform
+            has_completed_focus = BRA_constitutional_reform
+        }
+
+        continue_if_invalid = yes
+        cancel_if_invalid = no
+
+        completion_reward = {
+            add_stability = 0.05
+            add_daily_political_power = 0.10
+            set_country_flag = republic_strengthened
+        }
+
+        ai_will_do = {
+            factor = 1
+        }
+    }
+
+    #=== Royalist Current ===#
+    focus = {
+    id = BRA_the_royalist_current
+    icon = GFX_goal_monarchy
+    x = 7
+    y = 4
+    cost = 10
+
+        prerequisite = {
+            
+        }
+
+        available = {
+            has_country_flag = whispers_of_the_past
+            OR = {
+                has_completed_focus = BRA_constitutional_reform
+                has_completed_focus = BRA_cafe_con_leite_government
+                }
+            }
+
+
+        continue_if_invalid = yes
+        cancel_if_invalid = no
+
+        completion_reward = {
+            add_stability = 0.02
+            add_popularity = {
+            ideology = neutrality
+            popularity = 0.05
+            }
+            set_country_flag = royalist_movement_active
+            add_ideas = BRA_royalist_current_spirit
+        }
+
+        ai_will_do = {
+            factor = 0.2
+        }
+    }
+
+
+}
