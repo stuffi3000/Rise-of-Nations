@@ -1,0 +1,444 @@
+focus_tree = {
+	id = Ukraine_WW1
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = UKR
+			date > 1909.12.31
+			date < 1933.1.1
+		}
+	}
+	continuous_focus_position = { x = 30 y = 2000 }
+	
+	default = no
+
+	shared_focus = ww1_free_market
+	shared_focus = ww1_planned_economy
+	shared_focus = ww1_army_efforts
+	shared_focus = ww1_air_force
+	shared_focus = ww1_new_navy
+	
+	focus = {
+		id = UKR_go_hetamate
+		icon = GFX_goal_UKR_hetamate
+		cost = 10
+		x = 5
+		y = 0
+		available_if_capitulated = yes
+		mutually_exclusive = { focus = UKR_go_white }
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 999
+				OR = {
+					has_global_flag = UKR_hetamate_BR
+					is_historical_focus_on = yes
+				}
+			}
+		}
+		completion_reward = {
+			add_political_power = 120
+			add_popularity = { ideology = neutrality popularity = 0.15 }
+		}
+	}
+	focus = {
+		id = UKR_go_white
+		icon = GFX_goal_WIP
+		cost = 10
+		x = 15
+		y = 0
+		available_if_capitulated = yes
+		mutually_exclusive = { focus = UKR_go_hetamate }
+		ai_will_do = {
+			factor = 10
+			modifier = {
+				factor = 999
+				OR = {
+					has_global_flag = UKR_anarchist_BR
+					has_global_flag = UKR_sd_BR
+					has_global_flag = UKR_nationalist_BR
+				}
+			}
+		}
+		completion_reward = {
+			add_political_power = 120
+			set_politics = { ruling_party = social_conservative elections_allowed = no }
+			add_popularity = { ideology = social_conservative popularity = 0.7 }
+		}
+	}
+	#Hetamate Branch 
+	focus = {
+		id = UKR_conscripts
+		icon = GFX_focus_generic_manpower
+		prerequisite = { focus = UKR_go_hetamate }
+		cost = 10
+		x = -1
+		y = 1
+		relative_position_id = UKR_go_hetamate
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			load_oob = "UKR_hetamate"
+		}
+	}
+	focus = {
+		id = UKR_german_advisors
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_go_hetamate }
+		cost = 10
+		x = 1
+		y = 1
+		relative_position_id = UKR_go_hetamate
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_ideas = german_advisors
+		}
+	}
+	focus = {
+		id = UKR_german_invest
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_conscripts }
+		prerequisite = { focus = UKR_german_advisors }
+		cost = 10
+		x = 1
+		y = 1
+		relative_position_id = UKR_conscripts
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = german_advisors
+				add_idea = UKR_deutche_help_idea
+			}
+		}
+	}
+	#Elections
+	focus = {
+		id = UKR_elections_getyear_1
+		icon = GFX_goal_UKR_elections
+		prerequisite = { focus = UKR_go_white }
+		cost = 0.8
+		x = 0
+		y = 1
+		relative_position_id = UKR_go_white
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			country_event = ww1_ukraine.7
+		}
+	}
+	#Anarchist
+	focus = {
+		id = UKR_proclaim_makhnovina_free_territory
+		icon = GFX_goal_UKR_anarchist_control
+		prerequisite = { focus = UKR_elections_getyear_1 }
+		cost = 10
+		x = 0
+		y = 1
+		relative_position_id = UKR_elections_getyear_1
+		available_if_capitulated = yes
+		available = {
+			has_country_flag = UKR_anarchists_won_first
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_war_support = 0.1
+			remove_state_core = 89
+			remove_state_core = 91
+			remove_state_core = 93
+			remove_state_core = 199
+			remove_state_core = 201
+			remove_state_core = 198
+		}
+	}
+	focus = {
+		id = UKR_integrate_west
+		icon = GFX_goal_UKR_reintegrate_west
+		prerequisite = { focus = UKR_proclaim_makhnovina_free_territory }
+		cost = 14.4
+		x = 0
+		y = 1
+		relative_position_id = UKR_proclaim_makhnovina_free_territory
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_state_core = 89
+			add_state_core = 91
+			add_state_core = 93
+			add_state_core = 199
+			add_state_core = 201
+			add_state_core = 198
+		}
+	}
+	focus = {
+		id = UKR_new_anarchists_russia
+		icon = GFX_goal_anarchism
+		prerequisite = { focus = UKR_integrate_west }
+		prerequisite = { focus = UKR_leave_great_war }
+		cost = 10
+		x = 0
+		y = 2
+		relative_position_id = UKR_integrate_west
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			every_state = {
+				limit = { OR = { is_core_of = WHR is_core_of = SOV is_core_of = LIT is_core_of = LAT is_core_of = EST is_core_of = BLR is_core_of = FIN } }
+				add_core_of = UKR
+			}
+			set_cosmetic_tag = UKR_anarcho_russia
+			declare_war_on = {
+				target = WHR
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = SOV
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = FNR
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = FIN
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = LIT
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = LAT
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = EST
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = TRA
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = KUB
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = UBD
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = BLR
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = ARM
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = AZR
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = GEO
+				type = annex_everything
+			}
+		}
+	}
+	#Social Democracy
+	focus = {
+		id = UKR_the_new_sd_gov
+		icon = GFX_goal_UKR_social_democrats
+		prerequisite = { focus = UKR_elections_getyear_1 }
+		cost = 10
+		x = -2
+		y = 1
+		relative_position_id = UKR_elections_getyear_1
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_flag = UKR_socialists_won_first
+		}
+		completion_reward = {
+			add_ideas = liberty_ethos_focus
+		}
+	}
+	focus = {
+		id = UKR_ambitions_RUS_civil_war
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_the_new_sd_gov }
+		cost = 10
+		x = 0
+		y = 1
+		relative_position_id = UKR_the_new_sd_gov
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_state_core = 240
+			add_state_core = 799
+			add_state_core = 137
+			add_state_core = 218
+			add_state_core = 234
+		}
+	}
+	focus = {
+		id = UKR_investment_allied
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_ambitions_RUS_civil_war }
+		cost = 10
+		x = -1
+		y = 1
+		relative_position_id = UKR_ambitions_RUS_civil_war
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_ideas = UBD_allied_investments_idea
+		}
+	}
+	focus = {
+		id = UKR_leave_great_war
+		icon = GFX_goal_generic_alliance
+		prerequisite = { focus = UKR_ambitions_RUS_civil_war focus = UKR_integrate_west }
+		cost = 10
+		x = 1
+		y = 1
+		relative_position_id = UKR_ambitions_RUS_civil_war
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			GER = {
+				remove_from_faction = UKR
+				set_autonomy = { target = UKR autonomy_state = autonomy_free }
+			}
+			whitepeace_entente = yes
+		}
+	}
+	focus = {
+		id = UKR_join_whites
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_leave_great_war }
+		prerequisite = { focus = UKR_ambitions_RUS_civil_war }
+		cost = 10
+		x = -1
+		y = 1
+		relative_position_id = UKR_leave_great_war
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			WHR = {
+				country_event = generic.2
+			}
+			UKR = {
+				declare_war_on = { target = SOV type = annex_everything }
+			}
+		}
+	}
+	focus = {
+		id = UKR_ukrainian_nationalism
+		icon = GFX_goal_UKR_OUN_win
+		prerequisite = { focus = UKR_elections_getyear_1 }
+		cost = 10
+		x = 2
+		y = 1
+		relative_position_id = UKR_elections_getyear_1
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			has_country_flag = UKR_fascists_won_first
+		}
+		completion_reward = {
+			add_war_support = 0.1
+			add_stability = 0.05
+			add_political_power = -25
+		}
+	}
+
+	focus = {
+		id = UKR_dream_greater_ukraine
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_ally_not_puppet }
+		cost = 10
+		x = 0
+		y = 1
+		relative_position_id = UKR_ally_not_puppet
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_state_core = 73
+			add_state_core = 80
+			add_state_core = 137
+		}
+	}
+
+	focus = {
+		id = UKR_ally_not_puppet
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_ukrainian_nationalism }
+		cost = 10
+		x = 0
+		y = 1
+		relative_position_id = UKR_ukrainian_nationalism
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			GER = {
+				set_autonomy = { target = UKR autonomy_state = autonomy_free }
+				add_to_faction = UKR
+			}
+		}
+	}
+
+	focus = {
+		id = UKR_moldovan_annexation
+		icon = GFX_goal_WIP
+		prerequisite = { focus = UKR_ally_not_puppet }
+		cost = 10
+		x = 2
+		y = 1
+		relative_position_id = UKR_ally_not_puppet
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 10
+		}
+		available = {
+			country_exists = MOL
+		}
+		completion_reward = {
+			MOL = {
+				country_event = ww1_ukraine.6
+			}
+		}
+	}
+}
