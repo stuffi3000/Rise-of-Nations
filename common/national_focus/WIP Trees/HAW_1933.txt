@@ -1,0 +1,989 @@
+focus_tree = {
+    id = hawaiian_focus_tree
+    
+    country = {
+        factor = 0
+        
+        modifier = {
+            add = 10
+            original_tag = HAW # Changed tag to HAW for Hawaii
+        }
+    }
+    
+    default = no 
+    reset_on_civilwar = no # Assuming Hawaii gains independence and this tree applies post-independence
+    
+    continuous_focus_position = { x = 50 y = 3000 } # Adjusted y
+
+    # INITIAL FOCUS - Assumes Hawaii is independent
+    focus = {
+        id = HAW_the_islands_awaken
+        icon = GFX_goal_generic_independence # Placeholder icon
+        x = 26
+        y = 0
+        #relative_position_id = 
+
+        cost = 10 # Standard 70-day focus
+        #prerequisite = { focus =  }
+
+        available = {
+            # This condition should reflect Hawaii being independent,
+            # possibly after an American Civil War.
+            # Example:
+            # OR = {
+            #   NOT = { exists = USA }
+            #   USA = { has_civil_war = yes }
+            # }
+            # AND = { is_fully_independent = yes }
+            # For simplicity here, we'll assume this tree is active when HAW is playable and independent.
+            always = yes 
+        }
+        
+        bypass = {
+            # Potential bypass if Hawaii is already set on a path by events
+        }
+
+        cancel_if_invalid = yes
+        continue_if_invalid = no
+        available_if_capitulated = yes # Hawaii might be small and capitulate easily
+
+        completion_reward = {
+            add_stability = 0.05
+            add_political_power = 50
+            # Add a national spirit representing the new independence challenges
+            add_ideas = HAW_newly_independent_nation_spirit 
+        }
+
+        ai_will_do = {
+            factor = 1000 # AI should always take this first
+        }
+    }
+
+    # POLITICAL BRANCHES START HERE
+    # Branch 1: Communist/Syndicalist Path (Analogous to UKR_kill_the_hetman)
+    focus = {
+        id = HAW_islanders_revolt
+        icon = GFX_goal_generic_support_communism # Placeholder
+        x = -20 # To the left
+        y = 1
+        relative_position_id = HAW_the_islands_awaken
+        mutually_exclusive = { 
+            focus = HAW_embrace_american_ideals
+            focus = HAW_secure_the_kingdom
+            focus = HAW_warrior_spirit_reborn
+        }
+
+        cost = 10
+        prerequisite = { focus = HAW_the_islands_awaken }
+
+        available = {
+            # Add specific conditions if needed
+        }
+        
+        bypass = {
+            # Bypass if already communist by event
+            has_government = communism
+        }
+
+        cancel_if_invalid = yes
+        continue_if_invalid = no
+        available_if_capitulated = yes
+
+        completion_reward = {
+            set_politics = { ruling_party = communism elections_allowed = no }
+            add_political_power = 100
+            add_popularity = { ideology = communism popularity = 0.20 }
+            create_country_leader = { # Fictional leader
+                name = "Koa Kekoa" 
+                desc = "POLITICS_KOA_KEKOA_DESC"
+                picture = "gfx/leaders/HAW/Portrait_HAW_Koa_Kekoa.dds" # Placeholder
+                expire = "1965.1.1"
+                ideology = marxism # Or syndicalism
+                traits = { revolutionary }
+            }
+            remove_ideas = HAW_newly_independent_nation_spirit
+            add_ideas = HAW_peoples_republic_spirit
+        }
+
+        ai_will_do = {
+            factor = 10 # AI might pick this, but not always
+        }
+    }
+
+    # Branch 2: Democratic Path (Analogous to UKR_reinstall_the_rada)
+    focus = {
+        id = HAW_embrace_american_ideals # Or "Establish a Pacific Democracy"
+        icon = GFX_goal_support_democracy # Placeholder
+        x = -6 # To the left-center
+        y = 1
+        relative_position_id = HAW_the_islands_awaken
+        mutually_exclusive = { 
+            focus = HAW_islanders_revolt
+            focus = HAW_secure_the_kingdom
+            focus = HAW_warrior_spirit_reborn
+        }
+
+        cost = 10
+        prerequisite = { focus = HAW_the_islands_awaken }
+
+        available = {
+            # Specific conditions
+        }
+        
+        bypass = {
+            has_government = democratic
+        }
+
+        cancel_if_invalid = yes
+        continue_if_invalid = no
+        available_if_capitulated = yes
+
+        completion_reward = {
+            set_politics = { ruling_party = democratic elections_allowed = yes } # Allow elections
+            add_popularity = { ideology = democratic popularity = 0.20 }
+            add_political_power = 75
+            create_country_leader = { # Fictional or historical figure adapted
+                name = "Leilani Maka"
+                desc = "POLITICS_LEILANI_MAKA_DESC"
+                picture = "gfx/leaders/HAW/Portrait_HAW_Leilani_Maka.dds" # Placeholder
+                expire = "1965.1.1"
+                ideology = conservatism # Or liberalism
+                traits = { popular_figurehead }
+            }
+            if = { # If a US faction is democratic and influential
+                limit = {
+                    any_country = {
+                        original_tag = USA # Or specific ACW tags like USD
+                        exists = yes
+                        has_government = democratic
+                        is_major = yes
+                    }
+                }
+                # Add opinion bonus with democratic US
+                random_country = {
+                    original_tag = USA
+                    has_government = democratic
+                    is_major = yes
+                    add_opinion_modifier = { who = HAW target = PREV modifier = opinion_haw_democratic_kinship }
+                }
+            }
+            remove_ideas = HAW_newly_independent_nation_spirit
+            add_ideas = HAW_democratic_republic_spirit
+        }
+
+        ai_will_do = {
+            factor = 30 # AI more likely to pick democratic path for Hawaii
+        }
+    }
+
+    # Branch 3: Fascist/Militarist Path (Analogous to UKR_avenge_the_fallen)
+    focus = {
+        id = HAW_warrior_spirit_reborn
+        icon = GFX_goal_generic_nationalism # Placeholder
+        x = 6 # To the right-center
+        y = 1
+        relative_position_id = HAW_the_islands_awaken
+        mutually_exclusive = { 
+            focus = HAW_islanders_revolt
+            focus = HAW_embrace_american_ideals
+            focus = HAW_secure_the_kingdom
+        }
+
+        cost = 10
+        prerequisite = { focus = HAW_the_islands_awaken }
+
+        available = {
+            # Specific conditions
+        }
+        
+        bypass = {
+            has_government = fascism
+        }
+
+        cancel_if_invalid = yes
+        continue_if_invalid = no
+        available_if_capitulated = yes
+
+        completion_reward = {
+            set_politics = { ruling_party = fascism elections_allowed = no }
+            add_war_support = 0.15
+            add_popularity = { ideology = fascism popularity = 0.20 }
+            create_country_leader = { # Fictional leader
+                name = "Alika Kealoha"
+                desc = "POLITICS_ALIKA_KEALOHA_DESC"
+                picture = "gfx/leaders/HAW/Portrait_HAW_Alika_Kealoha.dds" # Placeholder
+                expire = "1965.1.1"
+                ideology = fascism_ideology 
+                traits = { iron_fisted_ruler }
+            }
+            if = { # Bonus if Japan is Fascist and strong
+                limit = {
+                    JAP = {
+                        exists = yes
+                        has_government = fascism
+                        is_major = yes
+                    }
+                }
+                JAP = { add_opinion_modifier = { who = HAW target = JAP modifier = opinion_haw_fascist_alignment } }
+            }
+            remove_ideas = HAW_newly_independent_nation_spirit
+            add_ideas = HAW_militarist_ambition_spirit
+        }
+
+        ai_will_do = {
+            factor = 20 # AI might pick this, especially if Japan is aggressive
+        }
+    }
+
+    # Branch 4: Monarchist/Neutral Path (Analogous to UKR_not_more_revolutions)
+    focus = {
+        id = HAW_secure_the_kingdom # Or "Restore the Monarchy"
+        icon = GFX_goal_generic_political_pressure # Placeholder for monarchy
+        x = 20 # To the right
+        y = 1
+        relative_position_id = HAW_the_islands_awaken
+        mutually_exclusive = { 
+            focus = HAW_islanders_revolt
+            focus = HAW_embrace_american_ideals
+            focus = HAW_warrior_spirit_reborn
+        }
+
+        cost = 10
+        prerequisite = { focus = HAW_the_islands_awaken }
+
+        available = {
+            # Specific conditions
+        }
+        
+        bypass = {
+            has_government = neutrality # Assuming monarchy is neutrality
+            # Could check for a specific monarchy flag if events set it up
+        }
+
+        cancel_if_invalid = yes
+        continue_if_invalid = no
+        available_if_capitulated = yes
+
+        completion_reward = {
+            set_politics = { ruling_party = neutrality elections_allowed = no } # Monarchy, no elections
+            add_stability = 0.10
+            add_popularity = { ideology = neutrality popularity = 0.25 }
+            create_country_leader = { # Fictional descendant or symbolic figure
+                name = "Queen Kapiʻolani II" # Example name
+                desc = "POLITICS_KAPIOLANI_II_DESC"
+                picture = "gfx/leaders/HAW/Portrait_HAW_Kapiolani_II.dds" # Placeholder
+                expire = "1965.1.1"
+                ideology = monarchism 
+                traits = { beloved_monarch }
+            }
+            remove_ideas = HAW_newly_independent_nation_spirit
+            add_ideas = HAW_royal_restoration_spirit
+            # Change country name/flag cosmetically if desired
+            # set_cosmetic_tag = HAW_kingdom 
+        }
+
+        ai_will_do = {
+            factor = 40 # A plausible path for an independent Hawaii AI
+        }
+    }
+
+    # SUB-BRANCHES for Communist Path (HAW_islanders_revolt)
+    focus = {
+        id = HAW_land_for_the_people
+        icon = GFX_focus_prc_agrarian_socialism # Placeholder
+        x = -4 # x relative to HAW_islanders_revolt
+        y = 1  # y relative to HAW_islanders_revolt
+        relative_position_id = HAW_islanders_revolt
+        # mutually_exclusive = { focus = HAW_industrial_workers_unite } # Example of split
+
+        cost = 10
+        prerequisite = { focus = HAW_islanders_revolt }
+
+        completion_reward = {
+            add_stability = 0.05
+            add_political_power = 50
+            # Add an idea like "Agrarian Reforms"
+            add_ideas = HAW_communist_agrarian_reforms
+            # Potentially trigger events for land redistribution
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+    focus = {
+        id = HAW_industrial_workers_unite # Alternative sub-branch
+        icon = GFX_goal_generic_production # Placeholder
+        x = 4 # x relative to HAW_islanders_revolt
+        y = 1 # y relative to HAW_islanders_revolt
+        # mutually_exclusive = { focus = HAW_land_for_the_people }
+
+        cost = 10
+        prerequisite = { focus = HAW_islanders_revolt }
+
+        completion_reward = {
+            add_war_support = 0.05
+            # Focus on limited industrial buildup
+            add_ideas = HAW_communist_industrial_drive
+            # Grant some offmap factories or build slots
+            add_building_construction = {
+                type = industrial_complex
+                level = 1
+                state = 629 # Assuming Hawaii (Oahu) is state 629
+                instant_build = yes
+            }
+        }
+        ai_will_do = { factor = 5 }
+    }
+    
+    focus = {
+        id = HAW_pacific_commune
+        icon = GFX_goal_generic_spread_communism
+        x = 0
+        y = 1
+        relative_position_id = HAW_land_for_the_people # Or HAW_industrial_workers_unite if only one path
+        prerequisite = { focus = HAW_land_for_the_people } # OR the other one
+        cost = 10
+        completion_reward = {
+            set_rule = { can_create_factions = yes }
+            if = {
+                limit = { is_in_faction = no }
+                create_faction = "Pacific Workers' Union" # Faction name
+            }
+            # Gain claims or wargoals on nearby minor islands if desired for alt-history
+            # add_claim_by = HAW state = XYZ 
+        }
+        ai_will_do = { factor = 3 }
+    }
+
+    # SUB-BRANCHES for Democratic Path (HAW_embrace_american_ideals)
+    focus = {
+        id = HAW_strengthen_ties_with_america
+        icon = GFX_goal_generic_democratic_alliance # Placeholder
+        x = -2 # x relative to HAW_embrace_american_ideals
+        y = 1  # y relative to HAW_embrace_american_ideals
+        # mutually_exclusive = { focus = HAW_independent_pacific_republic }
+
+        cost = 10
+        prerequisite = { focus = HAW_embrace_american_ideals }
+        available = { # Only if a US faction is viable
+            any_country = {
+                OR = { original_tag = USA original_tag = USD } # Example ACW tags
+                exists = yes
+                is_major = yes # Or some other viability check
+                NOT = { has_war_with = HAW }
+            }
+        }
+        bypass = {
+            # is_in_faction_with = USA # Or relevant US tag
+        }
+        completion_reward = {
+            # Send event to USA/USD to invite to faction or guarantee
+            # Example:
+            # random_country = {
+            #   OR = { original_tag = USA original_tag = USD }
+            #   limit = { exists = yes }
+            #   country_event = { id = hawaii.1 # Event for US to react
+            #       days = 7
+            #       random = 0
+            #   }
+            # }
+            add_political_power = 50
+            add_ideas = HAW_pro_american_sentiment
+        }
+        ai_will_do = { factor = 20 }
+    }
+
+    focus = {
+        id = HAW_independent_pacific_republic # Alternative democratic sub-branch
+        icon = GFX_goal_generic_neutrality # Placeholder
+        x = 2 # x relative to HAW_embrace_american_ideals
+        y = 1 # y relative to HAW_embrace_american_ideals
+        # mutually_exclusive = { focus = HAW_strengthen_ties_with_america }
+
+        cost = 10
+        prerequisite = { focus = HAW_embrace_american_ideals }
+
+        completion_reward = {
+            add_stability = 0.05
+            # Focus on self-reliance
+            add_ideas = HAW_fiercely_independent_democracy
+            # May lead to forming a local Polynesian democratic alliance
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+    focus = {
+        id = HAW_pearl_harbor_renegotiation
+        icon = GFX_goal_generic_trade
+        x = 0
+        y = 1
+        relative_position_id = HAW_strengthen_ties_with_america # Or independent path
+        prerequisite = { focus = HAW_strengthen_ties_with_america } # OR other
+        cost = 10
+        completion_reward = {
+            # If allied with USA, get benefits
+            if = {
+                limit = {
+                    # is_in_faction_with = USA # Or relevant US tag
+                    # For example, check if we have good relations with a US tag
+                    any_country = {
+                        OR = { original_tag = USA original_tag = USD }
+                        has_opinion_modifier = { who = HAW target = PREV modifier = opinion_haw_democratic_kinship }
+                    }
+                }
+                # Gain dockyards or naval base expansion in Pearl Harbor
+                629 = { # Oahu
+                    add_building_construction = { type = naval_base level = 2 instant_build = yes }
+                    add_building_construction = { type = dockyard level = 1 instant_build = yes }
+                }
+            }
+            else = {
+                # If independent, focus on own development
+                629 = { add_building_construction = { type = infrastructure level = 1 instant_build = yes } }
+            }
+        }
+        ai_will_do = { factor = 15 }
+    }
+
+    # SUB-BRANCHES for Fascist Path (HAW_warrior_spirit_reborn)
+    focus = {
+        id = HAW_ally_with_the_emperor # Pro-Japan
+        icon = GFX_goal_generic_fascist_alliance # Placeholder
+        x = -2 # x relative
+        y = 1  # y relative
+        relative_position_id = HAW_warrior_spirit_reborn
+        # mutually_exclusive = { focus = HAW_pacific_dominion }
+
+        cost = 10
+        prerequisite = { focus = HAW_warrior_spirit_reborn }
+        available = {
+            JAP = { exists = yes has_government = fascism is_major = yes }
+            NOT = { has_war_with = JAP }
+        }
+        bypass = {
+            is_in_faction_with = JAP
+        }
+        completion_reward = {
+            JAP = { country_event = { id = hawaii.2 days=7 random=0 } } # Event for Japan to react
+            add_ideas = HAW_japanese_friendship
+        }
+        ai_will_do = { factor = 15 }
+    }
+    
+    focus = {
+        id = HAW_pacific_dominion # Independent Expansionist
+        icon = GFX_goal_generic_dangerous_deal # Placeholder
+        x = 2 # x relative
+        y = 1 # y relative
+        relative_position_id = HAW_warrior_spirit_reborn
+        # mutually_exclusive = { focus = HAW_ally_with_the_emperor }
+
+        cost = 10
+        prerequisite = { focus = HAW_warrior_spirit_reborn }
+
+        completion_reward = {
+            add_war_support = 0.10
+            add_ideas = HAW_manifest_destiny_pacific
+            # Gain claims on minor pacific islands
+            # Example: add_claim_by = HAW state = X (e.g., Midway, Johnston Atoll if they are separate states)
+        }
+        ai_will_do = { factor = 5 }
+    }
+
+    focus = {
+        id = HAW_militarize_the_islands
+        icon = GFX_goal_generic_armaments_industry
+        x = 0
+        y = 1
+        relative_position_id = HAW_ally_with_the_emperor # or HAW_pacific_dominion
+        prerequisite = { focus = HAW_ally_with_the_emperor } # OR other
+        cost = 10
+        completion_reward = {
+            army_experience = 20
+            add_building_construction = { type = arms_factory level = 1 state = 629 instant_build = yes }
+            add_manpower = 5000 # Small boost
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+
+    # SUB-BRANCHES for Monarchist Path (HAW_secure_the_kingdom)
+    focus = {
+        id = HAW_proclaim_the_divine_right
+        icon = GFX_goal_generic_authoritarian_regime # Placeholder
+        x = -2 # x relative
+        y = 1  # y relative
+        relative_position_id = HAW_secure_the_kingdom
+        # mutually_exclusive = { focus = HAW_constitutional_settlement }
+
+        cost = 10
+        prerequisite = { focus = HAW_secure_the_kingdom }
+
+        completion_reward = {
+            add_stability = 0.05
+            # Change leader trait or sub-ideology to absolute monarch
+            # add_country_leader_trait = absolute_monarch
+            add_ideas = HAW_absolute_monarchy_spirit
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+    focus = {
+        id = HAW_constitutional_settlement
+        icon = GFX_goal_generic_political_reform # Placeholder
+        x = 2 # x relative
+        y = 1 # y relative
+        relative_position_id = HAW_secure_the_kingdom
+        # mutually_exclusive = { focus = HAW_proclaim_the_divine_right }
+
+        cost = 10
+        prerequisite = { focus = HAW_secure_the_kingdom }
+
+        completion_reward = {
+            add_political_power = 75
+            # Could slightly shift towards democratic support within neutrality
+            # add_popularity = { ideology = democratic popularity = 0.05 }
+            add_ideas = HAW_constitutional_monarchy_spirit
+        }
+        ai_will_do = { factor = 20 }
+    }
+
+    focus = {
+        id = HAW_royal_patronage_of_culture
+        icon = GFX_goal_generic_national_unity
+        x = 0
+        y = 1
+        relative_position_id = HAW_proclaim_the_divine_right # Or HAW_constitutional_settlement
+        prerequisite = { focus = HAW_proclaim_the_divine_right } # OR other
+        cost = 10
+        completion_reward = {
+            add_stability = 0.10
+            add_political_power = 50
+            # Add national spirit for cultural revival
+            add_ideas = HAW_cultural_renaissance
+        }
+        ai_will_do = { factor = 15 }
+    }
+
+    # ECONOMIC/INDUSTRIAL TREE (Generally available after initial political setup)
+    # Positioned to the right of the initial political branch, like Ukraine's industry
+    focus = {
+        id = HAW_economic_sovereignty
+        icon = GFX_goal_generic_construct_civ_factory # Placeholder
+        x = 30 # Further to the right of HAW_the_islands_awaken
+        y = 0
+        relative_position_id = HAW_the_islands_awaken # Relative to the start of political tree for visual separation
+
+        cost = 10
+        prerequisite = { # Requires one of the initial political focuses to be complete
+            OR = {
+                focus = HAW_islanders_revolt
+                focus = HAW_embrace_american_ideals
+                focus = HAW_warrior_spirit_reborn
+                focus = HAW_secure_the_kingdom
+            }
+        }
+        completion_reward = {
+            add_tech_bonus = {
+                bonus = 0.50 # 50% bonus
+                uses = 2
+                category = industry
+            }
+            add_building_construction = { type = civilian_factory level = 1 state = 629 instant_build = yes }
+        }
+        ai_will_do = { factor = 80 } # High prio for economy
+    }
+
+    focus = {
+        id = HAW_exploit_agricultural_wealth
+        icon = GFX_AUS_agriculture # Placeholder, using one from example
+        x = 0 # Relative to HAW_economic_sovereignty
+        y = 1
+        relative_position_id = HAW_economic_sovereignty
+
+        cost = 10
+        prerequisite = { focus = HAW_economic_sovereignty }
+
+        completion_reward = {
+            # National spirit for sugar/pineapple production efficiency or export income
+            add_ideas = HAW_plantation_economy 
+            # Maybe add some offmap resources or trade opinion
+            # add_resource = { type = HAW_sugar value = X } # If custom resource
+        }
+        ai_will_do = { factor = 70 }
+    }
+
+    focus = {
+        id = HAW_develop_fisheries_and_ports
+        icon = GFX_goal_generic_construct_naval_dockyard # Placeholder
+        x = -2 # Split from agricultural
+        y = 2  # Below HAW_exploit_agricultural_wealth
+        relative_position_id = HAW_exploit_agricultural_wealth
+        # mutually_exclusive = { focus = HAW_focus_on_tourism } # Example split
+
+        cost = 10
+        prerequisite = { focus = HAW_exploit_agricultural_wealth }
+
+        completion_reward = {
+            629 = { # Oahu
+                add_building_construction = { type = naval_base level = 1 instant_build = yes }
+                add_building_construction = { type = infrastructure level = 1 instant_build = yes }
+            }
+            # Add spirit for naval range or supply
+            add_ideas = HAW_expanded_ports
+        }
+        ai_will_do = { factor = 60 }
+    }
+
+    focus = {
+        id = HAW_focus_on_tourism # Could be an alternative or later focus
+        icon = GFX_goal_generic_national_unity # Placeholder
+        x = 2 # Split from agricultural
+        y = 2
+        relative_position_id = HAW_exploit_agricultural_wealth
+        # mutually_exclusive = { focus = HAW_develop_fisheries_and_ports }
+
+        cost = 10
+        prerequisite = { focus = HAW_exploit_agricultural_wealth }
+
+        completion_reward = {
+            add_political_power = 75
+            add_stability = 0.03
+            # Spirit for PP gain or consumer goods reduction (peacetime)
+            add_ideas = HAW_tourism_economy 
+        }
+        ai_will_do = { factor = 30 }
+    }
+
+    focus = {
+        id = HAW_strategic_resource_initiative # For synthetics
+        icon = GFX_goal_generic_oil_refinery # Placeholder
+        x = 0
+        y = 2 # Below the split
+        relative_position_id = HAW_develop_fisheries_and_ports # Or tourism if it's the prerequisite
+        prerequisite = {
+            OR = {
+                focus = HAW_develop_fisheries_and_ports
+                focus = HAW_focus_on_tourism
+            }
+        }
+        cost = 10
+        completion_reward = {
+            add_tech_bonus = {
+                bonus = 0.75
+                uses = 1
+                category = synthetic_oil_tech # Or general synthetics
+            }
+            629 = { # Oahu
+                add_building_construction = { type = synthetic_refinery level = 1 instant_build = yes }
+            }
+        }
+        ai_will_do = { factor = 50 }
+    }
+
+    # MILITARY TREE (Parallel to economy or below it)
+    # Placed to the right of the economic tree
+    focus = {
+        id = HAW_establish_defense_force
+        icon = GFX_goal_generic_allies_build_infantry # Placeholder
+        x = 14 # Right of HAW_economic_sovereignty
+        y = 0
+        relative_position_id = HAW_economic_sovereignty
+
+        cost = 10
+        prerequisite = { focus = HAW_economic_sovereignty } # Requires some economic base
+
+        completion_reward = {
+            army_experience = 25
+            add_manpower = 3000 # Initial small manpower boost
+            add_ideas = HAW_nascent_army
+            # Spawn a few basic infantry divisions
+            # create_unit = { division = "Infantry Division" state = 629 }
+        }
+        ai_will_do = { factor = 70 }
+    }
+
+    # Land Doctrine Choices (Mutually Exclusive)
+    focus = {
+        id = HAW_mobile_island_defense # Mobile Warfare
+        icon = GFX_goal_generic_army_tanks2 # Placeholder
+        x = -6 # Leftmost doctrine
+        y = 1
+        relative_position_id = HAW_establish_defense_force
+        mutually_exclusive = {
+            focus = HAW_superior_island_firepower
+            focus = HAW_entrenched_shores
+            focus = HAW_peoples_militia_hawaii
+        }
+        cost = 10
+        prerequisite = { focus = HAW_establish_defense_force }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = land_doctrine } # general bonus, player chooses specific doctrine
+            # Or give a direct bonus to mobile warfare:
+            # add_tech_bonus = { bonus = 1.0 uses = 2 category = cat_mobile_warfare }
+            add_ideas = HAW_doctrine_mobile_defense
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+    focus = {
+        id = HAW_superior_island_firepower # Superior Firepower
+        icon = GFX_goal_generic_army_artillery # Placeholder
+        x = -2
+        y = 1
+        relative_position_id = HAW_establish_defense_force
+        mutually_exclusive = {
+            focus = HAW_mobile_island_defense
+            focus = HAW_entrenched_shores
+            focus = HAW_peoples_militia_hawaii
+        }
+        cost = 10
+        prerequisite = { focus = HAW_establish_defense_force }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = cat_superior_firepower }
+            add_ideas = HAW_doctrine_superior_firepower
+        }
+        ai_will_do = { factor = 25 } # Good for small, well-equipped force
+    }
+
+    focus = {
+        id = HAW_entrenched_shores # Grand Battleplan
+        icon = GFX_goal_generic_construction2 # Placeholder
+        x = 2
+        y = 1
+        relative_position_id = HAW_establish_defense_force
+        mutually_exclusive = {
+            focus = HAW_mobile_island_defense
+            focus = HAW_superior_island_firepower
+            focus = HAW_peoples_militia_hawaii
+        }
+        cost = 10
+        prerequisite = { focus = HAW_establish_defense_force }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = cat_grand_battle_plan }
+            add_ideas = HAW_doctrine_grand_battleplan
+        }
+        ai_will_do = { factor = 20 } # Good for island defense
+    }
+
+    focus = {
+        id = HAW_peoples_militia_hawaii # Mass Assault (less thematic, but an option)
+        icon = GFX_focus_generic_manpower # Placeholder
+        x = 6
+        y = 1
+        relative_position_id = HAW_establish_defense_force
+        mutually_exclusive = {
+            focus = HAW_mobile_island_defense
+            focus = HAW_superior_island_firepower
+            focus = HAW_entrenched_shores
+        }
+        cost = 10
+        prerequisite = { focus = HAW_establish_defense_force }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = cat_mass_assault }
+            add_ideas = HAW_doctrine_mass_assault
+        }
+        ai_will_do = { factor = 5 }
+    }
+    
+    # Army Development (Below Doctrines)
+    focus = {
+        id = HAW_coastal_defense_network
+        icon = GFX_goal_generic_fortify_coastal # Placeholder
+        x = 0 # Centered under doctrines
+        y = 5 # Further down, after all doctrine choices potentially converge here
+        relative_position_id = HAW_establish_defense_force
+        prerequisite = { # Requires one doctrine to be chosen
+            OR = {
+                focus = HAW_mobile_island_defense
+                focus = HAW_superior_island_firepower
+                focus = HAW_entrenched_shores
+                focus = HAW_peoples_militia_hawaii
+            }
+        }
+        cost = 10
+        completion_reward = {
+            629 = { # Oahu
+                add_building_construction = { type = coastal_bunker level = 2 instant_build = yes }
+            }
+            # Can add to other islands if they are separate states (e.g., Maui, Kauai, Big Island)
+            # 630 = { add_building_construction = { type = coastal_bunker level = 1 instant_build = yes } } # Example for another state
+            add_ideas = HAW_coastal_fortifications
+        }
+        ai_will_do = { factor = 40 }
+    }
+
+    # Naval Tree (Parallel to Army or Economy)
+    focus = {
+        id = HAW_naval_aspirations
+        icon = GFX_goal_generic_navy_destroyer # Placeholder
+        x = 16 # Right of HAW_establish_defense_force or HAW_economic_sovereignty
+        y = 0  # Same level as HAW_establish_defense_force
+        relative_position_id = HAW_economic_sovereignty # Visually distinct section for Navy
+
+        cost = 10
+        prerequisite = { focus = HAW_economic_sovereignty } # Requires some economic base
+
+        completion_reward = {
+            navy_experience = 25
+            add_tech_bonus = { bonus = 0.50 uses = 1 category = naval_doctrine }
+            # Spawn a few starting destroyers/patrol craft
+            # load_oob = "HAW_starting_navy"
+            add_ideas = HAW_budding_navy
+        }
+        ai_will_do = { factor = 60 }
+    }
+
+    # Naval Doctrine choices (similar to land)
+    focus = {
+        id = HAW_fleet_in_being_pacific
+        icon = GFX_goal_generic_navy_battleship2 # Placeholder
+        x = -2 # Left of HAW_naval_aspirations
+        y = 1
+        relative_position_id = HAW_naval_aspirations
+        mutually_exclusive = { focus = HAW_commerce_raiding_focus }
+        cost = 10
+        prerequisite = { focus = HAW_naval_aspirations }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = fleet_in_being_tree }
+            add_ideas = HAW_naval_doctrine_fib
+        }
+        ai_will_do = { factor = 15 }
+    }
+
+    focus = {
+        id = HAW_commerce_raiding_focus # Trade Interdiction
+        icon = GFX_goal_generic_navy_submarine # Placeholder
+        x = 2 # Right of HAW_naval_aspirations
+        y = 1
+        relative_position_id = HAW_naval_aspirations
+        mutually_exclusive = { focus = HAW_fleet_in_being_pacific }
+        cost = 10
+        prerequisite = { focus = HAW_naval_aspirations }
+        completion_reward = {
+            add_tech_bonus = { bonus = 1.0 uses = 2 category = trade_interdiction_tree }
+            add_ideas = HAW_naval_doctrine_ti
+        }
+        ai_will_do = { factor = 15 } # Good for a small nation
+    }
+    
+    # Ship type focuses (below naval doctrines)
+    focus = {
+        id = HAW_submarine_focus
+        icon = GFX_goal_generic_navy_submarine2
+        x = 0
+        y = 3 # Below doctrines
+        relative_position_id = HAW_naval_aspirations
+        prerequisite = {
+            OR = {
+                focus = HAW_fleet_in_being_pacific
+                focus = HAW_commerce_raiding_focus
+            }
+        }
+        cost = 10
+        completion_reward = {
+            add_tech_bonus = { bonus = 0.75 uses = 1 technology = early_submarine } # Or specific sub tech
+        }
+        ai_will_do = { factor = 20 }
+    }
+
+
+    # Air Force Tree (Could be its own section or integrated)
+    focus = {
+        id = HAW_develop_air_power
+        icon = GFX_goal_generic_air_fighter # Placeholder
+        x = 0 # Below Army or Naval general start
+        y = 1 # One level down from HAW_establish_defense_force
+        relative_position_id = HAW_coastal_defense_network # Example placement below army
+        
+        cost = 10
+        prerequisite = { focus = HAW_coastal_defense_network } # Requires some military setup
+
+        completion_reward = {
+            air_experience = 25
+            add_tech_bonus = { bonus = 0.50 uses = 1 category = air_doctrine }
+            add_ideas = HAW_fledgling_air_force
+            # spawn_air_wing = { state = 629 type = fighter_equipment_0 amount = 12 }
+        }
+        ai_will_do = { factor = 50 }
+    }
+    
+    focus = {
+        id = HAW_fighter_production
+        icon = GFX_goal_generic_air_fighter2
+        x = -2
+        y = 1
+        relative_position_id = HAW_develop_air_power
+        cost = 10
+        prerequisite = { focus = HAW_develop_air_power }
+        completion_reward = {
+            add_tech_bonus = { bonus = 0.75 uses = 1 technology = early_fighter }
+            # Add some air base capacity
+            629 = { add_building_construction = { type = air_base level = 1 instant_build = yes } }
+        }
+        ai_will_do = { factor = 20 }
+    }
+    
+    focus = {
+        id = HAW_naval_bomber_focus
+        icon = GFX_goal_generic_air_naval_bomber
+        x = 2
+        y = 1
+        relative_position_id = HAW_develop_air_power
+        cost = 10
+        prerequisite = { focus = HAW_develop_air_power }
+        completion_reward = {
+            add_tech_bonus = { bonus = 0.75 uses = 1 technology = naval_bomber1 } # early_naval_bomber
+        }
+        ai_will_do = { factor = 20 }
+    }
+    
+    # ... This is a simplified structure. A full tree like Ukraine's would have many more focuses
+    # in each sub-branch, research slots, more specific national spirits, events, etc.
+    # The Ukrainian tree has about 100 focuses. This example is far short but gives the structure.
+    # To reach 100 focuses, each of these small branches (Communist, Dem, Fasc, Mon, Econ, Army, Navy, Air)
+    # would need 10-15 focuses each, with further sub-specializations.
+
+    # Example of deeper branch - Monarchist path continued
+    focus = {
+        id = HAW_seek_polynesian_allies
+        icon = GFX_goal_generic_diplomacy # Placeholder
+        x = 0 # Relative to HAW_royal_patronage_of_culture
+        y = 1
+        relative_position_id = HAW_royal_patronage_of_culture
+        prerequisite = { focus = HAW_royal_patronage_of_culture }
+        cost = 10
+        completion_reward = {
+            # Unlock decisions to influence or ally with other Pacific island nations (if they exist as tags)
+            # Example: unlock_decision_category = HAW_polynesian_diplomacy
+            add_political_power = 50
+        }
+        ai_will_do = { factor = 10 }
+    }
+
+    focus = {
+        id = HAW_royal_marines
+        icon = GFX_goal_generic_special_forces # Placeholder
+        x = 0 # Relative to HAW_seek_polynesian_allies
+        y = 1
+        relative_position_id = HAW_seek_polynesian_allies
+        prerequisite = { focus = HAW_seek_polynesian_allies }
+        cost = 10
+        completion_reward = {
+            add_tech_bonus = { bonus = 0.50 uses = 1 category = marine_tech }
+            # Create a template for Royal Marines
+            # division_template = { name = "Royal Hawaiian Marines" ... }
+            army_experience = 15
+        }
+        ai_will_do = { factor = 8 }
+    }
+
+    # To truly match the Ukrainian tree's size, you'd need to:
+    # 1. Flesh out each of the 4 main political paths with 5-10 subsequent focuses detailing domestic policy, foreign policy aims, and unique military/economic aspects.
+    # 2. Each of those might have 1-2 mutually exclusive choices within them.
+    # 3. The generic Army/Navy/Air/Industry trees would also need to be much longer, with more specific tech bonuses, factory outputs, national spirits, and possibly choices within them (e.g., light vs medium tanks, different industrial focuses).
+    # 4. Add focuses for research slots (typically 2-3 in a full tree).
+    # 5. Add more "flavor" focuses that grant PP, stability, or trigger interesting events.
+    # 6. The "Anarchist" branch of Ukraine's communist tree has 7 focuses alone. The "Second Republic" branch has another 10+. Each main political path in Ukraine's tree spawns ~20-30 focuses.
+    # This example provides the foundational structure and thematic adaptation for Hawaii.
+    # Scaling it to ~100 focuses would involve repeating this detailed branching process for all major paths.
+}
