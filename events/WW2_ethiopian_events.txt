@@ -1,0 +1,8501 @@
+﻿add_namespace = DARK_eth
+
+#Italy defeated by Ethiopia
+country_event = {
+	id = DARK_eth.1
+	title = DARK_eth.1.t
+	desc = DARK_eth.1.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	is_triggered_only = yes
+	
+	option = { #Agree to peace talks
+		name = DARK_eth.1.a
+		
+		ETH = { country_event = { id = DARK_eth.2 hours = 6 } }		
+		add_war_support = -0.1
+		add_stability = -0.1
+	}
+}
+	country_event = { # Ethiopia decides if they want to push for Somalia
+		id = DARK_eth.2
+		title = DARK_eth.2.t
+		desc = DARK_eth.2.desc
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Settle for Eritrea
+			name = DARK_eth.2.a
+			ai_chance = {
+				base = 1
+			}
+			
+			FROM = { country_event = { id = DARK_eth.3 hours = 6 } }
+		}
+		option = { #Push for Somalia
+			name = DARK_eth.2.b
+			ai_chance = {
+				base = 2
+			}
+			
+			FROM = { country_event = { id = DARK_eth.5 hours = 6 } }
+		}
+	}
+	country_event = { #Ethiopia demands only Eritrea
+		id = DARK_eth.3
+		title = DARK_eth.3.t
+		desc = DARK_eth.3.desc
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Agree, too reasonable to argue
+			name = DARK_eth.3.a
+			
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT
+				}
+				FROM = { transfer_state = 550 }
+			}
+			add_popularity = { ideology = fascism popularity = -0.2 }
+			FROM = { country_event = { id = DARK_eth.4 hours = 6 } }			
+		}
+	}
+		country_event = { #Peace for Eritrea
+			id = DARK_eth.4
+			title = DARK_eth.4.t
+			desc = DARK_eth.4.desc
+			picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.4.a
+				
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT
+				}
+				transfer_state = 550
+				hidden_effect = {
+					news_event = { id = DARK_eth.101 hours = 24 }
+				}
+			}
+		}
+	country_event = { #Ethiopia demands Eritrea & Somalia
+		id = DARK_eth.5
+		title = DARK_eth.5.t
+		desc = DARK_eth.5.desc
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Agree
+			name = DARK_eth.5.a
+			ai_chance = {
+				base = 1
+			}
+			
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT
+				}
+				FROM = { transfer_state = 550 }
+				FROM = { transfer_state = 559 }
+			}
+			add_popularity = { ideology = fascism popularity = -0.2 }
+			FROM = { country_event = { id = DARK_eth.6 hours = 6 } }			
+		}
+		option = { #Try to get mediation from France/UK
+			name = DARK_eth.5.b
+			trigger = {
+				NOT = { has_war_with = FRA }
+				NOT = { has_war_with = ENG }
+			}
+			ai_chance = {
+				base = 1
+			}
+			
+			ENG = { country_event = DARK_eth.7 }
+			FRA = { country_event = DARK_eth.7 }				
+		}
+	}
+		country_event = { #Peace for Eritrea & Somalia
+			id = DARK_eth.6
+			title = DARK_eth.6.t
+			desc = DARK_eth.6.desc
+			picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.6.a
+				
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT
+				}
+				transfer_state = 550
+				transfer_state = 559
+				hidden_effect = {
+					news_event = { id = DARK_eth.101 hours = 24 }
+				}
+			}
+		}
+	country_event = { #Italy doesn't want to lose both colonies
+		id = DARK_eth.7
+		title = DARK_eth.7.t
+		desc = DARK_eth.7.desc
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Side with Italy
+			name = DARK_eth.7.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					has_war = yes
+				}
+				modifier = {
+					factor = 10
+					OR = {
+						has_government = fascism
+						has_government = neutrality
+					}
+				}
+				modifier = {
+					factor = 100
+					is_in_faction_with = FROM
+				}
+			}
+			
+			add_stability = -0.1
+			if = {
+				limit = { has_government = neutrality }
+				add_popularity = { ideology = neutrality popularity = -0.1 }
+			}
+			else_if = {
+				limit = { has_government = democratic }
+				add_popularity = { ideology = democratic popularity = -0.1 }
+			}
+			else_if = {
+				limit = { has_government = communism }
+				add_popularity = { ideology = communism popularity = -0.2 }
+			}
+			else_if = {
+				limit = { has_government = fascism }
+				add_popularity = { ideology = fascism popularity = -0.1 }
+			}
+			
+			hidden_effect = {
+				if = {
+					limit = {
+						OR = {
+							FRA = { has_country_flag = chosen_ita_peace_flag }
+							ENG = { has_country_flag = chosen_ita_peace_flag }
+						}
+					}
+					ETH = { country_event = DARK_eth.8 }
+				}
+				else_if = {
+					limit = {
+						OR = {
+							FRA = { has_country_flag = chosen_eth_peace_flag }
+							ENG = { has_country_flag = chosen_eth_peace_flag }
+						}
+					}
+					if = {
+						limit = { original_tag = ENG }
+						FRA = { country_event = DARK_eth.17 }
+						
+						else = {
+							ENG = { country_event = DARK_eth.17 }
+						}
+					}
+				}
+				else = {
+					set_country_flag = chosen_ita_peace_flag
+				}
+			}
+		}
+		option = { #Choose Ethiopia
+			name = DARK_eth.7.b
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 10
+					has_government = communism
+				}
+				modifier = {
+					factor = 100
+					has_war = yes # We don't have the time to deal with this right now, just take the deal!"
+					NOT = { is_in_faction_with = FROM }
+				}
+				modifier = {
+					factor = 100
+					is_in_faction_with = ETH
+				}
+			}
+			
+			add_stability = 0.05
+			
+			hidden_effect = {
+				if = {
+					limit = { 
+						OR = {
+							FRA = { has_country_flag = chosen_eth_peace_flag }
+							ENG = { has_country_flag = chosen_eth_peace_flag }
+						}
+					}
+					ITA = { country_event = DARK_eth.15 }
+				}
+				else_if = {
+					limit = {
+						OR = {
+							FRA = { has_country_flag = chosen_ita_peace_flag }
+							ENG = { has_country_flag = chosen_ita_peace_flag }
+						}
+					}
+					if = {
+						limit = { original_tag = ENG }
+						FRA = { country_event = DARK_eth.17 }
+						
+						else = {
+							ENG = { country_event = DARK_eth.17 }
+						}
+					}
+				}
+				else = {
+					set_country_flag = chosen_eth_peace_flag
+				}
+			}
+		}
+	}
+		country_event = { #Great Powers Back Italy
+			id = DARK_eth.8
+			title = DARK_eth.8.t
+			desc = DARK_eth.8.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = { #Just Eritrea then
+				name = DARK_eth.8.a
+				ai_chance = {
+					base = 1
+				}
+				
+				ITA = { country_event = { id = DARK_eth.9 hours = 6 } }
+			}
+			option = { #They'd never risk war!
+				name = DARK_eth.8.b
+				ai_chance = {
+					base = 0
+				}
+				
+				custom_effect_tooltip = DARK_risk_war_with_majors_tt
+				add_war_support = -0.2
+				add_stability = -0.2
+				ENG = { country_event = { id = DARK_eth.10 hours = 6 } }
+				FRA = { country_event = { id = DARK_eth.10 hours = 6 } }
+			}
+		}
+			country_event = { #Ethiopia now demands only Eritrea
+				id = DARK_eth.9
+				title = DARK_eth.9.t
+				desc = DARK_eth.9.desc
+				picture = GFX_report_event_angry_mussolini
+				
+				is_triggered_only = yes
+				
+				option = { #Agree, too reasonable to argue
+					name = DARK_eth.9.a
+					
+					effect_tooltip = {
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = FROM
+									is_subject_of = FROM
+									is_in_faction_with = FROM
+								}
+							}
+							white_peace = ROOT
+						}
+						FROM = { transfer_state = 550 }
+					}
+					add_popularity = { ideology = fascism popularity = -0.2 }
+					FROM = { country_event = { id = DARK_eth.4 hours = 6 } }
+				}
+			}
+		country_event = { #Ethiopia refuses
+			id = DARK_eth.10
+			title = DARK_eth.10.t
+			desc = DARK_eth.10.desc
+			picture = GFX_report_event_haile_selassie_inspects_troops
+			
+			is_triggered_only = yes
+			
+			option = { #Uh, on second thought, they can have whatever they want
+				name = DARK_eth.10.a
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 5
+						has_government = communism
+					}
+				}
+				
+				add_war_support = -0.05
+				ITA = { country_event = { id = DARK_eth.12 hours = 6 } }				
+			}
+			option = { #Those upstarts!
+				name = DARK_eth.10.b
+				ai_chance = {
+					base = 3
+				}
+				
+				if = {
+					limit = { has_government = neutrality }
+					add_popularity = { ideology = neutrality popularity = -0.1 }
+				}
+				else_if = {
+					limit = { has_government = democratic }
+					add_popularity = { ideology = democratic popularity = -0.1 }
+				}
+				else_if = {
+					limit = { has_government = communism }
+					add_popularity = { ideology = communism popularity = -0.2 }
+				}
+				else_if = {
+					limit = { has_government = fascism }
+					add_popularity = { ideology = fascism popularity = -0.1 }
+				}
+				declare_war_on = {
+					type = puppet_wargoal_focus
+					target = FROM
+				}
+				hidden_effect = {
+					set_global_flag = war_over_ETH
+				}
+				ITA = { country_event = DARK_eth.11 }
+			}			
+		}
+			country_event = { #Major backs Italy in war
+				id = DARK_eth.11
+				title = DARK_eth.11.t
+				desc = DARK_eth.11.desc
+				picture = GFX_report_event_french_british_officers
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.11.a
+					
+					add_war_support = 0.1
+					add_popularity = { ideology = fascism popularity = 0.1 }
+				}
+			}
+			country_event = { #Major backs down
+				id = DARK_eth.12
+				title = DARK_eth.12.t
+				desc = DARK_eth.12.desc
+				picture = GFX_report_event_angry_mussolini
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.12.a
+					
+					add_opinion_modifier = {
+						target = FROM
+						modifier = DARK_reneged_on_promise
+					}
+					
+					hidden_effect = {
+						if = {
+							limit = {
+								has_country_flag = DARK_major_reneged
+							}
+							country_event = { id = DARK_eth.13 hours = 24 }
+						}
+						else = {
+							set_country_flag = DARK_major_reneged
+						}
+					}
+				}
+			}
+				country_event = { #Both majors backed down
+					id = DARK_eth.13
+					title = DARK_eth.13.t
+					desc = DARK_eth.13.desc
+					picture = GFX_report_event_angry_mussolini
+					
+					is_triggered_only = yes
+					
+					option = { #We have no choice but to accept...
+						name = DARK_eth.13.a
+						
+						effect_tooltip = {
+							every_enemy_country = {
+								limit = { 
+									OR = {
+										tag = ETH
+										is_subject_of = ETH
+										is_in_faction_with = ETH
+									}
+								}
+								white_peace = ROOT
+							}
+							ETH = { transfer_state = 550 }
+							ETH = { transfer_state = 559 }
+						}
+						ETH = { country_event = { id = DARK_eth.14 hours = 12 } }
+					}
+				}
+				country_event = { #Both majors backed down
+					id = DARK_eth.14
+					title = DARK_eth.14.t
+					desc = DARK_eth.14.desc
+					picture = GFX_report_event_angry_mussolini
+					
+					is_triggered_only = yes
+					
+					option = { #We have no choice but to accept...
+						name = DARK_eth.14.a
+						
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = FROM
+									is_subject_of = FROM
+									is_in_faction_with = FROM
+								}
+							}
+							white_peace = ROOT
+						}
+						transfer_state = 550
+						transfer_state = 559
+						hidden_effect = {
+							news_event = { id = DARK_eth.101 hours = 24 }
+						}
+					}
+				}
+		country_event = { #Great Powers Back Ethiopia
+			id = DARK_eth.15
+			title = DARK_eth.15.t
+			desc = DARK_eth.15.desc
+			picture = GFX_report_event_angry_mussolini
+			
+			is_triggered_only = yes
+			
+			option = { #We have no choice but to surrender then...
+				name = DARK_eth.15.a
+				
+				effect_tooltip = {
+					every_enemy_country = {
+						limit = { 
+							OR = {
+								tag = ETH
+								is_subject_of = ETH
+								is_in_faction_with = ETH
+							}
+						}
+						white_peace = ROOT
+					}
+					ETH = { transfer_state = 550 }
+					ETH = { transfer_state = 559 }
+				}
+				ETH = { country_event = { id = DARK_eth.16 hours = 12 } }
+			}
+		}
+			country_event = { #Great Powers Backed Ethiopia
+				id = DARK_eth.16
+				title = DARK_eth.16.t
+				desc = DARK_eth.16.desc
+				picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.16.a
+						
+					every_enemy_country = {
+						limit = { 
+							OR = {
+								tag = FROM
+								is_subject_of = FROM
+								is_in_faction_with = FROM
+							}
+						}
+						white_peace = ROOT
+					}
+					transfer_state = 550
+					transfer_state = 559
+					
+					add_opinion_modifier = {
+						target = ENG
+						modifier = ETH_backed_us
+					}
+					add_opinion_modifier = {
+						target = FRA
+						modifier = ETH_backed_us
+					}
+					
+					hidden_effect = {
+						news_event = { id = DARK_eth.101 hours = 24 }
+					}
+				}
+			}
+		country_event = { #Great Powers Divided
+			id = DARK_eth.17
+			title = DARK_eth.17.t
+			desc = DARK_eth.17.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = { #Push the point
+				name = DARK_eth.17.a
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 5
+						has_country_flag = chosen_eth_peace_flag
+					}
+				}
+				
+				if = {
+					limit = { original_tag = ENG }
+					FRA = { country_event = { id = DARK_eth.18 hours = 12 } }
+				}
+				else = {
+					ENG = { country_event = { id = DARK_eth.18 hours = 12 } }
+				}
+			}
+			option = { #Accept the other point of view
+				name = DARK_eth.17.b
+				ai_chance = {
+					base = 1
+				}
+				
+				if = {
+					limit = { has_country_flag = chosen_eth_peace_flag }
+					add_war_support = -0.05
+					ETH = { country_event = DARK_eth.8 }
+				}
+				else = {
+					ITA = { country_event = DARK_eth.15 }
+				}
+				if = {
+					limit = { original_tag = ENG }
+					FRA = { country_event = { id = DARK_eth.19 hours = 6 } }
+				}
+				else = {
+					FRA = { country_event = { id = DARK_eth.19 hours = 6 } }
+				}
+			}
+		}
+		country_event = { #Great Powers Divided Cont.
+			id = DARK_eth.18
+			title = DARK_eth.18.t
+			desc = {
+				text = DARK_eth.18.desc1
+				trigger = {
+					NOT = { has_country_flag = hard_enough_flag }
+				}
+			}
+			desc = {
+				text = DARK_lib.18.desc2
+				trigger = {
+					has_country_flag = hard_enough_flag
+				}
+			}
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = { # This is not worth war
+				name = DARK_eth.18.a
+				ai_chance = {
+					base = 10
+				}
+				
+				if = {
+					limit = { has_country_flag = chosen_ita_peace_flag }
+					add_war_support = -0.05
+					ETH = { country_event = DARK_eth.8 }
+				}
+				else = {
+					ITA = { country_event = DARK_eth.15 }
+				}
+				hidden_effect = {
+					clr_country_flag = hard_enough_flag
+				}
+				if = {
+					limit = { original_tag = ENG }
+					FRA = { country_event = { id = DARK_eth.19 hours = 6 } }
+				}
+				else = {
+					FRA = { country_event = { id = DARK_eth.19 hours = 6 } }
+				}
+			}
+			option = { # Think you're hard enough then!?
+				name = DARK_eth.18.b
+				trigger = {
+					has_war_support > 0.1
+					NOT = { has_country_flag = hard_enough_flag }
+				}
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 5
+						has_country_flag = chosen_eth_peace_flag
+					}
+					modifier = {
+						factor = 10
+						OR = {
+							is_in_faction_with = ITA
+							is_in_faction_with = ETH
+						}
+					}
+				}
+				
+				if = {
+					limit = { has_country_flag = chosen_ita_peace_flag }
+					add_war_support = -0.05
+					hidden_effect = {
+						set_country_flag = hard_enough_flag
+					}
+					FROM = { country_event = { id = DARK_eth.18 hours = 12 } }
+				}
+				else = {
+					hidden_effect = {
+						set_country_flag = hard_enough_flag
+					}
+					FROM = { country_event = { id = DARK_eth.18 hours = 12 } }
+				}
+			}
+			option = { #We Are Hard Enough!
+				name = DARK_eth.18.c
+				trigger = {
+					has_country_flag = hard_enough_flag
+				}
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 5
+						OR = {
+							is_in_faction_with = ITA
+							is_in_faction_with = ETH
+						}
+					}
+				}
+				
+				declare_war_on = {
+					type = puppet_wargoal_focus
+					target = FROM
+				}
+				if = {
+					limit = { has_country_flag = chosen_ita_peace_flag }
+						declare_war_on = {
+						type = puppet_wargoal_focus
+						target = ETH
+					}
+					if = {
+						limit = { 
+							is_faction_leader = yes
+							ITA = { is_in_faction = no }
+						}
+						add_to_faction = ITA
+					}	
+					else_if = {
+						limit = { 
+							is_faction_leader = no
+							is_in_faction = no
+							ITA = { is_in_faction = no }
+						}
+						create_faction = DARK_italian_league
+						add_to_faction = ITA
+					}
+				}
+				else = {
+					declare_war_on = {
+						type = puppet_wargoal_focus
+						target = ITA
+					}
+					if = {
+						limit = { 
+							is_faction_leader = yes
+							ETH = { is_in_faction = no }
+						}
+						add_to_faction = ETH
+					}
+					else_if = {
+						limit = { 
+							is_faction_leader = no
+							is_in_faction = no
+							ETH = { is_in_faction = no }
+						}
+						create_faction = DARK_ethiopian_league
+						add_to_faction = ETH
+					}
+				}
+				hidden_effect = {
+					clr_country_flag = hard_enough_flag
+					FROM = { clr_country_flag = hard_enough_flag }
+					FROM = { country_event = DARK_eth.20 }
+					news_event = { id = DARK_eth.100 hours = 24 }
+				}
+			}
+		}
+		country_event = { #Other power backs down
+			id = DARK_eth.19
+			title = DARK_eth.19.t
+			desc = DARK_eth.19.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.19.a
+				
+				add_political_power = 50
+				add_stability = 0.05
+				add_war_support = 0.05
+				
+				hidden_effect = {
+					clr_country_flag = hard_enough_flag
+					FROM = { clr_country_flag = hard_enough_flag }
+				}
+			}
+		}
+		country_event = { #WAR
+			id = DARK_eth.20
+			title = DARK_eth.20.t
+			desc = DARK_eth.20.desc
+			picture = GFX_report_event_soldiers_marching
+			
+			is_triggered_only = yes
+			
+			immediate = {
+				declare_war_on = {
+					type = puppet_wargoal_focus
+					target = FROM
+				}
+				if = {
+					limit = { has_country_flag = chosen_ita_peace_flag }
+						declare_war_on = {
+						type = puppet_wargoal_focus
+						target = ETH
+					}
+					if = {
+						limit = { 
+							is_faction_leader = yes
+							ITA = { is_in_faction = no }
+						}
+						add_to_faction = ITA
+					}
+					else_if = {
+						limit = { 
+							is_faction_leader = no
+							is_in_faction = no
+							ITA = { is_in_faction = no }
+						}
+						create_faction = DARK_italian_league
+						add_to_faction = ITA
+					}
+				}
+				else = {
+					declare_war_on = {
+						type = puppet_wargoal_focus
+						target = ITA
+					}
+					if = {
+						limit = { 
+							is_faction_leader = yes
+							ETH = { is_in_faction = no }
+						}
+						add_to_faction = ETH					
+					}
+					else_if = {
+						limit = { 
+							is_faction_leader = no
+							is_in_faction = no
+							ETH = { is_in_faction = no }
+						}
+						create_faction = DARK_ethiopian_league
+						add_to_faction = ETH
+					}
+				}
+			}
+			
+			option = {
+				name = DARK_eth.20.a
+				
+				hidden_effect = {
+					set_global_flag = war_over_ETH
+				}
+			}
+		}
+		
+##Italian War Troubles
+#1937, no progress
+country_event = {
+	id = DARK_eth.21
+	title = DARK_eth.21.t
+	desc = DARK_eth.21.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	fire_only_once = yes
+	trigger = {
+		original_tag = ITA
+		date > 1937.01.01
+		date < 1938.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+		ETH = { 
+			surrender_progress < 0.25
+			NOT = { controls_state = 550 }
+			NOT = { controls_state = 559 }
+		}
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.21.a
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.21.b
+		ai_chance = {
+			base = 10
+		}
+		
+		add_war_support = -0.05
+	}
+}
+	country_event = { #Italy Offers Peace
+		id = DARK_eth.22
+		title = DARK_eth.22.t
+		desc = DARK_eth.22.desc
+		picture = GFX_report_event_haile_selassie_court
+		
+		is_triggered_only = yes
+		
+		option = { #Take it
+			name = DARK_eth.22.a
+			ai_chance = {
+				base = 10			
+			}
+			
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = FROM
+						is_subject_of = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				white_peace = ROOT
+			}
+			hidden_effect = {
+				set_global_flag = DARK_end_of_ita_eth_war
+				news_event = { id = DARK_eth.102 hours = 12 }
+			}
+		}
+		
+		option = { #Demand Eritrea
+			name = DARK_eth.22.b
+			trigger = {
+				OR = {
+					controls_state = 550
+					controls_state = 559
+				}
+			}
+			ai_chance = {
+				base = 100
+			}
+			custom_effect_tooltip = ETH_if_ita_accepts_tt
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = ETH
+							is_subject_of = ETH
+							is_in_faction_with = ETH
+						}
+					}
+					white_peace = ROOT
+				}
+				transfer_state = 550
+			}
+			FROM = { country_event = { id = DARK_eth.26 hours = 12 } }
+		}
+		
+		option = { #Bah, we'll have them out by next year
+			name = DARK_eth.22.c
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 20
+					controls_state = 550
+				}
+				modifier = {
+					factor = 20
+					controls_state = 559
+				}
+			}
+			
+			if = {
+				limit = {
+					NOT = { controls_state = 550 }
+					NOT = { controls_state = 559 }
+				}
+				add_war_support = -0.1
+			}			
+			FROM = { country_event = { id = DARK_eth.23 hours = 12 } }
+		}
+	}
+		country_event = { #Ethiopia Refuses Peace
+			id = DARK_eth.23
+			title = DARK_eth.23.t
+			desc = DARK_eth.23.desc
+			picture = GFX_report_event_haile_selassie_court
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.23.a
+				
+				if = {
+					limit = {
+						controls_state = 550
+						controls_state = 559
+					}
+					add_war_support = 0.05
+				}
+			}
+		}
+#1937, Lost either Somalia or Eritrea (but not both)
+country_event = {
+	id = DARK_eth.24
+	title = DARK_eth.24.t
+	desc = DARK_eth.24.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	fire_only_once = yes
+	trigger = {
+		original_tag = ITA
+		has_civil_war = no
+		date > 1937.01.01
+		date < 1938.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+		ETH = { 
+			surrender_progress < 0.25 
+			OR = {
+				controls_state = 550
+				controls_state = 559
+			}
+			NOT = {
+				AND = {
+					controls_state = 550
+					controls_state = 559
+				}
+			}
+		}
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.24.a
+		ai_chance = {
+			base = 10
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Offer Eritrea
+		name = DARK_eth.24.b
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT				
+			}
+			ETH = { transfer_state = 550 }
+		}
+		ETH = { country_event = { id = DARK_eth.25 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.24.b
+		ai_chance = {
+			base = 10
+		}
+		
+		add_war_support = -0.1
+	}
+}
+	country_event = { #Italy Offers Eritrea
+		id = DARK_eth.25
+		title = DARK_eth.25.t
+		desc = DARK_eth.25.desc
+		picture = GFX_report_event_haile_selassie_court
+
+		is_triggered_only = yes
+		
+		option = { #Take it
+			name = DARK_eth.25.a
+			ai_chance = {
+				base = 20
+			}
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = FROM
+						is_subject_of = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				white_peace = ROOT				
+			}
+			transfer_state = 550
+			hidden_effect = { 
+				set_global_flag = DARK_end_of_ita_eth_war
+				news_event = { id = DARK_eth.101 hours = 24 }
+			}
+		}
+		
+		option = { #Bah, we'll have them out by next year
+			name = DARK_eth.25.b
+			trigger = {
+				has_war_support > 0.5
+			}
+			ai_chance = {
+				base = 1
+			}
+			
+			add_war_support = -0.1
+			FROM = { country_event = { id = DARK_eth.23 hours = 24 } }
+		}
+	}
+	country_event = { #Ethiopia Demands Eritrea
+		id = DARK_eth.26
+		title = DARK_eth.26.t
+		desc = DARK_eth.26.desc
+		picture = GFX_report_event_angry_mussolini
+
+		is_triggered_only = yes
+		
+		option = { #FINE
+			name = DARK_eth.26.a
+			ai_chance = {
+				base = 1
+			}
+			
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT				
+				}
+				FROM = { transfer_state = 550 }
+			}
+			FROM = { country_event = { id = DARK_eth.27 } }
+		}
+		
+		option = { #NEVER
+			name = DARK_eth.26.b
+			trigger = {
+				has_war_support > 0.25
+			}
+			ai_chance = {
+				base = 10
+			}
+			
+			FROM = { country_event = { id = DARK_eth.28 hours = 24 } }
+		}
+	}
+		country_event = { #Italy Cedes Eritrea
+			id = DARK_eth.27
+			title = DARK_eth.27.t
+			desc = DARK_eth.27.desc
+			picture = GFX_report_event_haile_selassie_inspects_troops
+
+			is_triggered_only = yes
+			
+			option = { #FINE
+				name = DARK_eth.27.a
+				
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT				
+				}
+				transfer_state = 550
+				hidden_effect = {
+					set_global_flag = DARK_end_of_ita_eth_war
+					news_event = { id = DARK_eth.101 hours = 24 }
+				}
+			}
+		}
+		country_event = { #Italy Refuses Eritrea
+			id = DARK_eth.28
+			title = DARK_eth.28.t
+			desc = DARK_eth.28.desc
+			picture = GFX_report_event_angry_mussolini
+
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.28.a
+				
+			}
+		}
+#1938, no progress
+country_event = {
+	id = DARK_eth.29
+	title = DARK_eth.29.t
+	desc = DARK_eth.29.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	fire_only_once = yes
+	trigger = {
+		original_tag = ITA
+		has_civil_war = no
+		date > 1938.01.01
+		date < 1939.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+		ETH = { 
+			surrender_progress < 0.25
+			NOT = { controls_state = 550 }
+			NOT = { controls_state = 559 }
+		}
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.29.a		
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.29.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0.1
+				has_war_support < 0.35
+			}
+		}
+		
+		add_war_support = -0.1
+		custom_effect_tooltip = DARK_italian_warning_tt
+	}
+}
+	#Fascist Government Collapses
+	country_event = {
+		id = DARK_eth.30
+		title = DARK_eth.30.t
+		desc = DARK_eth.30.desc
+		picture = GFX_report_event_angry_mussolini
+		
+		fire_only_once = yes
+		trigger = {
+			tag = ITA
+			has_civil_war = no
+			has_government = fascism
+			has_war_support < 0.25
+			date > 1938.01.01
+			has_war_with = ETH
+			NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+			NOT = { has_global_flag = war_over_ETH }
+			NOT = { has_global_flag = ETH_eth_lost_war }
+			OR = {
+				ETH = { surrender_progress < 0.5 }
+				date > 1939.3.1
+			}
+		}
+		mean_time_to_happen = {
+			days = 60
+		}
+		
+		option = { #Give up Power
+			name = DARK_eth.30.a		
+			ai_chance = {
+				base = 3
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							rule = DARK_new_italy_ai_behavior
+							option = FASCIST
+						}
+						has_country_flag = NEW_ITA_AI_RANDOM_FASCIST
+					}
+				}
+			}
+			
+			hidden_effect = {
+				DARK_set_italian_focus_flags = yes
+				set_cosmetic_tag = NEW_ITALY
+			}
+			load_focus_tree = new_italian_focus
+			add_stability = -0.15
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
+			add_popularity = { ideology = fascism popularity = -0.2 }
+			add_popularity = { ideology = democratic popularity = 0.1 }
+			add_popularity = { ideology = communism popularity = 0.1 }
+			add_popularity = { ideology = neutrality popularity = 0.15 }
+			remove_ideas = vittoria_mutilata
+			set_party_name = { ideology = neutrality long_name = "Casa Savoia" name = "CS" }
+			ITA_victor_emmanuel_iii = {
+				promote_character = yes
+				add_country_leader_trait = DARK_soldier_king
+			}
+			custom_effect_tooltip = ETH_if_eth_accepts_tt
+			effect_tooltip = {
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = ETH
+							is_subject_of = ETH
+							is_in_faction_with = ETH
+						}
+					}
+					white_peace = ROOT
+				}
+				ETH = { transfer_state = 550 }
+			}
+			ETH = { country_event = { id = DARK_eth.31 hours = 36 } }
+			
+			hidden_effect = {
+				news_event = { id = DARK_eth.103 hours = 24 }
+			}
+		}
+		option = { #FIGHT
+			name = DARK_eth.30.b		
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					OR = {
+						has_game_rule = {
+							rule = DARK_new_italy_ai_behavior
+							option = NONALIGNED
+						}
+						has_game_rule = {
+							rule = DARK_new_italy_ai_behavior
+							option = DEMOCRATIC
+						}
+						has_game_rule = {
+							rule = DARK_new_italy_ai_behavior
+							option = COMMUNIST
+						}
+						has_country_flag = NEW_ITA_AI_RANDOM_NONALIGNED
+						has_country_flag = NEW_ITA_AI_RANDOM_DEMOCRATIC
+						has_country_flag = NEW_ITA_AI_RANDOM_COMMUNIST
+					}
+				}
+			}
+			
+			add_stability = -0.3
+			start_civil_war = {
+				ideology = neutrality
+				size = 0.75
+				keep_unit_leaders_trigger = {
+					has_unit_leader_flag = DARK_fascist_leader
+				}
+			}
+			hidden_effect = {
+				remove_ideas = victor_emmanuel
+				random_other_country = {
+					limit = {
+						original_tag = ITA
+						NOT = { tag = ITA }
+					}
+					save_event_target_as = DARK_italian_civil_war
+					add_ideas = victor_emmanuel
+					add_ideas = DARK_anti_fascist_sentiment
+					remove_ideas = vittoria_mutilata
+					set_politics = {
+						ruling_party = neutrality
+						elections_allowed = yes
+						election_frequency = 48
+					}
+					set_party_name = { ideology = neutrality long_name = "Casa Savoia" name = "CS" }
+					ETH = { country_event = { id = DARK_eth.34 hours = 36 } }
+					ITA = {
+						every_character = {
+							limit = {
+								OR = {
+									has_unit_leader_flag = DARK_unfascist_leader
+									is_character = ITA_victor_emmanuel_iii
+								}
+							}
+							set_nationality = event_target:DARK_italian_civil_war
+						}
+					}
+					ITA_victor_emmanuel_iii = {
+						promote_character = yes
+						add_country_leader_trait = DARK_soldier_king
+					}
+				}
+				news_event = { id = DARK_eth.104 hours = 24 }
+			}
+		}
+	}
+		country_event = { #New Italian Government Offers Eritrea
+			id = DARK_eth.31
+			title = DARK_eth.31.t
+			desc = DARK_eth.31.desc
+			picture = GFX_report_event_haile_selassie_court
+			
+			is_triggered_only = yes
+			
+			option = { #Accept
+				name = DARK_eth.31.a
+				ai_chance = {
+					base = 1
+				}
+				
+				every_enemy_country = {
+					limit = { 
+						OR = {
+							tag = FROM
+							is_subject_of = FROM
+							is_in_faction_with = FROM
+						}
+					}
+					white_peace = ROOT
+				}
+				transfer_state = 550
+				
+				hidden_effect = {
+					set_global_flag = DARK_end_of_ita_eth_war
+					news_event = { id = DARK_eth.101 hours = 24 }
+				}
+			}
+			option = { #Push for Somalia
+				name = DARK_eth.31.b
+				ai_chance = {
+					base = 1
+					modifier = {
+						add = 4
+						controls_state = 550
+					}
+					modifier = {
+						add = 5
+						controls_state = 559
+					}
+				}
+				
+				if = {
+					limit = {
+						NOT = { controls_state = 550 }
+					}
+					add_war_support = -0.1
+				}
+				if = {
+					limit = {
+						NOT = { controls_state = 559 }
+					}
+					add_war_support = -0.1
+				}
+				FROM = { country_event = { id = DARK_eth.32 hours = 6 } }
+			}
+		}
+			country_event = { #Ethiopia Demands Somalia Too
+				id = DARK_eth.32
+				title = DARK_eth.32.t
+				desc = DARK_eth.32.desc
+				picture = GFX_report_event_haile_selassie_inspects_troops
+				
+				is_triggered_only = yes
+				
+				option = { #...Damn them
+					name = DARK_eth.32.a
+					ai_chance = {
+						base = 1
+					}
+					
+					every_enemy_country = {
+						limit = { 
+							OR = {
+								tag = FROM
+								is_subject_of = FROM
+								is_in_faction_with = FROM
+							}
+						}
+						white_peace = ROOT
+					}
+					FROM = { transfer_state = 550 }
+					FROM = { transfer_state = 559 }
+					
+					hidden_effect = {
+						set_global_flag = DARK_end_of_ita_eth_war
+						news_event = { id = DARK_eth.101 hours = 24 }
+					}
+				}
+				option = { #Excuse you!?
+					name = DARK_eth.32.b
+					ai_chance = {
+						base = 2
+						modifier = {
+							add = -1
+							NOT = { controls_state = 550 }
+						}
+						modifier = {
+							add = -1
+							NOT = { controls_state = 559 }
+						}							
+					}
+					
+					if = {
+						limit = {
+							NOT = { controls_state = 550 }
+						}
+						add_stability = -0.1
+						add_war_support = -0.1
+					}
+					if = {
+						limit = {
+							NOT = { controls_state = 559 }
+						}
+						add_stability = -0.1
+						add_war_support = -0.1
+					}	
+					FROM = { country_event = { id = DARK_eth.33 hours = 6 } }
+				}
+			}
+				country_event = { #New Italy Refuses
+					id = DARK_eth.33
+					title = DARK_eth.33.t
+					desc = DARK_eth.33.desc
+					picture = GFX_report_event_haile_selassie_court
+					
+					is_triggered_only = yes
+		
+					option = { #Then we TAKE the land!
+						name = DARK_eth.33.a
+						
+					}
+				}
+		country_event = { #Uprising Italy offers Eritrea
+			id = DARK_eth.34
+			title = DARK_eth.34.t
+			desc = DARK_eth.34.desc
+			picture = GFX_report_event_haile_selassie_inspects_troops
+			
+			is_triggered_only = yes
+			
+			option = { #Accept Eritrea
+				name = DARK_eth.34.a
+				ai_chance = {
+					base = 1
+				}
+				
+				every_other_country = {
+					limit = {
+						original_tag = ITA
+						NOT = { tag = ITA }
+					}
+					country_event = { id = DARK_eth.35 hours = 6 }
+					hidden_effect = {
+						save_event_target_as = DARK_italian_civil_war
+						set_country_flag = DARK_will_give_up_e
+					}
+				}
+				diplomatic_relation = {
+					country = event_target:DARK_italian_civil_war
+					relation = non_aggression_pact
+					active = yes
+				}
+				diplomatic_relation = {
+					country = event_target:DARK_italian_civil_war
+					relation = military_access
+					active = yes
+				}
+				event_target:DARK_italian_civil_war = {
+					diplomatic_relation = {
+						country = ROOT
+						relation = military_access
+						active = yes
+					}
+				}
+			}
+			option = { #Push for Somalia
+				name = DARK_eth.34.b
+				ai_chance = {
+					base = 2
+					modifier = {
+						factor = 5
+						OR = {
+							controls_state = 550
+							controls_state = 559
+						}
+					}
+				}
+				
+				every_other_country = {
+					limit = {
+						original_tag = ITA
+						NOT = { tag = ITA }
+					}
+					country_event = { id = DARK_eth.36 hours = 6 }
+				}
+			}
+		}
+			country_event = { #Ethiopia Agreement for Eritrea
+				id = DARK_eth.35
+				title = DARK_eth.35.t
+				desc = DARK_eth.35.desc
+				picture = GFX_report_event_haile_selassie_court
+				
+				is_triggered_only = yes
+	
+				option = { #Ummm, yay?
+					name = DARK_eth.35.a
+					
+					effect_tooltip = {
+						diplomatic_relation = {
+							country = FROM
+							relation = non_aggression_pact
+							active = yes
+						}
+						diplomatic_relation = {
+							country = FROM
+							relation = military_access
+							active = yes
+						}
+						FROM = {
+							diplomatic_relation = {
+								country = ROOT
+								relation = military_access
+								active = yes
+							}
+						}
+					}
+					custom_effect_tooltip = ETH_give_up_e_tt
+				}
+			}
+		country_event = { #Ethiopia Also Demands Somalia
+			id = DARK_eth.36
+			title = DARK_eth.36.t
+			desc = DARK_eth.36.desc
+			picture = GFX_report_event_haile_selassie_court
+			
+			is_triggered_only = yes
+
+			option = { #We don't really have a choice do we?
+				name = DARK_eth.36.a
+				ai_chance = {
+					base = 1
+				}
+				
+				custom_effect_tooltip = ETH_give_up_e_s_tt
+				diplomatic_relation = {
+					country = FROM
+					relation = non_aggression_pact
+					active = yes
+				}
+				diplomatic_relation = {
+					country = FROM
+					relation = military_access
+					active = yes
+				}
+				FROM = {
+					diplomatic_relation = {
+						country = ROOT
+						relation = military_access
+						active = yes
+					}
+				}
+				FROM = { country_event = { id = DARK_eth.37 hours = 12 } }
+				hidden_effect = {
+					set_country_flag = DARK_will_give_up_e
+					set_country_flag = DARK_will_give_up_s
+				}
+			}
+			option = { #Uh, yeah no
+				name = DARK_eth.36.b
+				trigger = {
+					OR = {
+						controls_state = 550
+						controls_state = 559
+					}
+				}
+				ai_chance = {
+					base = 3
+				}
+				
+				custom_effect_tooltip = ETH_beware_eth_tt
+				FROM = { country_event = { id = DARK_eth.38 hours = 12 } }
+			}
+		}
+			country_event = { #Italian Agreement for Eritrea & Somalia
+				id = DARK_eth.37
+				title = DARK_eth.37.t
+				desc = DARK_eth.37.desc
+				picture = GFX_report_event_haile_selassie_court
+				
+				is_triggered_only = yes
+	
+				option = {
+					name = DARK_eth.37.a
+					
+					effect_tooltip = {
+						diplomatic_relation = {
+							country = FROM
+							relation = non_aggression_pact
+							active = yes
+						}
+						diplomatic_relation = {
+							country = FROM
+							relation = military_access
+							active = yes
+						}
+						FROM = {
+							diplomatic_relation = {
+								country = ROOT
+								relation = military_access
+								active = yes
+							}
+						}
+					}
+				}
+			}
+		country_event = { #New Italy Refuses Somalia
+			id = DARK_eth.38
+			title = DARK_eth.38.t
+			desc = DARK_eth.38.desc
+			picture = GFX_report_event_haile_selassie_court
+			
+			is_triggered_only = yes
+
+			option = { #Meh Fine
+				name = DARK_eth.38.a
+				ai_chance = {
+					base = 1
+				}
+				
+				FROM = { country_event = { id = DARK_eth.35 hours = 12 } }
+				hidden_effect = {
+					FROM = { set_country_flag = DARK_will_give_up_e }
+				}
+			}
+			option = { #Oh really?
+				name = DARK_eth.38.b
+				ai_chance = {
+					base = 2
+				}
+				
+				add_state_claim = 559
+				declare_war_on = {
+					type = take_state_focus
+					target = FROM
+					generator = { 550 559 }
+				}
+			}
+		}
+		country_event = { #Ethiopia gets transferred land
+			id = DARK_eth.39
+			title = DARK_eth.39.t
+			desc = DARK_eth.39.desc
+			picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+			
+			is_triggered_only = yes
+
+			option = {
+				name = DARK_eth.39.a
+			}
+		}
+		country_event = { #Ethiopia gets transferred land, Italy
+			id = DARK_eth.40
+			title = DARK_eth.40.t
+			desc = DARK_eth.40.desc
+			picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+			
+			is_triggered_only = yes
+
+			option = {
+				name = DARK_eth.40.a
+			}
+		}
+#1938, Lost either Somalia or Eritrea (but not both)
+country_event = {
+	id = DARK_eth.41
+	title = DARK_eth.41.t
+	desc = DARK_eth.41.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	fire_only_once = yes
+	trigger = {
+		original_tag = ITA
+		has_civil_war = no
+		date > 1938.01.01
+		date < 1939.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+		ETH = { 
+			surrender_progress < 0.3
+			OR = {
+				controls_state = 550
+				controls_state = 559
+			}
+			NOT = {
+				AND = {
+					controls_state = 550
+					controls_state = 559
+				}
+			}
+		}
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.41.a
+		ai_chance = {
+			base = 10
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Offer Eritrea
+		name = DARK_eth.41.b
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT				
+			}
+			ETH = { transfer_state = 550 }
+		}
+		ETH = { country_event = { id = DARK_eth.25 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.41.b
+		ai_chance = {
+			base = 5
+		}
+		
+		add_stability = -0.1
+		add_war_support = -0.2
+		custom_effect_tooltip = DARK_italian_warning_tt
+	}
+}
+#1939, War STILL has not ended
+country_event = {
+	id = DARK_eth.42
+	title = DARK_eth.42.t
+	desc = DARK_eth.42.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	fire_only_once = yes
+	trigger = {
+		original_tag = ITA
+		has_civil_war = no
+		date > 1939.01.01
+		date < 1940.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	immediate = {
+		add_war_support = -0.05
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.42.a
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Offer Eritrea
+		name = DARK_eth.42.b
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT				
+			}
+			ETH = { transfer_state = 550 }
+		}
+		ETH = { country_event = { id = DARK_eth.25 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.42.b
+		ai_chance = {
+			base = 1
+		}
+		
+		add_stability = -0.2
+		add_war_support = -0.25
+		custom_effect_tooltip = DARK_italian_warning_tt
+	}
+}
+#1939+, War Is Demanded to be ended
+country_event = {
+	id = DARK_eth.43
+	title = DARK_eth.43.t
+	desc = DARK_eth.43.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	trigger = {
+		original_tag = ITA
+		has_civil_war = no
+		date > 1939.01.01
+		has_war_with = ETH
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+	}
+	mean_time_to_happen = {
+		days = 365
+	}
+	
+	immediate = {
+		add_war_support = -0.05
+	}
+	
+	option = { #Offer White Peace
+		name = DARK_eth.43.a
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = { id = DARK_eth.22 hours = 12 } }
+	}
+	
+	option = { #Offer Eritrea
+		name = DARK_eth.43.b
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT				
+			}
+			ETH = { transfer_state = 550 }
+		}
+		ETH = { country_event = { id = DARK_eth.25 hours = 12 } }
+	}
+	
+	option = { #Bah, we'll have them by next year
+		name = DARK_eth.43.b
+		ai_chance = {
+			base = 1
+		}
+		
+		add_stability = -0.25
+		add_war_support = -0.25
+		custom_effect_tooltip = DARK_italian_warning_tt
+	}
+}
+
+##Italian Government Crisis
+country_event = {
+	id = DARK_eth.44
+	title = DARK_eth.44.t
+	desc = DARK_eth.44.desc
+	picture = GFX_report_event_angry_mussolini
+	
+	trigger = {
+		tag = ITA
+		has_government = fascism
+		is_subject = no
+		has_war = no
+		NOT = {
+			271 = {
+				OWNER = {
+					OR = {
+						tag = ROOT
+						is_subject_of = ROOT
+					}
+				}
+			}
+		}
+		has_global_flag = DARK_end_of_ita_eth_war
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = {
+			has_game_rule = {
+				rule = africa_colonization_status
+				option = AFRICA_DECOLONIZED
+			}
+		}
+	}	
+	mean_time_to_happen = {
+		days = 30
+	}
+	
+	fire_only_once = yes
+	
+	option = { #Vote of no confidence in Mussolini, stay Fascist at loss of support
+		name = DARK_eth.44.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = NONALIGNED
+					}
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = DEMOCRATIC
+					}
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = COMMUNIST
+					}
+					has_country_flag = NEW_ITA_AI_RANDOM_NONALIGNED
+					has_country_flag = NEW_ITA_AI_RANDOM_DEMOCRATIC
+					has_country_flag = NEW_ITA_AI_RANDOM_COMMUNIST
+				}
+			}
+		}
+		
+		add_stability = -0.2
+		add_popularity = { ideology = fascism popularity = -0.2 }
+		remove_ideas = vittoria_mutilata
+		add_country_leader_role = {
+			character = ITA_pietro_badoglio
+			promote_leader = yes
+			country_leader = {
+				ideology = fascism_ideology
+				expire = "1965.1.1.1"
+				traits = { DARK_war_weary_trait }
+				id=30102
+			}
+		}
+		
+		hidden_effect = {
+			news_event = { id = DARK_eth.105 hours = 24 }
+		}
+	}
+	option = { #Keep Mussolini, trigger Civil War
+		name = DARK_eth.44.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = NONALIGNED
+					}
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = DEMOCRATIC
+					}
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = COMMUNIST
+					}
+					has_country_flag = NEW_ITA_AI_RANDOM_NONALIGNED
+					has_country_flag = NEW_ITA_AI_RANDOM_DEMOCRATIC
+					has_country_flag = NEW_ITA_AI_RANDOM_COMMUNIST
+				}
+			}
+		}
+		
+		add_stability = -0.3
+		start_civil_war = {
+			ideology = neutrality
+			size = 0.75
+			keep_unit_leaders_trigger = {
+				has_unit_leader_flag = DARK_fascist_leader
+			}
+		}
+		hidden_effect = {
+			remove_ideas = victor_emmanuel
+			random_other_country = {
+				limit = {
+					original_tag = ITA
+					NOT = { tag = ITA }
+				}
+				save_event_target_as = DARK_italian_civil_war
+				add_ideas = victor_emmanuel
+				add_ideas = DARK_anti_fascist_sentiment
+				remove_ideas = vittoria_mutilata
+				set_politics = {
+					ruling_party = neutrality
+					elections_allowed = yes
+					election_frequency = 48
+				}
+				set_party_name = { ideology = neutrality long_name = "Casa Savoia" name = "CS" }
+				ITA = {
+					every_character = {
+						limit = {
+							OR = {
+								has_unit_leader_flag = DARK_unfascist_leader
+								is_character = ITA_victor_emmanuel_iii
+							}
+						}
+						set_nationality = event_target:DARK_italian_civil_war
+					}
+				}
+				ITA_victor_emmanuel_iii = {
+					promote_character = yes
+					add_country_leader_trait = DARK_soldier_king
+				}
+			}
+			news_event = { id = DARK_eth.106 hours = 24 }
+		}		
+	}
+	option = { #King takes command
+		name = DARK_eth.44.c
+		ai_chance = {
+			base = 20
+			modifier = {
+				factor = 0
+				OR = {
+					has_game_rule = {
+						rule = DARK_new_italy_ai_behavior
+						option = FASCIST
+					}
+					has_country_flag = NEW_ITA_AI_RANDOM_FASCIST
+				}
+			}
+		}
+		
+		hidden_effect = {
+			DARK_set_italian_focus_flags = yes
+			set_cosmetic_tag = NEW_ITALY
+		}
+		load_focus_tree = new_italian_focus
+		add_stability = -0.15
+		set_politics = {
+			ruling_party = neutrality
+			elections_allowed = no
+		}
+		add_popularity = { ideology = fascism popularity = -0.2 }
+		add_popularity = { ideology = democratic popularity = 0.1 }
+		add_popularity = { ideology = communism popularity = 0.1 }
+		add_popularity = { ideology = neutrality popularity = 0.15 }
+		remove_ideas = vittoria_mutilata
+		set_party_name = { ideology = neutrality long_name = "Casa Savoia" name = "CS" }
+		ITA_victor_emmanuel_iii = {
+			promote_character = yes
+			add_country_leader_trait = DARK_soldier_king
+		}
+		
+		hidden_effect = {
+			news_event = { id = DARK_eth.103 hours = 24 }
+		}
+	}
+}
+
+##Yugoslavia/Croatia Jumps in to Grab Zara
+country_event = {
+	id = DARK_eth.45
+	title = DARK_eth.45.t
+	desc = DARK_eth.45.desc
+	picture = GFX_report_event_yugoslavian_cavalry
+	
+	trigger = {
+		OR = {
+			original_tag = YUG
+			original_tag = CRO
+			has_cosmetic_tag = HUN_EMPIRE
+		}
+		is_subject = no
+		has_war = no
+		ITA = { has_civil_war = yes }
+		NOT = { controls_state = 146 }
+		103 = { is_controlled_by_ROOT_or_subject = yes }
+		146 = {
+			CONTROLLER = { original_tag = ITA }
+			OWNER = { original_tag = ITA }
+		}
+	}
+	mean_time_to_happen = {
+		days = 30
+	}
+	
+	fire_only_once = yes
+	
+	option = { #Take Zara
+		name = DARK_eth.45.a
+		
+		add_political_power = -50
+		if = {
+			limit = { has_subject = CRO }
+			CRO = { transfer_state = 163 }
+			163 = { add_core_of = CRO }
+			163 = { add_core_of = ROOT }
+		}
+		else = {
+			transfer_state = 163
+			163 = { add_core_of = ROOT }
+		}
+		every_other_country = {
+			limit = { original_tag = ITA }
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = DARK_took_zara
+			}
+			country_event = { id = DARK_eth.46 hours = 12 }
+		}
+	}
+	option = { #Don't take Zara
+		name = DARK_eth.45.b
+	
+	}
+}
+	country_event = {
+		id = DARK_eth.46
+		title = DARK_eth.46.t
+		desc = DARK_eth.46.desc
+		picture = GFX_report_event_yugoslavian_cavalry
+		
+		is_triggered_only = yes
+		
+		option = { #Why those rotten...
+			name = DARK_eth.46.a
+			
+			effect_tooltip = {
+				YUG = {
+					transfer_state = 163
+				}
+				add_opinion_modifier = {
+					target = FROM
+					modifier = DARK_took_zara
+				}
+			}
+			add_state_claim = 163
+		}
+	}
+
+## The South Tyrol Revolt
+country_event = {
+	id = DARK_eth.47
+	title = DARK_eth.47.t
+	desc = DARK_eth.47.desc
+	picture = GFX_report_event_ger_civil_war
+	
+	trigger = {
+		original_tag = ITA
+		is_subject = no
+		has_civil_war = yes
+		controls_state = 39
+		OR = {
+			country_exists = AUS
+			any_other_country = {
+				has_cosmetic_tag = HUN_EMPIRE
+				NOT = { has_war_with = ROOT }
+			}
+		}
+		NOT = { has_war_with = AUS }
+	}
+	mean_time_to_happen = {
+		days = 45
+	}
+	
+	option = { #Bloody Hell
+		name = DARK_eth.47.a
+		
+		if = {
+			limit = { country_exists = AUS }
+			AUS = {
+				transfer_state = 39
+				country_event = { id = DARK_eth.48 hours = 12 }
+			}
+		}
+		else = {
+			random_other_country = {
+				limit = {
+					has_cosmetic_tag = HUN_EMPIRE
+					NOT = { has_war_with = ROOT }
+				}
+				transfer_state = 39
+				add_state_core = 39
+				country_event = { id = DARK_eth.48 hours = 12 }
+			}
+		}
+	}
+}
+	country_event = {
+		id = DARK_eth.48
+		title = DARK_eth.48.t
+		desc = DARK_eth.48.desc
+		picture = GFX_report_event_ger_civil_war
+		
+		is_triggered_only = yes
+		
+		option = { #Well, this is conveniant
+			name = DARK_eth.48.a
+			
+			hidden_effect = {
+				division_template = {
+					name = "Partisan Division"
+					priority = 1
+					division_names_group = AUS_INF_01
+					regiments = {
+						infantry = { x = 0 y = 0 }
+						infantry = { x = 0 y = 1 }
+						infantry = { x = 0 y = 2 }
+					}
+				}
+			}
+			effect_tooltip = {
+				transfer_state = 39
+			}
+			39 = {
+				create_unit = {
+					division = "name = \"South Tyrol Partisans\" division_template = \"Partisan Division\" start_experience_factor = 0.2" 
+					owner = AUS
+				}
+			}
+		}
+	}
+	
+##Italy and France look to combine forces
+country_event = {
+	id = DARK_eth.49
+	title = DARK_eth.49.t
+	desc = DARK_eth.49.desc
+	picture = GFX_report_event_degaulle_inspect_troops
+	
+	is_triggered_only = yes
+	
+	option = { #No-One Else in Faction
+		name = DARK_eth.49.a
+		trigger = {
+			NOT = { any_other_country = {
+				is_subject = no
+				is_in_faction_with = ROOT
+			} }
+		}
+		ai_chance = {
+			base = 1
+		}
+		
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = generic.3 
+		}
+	}
+	option = { #Okay, we accept
+		name = DARK_eth.49.b
+		trigger = {
+			any_other_country = {
+				is_subject = no
+				is_in_faction_with = ROOT
+			}
+		}
+		ai_chance = {
+			base = 1
+		}
+		
+		every_other_country = {
+			limit = {
+				is_in_faction_with = ROOT
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = FROM
+					value = 200
+				}
+			}
+			FROM = { add_to_faction = PREV }
+		}
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = DARK_eth.54
+		}
+	}
+	option = { #Okay, but we want to lead
+		name = DARK_eth.49.c
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 2
+				num_faction_members > FROM.num_faction_members
+			}
+		}
+		
+		country_event = DARK_eth.51
+	}
+	option = { #Non
+		name = DARK_eth.49.d
+		ai_chance = {
+			base = 0
+		}
+		
+		country_event = DARK_eth.50
+	}
+}
+	country_event = { #France Refuses
+		id = DARK_eth.50
+		title = DARK_eth.50.t
+		desc = DARK_eth.50.desc
+		picture = GFX_report_event_degaulle_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.50.a
+		}
+	}
+	country_event = { #France Asks for Leadership
+		id = DARK_eth.51
+		title = DARK_eth.51.t
+		desc = DARK_eth.51.desc
+		picture = GFX_report_event_generic_read_write
+		
+		is_triggered_only = yes
+		
+		option = { #We accept
+			name = DARK_eth.51.a
+			ai_chance = {
+				base = 1
+			}
+			
+			every_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+				}
+				hidden_effect = {
+					add_ai_strategy = {
+						type = alliance
+						id = FROM
+						value = 200
+					}
+				}
+				FROM = { add_to_faction = PREV }
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = FROM
+					value = 200
+				}
+			}
+			FROM = { 
+				add_to_faction = ROOT
+				country_event = DARK_eth.52
+			}
+		}
+		option = { #Either we lead or no-one does
+			name = DARK_eth.51.b
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 2
+					num_faction_members > FROM.num_faction_members
+				}
+			}
+			
+			
+			FROM = { country_event = DARK_eth.53 }
+		}
+	}
+		country_event = { #Italy Kneels
+			id = DARK_eth.52
+			title = DARK_eth.52.t
+			desc = DARK_eth.52.desc
+			picture = GFX_report_event_generic_sign_treaty1
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.52.a
+				
+				effect_tooltip = {
+					every_other_country = {
+						limit = {
+							is_in_faction_with = FROM
+						}
+						add_to_faction = PREV
+					}
+					add_to_faction = FROM
+				}
+			}
+		}
+		country_event = { #Italy Demands Leadership
+			id = DARK_eth.53
+			title = DARK_eth.53.t
+			desc = DARK_eth.53.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = { #Kneel
+				name = DARK_eth.53.a
+				ai_chance = {
+					base = 2
+				}
+				
+				every_other_country = {
+					limit = {
+						is_in_faction_with = ROOT
+					}
+					hidden_effect = {
+						add_ai_strategy = {
+							type = alliance
+							id = FROM
+							value = 200
+						}
+					}
+					FROM = { add_to_faction = PREV }
+				}
+				FROM = { 
+					hidden_effect = {
+						add_ai_strategy = {
+							type = alliance
+							id = ROOT
+							value = 200
+						}
+					}
+					add_to_faction = ROOT
+				}
+				FROM = { country_event = { id = DARK_eth.54 hours = 6 } }
+			}
+			option = { #Go suck spaghetti!
+				name = DARK_eth.53.a
+				ai_chance = {
+					base = 1
+				}
+				
+				effect_tooltip = {
+					remove_opinion_modifier = {
+						target = FROM
+						modifier = NEW_ITA_lovely_france
+					}
+				}
+				FROM = { country_event = { id = DARK_eth.55 hours = 6 } }
+			}
+		}
+		country_event = { #France Kneels
+			id = DARK_eth.54
+			title = DARK_eth.54.t
+			desc = DARK_eth.54.desc
+			picture = GFX_report_event_generic_sign_treaty1
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.54.a
+			}
+		}
+		country_event = { #France Refuses
+			id = DARK_eth.55
+			title = DARK_eth.55.t
+			desc = DARK_eth.55.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.55.a
+				FROM = {
+					remove_opinion_modifier = {
+						target = ROOT
+						modifier = NEW_ITA_lovely_france
+					}
+				}
+			}
+		}
+		
+##The Anti-Yugoslav Alliance
+#Albania
+country_event = { 
+	id = DARK_eth.56
+	title = DARK_eth.56.t
+	desc = DARK_eth.56.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Join
+		name = DARK_eth.56.a
+		ai_chance = {
+			base = 1
+		}
+		
+		add_state_claim = 105
+		if = {
+			limit = { FROM = { controls_state = 105 } }
+			set_state_controller = 105
+		}
+		if = {
+			limit = { FROM = { owns_state = 105 } }
+			set_state_owner = 105
+		}
+		if = {
+			limit = {
+				FROM = { NOT = { is_faction_leader = yes } }
+			}
+			FROM = {
+				create_faction = DARK_anti_yugo_alliance
+			}
+		}
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = DARK_eth.58
+		}
+	}
+	option = { #Don't
+		name = DARK_eth.56.b
+		ai_chance = {
+			base = 0
+		}
+		
+		FROM = { country_event = DARK_eth.59 }
+	}
+}
+#Bulgaria/Greece
+country_event = { 
+	id = DARK_eth.57
+	title = DARK_eth.56.t
+	desc = DARK_eth.56.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Join
+		name = DARK_eth.56.a
+		ai_chance = {
+			base = 1
+		}
+		
+		add_state_claim = 106
+		if = {
+			limit = { FROM = { controls_state = 106 } }
+			set_state_controller = 106
+		}
+		if = {
+			limit = { FROM = { owns_state = 106 } }
+			set_state_owner = 106
+		}
+		if = {
+			limit = {
+				FROM = { NOT = { is_faction_leader = yes } }
+			}
+			FROM = {
+				create_faction = DARK_anti_yugo_alliance
+			}
+		}
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = DARK_eth.58
+		}
+	}
+	option = { #Don't
+		name = DARK_eth.56.b
+		ai_chance = {
+			base = 0
+		}
+		
+		FROM = { country_event = DARK_eth.59 }
+	}
+}
+#Yes
+country_event = { 
+	id = DARK_eth.58
+	title = DARK_eth.58.t
+	desc = DARK_eth.58.desc
+	picture = GFX_report_event_generic_sign_treaty1
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.58.a
+	}
+}
+#No
+country_event = { 
+	id = DARK_eth.59
+	title = DARK_eth.59.t
+	desc = DARK_eth.59.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.59.a
+	}
+}
+#Bulgaria/Greece 2 (They have competing claims)
+country_event = { 
+	id = DARK_eth.60
+	title = DARK_eth.60.t
+	desc = DARK_eth.60.desc
+	picture = GFX_report_event_generic_sign_treaty3
+	
+	fire_only_once = yes
+	
+	trigger = {
+		is_faction_leader = yes
+		is_in_faction_with = GRE
+		is_in_faction_with = BUL
+		106 = { is_claimed_by = GRE }
+		106 = { is_claimed_by = BUL }
+	}
+	mean_time_to_happen = {
+		days = 5
+	}
+	
+	option = { #Promise Overlordship of Serbia to Bulgaria
+		name = DARK_eth.60.a
+		ai_chance = {
+			base = 100
+		}
+		
+		custom_effect_tooltip = DARK_promise_serbia_tt
+		BUL = { country_event = DARK_eth.61 }
+	}
+	option = { #Promise Overlordship of Serbia to Greece
+		name = DARK_eth.60.b
+		ai_chance = {
+			base = 50
+		}
+		
+		custom_effect_tooltip = DARK_promise_serbia_tt
+		GRE = { country_event = DARK_eth.61 }
+	}	
+	option = { #Promise Land to Bulgaria
+		name = DARK_eth.60.c
+		ai_chance = {
+			base = 1
+		}
+		
+		GRE = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = DARK_gave_away_claimed_land
+			}
+			country_event = DARK_eth.64
+		}
+	}
+	option = { #Promise Land to Greece
+		name = DARK_eth.60.d
+		ai_chance = {
+			base = 2
+		}
+		
+		BUL = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = DARK_gave_away_claimed_land
+			}
+			country_event = DARK_eth.64
+		}
+	}
+	option = { #Give The Dodecanese to Greece
+		name = DARK_eth.60.e
+		trigger = {
+			owns_state = 164
+			controls_state = 164
+		}
+		ai_chance = {
+			base = 25
+		}
+		
+		custom_effect_tooltip = DARK_promise_dod_tt
+		custom_effect_tooltip = NEW_ITA_if_accept_tt
+		effect_tooltip = {
+			GRE = { 
+				remove_state_claim = 106
+				transfer_state = 164 
+			}
+		}		
+		GRE = { country_event = DARK_eth.68 }
+	}
+}
+#Offer of Overlordship
+country_event = { 
+	id = DARK_eth.61
+	title = DARK_eth.61.t
+	desc = DARK_eth.61.desc
+	picture = GFX_report_event_generic_sign_treaty3
+	
+	is_triggered_only = yes
+	
+	option = { #Accept
+		name = DARK_eth.61.a
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = DARK_will_get_serbia_tt
+		remove_state_claim = 106
+		hidden_effect = {
+			set_country_flag = DARK_claim_on_serbia
+		}
+		FROM = { country_event = { id = DARK_eth.62 hours = 6 } }
+	}
+	option = { #Refuse!
+		name = DARK_eth.61.b
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				original_tag = GRE
+			}
+		}
+		
+		hidden_effect = {
+			set_country_flag = DARK_refused_serbia
+		}
+		FROM = { country_event = { id = DARK_eth.63 hours = 6 } }
+	}
+}
+	country_event = { #Yes
+		id = DARK_eth.62
+		title = DARK_eth.62.t
+		desc = DARK_eth.62.desc
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = { #Accept
+			name = DARK_eth.62.a
+		}
+	}
+	country_event = { #No
+		id = DARK_eth.63
+		title = DARK_eth.63.t
+		desc = DARK_eth.63.desc
+		picture = GFX_report_event_generic_sign_treaty3
+		
+		is_triggered_only = yes
+		
+		option = { #Promise Overlordship of Serbia to Bulgaria
+			name = DARK_eth.60.a
+			trigger = {
+				NOT = { BUL = { has_country_flag = DARK_refused_serbia } }
+			}
+			ai_chance = {
+				base = 100
+			}
+		
+			custom_effect_tooltip = DARK_promise_serbia_tt
+			BUL = { country_event = DARK_eth.61 }
+		}
+		option = { #Promise Overlordship of Serbia to Greece
+			name = DARK_eth.60.b
+			trigger = {
+				NOT = { GRE = { has_country_flag = DARK_refused_serbia } }
+			}
+			ai_chance = {
+				base = 100
+			}
+			
+			custom_effect_tooltip = DARK_promise_serbia_tt
+			GRE = { country_event = DARK_eth.61 }
+		}
+		option = { #Promise Land to Bulgaria
+			name = DARK_eth.60.c
+			ai_chance = {
+				base = 1
+			}
+			
+			GRE = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = DARK_gave_away_claimed_land
+				}
+				country_event = DARK_eth.64
+			}
+		}
+		option = { #Promise Land to Greece
+			name = DARK_eth.60.d
+			ai_chance = {
+				base = 2
+			}
+			
+			BUL = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = DARK_gave_away_claimed_land
+				}
+				country_event = DARK_eth.64
+			}
+		}
+		option = { #Give The Dodecanese to Greece
+			name = DARK_eth.60.e
+			trigger = {
+				owns_state = 164
+				controls_state = 164
+				NOT = { GRE = { has_country_flag = DARK_refused_dod } }
+			}
+			ai_chance = {
+				base = 25
+			}
+			
+			custom_effect_tooltip = DARK_promise_dod_tt
+			custom_effect_tooltip = NEW_ITA_if_accept_tt
+			effect_tooltip = {
+				GRE = { 
+					remove_state_claim = 106
+					transfer_state = 164 
+				}
+			}		
+			GRE = { country_event = DARK_eth.68 }
+		}
+	}
+#Promised Land to Another
+country_event = { 
+	id = DARK_eth.64
+	title = DARK_eth.64.t
+	desc = DARK_eth.64.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Bugger all this for a lark!
+		name = DARK_eth.64.a
+		trigger = {
+			has_capitulated = no
+		}
+		ai_chance = {
+			base = 5
+		}
+		
+		leave_faction = yes
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = -200
+			}
+		}
+		FROM = { country_event = { id = DARK_eth.65 hours = 6 } }
+	}
+	option = { #Accept offer of Overlordship from earlier
+		name = DARK_eth.64.b
+		trigger = {
+			has_country_flag = DARK_refused_serbia
+		}
+		ai_chance = {
+			base = 6
+		}
+		
+		custom_effect_tooltip = DARK_will_get_serbia_tt
+		remove_state_claim = 106
+		hidden_effect = {
+			set_country_flag = DARK_claim_on_serbia
+			clr_country_flag = DARK_refused_serbia
+		}
+		FROM = { country_event = { id = DARK_eth.66 hours = 6 } }
+	}
+	option = { #Accept offer of The Dodecanese from earlier
+		name = DARK_eth.64.b
+		trigger = {
+			has_country_flag = DARK_refused_dod
+		}
+		ai_chance = {
+			base = 10
+		}
+		
+		remove_state_claim = 106
+		transfer_state = 164
+		hidden_effect = {
+			set_country_flag = DARK_accepted_dod
+			clr_country_flag = DARK_refused_dod
+		}
+		FROM = { country_event = { id = DARK_eth.71 hours = 6 } }
+	}
+	option = { #...Grumble
+		name = DARK_eth.64.c
+		ai_chance = {
+			base = 1
+		}
+		
+		remove_state_claim = 106
+		FROM = { country_event = { id = DARK_eth.67 hours = 6 } }
+	}
+}
+	country_event = { #They Leave
+		id = DARK_eth.65
+		title = DARK_eth.65.t
+		desc = DARK_eth.65.desc
+		picture = GFX_report_event_hungary_refused
+		
+		is_triggered_only = yes
+		
+		immediate = {
+			effect_tooltip = {
+				FROM = { leave_faction = yes }
+			}
+		}
+		
+		option = {
+			name = DARK_eth.65.a
+		}
+	}
+	country_event = { #They Stay, Accepting Serbia
+		id = DARK_eth.66
+		title = DARK_eth.66.t
+		desc = DARK_eth.66.desc
+		picture = GFX_report_event_generic_sign_treaty3
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.66.a
+		}
+	}
+	country_event = { #They Stay, Accepting The Dodecanese
+		id = DARK_eth.71
+		title = DARK_eth.71.t
+		desc = DARK_eth.71.desc
+		picture = GFX_report_event_generic_sign_treaty3
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.71.a
+		}
+	}
+	country_event = { #They Stay
+		id = DARK_eth.67
+		title = DARK_eth.67.t
+		desc = DARK_eth.67.desc
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.67.a
+		}
+	}
+#Greece Offered The Dodecanese	
+country_event = { 
+	id = DARK_eth.68
+	title = DARK_eth.68.t
+	desc = DARK_eth.68.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Accept
+		name = DARK_eth.68.a
+		ai_chance = {
+			base = 1
+		}
+		
+		remove_state_claim = 106
+		transfer_state = 164
+		
+		hidden_effect = {
+			set_country_flag = DARK_accepted_dod
+		}
+		
+		FROM = { country_event = { id = DARK_eth.69 hours = 6 } }
+	}
+	option = { #NO
+		name = DARK_eth.68.a
+		ai_chance = {
+			base = 0
+		}
+		
+		hidden_effect = {
+			set_country_flag = DARK_refused_dod
+		}		
+		FROM = { country_event = { id = DARK_eth.70 hours = 6 } }
+	}
+}
+	country_event = { #Yes
+		id = DARK_eth.69
+		title = DARK_eth.69.t
+		desc = DARK_eth.69.desc
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.69.a
+			
+		}
+	}
+	country_event = { #No
+		id = DARK_eth.70
+		title = DARK_eth.70.t
+		desc = DARK_eth.70.desc
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = { #Promise Overlordship of Serbia to Bulgaria
+			name = DARK_eth.60.a
+			trigger = {
+				NOT = { BUL = { has_country_flag = DARK_refused_serbia } }
+			}
+			ai_chance = {
+				base = 100
+			}
+		
+			custom_effect_tooltip = DARK_promise_serbia_tt
+			BUL = { country_event = DARK_eth.61 }
+		}
+		option = { #Promise Overlordship of Serbia to Greece
+			name = DARK_eth.60.b
+			trigger = {
+				NOT = { GRE = { has_country_flag = DARK_refused_serbia } }
+			}
+			ai_chance = {
+				base = 100
+			}
+			
+			custom_effect_tooltip = DARK_promise_serbia_tt
+			GRE = { country_event = DARK_eth.61 }
+		}
+		option = { #Promise Land to Bulgaria
+			name = DARK_eth.60.c
+			ai_chance = {
+				base = 1
+			}
+			
+			GRE = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = DARK_gave_away_claimed_land
+				}
+				country_event = DARK_eth.64
+			}
+		}
+		option = { #Promise Land to Greece
+			name = DARK_eth.60.d
+			ai_chance = {
+				base = 2
+			}
+			
+			BUL = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = DARK_gave_away_claimed_land
+				}
+				country_event = DARK_eth.64
+			}
+		}
+		option = { #Give The Dodecanese to Greece
+			name = DARK_eth.60.e
+			trigger = {
+				owns_state = 164
+				controls_state = 164
+				NOT = { GRE = { has_country_flag = DARK_refused_dod } }
+			}
+			ai_chance = {
+				base = 25
+			}
+			
+			custom_effect_tooltip = DARK_promise_dod_tt
+			custom_effect_tooltip = NEW_ITA_if_accept_tt
+			effect_tooltip = {
+				GRE = { 
+					remove_state_claim = 106
+					transfer_state = 164 
+				}
+			}		
+			GRE = { country_event = DARK_eth.68 }
+		}
+	}
+	
+##Treaty of Belgrade, splits Yugoslavia up among Italy and its allies
+country_event = { 
+	id = DARK_eth.72
+	title = DARK_eth.72.t
+	desc = DARK_eth.72.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Abide by the Treaty
+		name = DARK_eth.72.a
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = DARK_abide_treaty_tt
+		if = {
+			limit = {	
+				102 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }	
+				AUS = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 102 }
+				}
+				NOT = { 102 = { OWNER = { is_subject_of = AUS } } }
+			}
+			AUS = { transfer_state = 102 }
+		}
+		if = {
+			limit = {	
+				109 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				AUS = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 109 }
+				}
+				NOT = { 109 = { OWNER = { is_subject_of = AUS } } }
+			}
+			AUS = { transfer_state = 109 }
+		}
+		if = {
+			limit = {	
+				104 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				AUS = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 104 }
+				}
+				NOT = { 104 = { OWNER = { is_subject_of = AUS } } }
+			}
+			AUS = { transfer_state = 104 }
+		}
+		if = {
+			limit = {	
+				45 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				AUS = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 45 }
+					NOT = { HUN = { is_in_faction_with = ITA } }
+				}
+				NOT = { 45 = { OWNER = { is_subject_of = AUS } } }
+			}
+			AUS = { transfer_state = 45 }
+		}
+		if = {
+			limit = {	
+				764 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				AUS = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 764 }
+					NOT = { HUN = { is_in_faction_with = ITA } }
+				}
+				NOT = { 764 = { OWNER = { is_subject_of = AUS } } }
+			}
+			AUS = { transfer_state = 764 }
+		}
+		if = {
+			limit = {	
+				102 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				HUN = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 102 }
+					has_cosmetic_tag = HUN_EMPIRE
+					NOT = { AUS = { is_in_faction_with = ITA } }
+				}
+				NOT = { 102 = { OWNER = { is_subject_of = HUN } } }
+			}
+			HUN = { transfer_state = 102 }
+		}
+		if = {
+			limit = {	
+				109 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				HUN = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 109 }
+					has_cosmetic_tag = HUN_EMPIRE
+					NOT = { AUS = { is_in_faction_with = ITA } }
+				}
+				NOT = { 109 = { OWNER = { is_subject_of = HUN } } }
+			}
+			HUN = { transfer_state = 109 }
+		}
+		if = {
+			limit = {	
+				104 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				HUN = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 104 }
+					has_cosmetic_tag = HUN_EMPIRE
+					NOT = { AUS = { is_in_faction_with = ITA } }
+				}
+				NOT = { 104 = { OWNER = { is_subject_of = HUN } } }
+			}
+			HUN = { transfer_state = 104 }
+		}
+		if = {
+			limit = {	
+				45 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				HUN = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 45 }
+				}
+				NOT = { 45 = { OWNER = { is_subject_of = HUN } } }
+			}
+			HUN = { transfer_state = 45 }
+		}
+		if = {
+			limit = {	
+				764 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				HUN = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 764 }
+				}
+				NOT = { 764 = { OWNER = { is_subject_of = HUN } } }
+			}
+			HUN = { transfer_state = 764 }
+		}
+		if = {
+			limit = {	
+				105 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				ALB = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 105 }
+				}
+				NOT = { 105 = { OWNER = { is_subject_of = ALB } } }
+			}
+			ALB = { transfer_state = 105 }
+		}
+		if = {
+			limit = {	
+				106 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				BUL = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 106 }
+					NOT = { has_country_flag = DARK_claim_on_serbia }
+					OR = {
+						NOT = { country_exists = GRE }
+						NOT = { has_opinion_modifier = DARK_gave_away_claimed_land }
+					}
+				}
+				NOT = { 106 = { OWNER = { is_subject_of = BUL } } }
+			}
+			BUL = { transfer_state = 106 }
+		}
+		if = {
+			limit = {	
+				106 = { OWNER = {
+					OR = { 
+						tag = ROOT
+						OVERLORD = { tag = ROOT }
+						is_in_faction_with = ROOT
+					}
+				} }
+				GRE = { 
+					is_in_faction_with = ROOT 
+					NOT = { owns_state = 106 }
+					NOT = { has_country_flag = DARK_claim_on_serbia }
+					NOT = { has_country_flag = DARK_accepted_dod }
+					OR = {
+						NOT = { country_exists = BUL }
+						NOT = { has_opinion_modifier = DARK_gave_away_claimed_land }
+					}
+				}
+				NOT = { 106 = { OWNER = { is_subject_of = GRE } } }
+			}
+			GRE = { transfer_state = 106 }
+		}
+		if = {
+			limit = {
+				NOT = { country_exists = SER }
+				NOT = {
+					any_country = {
+						has_country_flag = DARK_claim_on_serbia
+					}
+				}
+			}
+			if = {
+				limit = {
+					107 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+				}
+				SER = { transfer_state = 107 }
+				puppet = SER
+			}
+			if = {
+				limit = {
+					108 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+				}
+				SER = { transfer_state = 108 }
+				if = {
+					limit = {
+						NOT = { SER = { is_subject_of = ROOT } }
+					}
+					puppet = SER
+				}
+			}
+		}			
+		else_if = {
+			limit = {
+				OR = {	
+					107 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+					108 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+					any_country = {
+						has_country_flag = DARK_claim_on_serbia
+					}
+				}
+			}
+			if = {
+				limit = {
+					country_exists = SER
+					OR = {
+						SER = { is_in_faction = no }
+						SER = { OVERLORD = { is_in_faction_with = ROOT} }
+						SER = { OVERLORD = { tag = ROOT } }
+					}
+				}
+				every_other_country = {
+					limit = { has_country_flag = DARK_claim_on_serbia }
+					puppet = SER
+				}
+			}
+			if = {
+				limit = {
+					107 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+					OR = {
+						NOT = { country_exists = SER }
+						SER = { OVERLORD = { is_in_faction_with = ROOT} }
+						SER = { OVERLORD = { tag = ROOT } }
+					}
+				}
+				SER = { transfer_state = 107 }
+				every_other_country = {
+					limit = { has_country_flag = DARK_claim_on_serbia }
+					puppet = SER
+				}
+			}
+			if = {
+				limit = {
+					108 = { OWNER = {
+						OR = { 
+							tag = ROOT
+							OVERLORD = { tag = ROOT }
+							is_in_faction_with = ROOT
+						}
+					} }
+					OR = {
+						NOT = { country_exists = SER }
+						SER = { OVERLORD = { is_in_faction_with = ROOT} }
+						SER = { OVERLORD = { tag = ROOT } }
+					}
+				}
+				SER = { transfer_state = 108 }
+				every_other_country = {
+					limit = { has_country_flag = DARK_claim_on_serbia }
+					puppet = SER
+				}
+			}
+		}
+		if = {
+			limit = {	
+				103 = { OWNER = {
+					NOT = { tag = ROOT }
+					NOT = { OVERLORD = { tag = ROOT } }
+					is_in_faction_with = ROOT
+				} }
+			}
+			ROOT = { transfer_state = 103 }
+		}
+		if = {
+			limit = {	
+				163 = { OWNER = {
+					NOT = { tag = ROOT }
+					NOT = { OVERLORD = { tag = ROOT } }
+					is_in_faction_with = ROOT
+				} }
+			}
+			ROOT = { transfer_state = 163 }
+		}
+		hidden_effect = {
+			news_event = { id = DARK_eth.108 hours = 24 }
+		}
+	}
+	option = { #Buck it!
+		name = DARK_eth.72.b
+		ai_chance = {
+			base = 0
+		}
+		
+		add_political_power = -200
+		add_stability = -0.3
+		add_war_support = -0.3
+		every_other_country = {
+			limit = { 
+				is_in_faction_with = ROOT 
+				NOT = { is_subject_of = ROOT }
+			}
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = ROOT
+			}
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = DARK_betrayal_of_treaty
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = ROOT
+					value = -200
+				}
+				set_country_flag = DARK_betrayed_country
+			}
+		}
+		leave_faction = yes
+		hidden_effect = {
+			news_event = { id = DARK_eth.107 hours = 24 }
+		}
+	}
+}		
+
+##Suez Canal Re-Opens
+country_event = {
+	id = DARK_eth.73
+	title = DARK_eth.73.t
+	desc = {
+		text = DARK_eth.73.desc1
+		trigger = {
+			OR = {
+				has_war = yes
+				OVERLORD = { has_war = yes }
+			}
+		}
+	}
+	desc = {
+		text = DARK_eth.73.desc2
+		trigger = {
+			has_war = no
+			OVERLORD = { has_war = no }
+		}
+	}
+	
+	picture = GFX_report_event_destroyers
+	
+	fire_only_once = yes
+	
+	trigger = {
+		has_global_flag = DARK_SUEZ_CLOSED
+		owns_state = 446
+		owns_state = 453
+		OR = {
+			has_global_flag = DARK_end_of_ita_eth_war
+			ITA = { has_war = no } #Failsafe
+			ETH = { has_war = no } #Failsafe
+			446 = {
+				OWNER = {
+					OR = {
+						NOT = {
+							has_full_control_of_state = 446
+						}
+						has_war = yes
+						OVERLORD = { has_war = yes }
+					}
+				}
+			}
+			453 = {
+				OWNER = {
+					OR = {
+						NOT = {
+							has_full_control_of_state = 453
+						}
+						has_war = yes
+						OVERLORD = { has_war = yes }
+					}
+				}
+			}
+		}
+	}
+	mean_time_to_happen = {
+		days = 2
+	}
+	
+	option = { #And it's open
+		name = DARK_eth.73.a
+		
+		every_country = {
+			limit = { has_idea = DARK_closed_suez }
+			remove_ideas = DARK_closed_suez
+		}
+		hidden_effect = {
+			clr_global_flag = SUEZ_CANAL_BLOCKED
+			clr_global_flag = DARK_SUEZ_CLOSED
+			news_event = { id = DARK_eth.110 hours = 24 }
+		}
+	}
+}
+
+##Weapon Sending Events
+#Remove recently sent weapons
+country_event = {
+	id = DARK_eth.74
+	hidden = yes
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.74.a
+		
+		clr_country_flag = ETH_recently_sent_weapons
+	}
+}
+#Hidden Weapons Successfully Sent
+country_event = {
+	id = DARK_eth.75
+	title = {
+		trigger = {
+			tag = ETH
+		}
+		text = DARK_eth.75.t1
+	}
+	title = {
+		trigger = {
+			NOT = { tag = ETH }
+		}
+		text = DARK_eth.75.t2
+	}
+	desc = {
+		trigger = {
+			tag = ETH
+		}
+		text = DARK_eth.75.desc1
+	}
+	desc = {
+		trigger = {
+			NOT = { tag = ETH }
+		}
+		text = DARK_eth.75.desc2
+	}
+	picture = GFX_report_event_haile_selassie_inspects_troops
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.75.a
+		trigger = {
+			tag = ETH
+		}
+		
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 500
+		}
+	}
+	option = {
+		name = DARK_eth.75.b
+		trigger = {
+			NOT = { tag = ETH }
+		}
+		
+	}
+}
+#Hidden Weapons Dicovered!
+country_event = {
+	id = DARK_eth.76
+	title = DARK_eth.76.t
+	desc = DARK_eth.76.desc	
+	picture = GFX_report_event_czech_soldiers_02
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.76.a
+		
+		add_political_power = -75
+		ENG = {
+			if = {
+				limit = { ENG = { NOT = { has_opinion_modifier = ETH_tried_to_send_weapons_againt_embargo } } }
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = ETH_tried_to_send_weapons_againt_embargo
+				}
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = ETH_tried_to_send_weapons_againt_embargo2
+				}
+			}
+			country_event = DARK_eth.77
+		}
+		hidden_effect = {
+			add_to_variable = { global.ETH_seized_weapon_stockpile = 500 }
+		}
+	}
+}
+	country_event = { #Britain informed of weapons
+		id = DARK_eth.77
+		title = DARK_eth.77.t
+		desc = DARK_eth.77.desc		
+		picture = GFX_report_event_czech_soldiers_02
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.77.a
+			
+			effect_tooltip = {
+				add_opinion_modifier = {
+					target = FROM
+					modifier = ETH_tried_to_send_weapons_againt_embargo
+				}
+				add_opinion_modifier = {
+					target = FROM
+					modifier = ETH_tried_to_send_weapons_againt_embargo2
+				}
+			}
+		}
+	}
+#Openly Sending Weapons, Britain
+country_event = { #Britain informed of weapons
+	id = DARK_eth.78
+	title = DARK_eth.78.t
+	desc = DARK_eth.78.desc	
+	picture = GFX_report_event_czech_soldiers_02
+	
+	is_triggered_only = yes
+	
+	option = { #Block it!
+		name = DARK_eth.78.a
+		ai_chance = {
+			base = 10
+		}
+		
+		add_opinion_modifier = {
+			target = FROM
+			modifier = ETH_tried_to_send_weapons_againt_embargo
+		}
+		add_opinion_modifier = {
+			target = FROM
+			modifier = ETH_tried_to_send_weapons_againt_embargo2
+		}
+		FROM = {
+			country_event = DARK_eth.79
+		}
+		hidden_effect = {
+			add_to_variable = { global.ETH_seized_weapon_stockpile = 1000 }
+		}			
+	}
+	option = { #Let it in, this one time
+		name = DARK_eth.78.b
+		ai_chance = {
+			base = 1
+		}
+		
+		
+		add_political_power = -50
+		FROM = {
+			country_event = DARK_eth.80
+		}
+		effect_tooltip = {
+			ETH = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1000
+				}
+				country_event = DARK_eth.81
+			}
+		}
+		hidden_effect = {
+			add_to_variable = { ROOT.DARK_let_through_count = 1 }
+		}
+	}
+	option = { #End the embargo
+		name = DARK_eth.78.c
+		ai_chance = {
+			base = 0
+			modifier = {
+				always = yes
+				add = ROOT.DARK_let_through_count				
+			}
+			modifier = {
+				has_government = communism
+				add = 100
+			}
+		}
+		
+		
+		if = {
+			limit = { NOT = { has_government = communism } }
+			add_political_power = -100
+		}
+		hidden_effect = {
+			set_global_flag = ETH_end_of_embargo
+			FROM = { country_event = DARK_eth.80 }
+		}
+		news_event = { id = DARK_eth.111 days = 1 }
+		effect_tooltip = {
+			ETH = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = global.ETH_seized_weapon_stockpile
+				}
+			}
+		}
+	}
+}
+	#Weapons Blocked
+	country_event = {
+		id = DARK_eth.79
+		title = DARK_eth.79.t
+		desc = DARK_eth.79.desc
+		picture = GFX_report_event_czech_soldiers_02
+		
+		is_triggered_only = yes
+	
+		option = {
+			name = DARK_eth.79.a
+			trigger = {
+				NOT = { has_global_flag = ETH_end_of_embargo }
+			}
+			
+			add_political_power = -25
+			effect_tooltip = {
+				FROM = {
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = ETH_tried_to_send_weapons_againt_embargo
+					}
+					add_opinion_modifier = {
+						target = ROOT
+						modifier = ETH_tried_to_send_weapons_againt_embargo2
+					}
+				}
+			}
+		}
+		option = {
+			name = DARK_eth.79.b
+			trigger = {
+				has_global_flag = ETH_end_of_embargo
+			}
+		}
+	}
+	#Weapons Let In
+	country_event = {
+		id = DARK_eth.80
+		title = DARK_eth.80.t
+		desc = {
+			trigger = {
+				NOT = { has_global_flag = ETH_end_of_embargo }
+			}
+			text = DARK_eth.80.desc1
+		}
+		desc = {
+			trigger = {
+				has_global_flag = ETH_end_of_embargo
+			}
+			text = DARK_eth.80.desc2
+		}
+		picture = GFX_report_event_czech_soldiers_02
+		
+		is_triggered_only = yes
+	
+		option = {
+			name = DARK_eth.80.a
+			
+			add_political_power = 25
+			hidden_effect = {
+				ETH = { country_event = DARK_eth.81 }
+			}
+		}
+	}
+	#Ethiopia Gets the Weapons
+	country_event = {
+		id = DARK_eth.81
+		title = DARK_eth.81.t
+		desc = DARK_eth.81.desc	
+		picture = GFX_report_event_haile_selassie_inspects_troops
+		
+		is_triggered_only = yes
+	
+		option = {
+			name = DARK_eth.81.a
+			
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 1000
+			}
+		}
+	}
+	
+#France Forces the UK to end the Arms Embargo
+country_event = {
+	id = DARK_eth.82
+	title = DARK_eth.82.t
+	desc = DARK_eth.82.desc	
+	picture = GFX_report_event_french_british_officers
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.82.a
+		
+		add_political_power = -25
+		custom_effect_tooltip = DARK_end_the_embargo_tt
+		hidden_effect = {
+			set_global_flag = ETH_end_of_embargo
+		}
+		news_event = { id = DARK_eth.111 days = 1 }
+	}
+}
+
+#Ethiopia Asks France/England to Renogotiate the embargo
+country_event = {
+	id = DARK_eth.83
+	title = DARK_eth.83.t
+	desc = DARK_eth.83.desc	
+	picture = GFX_report_event_haile_selassie_inspects_troops
+	
+	is_triggered_only = yes
+	
+	option = { #The Embargo Stays
+		name = DARK_eth.83.a
+		ai_chance = {
+			base = 10
+		}
+		
+		add_political_power = 50
+		FROM = { country_event = DARK_eth.84 }
+	}
+	option = { #Release held weapons
+		name = DARK_eth.83.b
+		ai_chance = {
+			base = 6
+		}
+		
+		add_political_power = -25
+		effect_tooltip = {
+			FROM = { 
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = global.ETH_seized_weapon_stockpile
+					producer = GER
+				}
+				country_event = DARK_eth.85
+			}
+		}
+		hidden_effect = { FROM = { country_event = DARK_eth.85 } }
+		hidden_effect = {
+			ENG = {
+				add_to_variable = { ENG.DARK_let_through_count = 2 }
+			}
+		}
+	}
+	option = { #End the embargo
+		name = DARK_eth.83.c
+		ai_chance = {
+			base = 1
+		}
+		
+		add_political_power = -75
+		FROM = { 
+			effect_tooltip = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = global.ETH_seized_weapon_stockpile
+					producer = GER
+				}
+			}
+			country_event = DARK_eth.86
+		}
+		hidden_effect = { FROM = { country_event = DARK_eth.86 } }
+		if = {
+			limit = {
+				tag = ENG 
+				NOT = { has_global_flag = ETH_end_of_embargo }
+			}
+			news_event = { id = DARK_eth.111 days = 1 }
+		}
+		else_if = {
+			limit = {
+				tag = FRA
+				NOT = { has_global_flag = ETH_end_of_embargo }
+			}
+			ENG = { country_event = DARK_eth.82 }
+		}
+	}
+}
+	country_event = { #Embargo stays
+		id = DARK_eth.84
+		title = DARK_eth.84.t
+		desc = DARK_eth.84.desc	
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.84.a
+			
+			if = {
+				limit = {
+					FROM = { tag = ENG }
+				}
+				hidden_effect = {
+					FRA = { country_event = { id = DARK_eth.83 hours = 6 } }
+				}
+			}
+		}
+	}
+	country_event = { #Return weapons
+		id = DARK_eth.85
+		title = DARK_eth.85.t
+		desc = DARK_eth.85.desc	
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.85.a
+			
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = global.ETH_seized_weapon_stockpile
+				producer = GER
+			}
+			hidden_effect = {
+				subtract_from_variable = { global.ETH_seized_weapon_stockpile = global.ETH_seized_weapon_stockpile }
+			}
+			if = {
+				limit = {
+					FROM = { tag = ENG }
+				}
+				hidden_effect = {
+					FRA = { country_event = { id = DARK_eth.83 hours = 6 } }
+				}
+			}
+		}
+	}
+	country_event = { #Embargo ends
+		id = DARK_eth.86
+		title = DARK_eth.86.t
+		desc = DARK_eth.86.desc	
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.86.a
+			
+			hidden_effect = {
+				set_global_flag = ETH_end_of_embargo
+			}
+		}
+	}
+	
+	
+#Ethiopia Asks Countries For Support
+country_event = { #Embargo ends
+	id = DARK_eth.87
+	title = DARK_eth.87.t
+	desc = DARK_eth.87.desc	
+	picture = GFX_report_event_generic_factory
+	
+	is_triggered_only = yes
+	
+	immediate = {
+		if = {
+			limit = {
+				OR = {
+					has_global_flag = ETH_end_of_embargo
+					AND = {
+						NOT = { tag = FRA }
+						NOT = { tag = ENG }
+					}
+				}
+			}
+			hidden_effect = {
+				set_country_flag = ETH_can_send_weapons
+			}
+		}
+	}
+	
+	option = { #Try to send supplies
+		name = DARK_eth.87.a
+		trigger = {
+			OR = {
+				has_global_flag = ETH_end_of_embargo
+				AND = {
+					NOT = { tag = FRA }
+					NOT = { tag = ENG }
+				}
+			}
+		}
+		ai_chance = {
+			base = 2
+			modifier = {
+				factor = 5
+				has_government = communism
+			}
+			modifier = {
+				factor = 20
+				has_global_flag = ETH_end_of_embargo
+			}
+			modifier = {
+				factor = 0
+				is_in_faction_with = ITA
+			}
+		}
+		
+		if = {
+			limit = { 
+				has_equipment = {
+					infantry_equipment > 1000
+				}
+			}
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = -1000
+			}
+		}
+		else = {
+			add_timed_idea = { idea = DARK_weapons_produced days = 90 }
+		}
+		
+		if = {
+			limit = { NOT = { has_global_flag = ETH_end_of_embargo } }
+			custom_effect_tooltip = ETH_open_weapon_attempt_tt
+			ENG = { country_event = { id = DARK_eth.78 hours = 24 } }
+		}
+		else = {
+			ETH = { country_event = { id = DARK_eth.81 hours = 24 } }
+		}
+		effect_tooltip = {
+			ETH = {
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 1000
+				}
+			}
+		}
+		if = {
+			limit = {
+				NOT = {
+					ITA = { has_opinion_modifier = ETH_helped_enemies }
+				}
+			}
+			ITA = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = ETH_helped_enemies
+				}
+			}
+		}
+		hidden_effect = {
+			set_country_flag = ETH_recently_sent_weapons
+			add_to_variable = { ENG.DARK_let_through_count = 1 }
+			country_event = { id = DARK_eth.74 days = 90 }
+		}
+	}
+	option = { #Threaten to Intervene on behalf of Ethiopia
+		name = DARK_eth.87.b
+		trigger = {
+			NOT = { is_in_faction_with = ITA }
+			NOT = { has_completed_focus = GER_italy_ally }
+			OR = {
+				has_global_flag = ETH_end_of_embargo
+				AND = {
+					NOT = { tag = FRA }
+					NOT = { tag = ENG }
+				}
+			}				
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 1
+				date > 1938.1.1
+			}
+			modifier = {
+				add = 10
+				has_government = communism
+			}
+			modifier = {
+				add = 100
+				OR = {
+					has_war_with = ITA
+					is_in_faction_with = ETH
+				}
+			}
+			modifier = {
+				factor = 0
+				has_war = yes
+				NOT = { has_war_with = ITA }
+			}
+		}
+		
+		custom_effect_tooltip = ETH_intervention_warning_tt
+		ITA = { country_event = DARK_eth.89 }
+	}
+	
+	option = { #End the Embargo (England)
+		name = DARK_eth.87.c
+		trigger = {
+			tag = ENG
+			NOT = { has_global_flag = ETH_end_of_embargo }
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = ROOT.DARK_let_through_count
+				always = yes
+			}
+		}
+		
+		add_political_power = -50
+		effect_tooltip = {
+			FROM = { 
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = global.ETH_seized_weapon_stockpile
+					producer = GER
+				}
+				country_event = DARK_eth.86
+			}
+		}
+		hidden_effect = { FROM = { country_event = DARK_eth.86 } }
+		news_event = { id = DARK_eth.111 days = 1 }
+	}
+	option = { #End the Embargo (France)
+		name = DARK_eth.87.d
+		trigger = {
+			NOT = { has_global_flag = ETH_end_of_embargo }
+			tag = FRA
+		}
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = ROOT.DARK_let_through_count
+				always = yes
+			}
+		}
+	
+		effect_tooltip = {
+			FROM = { 
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = global.ETH_seized_weapon_stockpile
+					producer = GER
+				}
+				country_event = DARK_eth.86
+			}
+		}
+		hidden_effect = { FROM = { country_event = DARK_eth.86 } }
+		ENG = { country_event = DARK_eth.82 }
+	}
+	option = { #Not at this time
+		name = DARK_eth.87.e
+		ai_chance = {
+			base = 1
+		}
+		
+		FROM = { country_event = { id = DARK_eth.88 hours = 12 } }
+	}
+}
+	#Country doesn't send supplies
+	country_event = {
+		id = DARK_eth.88
+		title = DARK_eth.88.t
+		desc = DARK_eth.88.desc	
+		picture = GFX_report_event_generic_read_write
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.88.a
+		}
+	}
+		
+#Italy Threatened with intervention
+country_event = {
+	id = DARK_eth.89
+	title = DARK_eth.89.t
+	desc = DARK_eth.89.desc	
+	picture = GFX_report_event_soldiers_marching
+	
+	is_triggered_only = yes
+	
+	option = { #...What do you want?
+		name = DARK_eth.89.a
+		ai_chance = {
+			base = 1
+		}
+		
+		FROM = { country_event = DARK_eth.90 }
+	}
+	option = { #Surely France/Britain would never allow this?
+		name = DARK_eth.89.b
+		trigger = {
+			NOT = { FROM = { tag = FRA } }
+			NOT = { FROM = { tag = ENG } }
+		}
+		ai_chance = {
+			base = 10
+		}
+		
+		ENG = { country_event = DARK_eth.99 }
+		FRA = { country_event = DARK_eth.99 }
+	}
+	option = { #Well come on then you pansies!
+		name = DARK_eth.89.c
+		ai_chance = {
+			base = 0
+		}
+		
+		FROM = { country_event = DARK_eth.96 }
+	}
+}
+	country_event = { #Italy asks what we want
+		id = DARK_eth.90
+		title = DARK_eth.90.t
+		desc = DARK_eth.90.desc	
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #White Peace
+			name = DARK_eth.90.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 10
+					OR = {
+						tag = ENG
+						tag = FRA
+					}
+				}
+			}
+			
+			ITA = { country_event = DARK_eth.91 }
+		}
+		option = { #Push for Eritrea
+			name = DARK_eth.90.b
+			ai_chance = {
+				base = 5
+			}
+			
+			ITA = { country_event = DARK_eth.92 }
+		}
+		option = { #Get out of Africa you nub!
+			name = DARK_eth.90.c
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					OR = {
+						tag = ENG
+						tag = FRA
+					}
+				}
+				modifier = {
+					factor = 5
+					OR = {
+						tag = JAP
+					}
+				}
+			}
+			
+			ITA = { country_event = DARK_eth.93 }
+		}
+	}
+country_event = { #White Peace
+	id = DARK_eth.91
+	title = DARK_eth.91.t
+	desc = DARK_eth.91.desc	
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Accept
+		name = DARK_eth.91.a
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+		}
+		ETH = { country_event = DARK_eth.94 }
+	}
+	option = { #Refuse
+		name = DARK_eth.91.b
+		ai_chance = {
+			base = 0
+		}
+		
+		FROM = { country_event = DARK_eth.96 }
+	}
+}
+country_event = { #Eritrea
+	id = DARK_eth.92
+	title = DARK_eth.92.t
+	desc = DARK_eth.92.desc	
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Accept
+		name = DARK_eth.92.a
+		ai_chance = {
+			base = 5
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+			FROM = { transfer_state = 550 }
+		}
+		ETH = { country_event = DARK_eth.97 }
+	}
+	option = { #Refuse
+		name = DARK_eth.92.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				FROM = { tag = ENG }
+			}
+		}
+		
+		FROM = { country_event = DARK_eth.96 }
+	}
+}
+country_event = { #Also Somalia
+	id = DARK_eth.93
+	title = DARK_eth.93.t
+	desc = DARK_eth.93.desc	
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Accept
+		name = DARK_eth.93.a
+		ai_chance = {
+			base = 1
+		}
+		
+		custom_effect_tooltip = ETH_if_eth_accepts_tt
+		effect_tooltip = {
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = ETH
+						is_subject_of = ETH
+						is_in_faction_with = ETH
+					}
+				}
+				white_peace = ROOT
+			}
+			FROM = { transfer_state = 550 }
+			FROM = { transfer_state = 559 }
+		}
+		ETH = { country_event = DARK_eth.98 }
+	}
+	option = { #Refuse
+		name = DARK_eth.93.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				FROM = { tag = ENG }
+			}
+		}
+		
+		FROM = { country_event = DARK_eth.96 }
+	}
+}
+	country_event = { #Power pushed for white peace
+		id = DARK_eth.94
+		title = DARK_eth.94.t
+		desc = DARK_eth.94.desc	
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Take it
+			name = DARK_eth.94.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 0
+					OR = {
+						controls_state = 550
+						controls_state = 559
+					}
+				}
+			}
+			
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = FROM
+						is_subject_of = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				white_peace = ROOT
+			}
+			if = {
+				limit = { has_country_flag = ETH_most_recent_eng }
+				add_opinion_modifier = {
+					target = ENG
+					modifier = ETH_brokered_peace1
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_fra }
+				add_opinion_modifier = {
+					target = FRA
+					modifier = ETH_brokered_peace1
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				add_opinion_modifier = {
+					target = GER
+					modifier = ETH_brokered_peace1
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				add_opinion_modifier = {
+					target = JAP
+					modifier = ETH_brokered_peace1
+				}
+			}
+			hidden_effect = {
+				set_global_flag = DARK_end_of_ita_eth_war
+				news_event = { id = DARK_eth.102 hours = 12 }
+			}
+		}
+		option = { #Nah man, we got this
+			name = DARK_eth.94.b
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 1
+					OR = {
+						controls_state = 550
+						controls_state = 559
+					}
+				}
+			}
+			
+			FROM = { country_event = DARK_eth.95 }
+			if = {
+				limit = { has_country_flag = ETH_most_recent_eng }
+				ENG = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_fra }
+				FRA = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = DARK_eth.95 }
+			}
+		}
+	}
+		country_event = { #Ethiopia Refuses Peace
+			id = DARK_eth.95
+			title = DARK_eth.95.t
+			desc = {
+				text = DARK_eth.95.desc1
+				trigger = {
+					tag = ITA
+				}
+			}
+			desc = {
+				text = DARK_eth.95.desc2
+				trigger = {
+					NOT = { tag = ITA }
+				}
+			}
+			picture = GFX_report_event_haile_selassie_court
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.95.a
+				trigger = {
+					tag = ITA
+				}
+			}
+			option = {
+				name = DARK_eth.95.b
+				trigger = {
+					NOT = { tag = ITA }
+				}
+			}
+		}
+			
+	country_event = { #Italy refused
+		id = DARK_eth.96
+		title = DARK_eth.96.t
+		desc = DARK_eth.96.desc	
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #So it's war then
+			name = DARK_eth.96.a
+			
+			if = {
+				limit = { 
+					is_faction_leader = yes 
+					ETH = { is_in_faction = no }
+				}
+				add_to_faction = ETH
+			}
+			else_if = {
+				limit = { 
+					is_faction_leader = no
+					ETH = { is_in_faction = no }
+				}
+				create_faction = DARK_ethiopian_league
+				add_to_faction = ETH
+			}
+			else = {
+				declare_war_on = {
+					target = ITA
+					type = topple_government
+				}
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = "ETH"
+					value = 200
+				}
+			}
+		}
+	}
+	country_event = { #Power pushed for Eritrea
+		id = DARK_eth.97
+		title = DARK_eth.97.t
+		desc = DARK_eth.97.desc	
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Take it
+			name = DARK_eth.97.a
+			ai_chance = {
+				base = 1
+			}
+			
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = FROM
+						is_subject_of = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				white_peace = ROOT
+			}
+			transfer_state = 550
+			if = {
+				limit = { has_country_flag = ETH_most_recent_eng }
+				add_opinion_modifier = {
+					target = ENG
+					modifier = ETH_brokered_peace2
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_fra }
+				add_opinion_modifier = {
+					target = FRA
+					modifier = ETH_brokered_peace2
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				add_opinion_modifier = {
+					target = GER
+					modifier = ETH_brokered_peace2
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				add_opinion_modifier = {
+					target = JAP
+					modifier = ETH_brokered_peace2
+				}
+			}
+			hidden_effect = {
+				set_global_flag = DARK_end_of_ita_eth_war
+				news_event = { id = DARK_eth.101 hours = 12 }
+			}
+		}
+		option = { #Nah man, we got this
+			name = DARK_eth.97.b
+			trigger = {
+				NOT = {
+					any_other_country = {
+						OR = {
+							has_country_flag = ETH_backed_italy
+							has_country_flag = ETH_backed_other
+						}
+					}
+				}
+			}
+			ai_chance = {
+				base = 0
+			}
+			
+			FROM = { country_event = DARK_eth.95 }
+			if = {
+				limit = { has_country_flag = ETH_most_recent_eng }
+				ENG = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_fra }
+				FRA = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = DARK_eth.95 }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = DARK_eth.95 }
+			}
+		}
+	}
+	country_event = { #Power pushed for Eritrea & Somalia
+		id = DARK_eth.98
+		title = DARK_eth.98.t
+		desc = DARK_eth.98.desc	
+		picture = GFX_report_event_angry_mussolini
+		
+		is_triggered_only = yes
+		
+		option = { #Take it
+			name = DARK_eth.98.a
+			ai_chance = {
+				base = 1
+			}
+			
+			every_enemy_country = {
+				limit = { 
+					OR = {
+						tag = FROM
+						is_subject_of = FROM
+						is_in_faction_with = FROM
+					}
+				}
+				white_peace = ROOT
+			}
+			if = {
+				limit = { has_country_flag = ETH_most_recent_eng }
+				add_opinion_modifier = {
+					target = ENG
+					modifier = ETH_brokered_peace3
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_fra }
+				add_opinion_modifier = {
+					target = FRA
+					modifier = ETH_brokered_peace3
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				add_opinion_modifier = {
+					target = GER
+					modifier = ETH_brokered_peace3
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				add_opinion_modifier = {
+					target = JAP
+					modifier = ETH_brokered_peace3
+				}
+			}
+			transfer_state = 550
+			transfer_state = 559
+			hidden_effect = {
+				set_global_flag = DARK_end_of_ita_eth_war
+				news_event = { id = DARK_eth.101 hours = 12 }
+			}
+		}
+	}
+	
+#France & Britain Get Involved (France and Britain always get involved)
+country_event = {
+	id = DARK_eth.99
+	title = DARK_eth.99.t
+	desc = DARK_eth.99.desc	
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #Back the other power
+		name = DARK_eth.99.a
+		trigger = {
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				NOT = { has_war_with = GER }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				NOT = { has_war_with = JAP }
+			}
+		}
+		ai_chance = {
+			base = 5
+		}
+		
+		ITA = { country_event = DARK_eth.200 }
+		if = {
+			limit = {
+				tag = FRA
+				ENG = { has_country_flag = ETH_backed_other }
+			}
+			ITA = { country_event = { id = DARK_eth.202 hours = 24 } }
+		}
+		else_if = {
+			limit = {
+				tag = ENG
+				FRA = { has_country_flag = ETH_backed_other }
+			}
+			ITA = { country_event = { id = DARK_eth.202 hours = 24 } }
+		}
+		if = {
+			limit = {
+				tag = FRA
+				ENG = { has_country_flag = ETH_backed_italy }
+			}
+			ENG = { country_event = { id = DARK_eth.214 hours = 24 } }
+		}
+		else_if = {
+			limit = {
+				tag = ENG
+				FRA = { has_country_flag = ETH_backed_italy }
+			}
+			FRA = { country_event = { id = DARK_eth.214 hours = 24 } }
+		}
+	}
+	option = { #Back Italy
+		name = DARK_eth.99.b
+		ai_chance = {
+			base = 2
+			modifier = {
+				factor = 5
+				ETH = { has_country_flag = ETH_most_recent_ger }
+			}
+		}
+		
+		ITA = { country_event = DARK_eth.201 }
+		if = {
+			limit = {
+				tag = FRA
+				ENG = { has_country_flag = ETH_backed_other }
+			}
+			ENG = { country_event = { id = DARK_eth.214 hours = 24 } }
+		}
+		else_if = {
+			limit = {
+				tag = ENG
+				FRA = { has_country_flag = ETH_backed_other }
+			}
+			FRA = { country_event = { id = DARK_eth.214 hours = 24 } }
+		}
+		if = {
+			limit = {
+				tag = FRA
+				ENG = { has_country_flag = ETH_backed_other }
+			}
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = { id = DARK_eth.206 hours = 24 } }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = { id = DARK_eth.206 hours = 24 } }
+			}
+		}
+		else_if = {
+			limit = {
+				tag = ENG
+				FRA = { has_country_flag = ETH_backed_italy }
+			}
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = { id = DARK_eth.206 hours = 24 } }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = { id = DARK_eth.206 hours = 24 } }
+			}
+		}
+	}
+	option = { #Don't Get Involved
+		name = DARK_eth.99.c
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 50
+				has_war = yes
+			}
+		}
+		
+		ITA = { country_event = DARK_eth.218 }
+		hidden_effect = {
+			if = {
+				limit = {
+					tag = FRA					
+				}
+				if = {
+					limit = { ENG = { has_country_flag = ETH_backed_other } }
+					ITA = { country_event = DARK_eth.219 }
+				}
+				else_if = {
+					limit = { ENG = { has_country_flag = ETH_backed_italy } }
+					ENG = { country_event = DARK_eth.220 }
+				}
+			}
+			else_if = {
+				limit = {
+					tag = ENG					
+				}
+				if = {
+					limit = { FRA = { has_country_flag = ETH_backed_other } }
+					ITA = { country_event = DARK_eth.219 }
+				}
+				else_if = {
+					limit = { FRA = { has_country_flag = ETH_backed_italy } }
+					FRA = { country_event = DARK_eth.220 }
+				}
+			}
+		}
+	}
+}
+	country_event = { #Italy informed that Great Power Backs Another
+		id = DARK_eth.200
+		title = DARK_eth.200.t
+		desc = DARK_eth.200.desc	
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.200.a
+		}
+	}
+	country_event = { #Italy informed that Great Power Backs Them
+		id = DARK_eth.201
+		title = DARK_eth.201.t
+		desc = DARK_eth.201.desc	
+		picture = GFX_report_event_generic_sign_treaty3
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.201.a
+		}
+	}
+	country_event = { #Great Powers Unite Against Italy
+		id = DARK_eth.202
+		title = DARK_eth.202.t
+		desc = DARK_eth.202.desc	
+		picture = GFX_report_event_generic_sign_treaty1
+		
+		is_triggered_only = yes
+		
+		option = { #Back Down, Ask for Peace
+			name = DARK_eth.202.a
+			ai_chance = {
+				base = 1
+			}
+			
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = { id = DARK_eth.203 hours = 24 } }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = { id = DARK_eth.203 hours = 24 } }
+			}
+		}
+		option = { #Fight!
+			name = DARK_eth.202.b
+			ai_chance = {
+				base = 0
+			}
+			
+			declare_war_on = {
+				target = ENG
+				type = annex_everything
+			}
+			declare_war_on = {
+				target = FRA
+				type = annex_everything
+			}
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				declare_war_on = {
+					target = GER
+					type = annex_everything
+				}
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				declare_war_on = {
+					target = JAP
+					type = annex_everything
+				}
+			}
+			hidden_effect = {
+				ETH = { add_state_claim = 559 }
+				news_event = { id = DARK_eth.112 hours = 6 }
+			}
+		}
+	}
+		country_event = { #Dictate Peace Terms
+			id = DARK_eth.203
+			title = DARK_eth.203.t
+			desc = DARK_eth.203.desc	
+			picture = GFX_report_event_generic_sign_treaty1
+			
+			is_triggered_only = yes
+			
+			option = { #Eritrea
+				name = DARK_eth.203.a
+				ai_chance = {
+					base = 1
+				}
+				
+				ITA = { country_event = DARK_eth.204 }
+			}
+			option = { #+Somalia
+				name = DARK_eth.203.b
+				ai_chance = {
+					base = 5
+				}
+				
+				ITA = { country_event = DARK_eth.204 }
+			}
+		}
+			country_event = { #Eritra
+				id = DARK_eth.204
+				title = DARK_eth.204.t
+				desc = DARK_eth.204.desc	
+				picture = GFX_report_event_generic_sign_treaty3
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.204.a
+					
+					effect_tooltip = {
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = FROM
+									is_subject_of = FROM
+									is_in_faction_with = FROM
+								}
+							}
+							white_peace = ROOT
+						}
+						ETH = {
+							transfer_state = 550
+						}
+					}
+					hidden_effect = {
+						ETH = { country_event = DARK_eth.97 }
+					}
+				}
+			}
+			country_event = { #Eritra & Somalia
+				id = DARK_eth.205
+				title = DARK_eth.205.t
+				desc = DARK_eth.205.desc	
+				picture = GFX_report_event_generic_sign_treaty3
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.205.a
+					
+					effect_tooltip = {
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = FROM
+									is_subject_of = FROM
+									is_in_faction_with = FROM
+								}
+							}
+							white_peace = ROOT
+						}
+						ETH = {
+							transfer_state = 550
+							transfer_state = 559
+						}
+					}
+					hidden_effect = {
+						ETH = { country_event = DARK_eth.98 }
+					}
+				}
+			}
+	country_event = { #Other Country Informed of Great Powers Siding with Italy
+		id = DARK_eth.206
+		title = DARK_eth.206.t
+		desc = DARK_eth.206.desc
+		picture = GFX_report_event_generic_sign_treaty3
+		
+		is_triggered_only = yes
+
+		option = { #Back Down
+			name = DARK_eth.206.a
+			ai_chance = {
+				base = 1
+			}
+			
+			ETH = { country_event = DARK_eth.88 }
+			ITA = { country_event = DARK_eth.213 }
+		}
+		option = { #They're Bluffing!
+			name = DARK_eth.206.b
+			ai_chance = {
+				base = 1
+			}
+			
+			declare_war_on = {
+				target = ITA
+				type = puppet_wargoal_focus
+			}
+			effect_tooltip = {
+				ENG = { country_event = DARK_eth.207 }
+				FRA = { country_event = DARK_eth.207 }
+			}
+			hidden_effect = {
+				ENG = { country_event = DARK_eth.207 }
+			}
+		}
+	}
+		country_event = { #Britain, are they bluffing?
+			id = DARK_eth.207
+			title = DARK_eth.207.t
+			desc = DARK_eth.207.desc
+			picture = GFX_report_event_soldiers_marching
+			
+			is_triggered_only = yes
+			
+			option = { #Yeah, we were
+				name = DARK_eth.207.a
+				ai_chance = {
+					base = 2
+				}
+				
+				hidden_effect = {
+					FRA = { country_event = DARK_eth.208 }
+				}
+				ITA = { country_event = DARK_eth.209 }
+			}
+			option = { #No, we were not
+				name = DARK_eth.207.b
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 0
+						has_war = yes
+					}
+				}
+				
+				add_stability = -0.1
+				add_war_support = -0.1
+				declare_war_on = {
+					target = FROM
+					type = topple_government
+				}
+				if = {
+					limit = { 
+						is_faction_leader = yes 
+						ITA = { is_in_faction = no }
+					}
+					add_to_faction = ITA
+				}
+				else_if = {
+					limit = { 
+						is_faction_leader = no
+						ITA = { is_in_faction = no }
+					}
+					create_faction = DARK_stresa_front
+					add_to_faction = ITA
+				}
+				hidden_effect = {
+					FRA = { country_event = DARK_eth.208 }
+				}
+			}
+		}
+		country_event = { #France, are they bluffing?
+			id = DARK_eth.208
+			title = {
+				text = DARK_eth.208.t1
+				trigger = {
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						ENG = { has_war_with = GER }
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						ENG = { has_war_with = JAP}
+					}
+				}
+			}
+			title = {
+				text = DARK_eth.208.t2
+				trigger = {
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						NOT = { ENG = { has_war_with = GER } }
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						NOT = { ENG = { has_war_with = JAP } }
+					}
+				}
+			}
+			desc = {
+				text = DARK_eth.208.desc1
+				trigger = {
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						ENG = { has_war_with = GER }
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						ENG = { has_war_with = JAP}
+					}
+				}
+			}
+			desc = {
+				text = DARK_eth.208.desc2
+				trigger = {
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						NOT = { ENG = { has_war_with = GER } }
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						NOT = { ENG = { has_war_with = JAP } }
+					}
+				}
+			}
+			
+			picture = GFX_report_event_soldiers_marching
+			
+			is_triggered_only = yes
+			
+			option = { #Yeah, we were
+				name = DARK_eth.208.a
+				ai_chance = {
+					base = 2
+				}
+				
+				ITA = { country_event = DARK_eth.209 }
+			}
+			option = { #No, we were not
+				name = DARK_eth.208.b
+				ai_chance = {
+					base = 1
+					modifier = {
+						factor = 0
+						has_war = yes
+					}
+					modifier = {
+						factor = 0
+						if = {
+							limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+							NOT = { ENG = { has_war_with = GER } }
+						}
+						else_if = {
+							limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+							NOT = { ENG = { has_war_with = JAP} }
+						}
+					}
+				}
+				
+				add_stability = -0.1
+				add_war_support = -0.1
+				if = {
+					limit = { 
+						ETH = { has_country_flag = ETH_most_recent_ger }
+					}
+					declare_war_on = {
+						target = GER
+						type = topple_government
+					}
+				}
+				else_if = {
+					limit = { 
+						ETH = { has_country_flag = ETH_most_recent_jap }
+					}
+					declare_war_on = {
+						target = JAP
+						type = topple_government
+					}
+				}
+				
+				if = {
+					limit = { 
+						is_faction_leader = yes 
+						ITA = { is_in_faction = no }
+					}
+					add_to_faction = ITA
+				}
+				else_if = {
+					limit = { 
+						is_faction_leader = no
+						ITA = { is_in_faction = no }
+					}
+					create_faction = DARK_stresa_front
+					add_to_faction = ITA
+				}
+			}
+		}
+		country_event = { #Italy Informed of Those who did not join in
+			id = DARK_eth.209
+			title = DARK_eth.209.t
+			desc = DARK_eth.209.desc
+			picture = GFX_report_event_angry_mussolini
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.209.a
+				
+				
+				if = {
+					limit = {
+						FROM = { tag = FRA }
+						ETH = { has_country_flag = ETH_most_recent_ger }
+						NOT = { ENG = { has_war_with = GER } }
+						NOT = { FRA = { has_war_with = GER } }
+					}
+					GER = { country_event = DARK_eth.210 }
+				}
+				else_if = {
+					limit = {
+						FROM = { tag = FRA }
+						ETH = { has_country_flag = ETH_most_recent_jap }
+						NOT = { ENG = { has_war_with = JAP } }
+						NOT = { FRA = { has_war_with = JAP } }
+					}
+					JAP = { country_event = DARK_eth.210 }
+				}
+			}
+		}
+			country_event = { #Other Power Told That France/England Backed Down
+				id = DARK_eth.210
+				title = DARK_eth.210.t
+				desc = DARK_eth.210.desc
+				picture = GFX_report_event_angry_mussolini
+				
+				is_triggered_only = yes
+				
+				option = { #Force Eritrea Peace
+					name = DARK_eth.210.a
+					
+					FROM = { country_event = DARK_eth.211 }
+				}
+				option = { #Push for Somalia Peace
+					name = DARK_eth.210.a
+					
+					FROM = { country_event = DARK_eth.212 }
+				}
+			}
+			country_event = { #Italy Forced to Make Peace for Eritrea
+				id = DARK_eth.211
+				title = DARK_eth.211.t
+				desc = DARK_eth.211.desc
+				picture = GFX_report_event_angry_mussolini
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.211.a
+					
+					effect_tooltip = {
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = ETH
+									is_subject_of = ETH
+									is_in_faction_with = ETH
+								}
+							}
+							white_peace = ROOT
+						}
+						ETH = {
+							transfer_state = 550
+						}
+					}
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = GER
+									is_subject_of = GER
+									is_in_faction_with = GER
+								}
+							}
+							white_peace = ROOT
+						}
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = JAP
+									is_subject_of = JAP
+									is_in_faction_with = JAP
+								}
+							}
+							white_peace = ROOT
+						}
+					}
+					hidden_effect = {
+						ETH = { country_event = DARK_eth.97 }
+					}
+				}
+			}
+			country_event = { #Italy Asked to Make Peace for Somalia as well
+				id = DARK_eth.212
+				title = DARK_eth.212.t
+				desc = DARK_eth.212.desc
+				picture = GFX_report_event_angry_mussolini
+				
+				is_triggered_only = yes
+				
+				option = { #Give in
+					name = DARK_eth.212.a
+					ai_chance = {
+						base = 1
+					}
+					
+					effect_tooltip = {
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = ETH
+									is_subject_of = ETH
+									is_in_faction_with = ETH
+									if = {
+										limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+										tag = GER
+									}
+									else_if = {
+										limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+										tag = JAP
+									}
+								}
+							}
+							white_peace = ROOT
+						}
+						ETH = {
+							transfer_state = 550
+							transfer_state = 559
+						}
+					}
+					if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = GER
+									is_subject_of = GER
+									is_in_faction_with = GER
+								}
+							}
+							white_peace = ROOT
+						}
+					}
+					else_if = {
+						limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+						every_enemy_country = {
+							limit = { 
+								OR = {
+									tag = JAP
+									is_subject_of = JAP
+									is_in_faction_with = JAP
+								}
+							}
+							white_peace = ROOT
+						}
+					}
+					hidden_effect = {
+						ETH = { country_event = DARK_eth.98 }
+					}
+				}
+				option = { #FIGHT
+					name = DARK_eth.212.b
+					ai_chance = {
+						base = 0
+					}
+					
+					FROM = { country_event = DARK_eth.96 }
+				}
+			}
+		country_event = { #Italy informed of other power backing down
+			id = DARK_eth.213
+			title = DARK_eth.213.t
+			desc = DARK_eth.213.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.213.a
+			}
+		}
+	#Great Powers Divided
+	country_event = { #Great Powers Divided
+		id = DARK_eth.214
+		title = DARK_eth.214.t
+		desc = DARK_eth.214.desc
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = { #Push the point
+			name = DARK_eth.214.a
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 5
+					has_country_flag = ETH_backed_other
+				}
+			}
+			
+			if = {
+				limit = { original_tag = ENG }
+				FRA = { country_event = { id = DARK_eth.215 hours = 12 } }
+			}
+			else = {
+				ENG = { country_event = { id = DARK_eth.215 hours = 12 } }
+			}
+		}
+		option = { #Accept the other point of view
+			name = DARK_eth.214.b
+			ai_chance = {
+				base = 1
+			}
+			
+			if = {
+				limit = { has_country_flag = ETH_backed_other }
+				add_war_support = -0.05
+				if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+					GER = { country_event = DARK_eth.206 }
+				}
+				else_if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+					JAP = { country_event = DARK_eth.206 }
+				}
+			}
+			else = {
+				ITA = { country_event = DARK_eth.202 }
+			}
+			if = {
+				limit = { original_tag = ENG }
+				FRA = { country_event = { id = DARK_eth.216 hours = 6 } }
+			}
+			else = {
+				FRA = { country_event = { id = DARK_eth.216 hours = 6 } }
+			}
+		}
+	}
+	country_event = { #Great Powers Divided Cont.
+		id = DARK_eth.215
+		title = DARK_eth.215.t
+		desc = {
+			text = DARK_eth.215.desc1
+			trigger = {
+				NOT = { has_country_flag = hard_enough_flag }
+			}
+		}
+		desc = {
+			text = DARK_lib.215.desc2
+			trigger = {
+				has_country_flag = hard_enough_flag
+			}
+		}
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = { # This is not worth war
+			name = DARK_eth.215.a
+			ai_chance = {
+				base = 10
+			}
+			
+			if = {
+				limit = { has_country_flag = ETH_backed_italy }
+				add_war_support = -0.05
+				if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+					GER = { country_event = DARK_eth.206 }
+				}
+				else_if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+					JAP = { country_event = DARK_eth.206 }
+				}
+			}
+			else = {
+				ITA = { country_event = DARK_eth.202 }
+			}
+			hidden_effect = {
+				clr_country_flag = hard_enough_flag
+			}
+			if = {
+				limit = { original_tag = ENG }
+				FRA = { country_event = { id = DARK_eth.216 hours = 6 } }
+			}
+			else = {
+				FRA = { country_event = { id = DARK_eth.216 hours = 6 } }
+			}
+		}
+		option = { # Think you're hard enough then!?
+			name = DARK_eth.215.b
+			trigger = {
+				has_war_support > 0.1
+				NOT = { has_country_flag = hard_enough_flag }
+			}
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 5
+					has_country_flag = ETH_backed_other
+				}
+				modifier = {
+					factor = 10
+					OR = {
+						is_in_faction_with = ITA
+						is_in_faction_with = ETH
+					}
+				}
+			}
+			
+			if = {
+				limit = { has_country_flag = chosen_ita_peace_flag }
+				add_war_support = -0.05
+				hidden_effect = {
+					set_country_flag = hard_enough_flag
+				}
+				FROM = { country_event = { id = DARK_eth.215 hours = 12 } }
+			}
+			else = {
+				hidden_effect = {
+					set_country_flag = hard_enough_flag
+				}
+				FROM = { country_event = { id = DARK_eth.215 hours = 12 } }
+			}
+		}
+		option = { #We Are Hard Enough!
+			name = DARK_eth.215.c
+			trigger = {
+				has_country_flag = hard_enough_flag
+			}
+			ai_chance = {
+				base = 1
+				modifier = {
+					factor = 5
+					OR = {
+						is_in_faction_with = ITA
+						is_in_faction_with = ETH
+					}
+				}
+			}
+			
+			declare_war_on = {
+				type = puppet_wargoal_focus
+				target = FROM
+			}
+			if = {
+				limit = { has_country_flag = chosen_ita_peace_flag }
+					declare_war_on = {
+					type = puppet_wargoal_focus
+					target = ETH
+				}
+				if = {
+					limit = { 
+						is_faction_leader = yes
+						ITA = { is_in_faction = no }
+					}
+					add_to_faction = ITA
+				}	
+				else_if = {
+					limit = { 
+						is_faction_leader = no
+						is_in_faction = no
+						ITA = { is_in_faction = no }
+					}
+					create_faction = DARK_italian_league
+					add_to_faction = ITA
+				}
+			}
+			else = {
+				declare_war_on = {
+					type = puppet_wargoal_focus
+					target = ITA
+				}
+				if = {
+					limit = { 
+						is_faction_leader = yes
+						ETH = { is_in_faction = no }
+					}
+					add_to_faction = ETH
+				}
+				else_if = {
+					limit = { 
+						is_faction_leader = no
+						is_in_faction = no
+						ETH = { is_in_faction = no }
+					}
+					create_faction = DARK_ethiopian_league
+					add_to_faction = ETH
+				}
+			}
+			hidden_effect = {
+				clr_country_flag = hard_enough_flag
+				FROM = { clr_country_flag = hard_enough_flag }
+				FROM = { country_event = DARK_eth.20 }
+				if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+					GER = { country_event = { id = DARK_eth.217 hours = 2 } }
+				}
+				else_if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_jap } }
+					JAP = { country_event = { id = DARK_eth.217 hours = 2 } }
+				}
+				news_event = { id = DARK_eth.100 hours = 24 }
+			}
+		}
+	}
+	country_event = { #Other power backs down
+		id = DARK_eth.216
+		title = DARK_eth.216.t
+		desc = DARK_eth.216.desc
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.19.a
+			
+			add_political_power = 50
+			add_stability = 0.05
+			add_war_support = 0.05
+			
+			hidden_effect = {
+				clr_country_flag = hard_enough_flag
+				FROM = { clr_country_flag = hard_enough_flag }
+			}
+		}
+	}
+	country_event = { #Other Power Brought into war
+		id = DARK_eth.217
+		title = DARK_eth.217.t
+		desc = DARK_eth.217.desc
+		picture = GFX_report_event_soldiers_marching
+		
+		is_triggered_only = yes
+		
+		immediate = {
+			declare_war_on = {
+				type = puppet_wargoal_focus
+				target = ITA
+			}
+			if = {
+				limit = { 
+					is_faction_leader = yes
+					ETH = { is_in_faction = no }
+				}				
+			}
+			else_if = {
+				limit = { 
+					is_faction_leader = no
+					is_in_faction = no
+				}
+				every_country = {
+					limit = {
+						is_faction_leader = yes
+						is_in_faction_with = ETH
+					}
+					add_to_faction = ROOT
+				}
+			}
+		}
+		
+		option = {
+			name = DARK_eth.217.a
+			
+		}
+	}
+	#Italy Informed of France/England's Intention to stay out of this mess
+	country_event = {
+		id = DARK_eth.218
+		title = DARK_eth.218.t
+		desc = DARK_eth.218.desc
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.218.a
+		}
+	}
+	#Italy Informed of their two to one odds
+	country_event = {
+		id = DARK_eth.219
+		title = DARK_eth.219.t
+		desc = DARK_eth.219.desc
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = { #What do they want?
+			name = DARK_eth.219.a			
+			
+		}
+	}
+		country_event = { #What do we want from Italy
+			id = DARK_eth.220
+			title = DARK_eth.220.t
+			desc = DARK_eth.220.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = { #Eritrea
+				name = DARK_eth.220.a
+				ai_chance = {
+					base = 1
+				}
+				
+				FROM = { country_event = DARK_eth.221 }
+			}
+			option = { #Somalia too
+				name = DARK_eth.220.b
+				ai_chance = {
+					base = 5
+				}				
+				
+				FROM = { country_event = DARK_eth.222 }
+			}
+		}
+		country_event = { #They Demand Eritrea
+			id = DARK_eth.221
+			title = DARK_eth.221.t
+			desc = DARK_eth.221.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = { #Accept
+				name = DARK_eth.221.a
+				
+				effect_tooltip = {
+					every_enemy_country = {
+						limit = { 
+							OR = {
+								tag = ETH
+								is_subject_of = ETH
+								is_in_faction_with = ETH
+							}
+						}
+						white_peace = ROOT
+					}
+					ETH = {
+						transfer_state = 550
+					}
+				}
+				hidden_effect = {
+					ETH = { country_event = DARK_eth.97 }
+				}
+			}
+		}
+		country_event = { #They Demand Eritrea & Somalia
+			id = DARK_eth.222
+			title = DARK_eth.222.t
+			desc = DARK_eth.222.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = { #Accept
+				name = DARK_eth.222.a
+				
+				effect_tooltip = {
+					every_enemy_country = {
+						limit = { 
+							OR = {
+								tag = ETH
+								is_subject_of = ETH
+								is_in_faction_with = ETH
+							}
+						}
+						white_peace = ROOT
+					}
+					ETH = {
+						transfer_state = 550
+						transfer_state = 559
+					}
+				}
+				hidden_effect = {
+					ETH = { country_event = DARK_eth.98 }
+				}
+			}
+			option = { #WAR
+				name = DARK_eth.222.b
+				
+				declare_war_on = {
+					target = FROM
+					type = annex_everything
+				}
+				hidden_effect = {
+					every_other_country = {
+						limit = { has_country_flag = ETH_backed_other }
+						country_event = DARK_eth.223
+					}
+				}
+			}
+		}
+			country_event = { #Does the 3rd Power go to war?
+				id = DARK_eth.223
+				title = DARK_eth.223.t
+				desc = DARK_eth.223.desc
+				picture = GFX_report_event_soldiers_marching
+				
+				is_triggered_only = yes
+				
+				option = { #Yes
+					name = DARK_eth.223.a
+					ai_chance = {
+						base = 1
+					}
+					
+					declare_war_on = {
+						target = ITA
+						type = topple_government
+					}
+				}
+				option = { #No
+					name = DARK_eth.223.b
+					ai_chance = {
+						base = 0
+					}
+					
+					add_stability = -0.15
+					news_event = DARK_event.113
+				}
+			}
+	#Just Britain or France vs. Other
+	country_event = {
+		id = DARK_eth.224
+		title = DARK_eth.224.t
+		desc = DARK_eth.224.desc
+		picture = GFX_report_event_french_british_officers
+		
+		is_triggered_only = yes
+		
+		option = { #We challenge Other
+			name = DARK_eth.224.a
+			ai_chance = {
+				base = 1
+			}
+			
+			if = {
+				limit = { has_country_flag = ETH_most_recent_ger }
+				GER = { country_event = { id = DARK_eth.226 hours = 6 } }
+			}
+			else_if = {
+				limit = { has_country_flag = ETH_most_recent_jap }
+				JAP = { country_event = { id = DARK_eth.226 hours = 6 } }
+			}
+		}
+		option = { #Back Down
+			name = DARK_eth.224.b
+			ai_chance = {
+				base = 2
+			}
+			
+			ITA = { country_event = DARK_eth.225 }
+		}
+	}
+		country_event = { #Italy forced to ask about peace
+			id = DARK_eth.225
+			title = DARK_eth.225.t
+			desc = DARK_eth.225.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.225.a
+				
+				if = {
+					limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+					GER = { country_event = { id = DARK_eth.90 hours = 1 } }
+				}
+				else_if = {
+					limit = {  ETH = { has_country_flag = ETH_most_recent_jap } }
+					JAP = { country_event = { id = DARK_eth.90 hours = 1 } }
+				}
+			}
+		}
+		country_event = { #Other Challenged by France/Italy
+			id = DARK_eth.226
+			title = DARK_eth.226.t
+			desc = DARK_eth.226.desc
+			picture = GFX_report_event_french_british_officers
+			
+			is_triggered_only = yes
+			
+			option = { #Back Down
+				name = DARK_eth.226.a
+				ai_chance = {
+					base = 5
+				}
+				
+				ETH = { country_event = DARK_eth.88 }
+				ITA = { country_event = DARK_eth.227 }
+			}
+			option = { #YOU WILLING TO RISK WAR BUD!?
+				name = DARK_eth.226.b
+				ai_chance = {
+					base = 1
+				}
+				
+				declare_war_on = {
+					target = ITA
+					type = puppet_wargoal_focus
+				}
+				FROM = { country_event = DARK_eth.228 }
+			}
+		}
+			country_event = { #Other Backs Down
+				id = DARK_eth.227
+				title = DARK_eth.227.t
+				desc = DARK_eth.227.desc
+				picture = GFX_report_event_french_british_officers
+				
+				is_triggered_only = yes
+				
+				option = {
+					name = DARK_eth.227.a
+				}
+			}
+			country_event = { #Do we join the war?
+				id = DARK_eth.228
+				title = DARK_eth.228.t
+				desc = DARK_eth.228.desc
+				picture = GFX_report_event_soldiers_marching
+				
+				is_triggered_only = yes
+				
+				option = { #Yes
+					name = DARK_eth.228.a
+					
+					if = {
+						limit = { 
+							is_faction_leader = yes
+							ITA = { is_in_faction = no }
+						}
+						add_to_faction = ITA
+					}	
+					else_if = {
+						limit = { 
+							is_faction_leader = no
+							is_in_faction = no
+							ITA = { is_in_faction = no }
+						}
+						create_faction = DARK_stresa_front
+						add_to_faction = ITA
+					}
+					else = {
+						declare_war_on = {
+							target = ETH
+							type = puppet_wargoal_focus
+						}
+						if = {
+							limit = { ETH = { has_country_flag = ETH_most_recent_ger } }
+								declare_war_on = {
+								target = GER
+								type = puppet_wargoal_focus
+							}
+						}
+						else_if = {
+							limit = {  ETH = { has_country_flag = ETH_most_recent_jap } }
+							declare_war_on = {
+								target = JAP
+								type = puppet_wargoal_focus
+							}
+						}
+					}
+				}
+				
+				option = {
+					name = DARK_eth.228.b
+					
+					ITA = { country_event = DARK_eth.210 }
+				}
+			}
+	
+##Ethiopia Turns Fascist and Submits themselves to Italy
+country_event = {
+	id = DARK_eth.229
+	title = DARK_eth.229.t
+	desc = DARK_eth.229.desc
+	picture = GFX_report_event_haile_selassie_gugsa
+	
+	fire_only_once = yes
+	
+	trigger = {
+		tag = ITA
+		ETH = { has_government = fascism }
+		ETH = { has_country_leader = { ruling_only = yes character = ETH_haile_selassie_gugsa } }
+		ETH = { is_subject = no }
+		ETH = { has_war_with = ITA }
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+	}
+	mean_time_to_happen = {
+		days = 15
+	}
+	
+	option = { #Accept
+		name = DARK_eth.229.a
+		ai_chance = {
+			base = 1
+		}
+		
+		effect_tooltip = {
+			puppet = ETH
+		}
+		ETH = { country_event = DARK_eth.230 }
+	}
+	option = { #Refuse
+		name = DARK_eth.229.b
+		ai_chance = {
+			base = 0
+		}
+		
+		add_political_power = -200
+		add_stability = -0.25
+		add_war_support = -0.5
+		ETH = { country_event = DARK_eth.231 }
+	}
+}
+	country_event = {
+		id = DARK_eth.230
+		title = DARK_eth.230.t
+		desc = DARK_eth.230.desc
+		picture = GFX_report_event_haile_selassie_gugsa
+		
+		is_triggered_only = yes
+		
+		immediate = {
+			FROM = {
+				puppet = ROOT
+			}
+		}
+		
+		option = { #OK
+			name = DARK_eth.230.a
+			ai_chance = {
+				base = 1
+			}
+			
+		}
+	}
+	country_event = {
+		id = DARK_eth.231
+		title = DARK_eth.231.t
+		desc = DARK_eth.231.desc
+		picture = GFX_report_event_haile_selassie_gugsa
+		
+		is_triggered_only = yes
+		
+		option = { #Oh dear...
+			name = DARK_eth.231.a
+			
+			retire_country_leader = yes
+			ETH_hailu_tekle_haimonot = {
+				promote_character = yes
+				promote_character = fascism_ideology
+			}
+			set_party_name = { ideology = fascism long_name = "Noble Reactionaries" name = "Reactionaries" }
+			
+			hidden_effect = {
+				set_country_flag = ETH_italy_refused_puppet
+			}
+		}
+	}
+
+	
+##Deletes ETH_recently_affected_nobles
+country_event = {
+	id = DARK_eth.232
+	hidden = yes
+
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.232.a
+		
+		clr_country_flag = ETH_recently_affected_nobles ##THIS DOESN'T WORK FOR UNKNOWN REASONS
+	}
+}
+
+##ETH demands Djibouti from FRA
+country_event = {
+	id = DARK_eth.233
+	title = DARK_eth.233.t
+	desc = DARK_eth.233.desc
+	picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+
+	is_triggered_only = yes
+	
+	option = { #Surrender
+		name = DARK_eth.233.a
+		ai_chance = {
+			base = 10
+		}
+		
+		FROM = {
+			transfer_state = 268
+			country_event = DARK_eth.234
+		}
+	}
+	option = { #COME AND GET IT THEN
+		name = DARK_eth.233.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 10
+				strength_ratio = {
+					tag = FROM
+					ratio > 0.75
+				}
+			}
+			modifier = {
+				factor = 10
+				strength_ratio = {
+					tag = FROM
+					ratio > 1.25
+				}
+			}
+		}
+		
+		FROM = { 
+			add_state_claim = 268
+			create_wargoal = {
+				target = ROOT
+				type = take_state_focus
+				generator = { 268 }
+			}				
+			country_event = DARK_eth.235
+		}
+	}
+}
+	country_event = { #France Surrenders
+		id = DARK_eth.234
+		title = DARK_eth.234.t
+		desc = DARK_eth.234.desc
+		picture = GFX_report_event_degaulle_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.234.a
+			
+			effect_tooltip = { 
+				transfer_state = 268
+			}
+		}
+	}
+	country_event = { #France Does Not Surrender
+		id = DARK_eth.235
+		title = DARK_eth.235.t
+		desc = DARK_eth.235.desc
+		picture = GFX_report_event_degaulle_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.235.a
+			
+			effect_tooltip = {
+				add_state_claim = 268 
+				create_wargoal = {
+					target = FROM
+					type = take_state_focus
+					generator = { 268 }
+				}
+			}
+		}
+	}
+	
+##ETH demands British Somaliland
+country_event = {
+	id = DARK_eth.236
+	title = DARK_eth.236.t
+	desc = DARK_eth.236.desc
+	picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+
+	is_triggered_only = yes
+	
+	option = { #Surrender
+		name = DARK_eth.233.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = 5
+				268 = { CONTROLLER = { tag = FROM } }
+			}
+			modifier = {
+				add = 10
+				has_war_with = GER
+			}
+			modifier = {
+				add = 10
+				has_war_with = JAP
+			}
+			modifier = {
+				add = 10
+				has_war_with = ITA
+			}
+			modifier = {
+				add = 10
+				has_war_with = FRA
+			}
+			modifier = {
+				add = 10
+				has_war_with = SOV
+			}
+			modifier = {
+				add = 10
+				has_war_with = USA
+			}
+			modifier = {
+				add = 10
+				has_war_with = RAJ
+			}
+		}
+		
+		FROM = {
+			transfer_state = 269
+			country_event = DARK_eth.237
+		}
+	}
+	option = { #We do not negotiate with the likes of you!
+		name = DARK_eth.233.b
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 2
+				has_country_leader = { ruling_only = yes character = ENG_winston_churchill }
+			}
+		}
+		
+		FROM = { 
+			add_state_claim = 269
+			create_wargoal = {
+				target = ROOT
+				type = take_state_focus
+				generator = { 269 }
+			}
+			country_event = DARK_eth.238
+		}
+	}
+}
+	country_event = { #Britain Surrenders
+		id = DARK_eth.237
+		title = DARK_eth.237.t
+		desc = DARK_eth.237.desc
+		picture = GFX_report_event_british_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.237.a
+			
+			effect_tooltip = {
+				transfer_state = 269
+			}
+		}
+	}
+	country_event = { #Britain Does Not Surrender
+		id = DARK_eth.238
+		title = DARK_eth.238.t
+		desc = DARK_eth.238.desc
+		picture = GFX_report_event_british_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.238.a
+			
+			effect_tooltip = { 
+				add_state_claim = 269
+				create_wargoal = {
+					target = FROM
+					type = take_state_focus
+					generator = { 269 }
+				}
+			}
+		}
+	}
+
+	
+##Ethiopia Subjugates Yemen
+country_event = {
+	id = DARK_eth.239
+	title = DARK_eth.239.t
+	desc = DARK_eth.239.desc
+	picture = GFX_report_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+
+	is_triggered_only = yes
+	
+	option = { #Surrender
+		name = DARK_eth.239.a
+		ai_chance = {
+			base = 15
+		}
+		
+		effect_tooltip = { FROM = { puppet = ROOT } }
+		FROM = {
+			country_event = DARK_eth.240
+		}
+	}
+	option = { #Stand strong
+		name = DARK_eth.239.b
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = 19
+				659 = { is_owned_and_controlled_by = ROOT }
+			}
+			modifier = {
+				factor = 10
+				strength_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
+			modifier = {
+				factor = 10
+				is_in_faction = yes
+			}
+		}
+		
+		FROM = { 
+			create_wargoal = {
+				target = ROOT
+				type = puppet_wargoal_focus
+			}
+			country_event = DARK_eth.241
+		}
+	}
+}
+	country_event = { #Yemen Submits
+		id = DARK_eth.240
+		title = DARK_eth.240.t
+		desc = DARK_eth.240.desc
+		picture = GFX_report_event_degaulle_inspect_troops
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.240.a
+			
+			puppet = FROM
+		}
+	}
+	country_event = { #Yemen Does Not Surrender
+		id = DARK_eth.241
+		title = DARK_eth.241.t
+		desc = DARK_eth.241.desc
+		picture = GFX_report_event_degaulle_inspect_troops
+		
+		is_triggered_only = yes
+		
+		immediate = {
+			effect_tooltip = {
+				create_wargoal = {
+					target = FROM
+					type = puppet_wargoal_focus
+				}
+			}
+		}
+		
+		option = {
+			name = DARK_eth.241.a
+			
+		}
+	}
+	
+##Plane Purchases
+#ETH asks to buy planes
+country_event = {
+	id = DARK_eth.242
+	title = DARK_eth.242.t
+	desc = DARK_eth.242.desc
+	picture = GFX_report_event_airplane_factory
+
+	is_triggered_only = yes
+
+	option = { #Sell Fighters
+		name = DARK_eth.242.a
+		trigger = {
+			has_equipment = { fighter_equipment > 50 }
+		}
+		ai_chance = {
+			base = 100
+		}
+
+		add_timed_idea = { idea = ETH_air_payment days = 180 }
+		send_equipment = {
+			equipment = fighter_equipment
+			amount = 50
+			target = ETH
+		}
+		ETH = { 
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = ETH_sold_planes
+			}
+			country_event = DARK_eth.243
+		}
+	}
+	option = { #Divert Fighter Production
+		name = DARK_eth.242.b
+		trigger = {
+			has_equipment = { fighter_equipment < 51 }
+		}
+		ai_chance = {
+			base = 75
+		}
+
+		add_timed_idea = { idea = YUG_air_payment days = 180 }
+		add_timed_idea = { idea = YUG_fighter_production_diverted days = 120 }
+		
+		ETH = { 
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = ETH_sold_planes
+			}
+			add_equipment_to_stockpile = {
+				type = fighter_equipment
+				amount = 50
+			}
+			country_event = DARK_eth.243 
+		}
+	}
+	option = { #Sell Bombers
+		name = DARK_eth.242.c
+		trigger = {
+			has_equipment = { tac_bomber_equipment > 50 }
+		}
+		ai_chance = {
+			base = 50
+		}
+		
+		add_timed_idea = { idea = YUG_air_payment days = 180 }
+		send_equipment = {
+			equipment = tac_bomber_equipment
+			amount = 50
+			target = ETH
+		}
+		ETH = { 
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = ETH_sold_planes
+			}
+			country_event = DARK_eth.244 
+		}
+	}
+	option = { #Divert Bomber Production
+		name = DARK_eth.242.d
+		trigger = {
+			has_equipment = { tac_bomber_equipment < 51 }
+		}
+		ai_chance = {
+			base = 25
+		}
+		
+		add_timed_idea = { idea = ETH_air_payment days = 180 }
+		add_timed_idea = { idea = YUG_bomber_production_diverted days = 120 }
+		
+		ETH = {
+			add_opinion_modifier = {
+				target = ROOT
+				modifier = ETH_sold_planes
+			}
+			add_equipment_to_stockpile = {
+				type = tac_bomber_equipment
+				amount = 50
+			}
+			country_event = DARK_eth.244
+		}
+	}
+	option = { #Refuse
+		name = DARK_eth.242.e
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 0
+				is_in_faction_with = FROM
+			}
+		}
+	}
+}
+	country_event = { #Got Fighters
+		id = DARK_eth.243
+		title = DARK_eth.243.t
+		desc = DARK_eth.243.desc
+		picture = GFX_report_event_airplane_factory
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.243.a
+			
+			effect_tooltip = {
+				add_opinion_modifier = {
+					target = FROM
+					modifier = ETH_sold_planes
+				}
+				add_equipment_to_stockpile = {
+					type = fighter_equipment
+					amount = 50
+				}
+			}
+		}
+	}
+	country_event = { #Got Bombers
+		id = DARK_eth.244
+		title = DARK_eth.244.t
+		desc = DARK_eth.244.desc
+		picture = GFX_report_event_airplane_factory
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.244.a
+			
+			effect_tooltip = {
+				add_opinion_modifier = {
+					target = FROM
+					modifier = ETH_sold_planes
+				}
+				add_equipment_to_stockpile = {
+					type = tac_bomber_equipment
+					amount = 50
+				}
+			}
+		}
+	}
+	
+##Haile Selassie Returns as Field Marshal if he hasn't already
+##OBSOLETED BY NO STEP BACK CHARACTER MECHANICS
+#country_event = {
+#	id = DARK_eth.245
+#	title = DARK_eth.245.t
+#	desc = DARK_eth.245.desc
+#	picture = GFX_report_event_haile_selassie_inspects_troops
+#	
+#	is_triggered_only = yes #BRICKED FOR NOW
+#	
+	#trigger = {
+	#	tag = ETH
+	#	has_government = neutrality
+	#	is_subject = no
+	#	has_country_leader = { ruling_only = yes name = "Haile Selassie" }
+	#	NOT = { ETH = { has_unit_leader = 30110 } }
+	#}
+	#mean_time_to_happen = {
+	#	days = 15
+	#}
+	
+#	option = {
+#		name = DARK_eth.245.a
+#		
+#		create_field_marshal = {
+#			name = "Haile Selassie"
+#			portrait_path = "gfx/leaders/ETH/Portrait_Ethiopia_Haile_Selassie.dds"
+#			traits = { media_personality brilliant_strategist offensive_doctrine inspirational_leader }
+#			skill = 3
+#			attack_skill = 3
+#			defense_skill = 3
+#			planning_skill = 3
+#			logistics_skill = 3
+#			
+#			id = 30110
+#		}
+#	}
+#}
+
+##AOI Graziani Gets Paranoid
+country_event = {
+	id = DARK_eth.246
+	title = DARK_eth.246.t
+	desc = DARK_eth.246.desc
+	picture = GFX_report_event_fascist_militia
+	
+	fire_only_once = yes
+	
+	trigger = {
+		original_tag = AOI
+		has_country_leader = { ruling_only = yes character = ITA_rodolfo_graziani }
+	}
+	mean_time_to_happen = {
+		days = 360
+	}
+	
+	option = {
+		name = DARK_eth.246.a
+		
+		add_country_leader_trait = DARK_paranoid
+		hidden_effect = {
+			set_country_flag = DARK_paranoid_flag
+		}
+	}
+}
+
+##Invite Country to the Pan-African Congress
+country_event = {
+	id = DARK_eth.247
+	title = DARK_eth.247.t
+	desc = DARK_eth.247.desc
+	picture = GFX_report_event_african_soldiers
+	
+	is_triggered_only = yes
+	
+	option = { #Join
+		name = DARK_eth.247.a
+		ai_chance = {
+			base = 10
+			modifier = {
+				factor = 0.5
+				is_faction_leader = yes
+			}
+		}
+		
+		if = {
+			limit = { is_faction_leader = no }
+			FROM = {
+				add_to_faction = ROOT
+				country_event = DARK_eth.248
+			}
+		}
+		else = {
+			every_other_country = {
+				limit = { is_in_faction_with = ROOT }
+				FROM = { add_to_faction = PREV }
+			}
+			FROM = { add_to_faction = ROOT }
+		}
+	}
+	option = { #Refuse
+		name = DARK_eth.247.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				factor = 5
+				is_faction_leader = yes
+			}
+		}
+		
+		FROM = { country_event = DARK_eth.249 }
+	}
+}
+	country_event = {
+		id = DARK_eth.248
+		title = DARK_eth.248.t
+		desc = DARK_eth.248.desc
+		picture = GFX_report_event_african_soldiers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.248.a
+			
+		}
+	}
+	country_event = {
+		id = DARK_eth.249
+		title = DARK_eth.249.t
+		desc = DARK_eth.249.desc
+		picture = GFX_report_event_african_soldiers
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.249.a
+			
+		}
+	}
+	
+##Nobles Revolt
+country_event = {
+	id = DARK_eth.250
+	title = DARK_eth.250.t
+	desc = DARK_eth.250.desc
+	picture = GFX_report_event_haile_selassie_inspects_troops
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.250.a
+		
+		if  = {
+			limit = {
+				 check_variable = { ETH_noble_influence_value < 75 }
+			}
+			start_civil_war = {
+				ruling_party = neutrality
+				ideology = fascism
+				size = 0.5
+				keep_unit_leaders = {
+					30110 30111 30115
+				}
+			}
+		}
+		else= {
+			start_civil_war = {
+				ruling_party = neutrality
+				ideology = fascism
+				size = 0.75
+				keep_unit_leaders = {
+					30110 30111 30115
+				}
+			}
+		}
+	}
+}
+
+##After the War
+country_event = {
+	id = DARK_eth.251
+	title = DARK_eth.251.t
+	desc = DARK_eth.251.desc
+	picture = GFX_report_event_haile_selassie_court
+	
+	fire_only_once = yes
+	
+	trigger = {
+		original_tag = ETH
+		is_subject = no
+		has_government = neutrality
+		OR = {
+			has_global_flag = DARK_end_of_ita_eth_war
+			AND = {
+				has_global_flag = war_over_ETH
+				has_war = no
+			}
+		}
+		NOT = { focus_progress = { focus = ETH_restoration progress > 0 } }
+		NOT = { has_completed_focus = ETH_restoration }
+	}
+	mean_time_to_happen = {
+		days = 5
+	}
+	
+	option = {
+		name = DARK_eth.251.a
+		
+		custom_effect_tooltip = DARK_enable_nobles_tt
+		set_party_name = { ideology = fascism long_name = "Noble Reactionaries" name = "Reactionaries" }
+		retire_character = ETH_haile_selassie_gugsa
+		promote_character = {
+			character = ETH_hailu_tekle_haimonot
+			ideology = fascism_ideology
+		}
+		hidden_effect = {
+			set_country_flag = DARK_nobles_rise
+		}
+	}
+}
+	
+
+##AOI informed of Graziani's removal
+country_event = {
+	id = DARK_eth.252
+	title = DARK_eth.252.t
+	desc = DARK_eth.252.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.252.a
+		
+		effect_tooltip = {
+			ITA_rodolfo_graziani = {
+				set_nationality = ITA
+			}
+			#promote_character = AOI_guglielmo_nasi
+			set_politics = {
+				ruling_party = neutrality
+			}
+			add_popularity = { ideology = fascism popularity = -0.3 }
+			add_popularity = { ideology = neutrality popularity = 0.3 }
+		}
+	}
+}
+
+##Somalian/Eritrean Nationalism
+country_event = {
+	id = DARK_eth.253
+	title = DARK_eth.253.t
+	desc = DARK_eth.253.desc
+	picture = GFX_report_event_african_soldiers
+	
+	fire_only_once = yes
+	
+	trigger = {
+		tag = ETH
+		550 = { is_owned_and_controlled_by = ETH }
+		NOT = { has_completed_focus = ETH_integrate_eritrea }
+		NOT = { has_completed_focus = ETH_crush_eritrea }
+		NOT = { has_idea = ETH_eritrean_nationalism }
+		NOT = { has_idea = ETH_eritrean_nationalism_crushed }
+		NOT = { has_idea = ETH_somali_and_eritrean_nationalism_crushed }
+	}
+	mean_time_to_happen = {
+		days = 30
+	}		
+	
+	option = {
+		name = DARK_eth.253.a
+
+		add_ideas = ETH_eritrean_nationalism
+	}
+}
+country_event = {
+	id = DARK_eth.254
+	title = DARK_eth.254.t
+	desc = DARK_eth.254.desc
+	picture = GFX_report_event_african_soldiers
+	
+	fire_only_once = yes
+	
+	trigger = {
+		tag = ETH
+		OR = {
+			559 = { is_owned_and_controlled_by = ETH }
+			269 = { is_owned_and_controlled_by = ETH }
+		}
+		NOT = { has_completed_focus = ETH_order_in_somalia }
+		NOT = { has_completed_focus = ETH_establish_somalian_puppet }
+		NOT = { has_idea = ETH_somali_nationalism }
+		NOT = { has_idea = ETH_somali_nationalism_crushed }
+		NOT = { has_idea = ETH_somali_and_eritrean_nationalism_crushed }
+	}
+	mean_time_to_happen = {
+		days = 30
+	}		
+	
+	option = {
+		name = DARK_eth.254.a
+
+		add_ideas = ETH_somali_nationalism
+	}
+}
+
+##Random Nobility Events
+country_event = { #Nobles gain/lose influence in court
+	id = DARK_eth.255
+	hidden = yes
+	
+	trigger = {
+		tag = ETH
+		has_country_flag = DARK_nobles_rise
+		NOT = { has_country_flag = ETH_end_of_nobility }
+	}
+	mean_time_to_happen = {
+		days = 200
+	}	
+	
+	option = {
+		name = DARK_eth.255.a
+
+		random_list = {
+			50 = {
+				country_event = DARK_eth.256
+			}
+			50 = {
+				country_event = DARK_eth.257
+			}
+		}
+	}
+}
+	country_event = { #Nobles gain influence in court
+		id = DARK_eth.256
+		title = DARK_eth.256.t
+		desc = DARK_eth.256.desc
+		picture = GFX_report_event_haile_selassie_court
+		
+		is_triggered_only = yes	
+		
+		option = {
+			name = DARK_eth.256.a
+
+			custom_effect_tooltip = ETH_add_noble_influence_10
+			hidden_effect = {
+				add_to_variable = { ETH_noble_influence_value = 10 }
+				clamp_variable = {
+					max = 200
+					min = 0
+				}
+			}
+		}
+	}
+	country_event = { #Nobles lose influence in court
+		id = DARK_eth.257
+		title = DARK_eth.257.t
+		desc = DARK_eth.257.desc
+		picture = GFX_report_event_haile_selassie_court
+		
+		is_triggered_only = yes	
+		
+		option = {
+			name = DARK_eth.257.a
+
+			custom_effect_tooltip = ETH_remove_noble_influence_10
+			hidden_effect = {
+				subtract_from_variable = { ETH_noble_influence_value = 10 }
+				clamp_variable = {
+					max = 200
+					min = 0
+				}
+			}
+		}
+	}
+country_event = { #Nobles use war to leverage influence
+	id = DARK_eth.258
+	hidden = yes
+	
+	trigger = {
+		tag = ETH
+		has_war = yes
+		has_country_flag = DARK_nobles_rise
+		NOT = { has_country_flag = ETH_end_of_nobility }
+	}
+	mean_time_to_happen = {
+		days = 180
+	}	
+	
+	option = {
+		name = DARK_eth.258.a
+
+		random_list = {
+			50 = {
+				country_event = DARK_eth.259
+			}
+			50 = {
+			}
+		}
+	}
+}
+	country_event = { #Nobles gain influence via war
+		id = DARK_eth.259
+		title = DARK_eth.259.t
+		desc = DARK_eth.259.desc
+		picture = GFX_report_event_haile_selassie_court
+		
+		is_triggered_only = yes	
+		
+		option = {
+			name = DARK_eth.259.a
+
+			custom_effect_tooltip = ETH_add_noble_influence_5
+			hidden_effect = {
+				add_to_variable = { ETH_noble_influence_value = 5 }
+				clamp_variable = {
+					max = 200
+					min = 0
+				}
+			}
+		}
+	}
+	
+##Nobles Revolt Communism
+country_event = {
+	id = DARK_eth.260
+	title = DARK_eth.260.t
+	desc = DARK_eth.260.desc
+	picture = GFX_report_event_saf_soldiers_2
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.260.a
+		
+		if  = {
+			limit = {
+				 check_variable = { ETH_noble_influence_value < 75 }
+			}
+			start_civil_war = {
+				ruling_party = communism
+				ideology = fascism
+				size = 0.5
+			}
+		}
+		else= {
+			start_civil_war = {
+				ruling_party = communism
+				ideology = fascism
+				size = 0.75
+			}
+		}
+		hidden_effect = {
+			set_country_flag = ETH_dead_haile
+		}
+	}
+}
+
+##Italy Tries to Unite Factions with Austria/Hungary
+country_event = {
+	id = DARK_eth.261
+	title = DARK_eth.261.t
+	desc = DARK_eth.261.desc
+	picture = GFX_report_event_soldiers_marching
+	
+	is_triggered_only = yes
+	
+	option = { #No-One Else in Faction
+		name = DARK_eth.261.a
+		trigger = {
+			NOT = { any_other_country = {
+				is_subject = no
+				is_in_faction_with = ROOT
+			} }
+		}
+		ai_chance = {
+			base = 1
+		}
+		
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = generic.3 
+		}
+	}
+	option = { #Okay, we accept
+		name = DARK_eth.261.b
+		trigger = {
+			any_other_country = {
+				is_subject = no
+				is_in_faction_with = ROOT
+			}
+		}
+		ai_chance = {
+			base = 1
+		}
+		
+		every_other_country = {
+			limit = {
+				is_in_faction_with = ROOT
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = FROM
+					value = 200
+				}
+			}
+			FROM = { add_to_faction = PREV }
+		}
+		hidden_effect = {
+			add_ai_strategy = {
+				type = alliance
+				id = FROM
+				value = 200
+			}
+		}
+		FROM = { 
+			add_to_faction = ROOT
+			country_event = DARK_eth.266
+		}
+	}
+	option = { #Okay, but we want to lead
+		name = DARK_eth.261.c
+		ai_chance = {
+			base = 0
+			modifier = {
+				add = 2
+				num_faction_members > FROM.num_faction_members
+			}
+		}
+		
+		country_event = DARK_eth.263
+	}
+	option = { #Non
+		name = DARK_eth.261.d
+		ai_chance = {
+			base = 0
+		}
+		
+		country_event = DARK_eth.262
+	}
+}
+	country_event = { #They Refuse
+		id = DARK_eth.262
+		title = DARK_eth.262.t
+		desc = DARK_eth.262.desc
+		picture = GFX_report_event_soldiers_marching
+		
+		is_triggered_only = yes
+		
+		option = {
+			name = DARK_eth.262.a
+		}
+	}
+	country_event = { #They Ask for Leadership
+		id = DARK_eth.263
+		title = DARK_eth.263.t
+		desc = DARK_eth.263.desc
+		picture = GFX_report_event_generic_read_write
+		
+		is_triggered_only = yes
+		
+		option = { #We accept
+			name = DARK_eth.263.a
+			ai_chance = {
+				base = 1
+			}
+			
+			every_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+				}
+				hidden_effect = {
+					add_ai_strategy = {
+						type = alliance
+						id = FROM
+						value = 200
+					}
+				}
+				FROM = { add_to_faction = PREV }
+			}
+			hidden_effect = {
+				add_ai_strategy = {
+					type = alliance
+					id = FROM
+					value = 200
+				}
+			}
+			FROM = { 
+				add_to_faction = ROOT
+				country_event = DARK_eth.264
+			}
+		}
+		option = { #Either we lead or no-one does
+			name = DARK_eth.263.b
+			ai_chance = {
+				base = 0
+				modifier = {
+					add = 2
+					num_faction_members > FROM.num_faction_members
+				}
+			}
+			
+			
+			FROM = { country_event = DARK_eth.265 }
+		}
+	}
+		country_event = { #Italy Kneels
+			id = DARK_eth.264
+			title = DARK_eth.264.t
+			desc = DARK_eth.264.desc
+			picture = GFX_report_event_generic_sign_treaty1
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.264.a
+				
+				effect_tooltip = {
+					every_other_country = {
+						limit = {
+							is_in_faction_with = FROM
+						}
+						add_to_faction = PREV
+					}
+					add_to_faction = FROM
+				}
+			}
+		}
+		country_event = { #Italy Demands Leadership
+			id = DARK_eth.265
+			title = DARK_eth.265.t
+			desc = DARK_eth.265.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = { #Kneel
+				name = DARK_eth.265.a
+				ai_chance = {
+					base = 2
+				}
+				
+				every_other_country = {
+					limit = {
+						is_in_faction_with = ROOT
+					}
+					hidden_effect = {
+						add_ai_strategy = {
+							type = alliance
+							id = FROM
+							value = 200
+						}
+					}
+					FROM = { add_to_faction = PREV }
+				}
+				FROM = { 
+					hidden_effect = {
+						add_ai_strategy = {
+							type = alliance
+							id = ROOT
+							value = 200
+						}
+					}
+					add_to_faction = ROOT
+				}
+				FROM = { country_event = { id = DARK_eth.266 hours = 6 } }
+			}
+			option = { #Go suck spaghetti!
+				name = DARK_eth.265.a
+				ai_chance = {
+					base = 1
+				}
+				
+				effect_tooltip = {
+					remove_opinion_modifier = {
+						target = FROM
+						modifier = NEW_ITA_lovely_france
+					}
+				}
+				FROM = { country_event = { id = DARK_eth.267 hours = 6 } }
+			}
+		}
+		country_event = { #France Kneels
+			id = DARK_eth.266
+			title = DARK_eth.266.t
+			desc = DARK_eth.266.desc
+			picture = GFX_report_event_generic_sign_treaty1
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.266.a
+			}
+		}
+		country_event = { #France Refuses
+			id = DARK_eth.267
+			title = DARK_eth.267.t
+			desc = DARK_eth.267.desc
+			picture = GFX_report_event_generic_read_write
+			
+			is_triggered_only = yes
+			
+			option = {
+				name = DARK_eth.267.a
+				FROM = {
+					remove_opinion_modifier = {
+						target = ROOT
+						modifier = NEW_ITA_lovely_france
+					}
+				}
+			}
+		}
+
+##Take control of AOI?
+country_event = {
+	id = DARK_eth.268
+	title = DARK_eth.268.t
+	desc = DARK_eth.268.desc
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+	
+	option = { #No
+		name = DARK_eth.268.a
+		
+		add_political_power = 0
+	}
+	option = { #Yes
+		name = DARK_eth.268.b
+		
+		AOI = { change_tag_from = ROOT }
+	}
+}
+
+##Quadripartite/Tripartite Pact
+ # Event for Germany to accept Tripartite Pact
+country_event = {
+	id = DARK_eth.269
+	title = DARK_eth.269.t
+	desc = DARK_eth.269.desc
+	picture = GFX_report_event_japan_europe_pact
+
+	is_triggered_only = yes
+
+	immediate = {
+		hidden_effect = {
+			FROM = { save_event_target_as = ETH_initiator }
+			save_event_target_as = GER_fascism
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							JAP = { is_guaranteed_by = GER }
+							JAP = { is_guaranteed_by = ITA }
+						}
+						AND = {
+							JAP = { has_government = fascism }
+							ITA = { has_government = fascism }
+						}
+					}
+				}
+				set_global_flag = DARK_quad_pact
+			}
+						
+			random_country = {
+				limit = {
+					original_tag = ITA
+					has_government = fascism
+				}
+				save_event_target_as = ITA_fascism
+			}
+			random_country = {
+				limit = {
+					original_tag = JAP
+					has_government = fascism
+				}
+				save_event_target_as = JAP_fascism
+			}
+		}
+	}
+	
+	option = {
+		name = DARK_eth.269.a
+		ai_chance = {
+			base = 10
+		}
+
+		event_target:ITA_fascism = {
+			country_event = { id = DARK_eth.270 hours = 6 }
+		}
+		event_target:JAP_fascism = {
+			country_event = { id = DARK_eth.270 hours = 6 }
+		}
+		event_target:ETH_initiator = {
+			country_event = { id = DARK_eth.271 hours = 6 }
+		}
+	}
+
+	option = {
+		name = DARK_eth.269.b
+		ai_chance = {
+			base = 0
+		}
+
+		event_target:ETH_initiator = { country_event = { id = DARK_eth.272 hours = 6 } }
+		event_target:ITA_fascism = { country_event = { id = DARK_eth.272 hours = 6 } }
+		event_target:JAP_fascism = { country_event = { id = DARK_eth.272 hours = 6 } }
+	}
+}
+
+ # Event for Italy/Japan to accept Tripartite Pact
+country_event = {
+	id = DARK_eth.270
+	title = DARK_eth.269.t
+	desc = DARK_eth.270.desc
+	picture = GFX_report_event_japan_europe_pact
+
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.270.a
+		ai_chance = {
+			base = 10
+		}
+		
+		event_target:ETH_initiator = {
+			give_guarantee = event_target:ITA_fascism
+			give_guarantee = event_target:GER_fascism
+			give_guarantee = event_target:JAP_fascism
+		}
+		event_target:GER_fascism = {
+			give_guarantee = event_target:ITA_fascism
+			give_guarantee = event_target:JAP_fascism
+			give_guarantee = event_target:ETH_initiator
+		}
+		event_target:ITA_fascism = {
+			give_guarantee = event_target:ETH_initiator
+			give_guarantee = event_target:GER_fascism
+			give_guarantee = event_target:JAP_fascism
+		}
+		event_target:JAP_fascism = {
+			give_guarantee = event_target:ETH_initiator
+			give_guarantee = event_target:GER_fascism
+			give_guarantee = event_target:ITA_fascism
+		}
+		event_target:ETH_initiator = { country_event = { id = DARK_eth.271 hours = 6 } }
+		event_target:GER_fascism = { country_event = { id = DARK_eth.273 hours = 6 } }
+	}
+
+	option = {
+		name = DARK_eth.270.b
+		trigger = {
+			NOT = { original_tag = JAP }
+		}
+		ai_chance = {
+			base = 0
+		}
+		
+		event_target:GER_fascism = { country_event = { id = wtt_japan.112 hours = 6 } }
+		event_target:ETH_initiator = { country_event = { id = wtt_japan.112 hours = 6 } }
+	}
+}
+
+ #Notification event that Tripartite Pact has been signed
+country_event = {
+	id = DARK_eth.271
+	title = DARK_eth.271.t
+	desc = DARK_eth.271.desc
+	picture = GFX_report_event_japan_europe_pact
+
+	is_triggered_only = yes
+	
+	option = {
+		name = excellent
+		ai_chance = {
+			base = 10
+		}
+		effect_tooltip = {
+			event_target:ETH_initiator = {
+				give_guarantee = event_target:ITA_fascism
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:JAP_fascism
+			}
+			event_target:GER_fascism = {
+				give_guarantee = event_target:ITA_fascism
+				give_guarantee = event_target:JAP_fascism
+				give_guarantee = event_target:ETH_initiator
+			}
+			event_target:ITA_fascism = {
+				give_guarantee = event_target:ETH_initiator
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:JAP_fascism
+			}
+			event_target:JAP_fascism = {
+				give_guarantee = event_target:ETH_initiator
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:ITA_fascism
+			}
+		}
+	}
+}
+
+ #Notification event that FROM has rejected Tripartite Pact
+country_event = {
+	id = DARK_eth.272
+	title = DARK_eth.272.t
+	desc = DARK_eth.272.desc
+	picture = GFX_report_event_japan_europe_pact
+
+	is_triggered_only = yes
+	
+	option = {
+		name = unfortunate
+	}
+}
+
+ #Notification event for GER that ITA/JAP has accepted Tripartite Pact
+country_event = {
+	id = DARK_eth.273
+	title = DARK_eth.273.t
+	desc = DARK_eth.273.desc
+	picture = GFX_report_event_japan_europe_pact
+
+	is_triggered_only = yes
+	
+	option = {
+		name = excellent
+		effect_tooltip = {
+			event_target:ETH_initiator = {
+				give_guarantee = event_target:ITA_fascism
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:JAP_fascism
+			}
+			event_target:GER_fascism = {
+				give_guarantee = event_target:ITA_fascism
+				give_guarantee = event_target:JAP_fascism
+				give_guarantee = event_target:ETH_initiator
+			}
+			event_target:ITA_fascism = {
+				give_guarantee = event_target:ETH_initiator
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:JAP_fascism
+			}
+			event_target:JAP_fascism = {
+				give_guarantee = event_target:ETH_initiator
+				give_guarantee = event_target:GER_fascism
+				give_guarantee = event_target:ITA_fascism
+			}
+		}
+	}
+}
+
+
+### NEWS EVENTS ###	
+news_event = { #World War II Early
+	id = DARK_eth.100
+	title = DARK_eth.100.t
+	desc = DARK_eth.100.desc
+	picture = GFX_news_event_soldiers_marching
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.100.a
+		trigger = {
+			has_war_with = ETH
+		}
+	}
+	option = {
+		name = DARK_eth.100.b
+		trigger = {
+			has_war_with = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.100.c
+		trigger = {
+			NOT = { has_war_with = ETH }
+			NOT = { has_war_with = ITA }
+		}
+	}
+}
+
+news_event = { #Ethiopia Beats Italy
+	id = DARK_eth.101
+	title = DARK_eth.101.t
+	desc = {
+		text = DARK_eth.101.desc1
+		trigger = {
+			NOT = { ETH = { owns_state = 559 } } #Only Eritrea
+		}
+	}
+	desc = {
+		text = DARK_eth.101.desc2
+		trigger = {
+			ETH = { owns_state = 559 } #Eritrea & Somalia
+		}
+	}
+	picture = GFX_news_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.101.a
+		trigger = {
+			OR = {
+				tag = ITA
+				is_in_faction_with = ITA
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.101.b
+		trigger = {
+			OR = {
+				tag = ETH
+				is_in_faction_with = ETH
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.101.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { tag = ETH }
+			NOT = { is_in_faction_with = ITA }
+			NOT = { is_in_faction_with = ETH }
+		}
+	}
+}
+news_event = { #Ethiopia White Peaces Italy
+	id = DARK_eth.102
+	title = DARK_eth.102.t
+	desc = DARK_eth.102.desc
+	picture = GFX_news_event_ethiopian_troops_marching_in_support_of_emperor_haile_selassie
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.102.a
+		trigger = {
+			OR = {
+				tag = ITA
+				is_in_faction_with = ITA
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.102.b
+		trigger = {
+			OR = {
+				tag = ETH
+				is_in_faction_with = ETH
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.102.c
+		trigger = {
+			NOT = { has_war_with = ETH }
+			NOT = { has_war_with = ITA }
+		}
+	}
+}
+
+news_event = { #Italian Government Collapses
+	id = DARK_eth.103
+	title = DARK_eth.103.t
+	desc = DARK_eth.103.desc
+	picture = GFX_news_event_generic_riot
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.103.a
+		trigger = {
+			original_tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.103.b
+		trigger = {
+			original_tag = ETH
+		}
+	}
+	option = {
+		name = DARK_eth.103.c
+		trigger = {
+			NOT = { original_tag = ITA }
+			NOT = { original_tag = ETH }
+		}
+	}
+}
+news_event = { #Italian Civil War
+	id = DARK_eth.104
+	title = DARK_eth.104.t
+	desc = DARK_eth.104.desc
+	picture = GFX_news_event_ger_civil_war
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.104.a
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.104.b
+		trigger = {
+			original_tag = ITA
+			NOT = { tag = ITA }
+		}
+	}
+	option = {
+		name = DARK_eth.104.c
+		trigger = {
+			original_tag = ETH
+		}
+	}
+	option = {
+		name = DARK_eth.104.d
+		trigger = {
+			NOT = { original_tag = ITA }
+			NOT = { original_tag = ETH }
+		}
+	}
+}
+news_event = { #Vote of No Confidence in Mussolini
+	id = DARK_eth.105
+	title = DARK_eth.105.t
+	desc = DARK_eth.105.desc
+	picture = GFX_news_event_journalists_speech
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.105.a
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.105.b
+		trigger = {
+			tag = GER
+		}
+	}
+	option = {
+		name = DARK_eth.105.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { tag = GER }
+		}
+	}
+}
+news_event = { #Mussolini causes civil war
+	id = DARK_eth.106
+	title = DARK_eth.106.t
+	desc = DARK_eth.106.desc
+	picture = GFX_news_event_ger_civil_war
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.106.a
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.106.b
+		trigger = {
+			original_tag = ITA
+			NOT = { tag = ITA }
+		}
+	}
+	option = {
+		name = DARK_eth.106.c
+		trigger = {
+			NOT = { original_tag = ITA }
+		}
+
+	}
+}
+news_event = { #Italy Bucks Its Allies
+	id = DARK_eth.107
+	title = DARK_eth.107.t
+	desc = DARK_eth.107.desc
+	picture = GFX_news_event_008
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.107.a
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.107.b
+		trigger = {
+			NOT = { tag = ITA }
+			has_country_flag = DARK_betrayed_country
+		}
+		
+		hidden_effect = {
+			clr_country_flag = DARK_betrayed_country
+		}
+	}
+	option = {
+		name = DARK_eth.107.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { has_country_flag = DARK_betrayed_country }
+		}
+
+	}
+}
+news_event = { #The Treaty of Belgrade
+	id = DARK_eth.108
+	title = DARK_eth.108.t
+	desc = DARK_eth.108.desc
+	picture = GFX_news_event_008
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.108.a
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.108.b
+		trigger = {
+			NOT = { tag = ITA }
+			OR = {
+				is_in_faction_with = ITA
+				is_subject_of = ITA
+			}
+		}
+		
+		hidden_effect = {
+			clr_country_flag = DARK_betrayed_country
+		}
+	}
+	option = {
+		name = DARK_eth.108.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { is_subject_of = ITA }
+			NOT = { is_in_faction_with = ITA }
+		}
+	}
+}
+
+news_event = { #Closing the Suez
+	id = DARK_eth.109
+	title = DARK_eth.109.t
+	desc = DARK_eth.109.desc
+	picture = GFX_news_event_020
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.109.a
+		trigger = {
+			tag = FROM
+		}
+	}
+	option = {
+		name = DARK_eth.109.b
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.109.c
+		trigger = {
+			tag = ETH
+		}
+	}
+	option = {
+		name = DARK_eth.109.d
+		trigger = {
+			NOT = { tag = FROM }
+			NOT = { tag = ITA }
+			NOT = { tag = ETH }
+		}
+	}
+}
+news_event = { #The Suez Re-Opens
+	id = DARK_eth.110
+	title = DARK_eth.110.t
+	desc = {
+		text = DARK_eth.110.desc1
+		trigger = {
+			OR = {
+				FROM = { has_war = yes }
+				FROM = { OVERLORD = { has_war = yes } }
+			}
+		}
+	}
+	desc = {
+		text = DARK_eth.110.desc2
+		trigger = {
+			FROM = { has_war = no }
+			FROM = { OVERLORD = { has_war = no } }
+		}
+	}
+	picture = GFX_news_event_020
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.110.a
+		trigger = {
+			OR = {
+				tag = FROM
+				FROM = { is_subject_of = ROOT }
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.110.b
+		trigger = {
+			NOT = { tag = FROM }
+			NOT = { FROM = { is_subject_of = ROOT } }
+			OR = {
+				NOT = { tag = ETH }
+				has_global_flag = DARK_end_of_ita_eth_war
+			}
+		}
+	}
+	option = {
+		name = DARK_eth.110.c
+		trigger = {
+			tag = ETH
+			NOT = {	has_global_flag = DARK_end_of_ita_eth_war }
+		}
+	}
+}
+news_event = { #The Arms Embargo Ends
+	id = DARK_eth.111
+	title = DARK_eth.111.t
+	desc = DARK_eth.111.desc
+	picture = GFX_news_event_020
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.111.a
+		trigger = { 
+			tag = ETH
+		}
+		
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = global.ETH_seized_weapon_stockpile
+			producer = GER
+		}
+		hidden_effect = {
+			subtract_from_variable = { global.ETH_seized_weapon_stockpile = global.ETH_seized_weapon_stockpile }
+		}
+	}
+	option = {
+		name = DARK_eth.111.b
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.111.c
+		trigger = {
+			tag = ENG
+		}
+	}
+	option = {
+		name = DARK_eth.111.d
+		trigger = {
+			NOT = { tag = ETH }
+			NOT = { tag = ITA }
+			NOT = { tag = ENG }
+		}
+	}
+}
+
+news_event = { #Italy Takes On The World
+	id = DARK_eth.112
+	title = DARK_eth.112.t
+	desc = DARK_eth.112.desc
+	picture = GFX_news_event_016
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.112.a
+		trigger = { 
+			has_war_with = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.112.b
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.112.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { has_war_with = ITA }
+		}
+	}	
+}
+
+news_event = { #France/England Backs Down
+	id = DARK_eth.113
+	title = DARK_eth.113.t
+	desc = DARK_eth.113.desc
+	picture = GFX_news_event_016
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.113.a
+		trigger = { 
+			has_war_with = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.113.b
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.113.c
+		trigger = {
+			NOT = { tag = ITA }
+			NOT = { has_war_with = ITA }
+		}
+	}	
+}
+
+
+##Embargo Ends Due to War
+news_event = {#TRIGGER
+	id = DARK_eth.115
+	hidden = yes
+	
+	fire_only_once = yes
+	
+	trigger = {
+		has_start_date > 1936.01.01
+		OR = {
+			ENG = { has_war = yes }
+			FRA = { has_war = yes }
+		}
+		NOT = { has_global_flag = ETH_end_of_embargo }
+		NOT = { has_global_flag = DARK_end_of_ita_eth_war }
+		NOT = { has_global_flag = war_over_ETH }
+		NOT = { has_global_flag = ETH_eth_lost_war }
+		ETH = { is_subject = no }
+		ETH = { has_war_with = ITA }		
+	}
+	mean_time_to_happen = {
+		days = 10
+	}
+	
+	immediate = {
+		hidden_effect = {
+			set_global_flag = ETH_end_of_embargo
+		}
+	}
+	
+	option = {
+		news_event = DARK_eth.114
+	}
+}
+news_event = {#Actual Event
+	id = DARK_eth.114
+	title = DARK_eth.114.t
+	desc = DARK_eth.114.desc
+	picture = GFX_news_event_021
+	
+	major = yes
+	is_triggered_only = yes
+	
+	option = {
+		name = DARK_eth.114.a
+		trigger = {
+			OR = {
+				tag = ENG
+				tag = FRA
+			}
+			has_war = yes
+		}
+	}
+	option = {
+		name = DARK_eth.114.b
+		trigger = {
+			OR = {
+				tag = ENG
+				tag = FRA
+			}
+			has_war = no
+		}
+	}
+	option = {
+		name = DARK_eth.114.c
+		trigger = {
+			tag = ITA
+		}
+	}
+	option = {
+		name = DARK_eth.114.d
+		trigger = {
+			tag = ETH
+		}
+	}
+	option = {
+		name = DARK_eth.114.e
+		trigger = {
+			NOT = { tag = ENG }
+			NOT = { tag = FRA }
+			NOT = { tag = ITA }
+			NOT = { tag = ETH }
+		}
+	}
+			
+}
+	
+	
+	
