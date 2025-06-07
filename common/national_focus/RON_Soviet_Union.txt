@@ -3230,7 +3230,7 @@ focus_tree = {
 
 	focus = {
 		id = SOV_Mass_Immunizations
-		icon = GFX_goal_generic_propaganda
+		icon = GFX_goal_medicine
 		prerequisite = { focus = SOV_heavy_industry }
 		x = 1
 		y = 1
@@ -10530,6 +10530,142 @@ focus_tree = {
 	}
 
 	focus = {
+		id = SOV_Expand_the_Labor_Camps
+		icon = GFX_focus_CZE_german_puppet
+		prerequisite = { focus = SOV_organization_centralization_discipline }
+		x = -4
+		y = 1
+		relative_position_id = SOV_organization_centralization_discipline
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_ideas = sov_gulag
+		}
+	}
+
+	focus = {
+		id = SOV_Increase_Investment
+		icon = GFX_focus_generic_concessions
+		prerequisite = { focus = SOV_Expand_the_Labor_Camps }
+		mutually_exclusive = { focus = SOV_Increase_Quotas }
+		x = -1
+		y = 1
+		relative_position_id = SOV_Expand_the_Labor_Camps
+		cost = 5
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = sov_gulag
+				add_idea = sov_gulag2
+			}
+		}
+	}
+
+	focus = {
+		id = SOV_Increase_Quotas
+		icon = GFX_goal_generic_attack_allies
+		prerequisite = { focus = SOV_Expand_the_Labor_Camps }
+		mutually_exclusive = { focus = SOV_Increase_Investment }
+		x = 1
+		y = 1
+		relative_position_id = SOV_Expand_the_Labor_Camps
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = sov_gulag
+				add_idea = sov_gulag3
+			}
+		}
+	}
+
+	focus = {
+		id = SOV_Establish_Experimental_Design_Bureau
+		icon = GFX_focus_research2
+		prerequisite = { focus = SOV_Increase_Investment focus = SOV_Increase_Quotas }
+		x = 1
+		y = 1
+		relative_position_id = SOV_Increase_Investment
+		cost = 10
+		ai_will_do = {
+			factor = 1
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			custom_effect_tooltip = SOV_Experimental_Design_Bureau_tt
+			if = {
+				limit = { has_idea = sov_gulag2 }
+				swap_ideas = {
+					remove_idea = sov_gulag2
+					add_idea = sov_gulag4
+				}
+			}
+			if = {
+				limit = { has_idea = sov_gulag3 }
+				swap_ideas = {
+					remove_idea = sov_gulag3
+					add_idea = sov_gulag5
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = SOV_Siberian_Urban_Centers
+		icon = GFX_focus_prc_agrarian_socialism
+		prerequisite = { focus = SOV_Establish_Experimental_Design_Bureau }
+		x = 0
+		y = 1
+		relative_position_id = SOV_Establish_Experimental_Design_Bureau
+		cost = 5
+		ai_will_do = {
+			factor = 1
+		}
+		available = {
+			controls_state = 574
+			controls_state = 575
+			controls_state = 576
+		}
+		available_if_capitulated = yes
+
+		completion_reward = {
+			574 = {
+				add_extra_state_shared_building_slots = 3
+			}
+			575 = {
+				add_extra_state_shared_building_slots = 3
+			}
+			576 = {
+				add_extra_state_shared_building_slots = 3
+			}
+		}
+	}
+
+	focus = {
 		id = SOV_war_economy
 		icon = GFX_goal_generic_trade
 		prerequisite = { focus = SOV_organization_centralization_discipline }
@@ -14599,12 +14735,35 @@ focus_tree = {
 	}
 
 	focus = {
-		id = SOV_nkvd_primacy
-		icon = GFX_goal_generic_military_deal
+		id = SOV_Expand_the_NKVD
+		icon = GFX_goal_generic_war_with_comintern
 		prerequisite = { focus = SOV_addressing_internal_affairs }
 		x = -2
 		y = 1
 		relative_position_id = SOV_addressing_internal_affairs
+		cost = 10
+		ai_will_do = {
+			factor = 1000
+		}
+		available = {
+			NOT = { has_country_flag = NKVD_reform }
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_ideas = nkvd
+			SOV_paranoia_medium_increase_effect = yes
+		}
+	}
+
+	focus = {
+		id = SOV_nkvd_primacy
+		icon = GFX_goal_generic_military_deal
+		prerequisite = { focus = SOV_Expand_the_NKVD }
+		x = 0
+		y = 1
+		relative_position_id = SOV_Expand_the_NKVD
 		cost = 5
 
 		available = {
@@ -14614,14 +14773,40 @@ focus_tree = {
 		search_filters = {FOCUS_FILTER_SOV_POLITICAL_PARANOIA}
 
 		completion_reward = {
-			add_ideas = SOV_nkvd
+			swap_ideas = {
+				remove_idea = nkvd
+				add_idea = nkvd_2
+			}
+			SOV_paranoia_medium_increase_effect = yes
+		}
+	}
+
+	focus = {
+		id = SOV_nkvd_divisions
+		icon = GFX_goal_generic_allies_build_infantry
+		prerequisite = { focus = SOV_nkvd_primacy }
+		x = 0
+		y = 1
+		relative_position_id = SOV_nkvd_primacy
+		cost = 20
+		ai_will_do = {
+			factor = 100
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = nkvd_2
+				add_idea = nkvd_3
+			}
 			SOV_paranoia_medium_increase_effect = yes
 		}
 	}
 
 	focus = {
 		id = SOV_the_new_soviet_woman
-		icon = GFX_goal_support_communism
+		icon = GFX_goal_generic_demand_territory
 		prerequisite = { focus = SOV_addressing_internal_affairs }
 		x = 2
 		y = 1
@@ -14641,6 +14826,40 @@ focus_tree = {
 				ideology = communism
 				popularity = 0.1
 			}
+			add_ideas = women_in_the_military_focus
+		}
+	}
+
+	focus = {
+		id = SOV_New_Soviet_Feminism
+		icon = GFX_goal_support_communism
+		prerequisite = { focus = SOV_the_new_soviet_woman }
+		x = 0
+		y = 1
+		relative_position_id = SOV_the_new_soviet_woman
+		cost = 10
+		ai_will_do = {
+			factor = 1
+
+			modifier = {
+				factor = 3
+				has_war = yes
+			}
+
+		}
+
+		available = {
+			has_government = communism
+		}
+
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = women_in_the_military_focus
+				add_idea = women_in_the_military_focus2
+			}
 		}
 	}
 
@@ -14649,7 +14868,7 @@ focus_tree = {
 		icon = GFX_focus_generic_soviet_politics
 		prerequisite = { focus = SOV_addressing_internal_affairs }
 		x = 0
-		y = 1
+		y = 3
 		relative_position_id = SOV_addressing_internal_affairs
 		cost = 5
 
