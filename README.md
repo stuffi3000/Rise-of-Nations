@@ -26,5 +26,5 @@
 
 [github-latest]: https://img.shields.io/github/last-commit/stuffi3000/Rise-of-Nations?label=Latest%20Commit&color=blue&style=for-the-badge
 [github-activity]: https://img.shields.io/github/commit-activity/m/stuffi3000/Rise-of-Nations?label=Team%20Activity&style=for-the-badge
-[github-beta-backlog]: https://img.shields.io/github/commits-since/stuffi3000/Rise-of-Nations/0.5.0?label=Ahead%20Of%20Steam&style=for-the-badge&color=blue
+[github-beta-backlog]: https://img.shields.io/github/commits-since/stuffi3000/Rise-of-Nations/1.6.5?label=Ahead%20Of%20Steam&style=for-the-badge&color=blue
 [discord-link]: https://img.shields.io/discord/696379419895398411?color=lightgrey&label=DISCORD&style=for-the-badge
