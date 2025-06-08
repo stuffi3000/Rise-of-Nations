@@ -1,0 +1,286 @@
+on_actions = {
+
+	# MOD SETTINGS
+	on_startup = {
+		effect = {
+			# state devastation gain thresholds
+			# 	higher value means slower increase
+			#	a threshold of 0.00 means no changes to the base increase
+			# 	a threshold of 1.00 or higher means devastation can no longer increase
+			set_variable = { global.devastation_base_gain_threshold_1 = 0.00 }	# applies if devastation is < 25%		# must also change the loc for SDFactors0Key1
+			set_variable = { global.devastation_base_gain_threshold_2 = 0.20 }	# applies if devastation is 25%-50%		# must also change the loc for SDFactors0Key2
+			set_variable = { global.devastation_base_gain_threshold_3 = 0.50 }	# applies if devastation is 50%-75%		# must also change the loc for SDFactors0Key3
+			set_variable = { global.devastation_base_gain_threshold_4 = 0.80 }	# applies if devastation is > 75%
+			
+			# state devastation daily increase
+			# 	higher value means faster increase
+			set_variable = { global.devastation_base_gain_resistance = 0.001 }						#  must also change the loc for SDFactors1Key
+			set_variable = { global.devastation_base_gain_controller_at_war_with_owner = 0.05 }	    #  must also change the loc for SDFactors2Key
+			set_variable = { global.devastation_base_gain_partial_occupation = 0.12 }				#  must also change the loc for SDFactors3Key
+			set_variable = { global.devastation_base_gain_neighbor_state_is_enemy = 0.02 }			#  must also change the loc for SDFactors4Key
+			set_variable = { global.devastation_base_gain_experienced_bombing = 0.25 }				#  must also change the loc for SDFactors5Key
+			set_variable = { global.devastation_base_gain_controller_at_peace_with_owner = -0.01 }	#  must also change the loc for SDFactors6Key
+			set_variable = { global.devastation_base_gain_controller_at_peace = -0.02 }				#  must also change the loc for SDFactors7Key
+			
+			# max values for the state devastation ideas
+			# 	lower values mean harsher penalties
+			set_variable = { global.devastation_local_supplies = -0.40 }
+			set_variable = { global.devastation_local_factories = -0.20 }
+			set_variable = { global.devastation_local_building_slots = -12 }
+			set_variable = { global.devastation_state_resources_factor = -0.90 }
+			set_variable = { global.devastation_state_production_speed_buildings_factor = -0.75 }
+			set_variable = { global.devastation_state_repair_speed_buildings_factor = -0.50 }
+			
+			# multipliers for national devastation score
+			# 	lower values mean harsher penalties
+			set_variable = { global.country_devastation_stability_factor = -3.00 }
+			set_variable = { global.country_devastation_war_support_factor = -4.00 }
+			set_variable = { global.country_devastation_production_speed_buildings_factor = -3.5 }
+			
+			# how much the refugee stability impact wears off monthly
+			# 	lower value means faster wearing off
+			set_variable = { global.monthly_refugee_stability_weekly = -0.5 }
+			
+			# the percentage of casualties that will be generated for every migration.
+			# 	higher value means more casualties, min should always be lower than max
+			# 	for example, if 1000 civilians will migrate, 450 to 600 civilians 
+			# 	will fail to migrate and become casualties.
+			set_variable = { global.casualty_multiplier_min = 0.05 }	# 0.1 originally 0.45
+			set_variable = { global.casualty_multiplier_max = 0.3 }	# 0.15 originally 0.6
+			
+			# pops assimilation
+			set_variable = { global.passive_assimilation_min = 0.01 }
+			set_variable = { global.passive_assimilation_max = 0.08 }
+			set_variable = { global.nationwide_drive_assimilation_min = 0.1 }
+			set_variable = { global.nationwide_drive_assimilation_max = 0.2 }
+			set_variable = { global.expel_refugees_min = 0.15 }
+			set_variable = { global.expel_refugees_max = 0.3 }
+			
+			# for every 0.1% unassimilated, have the following effects
+			set_variable = { global.unassimilated_stability_factor = -0.2 } # can only do up to one decimal point (0.X),not (0.XX or 0.XXX)
+			# when can the decision to expel be active
+			set_variable = { global.unassimilated_expel_minimum_stability_factor = -5 } # can only do up to one decimal point (0.X),not (0.XX or 0.XXX)
+			
+			# mass exodus after state control changed multiplier
+			set_variable = { global.mass_exodus_multiplier = 5.0 } # 5.0  1.0 is 100% (normal value for migrations)
+			set_variable = { global.casualty_exodus_multiplier_min = 0.01 }
+			set_variable = { global.casualty_exodus_multiplier_max = 0.05 }
+			# how much casualties per nuke in a state
+			set_variable = { global.nuke_population_multiplier_min = 0.025 } # 2.5% of the population
+			set_variable = { global.nuke_population_multiplier_max = 0.1 } # 10% of the population
+		}
+	}
+
+	on_startup = {
+		effect = {
+			random_country = {
+				#news_event = devastation_news.0
+				news_event = devastation_news.1
+				#news_event = devastation_news.2
+			}
+			every_state = {
+				add_dynamic_modifier = {
+					modifier = state_devastation_modifier
+				}
+				set_variable = { state_devastation_value = 0 }
+			}
+			every_country = {
+				add_dynamic_modifier = {
+					modifier = country_devastation_modifier
+				}
+			}
+		}
+	}
+	
+	## Used to be daily, but now weekly for performance
+	on_daily = {			
+		effect = {
+			every_state = {
+				calc_pop_change = yes
+				clamp_variable = { var = state_devastation_value min = 0 max = 100 }
+			}
+			calc_total_external_refugees_in_game = yes
+			devastation_country_calc_value = yes
+			devastation_country_calc_modifiers = yes
+			devastation_country_calc_unassimilated = yes
+			calc_casualties = yes
+			every_controlled_state = {
+				devastation_state_calc_value = yes
+			}
+			
+			if = {
+				limit = {
+					NOT = { has_decision = assimilation_passive_decision } 
+					any_controlled_state = {
+						has_unassimilated_pops = yes
+					}
+				}
+				activate_decision = assimilation_passive_decision
+			}
+		}
+	}
+	
+	on_weekly = {
+		effect = {
+			if = {
+				limit = {
+					check_variable = { casualties_k > casualties_calculated_deaths_k }
+				}
+				set_variable = { casualties_civs_to_be_removed_k = casualties_k }
+				subtract_from_variable = { casualties_civs_to_be_removed_k = casualties_calculated_deaths_k }
+				add_to_variable = { casualties_calculated_deaths_k = casualties_civs_to_be_removed_k }
+				set_variable = { casualties_civs_to_be_removed = casualties_civs_to_be_removed_k }
+				multiply_variable = { casualties_civs_to_be_removed = 400 }
+
+				every_state = { 
+					limit = {
+						OR = {
+							is_core_of = ROOT
+							is_owned_by = ROOT
+						}
+					}
+
+					set_variable = { casualties_civs_percent_for_state = state_population_k }
+					divide_variable = { casualties_civs_percent_for_state = ROOT.max_manpower_k }
+					clamp_variable = {
+						var = casualties_civs_percent_for_state
+						min = 0.001
+					}
+					set_variable = { casualties_civs_to_be_removed_for_state = ROOT.casualties_civs_to_be_removed }
+					multiply_variable = { casualties_civs_to_be_removed_for_state = casualties_civs_percent_for_state }
+					round_variable = casualties_civs_to_be_removed_for_state
+					multiply_variable = { casualties_civs_to_be_removed_for_state = -1 }
+					#add_manpower = casualties_civs_to_be_removed_for_state
+					
+					set_temp_variable = { temp_min = casualties_civs_to_be_removed_for_state }
+					set_temp_variable = { temp_max = casualties_civs_to_be_removed_for_state }
+					add_to_temp_variable = { temp_max = 1 }
+					#generate_random_casualties = yes
+				}
+			}
+			# War end/some shit happened
+			if = {
+				limit = {
+					check_variable = { casualties_calculated_deaths_k > casualties_k }
+				}
+				set_variable = { casualties_calculated_deaths_k = casualties_k }
+			}
+		}
+	}
+	
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = { 
+					has_war = yes
+				}
+
+				set_temp_variable = { global.state_original_controller = FROM.ID }
+			
+				FROM.FROM = {
+					set_temp_variable = { exodus_migration = global.mass_exodus_multiplier }
+					#migration_get_chance = yes
+					devastation_state_trigger_migration = yes
+					add_to_variable = { state_control_changed_count = 1 }
+				}
+			}
+		}
+	}
+	
+	on_nuke_drop = {
+		effect = {
+			FROM = {
+				owner = { add_war_support = -0.1 }
+				
+				set_temp_variable_to_random = { var = random_rate min = global.nuke_population_multiplier_min max = global.nuke_population_multiplier_max } 
+				set_temp_variable = { state_pop_deaths = state_population_k }
+				multiply_temp_variable = { state_pop_deaths = random_rate }
+				multiply_temp_variable = { state_pop_deaths = 1000 }
+				
+				if = {
+					limit = { check_variable = { state_population_k > 50 } }
+					set_temp_variable_to_random = { var = temp_casualty min = 30000 max = 50000 }
+				}
+				else_if = {
+					limit = { check_variable = { state_population_k > 30 } }
+					set_temp_variable_to_random = { var = temp_casualty min = 10000 max = 30000 }
+				}
+				else_if = {
+					limit = { check_variable = { state_population_k > 10 } }
+					set_temp_variable_to_random = { var = temp_casualty min = 1000 max = 10000 }
+				}
+				add_to_temp_variable = { temp_casualty = state_pop_deaths }
+				divide_temp_variable = { temp_casualty = 1000 }
+				add_to_variable = { devastation_state_casualties = temp_casualty }
+				
+				multiply_temp_variable = { temp_casualty = -1000 }
+				add_manpower = temp_casualty
+				
+				set_temp_variable = { global.civ_casualty_gain = temp_casualty }
+				owner = {
+					set_temp_variable = { temp = global.civ_casualty_gain }
+					log = "[THIS.GetTag]: Civ Casualties Gain - [?global.civ_casualty_gain]"
+					add_civ_casualties_to_owner = yes
+				}
+				calc_pop_change = yes
+		
+				add_to_variable = { state_devastation_value = 75 }
+				clamp_variable = { var = state_devastation_value min = 0 max = 100 }
+				
+				random = { chance = 50 remove_building = { type = infrastructure level = 1 } }
+				random = { chance = 50 remove_building = { type = infrastructure level = 1 } }
+				random = { chance = 50 remove_building = { type = infrastructure level = 1 } }
+				random = { chance = 50 remove_building = { type = infrastructure level = 1 } }
+				random = { chance = 50 remove_building = { type = infrastructure level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = arms_factory level = 1 } }
+				random = { chance = 50 remove_building = { type = arms_factory level = 1 } }
+				random = { chance = 50 remove_building = { type = arms_factory level = 1 } }
+				random = { chance = 50 remove_building = { type = arms_factory level = 1 } }
+				random = { chance = 50 remove_building = { type = arms_factory level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = industrial_complex level = 1 } }
+				random = { chance = 50 remove_building = { type = industrial_complex level = 1 } }
+				random = { chance = 50 remove_building = { type = industrial_complex level = 1 } }
+				random = { chance = 50 remove_building = { type = industrial_complex level = 1 } }
+				random = { chance = 50 remove_building = { type = industrial_complex level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = dockyard level = 1 } }
+				random = { chance = 50 remove_building = { type = dockyard level = 1 } }
+				random = { chance = 50 remove_building = { type = dockyard level = 1 } }
+				random = { chance = 50 remove_building = { type = dockyard level = 1 } }
+				random = { chance = 50 remove_building = { type = dockyard level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = air_base level = 1 } }
+				random = { chance = 50 remove_building = { type = air_base level = 1 } }
+				random = { chance = 50 remove_building = { type = air_base level = 1 } }
+				random = { chance = 50 remove_building = { type = air_base level = 1 } }
+				random = { chance = 50 remove_building = { type = air_base level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = radar_station level = 1 } }
+				random = { chance = 50 remove_building = { type = radar_station level = 1 } }
+				random = { chance = 50 remove_building = { type = radar_station level = 1 } }
+				random = { chance = 50 remove_building = { type = radar_station level = 1 } }
+				random = { chance = 50 remove_building = { type = radar_station level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = anti_air_building level = 1 } }
+				random = { chance = 50 remove_building = { type = anti_air_building level = 1 } }
+				random = { chance = 50 remove_building = { type = anti_air_building level = 1 } }
+				random = { chance = 50 remove_building = { type = anti_air_building level = 1 } }
+				random = { chance = 50 remove_building = { type = anti_air_building level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = synthetic_refinery level = 1 } }
+				random = { chance = 50 remove_building = { type = synthetic_refinery level = 1 } }
+				random = { chance = 50 remove_building = { type = synthetic_refinery level = 1 } }
+				random = { chance = 50 remove_building = { type = synthetic_refinery level = 1 } }
+				random = { chance = 50 remove_building = { type = synthetic_refinery level = 1 } }
+				
+				random = { chance = 50 remove_building = { type = rocket_site level = 1 } }
+				random = { chance = 50 remove_building = { type = rocket_site level = 1 } }
+				random = { chance = 50 remove_building = { type = rocket_site level = 1 } }
+				random = { chance = 50 remove_building = { type = rocket_site level = 1 } }
+				random = { chance = 50 remove_building = { type = rocket_site level = 1 } }
+			}
+		}
+	}
+}
