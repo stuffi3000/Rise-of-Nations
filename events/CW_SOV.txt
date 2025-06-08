@@ -149,6 +149,8 @@ country_event = {
 			kill_country_leader = yes
 			promote_character = SOV_central_committee
 		}
+		unlock_decision_tooltip = put_committee_under_surveillance
+		unlock_decision_tooltip = instigate_coup_against_Beria
 		set_variable = { malenkov_influence = 30}
 		set_variable = { beria_influence = 80}
 		set_variable = { khrushchev_influence = 35 }
@@ -242,7 +244,10 @@ country_event = {
 	desc = cw_sov.14.d
 
 	is_triggered_only = yes
+	
 	immediate = {
+		set_country_flag = beria_discovers_plot
+		activate_shine_on_focus = SOV_Beria_opposition
 		if = {
 			limit = {
 				is_historical_focus_on = yes
@@ -306,7 +311,7 @@ country_event = {
 	option = {
 		#Arrest them immediately
 		country_event = cw_sov.15
-		
+		custom_effect_tooltip = total_plot_influence_tt
 	}
 	option = {
 		#Wait a bit...
@@ -327,36 +332,36 @@ country_event = {
 	option = {
 		
 
-		if = {
-			limit = {
-				has_country_flag = khrushchev_joined_plot
-			}
-			set_country_flag = khrushchev_purged
-		}
-		if = {
-			limit = {
-				has_country_flag = bulganin_joined_plot
-			}
-			set_country_flag = bulganin_purged
-		}
-		if = {
-			limit = {
-				has_country_flag = zhukov_joined_plot
-			}
-			set_country_flag = zhukov_purged
-		}
-		if = {
-			limit = {
-				has_country_flag = malenkov_joined_plot
-			}
-			set_country_flag = malenkov_purged
-		}
-		if = {
-			limit = {
-				has_country_flag = kaganovich_joined_plot
-			}
-			set_country_flag = kaganovich_purged
-		}
+		#if = {
+		#	limit = {
+		#		has_country_flag = khrushchev_joined_plot
+		#	}
+		#	set_country_flag = khrushchev_purged
+		#}
+		#if = {
+		#	limit = {
+		#		has_country_flag = bulganin_joined_plot
+		#	}
+		#	set_country_flag = bulganin_purged
+		#}
+		#if = {
+		#	limit = {
+		#		has_country_flag = zhukov_joined_plot
+		#	}
+		#	set_country_flag = zhukov_purged
+		#}
+		#if = {
+		#	limit = {
+		#		has_country_flag = malenkov_joined_plot
+		#	}
+		#	set_country_flag = malenkov_purged
+		#}
+		#if = {
+		#	limit = {
+		#		has_country_flag = kaganovich_joined_plot
+		#	}
+		#	set_country_flag = kaganovich_purged
+		#}
 	}
 }
 
@@ -371,7 +376,26 @@ country_event = {
 
 	}
 }
+country_event = {
+	id = cw_sov.17
+	title = cw_sov.17.t
+	desc = cw_sov.17.d
+	is_triggered_only = yes
 
+	option = {
+		#Remove Molotov from power
+		name = cw_sov.17.a
+		retire_character = SOV_vyacheslav_molotov
+		add_to_variable = {
+			khrushchev_influence = 10
+			tooltip = khruschev_influence_increased_to_tt
+		}
+		
+	}
+	option = {
+		name = cw_sov.17.b
+	}
+}
 country_event = {
 	id = cw_sov_opposition.1
 	hidden = yes
@@ -382,5 +406,285 @@ country_event = {
 			use_side_message = yes
 			originator_name = SOV_lavrentiy_beria
 		}
+
+		random_list = {
+			50 = {
+				set_country_flag = { flag = SOV_liberate_doctors_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.2 days = 14 } 
+				activate_shine_on_focus = SOV_liberate_doctors
+			}
+			50 = {
+				set_country_flag = { flag = SOV_gulag_reforms_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.3 days = 14 }
+				activate_shine_on_focus = SOV_gulag_reforms
+			}
+		}
+	}
+}
+
+country_event = {
+	id = cw_sov_opposition.2
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_liberate_doctors
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+		if = {
+			limit = {
+				has_completed_focus = SOV_gulag_reforms
+			}
+			set_country_flag = { flag = SOV_minority_recognition_progress_flag days = 14 value = 1}
+			country_event = { id = cw_sov_opposition.4 days = 14 }
+			activate_shine_on_focus = SOV_minority_recognition
+
+		}
+		else = {
+			set_country_flag = { flag = SOV_gulag_reforms_progress_flag days = 14 value = 1}
+			country_event = { id = cw_sov_opposition.3 days = 14 }
+			activate_shine_on_focus = SOV_gulag_reforms
+		}
+	}
+}
+
+country_event = {
+	id = cw_sov_opposition.3
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_gulag_reforms
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+		if = {
+			limit = {
+				has_completed_focus = SOV_liberate_doctors
+			}
+			set_country_flag = { flag = SOV_minority_recognition_progress_flag days = 14 value = 1}
+			country_event = { id = cw_sov_opposition.4 days = 14 }
+			activate_shine_on_focus = SOV_minority_recognition
+
+		}
+		else = {
+			set_country_flag = { flag = SOV_liberate_doctors_progress_flag days = 14 value = 1}
+			country_event = { id = cw_sov_opposition.2 days = 14 }
+			activate_shine_on_focus = SOV_liberate_doctors
+		}
+	}
+}
+country_event = {
+	id = cw_sov_opposition.4
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_minority_recognition
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+
+		random_list = {
+			60 = {
+				set_country_flag = { flag = SOV_establishing_control_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.5 days = 14 } 
+				activate_shine_on_focus = SOV_establishing_control
+			}
+			20 = {
+				set_country_flag = { flag = SOV_consolidate_power_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.6 days = 14 }
+				activate_shine_on_focus = SOV_consolidate_power
+			}
+			20 = {
+				set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.7 days = 14 }
+				activate_shine_on_focus = SOV_ideological_purges
+			}
+		}
+	}
+}
+country_event = {
+	id = cw_sov_opposition.5
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_establishing_control
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+
+		#random_list = {
+		#	50 = {
+		#		set_country_flag = { flag = SOV_liberate_doctors_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.2 days = 14 } 
+		#		activate_shine_on_focus = SOV_liberate_doctors
+		#	}
+		#	50 = {
+		#		set_country_flag = { flag = SOV_gulag_reforms_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.3 days = 14 }
+		#		activate_shine_on_focus = SOV_gulag_reforms
+		#	}
+		#}
+	}
+}
+country_event = {
+	id = cw_sov_opposition.6
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_consolidate_power
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+
+		#random_list = {
+		#	50 = {
+		#		set_country_flag = { flag = SOV_liberate_doctors_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.2 days = 14 } 
+		#		activate_shine_on_focus = SOV_liberate_doctors
+		#	}
+		#	50 = {
+		#		set_country_flag = { flag = SOV_gulag_reforms_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.3 days = 14 }
+		#		activate_shine_on_focus = SOV_gulag_reforms
+		#	}
+		#}
+	}
+}
+country_event = {
+	id = cw_sov_opposition.7
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		complete_national_focus = {
+			focus = SOV_ideological_purges
+			use_side_message = yes
+			originator_name = SOV_lavrentiy_beria
+		}
+
+		#random_list = {
+		#	50 = {
+		#		set_country_flag = { flag = SOV_liberate_doctors_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.2 days = 14 } 
+		#		activate_shine_on_focus = SOV_liberate_doctors
+		#	}
+		#	50 = {
+		#		set_country_flag = { flag = SOV_gulag_reforms_progress_flag days = 14 value = 1}
+		#		country_event = { id = cw_sov_opposition.3 days = 14 }
+		#		activate_shine_on_focus = SOV_gulag_reforms
+		#	}
+		#}
+	}
+}
+country_event = {
+	id = cw_sov_opposition.8
+	hidden = yes
+	is_triggered_only = yes
+	immediate = {
+		set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+		country_event = { id = cw_sov_opposition.7 days = 14 }
+		activate_shine_on_focus = SOV_ideological_purges
+	}
+}
+country_event = {
+	id = cw_sov_opposition.9
+	hidden = yes
+	is_triggered_only = yes
+	immediate = { 
+		complete_national_focus = {
+			focus = SOV_Beria_opposition
+			use_side_message = yes
+			originator_name = SOV_nikita_khrushchyov
+		}
+		random_list = {
+			50 = {
+				set_country_flag = { flag = SOV_Malenkov_proposition_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.10 days = 14 }
+				activate_shine_on_focus = SOV_Malenkov_proposition
+			}
+			50 = {
+				set_country_flag = { flag = SOV_call_the_army_progress_flag days = 14 value = 1}
+				country_event = { id = cw_sov_opposition.11 days = 14 }
+				activate_shine_on_focus = SOV_call_the_army
+			}
+		}
+		#set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+		#country_event = { id = cw_sov_opposition.7 days = 14 }
+		#activate_shine_on_focus = SOV_ideological_purges
+	}
+}
+country_event = {
+	id = cw_sov_opposition.10
+	hidden = yes
+	is_triggered_only = yes
+	immediate = { 
+		complete_national_focus = {
+			focus = SOV_Malenkov_proposition
+			use_side_message = yes
+			originator_name = SOV_nikita_khrushchyov
+		}
+		if = {
+			limit = {
+				has_completed_focus = SOV_call_the_army
+			}
+			country_event = { id = cw_sov_opposition.12 days = 14}
+			activate_shine_on_focus = SOV_take_advantage_of_the_berlin_uprising
+			set_country_flag = { flag = SOV_take_advantage_of_the_berlin_uprising_progress_flag days = 14 value = 1}
+		}
+		else = {
+			activate_shine_on_focus = SOV_call_the_army
+			country_event = { id = cw_sov_opposition.11 days = 14 }
+			set_country_flag = { flag = SOV_call_the_army_progress_flag days = 14 value = 1}
+		}
+		#set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+		#country_event = { id = cw_sov_opposition.7 days = 14 }
+		#activate_shine_on_focus = SOV_ideological_purges
+	}
+}
+country_event = {
+	id = cw_sov_opposition.11
+	hidden = yes
+	is_triggered_only = yes
+	immediate = { 
+		complete_national_focus = {
+			focus = SOV_call_the_army
+			use_side_message = yes
+			originator_name = SOV_nikita_khrushchyov
+		}
+		if = {
+			limit = {
+				has_completed_focus = SOV_Malenkov_proposition
+			}
+			country_event = { id = cw_sov_opposition.12 days = 7}
+			activate_shine_on_focus = SOV_take_advantage_of_the_berlin_uprising
+			set_country_flag = { flag = SOV_take_advantage_of_the_berlin_uprising_progress_flag days = 7 value = 1}
+		}
+		else = {
+			activate_shine_on_focus = SOV_Malenkov_proposition
+			country_event = { id = cw_sov_opposition.10 days = 14 }
+			set_country_flag = { flag = SOV_Malenkov_proposition_progress_flag days = 14 value = 1}
+		}
+		#set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+		#country_event = { id = cw_sov_opposition.7 days = 14 }
+		#activate_shine_on_focus = SOV_ideological_purges
+	}
+}
+country_event = {
+	id = cw_sov_opposition.12
+	hidden = yes
+	is_triggered_only = yes
+	immediate = { 
+		complete_national_focus = {
+			focus = SOV_take_advantage_of_the_berlin_uprising
+			use_side_message = yes
+			originator_name = SOV_nikita_khrushchyov
+		}
+		#set_country_flag = { flag = SOV_ideological_purges_progress_flag days = 14 value = 1}
+		#country_event = { id = cw_sov_opposition.7 days = 14 }
+		#activate_shine_on_focus = SOV_ideological_purges
 	}
 }

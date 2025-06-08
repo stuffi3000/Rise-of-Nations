@@ -1,5 +1,8 @@
 add_namespace = ddr
-
+add_namespace = DDR_leipzig_conference
+add_namespace = DDR_ultimatum_event
+add_namespace = DDR_communist_revolution_event
+add_namespace = DDR_support_rebels_event
 ##Event: German Democratic Republic Formed
 country_event = {
 	id = ddr.1
@@ -253,4 +256,185 @@ news_event = {
         name = ddr.14.a
         ai_chance = { factor = 1 }
     }
+}
+# Event for the Leipzig Conference
+country_event = {
+	id = DDR_leipzig_conference.1
+	title = DDR_leipzig_conference.1.t 
+	desc = DDR_leipzig_conference.1.d
+	picture = GFX_report_event_german_meeting
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Socialist Unification
+		name = DDR_leipzig_conference.1.a
+		ai_chance = { factor = 25 }
+		trigger = {
+		#	has_government = communism
+			GER = { has_government = democratic }
+		}
+		GER = { country_event = { id = DDR_leipzig_conference.2 days = 5 } } # West Germany's response
+	}
+
+	option = { # Neutral Unification
+		name = DDR_leipzig_conference.1.b
+		ai_chance = { factor = 50 }
+		trigger = {
+		#	has_government = neutrality
+			GER = { has_government = democratic }
+		}
+		GER = { country_event = { id = DDR_leipzig_conference.3 days = 5 } } # West Germany's response
+	}
+
+	option = { # Democratic Unification
+		name = DDR_leipzig_conference.1.c
+		ai_chance = { factor = 75 }
+		trigger = {
+		#	has_government = democratic
+			GER = { has_government = democratic }
+		}
+		GER = { country_event = { id = DDR_leipzig_conference.4 days = 5 } } # West Germany's response
+	}
+
+	option = { # Negotiations Fail
+		name = DDR_leipzig_conference.1.de
+		ai_chance = { factor = 10 } # Small chance for negotiations to fail outright
+		country_event = { id = DDR_leipzig_conference.5 days = 5 } # Event announcing the failure
+	}
+}
+
+# West Germany's Response to Socialist Unification Proposal
+country_event = {
+	id = DDR_leipzig_conference.2
+	title = DDR_leipzig_conference.2.t
+	desc = DDR_leipzig_conference.2.d
+	picture = GFX_report_event_german_meeting
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Accept Socialist Unification
+		name = DDR_leipzig_conference.2.a
+		ai_chance = { factor = 25 }
+		GER = { annex_country = { target = DDR } } # GDR annexes West Germany
+	}
+
+	option = { # Reject Proposal
+		name = DDR_leipzig_conference.2.b
+		ai_chance = { factor = 75 }
+		DDR = { country_event = { id = DDR_leipzig_conference.5 days = 5 } } # Notify GDR of failure
+	}
+}
+
+# West Germany's Response to Neutral Unification Proposal
+country_event = {
+	id = DDR_leipzig_conference.3
+	title = DDR_leipzig_conference.3.t
+	desc = DDR_leipzig_conference.3.d
+	picture = GFX_report_event_german_meeting
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Accept Neutral Unification
+		name = DDR_leipzig_conference.3.a
+		ai_chance = { factor = 50 }
+		GER = { annex_country = { target = DDR } } # GDR annexes West Germany
+	}
+
+	option = { # Reject Proposal
+		name = DDR_leipzig_conference.3.b
+		ai_chance = { factor = 50 }
+		DDR = { country_event = { id = DDR_leipzig_conference.5 days = 5 } } # Notify GDR of failure
+	}
+}
+
+# West Germany's Response to Democratic Unification Proposal
+country_event = {
+	id = DDR_leipzig_conference.4
+	title = DDR_leipzig_conference.4.t
+	desc = DDR_leipzig_conference.4.d
+	picture = GFX_report_event_german_meeting
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Accept Democratic Unification
+		name = DDR_leipzig_conference.4.a
+		ai_chance = { factor = 75 }
+		GER = { annex_country = { target = DDR } } # West Germany annexes GDR
+	}
+
+	option = { # Reject Proposal
+		name = DDR_leipzig_conference.4.b
+		ai_chance = { factor = 25 }
+		DDR = { country_event = { id = DDR_leipzig_conference.5 days = 5 } } # Notify GDR of failure
+	}
+}
+
+# Event for Failed Negotiations
+country_event = {
+	id = DDR_leipzig_conference.5
+	title = DDR_leipzig_conference.5.t
+	desc = DDR_leipzig_conference.5.d
+	picture = GFX_report_event_german_meeting
+	fire_only_once = yes
+	is_triggered_only = yes
+
+	option = { # Accept Division
+		name = DDR_leipzig_conference.5.a
+		ai_chance = { factor = 50 }
+		add_political_power = 50
+	}
+
+	option = { # Declare War on West Germany
+		name = DDR_leipzig_conference.5.b
+		ai_chance = { factor = 50 }
+		GER = { declare_war_on = DDR } # GDR declares war on West Germany
+	}
+}
+# Event for the Ultimatum to the USA
+country_event = {
+	title = ddr.15.t
+	desc = ddr.15.d
+	id = ddr.15
+	fire_only_once = yes
+	is_triggered_only = yes
+	picture = GFX_report_event_generic_usa_capitulation
+	option = {
+		name = ddr.15.a # Refuse the ultimatum
+		ai_chance = { factor = 90 }
+		USA = {
+			declare_war_on = {
+				target = DDR
+				type = puppet_wargoal
+			}
+		}
+	}
+	option = {
+		name = ddr.15.b # Accept the ultimatum
+		ai_chance = { factor = 10 }
+		DDR = {
+			puppet = USA
+		}
+	}
+}
+
+# Event for the Communist Revolution in the USA
+country_event = {
+	title = ddr.16.t
+	desc = ddr.16.d
+	id = ddr.16
+		fire_only_once = yes
+	is_triggered_only = yes
+
+	picture = GFX_report_event_generic_communist_revolution
+
+	option = {
+		name = ddr.16.a # The Revolution Begins
+		USA = {
+			start_civil_war = {
+				ideology = communism
+				size = 0.5
+			}
+			add_stability = -0.10
+		}
+	}
 }

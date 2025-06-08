@@ -1,0 +1,116 @@
+on_actions = {
+	on_daily_SER = {
+		effect = {
+			if = {
+				limit = {
+					SER = {
+						has_active_mission = RON_July_crisis_timer
+					}
+				}
+				set_temp_variable = { aggressor_side = AUH }
+				set_temp_variable = { defender_side = SER }
+				set_temp_variable = { crisis_id = 2 }
+				set_temp_variable = { amount = 1}
+				RON_add_diplo_crisis_progress = yes
+			}
+		}
+	}
+	on_daily = {
+		effect = {
+			if = { # Update the parliament pie chart (Credit: Yard1)
+				limit = { is_ai = no }
+				create_pie_chart = yes
+			}
+
+			# Exhaustion system
+
+			if = {
+				limit = { has_war = yes }
+				add_to_variable = { war_exhaustion_variable = war_exhaustion_daily }
+			}
+			else_if = {
+				limit = { has_war = no }
+				add_to_variable = { war_exhaustion_variable = peace_exhaustion_daily }
+			}
+
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable < 365 }
+				}
+				add_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = generic_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 365 }
+					check_variable = { war_exhaustion_variable < 730 }
+				}
+				add_ideas = slight_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = generic_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 730 }
+					check_variable = { war_exhaustion_variable < 1095 }
+				}
+				add_ideas = generic_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = heavy_war_exhaustion_gui
+			}
+			if = {
+				limit = {
+					check_variable = { war_exhaustion_variable > 1095 }
+				}
+				add_ideas = heavy_war_exhaustion_gui
+				remove_ideas = no_war_exhaustion
+				remove_ideas = slight_war_exhaustion_gui
+				remove_ideas = generic_war_exhaustion_gui
+			}
+			clamp_variable = { var = war_exhaustion_variable min = 0 max = war_exhaustion_max }
+		}
+	}
+	on_release_as_free = {
+		effect = {
+			ROOT = {
+				RON_handle_focuses_on_release = yes
+			}
+		}
+	}
+	on_weekly = {
+		effect = {
+			# unit limit calculations
+			if = {
+				limit = {
+					NOT = {
+						has_global_flag = KR_no_unit_limits
+					}
+				}
+				calculate_maximum_divisions = yes
+			}
+			if = {
+				limit = {
+					NOT = {
+						has_global_flag = KR_no_unit_limits
+						has_global_flag = KR_unit_limits_ai_only
+					}
+				}
+				country_event = kr.political.122
+			}
+		}
+	}
+	on_monthly = { # This dynamically updates power status for bigger countries (to decrease lag)
+		effect = {
+			every_other_country = {
+				limit = {
+					num_of_factories>19
+				}
+				RON_power_status_ok_effects = yes
+			}
+		}
+	}
+}

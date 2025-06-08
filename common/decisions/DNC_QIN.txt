@@ -133,9 +133,44 @@ box_victory_in_war = {
 			unlock_national_focus = DNC_QIN_stunning_victory
 			unlock_national_focus = DNC_QIN_chinese_politics
 			unlock_national_focus = DNC_QIN_end_imperial_rule
+			declare_war_on = {
+				target = TIB
+				type = civil_war
+			}
+	
 		}
 	}		
+box_march_forward = { 
+		icon = RNM_RUS
+		fire_only_once = yes
+		allowed = {
+			tag = BOX
+		}
+		cost = 10
+		visible = {
+			tag = BOX
+			country_exists = chi
+		}
+		available = {
+			country_exists = chi
+			CHI = {
+				has_war = no
+			}
+		}
 	
+		
+		ai_will_do = {
+			factor = 10000
+		}
+	 
+		complete_effect = { 
+			declare_war_on = {
+				target = CHI
+				type = civil_war
+			}
+		}
+	}		
+		
 
 guc_victory_in_war = {  #AI will only see this
 		icon = RNM_RUS
@@ -2876,197 +2911,197 @@ Civil_war_support = {
 chinese_revolution = {
 
 
-	QIN_revolution_timer = {
-		name = QIN_revolution_timer
-		priority = 10
-		allowed = {
-			tag = QIN
-		}
-		available = {
-			hidden_trigger = { always = no }
-		}
-		visible = { always = yes }
-		cancel_if_not_visible = yes
-		activation = { has_country_flag = uprising_preparing }
-		is_good = no
-		days_mission_timeout = CHI_days_until_uprising?2700
-
-		timeout_effect = {
-					every_state = {
-    limit = {
-        is_controlled_by = QIN
-    }
-    remove_core_of = BOX
-		}
-						CHI = {add_ideas = {CHI_uprising}}
-						QIN = {add_ideas = {QIN_uprising}}
-						QIN = {set_country_flag = revolution_started}
-						country_event = ww1_china.3
-						add_power_balance_value = {
-						    id = QIN_centralization_bop
-						    value = -0.30
-						    tooltip_side = QIN_centralization_bop_democracy
-						} 		
-		}
-
-
-	}
-	QIN_fight_uprising = {
-		name = QIN_fight_uprising
-		available = { NOT = { has_country_flag = revolution_started } }
-		visible = {
-			has_country_flag = uprising_preparing
-			NOT = { has_country_flag = side_with_CHI }
-		}
-		days_remove = 120
-		cost = 100
-		remove_effect = {
-			set_country_flag = fighting_uprising
-			subtract_from_variable = {
-				var = uprising_strengh
-				value = 0.05
-			}
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = 50
-			}
-						add_power_balance_value = {
-						    id = QIN_centralization_bop
-						    value = 0.1
-						    tooltip_side = QIN_centralization_bop_democracy
-						} 					
-		}
-	}
-	CHI_spread_uprising = {
-		name = CHI_spread_uprising
-		cost = 100
-		available = { NOT = { has_country_flag = revolution_started } }
-		visible = {
-			has_country_flag = uprising_preparing
-			NOT = { has_country_flag = side_with_QIN }
-		}
-		days_remove = 100
-		remove_effect = {
-			set_country_flag = uprising_spreading
-			add_to_variable = {
-				var = uprising_strengh
-				value = 0.03
-			}
-			add_political_power = 100
-			add_stability = -0.05
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = -50
-			}
-			add_power_balance_value = {
-			    id = QIN_centralization_bop
-			    value = -0.10
-			    tooltip_side = QIN_centralization_bop_democracy
-			} 					
-		}
-	}
-	QIN_arrest_leaders = {
-		name = QIN_arrest_leaders
-		cost = 200
-		available = { NOT = { has_country_flag = revolution_started } }
-		visible = {
-			has_country_flag = uprising_preparing
-			NOT = { has_country_flag = side_with_CHI } }
-		days_remove = 100
-		remove_effect = {
-			set_country_flag = leader_arrested
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = 100
-			}
-		}
-	}
-	CHI_attack_garrisons = {
-		name = CHI_attack_garrisons
-		cost = 150
-		available = { NOT = { has_country_flag = revolution_started } }
-		visible = {
-			AND = {
-				has_country_flag = uprising_preparing
-				has_country_flag = side_with_CHI
-			}
-		}
-		days_remove = 75
-		remove_effect = {
-			set_country_flag = garrisons_attacked
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = -50
-
-			}
-		}
-	}
-	QIN_fight_uprising_AI = {
-		name = QIN_fight_uprising
-		available = { hidden_trigger = { always = no } }
-		visible = { has_country_flag = uprising_preparing }
-		activation = { has_country_flag = uprising_spreading }
-		allowed = {
-			tag = QIN
-		}
-		is_good = yes
-		days_mission_timeout = 120
-		timeout_effect = {
-			subtract_from_variable = {
-				var = uprising_strengh
-				value = 0.05
-
-			}
-			clr_country_flag = uprising_spreading
-
-		}
-	}
-	CHI_spread_uprising_AI = {
-		name = CHI_spread_uprising
-		available = { has_country_flag = revolution_started }
-		visible = { has_country_flag = uprising_preparing }
-		activation = { has_country_flag = fighting_uprising }
-		allowed = { tag = QIN }
-		is_good = yes
-		days_mission_timeout = 100
-		timeout_effect = {
-			add_to_variable = {
-				var = uprising_strengh
-				value = 0.03
-			}
-			clr_country_flag = fighting_uprising
-
-		}
-	}
-	QIN_arrest_leaders_AI = {
-		name = QIN_arrest_leaders
-		available = { has_country_flag = revolution_started }
-		visible = { has_country_flag = uprising_preparing }
-		activation = { has_country_flag = garrisons_attacked }
-		allowed = { tag = QIN }
-		days_mission_timeout = 100
-		timeout_effect = {
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = 50
-			}
-			clr_country_flag = garrisons_attacked
-		}
-	}
-	CHI_attack_garrisons_AI = {
-		name = CHI_attack_garrisons
-		available = { has_country_flag = revolution_started }
-		visible = { has_country_flag = uprising_preparing }
-		activation = { has_country_flag = leader_arrested }
-		allowed = { tag = QIN }
-		days_mission_timeout = 75
-		timeout_effect = {
-			add_days_mission_timeout = {
-				mission = QIN_revolution_timer
-				days = -50
-
-			}
-			clr_country_flag = leader_arrested
-		}
-	}
+#	QIN_revolution_timer = {
+#		name = QIN_revolution_timer
+#		priority = 10
+#		allowed = {
+#			tag = QIN
+#		}
+#		available = {
+#			hidden_trigger = { always = no }
+#		}
+#		visible = { always = yes }
+#		cancel_if_not_visible = yes
+#		activation = { has_completed_focus = DNC_QIN_protecting_our_empire }
+#		is_good = no
+#		days_mission_timeout = CHI_days_until_uprising?2700
+#
+#		timeout_effect = {
+#					every_state = {
+#    limit = {
+#        is_controlled_by = QIN
+#    }
+#    remove_core_of = BOX
+#		}
+#						CHI = {add_ideas = {CHI_uprising}}
+#						QIN = {add_ideas = {QIN_uprising}}
+#						QIN = {set_country_flag = revolution_started}
+#						country_event = ww1_china.3
+#						add_power_balance_value = {
+#						    id = QIN_centralization_bop
+#						    value = -0.30
+#						    tooltip_side = QIN_centralization_bop_democracy
+#						} 		
+#		}
+#
+#
+#	}
+#QIN_fight_uprising = {
+#		name = QIN_fight_uprising
+#		available = { NOT = { has_country_flag = revolution_started } }
+#		visible = {
+#			has_country_flag = uprising_preparing
+#			NOT = { has_country_flag = side_with_CHI }
+#		}
+#		days_remove = 120
+#		cost = 100
+#		remove_effect = {
+#			set_country_flag = fighting_uprising
+#			subtract_from_variable = {
+#				var = uprising_strengh
+#				value = 0.05
+#			}
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = 50
+#			}
+#						add_power_balance_value = {
+#						    id = QIN_centralization_bop
+#						    value = 0.1
+#						    tooltip_side = QIN_centralization_bop_democracy
+#						} 					
+#		}
+#	}
+#	CHI_spread_uprising = {
+#		name = CHI_spread_uprising
+#		cost = 100
+#		available = { NOT = { has_country_flag = revolution_started } }
+#		visible = {
+#			has_country_flag = uprising_preparing
+#			NOT = { has_country_flag = side_with_QIN }
+#		}
+#		days_remove = 100
+#		remove_effect = {
+#			set_country_flag = uprising_spreading
+#			add_to_variable = {
+#				var = uprising_strengh
+#				value = 0.03
+#			}
+#			add_political_power = 100
+#			add_stability = -0.05
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = -50
+#			}
+#			add_power_balance_value = {
+#			    id = QIN_centralization_bop
+#			    value = -0.10
+#			    tooltip_side = QIN_centralization_bop_democracy
+#			} 					
+#		}
+#	}
+#	QIN_arrest_leaders = {
+#		name = QIN_arrest_leaders
+#		cost = 200
+#		available = { NOT = { has_country_flag = revolution_started } }
+#		visible = {
+#			has_country_flag = uprising_preparing
+#			NOT = { has_country_flag = side_with_CHI } }
+#		days_remove = 100
+#		remove_effect = {
+#			set_country_flag = leader_arrested
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = 100
+#			}
+#		}
+#	}
+#	CHI_attack_garrisons = {
+#		name = CHI_attack_garrisons
+#		cost = 150
+#		available = { NOT = { has_country_flag = revolution_started } }
+#		visible = {
+#			AND = {
+#				has_country_flag = uprising_preparing
+#				has_country_flag = side_with_CHI
+#			}
+#		}
+#		days_remove = 75
+#		remove_effect = {
+#			set_country_flag = garrisons_attacked
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = -50
+#
+#			}
+#		}
+#	}
+#	QIN_fight_uprising_AI = {
+#		name = QIN_fight_uprising
+#		available = { hidden_trigger = { always = no } }
+#		visible = { has_country_flag = uprising_preparing }
+#		activation = { has_country_flag = uprising_spreading }
+#		allowed = {
+#			tag = QIN
+#		}
+#		is_good = yes
+#		days_mission_timeout = 120
+#		timeout_effect = {
+#			subtract_from_variable = {
+#				var = uprising_strengh
+#				value = 0.05
+#
+#			}
+#			clr_country_flag = uprising_spreading
+#
+#		}
+#	}
+#	CHI_spread_uprising_AI = {
+#		name = CHI_spread_uprising
+#		available = { has_country_flag = revolution_started }
+#		visible = { has_country_flag = uprising_preparing }
+#		activation = { has_country_flag = fighting_uprising }
+#		allowed = { tag = QIN }
+#		is_good = yes
+#		days_mission_timeout = 100
+#		timeout_effect = {
+#			add_to_variable = {
+#				var = uprising_strengh
+#				value = 0.03
+#			}
+#			clr_country_flag = fighting_uprising
+#
+#		}
+#	}
+#	QIN_arrest_leaders_AI = {
+#		name = QIN_arrest_leaders
+#		available = { has_country_flag = revolution_started }
+#		visible = { has_country_flag = uprising_preparing }
+#		activation = { has_country_flag = garrisons_attacked }
+#		allowed = { tag = QIN }
+#		days_mission_timeout = 100
+#		timeout_effect = {
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = 50
+#			}
+#			clr_country_flag = garrisons_attacked
+#		}
+#	}
+#	CHI_attack_garrisons_AI = {
+#		name = CHI_attack_garrisons
+#		available = { has_country_flag = revolution_started }
+#		visible = { has_country_flag = uprising_preparing }
+#		activation = { has_country_flag = leader_arrested }
+#		allowed = { tag = QIN }
+#		days_mission_timeout = 75
+#		timeout_effect = {
+#			add_days_mission_timeout = {
+#				mission = QIN_revolution_timer
+#				days = -50
+#
+#			}
+#			clr_country_flag = leader_arrested
+#		}
+#	}
 }

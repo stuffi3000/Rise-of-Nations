@@ -1,0 +1,2864 @@
+# These are the 12 ideologies we are working with:
+# 1. Communist
+# 2. Democratic Socialist
+# 3. Social Democrat
+# 4. Progressive
+# 5. Social Liberal
+# 6. Christian Democratic
+# 7. Market Liberal
+# 8. Conservative
+# 9. Islamist
+# 10. Monarchist
+# 11. Reactionary
+# 12. Nationalist
+# 13. Fascist
+
+# TO DO LIST:
+# - What to do with political parties in the list (ban, support, de-support)
+# - Figure out how party popularities evolve over time
+# - Add the Parliamentary System and Presidential System ideas to all countries
+# - Take the election events over from TIA
+# - USA Congress GUI: show percentage of gov support, show the amount of seats, colour party names
+# -> REWORK THE COALITION GUI!
+# - Probably switch the active parties setup to popularity instead of seats
+
+# THINGS TO KEEP IN MIND:
+# - We will probably need leader pics for the leaders of each party
+
+#################################################################
+#																#
+# 				General Parliamentarty System					#
+#																#
+#################################################################
+break_coalition = {
+	clr_country_flag = has_coalition
+	clr_country_flag = coalition_communist
+	clr_country_flag = coalition_democratic_socialist
+	clr_country_flag = coalition_social_democrat
+	clr_country_flag = coalition_progressive
+	clr_country_flag = coalition_social_liberal
+	clr_country_flag = coalition_christian_democratic
+	clr_country_flag = coalition_market_liberal
+	clr_country_flag = coalition_conservative
+	clr_country_flag = coalition_islamist
+	clr_country_flag = coalition_monarchist
+	clr_country_flag = coalition_reactionary
+	clr_country_flag = coalition_nationalist
+	clr_country_flag = coalition_fascist
+	clear_variable = ROOT.Coalition
+}
+
+update_coalition = {
+	set_variable = {
+		var = ROOT.Coalition
+		value = 0
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_communist
+		}
+		add_to_variable = { ROOT.Coalition = communist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_democratic_socialist
+		}
+		add_to_variable = { ROOT.Coalition = democratic_socialist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_social_democrat
+		}
+		add_to_variable = { ROOT.Coalition = social_democrat_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_progressive
+		}
+		add_to_variable = { ROOT.Coalition = progressive_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_social_liberal
+		}
+		add_to_variable = { ROOT.Coalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_christian_democratic
+		}
+		add_to_variable = { ROOT.Coalition = christian_democratic_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_market_liberal
+		}
+		add_to_variable = { ROOT.Coalition = market_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_conservative
+		}
+		add_to_variable = { ROOT.Coalition = conservative_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_islamist
+		}
+		add_to_variable = { ROOT.Coalition = islamist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_monarchist
+		}
+		add_to_variable = { ROOT.Coalition = monarchist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_reactionary
+		}
+		add_to_variable = { ROOT.Coalition = reactionary_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_nationalist
+		}
+		add_to_variable = { ROOT.Coalition = nationalist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_fascist
+		}
+		add_to_variable = { ROOT.Coalition = fascist_seats }
+	}
+	if = {
+		limit = {
+			NOT = { has_country_flag = has_coalition }
+		}
+		break_coalition = yes
+	}
+}
+
+cleanup_coalition = {
+	clr_country_flag = government_chosen
+	clr_country_flag = coalition_chosen
+	clear_variable = ROOT.NewCoalition
+}
+
+# Every nation has entries in its history file for popularities of a certain ideology. These Popularities change over time
+# and are used to setup the seats inside the parliament
+
+quickset_parliament = {
+	# If no values have been predefined in the history files
+	clear_array = ideology_seats_array
+	clear_array = parliament_array
+
+	if = {
+		limit = {
+			NOT = {
+				OR = {
+					original_tag = USA
+				#	has_variable = communist_popularity
+				#	has_variable = democratic_socialist_popularity
+				#	has_variable = social_democrat_popularity
+				#	has_variable = progressive_popularity
+				#	has_variable = social_liberal_popularity
+				#	has_variable = christian_democratic_popularity
+				#	has_variable = market_liberal_popularity
+				#	has_variable = conservative_popularity
+				#	has_variable = islamist_popularity
+				#	has_variable = monarchist_popularity
+				#	has_variable = reactionary_popularity
+				#	has_variable = nationalist_popularity
+				#	has_variable = fascist_popularity
+				}
+			}
+		}
+		# First Era (there is a difference between eras because there were no progressive people in 1900 for example)
+		if = {
+			limit = {
+			#	date > 1899.12.1
+			#	date < 1901.1.1
+			#	OR = {
+				#	has_government = democratic # Because who needs a parliament in a non-democratic country?
+			#		has_country_flag = has_parliament # Because there are exceptions
+			#	}
+			#	democratic > 0
+			always = yes
+			}
+			log = "First Era Random Parliament setup"
+			set_temp_variable = { democratic_support = party_popularity_100@democratic }
+			random_list = {
+				1 = {
+					divide_temp_variable = { democratic_support = 4 }
+					set_variable = { democratic_socialist_popularity = democratic_support }
+					set_variable = { social_democrat_popularity = democratic_support }
+					set_variable = { market_liberal_popularity = democratic_support }
+					set_variable = { conservative_popularity = democratic_support }
+					random_list = {
+						1 = {
+							set_country_flag = government_democratic_socialist
+						}
+						1 = {
+							set_country_flag = government_social_democrat
+						}
+						1 = {
+							set_country_flag = government_market_liberal
+						}
+						1 = {
+							set_country_flag = government_conservative
+						}
+					}
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { democratic_socialist_popularity = democratic_support_1 }
+					set_temp_variable = { democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_democratic_socialist
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { social_democrat_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_social_democrat
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { market_liberal_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { conservative_popularity = democratic_support_2 }
+					set_country_flag = government_market_liberal
+				}
+				2 = {
+					set_temp_variable = { democratic_support_1 = democratic_support }
+					divide_temp_variable = { democratic_support_1 = 100 }
+					multiply_temp_variable = { democratic_support_1 = 75 }
+					set_variable = { conservative_popularity = democratic_support_1 }
+					set_temp_variable = {democratic_support_2 = democratic_support }
+					subtract_from_temp_variable = { democratic_support_2 = democratic_support_1 }
+					divide_temp_variable = { democratic_support_2 = 3 }
+					set_variable = { democratic_socialist_popularity = democratic_support_2 }
+					set_variable = { social_democrat_popularity = democratic_support_2 }
+					set_variable = { market_liberal_popularity = democratic_support_2 }
+					set_country_flag = government_conservative
+				}
+			}
+			# The residue is composed of the other ideologies and will be accordingly distributed
+			# Communism
+			set_temp_variable = { communist_support = party_popularity_100@communism }
+			set_variable = { communist_popularity = communist_support }
+			# Fascism
+			set_temp_variable = { fascist_support = party_popularity_100@fascism }
+			set_variable = { fascist_popularity = fascist_support }
+			# Reactionary
+			set_temp_variable = { reactionary_support = party_popularity_100@neutrality }
+			set_variable = { reactionary_popularity = reactionary_support }
+			# Islamism
+			set_temp_variable = { islamist_support = party_popularity_100@islamism }
+			set_variable = { islamist_popularity = islamist_support }
+
+			# Problem: for countries like Germany, there is a parliament in 1900, composed of different parties. However,
+			# the major ruling force in the country is the House of Hohenzollern, who isn't a party in the parliament, but has
+			# all the power. This means we cannot use this random system up here and we HAVE to define historical values!!
+
+			set_variable = { communist_seats = communist_popularity }
+			set_variable = { democratic_socialist_seats = democratic_socialist_popularity }
+			set_variable = { social_democrat_seats = social_democrat_popularity }
+			set_variable = { progressive_seats = progressive_popularity }
+			set_variable = { social_liberal_seats = social_liberal_popularity }
+			set_variable = { christian_democratic_seats = christian_democratic_popularity }
+			set_variable = { market_liberal_seats = market_liberal_popularity }
+			set_variable = { conservative_seats = conservative_popularity }
+			set_variable = { islamist_seats = islamist_popularity }
+			set_variable = { monarchist_seats = monarchist_popularity }
+			set_variable = { reactionary_seats = reactionary_popularity }
+			set_variable = { nationalist_seats = nationalist_popularity }
+			set_variable = { fascist_seats = fascist_popularity }
+			set_parliament_graphics = yes		
+		}
+	}
+}
+
+quickset_coalition = {
+	set_country_flag = has_coalition
+	set_variable = { ROOT.Coalition = 0 }
+	if = {
+		limit = {
+			has_country_flag = government_communist
+		}
+		set_country_flag = coalition_communist
+		set_variable = { ROOT.Coalition = communist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_democratic_socialist
+		}
+		set_country_flag = coalition_democratic_socialist
+		set_variable = { ROOT.Coalition = democratic_socialist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_social_democrat
+		}
+		set_country_flag = coalition_social_democrat
+		set_variable = { ROOT.Coalition = social_democrat_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_progressive
+		}
+		set_country_flag = coalition_progressive
+		set_variable = { ROOT.Coalition = progressive_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_social_liberal
+		}
+		set_country_flag = coalition_social_liberal
+		set_variable = { ROOT.Coalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_christian_democratic
+		}
+		set_country_flag = coalition_christian_democratic
+		set_variable = { ROOT.Coalition = christian_democratic_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_market_liberal
+		}
+		set_country_flag = coalition_market_liberal
+		set_variable = { ROOT.Coalition = market_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_conservative
+		}
+		set_country_flag = coalition_conservative
+		set_variable = { ROOT.Coalition = conservative_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_islamist
+			check_variable = { islamist_seats < 1 }			
+		}
+		set_country_flag = coalition_islamist
+		set_variable = { ROOT.Coalition = islamist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_monarchist
+		}
+		set_country_flag = coalition_monarchist
+		set_variable = { ROOT.Coalition = monarchist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_reactionary
+		}
+		set_country_flag = coalition_reactionary
+		set_variable = { ROOT.Coalition = reactionary_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_nationalist
+		}
+		set_country_flag = coalition_nationalist
+		set_variable = { ROOT.Coalition = nationalist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_fascist
+		}
+		set_country_flag = coalition_fascist
+		set_variable = { ROOT.Coalition = fascist_seats }
+	}
+	set_parliament_graphics = yes
+	set_parliament_graphics_2 = yes
+}
+
+set_parliament_graphics = {
+
+	## CLARIFICATION
+	# Every ideology has a number from 1 to 12.
+	# There will be a parliament array with 50 entries of numbers reaching from 1 to 12, each defining a seat for a certain ideology.
+	#
+	## Step 1 : Create new variables to work with
+	set_variable = { communist_seats_parliament = communist_seats }
+	set_variable = { democratic_socialist_seats_parliament = democratic_socialist_seats }
+	set_variable = { social_democrat_seats_parliament = social_democrat_seats }
+	set_variable = { progressive_seats_parliament = progressive_seats }
+	set_variable = { social_liberal_seats_parliament = social_liberal_seats }
+	set_variable = { christian_democratic_seats_parliament = christian_democratic_seats }
+	set_variable = { market_liberal_seats_parliament = market_liberal_seats }
+	set_variable = { conservative_seats_parliament = conservative_seats }
+	set_variable = { islamist_seats_parliament = islamist_seats }
+	set_variable = { monarchist_seats_parliament = monarchist_seats }
+	set_variable = { reactionary_seats_parliament = reactionary_seats }
+	set_variable = { nationalist_seats_parliament = nationalist_seats }
+	set_variable = { fascist_seats_parliament = fascist_seats }
+
+	## Step 2 : Round variables
+
+	round_variable = communist_seats_parliament
+	round_variable = democratic_socialist_seats_parliament
+	round_variable = social_democrat_seats_parliament
+	round_variable = progressive_seats_parliament
+	round_variable = social_liberal_seats_parliament
+	round_variable = christian_democratic_seats_parliament
+	round_variable = market_liberal_seats_parliament
+	round_variable = conservative_seats_parliament
+	round_variable = islamist_seats_parliament
+	round_variable = monarchist_seats_parliament
+	round_variable = reactionary_seats_parliament
+	round_variable = nationalist_seats_parliament
+	round_variable = fascist_seats_parliament
+
+	## Step 3 : Divide by 2 (For a graphic of 50 seats)
+
+	divide_variable = { communist_seats_parliament = 2 }
+	divide_variable = { democratic_socialist_seats_parliament = 2 }
+	divide_variable = { social_democrat_seats_parliament = 2 }
+	divide_variable = { progressive_seats_parliament = 2 }
+	divide_variable = { social_liberal_seats_parliament = 2 }
+	divide_variable = { christian_democratic_seats_parliament = 2 }
+	divide_variable = { market_liberal_seats_parliament = 2 }
+	divide_variable = { conservative_seats_parliament = 2 }
+	divide_variable = { islamist_seats_parliament = 2 }
+	divide_variable = { monarchist_seats_parliament = 2 }
+	divide_variable = { reactionary_seats_parliament = 2 }
+	divide_variable = { nationalist_seats_parliament = 2 }
+	divide_variable = { fascist_seats_parliament = 2 }
+
+	## Step 4 : Round again
+
+	round_variable = communist_seats_parliament
+	round_variable = democratic_socialist_seats_parliament
+	round_variable = social_democrat_seats_parliament
+	round_variable = progressive_seats_parliament
+	round_variable = social_liberal_seats_parliament
+	round_variable = christian_democratic_seats_parliament
+	round_variable = market_liberal_seats_parliament
+	round_variable = conservative_seats_parliament
+	round_variable = islamist_seats_parliament
+	round_variable = monarchist_seats_parliament
+	round_variable = reactionary_seats_parliament
+	round_variable = nationalist_seats_parliament
+	round_variable = fascist_seats_parliament
+
+	## Step 5: Assign seats
+
+	add_to_array = { ideology_seats_array = 0 } # Placeholder, I need the frames to be 1-12 and not 0-11
+	add_to_array = { ideology_seats_array = communist_seats_parliament }
+	add_to_array = { ideology_seats_array = democratic_socialist_seats_parliament }
+	add_to_array = { ideology_seats_array = social_democrat_seats_parliament }
+	add_to_array = { ideology_seats_array = progressive_seats_parliament }
+	add_to_array = { ideology_seats_array = social_liberal_seats_parliament }
+	add_to_array = { ideology_seats_array = christian_democratic_seats_parliament }
+	add_to_array = { ideology_seats_array = market_liberal_seats_parliament }
+	add_to_array = { ideology_seats_array = conservative_seats_parliament }
+	add_to_array = { ideology_seats_array = islamist_seats_parliament }
+	add_to_array = { ideology_seats_array = monarchist_seats_parliament }
+	add_to_array = { ideology_seats_array = reactionary_seats_parliament }
+	add_to_array = { ideology_seats_array = nationalist_seats_parliament }
+	add_to_array = { ideology_seats_array = fascist_seats_parliament }
+	for_each_loop = {
+		array = ideology_seats_array
+		if = {
+			limit = {
+				check_variable = { v > 49 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 48 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 47 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 46 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 45 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 44 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 43 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 42 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 41 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 40 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 39 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 38 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 37 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 36 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 35 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 34 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 33 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 32 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 31 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 30 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 29 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 28 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 27 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 26 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 25 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 24 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 23 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 22 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 21 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 20 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 19 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 18 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 17 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 16 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 15 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 14 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 13 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 12 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 11 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 10 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 9 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 8 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 7 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 6 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 5 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 4 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 3 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 2 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 1 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+		if = {
+			limit = {
+				check_variable = { v > 0 }
+			}
+			add_to_array = { parliament_array = i }
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { parliament_array^num > 51 }
+		}
+		resize_array = {
+			parliament_array = 51
+		}
+	}
+}
+
+set_parliament_graphics_2 = {
+	update_coalition = yes
+	set_variable = {
+		ROOT.GroupGFX = ROOT.Coalition
+	}
+	divide_variable = { ROOT.GroupGFX = 100 }
+	multiply_variable = { ROOT.GroupGFX = 230 }
+
+	set_variable = {
+		ROOT.Opposition = 100
+	}
+	subtract_from_variable = {
+		ROOT.Opposition = ROOT.Coalition
+	}
+}
+
+set_coalition_to_array = {
+	if = {
+		limit = {
+			has_country_flag = coalition_fascist
+		}
+		add_to_array = { member_parties_array = 13 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_nationalist
+		}
+		add_to_array = { member_parties_array = 12 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_reactionary
+		}
+		add_to_array = { member_parties_array = 11 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_monarchist
+		}
+		add_to_array = { member_parties_array = 10 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_islamist
+		}
+		add_to_array = { member_parties_array = 9 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_conservative
+		}
+		add_to_array = { member_parties_array = 8 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_market_liberal
+		}
+		add_to_array = { member_parties_array = 7 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_christian_democratic
+		}
+		add_to_array = { member_parties_array = 6 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_social_liberal
+		}
+		add_to_array = { member_parties_array = 5 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_progressive
+		}
+		add_to_array = { member_parties_array = 4 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_social_democrat
+		}
+		add_to_array = { member_parties_array = 3 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_democratic_socialist
+		}
+		add_to_array = { member_parties_array = 2 }
+	}
+	if = {
+		limit = {
+			has_country_flag = coalition_communist
+		}
+		add_to_array = { member_parties_array = 1 }
+	}
+}
+
+setup_active_parties_list = {
+	if = {
+		limit = {
+			check_variable = { communist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 1
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { democratic_socialist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 2
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { social_democrat_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 3
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { progressive_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 4
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { social_liberal_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 5
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { christian_democratic_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 6
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { market_liberal_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 7
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { conservative_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 8
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { islamist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 9
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { monarchist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 10
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { reactionary_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 11
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { nationalist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 12
+		}
+	}
+	if = {
+		limit = {
+			check_variable = { fascist_seats_parliament > 0 }
+		}
+		add_to_array = {
+			active_parties_array = 13
+		}
+	}
+	for_each_loop = {
+		array = active_parties_array
+
+		log = [?active_parties_array^v]
+	}
+}
+
+add_ruling_party_popularity = {
+	if = {
+		limit = {
+			has_country_flag = government_communist
+		}
+		add_to_variable = { ROOT.NewCoalition = communist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_democratic_socialist
+		}
+		add_to_variable = { ROOT.NewCoalition = democratic_socialist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_social_democrat
+		}
+		add_to_variable = { ROOT.NewCoalition = social_democrat_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_progressive
+		}
+		add_to_variable = { ROOT.NewCoalition = progressive_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_social_liberal
+		}
+		add_to_variable = { ROOT.NewCoalition = social_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_christian_democratic
+		}
+		add_to_variable = { ROOT.NewCoalition = christian_democratic_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_market_liberal
+		}
+		add_to_variable = { ROOT.NewCoalition = market_liberal_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_conservative
+		}
+		add_to_variable = { ROOT.NewCoalition = conservative_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_islamist
+		}
+		add_to_variable = { ROOT.NewCoalition = islamist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_monarchist
+		}
+		add_to_variable = { ROOT.NewCoalition = monarchist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_reactionary
+		}
+		add_to_variable = { ROOT.NewCoalition = reactionary_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_nationalist
+		}
+		add_to_variable = { ROOT.NewCoalition = nationalist_seats }
+	}
+	if = {
+		limit = {
+			has_country_flag = government_fascist
+		}
+		add_to_variable = { ROOT.NewCoalition = fascist_seats }
+	}
+}
+
+# Scripted GUI Pie Chart by Yard1
+
+# this creates a pie chart of popularities - can be easily adapted to show anything that adds up to 100%
+create_pie_chart = {
+	clear_array = pie_chart
+	resize_array = {
+		array = pie_chart
+		value = 1 # 1 is value for neutrality frame, so we don't have to make a loop for it
+		size = 100 # 100 pieces, each percent is one piece
+	}
+	set_temp_variable = { communist_pop = communist_popularity }
+	round_temp_variable = communist_pop
+
+	set_temp_variable = { democratic_socialist_pop = democratic_socialist_popularity }
+	round_temp_variable = democratic_socialist_pop 
+	set_variable = { ROOT.last_idx = communist_pop }
+	add_to_temp_variable = { democratic_socialist_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = democratic_socialist_pop
+		set_variable = { pie_chart^v = 2 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { social_democrat_pop = social_democrat_popularity }
+	round_temp_variable = social_democrat_pop 
+	set_variable = { ROOT.last_idx = democratic_socialist_pop }
+	add_to_temp_variable = { social_democrat_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = social_democrat_pop
+		set_variable = { pie_chart^v = 3 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { progressive_pop = progressive_popularity }
+	round_temp_variable = progressive_pop 
+	set_variable = { ROOT.last_idx = social_democrat_pop }
+	add_to_temp_variable = { progressive_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = progressive_pop
+		set_variable = { pie_chart^v = 4 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { social_liberal_pop = social_liberal_popularity }
+	round_temp_variable = social_liberal_pop 
+	set_variable = { ROOT.last_idx = progressive_pop }
+	add_to_temp_variable = { social_liberal_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = social_liberal_pop
+		set_variable = { pie_chart^v = 5 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { christian_democratic_pop = christian_democratic_popularity }
+	round_temp_variable = christian_democratic_pop 
+	set_variable = { ROOT.last_idx = social_liberal_pop }
+	add_to_temp_variable = { christian_democratic_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = christian_democratic_pop
+		set_variable = { pie_chart^v = 6 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { market_liberal_pop = market_liberal_popularity }
+	round_temp_variable = market_liberal_pop 
+	set_variable = { ROOT.last_idx = christian_democratic_pop }
+	add_to_temp_variable = { market_liberal_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = market_liberal_pop
+		set_variable = { pie_chart^v = 7 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { conservative_pop = conservative_popularity }
+	round_temp_variable = conservative_pop 
+	set_variable = { ROOT.last_idx = market_liberal_pop }
+	add_to_temp_variable = { conservative_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = conservative_pop
+		set_variable = { pie_chart^v = 8 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { islamist_pop = islamist_popularity }
+	round_temp_variable = islamist_pop 
+	set_variable = { ROOT.last_idx = conservative_pop }
+	add_to_temp_variable = { islamist_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = islamist_pop
+		set_variable = { pie_chart^v = 9 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { monarchist_pop = monarchist_popularity }
+	round_temp_variable = monarchist_pop 
+	set_variable = { ROOT.last_idx = islamist_pop }
+	add_to_temp_variable = { monarchist_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = monarchist_pop
+		set_variable = { pie_chart^v = 10 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { reactionary_pop = reactionary_popularity }
+	round_temp_variable = reactionary_pop 
+	set_variable = { ROOT.last_idx = monarchist_pop }
+	add_to_temp_variable = { reactionary_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = reactionary_pop
+		set_variable = { pie_chart^v = 11 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { nationalist_pop = nationalist_popularity }
+	round_temp_variable = nationalist_pop 
+	set_variable = { ROOT.last_idx = reactionary_pop }
+	add_to_temp_variable = { nationalist_pop = ROOT.last_idx }
+	for_loop_effect = {
+		start = ROOT.last_idx
+		end = nationalist_pop
+		set_variable = { pie_chart^v = 12 }
+		add_to_variable = { ROOT.last_idx = 1 }
+	}
+
+	set_temp_variable = { fascist_pop = fascist_popularity }
+	multiply_temp_variable = { fascist_pop = 100 }
+	round_temp_variable = fascist_pop 
+	add_to_temp_variable = { fascist_pop = ROOT.last_idx }
+	# for_loop_effect = {
+	# 	start = ROOT.last_idx
+	# 	end = fascist_pop
+	# 	set_variable = { pie_chart^v = 13 }
+	# }
+
+	clear_variable = ROOT.last_idx
+	add_to_variable = { pie_chart_dirty = 1 }
+}
+
+PieWindowPositionY_effect = {
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 1 }
+		}
+		set_variable = { PieWindowPositionY = 55 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 2 }
+		}
+		set_variable = { PieWindowPositionY = 110 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 3 }
+		}
+		set_variable = { PieWindowPositionY = 165 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 4 }
+		}
+		set_variable = { PieWindowPositionY = 220 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 5 }
+		}
+		set_variable = { PieWindowPositionY = 275 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 6 }
+		}
+		set_variable = { PieWindowPositionY = 330 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 7 }
+		}
+		set_variable = { PieWindowPositionY = 385 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 8 }
+		}
+		set_variable = { PieWindowPositionY = 440 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 9 }
+		}
+		set_variable = { PieWindowPositionY = 495 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 10 }
+		}
+		set_variable = { PieWindowPositionY = 550 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 11 }
+		}
+		set_variable = { PieWindowPositionY = 605 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 12 }
+		}
+		set_variable = { PieWindowPositionY = 660 }
+	}
+	if = {
+		limit = {
+			check_variable = { active_parties_array^num = 13 }
+		}
+		set_variable = { PieWindowPositionY = 715 }
+	}
+	add_to_variable = { PieWindowPositionY = 35 }
+	set_variable = { PieWindowPositionY_fix = PieWindowPositionY }
+	add_to_variable = { PieWindowPositionY_fix = 150 }
+	set_variable = { PieWindowPositionY_overlay = PieWindowPositionY_fix }
+	subtract_from_variable = { PieWindowPositionY_overlay = 100}
+	set_variable = { PieWindowPositionY_less = PieWindowPositionY_fix }
+	if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 0 }
+				check_variable = { active_parties_array^num = 1 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 1.9 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 2 }
+				check_variable = { active_parties_array^num = 3 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.0 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 4 }
+				check_variable = { active_parties_array^num = 5 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.1 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 6 }
+				check_variable = { active_parties_array^num = 7 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.2 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 8 }
+				check_variable = { active_parties_array^num = 9 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.3 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 10 }
+				check_variable = { active_parties_array^num = 11 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.4 }
+	}
+	else_if = {
+		limit = {
+			OR = {
+				check_variable = { active_parties_array^num = 12 }
+				check_variable = { active_parties_array^num = 13 }
+			}
+		}
+		multiply_variable = { PieWindowPositionY_less = 2.5 }
+	}
+}
+
+#################################################################
+#																#
+# The following effets can be used in focus trees, events, etc. #
+#																#
+#################################################################
+
+# TBD
+
+
+#################################################################
+#																#
+# 								USA								#
+#																#
+#################################################################
+
+USA_parliament_startup = {
+	# HOUSE
+	add_to_array = { USA_house_x_pos_frame_array = 0 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 13 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 26 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 39 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 52 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 64 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 77 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 90 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 103 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 116 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 129 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 1 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 14 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 27 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 40 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 53 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 66 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 79 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 3 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 92 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 16 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 105 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 29 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 42 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 118 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 55 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 131 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 68 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 5 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 19 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 81 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 32 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 95 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 45 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 108 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 9 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 58 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 22 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 72 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 121 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 36 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 85 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 49 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 13 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 135 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 99 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 63 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 27 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 76 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 40 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 112 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 18 }
+	add_to_array = { USA_house_y_pos_frame_array = 155 }
+	add_to_array = { USA_house_x_pos_frame_array = 54 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 90 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 32 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 126 }
+	add_to_array = { USA_house_y_pos_frame_array = 197 }
+	add_to_array = { USA_house_x_pos_frame_array = 68 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 104 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 46 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 81 }
+	add_to_array = { USA_house_y_pos_frame_array = 170 }
+	add_to_array = { USA_house_x_pos_frame_array = 23 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 140 }
+	add_to_array = { USA_house_y_pos_frame_array = 197 }
+	add_to_array = { USA_house_x_pos_frame_array = 60 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 38 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 118 }
+	add_to_array = { USA_house_y_pos_frame_array = 184 }
+	add_to_array = { USA_house_x_pos_frame_array = 96 }
+	add_to_array = { USA_house_y_pos_frame_array = 171 }
+	add_to_array = { USA_house_x_pos_frame_array = 74 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 52 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 30 }
+	add_to_array = { USA_house_y_pos_frame_array = 130 }
+	add_to_array = { USA_house_x_pos_frame_array = 132 }
+	add_to_array = { USA_house_y_pos_frame_array = 184 }
+	add_to_array = { USA_house_x_pos_frame_array = 110 }
+	add_to_array = { USA_house_y_pos_frame_array = 171 }
+	add_to_array = { USA_house_x_pos_frame_array = 88 }
+	add_to_array = { USA_house_y_pos_frame_array = 158 }
+	add_to_array = { USA_house_x_pos_frame_array = 44 }
+	add_to_array = { USA_house_y_pos_frame_array = 131 }
+	add_to_array = { USA_house_x_pos_frame_array = 67 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 37 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 103 }
+	add_to_array = { USA_house_y_pos_frame_array = 159 }
+	add_to_array = { USA_house_x_pos_frame_array = 59 }
+	add_to_array = { USA_house_y_pos_frame_array = 131 }
+	add_to_array = { USA_house_x_pos_frame_array = 82 }
+	add_to_array = { USA_house_y_pos_frame_array = 144 }
+	add_to_array = { USA_house_x_pos_frame_array = 125 }
+	add_to_array = { USA_house_y_pos_frame_array = 172 }
+	add_to_array = { USA_house_x_pos_frame_array = 147 }
+	add_to_array = { USA_house_y_pos_frame_array = 185 }
+	add_to_array = { USA_house_x_pos_frame_array = 52 }
+	add_to_array = { USA_house_y_pos_frame_array = 119 }
+	add_to_array = { USA_house_x_pos_frame_array = 95 }
+	add_to_array = { USA_house_y_pos_frame_array = 146 }
+	add_to_array = { USA_house_x_pos_frame_array = 74 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 118 }
+	add_to_array = { USA_house_y_pos_frame_array = 159 }
+	add_to_array = { USA_house_x_pos_frame_array = 45 }
+	add_to_array = { USA_house_y_pos_frame_array = 106 }
+	add_to_array = { USA_house_x_pos_frame_array = 67 }
+	add_to_array = { USA_house_y_pos_frame_array = 119 }
+	add_to_array = { USA_house_x_pos_frame_array = 140 }
+	add_to_array = { USA_house_y_pos_frame_array = 172 }
+	add_to_array = { USA_house_x_pos_frame_array = 90 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 111 }
+	add_to_array = { USA_house_y_pos_frame_array = 147 }
+	add_to_array = { USA_house_x_pos_frame_array = 60 }
+	add_to_array = { USA_house_y_pos_frame_array = 107 }
+	add_to_array = { USA_house_x_pos_frame_array = 133 }
+	add_to_array = { USA_house_y_pos_frame_array = 160 }
+	add_to_array = { USA_house_x_pos_frame_array = 83 }
+	add_to_array = { USA_house_y_pos_frame_array = 120 }
+	add_to_array = { USA_house_x_pos_frame_array = 53 }
+	add_to_array = { USA_house_y_pos_frame_array = 95 }
+	add_to_array = { USA_house_x_pos_frame_array = 104 }
+	add_to_array = { USA_house_y_pos_frame_array = 135 }
+	add_to_array = { USA_house_x_pos_frame_array = 76 }
+	add_to_array = { USA_house_y_pos_frame_array = 108 }
+	add_to_array = { USA_house_x_pos_frame_array = 126 }
+	add_to_array = { USA_house_y_pos_frame_array = 148 }
+	add_to_array = { USA_house_x_pos_frame_array = 156 }
+	add_to_array = { USA_house_y_pos_frame_array = 173 }
+	add_to_array = { USA_house_x_pos_frame_array = 69 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 99 }
+	add_to_array = { USA_house_y_pos_frame_array = 121 }
+	add_to_array = { USA_house_x_pos_frame_array = 119 }
+	add_to_array = { USA_house_y_pos_frame_array = 137 }
+	add_to_array = { USA_house_x_pos_frame_array = 62 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 92 }
+	add_to_array = { USA_house_y_pos_frame_array = 109 }
+	add_to_array = { USA_house_x_pos_frame_array = 149 }
+	add_to_array = { USA_house_y_pos_frame_array = 161 }
+	add_to_array = { USA_house_x_pos_frame_array = 113 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 85 }
+	add_to_array = { USA_house_y_pos_frame_array = 98 }
+	add_to_array = { USA_house_x_pos_frame_array = 142 }
+	add_to_array = { USA_house_y_pos_frame_array = 150 }
+	add_to_array = { USA_house_x_pos_frame_array = 79 }
+	add_to_array = { USA_house_y_pos_frame_array = 86 }
+	add_to_array = { USA_house_x_pos_frame_array = 72 }
+	add_to_array = { USA_house_y_pos_frame_array = 74 }
+	add_to_array = { USA_house_x_pos_frame_array = 108 }
+	add_to_array = { USA_house_y_pos_frame_array = 111 }
+	add_to_array = { USA_house_x_pos_frame_array = 136 }
+	add_to_array = { USA_house_y_pos_frame_array = 138 }
+	add_to_array = { USA_house_x_pos_frame_array = 102 }
+	add_to_array = { USA_house_y_pos_frame_array = 99 }
+	add_to_array = { USA_house_x_pos_frame_array = 129 }
+	add_to_array = { USA_house_y_pos_frame_array = 127 }
+	add_to_array = { USA_house_x_pos_frame_array = 95 }
+	add_to_array = { USA_house_y_pos_frame_array = 88 }
+	add_to_array = { USA_house_x_pos_frame_array = 166 }
+	add_to_array = { USA_house_y_pos_frame_array = 163 }
+	add_to_array = { USA_house_x_pos_frame_array = 123 }
+	add_to_array = { USA_house_y_pos_frame_array = 115 }
+	add_to_array = { USA_house_x_pos_frame_array = 89 }
+	add_to_array = { USA_house_y_pos_frame_array = 76 }
+	add_to_array = { USA_house_x_pos_frame_array = 82 }
+	add_to_array = { USA_house_y_pos_frame_array = 65 }
+	add_to_array = { USA_house_x_pos_frame_array = 159 }
+	add_to_array = { USA_house_y_pos_frame_array = 152 }
+	add_to_array = { USA_house_x_pos_frame_array = 119 }
+	add_to_array = { USA_house_y_pos_frame_array = 101 }
+	add_to_array = { USA_house_x_pos_frame_array = 153 }
+	add_to_array = { USA_house_y_pos_frame_array = 140 }
+	add_to_array = { USA_house_x_pos_frame_array = 112 }
+	add_to_array = { USA_house_y_pos_frame_array = 90 }
+	add_to_array = { USA_house_x_pos_frame_array = 146 }
+	add_to_array = { USA_house_y_pos_frame_array = 129 }
+	add_to_array = { USA_house_x_pos_frame_array = 106 }
+	add_to_array = { USA_house_y_pos_frame_array = 79 }
+	add_to_array = { USA_house_x_pos_frame_array = 99 }
+	add_to_array = { USA_house_y_pos_frame_array = 67 }
+	add_to_array = { USA_house_x_pos_frame_array = 140 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 93 }
+	add_to_array = { USA_house_y_pos_frame_array = 56 }
+	add_to_array = { USA_house_x_pos_frame_array = 133 }
+	add_to_array = { USA_house_y_pos_frame_array = 106 }
+	add_to_array = { USA_house_x_pos_frame_array = 130 }
+	add_to_array = { USA_house_y_pos_frame_array = 93 }
+	add_to_array = { USA_house_x_pos_frame_array = 124 }
+	add_to_array = { USA_house_y_pos_frame_array = 81 }
+	add_to_array = { USA_house_x_pos_frame_array = 176 }
+	add_to_array = { USA_house_y_pos_frame_array = 154 }
+	add_to_array = { USA_house_x_pos_frame_array = 117 }
+	add_to_array = { USA_house_y_pos_frame_array = 70 }
+	add_to_array = { USA_house_x_pos_frame_array = 111 }
+	add_to_array = { USA_house_y_pos_frame_array = 59 }
+	add_to_array = { USA_house_x_pos_frame_array = 170 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 104 }
+	add_to_array = { USA_house_y_pos_frame_array = 48 }
+	add_to_array = { USA_house_x_pos_frame_array = 164 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 157 }
+	add_to_array = { USA_house_y_pos_frame_array = 121 }
+	add_to_array = { USA_house_x_pos_frame_array = 151 }
+	add_to_array = { USA_house_y_pos_frame_array = 109 }
+	add_to_array = { USA_house_x_pos_frame_array = 144 }
+	add_to_array = { USA_house_y_pos_frame_array = 98 }
+	add_to_array = { USA_house_x_pos_frame_array = 142 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 135 }
+	add_to_array = { USA_house_y_pos_frame_array = 74 }
+	add_to_array = { USA_house_x_pos_frame_array = 129 }
+	add_to_array = { USA_house_y_pos_frame_array = 62 }
+	add_to_array = { USA_house_x_pos_frame_array = 122 }
+	add_to_array = { USA_house_y_pos_frame_array = 51 }
+	add_to_array = { USA_house_x_pos_frame_array = 116 }
+	add_to_array = { USA_house_y_pos_frame_array = 40 }
+	add_to_array = { USA_house_x_pos_frame_array = 156 }
+	add_to_array = { USA_house_y_pos_frame_array = 91 }
+	add_to_array = { USA_house_x_pos_frame_array = 163 }
+	add_to_array = { USA_house_y_pos_frame_array = 102 }
+	add_to_array = { USA_house_x_pos_frame_array = 169 }
+	add_to_array = { USA_house_y_pos_frame_array = 113 }
+	add_to_array = { USA_house_x_pos_frame_array = 176 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 182 }
+	add_to_array = { USA_house_y_pos_frame_array = 136 }
+	add_to_array = { USA_house_x_pos_frame_array = 188 }
+	add_to_array = { USA_house_y_pos_frame_array = 147 }
+	add_to_array = { USA_house_x_pos_frame_array = 128 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 135 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 141 }
+	add_to_array = { USA_house_y_pos_frame_array = 55 }
+	add_to_array = { USA_house_x_pos_frame_array = 148 }
+	add_to_array = { USA_house_y_pos_frame_array = 67 }
+	add_to_array = { USA_house_x_pos_frame_array = 154 }
+	add_to_array = { USA_house_y_pos_frame_array = 78 }
+	add_to_array = { USA_house_x_pos_frame_array = 141 }
+	add_to_array = { USA_house_y_pos_frame_array = 27 }
+	add_to_array = { USA_house_x_pos_frame_array = 147 }
+	add_to_array = { USA_house_y_pos_frame_array = 38 }
+	add_to_array = { USA_house_x_pos_frame_array = 169 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 154 }
+	add_to_array = { USA_house_y_pos_frame_array = 49 }
+	add_to_array = { USA_house_x_pos_frame_array = 175 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 160 }
+	add_to_array = { USA_house_y_pos_frame_array = 60 }
+	add_to_array = { USA_house_x_pos_frame_array = 182 }
+	add_to_array = { USA_house_y_pos_frame_array = 107 }
+	add_to_array = { USA_house_x_pos_frame_array = 167 }
+	add_to_array = { USA_house_y_pos_frame_array = 72 }
+	add_to_array = { USA_house_x_pos_frame_array = 188 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 195 }
+	add_to_array = { USA_house_y_pos_frame_array = 130 }
+	add_to_array = { USA_house_x_pos_frame_array = 154 }
+	add_to_array = { USA_house_y_pos_frame_array = 21 }
+	add_to_array = { USA_house_x_pos_frame_array = 201 }
+	add_to_array = { USA_house_y_pos_frame_array = 141 }
+	add_to_array = { USA_house_x_pos_frame_array = 160 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 167 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 181 }
+	add_to_array = { USA_house_y_pos_frame_array = 80 }
+	add_to_array = { USA_house_x_pos_frame_array = 173 }
+	add_to_array = { USA_house_y_pos_frame_array = 55 }
+	add_to_array = { USA_house_x_pos_frame_array = 188 }
+	add_to_array = { USA_house_y_pos_frame_array = 91 }
+	add_to_array = { USA_house_x_pos_frame_array = 180 }
+	add_to_array = { USA_house_y_pos_frame_array = 66 }
+	add_to_array = { USA_house_x_pos_frame_array = 195 }
+	add_to_array = { USA_house_y_pos_frame_array = 102 }
+	add_to_array = { USA_house_x_pos_frame_array = 167 }
+	add_to_array = { USA_house_y_pos_frame_array = 17 }
+	add_to_array = { USA_house_x_pos_frame_array = 173 }
+	add_to_array = { USA_house_y_pos_frame_array = 28 }
+	add_to_array = { USA_house_x_pos_frame_array = 201 }
+	add_to_array = { USA_house_y_pos_frame_array = 114 }
+	add_to_array = { USA_house_x_pos_frame_array = 180 }
+	add_to_array = { USA_house_y_pos_frame_array = 39 }
+	add_to_array = { USA_house_x_pos_frame_array = 187 }
+	add_to_array = { USA_house_y_pos_frame_array = 51 }
+	add_to_array = { USA_house_x_pos_frame_array = 208 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 195 }
+	add_to_array = { USA_house_y_pos_frame_array = 75 }
+	add_to_array = { USA_house_x_pos_frame_array = 180 }
+	add_to_array = { USA_house_y_pos_frame_array = 13 }
+	add_to_array = { USA_house_x_pos_frame_array = 194 }
+	add_to_array = { USA_house_y_pos_frame_array = 62 }
+	add_to_array = { USA_house_x_pos_frame_array = 201 }
+	add_to_array = { USA_house_y_pos_frame_array = 87 }
+	add_to_array = { USA_house_x_pos_frame_array = 215 }
+	add_to_array = { USA_house_y_pos_frame_array = 137 }
+	add_to_array = { USA_house_x_pos_frame_array = 187 }
+	add_to_array = { USA_house_y_pos_frame_array = 24 }
+	add_to_array = { USA_house_x_pos_frame_array = 208 }
+	add_to_array = { USA_house_y_pos_frame_array = 99 }
+	add_to_array = { USA_house_x_pos_frame_array = 194 }
+	add_to_array = { USA_house_y_pos_frame_array = 36 }
+	add_to_array = { USA_house_x_pos_frame_array = 200 }
+	add_to_array = { USA_house_y_pos_frame_array = 47 }
+	add_to_array = { USA_house_x_pos_frame_array = 194 }
+	add_to_array = { USA_house_y_pos_frame_array = 9 }
+	add_to_array = { USA_house_x_pos_frame_array = 215 }
+	add_to_array = { USA_house_y_pos_frame_array = 110 }
+	add_to_array = { USA_house_x_pos_frame_array = 208 }
+	add_to_array = { USA_house_y_pos_frame_array = 72 }
+	add_to_array = { USA_house_x_pos_frame_array = 207 }
+	add_to_array = { USA_house_y_pos_frame_array = 59 }
+	add_to_array = { USA_house_x_pos_frame_array = 201 }
+	add_to_array = { USA_house_y_pos_frame_array = 21 }
+	add_to_array = { USA_house_x_pos_frame_array = 215 }
+	add_to_array = { USA_house_y_pos_frame_array = 84 }
+	add_to_array = { USA_house_x_pos_frame_array = 222 }
+	add_to_array = { USA_house_y_pos_frame_array = 122 }
+	add_to_array = { USA_house_x_pos_frame_array = 207 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 208 }
+	add_to_array = { USA_house_y_pos_frame_array = 7 }
+	add_to_array = { USA_house_x_pos_frame_array = 214 }
+	add_to_array = { USA_house_y_pos_frame_array = 45 }
+	add_to_array = { USA_house_x_pos_frame_array = 222 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 228 }
+	add_to_array = { USA_house_y_pos_frame_array = 134 }
+	add_to_array = { USA_house_x_pos_frame_array = 215 }
+	add_to_array = { USA_house_y_pos_frame_array = 19 }
+	add_to_array = { USA_house_x_pos_frame_array = 222 }
+	add_to_array = { USA_house_y_pos_frame_array = 70 }
+	add_to_array = { USA_house_x_pos_frame_array = 221 }
+	add_to_array = { USA_house_y_pos_frame_array = 57 }
+	add_to_array = { USA_house_x_pos_frame_array = 229 }
+	add_to_array = { USA_house_y_pos_frame_array = 108 }
+	add_to_array = { USA_house_x_pos_frame_array = 221 }
+	add_to_array = { USA_house_y_pos_frame_array = 31 }
+	add_to_array = { USA_house_x_pos_frame_array = 222 }
+	add_to_array = { USA_house_y_pos_frame_array = 5 }
+	add_to_array = { USA_house_x_pos_frame_array = 229 }
+	add_to_array = { USA_house_y_pos_frame_array = 82 }
+	add_to_array = { USA_house_x_pos_frame_array = 228 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 229 }
+	add_to_array = { USA_house_y_pos_frame_array = 18 }
+	add_to_array = { USA_house_x_pos_frame_array = 236 }
+	add_to_array = { USA_house_y_pos_frame_array = 120 }
+	add_to_array = { USA_house_x_pos_frame_array = 236 }
+	add_to_array = { USA_house_y_pos_frame_array = 95 }
+	add_to_array = { USA_house_x_pos_frame_array = 236 }
+	add_to_array = { USA_house_y_pos_frame_array = 69 }
+	add_to_array = { USA_house_x_pos_frame_array = 235 }
+	add_to_array = { USA_house_y_pos_frame_array = 56 }
+	add_to_array = { USA_house_x_pos_frame_array = 236 }
+	add_to_array = { USA_house_y_pos_frame_array = 30 }
+	add_to_array = { USA_house_x_pos_frame_array = 236 }
+	add_to_array = { USA_house_y_pos_frame_array = 5 }
+	add_to_array = { USA_house_x_pos_frame_array = 243 }
+	add_to_array = { USA_house_y_pos_frame_array = 133 }
+	add_to_array = { USA_house_x_pos_frame_array = 243 }
+	add_to_array = { USA_house_y_pos_frame_array = 107 }
+	add_to_array = { USA_house_x_pos_frame_array = 243 }
+	add_to_array = { USA_house_y_pos_frame_array = 82 }
+	add_to_array = { USA_house_x_pos_frame_array = 243 }
+	add_to_array = { USA_house_y_pos_frame_array = 17 }
+	add_to_array = { USA_house_x_pos_frame_array = 243 }
+	add_to_array = { USA_house_y_pos_frame_array = 43 }
+	add_to_array = { USA_house_x_pos_frame_array = 250 }
+	add_to_array = { USA_house_y_pos_frame_array = 5 }
+	add_to_array = { USA_house_x_pos_frame_array = 250 }
+	add_to_array = { USA_house_y_pos_frame_array = 30 }
+	add_to_array = { USA_house_x_pos_frame_array = 250 }
+	add_to_array = { USA_house_y_pos_frame_array = 56 }
+	add_to_array = { USA_house_x_pos_frame_array = 249 }
+	add_to_array = { USA_house_y_pos_frame_array = 69 }
+	add_to_array = { USA_house_x_pos_frame_array = 250 }
+	add_to_array = { USA_house_y_pos_frame_array = 95 }
+	add_to_array = { USA_house_x_pos_frame_array = 250 }
+	add_to_array = { USA_house_y_pos_frame_array = 120 }
+	add_to_array = { USA_house_x_pos_frame_array = 257 }
+	add_to_array = { USA_house_y_pos_frame_array = 18 }
+	add_to_array = { USA_house_x_pos_frame_array = 257 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 256 }
+	add_to_array = { USA_house_y_pos_frame_array = 82 }
+	add_to_array = { USA_house_x_pos_frame_array = 264 }
+	add_to_array = { USA_house_y_pos_frame_array = 5 }
+	add_to_array = { USA_house_x_pos_frame_array = 264 }
+	add_to_array = { USA_house_y_pos_frame_array = 31 }
+	add_to_array = { USA_house_x_pos_frame_array = 256 }
+	add_to_array = { USA_house_y_pos_frame_array = 108 }
+	add_to_array = { USA_house_x_pos_frame_array = 264 }
+	add_to_array = { USA_house_y_pos_frame_array = 57 }
+	add_to_array = { USA_house_x_pos_frame_array = 263 }
+	add_to_array = { USA_house_y_pos_frame_array = 70 }
+	add_to_array = { USA_house_x_pos_frame_array = 271 }
+	add_to_array = { USA_house_y_pos_frame_array = 19 }
+	add_to_array = { USA_house_x_pos_frame_array = 257 }
+	add_to_array = { USA_house_y_pos_frame_array = 134 }
+	add_to_array = { USA_house_x_pos_frame_array = 263 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 271 }
+	add_to_array = { USA_house_y_pos_frame_array = 45 }
+	add_to_array = { USA_house_x_pos_frame_array = 277 }
+	add_to_array = { USA_house_y_pos_frame_array = 7 }
+	add_to_array = { USA_house_x_pos_frame_array = 278 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 263 }
+	add_to_array = { USA_house_y_pos_frame_array = 122 }
+	add_to_array = { USA_house_x_pos_frame_array = 270 }
+	add_to_array = { USA_house_y_pos_frame_array = 84 }
+	add_to_array = { USA_house_x_pos_frame_array = 284 }
+	add_to_array = { USA_house_y_pos_frame_array = 21 }
+	add_to_array = { USA_house_x_pos_frame_array = 278 }
+	add_to_array = { USA_house_y_pos_frame_array = 59 }
+	add_to_array = { USA_house_x_pos_frame_array = 277 }
+	add_to_array = { USA_house_y_pos_frame_array = 72 }
+	add_to_array = { USA_house_x_pos_frame_array = 270 }
+	add_to_array = { USA_house_y_pos_frame_array = 110 }
+	add_to_array = { USA_house_x_pos_frame_array = 291 }
+	add_to_array = { USA_house_y_pos_frame_array = 9 }
+	add_to_array = { USA_house_x_pos_frame_array = 285 }
+	add_to_array = { USA_house_y_pos_frame_array = 47 }
+	add_to_array = { USA_house_x_pos_frame_array = 291 }
+	add_to_array = { USA_house_y_pos_frame_array = 36 }
+	add_to_array = { USA_house_x_pos_frame_array = 277 }
+	add_to_array = { USA_house_y_pos_frame_array = 99 }
+	add_to_array = { USA_house_x_pos_frame_array = 298 }
+	add_to_array = { USA_house_y_pos_frame_array = 24 }
+	add_to_array = { USA_house_x_pos_frame_array = 270 }
+	add_to_array = { USA_house_y_pos_frame_array = 137 }
+	add_to_array = { USA_house_x_pos_frame_array = 284 }
+	add_to_array = { USA_house_y_pos_frame_array = 87 }
+	add_to_array = { USA_house_x_pos_frame_array = 292 }
+	add_to_array = { USA_house_y_pos_frame_array = 62 }
+	add_to_array = { USA_house_x_pos_frame_array = 305 }
+	add_to_array = { USA_house_y_pos_frame_array = 13 }
+	add_to_array = { USA_house_x_pos_frame_array = 290 }
+	add_to_array = { USA_house_y_pos_frame_array = 75 }
+	add_to_array = { USA_house_x_pos_frame_array = 277 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 298 }
+	add_to_array = { USA_house_y_pos_frame_array = 51 }
+	add_to_array = { USA_house_x_pos_frame_array = 305 }
+	add_to_array = { USA_house_y_pos_frame_array = 39 }
+	add_to_array = { USA_house_x_pos_frame_array = 284 }
+	add_to_array = { USA_house_y_pos_frame_array = 114 }
+	add_to_array = { USA_house_x_pos_frame_array = 312 }
+	add_to_array = { USA_house_y_pos_frame_array = 28 }
+	add_to_array = { USA_house_x_pos_frame_array = 318 }
+	add_to_array = { USA_house_y_pos_frame_array = 17 }
+	add_to_array = { USA_house_x_pos_frame_array = 290 }
+	add_to_array = { USA_house_y_pos_frame_array = 102 }
+	add_to_array = { USA_house_x_pos_frame_array = 305 }
+	add_to_array = { USA_house_y_pos_frame_array = 66 }
+	add_to_array = { USA_house_x_pos_frame_array = 297 }
+	add_to_array = { USA_house_y_pos_frame_array = 91 }
+	add_to_array = { USA_house_x_pos_frame_array = 312 }
+	add_to_array = { USA_house_y_pos_frame_array = 55 }
+	add_to_array = { USA_house_x_pos_frame_array = 304 }
+	add_to_array = { USA_house_y_pos_frame_array = 80 }
+	add_to_array = { USA_house_x_pos_frame_array = 318 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 325 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 284 }
+	add_to_array = { USA_house_y_pos_frame_array = 141 }
+	add_to_array = { USA_house_x_pos_frame_array = 331 }
+	add_to_array = { USA_house_y_pos_frame_array = 21 }
+	add_to_array = { USA_house_x_pos_frame_array = 290 }
+	add_to_array = { USA_house_y_pos_frame_array = 130 }
+	add_to_array = { USA_house_x_pos_frame_array = 297 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 318 }
+	add_to_array = { USA_house_y_pos_frame_array = 72 }
+	add_to_array = { USA_house_x_pos_frame_array = 303 }
+	add_to_array = { USA_house_y_pos_frame_array = 107 }
+	add_to_array = { USA_house_x_pos_frame_array = 325 }
+	add_to_array = { USA_house_y_pos_frame_array = 60 }
+	add_to_array = { USA_house_x_pos_frame_array = 310 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 331 }
+	add_to_array = { USA_house_y_pos_frame_array = 49 }
+	add_to_array = { USA_house_x_pos_frame_array = 316 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 338 }
+	add_to_array = { USA_house_y_pos_frame_array = 38 }
+	add_to_array = { USA_house_x_pos_frame_array = 344 }
+	add_to_array = { USA_house_y_pos_frame_array = 27 }
+	add_to_array = { USA_house_x_pos_frame_array = 331 }
+	add_to_array = { USA_house_y_pos_frame_array = 78 }
+	add_to_array = { USA_house_x_pos_frame_array = 338 }
+	add_to_array = { USA_house_y_pos_frame_array = 67 }
+	add_to_array = { USA_house_x_pos_frame_array = 344 }
+	add_to_array = { USA_house_y_pos_frame_array = 55 }
+	add_to_array = { USA_house_x_pos_frame_array = 350 }
+	add_to_array = { USA_house_y_pos_frame_array = 44 }
+	add_to_array = { USA_house_x_pos_frame_array = 357 }
+	add_to_array = { USA_house_y_pos_frame_array = 33 }
+	add_to_array = { USA_house_x_pos_frame_array = 297 }
+	add_to_array = { USA_house_y_pos_frame_array = 147 }
+	add_to_array = { USA_house_x_pos_frame_array = 303 }
+	add_to_array = { USA_house_y_pos_frame_array = 136 }
+	add_to_array = { USA_house_x_pos_frame_array = 310 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 316 }
+	add_to_array = { USA_house_y_pos_frame_array = 113 }
+	add_to_array = { USA_house_x_pos_frame_array = 322 }
+	add_to_array = { USA_house_y_pos_frame_array = 102 }
+	add_to_array = { USA_house_x_pos_frame_array = 329 }
+	add_to_array = { USA_house_y_pos_frame_array = 91 }
+	add_to_array = { USA_house_x_pos_frame_array = 369 }
+	add_to_array = { USA_house_y_pos_frame_array = 40 }
+	add_to_array = { USA_house_x_pos_frame_array = 363 }
+	add_to_array = { USA_house_y_pos_frame_array = 51 }
+	add_to_array = { USA_house_x_pos_frame_array = 356 }
+	add_to_array = { USA_house_y_pos_frame_array = 62 }
+	add_to_array = { USA_house_x_pos_frame_array = 350 }
+	add_to_array = { USA_house_y_pos_frame_array = 74 }
+	add_to_array = { USA_house_x_pos_frame_array = 343 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 341 }
+	add_to_array = { USA_house_y_pos_frame_array = 98 }
+	add_to_array = { USA_house_x_pos_frame_array = 334 }
+	add_to_array = { USA_house_y_pos_frame_array = 109 }
+	add_to_array = { USA_house_x_pos_frame_array = 328 }
+	add_to_array = { USA_house_y_pos_frame_array = 121 }
+	add_to_array = { USA_house_x_pos_frame_array = 321 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 381 }
+	add_to_array = { USA_house_y_pos_frame_array = 48 }
+	add_to_array = { USA_house_x_pos_frame_array = 315 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 374 }
+	add_to_array = { USA_house_y_pos_frame_array = 59 }
+	add_to_array = { USA_house_x_pos_frame_array = 368 }
+	add_to_array = { USA_house_y_pos_frame_array = 70 }
+	add_to_array = { USA_house_x_pos_frame_array = 309 }
+	add_to_array = { USA_house_y_pos_frame_array = 154 }
+	add_to_array = { USA_house_x_pos_frame_array = 362 }
+	add_to_array = { USA_house_y_pos_frame_array = 81 }
+	add_to_array = { USA_house_x_pos_frame_array = 355 }
+	add_to_array = { USA_house_y_pos_frame_array = 93 }
+	add_to_array = { USA_house_x_pos_frame_array = 352 }
+	add_to_array = { USA_house_y_pos_frame_array = 106 }
+	add_to_array = { USA_house_x_pos_frame_array = 392 }
+	add_to_array = { USA_house_y_pos_frame_array = 56 }
+	add_to_array = { USA_house_x_pos_frame_array = 345 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 386 }
+	add_to_array = { USA_house_y_pos_frame_array = 67 }
+	add_to_array = { USA_house_x_pos_frame_array = 379 }
+	add_to_array = { USA_house_y_pos_frame_array = 79 }
+	add_to_array = { USA_house_x_pos_frame_array = 339 }
+	add_to_array = { USA_house_y_pos_frame_array = 129 }
+	add_to_array = { USA_house_x_pos_frame_array = 373 }
+	add_to_array = { USA_house_y_pos_frame_array = 90 }
+	add_to_array = { USA_house_x_pos_frame_array = 333 }
+	add_to_array = { USA_house_y_pos_frame_array = 140 }
+	add_to_array = { USA_house_x_pos_frame_array = 366 }
+	add_to_array = { USA_house_y_pos_frame_array = 101 }
+	add_to_array = { USA_house_x_pos_frame_array = 326 }
+	add_to_array = { USA_house_y_pos_frame_array = 152 }
+	add_to_array = { USA_house_x_pos_frame_array = 403 }
+	add_to_array = { USA_house_y_pos_frame_array = 65 }
+	add_to_array = { USA_house_x_pos_frame_array = 396 }
+	add_to_array = { USA_house_y_pos_frame_array = 76 }
+	add_to_array = { USA_house_x_pos_frame_array = 363 }
+	add_to_array = { USA_house_y_pos_frame_array = 115 }
+	add_to_array = { USA_house_x_pos_frame_array = 320 }
+	add_to_array = { USA_house_y_pos_frame_array = 163 }
+	add_to_array = { USA_house_x_pos_frame_array = 390 }
+	add_to_array = { USA_house_y_pos_frame_array = 88 }
+	add_to_array = { USA_house_x_pos_frame_array = 356 }
+	add_to_array = { USA_house_y_pos_frame_array = 127 }
+	add_to_array = { USA_house_x_pos_frame_array = 383 }
+	add_to_array = { USA_house_y_pos_frame_array = 99 }
+	add_to_array = { USA_house_x_pos_frame_array = 349 }
+	add_to_array = { USA_house_y_pos_frame_array = 138 }
+	add_to_array = { USA_house_x_pos_frame_array = 377 }
+	add_to_array = { USA_house_y_pos_frame_array = 111 }
+	add_to_array = { USA_house_x_pos_frame_array = 413 }
+	add_to_array = { USA_house_y_pos_frame_array = 74 }
+	add_to_array = { USA_house_x_pos_frame_array = 407 }
+	add_to_array = { USA_house_y_pos_frame_array = 86 }
+	add_to_array = { USA_house_x_pos_frame_array = 343 }
+	add_to_array = { USA_house_y_pos_frame_array = 150 }
+	add_to_array = { USA_house_x_pos_frame_array = 400 }
+	add_to_array = { USA_house_y_pos_frame_array = 98 }
+	add_to_array = { USA_house_x_pos_frame_array = 372 }
+	add_to_array = { USA_house_y_pos_frame_array = 125 }
+	add_to_array = { USA_house_x_pos_frame_array = 336 }
+	add_to_array = { USA_house_y_pos_frame_array = 161 }
+	add_to_array = { USA_house_x_pos_frame_array = 393 }
+	add_to_array = { USA_house_y_pos_frame_array = 109 }
+	add_to_array = { USA_house_x_pos_frame_array = 423 }
+	add_to_array = { USA_house_y_pos_frame_array = 85 }
+	add_to_array = { USA_house_x_pos_frame_array = 366 }
+	add_to_array = { USA_house_y_pos_frame_array = 137 }
+	add_to_array = { USA_house_x_pos_frame_array = 386 }
+	add_to_array = { USA_house_y_pos_frame_array = 121 }
+	add_to_array = { USA_house_x_pos_frame_array = 416 }
+	add_to_array = { USA_house_y_pos_frame_array = 96 }
+	add_to_array = { USA_house_x_pos_frame_array = 329 }
+	add_to_array = { USA_house_y_pos_frame_array = 173 }
+	add_to_array = { USA_house_x_pos_frame_array = 359 }
+	add_to_array = { USA_house_y_pos_frame_array = 148 }
+	add_to_array = { USA_house_x_pos_frame_array = 409 }
+	add_to_array = { USA_house_y_pos_frame_array = 108 }
+	add_to_array = { USA_house_x_pos_frame_array = 382 }
+	add_to_array = { USA_house_y_pos_frame_array = 135 }
+	add_to_array = { USA_house_x_pos_frame_array = 432 }
+	add_to_array = { USA_house_y_pos_frame_array = 95 }
+	add_to_array = { USA_house_x_pos_frame_array = 402 }
+	add_to_array = { USA_house_y_pos_frame_array = 120 }
+	add_to_array = { USA_house_x_pos_frame_array = 352 }
+	add_to_array = { USA_house_y_pos_frame_array = 160 }
+	add_to_array = { USA_house_x_pos_frame_array = 425 }
+	add_to_array = { USA_house_y_pos_frame_array = 107 }
+	add_to_array = { USA_house_x_pos_frame_array = 375 }
+	add_to_array = { USA_house_y_pos_frame_array = 147 }
+	add_to_array = { USA_house_x_pos_frame_array = 395 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 345 }
+	add_to_array = { USA_house_y_pos_frame_array = 172 }
+	add_to_array = { USA_house_x_pos_frame_array = 418 }
+	add_to_array = { USA_house_y_pos_frame_array = 119 }
+	add_to_array = { USA_house_x_pos_frame_array = 440 }
+	add_to_array = { USA_house_y_pos_frame_array = 106 }
+	add_to_array = { USA_house_x_pos_frame_array = 367 }
+	add_to_array = { USA_house_y_pos_frame_array = 159 }
+	add_to_array = { USA_house_x_pos_frame_array = 411 }
+	add_to_array = { USA_house_y_pos_frame_array = 132 }
+	add_to_array = { USA_house_x_pos_frame_array = 390 }
+	add_to_array = { USA_house_y_pos_frame_array = 146 }
+	add_to_array = { USA_house_x_pos_frame_array = 433 }
+	add_to_array = { USA_house_y_pos_frame_array = 119 }
+	add_to_array = { USA_house_x_pos_frame_array = 338 }
+	add_to_array = { USA_house_y_pos_frame_array = 185 }
+	add_to_array = { USA_house_x_pos_frame_array = 360 }
+	add_to_array = { USA_house_y_pos_frame_array = 172 }
+	add_to_array = { USA_house_x_pos_frame_array = 403 }
+	add_to_array = { USA_house_y_pos_frame_array = 144 }
+	add_to_array = { USA_house_x_pos_frame_array = 426 }
+	add_to_array = { USA_house_y_pos_frame_array = 131 }
+	add_to_array = { USA_house_x_pos_frame_array = 382 }
+	add_to_array = { USA_house_y_pos_frame_array = 159 }
+	add_to_array = { USA_house_x_pos_frame_array = 448 }
+	add_to_array = { USA_house_y_pos_frame_array = 118 }
+	add_to_array = { USA_house_x_pos_frame_array = 418 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 441 }
+	add_to_array = { USA_house_y_pos_frame_array = 131 }
+	add_to_array = { USA_house_x_pos_frame_array = 397 }
+	add_to_array = { USA_house_y_pos_frame_array = 158 }
+	add_to_array = { USA_house_x_pos_frame_array = 375 }
+	add_to_array = { USA_house_y_pos_frame_array = 171 }
+	add_to_array = { USA_house_x_pos_frame_array = 353 }
+	add_to_array = { USA_house_y_pos_frame_array = 184 }
+	add_to_array = { USA_house_x_pos_frame_array = 455 }
+	add_to_array = { USA_house_y_pos_frame_array = 130 }
+	add_to_array = { USA_house_x_pos_frame_array = 433 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 411 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 389 }
+	add_to_array = { USA_house_y_pos_frame_array = 171 }
+	add_to_array = { USA_house_x_pos_frame_array = 367 }
+	add_to_array = { USA_house_y_pos_frame_array = 184 }
+	add_to_array = { USA_house_x_pos_frame_array = 447 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 425 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 345 }
+	add_to_array = { USA_house_y_pos_frame_array = 197 }
+	add_to_array = { USA_house_x_pos_frame_array = 462 }
+	add_to_array = { USA_house_y_pos_frame_array = 143 }
+	add_to_array = { USA_house_x_pos_frame_array = 404 }
+	add_to_array = { USA_house_y_pos_frame_array = 170 }
+	add_to_array = { USA_house_x_pos_frame_array = 439 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 381 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 417 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 359 }
+	add_to_array = { USA_house_y_pos_frame_array = 197 }
+	add_to_array = { USA_house_x_pos_frame_array = 453 }
+	add_to_array = { USA_house_y_pos_frame_array = 156 }
+	add_to_array = { USA_house_x_pos_frame_array = 395 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 431 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 467 }
+	add_to_array = { USA_house_y_pos_frame_array = 155 }
+	add_to_array = { USA_house_x_pos_frame_array = 373 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 445 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 409 }
+	add_to_array = { USA_house_y_pos_frame_array = 183 }
+	add_to_array = { USA_house_x_pos_frame_array = 459 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 422 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 386 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 350 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 472 }
+	add_to_array = { USA_house_y_pos_frame_array = 169 }
+	add_to_array = { USA_house_x_pos_frame_array = 436 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 400 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 449 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 364 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 414 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 463 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 427 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 476 }
+	add_to_array = { USA_house_y_pos_frame_array = 182 }
+	add_to_array = { USA_house_x_pos_frame_array = 377 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 440 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 391 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 453 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 404 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 467 }
+	add_to_array = { USA_house_y_pos_frame_array = 195 }
+	add_to_array = { USA_house_x_pos_frame_array = 480 }
+	add_to_array = { USA_house_y_pos_frame_array = 196 }
+	add_to_array = { USA_house_x_pos_frame_array = 417 }
+	add_to_array = { USA_house_y_pos_frame_array = 210 }
+	add_to_array = { USA_house_x_pos_frame_array = 354 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 430 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 367 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 443 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 456 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 380 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 469 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 393 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 482 }
+	add_to_array = { USA_house_y_pos_frame_array = 209 }
+	add_to_array = { USA_house_x_pos_frame_array = 406 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 419 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 432 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 445 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 458 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 471 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 484 }
+	add_to_array = { USA_house_y_pos_frame_array = 223 }
+	add_to_array = { USA_house_x_pos_frame_array = 356 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 369 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 382 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 395 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 408 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 421 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 434 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 446 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 459 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 472 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+	add_to_array = { USA_house_x_pos_frame_array = 485 }
+	add_to_array = { USA_house_y_pos_frame_array = 237 }
+
+
+	# SENATE
+	add_to_array = { USA_senate_x_pos_frame_array = 0 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 15 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 30 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 44 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 59 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 74 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 3 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 18 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 33 }
+	add_to_array = { USA_senate_y_pos_frame_array = 107 }
+	add_to_array = { USA_senate_x_pos_frame_array = 48 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 7 }
+	add_to_array = { USA_senate_y_pos_frame_array = 89 }
+	add_to_array = { USA_senate_x_pos_frame_array = 64 }
+	add_to_array = { USA_senate_y_pos_frame_array = 108 }
+	add_to_array = { USA_senate_x_pos_frame_array = 23 }
+	add_to_array = { USA_senate_y_pos_frame_array = 89 }
+	add_to_array = { USA_senate_x_pos_frame_array = 39 }
+	add_to_array = { USA_senate_y_pos_frame_array = 91 }
+	add_to_array = { USA_senate_x_pos_frame_array = 79 }
+	add_to_array = { USA_senate_y_pos_frame_array = 109 }
+	add_to_array = { USA_senate_x_pos_frame_array = 14 }
+	add_to_array = { USA_senate_y_pos_frame_array = 73 }
+	add_to_array = { USA_senate_x_pos_frame_array = 56 }
+	add_to_array = { USA_senate_y_pos_frame_array = 90 }
+	add_to_array = { USA_senate_x_pos_frame_array = 32 }
+	add_to_array = { USA_senate_y_pos_frame_array = 73 }
+	add_to_array = { USA_senate_x_pos_frame_array = 72 }
+	add_to_array = { USA_senate_y_pos_frame_array = 93 }
+	add_to_array = { USA_senate_x_pos_frame_array = 48 }
+	add_to_array = { USA_senate_y_pos_frame_array = 76 }
+	add_to_array = { USA_senate_x_pos_frame_array = 24 }
+	add_to_array = { USA_senate_y_pos_frame_array = 59 }
+	add_to_array = { USA_senate_x_pos_frame_array = 42 }
+	add_to_array = { USA_senate_y_pos_frame_array = 59 }
+	add_to_array = { USA_senate_x_pos_frame_array = 88 }
+	add_to_array = { USA_senate_y_pos_frame_array = 96 }
+	add_to_array = { USA_senate_x_pos_frame_array = 66 }
+	add_to_array = { USA_senate_y_pos_frame_array = 76 }
+	add_to_array = { USA_senate_x_pos_frame_array = 35 }
+	add_to_array = { USA_senate_y_pos_frame_array = 45 }
+	add_to_array = { USA_senate_x_pos_frame_array = 59 }
+	add_to_array = { USA_senate_y_pos_frame_array = 63 }
+	add_to_array = { USA_senate_x_pos_frame_array = 83 }
+	add_to_array = { USA_senate_y_pos_frame_array = 81 }
+	add_to_array = { USA_senate_x_pos_frame_array = 55 }
+	add_to_array = { USA_senate_y_pos_frame_array = 46 }
+	add_to_array = { USA_senate_x_pos_frame_array = 48 }
+	add_to_array = { USA_senate_y_pos_frame_array = 33 }
+	add_to_array = { USA_senate_x_pos_frame_array = 79 }
+	add_to_array = { USA_senate_y_pos_frame_array = 65 }
+	add_to_array = { USA_senate_x_pos_frame_array = 72 }
+	add_to_array = { USA_senate_y_pos_frame_array = 52 }
+	add_to_array = { USA_senate_x_pos_frame_array = 99 }
+	add_to_array = { USA_senate_y_pos_frame_array = 87 }
+	add_to_array = { USA_senate_x_pos_frame_array = 69 }
+	add_to_array = { USA_senate_y_pos_frame_array = 36 }
+	add_to_array = { USA_senate_x_pos_frame_array = 62 }
+	add_to_array = { USA_senate_y_pos_frame_array = 23 }
+	add_to_array = { USA_senate_x_pos_frame_array = 96 }
+	add_to_array = { USA_senate_y_pos_frame_array = 71 }
+	add_to_array = { USA_senate_x_pos_frame_array = 87 }
+	add_to_array = { USA_senate_y_pos_frame_array = 43 }
+	add_to_array = { USA_senate_x_pos_frame_array = 94 }
+	add_to_array = { USA_senate_y_pos_frame_array = 56 }
+	add_to_array = { USA_senate_x_pos_frame_array = 77 }
+	add_to_array = { USA_senate_y_pos_frame_array = 15 }
+	add_to_array = { USA_senate_x_pos_frame_array = 85 }
+	add_to_array = { USA_senate_y_pos_frame_array = 28 }
+	add_to_array = { USA_senate_x_pos_frame_array = 113 }
+	add_to_array = { USA_senate_y_pos_frame_array = 80 }
+	add_to_array = { USA_senate_x_pos_frame_array = 94 }
+	add_to_array = { USA_senate_y_pos_frame_array = 9 }
+	add_to_array = { USA_senate_x_pos_frame_array = 103 }
+	add_to_array = { USA_senate_y_pos_frame_array = 37 }
+	add_to_array = { USA_senate_x_pos_frame_array = 112 }
+	add_to_array = { USA_senate_y_pos_frame_array = 66 }
+	add_to_array = { USA_senate_x_pos_frame_array = 102 }
+	add_to_array = { USA_senate_y_pos_frame_array = 22 }
+	add_to_array = { USA_senate_x_pos_frame_array = 111 }
+	add_to_array = { USA_senate_y_pos_frame_array = 51 }
+	add_to_array = { USA_senate_x_pos_frame_array = 111 }
+	add_to_array = { USA_senate_y_pos_frame_array = 6 }
+	add_to_array = { USA_senate_x_pos_frame_array = 120 }
+	add_to_array = { USA_senate_y_pos_frame_array = 34 }
+	add_to_array = { USA_senate_x_pos_frame_array = 120 }
+	add_to_array = { USA_senate_y_pos_frame_array = 20 }
+	add_to_array = { USA_senate_x_pos_frame_array = 128 }
+	add_to_array = { USA_senate_y_pos_frame_array = 5 }
+	add_to_array = { USA_senate_x_pos_frame_array = 128 }
+	add_to_array = { USA_senate_y_pos_frame_array = 78 }
+	add_to_array = { USA_senate_x_pos_frame_array = 128 }
+	add_to_array = { USA_senate_y_pos_frame_array = 64 }
+	add_to_array = { USA_senate_x_pos_frame_array = 128 }
+	add_to_array = { USA_senate_y_pos_frame_array = 49 }
+	add_to_array = { USA_senate_x_pos_frame_array = 137 }
+	add_to_array = { USA_senate_y_pos_frame_array = 20 }
+	add_to_array = { USA_senate_x_pos_frame_array = 137 }
+	add_to_array = { USA_senate_y_pos_frame_array = 34 }
+	add_to_array = { USA_senate_x_pos_frame_array = 146 }
+	add_to_array = { USA_senate_y_pos_frame_array = 6 }
+	add_to_array = { USA_senate_x_pos_frame_array = 146 }
+	add_to_array = { USA_senate_y_pos_frame_array = 51 }
+	add_to_array = { USA_senate_x_pos_frame_array = 155 }
+	add_to_array = { USA_senate_y_pos_frame_array = 22 }
+	add_to_array = { USA_senate_x_pos_frame_array = 145 }
+	add_to_array = { USA_senate_y_pos_frame_array = 66 }
+	add_to_array = { USA_senate_x_pos_frame_array = 154 }
+	add_to_array = { USA_senate_y_pos_frame_array = 37 }
+	add_to_array = { USA_senate_x_pos_frame_array = 163 }
+	add_to_array = { USA_senate_y_pos_frame_array = 9 }
+	add_to_array = { USA_senate_x_pos_frame_array = 144 }
+	add_to_array = { USA_senate_y_pos_frame_array = 80 }
+	add_to_array = { USA_senate_x_pos_frame_array = 172 }
+	add_to_array = { USA_senate_y_pos_frame_array = 28 }
+	add_to_array = { USA_senate_x_pos_frame_array = 180 }
+	add_to_array = { USA_senate_y_pos_frame_array = 15 }
+	add_to_array = { USA_senate_x_pos_frame_array = 163 }
+	add_to_array = { USA_senate_y_pos_frame_array = 56 }
+	add_to_array = { USA_senate_x_pos_frame_array = 170 }
+	add_to_array = { USA_senate_y_pos_frame_array = 43 }
+	add_to_array = { USA_senate_x_pos_frame_array = 161 }
+	add_to_array = { USA_senate_y_pos_frame_array = 71 }
+	add_to_array = { USA_senate_x_pos_frame_array = 195 }
+	add_to_array = { USA_senate_y_pos_frame_array = 23 }
+	add_to_array = { USA_senate_x_pos_frame_array = 188 }
+	add_to_array = { USA_senate_y_pos_frame_array = 36 }
+	add_to_array = { USA_senate_x_pos_frame_array = 158 }
+	add_to_array = { USA_senate_y_pos_frame_array = 87 }
+	add_to_array = { USA_senate_x_pos_frame_array = 185 }
+	add_to_array = { USA_senate_y_pos_frame_array = 52 }
+	add_to_array = { USA_senate_x_pos_frame_array = 178 }
+	add_to_array = { USA_senate_y_pos_frame_array = 65 }
+	add_to_array = { USA_senate_x_pos_frame_array = 209 }
+	add_to_array = { USA_senate_y_pos_frame_array = 33 }
+	add_to_array = { USA_senate_x_pos_frame_array = 202 }
+	add_to_array = { USA_senate_y_pos_frame_array = 46 }
+	add_to_array = { USA_senate_x_pos_frame_array = 174 }
+	add_to_array = { USA_senate_y_pos_frame_array = 81 }
+	add_to_array = { USA_senate_x_pos_frame_array = 198 }
+	add_to_array = { USA_senate_y_pos_frame_array = 63 }
+	add_to_array = { USA_senate_x_pos_frame_array = 222 }
+	add_to_array = { USA_senate_y_pos_frame_array = 45 }
+	add_to_array = { USA_senate_x_pos_frame_array = 191 }
+	add_to_array = { USA_senate_y_pos_frame_array = 76 }
+	add_to_array = { USA_senate_x_pos_frame_array = 169 }
+	add_to_array = { USA_senate_y_pos_frame_array = 96 }
+	add_to_array = { USA_senate_x_pos_frame_array = 215 }
+	add_to_array = { USA_senate_y_pos_frame_array = 59 }
+	add_to_array = { USA_senate_x_pos_frame_array = 233 }
+	add_to_array = { USA_senate_y_pos_frame_array = 59 }
+	add_to_array = { USA_senate_x_pos_frame_array = 209 }
+	add_to_array = { USA_senate_y_pos_frame_array = 76 }
+	add_to_array = { USA_senate_x_pos_frame_array = 185 }
+	add_to_array = { USA_senate_y_pos_frame_array = 93 }
+	add_to_array = { USA_senate_x_pos_frame_array = 225 }
+	add_to_array = { USA_senate_y_pos_frame_array = 73 }
+	add_to_array = { USA_senate_x_pos_frame_array = 201 }
+	add_to_array = { USA_senate_y_pos_frame_array = 90 }
+	add_to_array = { USA_senate_x_pos_frame_array = 243 }
+	add_to_array = { USA_senate_y_pos_frame_array = 73 }
+	add_to_array = { USA_senate_x_pos_frame_array = 178 }
+	add_to_array = { USA_senate_y_pos_frame_array = 109 }
+	add_to_array = { USA_senate_x_pos_frame_array = 218 }
+	add_to_array = { USA_senate_y_pos_frame_array = 91 }
+	add_to_array = { USA_senate_x_pos_frame_array = 234 }
+	add_to_array = { USA_senate_y_pos_frame_array = 89 }
+	add_to_array = { USA_senate_x_pos_frame_array = 193 }
+	add_to_array = { USA_senate_y_pos_frame_array = 108 }
+	add_to_array = { USA_senate_x_pos_frame_array = 250 }
+	add_to_array = { USA_senate_y_pos_frame_array = 89 }
+	add_to_array = { USA_senate_x_pos_frame_array = 209 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 224 }
+	add_to_array = { USA_senate_y_pos_frame_array = 107 }
+	add_to_array = { USA_senate_x_pos_frame_array = 239 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 254 }
+	add_to_array = { USA_senate_y_pos_frame_array = 106 }
+	add_to_array = { USA_senate_x_pos_frame_array = 183 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 198 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 213 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 227 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 242 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+	add_to_array = { USA_senate_x_pos_frame_array = 257 }
+	add_to_array = { USA_senate_y_pos_frame_array = 124 }
+}
+
+# USA CONGRESS COLOR CODE:
+# DEMOCRAT (4), REPUBLICAN (6), INDEPENDENT (5), LIBERAL (7), GREEN (2), FASCIST (10), NATIONALIST (9), BIMETALLISM (8), LEFT POPULISM (1), SOCIAL LIBERAL (3), INDEPENDENT 2 (FILLER IDEOLOGY) (11)
+USA_house_setup = { # 435 seats
+	set_temp_variable = { total = USA_democrat_house_popularity }
+	add_to_temp_variable = { total = USA_republican_house_popularity }
+	add_to_temp_variable = { total = USA_independent_house_popularity }
+	add_to_temp_variable = { total = USA_liberal_house_popularity }
+	add_to_temp_variable = { total = USA_green_house_popularity }
+	add_to_temp_variable = { total = USA_fascist_house_popularity }
+	add_to_temp_variable = { total = USA_nationalist_house_popularity }
+	add_to_temp_variable = { total = USA_bimetallism_house_popularity }
+	add_to_temp_variable = { total = USA_left_populism_house_popularity }
+	add_to_temp_variable = { total = USA_social_liberal_house_popularity }
+	divide_variable = { USA_democrat_house_popularity = total }
+	divide_variable = { USA_republican_house_popularity = total }
+	divide_variable = { USA_independent_house_popularity = total }
+	divide_variable = { USA_liberal_house_popularity = total }
+	divide_variable = { USA_green_house_popularity = total }
+	divide_variable = { USA_fascist_house_popularity = total }
+	divide_variable = { USA_nationalist_house_popularity = total }
+	divide_variable = { USA_bimetallism_house_popularity = total }
+	divide_variable = { USA_left_populism_house_popularity = total }
+	divide_variable = { USA_social_liberal_house_popularity = total }
+
+	multiply_variable = { USA_democrat_house_popularity = 435 }
+	multiply_variable = { USA_republican_house_popularity = 435 }
+	multiply_variable = { USA_independent_house_popularity = 435 }
+	multiply_variable = { USA_liberal_house_popularity = 435 }
+	multiply_variable = { USA_green_house_popularity = 435 }
+	multiply_variable = { USA_fascist_house_popularity = 435 }
+	multiply_variable = { USA_nationalist_house_popularity = 435 }
+	multiply_variable = { USA_bimetallism_house_popularity = 435 }
+	multiply_variable = { USA_left_populism_house_popularity = 435 }
+	multiply_variable = { USA_social_liberal_house_popularity = 435 }
+	round_variable = USA_democrat_house_popularity
+	round_variable = USA_republican_house_popularity
+	round_variable = USA_independent_house_popularity
+	round_variable = USA_liberal_house_popularity
+	round_variable = USA_green_house_popularity
+	round_variable = USA_fascist_house_popularity
+	round_variable = USA_nationalist_house_popularity
+	round_variable = USA_bimetallism_house_popularity
+	round_variable = USA_left_populism_house_popularity
+	round_variable = USA_social_liberal_house_popularity
+
+	set_variable = { USA_independent2_house_popularity = 435 }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_democrat_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_republican_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_independent_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_liberal_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_green_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_fascist_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_nationalist_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_bimetallism_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_left_populism_house_popularity }
+	subtract_from_variable = { USA_independent2_house_popularity = USA_social_liberal_house_popularity }
+
+	set_temp_variable = { t1 = USA_left_populism_house_popularity }
+	set_temp_variable = { t2 = USA_green_house_popularity }
+	set_temp_variable = { t3 = USA_social_liberal_house_popularity }
+	set_temp_variable = { t4 = USA_democrat_house_popularity }
+	set_temp_variable = { t5 = USA_independent_house_popularity }
+	set_temp_variable = { t6 = USA_republican_house_popularity }
+	set_temp_variable = { t7 = USA_liberal_house_popularity }
+	set_temp_variable = { t8 = USA_bimetallism_house_popularity }
+	set_temp_variable = { t9 = USA_nationalist_house_popularity }
+	set_temp_variable = { t10 = USA_fascist_house_popularity }
+	set_temp_variable = { t11 = 435 }
+
+	add_to_temp_variable = { t2 = t1 }
+	add_to_temp_variable = { t3 = t2 }
+	add_to_temp_variable = { t4 = t3 }
+	add_to_temp_variable = { t5 = t4 }
+	add_to_temp_variable = { t6 = t5 }
+	add_to_temp_variable = { t7 = t6 }
+	add_to_temp_variable = { t8 = t7 }
+	add_to_temp_variable = { t9 = t8 }
+	add_to_temp_variable = { t10 = t9 }
+
+	clear_array = USA_house_frame_array
+
+	resize_array = {
+		array = USA_house_frame_array
+		value = 1
+		size = t1
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 2
+		size = t2
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 3
+		size = t3
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 4
+		size = t4
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 5
+		size = t5
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 6
+		size = t6
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 7
+		size = t7
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 8
+		size = t8
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 9
+		size = t9
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 10
+		size = t10
+	}
+	resize_array = {
+		array = USA_house_frame_array
+		value = 11
+		size = t11
+	}
+}
+
+USA_house_active_parties = {
+	if = {
+		limit = {
+			check_variable = { USA_left_populism_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 1 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_green_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 2 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_social_liberal_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 3 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_democrat_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 4 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_independent_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 5 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_republican_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 6 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_liberal_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 7 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_bimetallism_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 8 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_nationalist_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 9 }
+	}
+	if = {
+		limit = {
+			check_variable = { USA_fascist_house_popularity > 0 }
+		}
+		add_to_array = { USA_house_parties_array = 10 }
+	}
+}
+
+USA_senate_setup = { # 100 seats
+	set_temp_variable = { total = USA_democrat_senate_popularity }
+	add_to_temp_variable = { total = USA_republican_senate_popularity }
+	add_to_temp_variable = { total = USA_independent_senate_popularity }
+	add_to_temp_variable = { total = USA_liberal_senate_popularity }
+	add_to_temp_variable = { total = USA_green_senate_popularity }
+	add_to_temp_variable = { total = USA_fascist_senate_popularity }
+	add_to_temp_variable = { total = USA_nationalist_senate_popularity }
+	add_to_temp_variable = { total = USA_bimetallism_senate_popularity }
+	add_to_temp_variable = { total = USA_left_populism_senate_popularity }
+	add_to_temp_variable = { total = USA_social_liberal_senate_popularity }
+	divide_variable = { USA_democrat_senate_popularity = total }
+	divide_variable = { USA_republican_senate_popularity = total }
+	divide_variable = { USA_independent_senate_popularity = total }
+	divide_variable = { USA_liberal_senate_popularity = total }
+	divide_variable = { USA_green_senate_popularity = total }
+	divide_variable = { USA_fascist_senate_popularity = total }
+	divide_variable = { USA_nationalist_senate_popularity = total }
+	divide_variable = { USA_bimetallism_senate_popularity = total }
+	divide_variable = { USA_left_populism_senate_popularity = total }
+	divide_variable = { USA_social_liberal_senate_popularity = total }
+
+	multiply_variable = { USA_democrat_senate_popularity = 100 }
+	multiply_variable = { USA_republican_senate_popularity = 100 }
+	multiply_variable = { USA_independent_senate_popularity = 100 }
+	multiply_variable = { USA_liberal_senate_popularity = 100 }
+	multiply_variable = { USA_green_senate_popularity = 100 }
+	multiply_variable = { USA_fascist_senate_popularity = 100 }
+	multiply_variable = { USA_nationalist_senate_popularity = 100 }
+	multiply_variable = { USA_bimetallism_senate_popularity = 100 }
+	multiply_variable = { USA_left_populism_senate_popularity = 100 }
+	multiply_variable = { USA_social_liberal_senate_popularity = 100 }
+	round_variable = USA_democrat_senate_popularity
+	round_variable = USA_republican_senate_popularity
+	round_variable = USA_independent_senate_popularity
+	round_variable = USA_liberal_senate_popularity
+	round_variable = USA_green_senate_popularity
+	round_variable = USA_fascist_senate_popularity
+	round_variable = USA_nationalist_senate_popularity
+	round_variable = USA_bimetallism_senate_popularity
+	round_variable = USA_left_populism_senate_popularity
+	round_variable = USA_social_liberal_senate_popularity
+
+	set_variable = { USA_independent2_senate_popularity = 100 }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_democrat_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_republican_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_independent_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_liberal_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_green_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_fascist_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_nationalist_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_bimetallism_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_left_populism_senate_popularity }
+	subtract_from_variable = { USA_independent2_senate_popularity = USA_social_liberal_senate_popularity }
+
+	set_temp_variable = { t1 = USA_left_populism_senate_popularity }
+	set_temp_variable = { t2 = USA_green_senate_popularity }
+	set_temp_variable = { t3 = USA_social_liberal_senate_popularity }
+	set_temp_variable = { t4 = USA_democrat_senate_popularity }
+	set_temp_variable = { t5 = USA_independent_senate_popularity }
+	set_temp_variable = { t6 = USA_republican_senate_popularity }
+	set_temp_variable = { t7 = USA_liberal_senate_popularity }
+	set_temp_variable = { t8 = USA_bimetallism_senate_popularity }
+	set_temp_variable = { t9 = USA_nationalist_senate_popularity }
+	set_temp_variable = { t10 = USA_fascist_senate_popularity }
+	set_temp_variable = { t11 = 100 }
+
+	add_to_temp_variable = { t2 = t1 }
+	add_to_temp_variable = { t3 = t2 }
+	add_to_temp_variable = { t4 = t3 }
+	add_to_temp_variable = { t5 = t4 }
+	add_to_temp_variable = { t6 = t5 }
+	add_to_temp_variable = { t7 = t6 }
+	add_to_temp_variable = { t8 = t7 }
+	add_to_temp_variable = { t9 = t8 }
+	add_to_temp_variable = { t10 = t9 }
+
+	clear_array = USA_senate_frame_array
+
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 1
+		size = t1
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 2
+		size = t2
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 3
+		size = t3
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 4
+		size = t4
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 5
+		size = t5
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 6
+		size = t6
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 7
+		size = t7
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 8
+		size = t8
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 9
+		size = t9
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 10
+		size = t10
+	}
+	resize_array = {
+		array = USA_senate_frame_array
+		value = 11
+		size = t11
+	}
+}
+
+USA_clear_house_popularity = {
+	clear_variable = USA_democrat_house_popularity
+	clear_variable = USA_republican_house_popularity
+	clear_variable = USA_independent_house_popularity
+	clear_variable = USA_liberal_house_popularity
+	clear_variable = USA_green_house_popularity
+	clear_variable = USA_fascist_house_popularity
+	clear_variable = USA_nationalist_house_popularity
+	clear_variable = USA_bimetallism_house_popularity
+	clear_variable = USA_left_populism_house_popularity
+	clear_variable = USA_social_liberal_house_popularity
+}
+
+USA_clear_senate_popularity = {
+	clear_variable = USA_democrat_senate_popularity
+	clear_variable = USA_republican_senate_popularity
+	clear_variable = USA_independent_senate_popularity
+	clear_variable = USA_liberal_senate_popularity
+	clear_variable = USA_green_senate_popularity
+	clear_variable = USA_fascist_senate_popularity
+	clear_variable = USA_nationalist_senate_popularity
+	clear_variable = USA_bimetallism_senate_popularity
+	clear_variable = USA_left_populism_senate_popularity
+	clear_variable = USA_social_liberal_senate_popularity
+}
+
+USA_set_1900_popularities = {
+	set_variable = { USA_democrat_senate_popularity = 28.4 }
+	set_variable = { USA_republican_senate_popularity = 60.2 }
+	set_variable = { USA_independent_senate_popularity = 0 }
+	set_variable = { USA_liberal_senate_popularity = 0 }
+	set_variable = { USA_green_senate_popularity = 0 }
+	set_variable = { USA_fascist_senate_popularity = 0 }
+	set_variable = { USA_nationalist_senate_popularity = 0 }
+	set_variable = { USA_bimetallism_senate_popularity = 5.7 }
+	set_variable = { USA_left_populism_senate_popularity = 5.7 }
+	set_variable = { USA_social_liberal_senate_popularity = 0 }
+
+	set_variable = { USA_democrat_house_popularity = 44.8 }
+	set_variable = { USA_republican_house_popularity = 52.7 }
+	set_variable = { USA_independent_house_popularity = 0 }
+	set_variable = { USA_liberal_house_popularity = 0 }
+	set_variable = { USA_green_house_popularity = 0 }
+	set_variable = { USA_fascist_house_popularity = 0 }
+	set_variable = { USA_nationalist_house_popularity = 0 }
+	set_variable = { USA_bimetallism_house_popularity = 0.8 }
+	set_variable = { USA_left_populism_house_popularity = 1.7 }
+	set_variable = { USA_social_liberal_house_popularity = 0 }
+}
