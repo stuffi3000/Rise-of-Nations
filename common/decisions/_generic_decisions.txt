@@ -1082,7 +1082,7 @@ SOV = {
 		icon = generic_research
 
 		allowed = {
-			always = yes
+			always = no
 		}
 
 		available = {
@@ -1093,17 +1093,17 @@ SOV = {
 		}
 
 		target_root_trigger = {
-            has_tech = atomic_research
-            NOT = { has_global_flag = first_nuke_dropped }
-            NOT = { has_idea = race_for_the_bomb }
+			has_tech = atomic_research
+			NOT = { has_global_flag = first_nuke_dropped }
+			NOT = { has_idea = race_for_the_bomb }
 		}
 
 		#If this trigger matches a country.
 		target_trigger = {
 			#Target is FROM
 			FROM = {
-        		NOT = { is_in_faction_with = ROOT }
-				is_special_project_completed = sp:sp_nuclear_reactor
+				NOT = { is_in_faction_with = ROOT }
+				has_tech = nuclear_reactor
 				any_owned_state = {
 					nuclear_reactor > 0
 				}
@@ -1111,13 +1111,13 @@ SOV = {
 		}
 
 		visible = {
-            #Target is FROM
-            has_tech = atomic_research
-            NOT = { has_global_flag = first_nuke_dropped }
-            NOT = { has_idea = race_for_the_bomb }
-            FROM = {
-        		NOT = { is_in_faction_with = ROOT }
-				is_special_project_completed = sp:sp_nuclear_reactor
+			#Target is FROM
+			has_tech = atomic_research
+			NOT = { has_global_flag = first_nuke_dropped }
+			NOT = { has_idea = race_for_the_bomb }
+			FROM = {
+				NOT = { is_in_faction_with = ROOT }
+				has_tech = nuclear_reactor
 				any_owned_state = {
 					nuclear_reactor > 0
 				}
@@ -1133,7 +1133,7 @@ SOV = {
 			factor = 1
 			modifier = {
 				factor = 0
-				any_other_country = { is_special_project_completed = sp:sp_nuclear_bomb }
+				any_other_country = { has_tech = nukes }
 			}
 		}
 	}
@@ -1141,17 +1141,9 @@ SOV = {
 	improved_worker_conditions = {
 
 		icon = generic_industry
-		priority = 10
+
 		available = {
 			has_stability < 1.0
-			if = {
-				limit = {
-					tag = SPR
-				}
-				NOT = {
-					has_idea = SPR_political_violence
-				}
-			}
 		}
 
 		visible = {
@@ -1162,7 +1154,7 @@ SOV = {
 
 		modifier = {
 			stability_weekly = 0.005
-			consumer_goods_factor = 0.10
+			consumer_goods_factor = 0.05
 			industrial_capacity_factory = -0.1
 		}
 
@@ -1177,31 +1169,31 @@ SOV = {
 
 		ai_will_do = {
 			base = 0
-			modifier = {
-				add = 1
-				has_stability < 0.6
-				has_political_power > 155 #Spend on other things first
-			}
-			modifier = {
-				factor = 0
-				original_tag = SPR
-				NOT = { has_global_flag = spanish_civil_war }
-			}
-			modifier = {
-				factor = 0 
-				tag = GER
-				has_completed_focus = GER_arrest_hitler
-				NOT = { 
-					OR = {
-						has_completed_focus = GER_eliminate_facist_resistance 
-						has_completed_focus = GER_roter_morgen
-					}
-				}
-			}
+
 			modifier = {
 				add = 1000
-				has_stability < 0.76
-				original_tag = SWE
+
+				OR = {
+					has_stability < 0.7
+
+					AND = { has_stability < 0.8 NOT = { has_available_idea_with_traits = { idea = popular_figurehead limit = 1 } } }
+				}
+			}
+
+			modifier = {
+				factor = 0
+
+				has_available_idea_with_traits = { idea = military_theorist limit = 1 }
+				NOT = { has_idea_with_trait = military_theorist }
+			}
+
+			modifier = {
+				factor = 0
+
+				NOT = { is_major  = yes }
+
+				has_available_idea_with_traits = { idea = silent_workhorse limit = 1 }
+				NOT = { has_idea_with_trait = silent_workhorse }
 			}
 		}
 	}
@@ -1214,10 +1206,6 @@ SOV = {
 			has_war = no
 			has_war_support > 0.2
 			has_stability < 1.0
-			OR = {
-			check_variable = { ROOT.Coalition = 65 }	
-			is_ai = yes
-			}					
 		}
 
 		visible = {
@@ -1283,7 +1271,7 @@ economy_decisions = {
 		icon = generic_construction
 
 		allowed = {
-			NOT = { OR = { original_tag = GER original_tag = FRA } }
+			NOT = { OR = { tag = GER tag = FRA } }
 		}
 
 		cost = 50
@@ -1351,114 +1339,25 @@ economy_decisions = {
 					}
 				}
 			}
-			if = {
-				limit = {
-					has_idea = FRA_protected_by_the_maginot_line
-				}
-				remove_ideas = FRA_protected_by_the_maginot_line
-			}
 		}
 	}
-
-	restructure_supply_system = { #one time boost to get a few cheap supply hubs
-
-		icon = GFX_decision_generic_construction
-
-		visible = { 
-			OR = {
-				is_major = no
-				AND = {
-					is_faction_leader = yes
-					num_of_factories < 51 #would be a minor if it wasn't for faction leader status
-				}
-			}
-		}
-		fire_only_once = yes
-
-		days_remove = 120
-
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				num_of_factories < 30
-				factor = 0
-			}
-		}
-
-		modifier = {
-			production_speed_supply_node_factor = 3
-		}
-
-		complete_effect = {
-			set_variable = { node_goal = num_of_supply_nodes }
-			add_to_variable = { node_goal = 3 } #maximum 3 additional nodes
-		}
-
-		cancel_trigger = {
-			
-			 check_variable = { node_goal < num_of_supply_nodes } #if the number of supply nodes exceeds the old number by +3, immediately cancel
-		}
-	}
-	seize_some_trains_woo = { #repeating train seize
-
-		icon = GFX_decision_hol_draw_up_staff_plans	
-
-		visible = { 
-			num_of_factories < 60
-		}
-		
-		available = {
-			has_equipment = { train_equipment < 101 }
-			has_tech = basic_train
-		}
-		
-		days_remove = 180
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 1
-				has_stability > 0.74
-				NOT = {
-					original_tag = SWE
-					has_idea = SWE_hungershield
-				}
-			}
-		}
-
-		complete_effect = {
-			add_equipment_to_stockpile = {
-				type = train_equipment
-				amount = 15
-			}
-			add_stability = -0.05
-		}
-	}			
 }
-
 
 propaganda_efforts = {
 
-	war_propaganda = { 
+	war_propaganda = {
 
 		icon = generic_prepare_civil_war
 
 		available = {
 			NOT = { has_country_flag = war_propaganda_campaign_running }
+			threat > 0.5
 			has_war_support < 0.5
+			has_offensive_war = no
 		}
 
 		visible = {
-			OR = {
-				has_war_with_non_exiled_country = yes  
-				any_neighbor_country = {
-					AND = {
-						NOT = { has_government = ROOT }
-						has_offensive_war = yes
-						has_added_tension_amount > 10
-					}
-				}
-			}
+
 		}
 
 		fire_only_once = no
@@ -1469,7 +1368,7 @@ propaganda_efforts = {
 		cost = 150
 
 		modifier = {
-			war_support_weekly = 0.005
+			war_support_weekly = 0.01
 		}
 
 		complete_effect = {
@@ -1482,281 +1381,57 @@ propaganda_efforts = {
 		ai_will_do = {
 			base = 0
 			modifier = {
-				add = 1
-				has_war_support < 0.4
-				has_war = yes
-			}
-		}
-	}
-	
-	war_propaganda_casualties = { 
+				add = 1000
 
-		icon = generic_prepare_civil_war
-
-		available = {
-			#NOT = { has_country_flag = war_propaganda_campaign_running }
-			has_casualties_war_support < 0
-		}
-
-		visible = {
-			# has_war = yes
-			has_war_with_non_exiled_country = yes
-		}
-
-		fire_only_once = no
-
-		days_remove = 180
-		
-		remove_trigger = {
-			has_war = no
-        }
-		
-		cost = 100
-
-		modifier = {
-			weekly_casualties_war_support = 0.006
-		}
-
-		#complete_effect = {
-		#	set_country_flag = war_propaganda_campaign_running
-		#}
-		#remove_effect = {
-		#	clr_country_flag = war_propaganda_campaign_running
-		#}
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 10 #AI should probably just choose this one for general purposes.
-				has_war = yes
-				has_war_support < 0.7
-			}
-			modifier = {
-				add = 20
-				has_war = yes
-				has_war_support < 0.5
-			}
-			modifier = {
-				add = 30
-				has_war = yes
-				has_war_support < 0.3
-			}
-			modifier = {
-				add = 201 #ie; consider prio idea
-				has_war = yes
-				has_casualties_war_support < -0.25
-			}
-			modifier = {
-				factor = 0
-				has_manpower < 100000
-				has_political_power < 250
 				OR = {
-					has_idea = volunteer_only
-					has_idea = limited_conscription
-					has_idea = extensive_conscription
+					# has low war support
+					AND = {
+						has_war_support < 0.5
+
+						OR = {
+							threat > 0.5
+							has_war = yes
+							has_country_flag = mobilize_army
+						}
+					}
+
+					# taking tot_economic_mobilisation is possible 
+					AND = {
+						NOT = { has_idea = tot_economic_mobilisation }
+						any_enemy_country = {
+							ic_ratio = {
+								tag = ROOT
+								ratio > 0.5
+							}
+						}
+					}
+
+					# doesnt have women_in_the_workforce but has tot_economic_mobilisation
+					AND = {
+						has_idea = tot_economic_mobilisation
+						NOT = { has_decision = women_in_the_workforce }
+					}
 				}
-			}
-		}
-	}
-	
-	war_propaganda_convoys = { 
 
-		icon = GFX_decision_generic_naval
-
-		available = {
-			#NOT = { has_country_flag = war_propaganda_campaign_running }
-			has_convoys_war_support < 0
-		}
-
-		visible = {
-			# has_war = yes
-			has_war_with_non_exiled_country = yes
-		}
-
-		fire_only_once = no
-
-		days_remove = 180
-		
-		remove_trigger = {
-			has_war = no
-        }
-		
-		cost = 100
-
-		modifier = {
-			weekly_convoys_war_support = 0.006
-		}
-
-		#complete_effect = {
-		#	set_country_flag = war_propaganda_campaign_running
-		#}
-		#remove_effect = {
-		#	clr_country_flag = war_propaganda_campaign_running
-		#}
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 201 #ie; consider prio idea
-				has_war = yes
-				has_convoys_war_support < -0.29
-			}
-			modifier = {
-				factor = 0
-				has_manpower < 100000
-				has_political_power < 250
-				OR = {
-					has_idea = volunteer_only
-					has_idea = limited_conscription
-					has_idea = extensive_conscription
+				# war support needed for total mobilization and women_in_the_workforce
+				NOT = {
+					AND = {
+						has_government = democratic
+						has_war_support > 0.79
+					}
+					AND = {
+						has_government = communism
+						has_war_support > 0.79
+					}
+					AND = {
+						has_government = fascism
+						has_war_support > 0.89
+					}
+					AND = {
+						has_government = neutrality
+						has_war_support > 0.84
+					}
 				}
-			}
-		}
-	}
-	
-	war_propaganda_bombing = { 
-
-		icon = GFX_decision_generic_air
-
-		available = {
-		#	NOT = { has_country_flag = war_propaganda_campaign_running }
-			has_bombing_war_support < 0
-		}
-
-		visible = {
-			# has_war = yes
-			has_war_with_non_exiled_country = yes
-		}
-
-		fire_only_once = no
-
-		days_remove = 180
-		
-		remove_trigger = {
-			has_war = no
-        }
-		
-		cost = 100
-
-		modifier = {
-			weekly_bombing_war_support = 0.006
-		}
-
-		#complete_effect = {
-		#	set_country_flag = war_propaganda_campaign_running
-		#}
-		#remove_effect = {
-		#	clr_country_flag = war_propaganda_campaign_running
-		#}
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 10 #AI should probably just choose this one for general purposes.
-				has_war = yes
-				has_war_support < 0.65
-			}
-			modifier = {
-				add = 20
-				has_war = yes
-				has_war_support < 0.50
-			}
-			modifier = {
-				add = 30
-				has_war = yes
-				has_war_support < 0.35
-			}
-			modifier = {
-				add = 201 #ie; consider prio idea
-				has_war = yes
-				has_bombing_war_support < -0.20
-			}
-			modifier = {
-				factor = 0
-				has_manpower < 100000
-				has_political_power < 250
-				OR = {
-					has_idea = volunteer_only
-					has_idea = limited_conscription
-					has_idea = extensive_conscription
-				}
-			}
-		}
-	}
-
-	war_propaganda_radio_industry = { 
-
-		icon = generic_prepare_civil_war
-
-		available = {
-			threat > 0.25
-			has_tech = radio
-		}
-
-		visible = {
-		}
-
-		fire_only_once = yes
-
-		cost = 75
-
-		complete_effect = {
-			add_war_support = 0.05
-		}
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 201
-				has_war_support < 0.6
-			}
-		}
-	}
-	
-	war_propaganda_film_industry = { 
-
-		icon = generic_prepare_civil_war
-
-		available = { 
-			has_war_with_non_exiled_country = yes
-			OR = {
-				is_major = yes
-				any_allied_country = {
-					is_major = yes
-				}
-			}
-			if = {
-				limit = {
-					NOT = { has_government = fascism }
-				}
-				threat > 0.5
-			}
-			else = {
-				threat > 0.30
-			}
-		}
-
-		visible = {
-		}
-
-		fire_only_once = yes
-
-		cost = 100 
-
-		complete_effect = {
-			effect_tooltip = {
-				add_war_support = 0.10
-			}
-			hidden_effect = {
-				country_event = political.33
-			}
-		}
-
-		ai_will_do = {
-			base = 0
-			modifier = {
-				add = 201
-				has_war_support < 0.6
 			}
 		}
 	}
@@ -1768,10 +1443,6 @@ propaganda_efforts = {
 
 		available = {
 			NOT = { has_country_flag = war_propaganda_campaign_running }
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}					
 			FROM = {
 				OR = {
 					is_justifying_wargoal_against = ROOT
@@ -1875,10 +1546,6 @@ propaganda_efforts = {
 		icon = generic_prepare_civil_war
 
 		available = {
-				OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}		
 			NOT = { has_country_flag = war_propaganda_campaign_running }
 			FROM = {
 				OR = {
@@ -2553,10 +2220,6 @@ operations = {
 			has_dlc = "Waking the Tiger"
 		}
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}					
 			controls_state = 446
 			controls_state = 453
 			OR = {
@@ -2683,10 +2346,6 @@ operations = {
 
 		}
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}			
 			has_full_control_of_state = 685
 		}
 
@@ -2789,10 +2448,6 @@ special_projects = {
 			has_full_control_of_state = 446
 			has_full_control_of_state = 453
 			num_of_civilian_factories > 15
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}					
 		}
 
 		visible = {
@@ -2857,10 +2512,6 @@ special_projects = {
 		icon = GFX_decision_generic_special_project
 
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}			
 			has_full_control_of_state = 685
 			NOT = {
 				any_enemy_country = {
@@ -2924,10 +2575,6 @@ war_measures = {
 		icon = generic_industry
 
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}			
 			num_of_civilian_factories > 5 #Change this if amount of factories change
 		}
 
@@ -2956,10 +2603,6 @@ war_measures = {
 		icon = generic_industry
 
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}			
 			num_of_civilian_factories > 5 #Change this if amount of factories change
 		}
 
@@ -3036,13 +2679,6 @@ war_measures = {
 		}
 
 		available = {
-			NOT = {
-				has_country_flag = government_islamist
-			}			
-			OR = {
-			check_variable = { ROOT.Coalition = 55 }	
-			is_ai = yes
-			}					
 			has_war = yes
 			has_idea = tot_economic_mobilisation
 			OR = {
@@ -3110,10 +2746,6 @@ war_measures = {
 		}
 
 		available = {
-			OR = {
-			check_variable = { ROOT.Coalition = 45 }	
-			is_ai = yes
-			}					
 			has_war = yes
 			OR = {
 				AND = {
@@ -3220,126 +2852,7 @@ war_measures = {
 	}
 }
 generic_veteran_wounded = {
-	war_exhaustiom = {
-		days_mission_timeout = 100
-		is_good = no
-		priority = 100
-		fire_only_once = no
-		activation = {
-			has_war = yes
-		}
-		available = {
-			has_war = no
-		}	
-		timeout_effect = {	
-			add_war_support = -0.02
-			if = {
-				limit = {
-					is_ai = no
-				}
-				subtract_from_variable = {
-					var = ROOT.Coalition
-					value = 1
-				}
-				clamp_variable = {
-					var = FROM.Coalition
-					min = 0
-				}				
-			custom_effect_tooltip = "Our ruling coalition will experience a decline in popularity, while we gain support from capitulated nations. Each faction member will see a change in popularity: a loss of 10 from minor countries and a loss of 30 from major powers."
-			}
-			if = {
-				limit = {
-					is_faction_leader = yes
-					has_war_support < 1
-					has_global_flag = united_nations_created
-				}
-				every_country = {
-					limit = {
-						has_war_with = ROOT
-						NOT = {
-							is_in_faction_with = ROOT
-						}
-						is_faction_leader = yes
-						NOT = {
-							has_country_flag = denied_peace_decision_timer
-						}
-					}
-				country_event = { id = unsc.11 hours = 6 }
-				}
-			}
 
-			if ={
-				limit = {
-					is_ai = no
-						has_government = communism
-				check_variable = { ROOT.Coalition = 0 }						
-				}
-					add_popularity = {
-    					ideology = communism
-    					popularity = -0.3
-					}				
-hidden_effect ={
-				    break_coalition = yes
-					quickset_parliament = yes
-					
-			        set_country_flag = forming_government_1		
-}			}	
-			if ={
-				limit = {
-					is_ai = no
-					has_government = democratic
-				check_variable = { ROOT.Coalition = 0 }					
-				}
-					add_popularity = {
-    					ideology = democratic
-    					popularity = -0.3
-					}				
-hidden_effect ={
-				    break_coalition = yes
-					quickset_parliament = yes
-					
-
-			        set_country_flag = forming_government_1		
-}			}	
-			if ={
-				limit = {
-					is_ai = no
-					has_government = neutrality
-				check_variable = { ROOT.Coalition = 0 }					
-				}
-					add_popularity = {
-    					ideology = neutrality
-    					popularity = -0.3
-					}				
-hidden_effect ={
-				    break_coalition = yes
-					quickset_parliament = yes
-					
-
-			        set_country_flag = forming_government_1		
-}			}	
-			if ={
-				limit = {
-					is_ai = no
-					has_government = fascism
-					NOT = {
-						tag = USA
-					}
-				check_variable = { ROOT.Coalition = 0 }					
-				}
-					add_popularity = {
-    					ideology = fascism
-    					popularity = -0.3
-					}				
-hidden_effect ={
-				    break_coalition = yes
-					quickset_parliament = yes
-					
-			        set_country_flag = forming_government_1		
-}			}												
-		}
-
-	}
 	veterans_come_home = {
 		days_mission_timeout = 7
 		is_good = no
@@ -3353,7 +2866,12 @@ hidden_effect ={
 			has_war = yes
 		}	
 		timeout_effect = {
-
+			if = {
+				limit = {
+							check_variable = { ROOT.woundedsoldiers > 0 }
+				}
+			activate_mission = veterans_come_home
+			}
 # No Health Spending
 if = {
     limit = {

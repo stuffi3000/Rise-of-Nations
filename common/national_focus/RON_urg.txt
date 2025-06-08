@@ -1,0 +1,1643 @@
+focus_tree = {
+	id = uruguay_focus
+	
+	country = {
+		factor = 0
+		
+		modifier = {
+			add = 10
+			tag = URG
+			has_dlc = "Trial of Allegiance"
+		}
+	}
+ 
+	default = no
+
+	continuous_focus_position = { x = 50 y = 1500 }
+
+	initial_show_position = {
+		x = 10
+		y = 0
+	}
+
+	focus = {
+		id = URG_terras_dictatorship
+		available = {
+		}
+
+		icon = GFX_focus_generic_military_dictatorship
+		x = 10
+		y = 0
+		cost = 5
+
+		search_filters = { FOCUS_FILTER_HISTORICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = {
+				URG_terra_dictatorship
+			}
+		}
+	}
+
+	focus = {
+		id = URG_statism
+		available = {
+		}
+		prerequisite = { focus = URG_terras_dictatorship }
+		mutually_exclusive = { }
+		relative_position_id = URG_terras_dictatorship
+		icon = GFX_focus_por_concordat
+		x = 2
+		y = 1
+		cost = 5
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_statism
+			}
+		}
+	}
+
+	focus = {
+		id = URG_right_to_food_housing_and_health
+		available = {
+		}
+		prerequisite = { focus = URG_statism }
+		relative_position_id = URG_statism
+		mutually_exclusive = { }
+		icon = GFX_goal_generic_national_unity
+		x = 0
+		y = 1
+		cost = 10
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_stability = 0.05
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				prioritize = { 946 945 }
+				add_extra_state_shared_building_slots = 1
+				#increase_state_category = yes
+			}
+		}
+	}
+
+	focus = {
+		id = URG_womens_vote
+		available = {
+		}
+		prerequisite = { focus = URG_terras_dictatorship }
+		mutually_exclusive = { }
+		relative_position_id = URG_terras_dictatorship
+		icon = GFX_focus_generic_population_growth
+		x = 0
+		y = 1
+		cost = 5
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_stability = 0.08
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+		}
+	}
+
+	focus = {
+		id = URG_prohibition_of_usury
+		available = {
+		}
+		relative_position_id = URG_terras_dictatorship
+		prerequisite = { focus = URG_terras_dictatorship }
+		mutually_exclusive = { }
+		icon = GFX_focus_ITA_workers_unions
+		x = -2
+		y = 1
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_prohibition_of_usury
+			}
+		}
+	}
+
+
+	focus = {
+		id = URG_break_relations_with_the_ussr
+		available = {
+		}
+		prerequisite = { focus = URG_statism }
+		mutually_exclusive = { }
+		icon = GFX_goal_anti_comintern_pact
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = URG_statism
+		search_filters = {   FOCUS_FILTER_HISTORICAL}
+		completion_reward = {
+			add_fascist_influence = yes
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+				send_embargo = SOV
+				send_embargo = MON
+				send_embargo = TAN
+			}
+
+			SOV = {
+				add_opinion_modifier = {
+					target = PREV 
+					modifier = SWE_embargoed_us
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_tour_to_italy
+		available = {
+		}
+		prerequisite = { focus = URG_break_relations_with_the_ussr }
+		mutually_exclusive = { }
+		icon = GFX_focus_befriend_italy
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = URG_break_relations_with_the_ussr
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			if = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+
+				add_equipment_subsidy = {
+					cic = 500
+					equipment_type = light_tank_chassis
+					seller_tags = { GER ITA HUN ROM } 
+				}
+			}
+			add_fascist_influence = yes
+			if = {
+				limit = {
+					NOT = {
+						has_dlc = "No Step Back"
+					}
+				}
+				if = {
+					limit = {
+						not = {
+							#has_tech = gwtank
+						}
+					}
+				#	set_technology = { gwtank = 1 }
+				}
+
+				add_equipment_to_stockpile = { type = light_tank_equipment_1 amount = 100 producer = ITA }
+
+
+			}
+			else = {
+				if = {
+					limit = {
+						not = {
+							has_tech = gwtank_chassis
+						}
+					}
+					set_technology = { gwtank_chassis = 1 }
+				}
+
+				add_equipment_to_stockpile = { type = light_tank_chassis_1 amount = 100 producer = ITA variant_name = "Fiat 3000B" }
+			}
+
+		}
+		
+	}
+
+	focus = {
+		id = URG_recognize_francoist_spain
+		available = {
+		}
+		prerequisite = { focus = URG_break_relations_with_the_ussr }
+		mutually_exclusive = { }
+		bypass = {
+			any_other_country = {
+				original_tag = SPR
+				OR = {
+					has_government = communism
+					has_government = democratic
+				}
+
+				NOT = {
+					has_country_leader = {
+						ruling_only = yes # default = yes
+						character = SPA_francisco_franco # recommendedSPR_fr
+					}
+				}
+			}
+
+			has_global_flag = scw_over
+		}
+
+		icon = GFX_focus_spa_caudillo_of_spain
+		x = 4
+		y = 0
+		cost = 5
+		relative_position_id = URG_tour_to_italy
+		search_filters = { FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_spanish_volunteers
+			}
+			set_rule = { 
+
+				can_send_volunteers = yes # rule to use, e.g.  can_not_declare_war = yes
+			}
+			every_other_country = {
+				limit = {
+					original_tag = SPR
+					OR = {
+						has_government = fascism
+						OR = {
+							has_government = neutrality
+							#has_completed_focus = SPA_a_great_spain
+						}
+					}
+				}
+
+				add_political_power = 70
+				add_opinion_modifier = {
+					target = ROOT # target of the relation
+					modifier = DEN_deepening_partnership
+				}
+			}
+
+
+			if = {
+				limit ={
+					NOT = { has_idea = fascist_influence }
+				}
+				add_timed_idea = {
+				 	idea = fascist_influence
+				 	days = 45
+				 }
+			}
+		}
+	}
+
+	focus = {
+		id = URG_merge_falangist_movements
+		available = {
+		}
+		prerequisite = { focus = URG_recognize_francoist_spain }
+		mutually_exclusive = { }
+		icon = GFX_focus_spa_fuse_the_parties
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = URG_recognize_francoist_spain
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.025
+			}
+			add_ideas = {
+				URG_mandatory_pre_military_training
+			}
+
+			add_fascist_influence = yes
+		}
+	}
+
+	focus = {
+		id = URG_rincon_del_bonete_hydroelectric_power_station
+		available = {
+		}
+		prerequisite = { focus = URG_break_relations_with_the_ussr }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_hydroelectric_energy
+		x = 8
+		y = 1
+		cost = 10
+		relative_position_id = URG_break_relations_with_the_ussr
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+			add_ideas = {
+				idea_GUAY_electrification_of_the_country
+			}
+			add_fascist_influence = yes
+
+		}
+	}
+
+	focus = {
+		id = URG_allow_nazi_movements_among_german_uruguayan
+		available = {
+		}
+		prerequisite = { focus = URG_rincon_del_bonete_hydroelectric_power_station }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_reorient_production
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = URG_rincon_del_bonete_hydroelectric_power_station
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.05
+			}
+
+			random_core_state = {
+				limit = {
+					ROOT = { controls_state = PREV }
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+				prioritize = { 946 945 } #optional: to pick those states first if they fulfill the limit
+				
+			}
+
+			add_fascist_influence = yes
+		}
+	}
+
+	focus = {
+		id = URG_accion_revisionista_del_uruguay
+		available = {
+			NOT = {
+				has_completed_focus = URG_colorado_victory
+				has_completed_focus = URG_blanco_victory
+			}
+		}
+		prerequisite = { focus = URG_allow_nazi_movements_among_german_uruguayan focus = URG_merge_falangist_movements }
+		mutually_exclusive = { focus = URG_colorado_victory focus = URG_blanco_victory }
+		icon = GFX_focus_generic_fascist_troops
+		x = -1
+		y = 1
+		cost = 5
+		relative_position_id = URG_allow_nazi_movements_among_german_uruguayan
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_POLITICAL_CHARACTER }
+		mutually_exclusive = { focus = URG_colorado_victory focus = URG_blanco_victory }
+		completion_reward = {
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = URG_adolfo_agorio
+			
+
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = URG_teodomiro_varela_de_andrade
+
+			add_fascist_influence = yes
+		}
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				OR = {
+					has_game_rule = {
+						rule = URG_AI_BEHAVIOR
+						option = DEFAULT
+					}
+					has_game_rule = {
+						rule = URG_AI_BEHAVIOR
+						option = HISTORICAL
+					}
+				}
+				factor = 0
+			}
+		}
+	}
+
+	focus = {
+		id = URG_force_through_corporatism
+		available = {
+		}
+		prerequisite = { focus = URG_accion_revisionista_del_uruguay  }
+		mutually_exclusive = { }
+		icon = GFX_focus_ICE_state_corporatism
+		x = -2
+		y = 1
+		cost = 10
+		relative_position_id = URG_accion_revisionista_del_uruguay
+		search_filters = {  FOCUS_FILTER_STABILITY FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			add_stability = -0.08
+			add_ideas = idea_URG_corporatism
+		}
+	}
+
+	focus = {
+		id = URG_establish_the_german_uruguayan_cultural_center
+		available = {
+			#has_completed_focus = URG_tour_to_italy
+		}
+		relative_position_id = URG_accion_revisionista_del_uruguay
+		icon = GFX_goal_generic_political_pressure
+		prerequisite = { focus = URG_accion_revisionista_del_uruguay }
+		#mutually_exclusive = { focus = URG_colorado_victory focus = URG_blanco_victory focus = URG_refuse_to_step_down }
+		x = 0
+		y = 1
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_MANPOWER FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.15
+			}
+			add_war_support = 0.1
+			add_manpower = 14000
+		}
+	}
+
+	focus = {
+		id = URG_the_fuhrmann_plan
+		available = {
+		} 
+		prerequisite = { focus = URG_establish_the_german_uruguayan_cultural_center  }
+		available = { fascism > 0.5 }
+		mutually_exclusive = { }
+		icon = GFX_focus_hol_war_on_pacifism
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = URG_establish_the_german_uruguayan_cultural_center
+		search_filters = { FOCUS_FILTER_POLITICAL  }
+		completion_reward = {
+			set_politics = {
+				ruling_party = fascism
+				elections_allowed = no
+				#last_election = "YYYY.MM.DD"
+				#election_frequency = <months>
+				#long_name = <loc_string> # Optional
+				#name = <loc_string># Optional
+			}
+			if  ={
+				limit = {
+					has_dlc = "No Step Back"
+					NOT = { has_tech = gwtank_chassis }
+				}
+				set_technology = {
+					gwtank_chassis = 1
+					popup = no
+				}
+			}
+			else_if = {
+				limit = {
+				#	NOT = { has_tech = gwtank }
+					NOT = { has_dlc = "No Step Back" }
+				}
+			#	set_technology = {
+			#		gwtank = 1
+			#		popup = no
+			#	}
+			}
+
+			division_template = {
+				name = "German Militia Machine-Gunners"
+				priority = 2
+				regiments = {
+					infantry={ x=0 y=0 }
+					infantry={ x=0 y=1 }
+					infantry={ x=0 y=2 }
+					infantry={ x=1 y=0 }
+					infantry={ x=1 y=1 }
+					infantry={ x=1 y=2 }
+					infantry={ x=2 y=0 }
+					infantry={ x=2 y=1 }
+					infantry={ x=2 y=2 }
+				}
+			}
+
+			random_owned_controlled_state = {
+				prioritize = { 300 }
+				create_unit = {
+					division = "name = \"German Militia Machine-Gunners\" division_template = \"German Militia Machine-Gunners\" start_experience_factor = 0.1 start_equipment_factor = 0.6 start_manpower_factor = 1" 
+					owner = ROOT
+				}	
+			}
+
+			create_equipment_variant = {
+			    name = "German Tractor Tank"
+			    type = light_tank_chassis_0
+			    parent_version = 1
+			    modules = {
+					main_armament_slot=tank_small_cannon
+					engine_type_slot=tank_gasoline_engine
+					turret_type_slot=tank_light_one_man_tank_turret
+					suspension_type_slot=tank_wheeled_suspension
+					armor_type_slot=tank_riveted_armor
+			    }
+			    #upgrades = {
+			    #    tank_nsb_engine_upgrade = 0
+			    #    tank_nsb_armor_upgrade = 0
+			    #}
+			}
+
+
+
+			division_template = {
+				name = "Tractor Tanks"
+				priority = 2
+				regiments={
+					light_armor={ x=0 y=0 }
+					light_armor={ x=0 y=1 }
+					light_armor={ x=0 y=2 }
+					cavalry={ x=1 y=0 }
+					cavalry={ x=1 y=1 }
+				}
+			}
+			add_equipment_to_stockpile = { 
+				type = light_tank_chassis_0
+				amount = 700
+				producer = URG
+				variant_name = "German Tractor Tank" 
+			}
+
+			random_owned_controlled_state = {
+				prioritize = { 300 }
+				create_unit = {
+					division = "name = \"Tractor Tanks\" division_template = \"Tractor Tanks\" start_experience_factor = 0.1 start_equipment_factor = 1 start_manpower_factor = 0.9" 
+					owner = ROOT
+				}	
+				create_unit = {
+					division = "name = \"Tractor Tanks\" division_template = \"Tractor Tanks\" start_experience_factor = 0.1 start_equipment_factor = 1 start_manpower_factor = 0.7" 
+					owner = ROOT
+				}	
+				create_unit = {
+					division = "name = \"Tractor Tanks\" division_template = \"Tractor Tanks\" start_experience_factor = 0.1 start_equipment_factor = 1 start_manpower_factor = 0.2" 
+					owner = ROOT
+				}	
+								create_unit = {
+					division = "name = \"Tractor Tanks\" division_template = \"Tractor Tanks\" start_experience_factor = 0.1 start_equipment_factor = 1 start_manpower_factor = 0.1" 
+					owner = ROOT
+				}	
+			}
+
+			add_timed_idea = {
+			 	idea = political_turmoil
+			 	days = 365
+			 }
+
+			 if = {
+			 	limit = {
+			 		GER = {
+			 			has_government = fascism
+			 			exists = yes
+			 			has_capitulated = no
+			 			NOT = { is_in_faction_with = ROOT }
+			 		}
+			 	}
+			 	GER = {
+			 		country_event = {
+			 			id = generic.2
+			 			hours = 2 # optional - can take hours/days/months
+			 			random_hours = 2 # optional - can take hours/days/months
+			 		}
+			 	}
+			 }
+		}
+	}
+
+	#focus = {
+	#	id = URG_the_american_springboard
+	#	available = {
+	#	}
+	#	prerequisite = { focus = URG_the_fuhrmann_plan  }
+	#	mutually_exclusive = { }
+	#	icon = GFX_focus_generic_military_academy
+	#	x = 0
+	#	y = 1
+	#	cost = 5
+	#	relative_position_id = URG_the_fuhrmann_plan
+	#	search_filters = {  }
+	#	completion_reward = {
+	#				create_wargoal = {			
+				#expire = 100
+	#			type = annex_everything
+	#			target = BRA
+	#		}
+#
+#					create_wargoal = {			
+#				expire = 100
+#				type = annex_everything
+#				target = ARG
+#			}
+#		}
+#	}
+
+	focus = {
+		id = URG_food_for_the_warmachine
+		available = {
+		}
+		prerequisite = { focus = URG_the_fuhrmann_plan  }
+		mutually_exclusive = { }
+		icon = GFX_focus_SWE_rations
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = URG_the_fuhrmann_plan
+		search_filters = {  }
+		completion_reward = {
+			every_country = {
+				limit ={
+					is_in_faction_with = ROOT
+				}
+				add_ideas = idea_URG_food_for_the_warmachine
+			}
+			add_ideas = idea_URG_food_for_the_warmachine
+		}
+	}
+
+
+	focus = {
+
+		id = URG_revaluation_law
+		available = {
+		}
+
+		icon = GFX_focus_generic_court
+		relative_position_id = URG_prohibition_of_usury
+		prerequisite = { focus = URG_prohibition_of_usury }
+		x = -2
+		y = 1
+		cost = 10
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_timed_idea = {
+				idea = idea_URG_revaluation_law
+				days = 620
+			}
+		}
+	}
+	
+
+	focus = {
+		id = URG_brou
+		available = {
+		}
+		prerequisite = { focus = URG_revaluation_law }
+		mutually_exclusive = { }
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = URG_revaluation_law
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = idea_URG_brou
+		}
+	}
+	
+
+	focus = {
+		id = URG_pay_of_all_external_debts
+		available = {
+		}
+		prerequisite = { focus = URG_brou }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_american_investments
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = URG_brou
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = idea_URG_low_amounts_of_external_debts
+				}
+				remove_ideas = {
+					idea_URG_low_amounts_of_external_debts
+				}
+			}
+
+			if = {
+				limit = {
+					has_idea = idea_URG_expired_debts
+				}
+				remove_ideas = {
+					idea_URG_expired_debts
+				}
+			}
+
+		}
+	}
+	#National Laboratory of Electrical Magnitudes
+
+	focus = {
+		id = URG_ministry_of_public_works
+		available = {
+		}
+		relative_position_id = URG_prohibition_of_usury
+		prerequisite = { focus = URG_prohibition_of_usury }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_improve_the_administration
+		x = 0
+		y = 1
+		cost = 5
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_timed_idea = {
+			 	idea = idea_URG_ministry_of_public_works
+			 	days = 480
+			 } 
+				
+		}
+	}
+
+	focus = {
+		id = URG_import_substitution
+		available = {
+		}
+		prerequisite = { focus = URG_ministry_of_public_works  }
+		mutually_exclusive = { }
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = URG_ministry_of_public_works
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			add_ideas = idea_URG_import_substitution
+		}
+	}
+
+	focus = {
+		id = URG_rapid_industrialization
+		available = {
+		}
+		prerequisite = { focus = URG_ministry_of_public_works }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_modernize_industry
+		x = 0
+		y = 1
+		cost = 10
+		relative_position_id = URG_ministry_of_public_works
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_timed_idea = {
+			 	idea = idea_URG_rapid_industrialization
+			 	days = 720
+			 } 
+		}
+	}
+
+	focus = {
+		id = URG_la_teja_refinery 
+		available = {
+			#controls_state = 300
+		}
+		prerequisite = { focus = URG_rapid_industrialization }
+		mutually_exclusive = { }
+		icon = GFX_goal_generic_oil_refinery
+		x = 0
+		y = 1
+		cost = 5
+		relative_position_id = URG_rapid_industrialization
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				prioritize = { 946 945 }
+				add_resource = {
+					type = oil
+					amount = 8
+				}
+
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = synthetic_refinery
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_pluna
+		available = {
+		}
+		prerequisite = { focus = URG_rapid_industrialization }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_aircraft_production
+		x = 2
+		y = 1
+		cost = 5
+		relative_position_id = URG_rapid_industrialization
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			air_experience = 40
+			add_equipment_to_stockpile = { 
+				type = transport_plane_equipment_1
+				amount = 40 
+				producer = URG
+			}
+
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+
+		}
+	}
+
+	focus = {
+		id = URG_conaprole
+		available = {
+		}
+		prerequisite = { focus = URG_rapid_industrialization }
+		mutually_exclusive = { }
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 4
+		y = 1
+		cost = 5
+		relative_position_id = URG_rapid_industrialization
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_tech_bonus = {
+			 	bonus = 0.2
+			 	uses = 2
+			 	category = construction_tech # optional 
+			 	# technology  = technology_id # optional
+			 } 
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+				}
+				prioritize = { 946 945 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_mercado_modelo
+		available = {
+			controls_state = 300
+		}
+		prerequisite = { focus = URG_rapid_industrialization }
+		mutually_exclusive = { }
+		icon = GFX_focus_generic_industry_1
+		x = 6
+		y = 1
+		cost = 10
+		relative_position_id = URG_rapid_industrialization
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			300 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+			random_core_state = {
+				limit = {
+					is_controlled_by = ROOT
+					NOT = { state = 300 }
+				}
+				add_extra_state_shared_building_slots = 2
+			}
+		}
+	}
+
+	focus = {
+		id = URG_colorado_victory
+		available = {
+		}
+
+		icon = GFX_focus_URG_colorados
+		x = -11
+		y = 0
+		available = { 
+			has_country_flag = URG_terra_election 
+			NOT = { has_completed_focus = URG_accion_revisionista_del_uruguay }
+		}
+
+		cost = 5
+		relative_position_id = URG_accion_revisionista_del_uruguay
+		mutually_exclusive = { focus = URG_blanco_victory focus = URG_accion_revisionista_del_uruguay  }
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.15
+			}
+		}
+	}
+
+	focus = {
+		id = URG_legacy_of_batlle
+		available = {
+		}
+
+		icon = GFX_focus_URG_legacy_of_batle
+		x = 2
+		y = 1
+		prerequisite = {focus = URG_colorado_victory }
+		cost = 5
+		relative_position_id = URG_colorado_victory
+		mutually_exclusive = { }
+
+		search_filters = {  FOCUS_FILTER_STABILITY FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = idea_URG_legacy_of_batlle
+		}
+	}
+
+	focus = {
+		id = URG_declare_neutrality
+		available = {
+		}
+
+		icon = GFX_goal_generic_neutrality_focus
+		x = 0
+		y = 1
+		available = {  }
+		cost = 5
+		relative_position_id = URG_colorado_victory
+		prerequisite = { focus = URG_colorado_victory }
+
+		search_filters = {   FOCUS_FILTER_HISTORICAL  FOCUS_FILTER_POLITICAL}
+		completion_reward = {
+			add_political_power = 150
+			add_ideas = neutrality_idea
+		}
+	}
+
+	focus = {
+		id = URG_law_no_9914
+		available = {
+		}
+
+		icon = GFX_focus_invite_finland
+		x = 0
+		y = 1
+		available = { FIN = { has_war_with_major = yes }  }
+		cost = 5
+		relative_position_id = URG_declare_neutrality
+		prerequisite = { focus = URG_declare_neutrality }
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_political_power = 120
+
+
+			FIN = {
+				add_timed_idea = {
+					idea = idea_URG_food_for_the_warmachine
+					days = 365
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_investigate_german_and_italian_cultural_organization
+		available = {
+		}
+
+		icon = GFX_focus_URG_turmoil_of_paso_morlan
+		x = 2
+		y = 0
+		available = {  }
+		cost = 5
+		relative_position_id = URG_law_no_9914
+		prerequisite = { focus = URG_declare_neutrality }
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.3
+			}
+			add_popularity = {
+				ideology = neutrality
+				popularity = -0.3
+			}
+		}
+	}
+
+	focus = {
+		id = URG_law_no_9943
+		available = {
+		}
+
+		icon = GFX_focus_generic_commonwealth_build_infantry
+		x = 2
+		y = 0
+		available = {  }
+		cost = 5
+		relative_position_id = URG_investigate_german_and_italian_cultural_organization
+		prerequisite = { focus = URG_declare_neutrality }
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			add_ideas = idea_URG_law_no_9943
+		}
+	}
+
+	focus = {
+		id = URG_american_air_bases
+		available = {
+		}
+
+		icon = GFX_focus_generic_air_defense
+		x = 1
+		y = 1
+		available = { 
+			has_full_control_of_state = 300
+			NOT = { has_war_with = USA } 
+
+		}
+		cost = 5
+		relative_position_id = URG_investigate_german_and_italian_cultural_organization
+		prerequisite = { focus = URG_investigate_german_and_italian_cultural_organization focus = URG_law_no_9943 }
+
+		search_filters = {  }
+		completion_reward = {
+			300 = {
+				add_building_construction = {
+					type = air_base
+					level = 3
+					instant_build = yes
+				}
+			}
+
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+
+				create_equipment_variant = {
+					name = "P-36A" #
+					type = small_plane_airframe_1
+					icon = "GFX_USA_fighter1_medium"
+					modules={
+						fixed_main_weapon_slot=light_mg_4x
+						fixed_auxiliary_weapon_slot_1=light_mg_2x
+						engine_type_slot=engine_2_1x
+					}
+				}
+
+				create_equipment_variant = {
+					name = "B-10" #
+					type = medium_plane_airframe_1
+					icon ="GFX_medium_plane_1_medium"
+					modules={
+						fixed_main_weapon_slot=medium_bomb_bay
+						engine_type_slot=engine_1_2x
+						special_type_slot_1=lmg_defense_turret
+					}
+					#icon = "GFX_ITA_early_bomber_medium"
+				}
+
+				add_equipment_to_stockpile = { 
+					type = small_plane_airframe_1
+					amount = 110
+					producer = USA
+					variant_name = "P-36A" 
+				}
+
+				add_equipment_to_stockpile = { 
+					type = medium_plane_airframe_1
+					amount = 60
+					producer = USA
+					variant_name = "B-10" 
+				}
+			}
+			else = {
+				add_equipment_to_stockpile = { 
+					type = fighter_equipment_1
+					amount = 130
+					producer = USA
+				}
+				add_equipment_to_stockpile = { 
+					type = tac_bomber_equipment_1
+					amount = 100
+					producer = USA
+				}
+			}
+
+			if = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = small_plane_airframe
+					seller_tags = { USA ENG FRA CAN } 
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = large_plane_airframe
+					seller_tags = { USA ENG FRA CAN } 
+				}
+				add_equipment_subsidy = {
+					cic = 1000
+					equipment_type = medium_plane_airframe
+					seller_tags = { USA ENG FRA CAN } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_break_diplomatic_relations_with_the_axis
+		available = {
+		}
+
+		icon = GFX_focus_attack_germany
+		x = 2
+		y = 0
+		available = {  }
+		cost = 5
+		relative_position_id = URG_american_air_bases
+		prerequisite = { focus = URG_investigate_german_and_italian_cultural_organization focus = URG_law_no_9943 }
+
+		search_filters = {  FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+		completion_reward = {
+			if = {
+				limit = {
+					has_idea = neutrality_idea
+				}
+				remove_ideas = neutrality_idea
+			}
+
+			if = {
+				limit = {
+					has_dlc = "By Blood Alone"
+				}
+
+				if = {
+					limit = {
+						GER = {
+							NOT = { has_government = democratic }
+						}
+					}
+					send_embargo = GER
+					every_country = {
+						limit = {
+							is_in_faction_with = GER
+							NOT = { original_tag = GER }
+						}
+						ROOT = { send_embargo = PREV } 
+					}
+				}
+			}
+
+			add_war_support = 0.12
+		}
+	}
+
+	focus = {
+		id = URG_join_the_allies
+		available = {
+		}
+
+		icon = GFX_focus_chi_british_cooperation
+		x = -6
+		y = 1
+		available = {  }
+		cost = 5
+		relative_position_id = URG_break_diplomatic_relations_with_the_axis
+		prerequisite = { focus = URG_break_diplomatic_relations_with_the_axis  focus = URG_anticentralism }
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.15
+			}
+
+			if = {
+				limit = {
+					ENG = { 
+						is_faction_leader = yes 
+						has_government = democratic
+						NOT = { has_war_with = ROOT }
+					}	
+				}
+
+				ENG = {
+					country_event = {
+						id = generic.2
+						hours = 3# optional - can take hours/days/months
+						random_hours = 3 # optional - can take hours/days/months
+					}
+				}
+			}
+			else_if = {
+				limit = {
+					USA = { 
+						is_faction_leader = yes 
+						has_government = democratic
+						NOT = { has_war_with = ROOT }
+					}	
+				}
+
+				USA = {
+					country_event = {
+						id = generic.2
+						hours = 3# optional - can take hours/days/months
+						random_hours = 3 # optional - can take hours/days/months
+					}
+				}
+			}
+			else = {
+				every_country = {
+					limit = {
+						is_major = yes
+						is_faction_leader = yes
+						has_government = democratic
+					}
+					random_select_amount = 1
+					country_event = {
+						id = generic.2
+						hours = 3# optional - can take hours/days/months
+						random_hours = 3 # optional - can take hours/days/months
+					}
+				}
+			}
+		}
+
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				GER = {
+					has_government = fascism
+					surrender_progress > 0.45
+				}
+				add = 10
+			}
+
+			modifier = {
+				is_historical_focus_on = no
+				add = 10
+			}
+		}
+	}
+
+
+	focus = {
+		id = URG_a_new_constitution
+		available = {
+		}
+
+		icon = GFX_focus_generic_treaty
+		x = -4
+		y = 1
+		prerequisite = { focus = URG_colorado_victory }
+		cost = 5
+		relative_position_id = URG_colorado_victory
+		#mutually_exclusive = { focus = URG_blanco_victory focus = URG_refuse_to_step_down  }
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.1
+			}
+			add_ideas = idea_URG_constitutional_guarantees
+
+		}
+	}
+
+	focus = {
+		id = URG_the_good_coup
+		available = {
+		}
+
+		icon = GFX_focus_SWE_refuge_from_war
+		x = 0
+		y = 1
+		prerequisite = { focus = URG_a_new_constitution }
+		cost = 5
+		relative_position_id = URG_a_new_constitution
+		#mutually_exclusive = { focus = URG_blanco_victory focus = URG_refuse_to_step_down  }
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_HISTORICAL FOCUS_FILTER_POLITICAL FOCUS_FILTER_POLITICAL_CHARACTER }
+		completion_reward = {
+			add_country_leader_trait = JUNO_emergency_powers
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.15
+			}
+			add_timed_idea = {
+			 	idea = political_turmoil
+			 	days = 240
+			 }
+		}
+	}
+
+	focus = {
+		id = URG_legalize_the_pool
+		available = {
+		}
+
+		icon = GFX_focus_mex_privatisation
+		x = -2
+		y = 1
+		prerequisite = { focus = URG_colorado_victory }
+		cost = 5
+		relative_position_id = URG_colorado_victory
+		#mutually_exclusive = { focus = URG_blanco_victory focus = URG_refuse_to_step_down  }
+
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_stability = 0.05
+			random_core_state = {
+				limit = {
+					ROOT = { has_full_control_of_state = PREV }
+				}
+				prioritize = { 946 945 }
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+				
+			}
+
+		}
+	}
+
+	focus = {
+		id = URG_blanco_victory
+		available = {
+		}
+
+		icon = GFX_focus_URG_blancos
+		x = -8
+		y = 0
+		available = { 
+			has_country_flag = URG_terra_election 
+			NOT = { has_completed_focus = URG_accion_revisionista_del_uruguay }
+		}
+		cost = 5
+		relative_position_id = URG_colorado_victory
+		mutually_exclusive = { focus = URG_colorado_victory focus = URG_accion_revisionista_del_uruguay  }
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.15
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}
+		}
+	}
+
+	focus = {
+		id = URG_herrerismo
+		available = {
+		}
+
+		icon = GFX_goal_generic_construction
+		x = -1
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_blanco_victory }
+		relative_position_id = URG_blanco_victory
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			add_ideas = idea_URG_herreismo
+		}
+	}
+
+
+	focus = {
+		id = URG_traditionalism
+		available = {
+		}
+
+		icon = GFX_focus_FIN_pragmatic_socialism
+		x = 1
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_blanco_victory }
+		relative_position_id = URG_blanco_victory
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_traditionalism
+			}
+		}
+	}
+
+	focus = {
+		id = URG_americanism
+		available = {
+		}
+
+		icon = GFX_focus_por_recover_latin_america
+		x = 0
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_traditionalism }
+		relative_position_id = URG_traditionalism
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_americanism
+			}
+
+			if = {
+				limit = {
+					NOT = { 
+						has_war_with = USA 
+						has_non_aggression_pact_with = USA
+					}
+					USA = { 
+						is_ai = yes 
+						exists = yes
+						is_subject = no
+					}
+				}
+				USA = {
+					diplomatic_relation = { 
+						country = ROOT #tar
+						relation = guarantee 
+						active = yes #yes to add relation, no to cancel existing one
+					}
+					give_market_access = URG
+				}
+				give_market_access = USA 
+			}
+
+			if = {
+				limit = {
+					has_dlc = "Arms Against Tyranny"
+				}
+				add_cic = 300
+			}
+		}
+	}
+
+	focus = {
+		id = URG_ruralism
+		available = {
+		}
+
+		icon = GFX_focus_ARG_capitalize_the_beef_industry
+		x = 0
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_herrerismo focus = URG_traditionalism   }
+		relative_position_id = URG_herrerismo
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			945 = {
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_good
+				}
+			}
+			946 = {
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_good
+				}
+			}
+
+			300 = {
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_bad
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_anticentralism
+		available = {
+		}
+
+		icon = GFX_focus_generic_workers_and_farmers_rise
+		x = 0
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_ruralism  }
+		relative_position_id = URG_ruralism
+		search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			945 = {
+				hidden_effect = {
+					remove_dynamic_modifier = {
+						modifier = idea_URG_ruralism_good
+					}
+				}
+
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_good_2
+				}
+
+			}
+			946 = {
+				hidden_effect = {
+					remove_dynamic_modifier = {
+						modifier = idea_URG_ruralism_good
+					}
+				}
+
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_good_2
+				}
+			}
+
+			300 = {
+				hidden_effect = {
+					remove_dynamic_modifier = {
+						modifier = idea_URG_ruralism_bad
+					}
+				}
+				add_dynamic_modifier = {
+					modifier = idea_URG_ruralism_bad_2
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = URG_anti_imperialism
+		available = {
+		}
+
+		icon = GFX_focus_generic_support_the_left_right
+		x = 0
+		y = 1
+		available = {  }
+		cost = 5
+		prerequisite = { focus = URG_americanism }
+		relative_position_id = URG_americanism
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_ideas = {
+				idea_URG_anti_imperialism
+			}
+
+			set_rule = { 
+				can_declare_war_on_same_ideology = yes # rule to use, e.g.  can_not_declare_war = yes
+			}
+
+			#set_rule = { 
+			#	can_declare_war_without_wargoal_when_in_war = yes # rule to use, e.g.  can_not_declare_war = yes
+			#}
+
+			set_rule = { 
+				can_only_justify_war_on_threat_country = no
+			}
+
+
+			set_rule = { 
+				can_join_opposite_factions = yes
+			}
+
+			
+		}
+	}
+
+	 
+}

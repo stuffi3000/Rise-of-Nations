@@ -1,0 +1,3683 @@
+#focus_tree = {
+	id = DNC_FRA
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = FRA
+		}
+	}
+	#Focus for Keep the Case Closed
+	focus = {
+		id = FRADNC_keep_the_case_closed
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 7
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_dreyfus_affair }
+		mutually_exclusive = { focus = FRADNC_reopen_the_case }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = 0.1
+			add_political_power = 50
+		}
+	}
+
+	#Focus for Reopen the Case
+	focus = {
+		id = FRADNC_reopen_the_case
+		icon = GFX_focus_renounce_the_treaty_of_trianon
+		x = 34
+		y = 3
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_dreyfus_affair }
+		mutually_exclusive = { focus = FRADNC_keep_the_case_closed }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = -0.05
+			add_political_power = 100
+		}
+	}
+
+	#Focus for The Dreyfus Affair
+	focus = {
+		id = FRADNC_the_dreyfus_affair
+		icon = GFX_goal_generic_forceful_treaty
+		x = 21
+		y = 2
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = -0.05
+			add_political_power = 50
+		}
+	}
+
+	#Focus for Le Peuple
+	focus = {
+		id = FRADNC_le_peuple
+		icon = GFX_goal_generic_war_with_comintern
+		x = 11
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_keep_the_case_closed }
+		mutually_exclusive = { focus = FRADNC_la_republique }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_populartity = {
+				ideology = communism
+				popularity = 0.1
+			}
+			set_variable = { antisyndie_influence = 100 }
+			set_variable = { syndicalist_influence = 0 }
+			unlock_decision_category_tooltip = FRA_syndicalists
+		}
+	}
+	focus = {
+		id = FRADNC_remember_commune
+		icon = GFX_goal_generic_war_with_comintern
+		x = 9
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRADNC_le_peuple
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = FRA_memory_of_the_commune
+		}
+	}
+
+	focus = {
+		id = FRADNC_syndicalist_outlets
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 11
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRADNC_le_peuple
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = FRA_syndicalist_outlets
+		}
+
+	}
+
+	focus = {
+		id = FRADNC_unite_syndicats
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 13
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRADNC_le_peuple
+		}
+		ai_will_do = {
+			facor = 1
+		}
+		completion_reward = {
+			unlock_decision_tooltip = FRA_unite_CGT
+			unlock_decision_tooltip = FRA_fight_yellow_syndicalism
+		}
+	}
+
+	focus = {
+		id = FRADNC_antiparliamentary_actions
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 10
+		y = 7
+		prerequisite = {
+			focus = FRADNC_expand_workers_right
+			focus = FRADNC_expand_syndicats_power
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_stability = -0.05
+			add_popularity = {
+				ideology = democratic
+				popularity = -0.1
+			}
+		}
+
+	}
+	focus = {
+		id = FRADNC_unlimited_strikes
+		icon = GFX_goal_generic_production2
+		x = 12
+		y = 7
+		prerequisite = {
+			focus = FRADNC_expand_workers_right
+			focus = FRADNC_expand_syndicats_power
+		}
+		completion_reward = {
+			add_timed_idea = {
+				idea = FRA_factory_strikes
+				days = 120
+			}
+		}
+	}
+
+	focus = {
+		id = FRADNC_insurection
+		icon = GFX_goal_generic_major_war
+		x = 11
+		y = 8
+		prerequisite = {
+			focus = FRADNC_unlimited_strikes
+		}
+		prerequisite = {
+			focus = FRADNC_antiparliamentary_actions
+		}
+		available = {
+			NOT = {
+				has_decision = FRA_fight_yellow_syndicalism
+			}
+		}
+		completion_reward = {
+			set_temp_variable = { temp = syndicalist_influence }
+			divide_temp_variable = { temp = 100 }
+			start_civil_war = {
+				ideology = democratic
+				states_filter = { 
+			        NOT = {
+						has_state_flag = syndicalist_took_over
+				    }
+
+				}
+				size = temp
+
+			}
+		}
+	}
+	focus = {
+		id = FRADNC_expand_workers_right
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 10
+		y = 6
+		prerequisite = {
+			focus = FRADNC_syndicalist_outlets
+			focus = FRADNC_remember_commune
+			focus = FRADNC_unite_syndicats
+		}
+		completion_reward = {
+			add_ideas = FRA_workers_rights_expanded
+		}
+	}
+	focus = {
+		id = FRADNC_expand_syndicats_power
+		icon = GFX_goal_generic_war_with_comintern
+		x = 12
+		y = 6
+		prerequisite = {
+			focus = FRADNC_remember_commune
+			focus = FRADNC_syndicalist_outlets
+			focus = FRADNC_unite_syndicats
+		}
+		completion_reward = {
+			add_to_variable = {
+				syndicalist_influence = 5
+			}
+			clamp_variable = {
+				var = syndicalist_influence
+				min = 0
+				max = 100
+			}
+			set_temp_variable = { temp1 = 100 }
+			subtract_from_temp_variable = { temp1 = syndicalist_influence }
+			set_variable = { antisyndie_influence = temp1 }
+			custom_effect_tooltip = FRA_increase_syndie_influence_by_5_tt
+		}
+	}
+	#Focus for Negotiations With New Zealand
+	focus = {
+		id = FRADNC_stronger_navy
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 56
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_negotiations_with_canada }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for His Majesty's Diplomatic Service
+	focus = {
+		id = FRADNC_his_majestys_diplomatic_service
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 26
+		y = 18
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support The Boxers
+	focus = {
+		id = FRADNC_support_the_boxers
+		icon = GFX_focus_mex_soldaderas
+		x = 22
+		y = 20
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_udiXEyak }
+		mutually_exclusive = { 
+			focus = FRADNC_CNHbRiQZ 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_wnsfyWbZ 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Proclaim Neutrality
+	focus = {
+		id = FRADNC_proclaim_neutrality
+		icon = GFX_goal_generic_neutrality_focus
+		x = 26
+		y = 20
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_udiXEyak }
+		mutually_exclusive = { 
+			focus = FRADNC_support_the_boxers 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_wnsfyWbZ 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Condemn The Boxers
+	focus = {
+		id = FRADNC_condemn_the_boxers
+		icon = attack_taiwan
+		x = 30
+		y = 20
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_udiXEyak }
+		mutually_exclusive = { 
+			focus = FRADNC_support_the_boxers 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_proclaim_neutrality 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Arm The Boxers
+	focus = {
+		id = FRADNC_arm_the_boxers
+		icon = small_arms
+		x = 21
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_boxers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Military Advisors To Qing
+	focus = {
+		id = FRADNC_military_advisors_to_qing
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 23
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_boxers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Arms Embargo To Both Sides
+	focus = {
+		id = FRADNC_arms_embargo_to_both_sides
+		icon = GFX_focus_usa_voter_registration_act
+		x = 27
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_proclaim_neutrality }
+		mutually_exclusive = { focus = FRADNC_gVNlethv }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Allow Volunteers
+	focus = {
+		id = FRADNC_allow_volunteers
+		icon = GFX_focus_generic_manpower
+		x = 26
+		y = 22
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_arms_embargo_to_both_sides 
+			focus = FRADNC_gVNlethv 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Smuggle Military Advisors To Legations
+	focus = {
+		id = FRADNC_smuggle_military_advisors_to_legations
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 31
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_condemn_the_boxers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Boxer Rebellion Comes To An End
+	focus = {
+		id = FRADNC_boxer_rebellion_comes_to_an_end
+		icon = GFX_goal_generic_alliance
+		x = 26
+		y = 23
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_AEbdUtYc 
+			focus = FRADNC_allow_volunteers 
+			focus = FRADNC_MtFILKXP 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Our Empire
+	focus = {
+		id = FRADNC_our_empire
+		icon = GFX_focus_eng_the_sun_never_sets
+		x = 21
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_hold_the_khaki_election 
+			focus = FRADNC_unite_behind_house_windsor 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Our Island
+	focus = {
+		id = FRADNC_our_island
+		icon = GFX_focus_eng_the_sun_never_sets
+		x = 3
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_hold_the_khaki_election }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Intervene in the Moroccan Crisis
+	focus = {
+		id = FRADNC_intervene_in_the_moroccan_crisis
+		icon = GFX_goal_generic_dangerous_deal
+		x = 21
+		y = 16
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_decolonization 
+			focus = FRADNC_make_nigeria_a_protectorate 
+			focus = FRADNC_the_sun_never_sets 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Claim Protectorates In The South Pacific
+	focus = {
+		id = FRADNC_claim_protectorates_in_the_south_pacific
+		icon = GFX_focus_usa_focus_on_asia
+		x = 23
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_sign_the_anglosiamese_treaty }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Make Nigeria A Protectorate
+	focus = {
+		id = FRADNC_make_nigeria_a_protectorate
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 21
+		y = 14
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_grant_south_africa_dominion_status }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Sign The Anglo-Japanese Pact
+	focus = {
+		id = FRADNC_sign_the_anglojapanese_pact
+		icon = GFX_goal_generic_major_alliance
+		x = 23
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_steady_as_she_goes }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Sign The Anglo-Siamese Treaty
+	focus = {
+		id = FRADNC_sign_the_anglosiamese_treaty
+		icon = GFX_goal_generic_major_alliance
+		x = 23
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_sign_the_anglojapanese_pact }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for End The Boer War
+	focus = {
+		id = FRADNC_end_the_boer_war
+		icon = GFX_goal_generic_military_deal
+		x = 21
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_steady_as_she_goes }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Sign The Treaty of Vereeniging
+	focus = {
+		id = FRADNC_sign_the_treaty_of_vereeniging
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 21
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_end_the_boer_war }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Federated Malay States
+	focus = {
+		id = FRADNC_the_federated_malay_states
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 19
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_steady_as_she_goes }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Grant New Zealand Dominion Status
+	focus = {
+		id = FRADNC_grant_new_zealand_dominion_status
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 19
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_grant_australia_dominion_status }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Grant South Africa Dominion Status
+	focus = {
+		id = FRADNC_grant_south_africa_dominion_status
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 21
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_sign_the_treaty_of_vereeniging }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Grant Australia Dominion Status
+	focus = {
+		id = FRADNC_grant_australia_dominion_status
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 19
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_federated_malay_states }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Royal Society I
+	focus = {
+		id = FRADNC_royal_society_i
+		icon = GFX_focus_research2
+		x = 3
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_kings_college_i }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Establish The Territorial Army
+	focus = {
+		id = FRADNC_establish_the_territorial_army
+		icon = GFX_focus_generic_manpower
+		x = 1
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_provision_of_education_act }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Provision of Education Act
+	focus = {
+		id = FRADNC_provision_of_education_act
+		icon = GFX_focus_generic_treaty
+		x = 1
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_hold_a_census }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Bring In The New Electric Trams
+	focus = {
+		id = FRADNC_bring_in_the_new_electric_trams
+		icon = GFX_goal_generic_production2
+		x = 5
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_pass_the_factories_act }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Pass The Mines Act
+	focus = {
+		id = FRADNC_pass_the_mines_act
+		icon = GFX_goal_generic_construction2
+		x = 5
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_island }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Unite Behind House Windsor
+	focus = {
+		id = FRADNC_unite_behind_house_windsor
+		icon = GFX_focus_hol_united_netherlands
+		x = 38
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_controlled_opposition }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Monarchist Politicians
+	focus = {
+		id = FRADNC_monarchist_politicians
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 40
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_legitimism
+			focus = FRADNC_integral_nationalism
+			focus = FRADNC_orleanism	
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Controlled Opposition
+	focus = {
+		id = FRADNC_controlled_opposition
+		icon = GFX_focus_usa_voter_registration_act
+		x = 38
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_monarchist_politicians 
+		}
+		prerequisite = { 
+			focus = FRADNC_monarchist_officers 
+		}
+		prerequisite = {
+			focus = FRADNC_march_to_paris
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Monarchist Officers
+	focus = {
+		id = FRADNC_monarchist_officers
+		icon = GFX_focus_mex_support_general_cedillo
+		x = 36
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_orleanism 
+			focus = FRADNC_integral_nationalism
+			focus = FRADNC_legitimism
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for L'aigle
+	focus = {
+		id = FRADNC_laigle
+		icon = GFX_focus_fra_le_deluge
+		x = 30
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_reopen_the_case }
+		mutually_exclusive = { focus = FRADNC_le_soleil }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			}
+			set_variable = {FRA_parliament_support = 85}
+			unlock_decision_category_tooltip = FRA_DNC_napoleonist_path
+		}
+	}
+	focus = {
+		id = FRADNC_a_failing_republic
+		icon = GFX_goal_generic_propaganda
+		x = 30
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = FRADNC_laigle
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = dnc_france.1
+			
+
+		}
+	}
+	focus = {
+		id = FRADNC_the_blue_coup
+		icon = GFX_goal_generic_propaganda
+		x = 28
+		y = 6
+		prerequisite = {
+			focus = FRADNC_a_failing_republic
+		}
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_parliament_support_less_than_20_tt
+				check_variable = {
+					FRA_parliament_support < 20
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			country_event = dnc_france.2
+		}
+	}
+	focus = {
+		id = FRADNC_napoleonist_outlets
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 30
+		y = 6
+		prerequisite = {
+			focus = FRADNC_a_failing_republic
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = FRA_napoleonist_outlets
+		}
+	}
+	focus = {
+		id = FRADNC_new_empire
+		icon = GFX_focus_fra_le_deluge
+		x = 29
+		y = 8
+		mutually_exclusive = {
+			focus = FRADNC_build_on_the_old
+		}
+		prerequisite = {
+			focus = FRADNC_the_new_napoleon
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = FRADNC_build_on_the_old
+		icon = GFX_focus_fra_le_deluge
+		x = 31
+		y = 8
+		mutually_exclusive = {
+			focus = FRADNC_new_empire
+		}
+		prerequisite = {
+			focus = FRADNC_the_new_napoleon
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	focus = {
+		id = FRADNC_march_to_paris
+		icon = GFX_goal_generic_national_unity
+		x = 34
+		y = 6
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = FRA_parliament_support_less_than_20_tt
+				check_variable = {
+					FRA_parliament_support < 20
+				}
+			}
+		}
+		prerequisite = {
+			focus = FRADNC_a_failing_republic
+			focus = FRADNC_orleanism
+			focus = FRADNC_legitimism
+			focus = FRADNC_integral_nationalism
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			activate_mission = FRA_march_to_paris
+		}
+
+	}
+	focus = {
+		id = FRADNC_gather_support
+		icon = GFX_goal_generic_propaganda
+		x = 32
+		y = 6
+		prerequisite = {
+			focus = FRADNC_a_failing_republic
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			unlock_decision_tooltip = FRA_gather_napoleonic_support
+		}
+	}
+	focus = {
+		id = FRADNC_the_new_napoleon
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 30
+		y = 7
+		cost = 10
+		prerequisite = {
+			focus = FRADNC_napoleonist_outlets
+			focus = FRADNC_the_blue_coup
+			focus = FRADNC_gather_support
+		}
+		prerequisite = {
+			focus = FRADNC_march_to_paris
+		}
+		completion_reward = {
+			country_event = dnc_france.3
+		}
+	}
+	#Focus for Orleanism
+	focus = {
+		id = FRADNC_orleanism
+		icon = GFX_focus_rom_royal_dictatorship
+		x = 36
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_le_soleil }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Integral Nationalism
+	focus = {
+		id = FRADNC_integral_nationalism
+		icon = GFX_focus_generic_monarchy_2
+		x =40
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_le_soleil 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Hold The Khaki Election
+	focus = {
+		id = FRADNC_hold_the_khaki_election
+		icon = GFX_focus_usa_voter_registration_act
+		x = 3
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_democratic_principles }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Free Speech
+	focus = {
+		id = FRADNC_support_free_speech
+		icon = GFX_goal_generic_propaganda
+		x = 5
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_la_republique }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_ideas = {
+				RI_free_speech
+			}
+		}
+	}
+
+	#Focus for The British Parliament
+	focus = {
+		id = FRADNC_the_british_parliament
+		icon = GFX_focus_usa_guarantee_the_american_dream
+		x = 5
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_free_speech }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Democratic Principles
+	focus = {
+		id = FRADNC_democratic_principles
+		icon = GFX_focus_generic_treaty
+		x = 3
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_workers_rights_movement 
+		}
+		prerequisite = { 
+			focus = FRADNC_BPRGlwAh 
+		}
+		prerequisite = { 
+			focus = FRADNC_the_british_parliament 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Freedom of The Press
+	focus = {
+		id = FRADNC_freedom_of_the_press
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 3
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_free_speech 
+		}
+		prerequisite = { 
+			focus = FRADNC_riSYbyzl 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Worker's Rights Movement
+	focus = {
+		id = FRADNC_workers_rights_movement
+		icon = GFX_focus_generic_the_giant_wakes
+		x = 1
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_riSYbyzl }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for placeholder
+	focus = {
+		id = FRADNC_placeholder
+		icon = GFX_goal_unknown
+		x = 0
+		y = 42
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Supporters In The Factories
+	focus = {
+		id = FRADNC_supporters_in_the_factories
+		icon = GFX_focus_generic_the_giant_wakes
+		x = 1
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_la_republique }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = neutrality
+						has_government = fascism
+						has_government = communism
+					}
+				}
+				add_ideas = {
+					RI_democrat_factories
+				}
+			}
+			if = {
+				limit = {
+					has_government = democratic
+				}
+				add_ideas = {
+					RI_democrat_factories1
+				}
+			}
+		}
+	}
+
+	#Focus for Le Soleil
+	focus = {
+		id = FRADNC_le_soleil
+		icon = GFX_focus_hun_elect_a_king
+		x = 38
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_reopen_the_case }
+		mutually_exclusive = { focus = FRADNC_laigle }
+		ai_will_do = {
+			factor = 1
+		}
+		completion_reward = {
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.1
+			}
+		}
+	}
+
+	#Focus for Hold A Census
+	focus = {
+		id = FRADNC_hold_a_census
+		icon = GFX_goal_generic_propaganda
+		x = 1
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_island }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Pass The Factories Act
+	focus = {
+		id = FRADNC_pass_the_factories_act
+		icon = GFX_goal_unknown ##Unfortunately, the tool could not find your icon in the game's files
+		x = 5
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_pass_the_mines_act }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Monarchist Sentiment In France
+	focus = {
+		id = FRADNC_monarchist_sentiment_in_france
+		icon = GFX_focus_generic_monarchy_2
+		x = 22
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_draw_up_plans_for_a_british_faction }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Modern Industrial Processes
+	focus = {
+		id = FRADNC_modern_industrial_processes
+		icon = GFX_goal_generic_consumer_goods
+		x = 38
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_imperial_customs_union 
+			focus = FRADNC_royal_society_ii 
+			focus = FRADNC_british_industrial_giant 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for British Imperialism
+	focus = {
+		id = FRADNC_french_imperialism
+		icon = GFX_focus_hol_united_netherlands
+		x = 57
+		y = 7
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_revise_splendid_isolation 
+		}
+		prerequisite = { 
+			focus = FRADNC_our_new_continental_policy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Revise Splendid Isolation
+	focus = {
+		id = FRADNC_revise_splendid_isolation
+		icon = GFX_focus_eng_global_defense
+		x = 55
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_for_king_and_country }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Our New Continental Policy
+	focus = {
+		id = FRADNC_our_new_continental_policy
+		icon = GFX_focus_usa_focus_on_europe
+		x = 59
+		y = 6
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_for_king_and_country }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Guide The Colonies
+	focus = {
+		id = FRADNC_guide_the_colonies
+		icon = GFX_align_to_britain
+		x = 12
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_empire }
+		mutually_exclusive = { 
+			focus = FRADNC_steady_as_she_goes 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_enforce_direct_rule 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Indochinese bases
+	focus = {
+		id = FRADNC_indochinese_bases
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 54
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_fund_separatism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for La Republique
+	focus = {
+		id = FRADNC_la_republique
+		icon = GFX_goal_support_democracy
+		x = 3
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_keep_the_case_closed }
+		mutually_exclusive = { focus = FRADNC_le_peuple }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Legitimism
+	focus = {
+		id = FRADNC_legitimism
+		icon = GFX_focus_rom_royal_dictatorship
+		x = 38
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_le_soleil }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Hold A New Election
+	focus = {
+		id = FRADNC_hold_a_new_election
+		icon = GFX_goal_support_democracy
+		x = 3
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_establish_the_territorial_army 
+			focus = FRADNC_royal_society_i 
+			focus = FRADNC_bring_in_the_new_electric_trams 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for King's College I
+	focus = {
+		id = FRADNC_kings_college_i
+		icon = GFX_focus_usa_guarantee_the_american_dream
+		x = 3
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_hold_a_census 
+			focus = FRADNC_pass_the_mines_act 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Steady As She Goes
+	focus = {
+		id = FRADNC_steady_as_she_goes
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 21
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_empire }
+		mutually_exclusive = { 
+			focus = FRADNC_guide_the_colonies 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_enforce_direct_rule 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Expand Railways
+	focus = {
+		id = FRADNC_expand_railways
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 40
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_ljmXoAwI }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Towards Dominion Independence
+	focus = {
+		id = FRADNC_towards_dominion_independence
+		icon = GFX_goal_tfv_sever_ties_with_uk
+		x = 10
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_guide_the_colonies }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Withdraw From Contested Territories
+	focus = {
+		id = FRADNC_withdraw_from_contested_territories
+		icon = GFX_goal_generic_position_armies
+		x = 14
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_guide_the_colonies }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Foundations For An Indian State
+	focus = {
+		id = FRADNC_foundations_for_an_indian_state
+		icon = GFX_focus_RAJ_all_india_forward_bloc
+		x = 10
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_towards_dominion_independence }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Towards Indian Independence
+	focus = {
+		id = FRADNC_towards_indian_independence
+		icon = GFX_goal_tfv_sever_ties_with_uk
+		x = 11
+		y = 14
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_three_nation_solution 
+		}
+		prerequisite = { 
+			focus = FRADNC_selfgovernment_for_africa 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Three Nation Solution
+	focus = {
+		id = FRADNC_three_nation_solution
+		icon = GFX_focus_RAJ_two_nation_theory
+		x = 10
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_foundations_for_an_indian_state }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Self-Government For The Mediterranean
+	focus = {
+		id = FRADNC_selfgovernment_for_the_mediterranean
+		icon = GFX_goal_tripartite_pact
+		x = 12
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_withdraw_from_contested_territories 
+		}
+		prerequisite = { 
+			focus = FRADNC_towards_dominion_independence 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Self-Government For The Middle East
+	focus = {
+		id = FRADNC_selfgovernment_for_the_middle_east
+		icon = GFX_goal_tripartite_pact
+		x = 14
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_withdraw_from_contested_territories }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Self-Government For The Americas
+	focus = {
+		id = FRADNC_selfgovernment_for_the_americas
+		icon = GFX_goal_tripartite_pact
+		x = 14
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_selfgovernment_for_the_middle_east }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Self-Government For Asia
+	focus = {
+		id = FRADNC_selfgovernment_for_asia
+		icon = GFX_goal_tripartite_pact
+		x = 13
+		y = 14
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_selfgovernment_for_africa 
+		}
+		prerequisite = { 
+			focus = FRADNC_selfgovernment_for_the_americas 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Self-Government For Africa
+	focus = {
+		id = FRADNC_selfgovernment_for_africa
+		icon = GFX_goal_tripartite_pact
+		x = 12
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_selfgovernment_for_the_mediterranean }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Decolonization
+	focus = {
+		id = FRADNC_decolonization
+		icon = GFX_focus_eng_decolonization
+		x = 12
+		y = 15
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_towards_indian_independence 
+		}
+		prerequisite = { 
+			focus = FRADNC_selfgovernment_for_asia 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Enforce Direct Rule
+	focus = {
+		id = FRADNC_enforce_direct_rule
+		icon = GFX_focus_eng_bring_the_dominions_back_into_the_fold
+		x = 30
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_empire }
+		mutually_exclusive = { 
+			focus = FRADNC_guide_the_colonies 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_steady_as_she_goes 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Economic Focus
+	focus = {
+		id = FRADNC_economic_focus
+		icon = GFX_focus_usa_reestablish_the_gold_standard
+		x = 36
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_his_majestys_government }
+		mutually_exclusive = { focus = FRADNC_ljmXoAwI }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Censor Australian Nationalism
+	focus = {
+		id = FRADNC_censor_australian_nationalism
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 32
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_empower_colonial_governors }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Industrial Focus
+	focus = {
+		id = FRADNC_industrial_focus
+		icon = GFX_focus_generic_industry_3
+		x = 40
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_his_majestys_government }
+		mutually_exclusive = { focus = FRADNC_economic_focus }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Empower Colonial Governors
+	focus = {
+		id = FRADNC_empower_colonial_governors
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 32
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_enforce_direct_rule }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Welfare State
+	focus = {
+		id = FRADNC_the_welfare_state
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_economic_focus }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for His Majesty's Government
+	focus = {
+		id = FRADNC_his_majestys_government
+		icon = GFX_focus_eng_the_kings_party
+		x = 38
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Move To Secure The Dominions
+	focus = {
+		id = FRADNC_move_to_secure_the_dominions
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 30
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_enforce_direct_rule }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Imperial Conscription
+	focus = {
+		id = FRADNC_imperial_conscription
+		icon = GFX_focus_generic_commonwealth_build_infantry
+		x = 28
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_enforce_direct_rule }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Reclaim The Jewel In The Crown
+	focus = {
+		id = FRADNC_reclaim_the_jewel_in_the_crown
+		icon = GFX_focus_RAJ_british_investors
+		x = 30
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_censor_irish_nationalism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Sun Never Sets
+	focus = {
+		id = FRADNC_the_sun_never_sets
+		icon = GFX_focus_eng_the_sun_never_sets
+		x = 30
+		y = 14
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_our_empire 
+			focus = FRADNC_censor_boer_nationalism 
+			focus = FRADNC_reclaim_the_jewel_in_the_crown 
+			focus = FRADNC_censor_kiwi_nationalism 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for That One Rebellious Colony
+	focus = {
+		id = FRADNC_secure_morocco
+		icon = GFX_focus_spa_the_war_of_vengeance
+		x = 49
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_two_power_standard 
+		}
+		prerequisite = { 
+			focus = FRADNC_infraestructure_buildup_in_northern_africa
+		}
+		mutually_exclusive = { focus = FRADNC_invade_morocco }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Unite The Anglosphere
+	focus = {
+		id = FRADNC_unite_the_francosphere
+		icon = GFX_focus_eng_unite_the_anglosphere
+		x = 52
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_hegemony_in_north_africa
+		}
+		prerequisite = { 
+			focus = FRADNC_take_revenge_on_the_brits 
+		}
+		mutually_exclusive = { focus = FRADNC_the_two_crown_empire }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Closer Relations With France
+	focus = {
+		id = FRADNC_closer_relations_with_spain
+		icon = GFX_align_to_france
+		x = 61
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_dominions_of_house_plantagenet }
+		mutually_exclusive = { focus = FRADNC_ultimatum_to_the_french }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for British Industrial Giant
+	focus = {
+		id = FRADNC_british_industrial_giant
+		icon = GFX_goal_generic_construct_civ_factory
+		x = 40
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_expand_railways }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for King's College II
+	focus = {
+		id = FRADNC_kings_college_ii
+		icon = GFX_focus_usa_guarantee_the_american_dream
+		x = 38
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_economic_focus 
+			focus = FRADNC_industrial_focus 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Partition America With France And Spain
+	focus = {
+		id = FRADNC_invade_morocco
+		icon = GFX_focus_spa_the_war_of_vengeance
+		x = 51
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_two_power_standard 
+		}
+		prerequisite = { 
+			focus = FRADNC_infraestructure_buildup_in_northern_africa 
+		}
+		mutually_exclusive = { focus = FRADNC_secure_morocco }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Censor Irish Nationalism
+	focus = {
+		id = FRADNC_censor_irish_nationalism
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 30
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_move_to_secure_the_dominions }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Demand Canadian Submission
+	focus = {
+		id = FRADNC_demand_canadian_submission
+		icon = attack_canada
+		x = 28
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_imperial_conscription }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Censor Kiwi Nationalism
+	focus = {
+		id = FRADNC_censor_kiwi_nationalism
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 32
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_censor_australian_nationalism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Censor Boer Nationalism
+	focus = {
+		id = FRADNC_censor_boer_nationalism
+		icon = GFX_focus_generic_anti_fascist_diplomacy
+		x = 28
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_demand_canadian_submission }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for placeholder2
+	focus = {
+		id = FRADNC_placeholder2
+		icon = GFX_goal_unknown
+		x = 117
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Britannia Rules The Waves
+	focus = {
+		id = FRADNC_britannia_rules_the_waves
+		icon = GFX_focus_eng_the_sun_never_sets
+		x = 57
+		y = 4
+		cost = 10
+		available_if_capitulated = yes
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for For King And Country
+	focus = {
+		id = FRADNC_for_king_and_country
+		icon = GFX_focus_hun_elect_a_king
+		x = 57
+		y = 5
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_britannia_rules_the_waves }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for American Stance
+	focus = {
+		id = FRADNC_american_stance
+		icon = GFX_focus_hun_elect_a_king
+		x = 45
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Dominions of House Plantagenet
+	focus = {
+		id = FRADNC_the_dominions_of_house_plantagenet
+		icon = GFX_focus_hun_elect_a_king
+		x = 60
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Start Talks For The Imperial Federation
+	focus = {
+		id = FRADNC_the_british_question
+		icon = GFX_focus_eng_imperial_federation
+		x = 55
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Restoring Our Empire
+	focus = {
+		id = FRADNC_restoring_our_empire
+		icon = GFX_focus_eng_the_sun_never_sets
+		x = 50
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Negotiations With Canada
+	focus = {
+		id = FRADNC_negotiations_with_canada
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 56
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_british_question }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Ultimatum To Denmark
+	focus = {
+		id = FRADNC_ultimatum_to_mexico
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 44
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_american_stance }
+		mutually_exclusive = { focus = FRADNC_intervene_in_mexico }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Purchase Danish Colonies
+	focus = {
+		id = FRADNC_intervene_in_mexico
+		icon = GFX_focus_mex_jefe_maximo
+		x = 46
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_american_stance }
+		mutually_exclusive = { focus = FRADNC_ultimatum_to_mexico }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Annex Denmark
+	focus = {
+		id = FRADNC_liberate_Quebec
+		icon = GFX_goal_generic_major_war
+		x = 44
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_ultimatum_to_mexico 
+			focus = FRADNC_intervene_in_mexico 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Annex Norway
+	focus = {
+		id = FRADNC_central_america_actions
+		icon = GFX_goal_generic_major_war
+		x = 46
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_ultimatum_to_mexico 
+			focus = FRADNC_intervene_in_mexico 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for A Windsor-Bourbon Marriage
+	focus = {
+		id = FRADNC_a_bourbon_union
+		icon = GFX_focus_generic_royal_wedding
+		x = 61
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_closer_relations_with_spain }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Ultimatum To The French
+	focus = {
+		id = FRADNC_ultimatum_to_spain
+		icon = GFX_focus_generic_strike_at_democracy2
+		x = 59
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_dominions_of_house_plantagenet }
+		mutually_exclusive = { focus = FRADNC_closer_relations_with_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Fate of France
+	focus = {
+		id = FRADNC_fate_of_spain
+		icon = GFX_focus_ger_break_anglo_french_colonial_hegemony
+		x = 59
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_ultimatum_to_spain }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Angevin Empire
+	focus = {
+		id = FRADNC_the_spanish_crown
+		icon = GFX_focus_hun_elect_a_king
+		x = 60
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_a_unified_citizenship 
+		}
+		prerequisite = { 
+			focus = FRADNC_our_two_official_languages 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Franco-British Union
+	focus = {
+		id = FRADNC_the_two_crown_empire
+		icon = GFX_focus_fra_le_deluge
+		x = 60
+		y = 13
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_spanish_crown }
+		mutually_exclusive = { focus = FRADNC_unite_the_francosphere }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for New France
+	focus = {
+		id = FRADNC_New_France
+		icon = GFX_focus_hun_elect_a_king
+		x = 45
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_luisiana_for_guarantees 
+			focus = FRADNC_retake_luisiana
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Two Power Standard
+	focus = {
+		id = FRADNC_two_power_standard
+		icon = GFX_goal_generic_navy_battleship
+		x = 49
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_restoring_our_empire }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Infraestructure Buildup In Canada
+	focus = {
+		id = FRADNC_infraestructure_buildup_in_northern_africa
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 51
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_restoring_our_empire }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Negotiations With Ireland
+	focus = {
+		id = FRADNC_fund_separatism
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 54
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_british_question }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The British Imperial Federation
+	focus = {
+		id = FRADNC_take_revenge_on_the_brits
+		icon = GFX_focus_eng_imperial_federation
+		x = 55
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_the_indian_question 
+		}
+		prerequisite = { 
+			focus = FRADNC_new_colonies_in_the_pacific 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Hegemony In North America
+	focus = {
+		id = FRADNC_hegemony_in_north_africa
+		icon = GFX_focus_eng_move_to_secure_the_dominions
+		x = 50
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_split_with_spain 
+			focus = FRADNC_full_french_protectorate 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Friendship With Mexico
+	focus = {
+		id = FRADNC_split_with_spain
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 49
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_invade_morocco 
+			focus = FRADNC_secure_morocco 
+		}
+		mutually_exclusive = { focus = FRADNC_full_french_protectorate }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Secure Mexico
+	focus = {
+		id = FRADNC_full_french_protectorate
+		icon = GFX_focus_mex_jefe_maximo
+		x = 51
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_secure_morocco 
+			focus = FRADNC_invade_morocco 
+		}
+		mutually_exclusive = { focus = FRADNC_split_with_spain }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Indian Question
+	focus = {
+		id = FRADNC_the_indian_question
+		icon = GFX_focus_RAJ_british_investors
+		x = 54
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_indochinese_bases }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Boer Question
+	focus = {
+		id = FRADNC_new_colonies_in_the_pacific
+		icon = GFX_goal_tfv_saf_support_ossebrandwag
+		x = 56
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stronger_navy }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for A Unified Citizenship
+	focus = {
+		id = FRADNC_a_unified_citizenship
+		icon = GFX_align_to_france
+		x = 59
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_fate_of_spain
+			focus = FRADNC_a_bourbon_union
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Our Two Official Languages
+	focus = {
+		id = FRADNC_our_two_official_languages
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 61
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_fate_of_spain
+			focus = FRADNC_a_bourbon_union
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Extend The Conscription
+	focus = {
+		id = FRADNC_extend_the_conscription
+		icon = GFX_focus_generic_manpower
+		x = 34
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_FzftJVpZ }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Southern Sweden For Guarantees
+	focus = {
+		id = FRADNC_luisiana_for_guarantees
+		icon = GFX_goal_generic_forceful_treaty
+		x = 44
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_central_america_actions 
+		}
+		prerequisite = { 
+			focus = FRADNC_liberate_Quebec 
+		}
+		mutually_exclusive = { focus = FRADNC_retake_luisiana }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Take Southern Sweden By Force
+	focus = {
+		id = FRADNC_retake_luisiana
+		icon = GFX_goal_generic_military_deal
+		x = 46
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = FRADNC_liberate_Quebec
+		}
+		prerequisite = {
+			focus = FRADNC_central_america_actions
+		}
+		mutually_exclusive = { focus = FRADNC_luisiana_for_guarantees }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Middle Eastern Expansion
+	focus = {
+		id = FRADNC_middle_eastern_expeditions
+		icon = GFX_focus_TUR_misak_i_milli
+		x = 65
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Annex Persia
+	focus = {
+		id = FRADNC_annex_persia
+		icon = GFX_goal_generic_attack_allies
+		x = 64
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_middle_eastern_expeditions }
+		mutually_exclusive = { focus = FRADNC_a_persian_protectorate }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Annex Afghanistan
+	focus = {
+		id = FRADNC_annex_afghanistan
+		icon = GFX_goal_generic_attack_allies
+		x = 64
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_annex_persia 
+			focus = FRADNC_a_persian_protectorate 
+		}
+		mutually_exclusive = { focus = FRADNC_an_afghan_protectorate }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Secure Arab Peninsula
+	focus = {
+		id = FRADNC_secure_arab_peninsula
+		icon = GFX_goal_generic_attack_allies
+		x = 64
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_annex_afghanistan 
+			focus = FRADNC_an_afghan_protectorate 
+		}
+		mutually_exclusive = { focus = FRADNC_demand_arab_submission }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Demand Arab Submission
+	focus = {
+		id = FRADNC_demand_arab_submission
+		icon = GFX_goal_generic_military_deal
+		x = 66
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_annex_afghanistan 
+			focus = FRADNC_an_afghan_protectorate 
+		}
+		mutually_exclusive = { focus = FRADNC_secure_arab_peninsula }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for A Persian Protectorate
+	focus = {
+		id = FRADNC_a_persian_protectorate
+		icon = GFX_goal_generic_military_deal
+		x = 66
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_middle_eastern_expeditions }
+		mutually_exclusive = { focus = FRADNC_annex_persia }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for An Afghan Protectorate
+	focus = {
+		id = FRADNC_an_afghan_protectorate
+		icon = GFX_goal_generic_military_deal
+		x = 66
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_annex_persia 
+			focus = FRADNC_a_persian_protectorate 
+		}
+		mutually_exclusive = { focus = FRADNC_annex_afghanistan }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Challenge english egypt
+	focus = {
+		id = FRADNC_expedition_in_egypt
+		icon = GFX_focus_generic_attack_turkey
+		x = 64
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_demand_arab_submission 
+			focus = FRADNC_secure_arab_peninsula 
+		}
+		mutually_exclusive = { focus = FRADNC_european_crusade_against_islam }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for European Crusade Against Islam
+	focus = {
+		id = FRADNC_retake_suez
+		icon = GFX
+		x = 66
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_demand_arab_submission 
+			focus = FRADNC_secure_arab_peninsula 
+		}
+		mutually_exclusive = { focus = FRADNC_fate_of_the_ottoman_empire }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Hannover or War
+	focus = {
+		id = FRADNC_Dismantle_the_ogre
+		icon = GFX_goal_generic_attack_allies
+		x = 69
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_netherland_sister_republic 
+			focus = FRADNC_invade_low_countries 
+		}
+		mutually_exclusive = { focus = FRADNC_rhein_gebiet_for_guarantees }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Hannover For Guarantees
+	focus = {
+		id = FRADNC_rhein_gebiet_for_guarantees
+		icon = GFX_align_to_germany2
+		x = 71
+		y = 10
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = {
+			focus = FRADNC_invade_low_countries
+			focus = FRADNC_netherland_sister_republic
+		}
+		mutually_exclusive = { focus = FRADNC_hannover_or_war }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Make English An Official Language
+	focus = {
+		id = FRADNC_the_austrian_question
+		icon = GFX_focus_hol_the_foundations_of_defense
+		x = 71
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_rhein_gebiet_for_guarantees 
+			focus = FRADNC_Dismantle_the_ogre 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Grant British Citizenship To Hannoverian Subjects
+	focus = {
+		id = FRADNC_italian_campaign
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		x = 69
+		y = 11
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_Dismantle_the_ogre 
+			focus = FRADNC_rhein_gebiet_for_guarantees 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Integrate Kingdom of Hannover
+	focus = {
+		id = FRADNC_the_new_continental_system
+		icon = GFX_align_to_germany2
+		x = 70
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_italian_campaign 
+		}
+		prerequisite = { 
+			focus = FRADNC_the_austrian_question 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Friendship With The Netherlands
+	focus = {
+		id = FRADNC_netherland_sister_republic
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 71
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stance_in_europe }
+		mutually_exclusive = { focus = FRADNC_secure_the_netherlands }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+	#Focus for Secure The Netherlands
+	focus = {
+		id = FRADNC_invade_low_countries
+		icon = GFX_goal_generic_attack_allies
+		x = 69
+		y = 9
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stance_in_europe }
+		mutually_exclusive = { focus = FRADNC_netherland_sister_republic }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Kingdom of Hannover
+	focus = {
+		id = FRADNC_stance_in_europe
+		icon = GFX_focus_hun_elect_a_king
+		x = 70
+		y = 8
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_french_imperialism }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Imperial Customs Union
+	focus = {
+		id = FRADNC_imperial_customs_union
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 36
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_welfare_state }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Royal Society II
+	focus = {
+		id = FRADNC_royal_society_ii
+		icon = GFX_focus_research2
+		x = 38
+		y = 12
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_kings_college_ii }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Boxer Rebellion
+	focus = {
+		id = FRADNC_the_boxer_rebellion
+		icon = GFX_focus_chi_one_china_policy
+		x = 26
+		y = 19
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_his_majestys_diplomatic_service }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Chinese Foreign Policy
+	focus = {
+		id = FRADNC_support_chinese_foreign_policy
+		icon = GFX_align_to_taiwan
+		x = 22
+		y = 22
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_arm_the_boxers 
+			focus = FRADNC_military_advisors_to_qing 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Sell Weapons To Both Sides
+	focus = {
+		id = FRADNC_sell_weapons_to_both_sides
+		icon = small_arms
+		x = 25
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_proclaim_neutrality }
+		mutually_exclusive = { focus = FRADNC_arms_embargo_to_both_sides }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Smuggle Weapons To Legations
+	focus = {
+		id = FRADNC_smuggle_weapons_to_legations
+		icon = small_arms
+		x = 29
+		y = 21
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_condemn_the_boxers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Sanction China
+	focus = {
+		id = FRADNC_sanction_china
+		icon = GFX_focus_generic_military_academy
+		x = 30
+		y = 22
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_smuggle_military_advisors_to_legations 
+			focus = FRADNC_smuggle_weapons_to_legations 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for European Affairs
+	focus = {
+		id = FRADNC_european_affairs
+		icon = GFX_focus_usa_focus_on_europe
+		x = 16
+		y = 24
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_boxer_rebellion_comes_to_an_end }
+		mutually_exclusive = { focus = FRADNC_IugXbjFf }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support The Central Powers
+	focus = {
+		id = FRADNC_support_the_central_powers
+		icon = GFX_focus_ger_revive_kaiserreich
+		x = 6
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_european_affairs }
+		mutually_exclusive = { 
+			focus = FRADNC_LWHeXgnD 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_draw_up_plans_for_a_british_faction 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support The Kaisers Foreign Policy
+	focus = {
+		id = FRADNC_support_the_kaisers_foreign_policy
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 3
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_germany }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Condemn French Foreign Policy
+	focus = {
+		id = FRADNC_condemn_french_foreign_policy
+		icon = attack_france
+		x = 5
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_germany }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Kaiser Visits Us
+	focus = {
+		id = FRADNC_the_kaiser_visits_us
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 4
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_the_kaisers_foreign_policy 
+		}
+		prerequisite = { 
+			focus = FRADNC_condemn_french_foreign_policy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Germany
+	focus = {
+		id = FRADNC_support_germany
+		icon = GFX_focus_ger_revive_kaiserreich
+		x = 4
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_central_powers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Austria-Hungary
+	focus = {
+		id = FRADNC_support_austriahungary
+		icon = GFX_focus_ger_revive_kaiserreich
+		x = 8
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_central_powers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support The Emperor's Foreign Policy
+	focus = {
+		id = FRADNC_support_the_emperors_foreign_policy
+		icon = GFX_focus_hun_elect_a_king
+		x = 7
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_austriahungary }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Condemn Russian Policy
+	focus = {
+		id = FRADNC_condemn_russian_policy
+		icon = GFX_focus_generic_attack_cyprus
+		x = 9
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_austriahungary }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Emperor Visits Us
+	focus = {
+		id = FRADNC_the_emperor_visits_us
+		icon = GFX_focus_hun_elect_a_king
+		x = 8
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_the_emperors_foreign_policy 
+		}
+		prerequisite = { 
+			focus = FRADNC_condemn_russian_policy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Join The Central Powers
+	focus = {
+		id = FRADNC_join_the_central_powers
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 6
+		y = 29
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_the_kaiser_visits_us 
+		}
+		prerequisite = { 
+			focus = FRADNC_the_emperor_visits_us 
+		}
+		prerequisite = { 
+			focus = FRADNC_TpoaHGmh 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Invite Foreign Officers
+	focus = {
+		id = FRADNC_invite_foreign_officers
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 11
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_the_central_powers 
+			focus = FRADNC_LWHeXgnD 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Export Weapons
+	focus = {
+		id = FRADNC_export_weapons
+		icon = GFX_focus_ger_oppose_hitler
+		x = 11
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_invite_foreign_officers }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Study Foreign Militaries
+	focus = {
+		id = FRADNC_study_foreign_militaries
+		icon = GFX_focus_generic_treaty
+		x = 11
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_export_weapons }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support The Entente
+	focus = {
+		id = FRADNC_support_the_entente
+		icon = GFX_goal_support_democracy
+		x = 16
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_european_affairs }
+		mutually_exclusive = { 
+			focus = FRADNC_support_the_central_powers 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_draw_up_plans_for_a_british_faction 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support France
+	focus = {
+		id = FRADNC_support_france
+		icon = GFX_align_to_france
+		x = 14
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_entente }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Russia
+	focus = {
+		id = FRADNC_support_russia
+		icon = GFX_focus_generic_befriend_cyprus
+		x = 18
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_the_entente }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support French Revanchism
+	focus = {
+		id = FRADNC_support_french_revanchism
+		icon = GFX_align_to_france
+		x = 13
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Condemn German Imperialism
+	focus = {
+		id = FRADNC_condemn_german_imperialism
+		icon = attack_germany
+		x = 15
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Make French An Official Language
+	focus = {
+		id = FRADNC_make_french_an_official_language
+		icon = GFX_focus_generic_military_academy
+		x = 14
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_french_revanchism 
+		}
+		prerequisite = { 
+			focus = FRADNC_condemn_german_imperialism 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Support Pan-Slavism
+	focus = {
+		id = FRADNC_support_panslavism
+		icon = GFX_focus_generic_befriend_cyprus
+		x = 17
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_russia }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Condemn Habsburg Foreign Policy
+	focus = {
+		id = FRADNC_condemn_habsburg_foreign_policy
+		icon = attack_germany
+		x = 19
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_support_russia }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Tsar Visits Us
+	focus = {
+		id = FRADNC_the_tsar_visits_us
+		icon = GFX_focus_hun_elect_a_king
+		x = 18
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_support_panslavism 
+		}
+		prerequisite = { 
+			focus = FRADNC_condemn_habsburg_foreign_policy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Join The Entente
+	focus = {
+		id = FRADNC_join_the_entente
+		icon = GFX_align_to_france
+		x = 16
+		y = 29
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_study_foreign_militaries 
+		}
+		prerequisite = { 
+			focus = FRADNC_make_french_an_official_language 
+		}
+		prerequisite = { 
+			focus = FRADNC_the_tsar_visits_us 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Joint Industrial Development
+	focus = {
+		id = FRADNC_joint_industrial_development
+		icon = GFX_focus_generic_industry_3
+		x = 14
+		y = 30
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_join_the_central_powers 
+			focus = FRADNC_join_the_entente 
+			focus = FRADNC_create_the_faction 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for A Foreign Attache
+	focus = {
+		id = FRADNC_a_foreign_attache
+		icon = GFX_focus_ger_return_of_the_kaiser
+		x = 16
+		y = 30
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_join_the_central_powers 
+			focus = FRADNC_join_the_entente 
+			focus = FRADNC_create_the_faction 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Joint Technological Development
+	focus = {
+		id = FRADNC_joint_technological_development
+		icon = GFX_focus_research2
+		x = 18
+		y = 30
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_join_the_central_powers 
+			focus = FRADNC_join_the_entente 
+			focus = FRADNC_create_the_faction 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Stay Neutral
+	focus = {
+		id = FRADNC_stay_neutral
+		icon = GFX_align_to_switzerland
+		x = 41
+		y = 24
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_boxer_rebellion_comes_to_an_end }
+		mutually_exclusive = { 
+			focus = FRADNC_stay_neutral 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_european_affairs 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_ 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Prepare For The Worst
+	focus = {
+		id = FRADNC_prepare_for_the_worst
+		icon = small_arms
+		x = 35
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stay_neutral }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Our Role
+	focus = {
+		id = FRADNC_our_role
+		icon = GFX_goal_generic_neutrality_focus
+		x = 41
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stay_neutral }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Deterrence
+	focus = {
+		id = FRADNC_deterrence
+		icon = GFX_focus_generic_coastal_fort
+		x = 47
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_stay_neutral }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Acquire Weapons
+	focus = {
+		id = FRADNC_acquire_weapons
+		icon = GFX_goal_generic_army_artillery2
+		x = 36
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_prepare_for_the_worst }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Proper Military Training
+	focus = {
+		id = FRADNC_proper_military_training
+		icon = army_officers
+		x = 35
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_extend_the_conscription 
+		}
+		prerequisite = { 
+			focus = FRADNC_acquire_weapons 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Oppose German Ambitions
+	focus = {
+		id = FRADNC_oppose_german_ambitions
+		icon = attack_germany
+		x = 38
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_role }
+		mutually_exclusive = { focus = FRADNC_improve_relations_with_germany }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Improve Relations With Germany
+	focus = {
+		id = FRADNC_improve_relations_with_germany
+		icon = GFX_align_to_germany2
+		x = 40
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_role }
+		mutually_exclusive = { focus = FRADNC_oppose_german_ambitions }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Improve Relations With France
+	focus = {
+		id = FRADNC_improve_relations_with_france
+		icon = GFX_align_to_france
+		x = 42
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_role }
+		mutually_exclusive = { focus = FRADNC_XYAWBvtb }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Oppose French Ambitions
+	focus = {
+		id = FRADNC_oppose_french_ambitions
+		icon = attack_france
+		x = 44
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_our_role }
+		mutually_exclusive = { focus = FRADNC_improve_relations_with_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Best Defense Is A Good Offense
+	focus = {
+		id = FRADNC_the_best_defense_is_a_good_offense
+		icon = GFX_focus_prc_infiltration
+		x = 41
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_oppose_german_ambitions 
+			focus = FRADNC_oppose_french_ambitions 
+			focus = FRADNC_improve_relations_with_germany 
+			focus = FRADNC_improve_relations_with_france 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Home Defense
+	focus = {
+		id = FRADNC_home_defense
+		icon = GFX_focus_generic_home_defense
+		x = 46
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_deterrence }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Fortification Effort
+	focus = {
+		id = FRADNC_fortification_effort
+		icon = city_fort
+		x = 48
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_deterrence }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Why We Fight
+	focus = {
+		id = FRADNC_why_we_fight
+		icon = GFX_goal_generic_propaganda
+		x = 47
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_home_defense 
+		}
+		prerequisite = { 
+			focus = FRADNC_fortification_effort 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Appeasement Policy
+	focus = {
+		id = FRADNC_appeasement_policy
+		icon = GFX_goal_tripartite_pact
+		x = 40
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_best_defense_is_a_good_offense }
+		mutually_exclusive = { focus = FRADNC_SGuRdvnT }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for League of Armed Neutrality
+	focus = {
+		id = FRADNC_league_of_armed_neutrality
+		icon = GFX_goal_generic_alliance
+		x = 42
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_the_best_defense_is_a_good_offense }
+		mutually_exclusive = { focus = FRADNC_appeasement_policy }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Draw Up Plans For A British Faction
+	focus = {
+		id = FRADNC_draw_up_plans_for_a_british_faction
+		icon = GFX_focus_generic_treaty
+		x = 26
+		y = 25
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_european_affairs }
+		mutually_exclusive = { 
+			focus = FRADNC_support_the_central_powers 
+		}
+		mutually_exclusive = { 
+			focus = FRADNC_support_the_entente 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Monarchist Coup In France
+	focus = {
+		id = FRADNC_monarchist_coup_in_france
+		icon = GFX_focus_fra_le_deluge
+		x = 22
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_arm_action_francaise 
+		}
+		prerequisite = { 
+			focus = FRADNC_fund_action_francaise 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Arm Action Francaise
+	focus = {
+		id = FRADNC_arm_action_francaise
+		icon = small_arms
+		x = 21
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_monarchist_sentiment_in_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Fund Action Francaise
+	focus = {
+		id = FRADNC_fund_action_francaise
+		icon = GFX_focus_mex_privatisation
+		x = 23
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_monarchist_sentiment_in_france }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Iberian Diplomacy
+	focus = {
+		id = FRADNC_iberian_diplomacy
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 25
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_exert_our_influence_over_the_mediterranean }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Exert Our Influence Over The Mediterranean
+	focus = {
+		id = FRADNC_exert_our_influence_over_the_mediterranean
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		x = 26
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_draw_up_plans_for_a_british_faction }
+		mutually_exclusive = { focus = FRADNC_exert_our_influence_over_the_north_sea }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Benelux Diplomacy
+	focus = {
+		id = FRADNC_benelux_diplomacy
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 29
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_exert_our_influence_over_the_north_sea }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Scandinavian Diplomacy
+	focus = {
+		id = FRADNC_scandinavian_diplomacy
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 31
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_exert_our_influence_over_the_north_sea }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Amsterdam Conference
+	focus = {
+		id = FRADNC_the_amsterdam_conference
+		icon = GFX_focus_generic_military_academy
+		x = 30
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_benelux_diplomacy 
+		}
+		prerequisite = { 
+			focus = FRADNC_scandinavian_diplomacy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Mediterranean Diplomacy
+	focus = {
+		id = FRADNC_mediterranean_diplomacy
+		icon = GFX_goal_tfv_strengthen_commonwealth_ties
+		x = 27
+		y = 27
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_exert_our_influence_over_the_mediterranean }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Exert Our Influence Over The North Sea
+	focus = {
+		id = FRADNC_exert_our_influence_over_the_north_sea
+		icon = GFX_focus_eng_concessions_to_the_trade_unions
+		x = 30
+		y = 26
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { focus = FRADNC_draw_up_plans_for_a_british_faction }
+		mutually_exclusive = { focus = FRADNC_exert_our_influence_over_the_mediterranean }
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for The Madrid Conference
+	focus = {
+		id = FRADNC_the_madrid_conference
+		icon = GFX_focus_generic_military_academy
+		x = 26
+		y = 28
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_iberian_diplomacy 
+		}
+		prerequisite = { 
+			focus = FRADNC_mediterranean_diplomacy 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	#Focus for Create The Faction
+	focus = {
+		id = FRADNC_create_the_faction
+		icon = GFX_focus_eng_imperial_federation
+		x = 26
+		y = 29
+		cost = 10
+		available_if_capitulated = yes
+		prerequisite = { 
+			focus = FRADNC_study_foreign_militaries 
+			focus = FRADNC_monarchist_coup_in_france 
+			focus = FRADNC_the_madrid_conference 
+			focus = FRADNC_the_amsterdam_conference 
+		}
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+#End of focuses 
+# }
