@@ -1,0 +1,1622 @@
+devastation_test = { 
+	ETH = {
+		set_province_controller = 9772
+		set_province_controller = 11773
+	}
+	
+	114 = {
+		set_variable = { state_devastation_value = 100 }
+	}
+	
+	#clear_variable = total_external_refugees_in_game
+	#clear_variable = total_external_refugees_assimilated_in_game
+	#clear_variable = total_external_refugees_expelled_in_game
+	#
+	#set_temp_variable = { global.temp = 84.55 }
+	#1 = {
+	#	#add_to_variable = { devastation_unassimilated_pops = global.temp }
+	#	set_variable = { devastation_unassimilated_pops = global.temp }
+	#	add_to_variable = { PREV.total_external_refugees_in_game = global.temp }
+	#}
+	#851 = {
+	#	#add_to_variable = { devastation_unassimilated_pops = global.temp }
+	#	set_variable = { devastation_unassimilated_pops = global.temp }
+	#	add_to_variable = { PREV.total_external_refugees_in_game = global.temp }
+	#}
+	##add_to_variable = { total_external_refugees_in_game = global.temp }
+	#devastation_country_calc_unassimilated = yes
+	##add_ideas = devastation_test_idea
+}
+
+devastation_test2 = {
+	851 = {
+		#if = {
+		#	limit = { is_coastal = yes }
+			
+			every_state = {
+				limit = { is_coastal = yes NOT = { state = PREV } distance_to = { value < 5000 target = PREV } NOT = { is_capital = yes } }
+				transfer_state_to = CHL
+			}
+		#}
+	}
+}
+
+d_damage_infrastructure = { 
+	damage_building = {
+		type = infrastructure
+		damage = 1
+	}
+}
+
+d_add_resistance = { 
+	add_resistance = args^0
+}
+
+d_set_controller = { 
+	#838 = {
+	#	set_state_controller = ITA
+	#}
+}
+
+debug_every_states_neighbor_devastation = { 
+	every_state = {
+		limit = { 
+			controller = {
+				set_temp_variable = { global.state_controler = THIS.id }
+			}
+			any_neighbor_state = { 
+				controller = { 
+					NOT = { tag = var:global.state_controler } 
+				} 
+			}
+		}
+		set_variable = { state_devastation_value = 100 }
+		devastation_state_random_value = yes
+		devastation_state_calc_modifiers = yes
+	}
+	every_country = {
+		hidden_effect = {
+			devastation_country_calc_value = yes
+			#devastation_country_calc_modifiers = yes
+		}
+	}
+}
+
+debug_every_states_0_devastation = { 
+	every_state = {
+		set_variable = { state_devastation_value = 0 }
+		devastation_state_calc_modifiers = yes
+	}
+	every_country = {
+		hidden_effect = {
+			devastation_country_calc_value = yes
+			#devastation_country_calc_modifiers = yes
+		}
+	}
+}
+
+debug_every_states_100_devastation = { 
+	every_state = {
+		set_variable = { state_devastation_value = 100 }
+		devastation_state_calc_modifiers = yes
+	}
+	every_country = {
+		hidden_effect = {
+			devastation_country_calc_value = yes
+			#devastation_country_calc_modifiers = yes
+		}
+	}
+}
+
+debug_every_states_random_devastation = { 
+	every_state = {
+		set_variable = { state_devastation_value = 0 }
+		devastation_state_random_value = yes
+		devastation_state_calc_modifiers = yes
+	}
+	every_country = {
+		hidden_effect = {
+			devastation_country_calc_value = yes
+			#devastation_country_calc_modifiers = yes
+		}
+	}
+}
+
+devastation_state_change_value = { 
+	add_to_variable = { state_devastation_value = temp }
+	custom_effect_tooltip = devastation_state_change_value_tt
+}
+
+devastation_state_random_value = { 
+	set_variable_to_random = { var = state_devastation_value min = 1 max = 100 integer = yes }
+}
+
+devastation_state_calc_modifiers = { 
+	clear_array = state_devastation_modifier
+	clamp_variable = { var = state_devastation_value min = 0 max = 100 }
+	
+			
+	# local_supplies -0.50
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_local_supplies }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+	
+	# local_factories -0.35
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_local_factories }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+	
+	# local_building_slots -20
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_local_building_slots }
+	divide_temp_variable = { temp = temp_100 }
+	round_temp_variable = temp
+	add_to_array = { state_devastation_modifier = temp }
+	
+	# state_resources_factor -0.9
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_state_resources_factor }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+	
+	# state_production_speed_buildings_factor -0.75
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_state_production_speed_buildings_factor }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+	
+	# USED BY 'state_repair_speed_arms_factory_factor' AND 'state_repair_speed_industrial_complex_factor' AS WELL
+	# state_repair_speed_infrastructure_factor -0.5
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_state_repair_speed_buildings_factor }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+
+	set_temp_variable = { temp = state_devastation_value }
+	set_temp_variable = { temp_100 = 100 }
+	divide_temp_variable = { temp_100 = global.devastation_army_speed_factor }
+	divide_temp_variable = { temp = temp_100 }
+	add_to_array = { state_devastation_modifier = temp }
+	
+	force_update_dynamic_modifier = yes
+}
+
+devastation_country_calc_value = { 
+	clear_variable = country_devastation_value
+	set_temp_variable = { devastation_country_score = 0 } 
+	set_temp_variable = { devastation_country_population = 0 } 
+	
+	every_owned_state = {
+		set_temp_variable = { devastation_state_score = 0 }
+		
+		set_temp_variable = { devastation_percentage = state_devastation_value }
+		divide_temp_variable = { devastation_percentage = 100 }
+		##log = "[THIS.GetName]: Devastation Percentage - [?devastation_percentage|%]"
+		
+		devastation_get_state_type_multiplier = yes
+		add_to_temp_variable = { devastation_state_type_multiplier = 5 }
+		##log = "[THIS.GetName]: Devastation State Multiplier - [?devastation_state_type_multiplier]"
+		
+		set_temp_variable = { devastation_state_score = state_population_k }
+		divide_temp_variable = { devastation_state_score = 1000 }
+		##log = "[THIS.GetName]: Devastation State Population - [?state_population_k]"
+		
+		multiply_temp_variable = { devastation_state_score = devastation_percentage }
+		multiply_temp_variable = { devastation_state_score = devastation_state_type_multiplier }
+		
+		##log = "[THIS.GetName]: Devastation State Score - [?devastation_state_score]"
+		add_to_temp_variable = { PREV.devastation_country_score = devastation_state_score }
+		
+	}
+	set_temp_variable = { devastation_max_population = max_manpower_k }
+	divide_temp_variable = { devastation_max_population = 1000 }
+	divide_temp_variable = { devastation_country_score = devastation_max_population }
+	
+	set_variable = { country_devastation_value = devastation_country_score }
+	##log = "[THIS.GetName]: [?country_devastation_value] - [?max_manpower_k] K"
+}
+
+devastation_country_calc_modifiers = { 
+	if = {
+		limit = { 
+			NOT = {
+				has_dynamic_modifier = {
+					modifier = country_devastation_modifier
+				}
+			}
+		}
+		add_dynamic_modifier = {
+			modifier = country_devastation_modifier
+		}
+	}
+	#set_variable = { country_devastation_value = 100 }
+	clear_array = country_devastation_modifier
+	
+	# stability_factor
+	set_temp_variable = { temp = country_devastation_value }
+	multiply_temp_variable = { temp = global.country_devastation_stability_factor }
+	divide_temp_variable = { temp = 100 }
+	add_to_array = { country_devastation_modifier = temp }
+	
+	# war_support_factor
+	set_temp_variable = { temp = country_devastation_value }
+	multiply_temp_variable = { temp = global.country_devastation_war_support_factor }
+	divide_temp_variable = { temp = 100 }
+	add_to_array = { country_devastation_modifier = temp }
+	
+	# production_speed_buildings_factor
+	set_temp_variable = { temp = country_devastation_value }
+	multiply_temp_variable = { temp = global.country_devastation_production_speed_buildings_factor }
+	divide_temp_variable = { temp = 100 }
+	add_to_array = { country_devastation_modifier = temp }
+	
+	force_update_dynamic_modifier = yes
+}
+
+			
+monthly_devastation_update = {
+	#every_country = {
+	#	add_to_variable = { country_refugee_stability_weekly = global.monthly_refugee_stability_weekly }
+	#	
+	#	clamp_variable = { var = country_refugee_stability_weekly min = 0 }
+	#}
+}
+
+			
+weekly_devastation_update = {
+	#every_country = {
+	#	add_stability = country_refugee_stability_weekly
+	#}
+	every_state = {
+		#trigger a migration base on the amount of devastation
+		if = {
+			limit = { state_isnt_fully_controlled_owner = yes }
+			
+			set_temp_variable = { global.state_original_controller = THIS.owner }
+			set_temp_variable = { temp = state_devastation_value }
+			add_to_temp_variable = { temp = 10 }			# was 25
+			random = {
+				chance = temp
+				devastation_state_trigger_migration = yes
+				#random_country = { limit = { is_ai = no } country_event = devastation_event.0 }
+			}
+		}
+		
+		#trigger a factory migration
+		if = {
+			limit = { 
+				state_isnt_fully_controlled_owner = yes 
+				OR = {
+					arms_factory > 0
+					industrial_complex > 0
+				}
+				NOT = { has_state_flag = recently_attempted_to_migrated_factory }
+			}
+			
+			set_temp_variable = { global.state_original_controller = THIS.owner }
+			set_temp_variable = { temp = state_devastation_value }
+			add_to_temp_variable = { temp = 15 }
+			divide_temp_variable = { temp = 2 }
+			random = {
+				chance = temp
+				devastation_state_trigger_factory_migration = yes
+				set_state_flag = recently_attempted_to_migrated_factory
+			}
+		}
+		
+		if = {
+			limit = {
+				has_state_flag = {
+					flag = recently_attempted_to_migrated_factory
+					days > 120
+				}
+			}
+			clr_state_flag = recently_attempted_to_migrated_factory
+		}
+	}
+}
+
+daily_devastation_update = {
+	every_country = {
+		devastation_country_calc_value = yes
+		#devastation_country_calc_modifiers = yes
+		devastation_country_calc_unassimilated = yes
+		calc_casualties = yes
+	}
+	
+	every_state = {
+		devastation_state_calc_value = yes
+	}
+}
+
+devastation_country_calc_unassimilated = {
+	hidden_effect = { 
+		if = {
+			limit = { 
+				NOT = { has_decision = assimilation_passive_decision } 
+				any_controlled_state = {
+					has_unassimilated_pops = yes
+				}
+			}
+			activate_decision = assimilation_passive_decision
+		}
+		clear_variable = country_unassimilated_pops
+		clear_variable = country_core_population_controlled
+		clear_array = country_unassimilated_pops_modifier
+		every_controlled_state = {
+			add_to_variable = { PREV.country_unassimilated_pops = devastation_unassimilated_pops }
+			
+			if = {
+				limit = { check_variable = { devastation_unassimilated_pops < 0 } }
+				clamp_variable = { var = devastation_unassimilated_pops min = 0 }
+			}
+			if = {
+				limit = { is_core_of = controller }
+				#log = "[?THIS.GetName] is core of [?THIS.controller.GetTag]"
+				add_to_temp_variable = { global.num_of_cores = 1 }
+				add_to_variable = { PREV.country_core_population_controlled = state_population_k }
+			}
+		}
+		clamp_variable = { var = country_unassimilated_pops min = 0 }
+		
+		
+		set_variable = { country_unassimilated_pops_ratio_core = country_unassimilated_pops }
+		#log = "country_unassimilated_pops_ratio_core = [?country_unassimilated_pops_ratio_core]"
+		divide_variable = { country_unassimilated_pops_ratio_core = country_core_population_controlled }
+		#log = "country_unassimilated_pops_ratio_core = [?country_unassimilated_pops_ratio_core]"
+		multiply_variable = { country_unassimilated_pops_ratio_core = 100 }
+		#log = "country_unassimilated_pops_ratio_core = [?country_unassimilated_pops_ratio_core]"
+		if = {
+			limit = { check_variable = { country_unassimilated_pops_ratio_core < 0.1 } check_variable = { country_unassimilated_pops > 0.1 } }
+			set_variable = { country_unassimilated_pops_ratio_core = 0.099 }
+		}
+		
+		#log = "[?THIS.GetFlag][?THIS.GetName] number of unassimilated pops is [?country_unassimilated_pops]K"
+		#log = "[?THIS.GetFlag][?THIS.GetName] number of cores is [?global.num_of_cores] and have a total of [?country_core_population_controlled]K population"
+		#log = "Ratio is [?country_unassimilated_pops_ratio_core|3]"
+		
+		
+		if = {
+			limit = { 
+				NOT = {
+					has_dynamic_modifier = {
+						modifier = country_unassimilated_pops_modifier
+					}
+				}
+			}
+			add_dynamic_modifier = {
+				modifier = country_unassimilated_pops_modifier
+			}
+		}
+	
+		set_temp_variable = { temp = global.unassimilated_stability_factor }
+		#log = "global.unassimilated_stability_factor = [?global.unassimilated_stability_factor]"
+		multiply_temp_variable = { temp = 0.1 }
+		#log = "temp = [?temp]"
+		multiply_temp_variable = { temp = country_unassimilated_pops_ratio_core }
+		#log = "temp = [?temp]"
+		add_to_array = { country_unassimilated_pops_modifier = temp }
+		#log = "country_unassimilated_pops_modifier = [?country_unassimilated_pops_modifier^0|%]"
+	}
+}
+
+assimilate_unassimilated_pops = {
+	#set_temp_variable = { assimilate_unassimilated_pops_min = global.passive_assimilation_min }
+	#set_temp_variable = { assimilate_unassimilated_pops_max = global.passive_assimilation_max }
+	set_temp_variable_to_random = { var = global.temp2 min = assimilate_unassimilated_pops_min max = assimilate_unassimilated_pops_max }
+	
+	set_temp_variable = { country_temp = global.temp2 }
+	multiply_temp_variable = { country_temp = country_unassimilated_pops }
+	multiply_temp_variable = { country_temp = 1000 }
+	custom_effect_tooltip = assimilate_unassimilated_pops_tt
+	
+	every_controlled_state = {
+		limit = {
+			has_unassimilated_pops = yes
+		}
+		set_temp_variable = { temp = global.temp2 }
+		#log = "[THIS.GetName] Temp [?global.temp]"
+		#log = "[THIS.GetName] devastation_unassimilated_pops [?devastation_unassimilated_pops]"
+		multiply_temp_variable = { temp = devastation_unassimilated_pops }
+		#log = "[THIS.GetName] temp [?temp]"
+		
+		if = {
+			limit = { check_variable = { temp < 0.001 } }
+			
+			set_temp_variable = { temp = 0.001 }
+			#log = "[THIS.GetName] temp is less than 0.001, changing it to [?temp]"
+		}
+		set_temp_variable = { pops_to_be_assimilated = temp }
+			
+		multiply_temp_variable = { pops_to_be_assimilated = 1000 }
+		#log = "[THIS.GetName] pops_to_be_assimilated [?pops_to_be_assimilated]"
+		
+		
+		#add_manpower = pops_to_be_assimilated
+		
+		divide_temp_variable = { pops_to_be_assimilated = 1000 }
+		subtract_from_variable = { devastation_unassimilated_pops = pops_to_be_assimilated }
+		
+		add_to_variable = { PREV.total_external_refugees_assimilated_in_game = pops_to_be_assimilated }
+	}
+	
+	devastation_country_calc_unassimilated = yes
+}
+
+assimilate_expel_pops = {
+	set_temp_variable = { assimilate_expel_pops_min = global.expel_refugees_min }
+	set_temp_variable = { assimilate_expel_pops_max = global.expel_refugees_max }
+	set_temp_variable_to_random = { var = global.temp2 min = assimilate_expel_pops_min max = assimilate_expel_pops_max }
+	
+	set_temp_variable = { country_temp = global.temp2 }
+	multiply_temp_variable = { country_temp = country_unassimilated_pops }
+	multiply_temp_variable = { country_temp = 1000 }
+	custom_effect_tooltip = assimilate_expel_pops_tt
+	
+	every_controlled_state = {
+		limit = {
+			has_unassimilated_pops = yes
+		}
+		set_temp_variable = { temp = global.temp2 }
+		#log = "Temp [?temp]"
+		#log = "devastation_unassimilated_pops [?devastation_unassimilated_pops]"
+		multiply_temp_variable = { temp = devastation_unassimilated_pops }
+		#log = "temp [?temp]"
+		
+		if = {
+			limit = { check_variable = { temp < 0.001 } }
+			
+			set_temp_variable = { temp = 0.001 }
+			#log = "temp is less than 0.001, changing it to [?temp]"
+		}
+		set_temp_variable = { pops_to_be_expelled = temp }
+			
+		#log = "pops_to_be_expelled [?pops_to_be_expelled]"
+		
+		subtract_from_variable = { devastation_unassimilated_pops = pops_to_be_expelled }
+		add_to_variable = { PREV.total_external_refugees_expelled_in_game = pops_to_be_expelled }
+		
+		set_temp_variable = { global.pops_to_be_expelled_global = pops_to_be_expelled }
+		#log = " [?global.pops_to_be_expelled_global]K Refugees from [?THIS.GetName]"
+		
+		hidden_effect = {
+			random_state = {
+				limit = {
+					NOT = { is_controlled_by = PREV.controller }
+					controller = { is_ai = yes }
+				}
+				#log = "is expelled to [?THIS.GetName] ([?global.pops_to_be_expelled_global]K)"
+				
+				
+				add_to_variable = { devastation_state_refugee_gain = global.pops_to_be_expelled_global }
+				calc_pop_change = yes
+				
+				add_to_variable = { devastation_unassimilated_pops = global.pops_to_be_expelled_global }
+				
+				set_temp_variable = { global.devastation_state_refugee_gain_k = global.pops_to_be_expelled_global }
+				
+				controller = { devastation_country_calc_unassimilated = yes }
+				
+				THIS.controller = {
+					add_to_variable = { total_external_refugees_in_game = global.devastation_state_refugee_gain_k }
+				}
+			}
+		}
+		
+		multiply_temp_variable = { pops_to_be_expelled = 1000 }
+		custom_effect_tooltip = assimilate_expel_pops_tt2
+	}
+	
+	devastation_country_calc_unassimilated = yes
+}
+
+get_devastation_gain_threshold = {
+	set_temp_variable = { temp_threshold = 1 }
+	#log = "Threshold Before Subtraction: [?temp_threshold]"
+	if = {
+		limit = { check_variable = { state_devastation_value > 79.99 } }
+		subtract_from_temp_variable = { temp_threshold = global.devastation_base_gain_threshold_4 }
+		#log = "Threshold 1: [?global.devastation_base_gain_threshold_4]"
+	}
+	else_if = {
+		limit = { check_variable = { state_devastation_value > 49.99 } }
+		subtract_from_temp_variable = { temp_threshold = global.devastation_base_gain_threshold_3 }
+		#log = "Threshold 2: [?global.devastation_base_gain_threshold_3]"
+	}
+	else_if = {
+		limit = { check_variable = { state_devastation_value > 19.99 } }
+		subtract_from_temp_variable = { temp_threshold = global.devastation_base_gain_threshold_2 }
+		#log = "Threshold 3: [?global.devastation_base_gain_threshold_2]"
+	}
+	else = {
+		subtract_from_temp_variable = { temp_threshold = global.devastation_base_gain_threshold_1 }
+		#log = "Threshold 4: [?global.devastation_base_gain_threshold_1]"
+	}
+	clamp_temp_variable = { var = temp_threshold min = 0 max = 1 }
+	
+	#log = "Final Threshold after Subtraction: [?temp_threshold]"
+}
+
+generate_random_casualties = {
+	if = {
+		limit = { check_variable = { state_population_k > 1 } }
+		set_temp_variable_to_random = { var = temp_casualty min = temp_min max = temp_max }
+		
+		set_temp_variable = { global.civ_casualty_gain = temp_casualty }
+		owner = {
+			set_temp_variable = { temp = global.civ_casualty_gain }
+			#log = "[THIS.GetTag]: Civ Casualties Gain - [?global.civ_casualty_gain]"
+			add_civ_casualties_to_owner = yes
+		}
+		calc_pop_change = yes
+		
+		multiply_temp_variable = { temp_casualty = -1 }
+
+		
+		controller = {
+			set_temp_variable = { manpower = manpower_per_military_factory }
+			set_temp_variable = { mils = num_of_military_factories }
+		}
+
+		add_manpower = temp_casualty
+		
+		controller = {
+			set_temp_variable = { manpower_two = manpower_per_military_factory }
+			set_temp_variable = { mils = num_of_military_factories }
+			subtract_from_temp_variable = { manpower_two = manpower }
+			multiply_temp_variable = { manpower_two = num_of_military_factories }
+			if = {
+				limit = {
+					check_variable = { manpower_two > 0 }
+				}
+				multiply_temp_variable = { manpower_two = -1 }
+				add_manpower = manpower_two
+			}
+		}
+
+		multiply_temp_variable = { temp_casualty = -1 }
+		set_temp_variable = { devastation_state_casualties_k = temp_casualty }
+		divide_temp_variable = { devastation_state_casualties_k = 1000 }
+		add_to_variable = { devastation_state_casualties = devastation_state_casualties_k }
+	}
+}
+
+add_civ_casualties_to_owner = {
+	if = {
+		limit = { check_variable = { temp < 0 } }
+		multiply_temp_variable = { temp = -1 }
+	}
+	add_to_temp_variable = { civ_casualties = temp }
+	divide_temp_variable = { civ_casualties = 1000 }
+	
+	add_to_variable = { civ_casualties_k = civ_casualties }
+	
+	calc_casualties = yes
+}
+
+calc_casualties = {
+	if = {
+		limit = { check_variable = { casualties_k > 999.999 } }
+		set_variable = { casualties_m = casualties_k }
+		divide_variable = { casualties_m = 1000 }
+	}
+	else = {
+		clear_variable = casualties_m
+	}
+	if = {
+		limit = { check_variable = { civ_casualties_k > 999.999 } }
+		set_variable = { civ_casualties_m = civ_casualties_k }
+		divide_variable = { civ_casualties_m = 1000 }
+	}
+	else = {
+		clear_variable = civ_casualties_m
+	}
+	
+	set_variable = { total_casualties_k = casualties_k }
+	add_to_variable = { total_casualties_k = civ_casualties_k }
+	if = {
+		limit = { check_variable = { total_casualties_k > 999.999 } }
+		set_variable = { total_casualties_m = total_casualties_k }
+		divide_variable = { total_casualties_m = 1000 }
+	}
+	else = {
+		clear_variable = total_casualties_m
+	}
+}
+
+calc_pop_change = {
+	#round_variable = devastation_state_refugee_gain
+	#round_variable = devastation_state_refugee_lost
+	#round_variable = devastation_state_casualties
+	
+	#if = {
+	#	limit = {
+	#		controller = { has_war = yes }
+	#	}
+		
+		set_temp_variable = { temp_pop_change = devastation_state_refugee_gain }
+		subtract_from_temp_variable = { temp_pop_change = devastation_state_refugee_lost }
+		subtract_from_temp_variable = { temp_pop_change = devastation_state_casualties }
+		
+		#set_temp_variable = { old_pop_change = devastation_state_pop_change }
+		#if = {
+		#	limit = { NOT = { check_variable = { old_pop_change = temp_pop_change } } }
+			set_variable = { devastation_state_pop_change = temp_pop_change }
+		#}
+	#}
+}
+
+devastation_get_state_type_multiplier = {
+	if = {
+		limit = { is_wasteland_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 0 }
+	}
+	else_if = {
+		limit = { is_pastoral_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 1 }
+	}
+	else_if = {
+		limit = { is_rural_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 2 }
+	}
+	else_if = {
+		limit = { is_town_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 4 }
+	}
+	else_if = {
+		limit = { is_large_town_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 5 }
+	}
+	else_if = {
+		limit = { is_city_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 6 }
+	}
+	else_if = {
+		limit = { is_large_city_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 8 }
+	}
+	else_if = {
+		limit = { is_metropolis_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 10 }
+	}
+	else_if = {
+		limit = { is_megalopolis_state = yes }
+		set_temp_variable = { devastation_state_type_multiplier = 12 }
+	}
+}
+
+migration_get_chance = {
+	set_temp_variable = { migration_chance = 0 }
+	
+	set_temp_variable = { devastation_value = state_devastation_value }
+	##log = "[THIS.GetName]: Devastation Value - [?devastation_value]"
+	set_temp_variable = { migration_chance = devastation_value }
+	
+	set_temp_variable = { stability_factor = 2 }
+	subtract_from_temp_variable = { stability_factor = ROOT.stability }
+	var:global.state_original_controller = { 
+		subtract_from_temp_variable = { PREV.stability_factor = stability } 
+		##log = "[THIS.GetTag] Stability (Occupied) - [?stability]"
+	}
+	divide_temp_variable = { stability_factor = 2 }
+	##log = "[ROOT.GetTag] Stability (Occupier) - [?ROOT.stability]"
+	##log = "[THIS.GetName]: Stability Factor - [?stability_factor]"
+	multiply_temp_variable = { migration_chance = stability_factor }
+	
+	set_temp_variable = { war_support_factor = 1 }
+	var:global.state_original_controller = { 
+		subtract_from_temp_variable = { PREV.war_support_factor = has_war_support } 
+		##log = "[THIS.GetTag] War Support (Occupied) - [?has_war_support]" 
+	}
+	add_to_temp_variable = { war_support_factor = ROOT.has_war_support }
+	##log = "[ROOT.GetTag] War Support (Occupier) - [?ROOT.has_war_support]"
+	##log = "[THIS.GetName]: War Support Factor - [?war_support_factor]"
+	multiply_temp_variable = { migration_chance = stability_factor }
+	
+	
+	if = {
+		limit = { is_core_of = ROOT }
+		set_temp_variable = { core_multiplier = 0.5 }
+		##log = "[THIS.GetName]: Core Multiplier - [?core_multiplier]"
+	}
+	else = {
+		set_temp_variable = { core_multiplier = 1 }
+		##log = "[THIS.GetName]: Core Multiplier - [?core_multiplier]"
+	}
+	multiply_temp_variable = { migration_chance = core_multiplier }
+	
+	set_temp_variable = { temp_sensitivity = 100 }
+	multiply_temp_variable = { migration_chance = temp_sensitivity }
+	##log = "[THIS.GetName]: Migration Chance - [?migration_chance]"
+	
+	clamp_variable = { var = migration_chance min = 0 max = 100 }
+	random = {
+		chance = migration_chance
+		#random_country = { limit = { is_ai = no } add_political_power = 100 }
+		devastation_state_trigger_migration = yes
+	}
+	#set_variable = { global.migration_chance_test = migration_chance }
+	#random_country = { limit = { is_ai = no } country_event = devastation_event.0 }
+}
+
+devastation_state_trigger_migration = {
+	if = {
+		limit = {
+			# if population is greater than 1k, then migrate
+			check_variable = { state_population_k > 1 }
+			#has_state_devastation = yes
+		}
+		set_temp_variable = { devastation_state_refugee = 0 }
+		
+		if = {
+			limit = { check_variable = { exodus_migration = global.mass_exodus_multiplier } }
+			set_temp_variable = { devastation_percentage = 100 }
+		}
+		else = {
+			set_temp_variable = { devastation_percentage = state_devastation_value }
+			set_temp_variable = { exodus_migration = 1 }
+		}
+		divide_temp_variable = { devastation_percentage = 100 }
+		#log = "[THIS.GetName]: Devastation Percentage - [?devastation_percentage|%]"
+		
+		devastation_get_state_type_multiplier = yes
+		add_to_temp_variable = { devastation_state_type_multiplier = 5 }
+		divide_temp_variable = { devastation_state_type_multiplier = 100 }
+		#log = "[THIS.GetName]: Category Multiplier - [?devastation_state_type_multiplier]"
+		
+		set_temp_variable = { devastation_state_refugee = state_population_k }
+		#log = "[THIS.GetName]: State Population - [?state_population_k] K"
+		
+		multiply_temp_variable = { devastation_state_refugee = devastation_percentage }
+		multiply_temp_variable = { devastation_state_refugee = devastation_state_type_multiplier }
+		
+		if = {
+			limit = { is_core_of = controller }
+			set_temp_variable_to_random = { var = devastation_state_core_multiplier min = 0.01 max = 0.05 }
+			multiply_temp_variable = { devastation_state_refugee = devastation_state_core_multiplier }
+		}
+		else = {
+			set_temp_variable_to_random = { var = devastation_state_core_multiplier min = 0.01 max = 0.1 }
+			multiply_temp_variable = { devastation_state_refugee = devastation_state_core_multiplier }
+		}
+		#log = "[THIS.GetName]: Core Multplier - [?devastation_state_core_multiplier]"
+	
+		if = {
+			limit = { check_variable = { exodus_migration = 0 } }
+			set_temp_variable = { exodus_migration = 1 }
+		}
+		multiply_temp_variable = { devastation_state_refugee = exodus_migration }
+		
+		if = {
+			limit = { check_variable = { devastation_state_refugee > 2147.483 } }
+			
+			# if # of refugee is greater than 2 million, clamp to 2 million
+			
+			#log = "[THIS.GetName]: Refugee wil overflow! Clamping to 2 million"
+			set_temp_variable = { devastation_state_refugee = 2147.483 }
+			multiply_temp_variable = { devastation_state_refugee = 1000 }
+			multiply_temp_variable = { devastation_state_refugee = -1 }
+			#log = "[THIS.GetName]: Refugees Lost - [?devastation_state_refugee]"
+
+			#effect_tooltip = {
+				#add_manpower = devastation_state_refugee
+			#}
+			
+			# if # of refugee is greater than 2 million, do a for-loop
+			
+			##log = "[THIS.GetName]: Refugee wil overflow! Proceeding to For-Loop 10x"
+			#for_loop_effect = {
+			#	start = 0
+			#	end = 10
+			#	value = loop_value
+			#	#log = "[THIS.GetName]: Loop Value is [?loop_value]"
+			#	##log = "[THIS.GetName]: Refugees - [?devastation_state_refugee]"
+			#	
+			#	multiply_temp_variable = { devastation_state_refugee = -1 }
+			#	effect_tooltip = {
+			#		add_manpower = devastation_state_refugee
+			#	}
+			#}
+		}
+		else = {
+			multiply_temp_variable = { devastation_state_refugee = 1000 }
+			#log = "[THIS.GetName]: Refugees Lost - [?devastation_state_refugee]"
+			
+			multiply_temp_variable = { devastation_state_refugee = -1 }
+
+			#effect_tooltip = {
+				#add_manpower = devastation_state_refugee
+			#}
+		}
+		
+		multiply_temp_variable = { devastation_state_refugee = -1 }
+		set_temp_variable = { casualties = devastation_state_refugee }
+		
+		# if exodus
+		if = {
+			limit = { check_variable = { exodus_migration = global.mass_exodus_multiplier } }
+			set_temp_variable_to_random = { var = temp_casualty_multiplier min = global.casualty_exodus_multiplier_min max = global.casualty_exodus_multiplier_max }
+		}
+		else = {
+			set_temp_variable_to_random = { var = temp_casualty_multiplier min = global.casualty_multiplier_min max = global.casualty_multiplier_max }
+		}
+		multiply_temp_variable = { casualties = temp_casualty_multiplier }
+		#log = "[THIS.GetName]: Refugees Becoming Casulaties - [?temp_casualty_multiplier|%] = [?casualties]"
+		
+		subtract_from_temp_variable = { devastation_state_refugee = casualties }
+		set_temp_variable = { devastation_state_casualties_k = casualties }
+		divide_temp_variable = { devastation_state_casualties_k = 1000 }
+		add_to_variable = { devastation_state_casualties = devastation_state_casualties_k }
+		
+		round_temp_variable = devastation_state_casualties
+		round_temp_variable = devastation_state_refugee
+		
+		set_temp_variable = { devastation_state_refugee_k = devastation_state_refugee }
+		divide_temp_variable = { devastation_state_refugee_k = 1000 }
+		add_to_variable = { devastation_state_refugee_lost = devastation_state_refugee_k }
+				
+		set_temp_variable = { global.civ_casualty_gain = casualties }
+		owner = {
+			set_temp_variable = { temp = global.civ_casualty_gain }
+			#log = "[THIS.GetTag]: Civ Casualties Gain - [?global.civ_casualty_gain]"
+			add_civ_casualties_to_owner = yes
+		}
+		
+		# divide the refugees in groups of 10%, 20%, 30%, and 40%
+		set_temp_variable = { refugee_gain_1 = devastation_state_refugee }
+		multiply_temp_variable = { refugee_gain_1 = 0.1 }
+		set_temp_variable = { refugee_gain_2 = devastation_state_refugee }
+		multiply_temp_variable = { refugee_gain_2 = 0.2 }
+		set_temp_variable = { refugee_gain_3 = devastation_state_refugee }
+		multiply_temp_variable = { refugee_gain_3 = 0.3 }
+		set_temp_variable = { refugee_gain_4 = devastation_state_refugee }
+		multiply_temp_variable = { refugee_gain_4 = 0.4 }
+		round_temp_variable = refugee_gain_1
+		round_temp_variable = refugee_gain_2
+		round_temp_variable = refugee_gain_3
+		round_temp_variable = refugee_gain_4
+		
+		#set_temp_variable = { global.state_original_controller = FRA }
+		calc_pop_change = yes
+			
+		# if there exists a neighboring state with the old controller, allied with, or a country at war with the old controller
+		if = {
+			limit = { 
+				any_neighbor_state = { 
+					can_migrate_to_neighboring_state = yes
+				} 
+			}
+			
+			if = {
+				limit = { is_coastal = yes }
+				log = "Originator state of [THIS.GetName] is Coastal!"
+				# randomly send these refugee groups in random neighbor states
+				random_list = {	# 50/50 chance to either migrate to a coastal state or no
+					50 = {
+						random_state = { 
+							limit = { can_migrate_to_neighboring_state = yes is_coastal = yes NOT = { state = PREV } distance_to = { value < 10000 target = PREV } }
+							log = "Destination state of [THIS.GetName] is coastal!"
+							
+							set_temp_variable = { refugee_state_number = 1 }
+							meta_effect_migrating_refugees = yes
+						}
+					}
+					50 = {
+						random_neighbor_state = { 
+							limit = { can_migrate_to_neighboring_state = yes }
+							log = "Destination state of [THIS.GetName] is neighbor!"
+							
+							set_temp_variable = { refugee_state_number = 1 }
+							meta_effect_migrating_refugees = yes
+						}
+					}
+				}
+				random_state = { 
+					limit = { can_migrate_to_neighboring_state = yes is_coastal = yes NOT = { state = PREV } distance_to = { value < 5000 target = PREV } }
+					log = "Destination state of [THIS.GetName] is coastal!"
+					
+					set_temp_variable = { refugee_state_number = 2 }
+					meta_effect_migrating_refugees = yes
+				}
+			}
+			else = {
+				log = "Originator state of [THIS.GetName] is non-Coastal!"
+				# randomly send these refugee groups in random neighbor states
+				random_neighbor_state = { 
+					limit = { can_migrate_to_neighboring_state = yes }
+					log = "Destination state of [THIS.GetName] is neighbor!"
+					
+					set_temp_variable = { refugee_state_number = 1 }
+					meta_effect_migrating_refugees = yes
+				}
+				random_neighbor_state = { 
+					limit = { can_migrate_to_neighboring_state = yes }
+					log = "Destination state of [THIS.GetName] is neighbor!"
+					
+					set_temp_variable = { refugee_state_number = 2 }
+					meta_effect_migrating_refugees = yes
+				}
+			}
+			#random_list = {
+				#20 = {
+				#	#modifier = {
+				#	#	factor = 0
+				#	#	all_state = {
+				#	#		state = PREV
+				#	#		controller = { tag = var:global.state_original_controller }
+				#	#	}
+				#	#}
+				#	random_state = { 
+				#		limit = { can_migrate_to_neighboring_state = yes }
+				#		log = "Destination state of [THIS.GetName] is further inland!"
+				#		
+				#		set_temp_variable = { refugee_state_number = 3 }
+				#		meta_effect_migrating_refugees = yes
+				#	}
+				#}
+				#80 = {
+					random_neighbor_state = { 
+						limit = { can_migrate_to_neighboring_state = yes }
+						log = "Destination state of [THIS.GetName] is neighbor!"
+						
+						set_temp_variable = { refugee_state_number = 3 }
+						meta_effect_migrating_refugees = yes
+					}
+				#}
+			#}
+			random_neighbor_state = { 
+				limit = { can_migrate_to_neighboring_state = yes }
+				log = "Destination state of [THIS.GetName] is neighbor!"
+				
+				set_temp_variable = { refugee_state_number = 4 }
+				meta_effect_migrating_refugees = yes
+			}
+		}
+	}
+		
+	calc_pop_change = yes
+}
+
+meta_effect_migrating_refugees = {
+	meta_effect = {
+		text = {
+			set_temp_variable = { devastation_state_refugee_gain_k = refugee_gain_[STATE_NUMBER] }
+			#log = "[THIS.controller.GetFlag] [THIS.GetName]: Refugees Gain - [?devastation_state_refugee_gain_k]"
+			divide_temp_variable = { devastation_state_refugee_gain_k = 1000 }
+			#log = "[THIS.controller.GetFlag] [THIS.GetName]: Refugees Gain K - [?devastation_state_refugee_gain_k]"
+			add_to_variable = { devastation_state_refugee_gain = devastation_state_refugee_gain_k }
+			calc_pop_change = yes
+			
+			# if owner of this state is not the owner of the previous state, it means that the migration happened cross-country
+			if = {
+				limit = { owner = { NOT = { tag = var:global.state_original_controller } } }
+				
+				#effect_stability_hit_refugees = yes
+				#log = "[THIS.controller.GetFlag] [THIS.GetName]: Becomes unassimilated - [?devastation_state_refugee_gain_k|2] will be added to [?devastation_unassimilated_pops|2]"
+				add_to_variable = { devastation_unassimilated_pops = devastation_state_refugee_gain_k }
+			}
+			else = {
+				#effect_tooltip = {
+					#THIS = { add_manpower = refugee_gain_[STATE_NUMBER] }
+				#}
+			}
+			
+			set_temp_variable = { global.devastation_state_refugee_gain_k = devastation_state_refugee_gain_k }
+			
+			controller = { devastation_country_calc_unassimilated = yes }
+		}
+		STATE_NUMBER = "[?refugee_state_number|.0]"
+	}
+	#log = "[THIS.controller.GetFlag] [THIS.GetName]: devastation_state_refugee_gain_k [?devastation_state_refugee_gain_k]"
+	
+	THIS.controller = {
+		add_to_variable = { total_external_refugees_in_game = global.devastation_state_refugee_gain_k }
+		#log = "[THIS.GetFlag] [THIS.GetName]: PREV.devastation_state_refugee_gain_k [?global.devastation_state_refugee_gain_k]"
+		#log = "[THIS.GetFlag] [THIS.GetName]: total_external_refugees_in_game [?total_external_refugees_in_game]"
+	}	
+	
+}
+
+calc_total_external_refugees_in_game = {
+	clear_variable = total_external_refugees_in_game
+	
+	add_to_variable = { total_external_refugees_in_game = country_unassimilated_pops } 
+	add_to_variable = { total_external_refugees_in_game = total_external_refugees_assimilated_in_game } 
+	add_to_variable = { total_external_refugees_in_game = total_external_refugees_expelled_in_game } 
+}
+
+effect_stability_hit_refugees = {
+	#set_temp_variable = { outgoing_refugees = devastation_state_refugee_gain_k }
+	#multiply_temp_variable = { outgoing_refugees = 10 }
+	#set_temp_variable = { incoming_population = state_population_k }	
+	##log = "[THIS.controller.GetFlag] [THIS.GetName]: Outgoing Refugees - [?outgoing_refugees] K"
+	##log = "[THIS.controller.GetFlag] [THIS.GetName]: Incoming Population - [?incoming_population] K"
+	#
+	#set_temp_variable = { global.temp = outgoing_refugees }
+	#divide_temp_variable = { global.temp = incoming_population }
+	#multiply_temp_variable = { global.temp = -0.1 }
+	#
+	#if = {
+	#	limit = { check_variable = { global.temp < 0.001 } }
+	#	set_temp_variable = { global.temp < 0.001 }
+	#	#log = "Default 0.001 Hit"
+	#}
+	#controller = { 
+	#	force_update_dynamic_modifier = yes 
+	#	subtract_from_variable = { country_refugee_stability_weekly = global.temp } 
+	#	#log = "[THIS.GetFlag] [PREV.THIS.GetName]: Stability hit [?global.temp] -> [?country_refugee_stability_weekly]"
+	#}
+}
+
+devastation_state_trigger_factory_migration = {
+	random_neighbor_state = { 
+		limit = { can_migrate_to_neighboring_state = yes }
+		
+		#effect_tooltip = {
+			random_list = {
+				10 = {
+					modifier = { factor = 0 PREV = { arms_factory < 1 } }
+					#log = "[THIS.controller.GetFlag]: 1 Mil Migrates from [PREV.GetName] to [THIS.GetName]"
+					add_building_construction = { type = arms_factory level = 1 instant_build = yes } add_to_variable = { devastation_state_mil_gain = 1 }
+					PREV = { remove_building = { type = arms_factory level = 1 } add_to_variable = { devastation_state_mil_lost = 1 } }
+				}
+				10 = {
+					modifier = { factor = 0 PREV = { industrial_complex < 1 } }
+					#log = "[THIS.controller.GetFlag]: 1 Civ Migrates from [PREV.GetName] to [THIS.GetName]"
+					add_building_construction = { type = industrial_complex level = 1 instant_build = yes } add_to_variable = { devastation_state_civ_gain = 1 }
+					PREV = { remove_building = { type = industrial_complex level = 1 } add_to_variable = { devastation_state_civ_lost = 1 } }
+				}
+				5 = {
+					modifier = { factor = 0 PREV = { arms_factory < 2 } }
+					#log = "[THIS.controller.GetFlag]: 2 Mils Migrates from [PREV.GetName] to [THIS.GetName]"
+					add_building_construction = { type = arms_factory level = 2 instant_build = yes } add_to_variable = { devastation_state_mil_gain = 2 }
+					PREV = { remove_building = { type = arms_factory level = 2 } add_to_variable = { devastation_state_mil_lost = 2 } }
+				}
+				5 = {
+					modifier = { factor = 0 PREV = { industrial_complex < 2 } }
+					#log = "[THIS.controller.GetFlag]: 2 Civs Migrates from [PREV.GetName] to [THIS.GetName]"
+					add_building_construction = { type = industrial_complex level = 2 instant_build = yes } add_to_variable = { devastation_state_civ_gain = 2 }
+					PREV = { remove_building = { type = industrial_complex level = 2 } add_to_variable = { devastation_state_civ_lost = 2 } }
+				}
+				5 = {
+					PREV = {
+						random_list = {
+							10 = {
+								modifier = { factor = 0 arms_factory < 1 }
+								#log = "[THIS.controller.GetFlag]: 1 Mil Fails to Migrates from [PREV.GetName] to [THIS.GetName]"
+								remove_building = { type = arms_factory level = 1 } add_to_variable = { devastation_state_mil_lost = 1 }
+							}
+							10 = {
+								modifier = { factor = 0 industrial_complex < 1 }
+								#log = "[THIS.controller.GetFlag]: 1 Civ Fails to Migrates from [PREV.GetName] to [THIS.GetName]"
+								remove_building = { type = industrial_complex level = 1 } add_to_variable = { devastation_state_civ_lost = 1 }
+							}
+						}
+					}
+				}
+				1 = {
+					#log = "[THIS.controller.GetFlag]: No Factory Migration Happened in [PREV.GetName]"
+				}
+			}
+			calc_total_factory_migration = yes
+		#}
+	}
+	calc_total_factory_migration = yes
+}
+
+calc_total_factory_migration = {
+	set_variable = { devastation_state_factory_gain = devastation_state_civ_gain }
+	add_to_variable = { devastation_state_factory_gain = devastation_state_mil_gain }
+	
+	set_variable = { devastation_state_factory_lost = devastation_state_civ_lost }
+	add_to_variable = { devastation_state_factory_lost = devastation_state_mil_lost }
+	
+	set_variable = { devastation_state_factory_effective_gain = devastation_state_factory_gain }
+	subtract_from_variable = { devastation_state_factory_effective_gain = devastation_state_factory_lost }
+	
+	set_variable = { devastation_state_civ_effective_gain = devastation_state_civ_gain }
+	subtract_from_variable = { devastation_state_civ_effective_gain = devastation_state_civ_lost }
+	
+	set_variable = { devastation_state_mil_effective_gain = devastation_state_mil_gain }
+	subtract_from_variable = { devastation_state_mil_effective_gain = devastation_state_mil_lost }
+}
+
+devastation_state_calc_value = {
+	calc_pop_change = yes
+	set_variable = { state_devastation_previous_value = state_devastation_value }
+	#log = "[THIS.GetName] State Devastation Previous Value: [?state_devastation_previous_value]"
+	
+	set_temp_variable = { base_gain = 0 }
+	#log = "[THIS.GetName] Base Gain: [?base_gain]"
+	
+	#if = {
+	#	limit = {
+	#		# if state is fully occupied, and has resistance
+	#		state_is_fully_controlled_owner = yes
+	#	}
+		
+		if = {
+			limit = {
+				state_is_fully_controlled_owner = yes
+				#has_resistance = yes
+				check_variable = { resistance > 0.499 }
+				check_variable = { state_devastation_value < 35 }
+			}
+		
+			# then for every point of resistane, add 0.003 to base gain
+			set_temp_variable = { base_gain_resistance = resistance }
+			round_temp_variable = base_gain_resistance
+			#log = "[THIS.GetName] Base Gain Resistance: [?base_gain_resistance]"
+			
+			#divide_temp_variable = { base_gain_resistance = 333.333 }
+			multiply_temp_variable = { base_gain_resistance = global.devastation_base_gain_resistance }
+			divide_temp_variable = { base_gain_resistance = 2 }			### Added this, otherwise resistance is too strong and cannot be fought devastation-wise
+			set_variable = { state_devastation_base_gain_resistance = base_gain_resistance }
+			#log = "[THIS.GetName] Base Gain Resistance after multiplier: [?base_gain_resistance]"
+			
+			add_to_temp_variable = { base_gain = base_gain_resistance }
+			#log = "[THIS.GetName] Base Gain Resistance -> Base Gain: [?base_gain]"
+		}
+	#}
+	#else = {
+		if = {
+			limit = {
+				controller_has_war_with_owner = yes
+				state_is_fully_controlled_owner = no
+			}
+			
+			if = {
+				limit = { check_variable = { state_devastation_value < 75 } }
+				add_to_temp_variable = { base_gain = global.devastation_base_gain_controller_at_war_with_owner }
+				#log = "[THIS.GetName] Global|Controller at war with owner: [?global.devastation_base_gain_controller_at_war_with_owner] -> Base Gain: [?base_gain]"
+			}
+			else = {
+				add_to_temp_variable = { base_gain = 0.05 }
+				#log = "[THIS.GetName] Base Gain: [?base_gain]"
+			}
+		}
+		
+		if = {
+			limit = {
+				state_isnt_fully_controlled_owner = yes
+				check_variable = { state_devastation_value < 85 }
+			}
+			add_to_temp_variable = { base_gain = global.devastation_base_gain_partial_occupation }
+			#log = "[THIS.GetName] Global|Partial Occupation: [?global.devastation_base_gain_partial_occupation] -> Base Gain: [?base_gain]"
+		}
+		
+		if = {
+			limit = {
+				neighbor_state_has_direct_war = yes
+			}
+			add_to_temp_variable = { base_gain = global.devastation_base_gain_neighbor_state_is_enemy }
+			#log = "[THIS.GetName] Global|Neighbor state is enemy: [?global.devastation_base_gain_neighbor_state_is_enemy] -> Base Gain: [?base_gain]"
+		}
+	#}
+	
+	if = {
+		limit = {
+			has_recently_experienced_strat_bombing = yes
+		}
+		add_to_temp_variable = { base_gain = global.devastation_base_gain_experienced_bombing }
+		#log = "[THIS.GetName] Global|Bombing: [?global.devastation_base_gain_controller_at_war_with_owner] -> Base Gain: [?base_gain]"
+		
+		set_temp_variable = { temp_min = 100 }		# Original 50
+		set_temp_variable = { temp_max = 402 }		# Original 201
+		generate_random_casualties = yes
+	}
+	
+	
+	set_temp_variable = { base_loss = 0 }
+	#log = "[THIS.GetName] Base Loss: [?base_loss]"
+	
+	if = {
+		limit = {
+			controller_has_war_with_owner = no
+		}
+		add_to_temp_variable = { base_loss = global.devastation_base_gain_controller_at_peace_with_owner }
+		#log = "[THIS.GetName] Global|Controller at peace with owner: [?global.devastation_base_gain_controller_at_war_with_owner] -> Base Loss: [?base_loss]"
+	}
+	if = {
+		limit = {
+			controller_at_peace = yes
+		}
+		add_to_temp_variable = { base_loss = global.devastation_base_gain_controller_at_peace }
+		#log = "[THIS.GetName] Global|Controller at peace: [?global.devastation_base_gain_controller_at_war_with_owner] -> Base Loss: [?base_loss]"
+	}
+	
+	controller = {
+		if = {
+			limit = { NOT = { check_variable = { modifier@state_devastation_reduction = 0 } } }
+			
+			PREV = {
+				add_to_temp_variable = { base_loss = PREV.modifier@state_devastation_reduction }
+				#log = "[THIS.GetName] Modifier|State Devastation Reduction: [?PREV.modifier@state_devastation_reduction] -> Base Loss: [?base_loss]"
+			}
+		}
+		if = {
+			limit = { NOT = { check_variable = { modifier@state_devastation_reduction_factor = 0 } } }
+			
+			PREV = {
+				set_temp_variable = { temp_a = base_loss }
+				set_temp_variable = { temp_b = PREV.modifier@state_devastation_reduction_factor }
+				multiply_temp_variable = { temp_b = -1 }
+				multiply_temp_variable = { temp_a = temp_b }
+				add_to_temp_variable = { base_loss = temp_a }
+				#log = "[THIS.GetName] Modifier|State Devastation Reduction Factor: [?PREV.modifier@state_devastation_reduction] -> Base Loss: [?base_loss]"
+			}
+		}
+	}
+	
+	#log = "[THIS.GetName] Base Gain Before Threshold: [?base_gain]"
+	get_devastation_gain_threshold = yes
+	multiply_temp_variable = { base_gain = temp_threshold }
+	#log = "[THIS.GetName] Base Gain After Threshold: [?base_gain]"
+	set_temp_variable = { temp_threshold_loss = 1 }					# Addition, saturation factor helps reducing devastation now
+	subtract_from_temp_variable = { temp_threshold_loss = temp_threshold }					# Addition
+	add_to_temp_variable = { temp_threshold_loss = 1 }					# Addition
+	multiply_temp_variable = { base_loss = temp_threshold_loss }			# Addition
+	
+	add_to_variable = { state_devastation_value = base_gain }
+	add_to_variable = { state_devastation_value = base_loss }
+	
+	set_variable = { state_devastation_value_change = base_gain }
+	add_to_variable = { state_devastation_value_change = base_loss }
+	
+	devastation_state_calc_modifiers = yes
+	
+	if = {
+		limit = { state_isnt_fully_controlled_owner = yes }
+		
+		set_temp_variable = { global.state_original_controller = THIS.owner }
+		random = {
+			chance = state_devastation_value
+			devastation_state_trigger_migration = yes
+			#random_country = { limit = { is_ai = no } country_event = devastation_event.0 }
+		}
+		set_temp_variable = { temp_min = 5 }
+		set_temp_variable = { temp_max = 10 }
+		generate_random_casualties = yes
+	}
+	
+	calc_pop_change = yes
+	
+}
+
+
+	
+casualty_sort_add_dummy = {
+	add_to_array = { global.countries_casualty = 0 }	# dummy
+}
+casualty_sort_remove_dummy = {
+	remove_from_array = { global.countries_casualty = 0 }	# dummy
+}
+
+casualty_sort_list_countries = {
+	clear_array = global.countries_casualty
+	
+	every_country = {
+		if = {
+			limit = {
+				NOT = { is_in_array = { global.countries_casualty = THIS.id } }
+			}
+			add_to_array = { global.countries_casualty = THIS.id }
+		}
+	}	
+
+	casualty_sort_add_dummy = yes
+}
+
+casualty_sort_total = {
+	casualty_sort_list_countries = yes
+	casualty_sort_remove_dummy = yes
+	
+	clr_country_flag = casualty_sort_civ_descending
+	clr_country_flag = casualty_sort_mil_descending
+	clr_country_flag = casualty_sort_total_ascending
+	clr_country_flag = casualty_sort_civ_ascending
+	clr_country_flag = casualty_sort_mil_ascending
+	
+	if = {
+		limit = {
+			has_country_flag = casualty_sort_total_descending
+		}
+		clr_country_flag = casualty_sort_total_descending
+		set_country_flag = casualty_sort_total_ascending
+	}
+	else = {
+		set_country_flag = casualty_sort_total_descending
+	}
+	
+	set_temp_variable = { len = global.countries_casualty^num }
+	subtract_from_temp_variable = { len = 1 }
+	##log = "Sort: Indexing Length is [?len]"
+	set_temp_variable = { sorted = 0 }
+	##log = "Sort: Is sorted - [?sorted]"
+	
+	while_loop_effect = {
+		limit = { 
+			NOT = { check_variable = { sorted = 1 } }
+		}
+		
+		# Assume the array is sorted
+		set_temp_variable = { sorted = 1 }
+		##log = "[?sorted] While started"
+		
+		if = {
+			limit = {
+				has_country_flag = casualty_sort_total_descending
+			}
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = total_casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = total_casualties_k }
+						}
+						check_variable = { global.temp_a < global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+		else = {
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = total_casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = total_casualties_k }
+						}
+						check_variable = { global.temp_a > global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+	}
+	
+	casualty_sort_add_dummy = yes
+}
+
+casualty_sort_mil = {
+	casualty_sort_list_countries = yes
+	casualty_sort_remove_dummy = yes
+	
+	clr_country_flag = casualty_sort_total_descending
+	clr_country_flag = casualty_sort_civ_descending
+	clr_country_flag = casualty_sort_total_ascending
+	clr_country_flag = casualty_sort_civ_ascending
+	clr_country_flag = casualty_sort_mil_ascending
+	
+	if = {
+		limit = {
+			has_country_flag = casualty_sort_mil_descending
+		}
+		clr_country_flag = casualty_sort_mil_descending
+		set_country_flag = casualty_sort_mil_ascending
+	}
+	else = {
+		set_country_flag = casualty_sort_mil_descending
+	}
+	
+	set_temp_variable = { len = global.countries_casualty^num }
+	subtract_from_temp_variable = { len = 1 }
+	##log = "Sort: Indexing Length is [?len]"
+	set_temp_variable = { sorted = 0 }
+	##log = "Sort: Is sorted - [?sorted]"
+	
+	while_loop_effect = {
+		limit = { 
+			NOT = { check_variable = { sorted = 1 } }
+		}
+		
+		# Assume the array is sorted
+		set_temp_variable = { sorted = 1 }
+		##log = "[?sorted] While started"
+		
+		if = {
+			limit = {
+				has_country_flag = casualty_sort_mil_descending
+			}
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = casualties_k }
+						}
+						check_variable = { global.temp_a < global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+		else = {
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = casualties_k }
+						}
+						check_variable = { global.temp_a > global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+	}
+	
+	casualty_sort_add_dummy = yes
+}
+
+casualty_sort_civ = {
+	casualty_sort_list_countries = yes
+	casualty_sort_remove_dummy = yes
+	
+	clr_country_flag = casualty_sort_total_descending
+	clr_country_flag = casualty_sort_mil_descending
+	clr_country_flag = casualty_sort_total_ascending
+	clr_country_flag = casualty_sort_civ_ascending
+	clr_country_flag = casualty_sort_mil_ascending
+	
+	if = {
+		limit = {
+			has_country_flag = casualty_sort_civ_descending
+		}
+		clr_country_flag = casualty_sort_civ_descending
+		set_country_flag = casualty_sort_civ_ascending
+	}
+	else = {
+		set_country_flag = casualty_sort_civ_descending
+	}
+	
+	set_temp_variable = { len = global.countries_casualty^num }
+	subtract_from_temp_variable = { len = 1 }
+	##log = "Sort: Indexing Length is [?len]"
+	set_temp_variable = { sorted = 0 }
+	##log = "Sort: Is sorted - [?sorted]"
+	
+	while_loop_effect = {
+		limit = { 
+			NOT = { check_variable = { sorted = 1 } }
+		}
+		
+		# Assume the array is sorted
+		set_temp_variable = { sorted = 1 }
+		##log = "[?sorted] While started"
+		
+		if = {
+			limit = {
+				has_country_flag = casualty_sort_civ_descending
+			}
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = civ_casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = civ_casualties_k }
+						}
+						check_variable = { global.temp_a < global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+		else = {
+			for_loop_effect = {
+				start = 0
+				end = len
+				value = v
+				
+				set_temp_variable = { w = v }
+				add_to_temp_variable = { w = 1 }
+				
+				if = {
+					limit = {
+						var:global.countries_casualty^v = {
+							set_temp_variable = { global.temp_a = civ_casualties_k }
+						}
+						var:global.countries_casualty^w = {
+							set_temp_variable = { global.temp_b = civ_casualties_k }
+						}
+						check_variable = { global.temp_a > global.temp_b }
+					}
+					set_temp_variable = { sorted = 0 }
+					
+					##log = "[?global.countries_casualty^v.GetTag] swapped with [?global.countries_casualty^w.GetTag]"
+					
+					set_temp_variable = { global.sort_a = global.countries_casualty^v }
+					set_variable = { global.countries_casualty^v = global.countries_casualty^w }
+					set_variable = { global.countries_casualty^w = global.sort_a }
+				}
+			}
+		}
+	}
+	
+	casualty_sort_add_dummy = yes
+}
