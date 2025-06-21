@@ -1,0 +1,118 @@
+
+test_t_devastation = {
+}
+
+has_state_devastation = {
+	custom_trigger_tooltip = {
+		tooltip = has_state_devastation_tt
+		
+		check_variable = { state_devastation_value > 0 }
+	}
+}
+
+neighbor_state_has_direct_war = {
+	custom_trigger_tooltip = {
+		tooltip = neighbor_state_has_direct_war_tt
+		any_neighbor_state = {
+			#OR = {
+				controller = {
+					has_war_with = PREV.PREV.controller
+				}
+				#owner = {
+				#	has_war_with = PREV.PREV.controller
+				#}
+			#}
+		}
+	}
+}
+
+has_recently_experienced_strat_bombing = {
+	days_since_last_strategic_bombing < 2
+}
+
+can_migrate_to_neighboring_state = {
+	#custom_trigger_tooltip = {
+	#	tooltip = can_migrate_to_neighboring_state_tt
+		
+		controller = { 
+			OR = {
+				tag = var:global.state_original_controller
+				NOT = { has_war_with = var:global.state_original_controller }
+				is_ally_with = var:global.state_original_controller
+			}
+		} 
+	#}
+}
+
+controller_has_war_with_owner = {
+	custom_trigger_tooltip = {
+		tooltip = controller_has_war_with_owner_tt
+		
+		OR = {
+			controller = {
+				has_war_with = PREV.owner
+			}
+			owner = {
+				has_war_with = PREV.controller
+			}
+		}
+	}
+}
+
+state_isnt_fully_controlled_owner = {
+	custom_trigger_tooltip = {
+		tooltip = state_isnt_fully_controlled_owner_tt
+		
+		#controller_has_war_with_owner = yes
+		NOT = {
+			OR = {
+				is_fully_controlled_by = controller
+				is_fully_controlled_by = owner
+			}
+		}
+	}
+}
+
+state_is_fully_controlled_owner = {
+	custom_trigger_tooltip = {
+		tooltip = state_is_fully_controlled_owner_tt
+		
+		#controller_has_war_with_owner = yes
+		OR = {
+			is_fully_controlled_by = controller
+			is_fully_controlled_by = owner
+		}
+	}
+}
+
+controller_at_peace = {
+	custom_trigger_tooltip = {
+		tooltip = controller_at_peace_tt
+		
+		controller = {
+			has_war = no
+		}
+	}
+}
+
+
+has_unassimilated_pops = {
+	custom_trigger_tooltip = {
+		tooltip = has_unassimilated_pops_tt
+		
+		check_variable = { devastation_unassimilated_pops > 0 }
+	}
+}
+
+less_than_unassimilated_stability_hit = {
+	divide_temp_variable = { temp = 100 }
+	custom_trigger_tooltip = {
+		tooltip = less_than_unassimilated_stability_hit_tt
+		
+		check_variable = { 
+			var = country_unassimilated_pops_modifier^0
+			value = temp 
+			compare = less_than_or_equals 
+		}
+	}
+}
