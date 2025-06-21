@@ -1,95 +1,69 @@
 RON_start_game_button_rc = {
-	if = {
-		limit = {
-			NOT = {
-				has_global_flag = game_started
+	set_global_flag = game_started
+
+	RON_setup_teritories = yes
+	RON_welcome_ok_effects = yes
+	predection_house = yes
+	HOUSE_init_parliament = yes
+	USA_campaign_vars_setup = yes
+	RON_sphere_system = yes
+	#RON_electoral_map = yes
+	#calc_loc = yes
+	#calcelccollage = yes
+	#calcelctorallage = yes
+	every_possible_country = {
+
+		calculate_maximum_divisions = yes
+		THIS = {
+			RON_handle_formables = yes
+			set_variable = {
+				selected_formable = 0
 			}
-		}
-		set_global_flag = game_started
-		quickset_parliament = yes
-		break_coalition = yes
-		if = {
-			limit = {
-				NOT = {
-					tag = USA
-				}
-			}
-			set_country_flag = forming_government_1
-		}
-		RON_setup_teritories = yes
-		RON_welcome_ok_effects = yes
-		predection_house = yes
-		HOUSE_init_parliament = yes
-		USA_campaign_vars_setup = yes
-		RON_sphere_system = yes
-		RON_electoral_map = yes
-		calc_loc = yes
-		calcelccollage = yes
-		calcelctorallage = yes
-		every_possible_country = {
-	
-			calculate_maximum_divisions = yes
-			THIS = {
-				RON_handle_formables = yes
-				set_variable = {
-					selected_formable = 0
-				}
-				set_variable = { ROOT.formable_id = ROOT.possible_formable_array^selected_formable}
-			}
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_CP_vic
-			}
-			RON_handle_gamemode_cp_vic = yes
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_Axis_vs_Allies
-			}
-			country_event = {id = ron_welcomeevents.102}
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_zombies
-			}
-			country_event = { id = ron_welcomeevents.103 }
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_Axis_vic
-			}
-			RON_handle_gamemode_axis_vic = yes
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_Axis_vic2
-			}
-			RON_handle_gamemode_axis_vic_jap_2 = yes
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_Axis_vic3
-			}
-			RON_handle_gamemode_axis_vic_jap = yes
-		}
-		if = {
-			limit = {
-				has_country_flag = selected_roman_empire
-			}
-			RON_handle_roman_empire = yes
+			set_variable = { ROOT.formable_id = ROOT.possible_formable_array^selected_formable}
 		}
 	}
-		if = {
-			limit = {
-				is_faction_leader = yes
-				has_war = no
-			}
-			set_variable = { ROOT.current_countrya = root.num_faction_members }
-			divide_variable = { ROOT.current_countrya = 2}
-			subtract_from_variable = {ROOT.current_countryc = ROOT.current_countrya }
-		}	
-
+	if = {
+		limit = {
+			has_country_flag = selected_CP_vic
+		}
+		RON_handle_gamemode_cp_vic = yes
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_Axis_vs_Allies
+		}
+		country_event = {id = ron_welcomeevents.102}
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_zombies
+		}
+		country_event = { id = ron_welcomeevents.103 }
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_Axis_vic
+		}
+		RON_handle_gamemode_axis_vic = yes
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_Axis_vic2
+		}
+		RON_handle_gamemode_axis_vic_jap_2 = yes
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_Axis_vic3
+		}
+		RON_handle_gamemode_axis_vic_jap = yes
+	}
+	if = {
+		limit = {
+			has_country_flag = selected_roman_empire
+		}
+		RON_handle_roman_empire = yes
+	}
 	if = { # Scripted Peace Deals
 		limit = {
 			check_variable = {
@@ -151,27 +125,22 @@ RON_start_game_button_rc = {
 		set_global_flag = closede
 		set_global_flag = hideeconomy
 	}
-	if = { # Soft Removal of War Exhaustion
-		limit = {
-			check_variable = {
-				ROOT.checkbox_8_var = 1
-			}
-		}
-		set_global_flag = no_exhaustion
-	}
 	if = { # Islam for All
 		limit = {
 			check_variable = {
-				ROOT.checkbox_9_var = 2
+				ROOT.checkbox_8_var = 2
 			}
 		}
 		set_global_flag = return_islamic_paths
+		every_country = {
+			mark_focus_tree_layout_dirty = yes
+		}
 	}
 
 	if = { # /kill south_america
 		limit = {
 			check_variable = {
-				ROOT.checkbox_10_var = 2
+				ROOT.checkbox_9_var = 2
 			}
 		}
 		every_state = {
@@ -203,7 +172,7 @@ RON_start_game_button_rc = {
 	if = { # No AI for minors
 		limit = {
 			check_variable = {
-				ROOT.checkbox_11_var = 2
+				ROOT.checkbox_10_var = 2
 			}
 		}
 		every_country = {
@@ -220,6 +189,18 @@ RON_start_game_button_rc = {
 			add_ideas = {
 				RI_optimisation
 			}
+		}
+	}
+
+	if = { # Realism Mode
+		limit = {
+			check_variable = {
+				ROOT.checkbox_11_var = 2
+			}
+		}
+		set_global_flag = RON_realism_mode
+		HUN = { # HUN WW2 Realism
+			set_country_flag = HUN_realism
 		}
 	}
 }
@@ -662,7 +643,7 @@ if = {limit = { OR = { original_tag = SWI } } add_to_array = { array = possible_
 if = {limit = { OR = { original_tag = ENG } } add_to_array = { array = possible_formable_array value = 71 } }
 if = {limit = { OR = { original_tag = FRA original_tag = ENG } } add_to_array = { array = possible_formable_array value = 72 } }
 if = {limit = { OR = { original_tag = FRA } } add_to_array = { array = possible_formable_array value = 73 } }
-if = {limit = { OR = { original_tag = WGR original_tag = DDR original_tag = PRE original_tag = WUR original_tag = SAR original_tag = SAX original_tag = MEK original_tag = BDN original_tag = WSP original_tag = HES original_tag = RHR original_tag = DAN AND = {original_tag = GER has_start_date > 1918.12.31} } } add_to_array = { array = possible_formable_array value = 74 } }
+if = {limit = { OR = { original_tag = WGR original_tag = DDR original_tag = PRE original_tag = WUR original_tag = SAR original_tag = SAX original_tag = MEK original_tag = BDN original_tag = WSP original_tag = HES original_tag = RHR original_tag = DNZ AND = {original_tag = GER has_start_date > 1918.12.31} } } add_to_array = { array = possible_formable_array value = 74 } }
 if = {limit = { OR = { original_tag = TUR original_tag = IRQ original_tag = SAU original_tag = YEM original_tag = OMA original_tag = PER original_tag = EGY original_tag = LBA original_tag = ALG original_tag = MOR } } add_to_array = { array = possible_formable_array value = 75 } }
 if = {limit = { OR = { original_tag = SAF original_tag = BOT original_tag = ZIM original_tag = MZB } } add_to_array = { array = possible_formable_array value = 76 } }
 if = {limit = { OR = { original_tag = NOR original_tag = DEN original_tag = SWE original_tag = FIN original_tag = KNS } } add_to_array = { array = possible_formable_array value = 77 } }
@@ -1050,6 +1031,7 @@ RON_country_setup = {
 		}
 		load_focus_tree = generic_focus
 	}
+
 
 	if = {
 		limit = {
@@ -1861,3 +1843,4 @@ RON_handle_party_names_2017 = {
 		set_party_name = { ideology = neutrality  long_name = JAP_neutrality_party_2017_long name = JAP_neutrality_party_2017 }
 	}
 }
+
