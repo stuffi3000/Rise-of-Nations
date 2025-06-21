@@ -69,6 +69,15 @@ on_actions = {
 	on_monthly = {
 		
 		effect = {
+				if = {
+					limit = {
+						check_variable = { ROOT.current_countryc < 0 }
+						has_war = no
+						is_faction_leader = yes
+					}
+			dismantle_faction = yes
+            			add_threat = -200
+					}			
 			if = {
 				limit = {
 					OR = {
@@ -153,7 +162,9 @@ on_monthly = {
 				is_faction_leader = yes
 				has_war = no
 			}
-			subtract_from_variable = {ROOT.current_countryc = root.num_faction_members }
+			set_variable = { ROOT.current_countrya = root.num_faction_members }
+			divide_variable = { ROOT.current_countrya = 2}
+			subtract_from_variable = {ROOT.current_countryc = ROOT.current_countrya }
 		}
 if = {
 	limit = {
@@ -617,6 +628,11 @@ if = {
 
 	#FROM is the one that joins the faction
 	on_create_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}				
 	}
 
 	#FROM is country getting invited.
@@ -625,6 +641,12 @@ if = {
 
 	#FROM is faction leader on join faction requests. THIS DOES NOT FIRE ON ADD_TO_FACTION EFFECT! USE ON_OFFER_JOIN_FACTION!
 	on_join_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}	
+	
 	}
 
 	#FROM is war target
@@ -635,7 +657,10 @@ if = {
 	on_faction_formed = {
 		effect = {
 			news_event = { id = news.159 }
-			 set_variable = { ROOT.current_countryc = 100 }
+ROOT = {
+				 set_variable = { ROOT.current_countryc = 100 }
+
+}
 		}
 	}
 
@@ -707,12 +732,11 @@ if = {
 	#Not run on a specific country.
 	on_startup = {
 		effect = {
-			if = {
-				limit = {
-					is_faction_leader = yes
-				}
-				set_variable = { ROOT.current_countryc = 100 }
-			
+			every_country = {
+			limit = {
+				is_faction_leader = yes
+			}
+			set_variable = { ROOT.current_countryc = 100 }
 			}
 			if = {
 				limit = {
