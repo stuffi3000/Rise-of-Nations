@@ -10139,9 +10139,7 @@ focus_tree = {
 			POL_sanation_right_opposition_down = yes
 			custom_effect_tooltip = available_political_advisor
 			show_ideas_tooltip = POL_jerzy_rutkowski
-			add_ideas = {
-				POL_right_paramilitarism_idea
-			}
+			add_ideas = POL_right_paramilitarism_idea
 		}
 	}
 
@@ -10966,6 +10964,9 @@ focus_tree = {
 
 		available_if_capitulated = yes
 		search_filters = { FOCUS_FILTER_POLITICAL }
+		bypass_effect = {
+			POL_remove_peasants_strike = yes
+		}
 		completion_reward = {
 			add_timed_idea = {
 				idea = communist_influence
@@ -11018,8 +11019,10 @@ focus_tree = {
 		completion_reward = {
 			#Relation Boost with the USSR
 			add_opinion_modifier = { target = SOV modifier = POL_seek_accommodation_with_USSR }
-			SOV = { add_opinion_modifier = { target = ROOT modifier = POL_seek_accommodation_with_USSR } }
+			reverse_add_opinion_modifier = { target = SOV modifier = POL_seek_accommodation_with_USSR }
+			custom_effect_tooltip = generic_skip_one_line_tt
 			add_ideas = POL_soviet_influence
+			custom_effect_tooltip = generic_skip_one_line_tt
 			give_military_access = SOV
 		}
 	}
@@ -11030,7 +11033,7 @@ focus_tree = {
 		prerequisite = { focus = POL_seek_accommodation_with_USSR }
 		mutually_exclusive = { focus = POL_polish_stalinism }
 		available = {
-			POL = { has_government = communism }
+			has_government = communism
 		}
 
 		x = -1
@@ -11044,9 +11047,11 @@ focus_tree = {
 
 		available_if_capitulated = yes
 		completion_reward = {
-			remove_ideas = POL_between_two_powers
-			add_ideas = POL_industry_progression
-			add_country_leader_trait = socialist
+			swap_ideas = {
+				remove_idea = POL_between_two_powers
+				add_idea = POL_industry_progression
+			}
+			add_country_leader_trait = POL_socialist
 		}
 	}
 
@@ -11056,7 +11061,7 @@ focus_tree = {
 		prerequisite = { focus = POL_seek_accommodation_with_USSR }
 		mutually_exclusive = { focus = POL_polish_socialism }
 		available = {
-			POL = { has_government = communism }
+			has_government = communism
 		}
 
 		x = 1
@@ -11071,8 +11076,11 @@ focus_tree = {
 		available_if_capitulated = yes
 		completion_reward = {
 			retire_country_leader = yes
-			remove_ideas = POL_between_two_powers
-			add_ideas = POL_cult_of_bierut
+			custom_effect_tooltip = generic_skip_one_line_tt
+			swap_ideas = {
+				remove_idea = POL_between_two_powers
+				add_idea = POL_cult_of_bierut
+			}
 		}
 	}
 
@@ -11081,7 +11089,7 @@ focus_tree = {
 		icon = GFX_align_to_soviet_union
 		prerequisite = { focus = POL_polish_stalinism focus = POL_polish_socialism }
 		available = {
-			POL = { has_government = communism }
+			has_government = communism
 		}
 
 		x = 1
@@ -11095,9 +11103,7 @@ focus_tree = {
 
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		completion_reward = {
-			POL = {
-				country_event = { id = polmod.38 }
-			}
+			country_event = { id = polmod.38 }
 		}
 	}
 
@@ -11107,8 +11113,8 @@ focus_tree = {
 		prerequisite = { focus = POL_polish_stalinism }
 		prerequisite = { focus = POL_pact_beck-molotow }
 		available = {
-			POL = { has_government = communism }
-			POL = { is_in_faction_with = SOV }
+			has_government = communism
+			is_in_faction_with = SOV
 		}
 
 		x = 0
@@ -11135,7 +11141,7 @@ focus_tree = {
 		icon = GFX_focus_YUG_pan_slavic_congress
 		prerequisite = { focus = POL_polish_stalinism focus = POL_polish_socialism }
 		available = {
-			POL = { has_government = communism }
+			has_government = communism
 		}
 
 		x = -1
@@ -11189,13 +11195,37 @@ focus_tree = {
 	}
 
 	focus = {
-		id = POL_military_youth
-		icon = GFX_goal_generic_wolf_pack
+		id = POL_paramilitarism
+		icon = GFX_focus_RAJ_a_private_military
 		prerequisite = { focus = POL_go_right }
 
 		x = 2
 		y = 1
 		relative_position_id = POL_go_right
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			add_ideas = paramilitarism_focus
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = POL_jerzy_rutkowski
+		}
+	}
+
+	focus = {
+		id = POL_military_youth
+		icon = GFX_goal_generic_wolf_pack
+		prerequisite = { focus = POL_paramilitarism }
+
+		x = 0
+		y = 1
+		relative_position_id = POL_paramilitarism
 		cost = 10
 
 		ai_will_do = {
@@ -11231,7 +11261,8 @@ focus_tree = {
 
 		completion_reward = {
 			add_opinion_modifier = { target = GER modifier = POL_seek_accommodation_with_germany }
-			GER = { add_opinion_modifier = { target = ROOT modifier = POL_seek_accommodation_with_germany } }
+			reverse_add_opinion_modifier = { target = GER modifier = POL_seek_accommodation_with_germany }
+			custom_effect_tooltip = generic_skip_one_line_tt
 			#Relation Boost With Germany
 			unlock_decision_tooltip = POL_build_extraterritorial_road
 		}
@@ -11242,8 +11273,8 @@ focus_tree = {
 		icon = GFX_align_to_germany2
 		prerequisite = { focus = POL_seek_accommodation_with_germany }
 		available = {
-			POL = { has_war = no }
-			85 = { is_owned_by = POL }
+			has_war = no
+			owns_state = 85
 			country_exists = GER
 			has_country_flag = extraterritorial_road_completed
 			NOT = { has_war_with = GER }
@@ -11265,10 +11296,9 @@ focus_tree = {
 
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		completion_reward = {
-			POL = {
-				remove_ideas = POL_between_two_powers
-				country_event = { id = polmod.25 }
-			}
+			remove_ideas = POL_between_two_powers
+			custom_effect_tooltip = generic_skip_one_line_tt
+			country_event = { id = polmod.25 }
 		}
 	}
 
@@ -11337,12 +11367,14 @@ focus_tree = {
 					LIT = { exists = yes }
 				}
 				LIT = { country_event = polmod.13 }
+				custom_effect_tooltip = generic_skip_one_line_tt
 			}
 			if = {
 				limit = {
 					LAT = { exists = yes }
 				}
 				LAT = { country_event = polmod.13 }
+				custom_effect_tooltip = generic_skip_one_line_tt
 			}
 			if = {
 				limit = {
@@ -11361,7 +11393,7 @@ focus_tree = {
 		mutually_exclusive = { focus = POL_nadbaltycki_protekcjonizm }
 		available = {
 			country_exists = GER
-			72 = { is_owned_by = POL }
+			owns_state = 72
 			NOT = {
 				is_in_faction_with = GER
 				has_idea = POL_GER_border_issues
@@ -11385,9 +11417,7 @@ focus_tree = {
 
 		search_filters = { FOCUS_FILTER_POLITICAL }
 		completion_reward = {
-			POL = {
-				country_event = { id = polmod.1 }
-			}
+			country_event = { id = polmod.1 }
 		}
 	}
 
@@ -11410,9 +11440,7 @@ focus_tree = {
 
 
 		completion_reward = {
-			POL = {
-				country_event = { id = polmod.24 }
-			}
+			country_event = { id = polmod.24 }
 		}
 	}
 
