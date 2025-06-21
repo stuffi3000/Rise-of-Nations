@@ -5886,13 +5886,7 @@ focus_tree = {
 				var = POL_investments_var
 				value = 1
 			}
-			if = {
-				limit = { has_idea = POL_great_peasants_strike }
-				remove_ideas = POL_great_peasants_strike
-			}
-			else = {
-				remove_ideas = POL_looming_peasants_strike
-			}
+			POL_remove_peasants_strike = yes
 		}		
 	}
 	
@@ -10947,270 +10941,6 @@ focus_tree = {
 	#############################
 
 	focus = {
-		id = POL_go_right
-		icon = GFX_goal_support_fascism
-		prerequisite = { focus = POL_authoritarianism }
-		mutually_exclusive = { focus = POL_Restore_Monarchy focus = POL_go_left focus = POL_complete_april_constitution }
-
-		x = 4
-		y = 0
-		relative_position_id = POL_go_left
-		cost = 5
-
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			add_timed_idea = {
-				idea = fascist_influence
-				days = 720
-			}
-			remove_mission = POL_peasants_strike
-			remove_ideas = POL_great_peasants_strike
-		}
-	}
-
-	focus = {
-		id = POL_military_youth
-		icon = GFX_goal_generic_wolf_pack
-		prerequisite = { focus = POL_go_right }
-
-		x = 2
-		y = 1
-		relative_position_id = POL_go_right
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-		search_filters = { FOCUS_FILTER_MANPOWER }
-		completion_reward = {
-			add_ideas = military_youth_focus
-			#As per generic
-		}
-	}
-
-	focus = {
-		id = POL_seek_accommodation_with_germany
-		icon = GFX_goal_generic_military_deal
-		prerequisite = { focus = POL_go_right }
-		available = {
-			country_exists = GER
-		}
-
-		x = 0
-		y = 1
-		relative_position_id = POL_go_right
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		completion_reward = {
-			add_opinion_modifier = { target = GER modifier = POL_seek_accommodation_with_germany }
-			GER = { add_opinion_modifier = { target = ROOT modifier = POL_seek_accommodation_with_germany } }
-			#Relation Boost With Germany
-			unlock_decision_tooltip = POL_build_extraterritorial_road
-		}
-	}
-
-	focus = {
-		id = POL_silesia_for_klaipeda
-		icon = GFX_align_to_germany2
-		prerequisite = { focus = POL_seek_accommodation_with_germany }
-		available = {
-			POL = { has_war = no }
-			85 = { is_owned_by = POL }
-			country_exists = GER
-			has_country_flag = extraterritorial_road_completed
-			NOT = { has_war_with = GER }
-			has_government = neutrality
-		}
-		bypass = {
-			is_in_faction_with = GER
-		}
-
-		x = 0
-		y = 1
-		relative_position_id = POL_seek_accommodation_with_germany
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			POL = {
-				remove_ideas = POL_between_two_powers
-				country_event = { id = polmod.25 }
-			}
-		}
-	}
-
-
-	focus = {
-		id = POL_aneksja_litwy
-		icon = attack_lithuania
-		prerequisite = { focus = POL_go_left focus = POL_go_right }
-		available = {
-			country_exists = LIT
-			has_country_flag = POL_lit_incident
-		}
-
-		x = -2
-		y = 1
-		relative_position_id = POL_go_right
-		cost = 5
-
-		ai_will_do = {
-			factor = 10
-		}
-
-		available_if_capitulated = yes
-
-		completion_reward = {
-			unlock_decision_tooltip = POL_lit_border_conflict
-		}
-	}
-
-	focus = {
-		id = POL_nadbaltycki_protekcjonizm
-		icon = GFX_goal_anschluss
-		prerequisite = { focus = POL_silesia_for_klaipeda focus = POL_aneksja_litwy }
-		mutually_exclusive = { focus = POL_wielka_polska }
-		available = {
-			OR = {
-				LIT = { exists = yes }
-				LAT = { exists = yes }
-				EST = { exists = yes }
-			}
-			OR = {
-				SOV = {
-					focus_progress = {
-						focus = SOV_claims_on_baltic
-						progress > 0
-					}
-				}
-				has_government = fascism
-			}
-			communism < 0.1
-		}
-
-		x = -1
-		y = 1
-		relative_position_id = POL_silesia_for_klaipeda
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-
-		completion_reward = {
-			if = {
-				limit = {
-					LIT = { exists = yes }
-				}
-				LIT = { country_event = polmod.13 }
-			}
-			if = {
-				limit = {
-					LAT = { exists = yes }
-				}
-				LAT = { country_event = polmod.13 }
-			}
-			if = {
-				limit = {
-					EST = { exists = yes }
-				}
-				EST = { country_event = polmod.13 }
-			}
-			hidden_effect = { news_event = newsmod.2 }
-		}
-	}
-
-	focus = {
-		id = POL_wielka_polska
-		icon = GFX_POL_regency_council_focus
-		prerequisite = { focus = POL_silesia_for_klaipeda }
-		mutually_exclusive = { focus = POL_nadbaltycki_protekcjonizm }
-		available = {
-			country_exists = GER
-			72 = { is_owned_by = POL }
-			NOT = {
-				is_in_faction_with = GER
-				has_idea = POL_GER_border_issues
-				has_war_with = GER
-				has_country_leader = {
-					name = "Roman Dmowski"
-					ruling_only = yes
-				}
-			}
-		}
-
-		x = 1
-		y = 1
-		relative_position_id = POL_silesia_for_klaipeda
-		cost = 10
-
-		ai_will_do = {
-			factor = 10
-		}
-
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			POL = {
-				country_event = { id = polmod.1 }
-			}
-		}
-	}
-
-	focus = {
-		id = POL_commonwelth_reborn
-		icon = GFX_goal_great_poland
-		prerequisite = { focus = POL_nadbaltycki_protekcjonizm focus = POL_wielka_polska }
-		available = {
-			holds_eastern_europe = yes
-		}
-
-		x = -1
-		y = 1
-		relative_position_id = POL_wielka_polska
-		cost = 5
-
-		ai_will_do = {
-			factor = 10
-		}
-
-
-		completion_reward = {
-			POL = {
-				country_event = { id = polmod.24 }
-			}
-		}
-	}
-
-	#############################
-	##### COMMUNISM SECTION #####
-	#############################
-
-	focus = {
 		id = POL_go_left
 		icon = GFX_goal_support_communism
 		prerequisite = { focus = POL_authoritarianism }
@@ -11241,8 +10971,7 @@ focus_tree = {
 				idea = communist_influence
 				days = 720
 			}
-			remove_mission = POL_peasants_strike
-			remove_ideas = POL_great_peasants_strike
+			POL_remove_peasants_strike = yes
 		}
 	}
 
@@ -11425,6 +11154,268 @@ focus_tree = {
 		}
 	}
 
+	###########################
+	##### FASCISM SECTION #####
+	###########################
+
+	focus = {
+		id = POL_go_right
+		icon = GFX_goal_support_fascism
+		prerequisite = { focus = POL_authoritarianism }
+		mutually_exclusive = { focus = POL_Restore_Monarchy focus = POL_go_left focus = POL_complete_april_constitution }
+
+		x = 4
+		y = 0
+		relative_position_id = POL_go_left
+		cost = 5
+
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_timed_idea = {
+				idea = fascist_influence
+				days = 720
+			}
+		}
+	}
+
+	focus = {
+		id = POL_military_youth
+		icon = GFX_goal_generic_wolf_pack
+		prerequisite = { focus = POL_go_right }
+
+		x = 2
+		y = 1
+		relative_position_id = POL_go_right
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+		search_filters = { FOCUS_FILTER_MANPOWER }
+		completion_reward = {
+			add_ideas = military_youth_focus
+			#As per generic
+		}
+	}
+
+	focus = {
+		id = POL_seek_accommodation_with_germany
+		icon = GFX_goal_generic_military_deal
+		prerequisite = { focus = POL_go_right }
+		available = {
+			country_exists = GER
+		}
+
+		x = 0
+		y = 1
+		relative_position_id = POL_go_right
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			add_opinion_modifier = { target = GER modifier = POL_seek_accommodation_with_germany }
+			GER = { add_opinion_modifier = { target = ROOT modifier = POL_seek_accommodation_with_germany } }
+			#Relation Boost With Germany
+			unlock_decision_tooltip = POL_build_extraterritorial_road
+		}
+	}
+
+	focus = {
+		id = POL_silesia_for_klaipeda
+		icon = GFX_align_to_germany2
+		prerequisite = { focus = POL_seek_accommodation_with_germany }
+		available = {
+			POL = { has_war = no }
+			85 = { is_owned_by = POL }
+			country_exists = GER
+			has_country_flag = extraterritorial_road_completed
+			NOT = { has_war_with = GER }
+			has_government = neutrality
+		}
+		bypass = {
+			is_in_faction_with = GER
+		}
+
+		x = 0
+		y = 1
+		relative_position_id = POL_seek_accommodation_with_germany
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			POL = {
+				remove_ideas = POL_between_two_powers
+				country_event = { id = polmod.25 }
+			}
+		}
+	}
+
+
+	focus = {
+		id = POL_aneksja_litwy
+		icon = attack_lithuania
+		prerequisite = { focus = POL_go_left focus = POL_go_right }
+		available = {
+			country_exists = LIT
+			has_country_flag = POL_lit_incident
+		}
+
+		x = 2
+		y = 1
+		relative_position_id = POL_go_left
+		cost = 5
+
+		ai_will_do = {
+			factor = 10
+		}
+
+		available_if_capitulated = yes
+
+		completion_reward = {
+			unlock_decision_tooltip = POL_lit_border_conflict
+		}
+	}
+
+	focus = {
+		id = POL_nadbaltycki_protekcjonizm
+		icon = GFX_goal_anschluss
+		prerequisite = { focus = POL_silesia_for_klaipeda focus = POL_aneksja_litwy }
+		mutually_exclusive = { focus = POL_wielka_polska }
+		available = {
+			OR = {
+				LIT = { exists = yes }
+				LAT = { exists = yes }
+				EST = { exists = yes }
+			}
+			OR = {
+				SOV = {
+					focus_progress = {
+						focus = SOV_claims_on_baltic
+						progress > 0
+					}
+				}
+				has_government = fascism
+			}
+			communism < 0.1
+		}
+
+		x = -1
+		y = 1
+		relative_position_id = POL_silesia_for_klaipeda
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+
+		completion_reward = {
+			if = {
+				limit = {
+					LIT = { exists = yes }
+				}
+				LIT = { country_event = polmod.13 }
+			}
+			if = {
+				limit = {
+					LAT = { exists = yes }
+				}
+				LAT = { country_event = polmod.13 }
+			}
+			if = {
+				limit = {
+					EST = { exists = yes }
+				}
+				EST = { country_event = polmod.13 }
+			}
+			hidden_effect = { news_event = newsmod.2 }
+		}
+	}
+
+	focus = {
+		id = POL_wielka_polska
+		icon = GFX_POL_regency_council_focus
+		prerequisite = { focus = POL_silesia_for_klaipeda }
+		mutually_exclusive = { focus = POL_nadbaltycki_protekcjonizm }
+		available = {
+			country_exists = GER
+			72 = { is_owned_by = POL }
+			NOT = {
+				is_in_faction_with = GER
+				has_idea = POL_GER_border_issues
+				has_war_with = GER
+				has_country_leader = {
+					name = "Roman Dmowski"
+					ruling_only = yes
+				}
+			}
+		}
+
+		x = 1
+		y = 1
+		relative_position_id = POL_silesia_for_klaipeda
+		cost = 10
+
+		ai_will_do = {
+			factor = 10
+		}
+
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			POL = {
+				country_event = { id = polmod.1 }
+			}
+		}
+	}
+
+	focus = {
+		id = POL_commonwelth_reborn
+		icon = GFX_goal_great_poland
+		prerequisite = { focus = POL_nadbaltycki_protekcjonizm focus = POL_wielka_polska }
+		available = {
+			holds_eastern_europe = yes
+		}
+
+		x = -1
+		y = 1
+		relative_position_id = POL_wielka_polska
+		cost = 5
+
+		ai_will_do = {
+			factor = 10
+		}
+
+
+		completion_reward = {
+			POL = {
+				country_event = { id = polmod.24 }
+			}
+		}
+	}
+
 	#######################
 	###   MONARCHISM    ###
 	#######################
@@ -11444,10 +11435,13 @@ focus_tree = {
 		}
 
 		completion_reward = {
-			swap_ideas = {
-				add_idea = POL_Faction_Conflict_Monarchy
-				remove_idea = POL_Faction_Conflict
-			}
+			#swap_ideas = {
+			#	add_idea = POL_Faction_Conflict_Monarchy
+			#	remove_idea = POL_Faction_Conflict
+			#}
+			POL_april_constitution_remove = yes
+			POL_sanation_left_opposition_remove = yes
+			POL_sanation_right_opposition_remove = yes
 			hidden_effect = {
 				set_cosmetic_tag = POL_KINGDOM
 			}
@@ -11591,8 +11585,10 @@ focus_tree = {
 		y = 1
 		cost = 5
 		completion_reward = {
-			remove_ideas = POL_ukrainian_problem
-			add_ideas = POL_Polish_Empire
+			swap_ideas = {
+				remove_idea = POL_ukrainian_problem
+				add_idea = POL_Polish_Empire
+			}
 		}
 	}
 	
@@ -11607,8 +11603,10 @@ focus_tree = {
 		y = 1
 		cost = 5
 		completion_reward = {
-			remove_ideas = POL_ukrainian_problem
-			add_ideas = POL_Equal_Commonwealth
+			swap_ideas = {
+				remove_idea = POL_ukrainian_problem
+				add_idea = POL_Equal_Commonwealth
+			}
 		}
 	}
 	
