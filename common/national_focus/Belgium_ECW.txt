@@ -1,0 +1,802 @@
+focus_tree = {
+	id = Belgium_ECW
+
+	country = {
+		factor = 0
+
+		modifier = {
+			add = 10
+			original_tag = BEL
+		}
+	}
+	continuous_focus_position = {
+		x = 3000
+		y = 2000
+	}
+
+	focus = {
+		id = bel_guns_fall_silent
+		icon = GFX_goal_unknown
+		x = 8
+		y = 2
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available_if_capitulated = yes
+		allow_branch = {
+			NOT = {
+				is_puppet_of = GER
+			}
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_war_support < 0.15
+				}
+				add_ideas = civilian_economy
+			}
+			else_if = {
+				limit = {
+					has_war_support < 0.25
+				}
+				add_ideas = low_economic_mobilisation
+			}
+			else_if = {
+				limit = {
+					has_war_support < 0.5
+				}
+				add_ideas = partial_economic_mobilisation
+			}
+			else_if = {
+				limit = {
+					has_war_support < 0.8
+				}
+				add_ideas = war_economy
+			}
+			if = {
+				limit = {
+					has_idea = strikes_1
+				}
+				remove_ideas = strikes_1
+			}
+			if = {
+				limit = {
+					has_idea = strikes_2
+				}
+				remove_ideas = strikes_2
+			}
+			if = {
+				limit = {
+					has_idea = strikes_3
+				}
+				remove_ideas = strikes_3
+			}
+			
+			if = {
+				#limit = { NOT = { has_idea = usa_capitalist_economy } }
+				#add_ideas = usa_capitalist_economy 
+			}
+			if = {
+				limit = { NOT = { has_idea = free_trade } }
+				add_ideas = free_trade
+			}
+			if = {
+				limit = { NOT = { has_idea = limited_conscription } }
+				add_ideas = limited_conscription
+			}
+			add_timed_idea = {
+				idea = FRA_recovering_from_german_invasion
+				days = 300
+			}
+			add_named_threat = { threat = -3 name = "Belgium Demobilizes" }
+			add_stability = 0.1
+			add_war_support = -0.3
+		}
+	}
+focus = {
+		id = bel_international_matters
+		icon = GFX_goal_unknown
+		x = 8
+		y = 3
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_guns_fall_silent }
+		completion_reward = {
+			add_political_power = 150
+		}
+
+}
+focus = {
+		id = bel_treaty_of_b
+		icon = GFX_goal_unknown
+		x = 12
+		y = 4
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_international_matters }
+		completion_reward = {
+				country_event = CW_Expansion_country.49 
+		}
+}
+focus = {
+		id = bel_treaty_invite_communist_nations
+		icon = GFX_goal_unknown
+		x = 15
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}
+		mutually_exclusive = { focus = bel_treaty_only_democratic_nations }
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_treaty_of_b }
+		completion_reward = {
+			add_popularity = {
+				ideology = communism
+				popularity = 0.05
+			}
+		every_other_country = {
+			limit = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+				has_government = communism
+			}
+				add_opinion_modifier = {
+					target = BEL
+					modifier = medium_increase
+				}
+		}
+		}
+		}
+focus = {
+		id = bel_treaty_only_democratic_nations
+		icon = GFX_goal_unknown
+		x = 9
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		mutually_exclusive = { focus = bel_treaty_invite_communist_nations }
+		prerequisite = { focus = bel_treaty_of_b }
+		completion_reward = {
+		every_other_country = {
+			limit = {
+				capital_scope = {
+					is_on_continent = europe
+				}
+				has_government = democratic
+			}
+				add_opinion_modifier = {
+					target = BEL
+					modifier = medium_increase
+				}
+		}			
+			add_political_power = 300
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.05
+			}			
+		}
+}
+focus = {
+		id = bel_invite_eng
+		icon = GFX_goal_unknown
+		x = 10
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_treaty_only_democratic_nations focus = bel_treaty_invite_communist_nations}
+		completion_reward = {
+				ENG = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}					
+				}
+		}
+}
+focus = {
+		id = bel_invite_ita
+		icon = GFX_goal_unknown
+		x = 8
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_treaty_only_democratic_nations }
+		completion_reward = {
+				ITA = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}					
+				}
+		}
+}
+focus = {
+		id = bel_invite_fra
+		icon = GFX_goal_unknown
+		x = 8
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_invite_ita  }
+		completion_reward = {
+				FRA = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}					
+				}
+		}
+}
+focus = {
+		id = bel_invite_gre
+		icon = GFX_goal_unknown
+		x = 10
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = {  focus = bel_invite_eng }
+		completion_reward = {
+				GRE = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}					
+				}
+		}
+}
+focus = {
+		id = bel_invite_benelux
+		icon = GFX_goal_unknown
+		x = 9
+		y = 8
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_invite_fra  }
+		prerequisite = { focus = bel_invite_gre }
+		completion_reward = {
+			LUX = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}			
+			SAR = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}			
+				HOL = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}					
+				}
+		}
+}
+focus = {
+		id = bel_invite_SPA
+		icon = GFX_goal_unknown
+		x = 16
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = {  focus = bel_treaty_invite_communist_nations}
+		completion_reward = {
+			SPR = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}
+		}
+}
+focus = {
+		id = bel_invite_SWE
+		icon = GFX_goal_unknown
+		x = 14
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_invite_fin}
+		completion_reward = {
+			SWE = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}
+		}
+}
+focus = {
+		id = bel_invite_non_aligned
+		icon = GFX_goal_unknown
+		x = 15
+		y = 8
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_invite_SWE  }
+		prerequisite = { focus = bel_invite_tur }
+		completion_reward = {		
+			AUS = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}		
+			SWI = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}				
+			YUG = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}
+		}
+}
+focus = {
+		id = bel_invite_fin
+		icon = GFX_goal_unknown
+		x = 14
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_treaty_only_democratic_nations focus = bel_treaty_invite_communist_nations focus = bel_treaty_only_democratic_nations }
+		completion_reward = {
+			FIN = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}
+		}
+}
+focus = {
+		id = bel_invite_tur
+		icon = GFX_goal_unknown
+		x = 16
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			has_idea = RON_European_Union
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_invite_SPA}
+		completion_reward = {
+			TUR = {
+			country_event = {
+				id = RON_European_Union.1
+				hours = 6
+			}				
+			}
+		}
+}
+focus = {
+		id = bel_treaty_finished
+		icon = GFX_goal_unknown
+		x = 12
+		y = 9
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		prerequisite = { focus = bel_invite_benelux focus = bel_invite_non_aligned}
+		available_if_capitulated = yes
+		completion_reward = {
+			add_stability = 0.1
+			add_country_leader_trait = political_specialist
+		}
+}
+focus = {
+		id = bel_decolonization
+		icon = GFX_goal_unknown
+		x = 4
+		y = 4
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			controls_state = 295
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_international_matters }
+		completion_reward = {
+			release_puppet_on_controlled  = COG
+		}
+}
+focus = {
+		id = bel_guided_decolonization
+		icon = GFX_goal_unknown
+		x = 2
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		mutually_exclusive = { focus = bel_rushed_decolonization }
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_decolonization }
+		completion_reward = {
+			custom_effect_tooltip = "If we wait too long they will declare independence and it may lead to war..."
+		}
+}
+focus = {
+		id = bel_congo_guideance
+		icon = GFX_goal_unknown
+		x = 0
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+			date > 1951.1.1
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_guided_decolonization }
+		completion_reward = {
+			COG = {
+army_experience = 15	
+			}
+		}
+}
+focus = {
+		id = bel_congo_install_democracy
+		icon = GFX_goal_unknown
+		x = 0
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_guideance }
+		completion_reward = {
+			COG = {
+				add_popularity = {
+    ideology = democratic
+    popularity = 0.3
+}			}
+		}
+}
+focus = {
+		id = bel_congo_full_representation
+		icon = GFX_goal_unknown
+		x = 0
+		y = 8
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_install_democracy }
+		completion_reward = {
+			COG = {
+				add_political_power = 300
+				add_popularity = {
+    ideology = democratic
+    popularity = 0.5
+}			}
+		}
+}
+focus = {
+		id = bel_congo_economic_aid
+		icon = GFX_goal_unknown
+		x = 4
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_guided_decolonization }
+		completion_reward = {			
+			COG = {
+			random_owned_controlled_state = { limit = { free_building_slots = { building = industrial_complex size > 0 include_locked = yes } } add_extra_state_shared_building_slots = 2 add_building_construction = { type = industrial_complex level = 2 instant_build = yes }  }
+			}
+		}
+}
+
+focus = {
+		id = bel_congo_invest_in_congo
+		icon = GFX_goal_unknown
+		x = 4
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_economic_aid }
+		completion_reward = {			
+			random_owned_controlled_state = {
+				remove_building = {
+    type = arms_factory
+    level = 3
+}
+			}
+			COG = {
+			random_owned_controlled_state = { limit = { free_building_slots = { building = industrial_complex size > 0 include_locked = yes } } add_extra_state_shared_building_slots = 2 add_building_construction = { type = industrial_complex level = 2 instant_build = yes }  }
+			}
+		}
+}
+focus = {
+		id = bel_congo_economic_boom
+		icon = GFX_goal_unknown
+		x = 4
+		y = 8
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_invest_in_congo }
+		completion_reward = {			
+			COG = {
+			add_timed_idea = {
+				idea = economic_mobilisation
+				days = 100
+			}
+			}
+		}
+}
+focus = {
+		id = bel_congo_send_advisors
+		icon = GFX_goal_unknown
+		x = 2
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_guided_decolonization }
+		completion_reward = {
+		add_opinion_modifier = {
+			target = COG
+			modifier = CHL_advisors
+		}					
+			give_guarantee = COG
+send_equipment = {
+    equipment = infantry_equipment
+    amount = 10000
+    target = COG
+}			
+		}
+}
+focus = {
+		id = bel_congo_train_their_military
+		icon = GFX_goal_unknown
+		x = 2
+		y = 7
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_send_advisors }
+		completion_reward = {
+			air_experience = -100
+			navy_experience = -100
+			COG = {
+				navy_experience = 100
+				air_experience = 100
+			}
+		}
+}
+focus = {
+		id = bel_congo_fully_prepared
+		icon = GFX_goal_unknown
+		x = 2
+		y = 8
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_train_their_military }
+		completion_reward = {
+			COG = {
+				navy_experience = 300
+				air_experience = 300
+			}
+		}
+}
+focus = {
+		id = bel_congo_leave_congo
+		icon = GFX_goal_unknown
+		x = 2
+		y = 9
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available = {
+		date > 1958.6.30			
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_congo_full_representation }
+		prerequisite = { focus = bel_congo_economic_boom  }
+		prerequisite = {focus = bel_congo_fully_prepared  }
+		completion_reward = {
+			country_event = ron_decolonizationcountry.145
+		}
+}
+focus = {
+		id = bel_rushed_decolonization
+		icon = GFX_goal_unknown
+		x = 6
+		y = 5
+		cost = 10
+		ai_will_do = {
+			factor = 0
+		}
+		available = {
+			COG = {is_puppet_of = BEL}
+		}		
+		available_if_capitulated = yes
+		mutually_exclusive = { focus = bel_guided_decolonization }
+		prerequisite = { focus = bel_decolonization }
+		completion_reward = {
+			COG = {
+				add_popularity = {
+    ideology = fascism
+    popularity = 0.3
+}
+add_popularity = {
+    ideology = communism
+    popularity = 0.3
+}
+add_popularity = {
+    ideology = neutrality
+    popularity = 0.3
+}
+			}
+		}
+}
+focus = {
+		id = bel_last_flight_out
+		icon = GFX_goal_unknown
+		x = 6
+		y = 6
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		available_if_capitulated = yes
+		prerequisite = { focus = bel_rushed_decolonization }
+		completion_reward = {
+			BEL = {
+				release = COG
+				end_puppet = COG
+			}
+			COG = {
+				news_event = {
+					id = ron_decolonizationnews.1
+					hours = 6
+				}
+				leave_faction = yes
+			}
+			BEL = {
+				transfer_state = 768
+				transfer_state = 769
+			}			
+			hidden_effect = {
+				COG = {
+					start_civil_war = {
+    					ideology = communism
+    					size = 0.3
+					}
+				}
+			}
+		}
+}
+}
