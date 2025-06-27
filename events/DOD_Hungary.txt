@@ -1,1 +1,366 @@
-﻿
+﻿###########################
+# Hungarian Events
+###########################
+
+add_namespace = DOD_hungary
+
+#Demand Overlordship over Slovakia - CZE agrees, Hungary gets options on whether to annex or puppet
+country_event = {
+	id = DOD_hungary.101
+	title = DOD_hungary.101.t
+	desc = DOD_hungary.101.desc 
+	picture = GFX_report_event_military_planning
+	
+	is_triggered_only = yes
+
+	option = {# annex
+		name = DOD_hungary.101.a
+		ai_chance = {
+			factor = 70
+			modifier = {
+				country_exists = SLO
+				factor = 0
+			}
+		}
+		HUN = {
+			transfer_state = 70
+			transfer_state = 71
+			transfer_state = 72
+			transfer_state = 73
+		}
+		if = { #In case Demand Southern Slovakia Bypasses, this will transfer it.  
+			limit = {
+				FROM = { owns_state = 664 }
+			}
+			HUN = { transfer_state = 664 }
+		}
+		if = {
+			limit = {
+				country_exists = CZE
+			}
+			CZE = {
+				set_cosmetic_tag = CZE_ONLY
+			}
+		}
+	}
+
+	option = {# puppet
+		name = DOD_hungary.101.b
+		ai_chance = {
+			factor = 30
+		}
+		if = {
+			limit = {
+				70 = {
+					is_owned_by = CZE
+				}
+			}
+			SLO = { transfer_state = 70 }
+		}
+		if = {
+			limit = {
+				71 = {
+					is_owned_by = CZE	
+				}
+			}
+			SLO = { transfer_state = 71 }
+		}
+		if = {
+			limit = {
+				72 = {
+					is_owned_by = CZE	
+				}
+			}
+			SLO = { transfer_state = 72 }
+		}
+		if = {
+			limit = {
+				154 = { is_owned_by = HUN }
+				73 = {
+					is_owned_by = CZE
+				}
+			}
+			HUN = { transfer_state = 73 }
+		}
+		if = {
+			limit = {
+				664 = {
+					is_owned_by = CZE
+				}
+			}
+			HUN = { transfer_state = 664 }
+		}
+		every_state = {
+			limit = {
+				is_owned_by = SLO
+			}
+			add_core_of = SLO
+		}
+		hidden_effect = {
+			SLO = {
+				load_oob = SLO_1939
+				add_manpower = 9876
+			}
+		}
+		puppet = SLO
+		if = {
+			limit = {
+				country_exists = CZE
+			}
+			CZE = {
+				set_cosmetic_tag = CZE_ONLY
+			}
+		}
+	}
+}
+
+#Demand Overlordship over Slovakia - CZE refuses to hand over Slovakia
+country_event = {
+	id = DOD_hungary.102
+	title = DOD_hungary.102.t
+	desc = DOD_hungary.102.desc 
+	picture = GFX_report_event_czech_soldiers_01
+	
+	is_triggered_only = yes
+
+	option = {# let it go
+		name = DOD_hungary.102.a
+		ai_chance = {
+			factor = 10
+			modifier = {
+				is_in_faction = no
+				CZE = {
+					is_in_faction = yes
+				}
+				factor = 10
+			}
+		}
+	}
+
+	option = {# ask Germany to participate in the split
+		name = DOD_hungary.102.b
+		trigger = {
+			GER = { exists = yes }
+		}
+		ai_chance = {
+			factor = 90
+			modifier = {
+				is_in_faction_with = GER
+				factor = 10
+			}
+		}
+		GER = { country_event = DOD_hungary.103 }
+	}
+}
+
+#Demand Overlordship over Slovakia - GER asked to split CZE with Hungary
+country_event = {
+	id = DOD_hungary.103
+	title = DOD_hungary.103.t
+	desc = DOD_hungary.103.desc 
+	picture = [GetHitlerCroatianHandshakeEventPicture]
+	
+	is_triggered_only = yes
+
+	option = {# yes
+		name = DOD_hungary.103.a
+		ai_chance = {
+			factor = 75
+			modifier = {
+				has_government = democratic
+				factor = 0
+			}
+		}
+		set_global_flag = GER_HUN_CZE_split
+		HUN = { 
+			country_event = DOD_hungary.104 
+			add_opinion_modifier = { target = GER modifier = HUN_split_CZE }
+			add_ai_strategy = {
+					type = alliance
+					id = "GER"
+					value = 200
+				}
+		}
+
+	}
+
+	option = {# refuse
+		name = DOD_hungary.103.b
+		ai_chance = {
+			factor = 25
+		}
+		HUN = { country_event = DOD_hungary.105 }
+	}
+}
+
+#Demand Overlordship over Slovakia - GER agrees to split CZE with Hungary
+country_event = {
+	id = DOD_hungary.104
+	title = DOD_hungary.104.t
+	desc = DOD_hungary.104.desc 
+	picture = GFX_report_event_generic_sign_treaty3
+	
+	is_triggered_only = yes
+
+	option = {# great
+		name = DOD_hungary.104.a
+	}	
+}
+#Demand Overlordship over Slovakia - GER refuses to split CZE with Hungary
+country_event = {
+	id = DOD_hungary.105
+	title = DOD_hungary.105.t
+	desc = DOD_hungary.105.desc 
+	picture = GFX_report_event_german_inspect_troops
+	
+	is_triggered_only = yes
+
+	option = {# let it go
+		name = DOD_hungary.105.a
+		ai_chance = {
+			factor = 10
+		}
+	}
+
+	option = {# war goal
+		name = DOD_hungary.105.b
+		ai_chance = {
+			factor = 90
+		}
+		create_wargoal = {
+				type = take_state_focus
+				target = CZE
+				generator = { 70 71 72 73 }
+			}
+		hidden_effect = {
+			news_event = { id = news.311 days = 1 }
+		}
+	}
+}
+#Demand Overlordship over Slovakia - GER betrays promise
+country_event = {
+	id = DOD_hungary.106
+	title = DOD_hungary.106.t
+	desc = DOD_hungary.106.desc 
+	picture = GFX_report_event_german_troops
+	
+	is_triggered_only = yes
+
+	option = {# fume
+		name = DOD_hungary.106.a
+		ai_chance = {
+			factor = 5
+		}
+		remove_opinion_modifier = { target = GER modifier = HUN_split_CZE }
+		add_opinion_modifier = { target = GER modifier = HUN_split_CZE_betrayed }
+	}
+
+	option = {# take what is ours
+		name = DOD_hungary.106.b
+		ai_chance = {
+			factor = 95
+		}
+		remove_opinion_modifier = { target = GER modifier = HUN_split_CZE }
+		add_opinion_modifier = { target = GER modifier = HUN_split_CZE_betrayed }
+		create_wargoal = {
+				type = take_state_focus
+				target = CZE
+				generator = { 70 71 72 73 }
+		}
+		hidden_effect = {
+			news_event = { id = news.311 days = 1 }
+		}
+	}	
+}
+
+#Demand Overlordship over Slovakia - Slovakia independent
+country_event = {
+	id = DOD_hungary.107
+	title = DOD_hungary.107.t
+	desc = {
+		text = DOD_hungary.107.desc_SLO_independent
+		trigger = { 
+			SLO = { is_subject = no }
+		}
+	}
+	desc = {
+		text = DOD_hungary.107.desc_SLO_puppet
+		trigger = { 
+			SLO = { is_subject = yes }
+		}
+	}
+	picture = GFX_report_event_lithuania_army
+	
+	is_triggered_only = yes
+
+	option = {# agree to being a puppet
+		name = DOD_hungary.107.a
+		ai_chance = {
+			factor = 50
+			modifier = {
+				factor = 2
+				HUN = {
+					is_ai = no
+				}
+			}
+		}
+		HUN = { country_event = DOD_hungary.108 }
+		hidden_effect = {
+			news_event = { id = news.310 days = 1 }
+		}
+	}
+
+	option = {# refuse
+		name = DOD_hungary.107.b
+		ai_chance = {
+			factor = 50
+			modifier = {
+				is_in_faction = yes
+				HUN = { is_in_faction = no }
+				factor = 5
+			}
+		}
+		HUN = { country_event = DOD_hungary.109 }
+		
+	}	
+}
+
+#Demand Overlordship over Slovakia - Slovakia agrees to become a puppet
+country_event = {
+	id = DOD_hungary.108
+	title = DOD_hungary.108.t
+	desc = DOD_hungary.108.desc 
+	picture = GFX_report_event_generic_read_write
+	
+	is_triggered_only = yes
+
+	option = {# good
+		name = DOD_hungary.108.a
+		puppet = SLO
+	}
+
+	
+}
+
+#Demand Overlordship over Slovakia - Slovakia refuses to become a puppet
+country_event = {
+	id = DOD_hungary.109
+	title = DOD_hungary.109.t
+	desc = DOD_hungary.109.desc 
+	picture = GFX_report_event_military_planning
+	
+	is_triggered_only = yes
+
+	option = {# war!
+		name = DOD_hungary.109.a
+		create_wargoal = {
+				type = puppet_wargoal_focus
+				target = SLO
+		}
+		hidden_effect = {
+			news_event = { id = news.311 days = 1 }
+		}
+	}
+
+	
+}
