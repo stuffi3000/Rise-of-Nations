@@ -69,6 +69,15 @@ on_actions = {
 	on_monthly = {
 		
 		effect = {
+				if = {
+					limit = {
+						check_variable = { ROOT.current_countryc < 0 }
+						has_war = no
+						is_faction_leader = yes
+					}
+			dismantle_faction = yes
+            			add_threat = -200
+					}			
 			if = {
 				limit = {
 					OR = {
@@ -147,6 +156,16 @@ on_actions = {
 	}
 on_monthly = {
 	effect = {
+		
+		if = {
+			limit = {
+				is_faction_leader = yes
+				has_war = no
+			}
+			set_variable = { ROOT.current_countrya = root.num_faction_members }
+			divide_variable = { ROOT.current_countrya = 2}
+			subtract_from_variable = {ROOT.current_countryc = ROOT.current_countrya }
+		}
 if = {
 	limit = {
 		country_exists = CHI
@@ -609,6 +628,11 @@ if = {
 
 	#FROM is the one that joins the faction
 	on_create_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}				
 	}
 
 	#FROM is country getting invited.
@@ -617,16 +641,35 @@ if = {
 
 	#FROM is faction leader on join faction requests. THIS DOES NOT FIRE ON ADD_TO_FACTION EFFECT! USE ON_OFFER_JOIN_FACTION!
 	on_join_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}	
+	
 	}
 
 	#FROM is war target
 	on_declare_war = {
+		effect = {
+		ROOT = {
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				subtract_from_variable = { ROOT.current_countryc = 10 }
+				}
+			}	
+		}
 	}
 
 	# When a new faction is formed
 	on_faction_formed = {
 		effect = {
 			news_event = { id = news.159 }
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
 		}
 	}
 
@@ -653,13 +696,43 @@ if = {
 
 	# ROOT is previously capitulated country
 	on_uncapitulation = {
+				effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 add_to_variable = { ROOT.current_countryc = 10 }
+		}
+	}
+
+}		
 	}
 
 	on_government_change = {
+				effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 subtract_from_variable = { ROOT.current_countryc = 10 }
+		}
 	}
+
+}
+		}
 
 	on_coup_succeeded = {
 		effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 subtract_from_variable = { ROOT.current_countryc = 10 }
+		}
+	}			
 			#Turn elections on for democracies created from coup
 			random_other_country = {
 				limit = {
@@ -683,22 +756,60 @@ if = {
 	#ROOT = nation being puppeted, FROM = overlord
 
 	on_puppet = {
+				effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 add_to_variable = { ROOT.current_countryc = 10 }
+		}
+	}
+
+}				
 	}
 
 	#used when puppeting through the occupied territories menu during peace time (or when releasing from non-core but owned territory, f.e. Britain releasing Egypt)
 	#ROOT = nation being released, FROM = overlord
 
 	on_release_as_puppet = {
+				effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 add_to_variable = { ROOT.current_countryc = 10 }
+		}
+	}
+
+}				
 	}
 
 	#ROOT is winner #FROM gets annexed - For civil wars on_civil_war_end is also fired
 	on_annex = {
+				effect = {
+ROOT = {
+	if = {
+		limit = {
+			is_faction_leader = yes
+		}
+				 add_to_variable = { ROOT.current_countryc = 10 }
+		}
+	}
+
+}				
 	}
 
 	#Not run on a specific country.
 	on_startup = {
 		effect = {
-
+			every_country = {
+				limit = {
+					is_faction_leader = yes
+				}
+			set_variable = { ROOT.current_countryc = 100 }
+			}
 			if = {
 				limit = {
 					date > 1945.1.1
@@ -735,15 +846,6 @@ if = {
 				remove_core_of = KOA
 				remove_core_of = SSA
 				remove_core_of = JSA
-			}
-
-			if = {
-				limit = {
-					has_start_date < 1918.1.1
-				}
-				BEL = {
-					give_resource_rights = { receiver = ENG state = 295 }
-				}
 			}
 		}
 
