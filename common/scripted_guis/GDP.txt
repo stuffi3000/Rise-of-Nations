@@ -1,0 +1,103 @@
+scripted_gui = {
+	view_GDP = {
+		context_type = player_context
+		parent_window_token = top_bar
+		window_name = "view_GDP_container"
+		dirty = show_GDP_main
+
+		visible = {
+			is_ai = no
+		}
+
+
+		effects = {
+			view_GDP_button_click = {
+
+				if = {
+					limit = { has_variable = show_GDP_main }
+					clear_variable = show_GDP_main
+				}
+				else = {
+					set_variable = { show_GDP_main = 1 }
+				}
+				clear_array = global.GDP_list_array
+				every_country = {
+					if = {
+						limit = {
+							NOT = { is_in_array = { global.GDP_list_array = THIS } }
+						}
+						add_to_array = { global.GDP_list_array = THIS }
+						calculate_GDP = yes
+					}
+				}
+				clear_array = GDP_selected_country_array
+				add_to_array = { GDP_selected_country_array = THIS }
+				update_position = yes
+			}
+		}
+	}
+
+	GDP_main = {
+		context_type = player_context
+		parent_window_token = top_bar
+		window_name = "GDP_main_container"
+		dirty = show_GDP_main
+
+		visible = {
+			check_variable = { show_GDP_main > 0 }
+		}
+
+
+		dynamic_lists = {
+			top_ten_GDP_grid = {
+				array = global.top_ten_GDP_array
+				change_scope = yes
+				entry_container = top_ten_GDP_entry
+			}
+			GDP_list_grid = {
+				array = global.GDP_list_array
+				change_scope = yes
+				entry_container = GDP_list_entry
+			}
+			GDP_selected_country_grid = {
+				array = GDP_selected_country_array
+				change_scope = yes
+				entry_container = GDP_selected_country_entry
+			}
+		}
+
+		effects = {
+			GDP_list_sort_button_click = {
+				create_GDP_sorted_array = yes
+				add_to_variable = { show_GDP_main = 1 }
+			}
+			GDP_per_capita_list_sort_button_click = {
+				create_GDP_per_capita_sorted_array = yes
+				add_to_variable = { show_GDP_main = 1 }
+			}
+			GDP_list_flag_button_click = {
+				ROOT = {
+					clear_array = GDP_selected_country_array
+					add_to_array = { GDP_selected_country_array = PREV }
+					add_to_variable = { show_GDP_main = 1 }
+				}
+			}
+			close_GDP_button_click = {
+				clear_variable = show_GDP_main
+			}
+		}
+
+		properties = {
+			GDP_list_flag_button = {
+				image = "[THIS.GetFlag]"
+			}
+			GDP_selected_country_flag_icon = {
+				image = "[THIS.GetFlag]"
+			}
+			top_ten_GDP_country_flag_icon = {
+				image = "[THIS.GetFlag]"
+			}
+		}
+	}
+}
+

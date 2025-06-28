@@ -1,0 +1,1644 @@
+gdp_init_calc = {	
+	set_temp_variable = { factory_count_temp = num_of_civilian_factories }
+	set_temp_variable = { pop_k_temp = max_manpower_k }
+	if = {
+		limit = {
+			check_variable = { 
+				pop_k_temp > 150000 
+			}
+		}
+		multiply_temp_variable = { pop_k_temp = 0.0009 } 
+	}
+	if = {
+		limit = {
+			check_variable = { pop_k_temp < 15000 }
+		}
+		multiply_temp_variable = { pop_k_temp = 0.007 } 
+	}
+	if = {
+		limit = {
+			check_variable = { 
+				pop_k_temp < 30000 
+				pop_k_temp > 15000
+			}
+		}
+		multiply_temp_variable = { pop_k_temp = 0.004 } 
+	}
+	if = {
+		limit = {
+			check_variable = {
+	  			pop_k_temp < 90000 
+				pop_k_temp > 30000 
+			}
+		}
+		multiply_temp_variable = { pop_k_temp = 0.002 } 
+	}
+	if = {
+		limit = {
+			check_variable = {
+				pop_k_temp < 150000 
+				pop_k_temp > 90000
+			}
+		}
+		multiply_temp_variable = { pop_k_temp = 0.001 } 
+	} 
+	multiply_temp_variable = { factory_count_temp = pop_k_temp }
+	set_variable = { gdp_calc = factory_count_temp }
+}
+
+gdp_growth_calc = {	
+	every_country = {
+	set_variable = { gdp_growth_calc = 0.01 }
+	if = {
+		limit = {
+			has_idea = undisturbed_isolation
+		}
+		add_to_variable = { gdp_growth_calc = -0.002 }
+	}
+	if = {
+		limit = {
+			has_idea = isolation
+		}
+		add_to_variable = { gdp_growth_calc = -0.001 }
+	}
+	if = {
+		limit = {
+			has_idea = civilian_economy
+		}
+		add_to_variable = { gdp_growth_calc = 0.005 }
+	}
+	if = {
+		limit = {
+			has_idea = low_economic_mobilisation
+		}
+		add_to_variable = { gdp_growth_calc = 0.002 }
+	}
+	if = {
+		limit = {
+			has_idea = partial_economic_mobilisation
+		}
+		add_to_variable = { gdp_growth_calc = 0.001 }
+	}
+	if = {
+		limit = {
+			has_idea = war_economy
+		}
+		add_to_variable = { gdp_growth_calc = -0.002 }
+	}
+	if = {
+		limit = {
+			has_idea = tot_economic_mobilisation
+		}
+		add_to_variable = { gdp_growth_calc = -0.004 }
+	}
+	if = {
+		limit = {
+			has_idea = free_trade
+		}
+		add_to_variable = { gdp_growth_calc = 0.003 }
+	}
+	if = {
+		limit = {
+			has_idea = export_focus
+		}
+		add_to_variable = { gdp_growth_calc = 0.004 }
+	}
+	if = {
+		limit = {
+			has_idea = limited_exports
+		}
+		add_to_variable = { gdp_growth_calc = 0.001 }
+	}
+	if = {
+		limit = {
+			has_idea = closed_economy
+		}
+		add_to_variable = { gdp_growth_calc = -0.001 }
+	}
+
+	set_temp_variable = { gdp_calc_temp = gdp_calc }
+	multiply_temp_variable = { gdp_calc_temp = gdp_growth_calc }
+	add_to_temp_variable = { gdp_calc = gdp_calc_temp }
+	
+	}
+}
+
+
+calculate_GDP = {
+	set_variable = { country_GDP = 0 }
+	set_temp_variable = { temp_civ = 0 }
+	set_temp_variable = { temp_mil = 0 }
+	set_temp_variable = { temp_doc = num_of_naval_factories }
+
+	set_variable = { country_GDP_M = 0 }
+	set_variable = { country_GDP_B = 0 }
+	
+	set_temp_variable = { actual_core_manpower_k = 0 }
+	set_temp_variable = { actual_core_manpower_nocore_k = 0 }
+	clr_country_flag = gdp_menu
+	every_owned_state = {
+		limit = { is_core_of = PREV }
+		add_to_temp_variable = { PREV.actual_core_manpower_k = state_population_k }
+	}
+
+	every_owned_state = {
+		#limit = { is_full_controlled_by = PREV }
+		add_to_temp_variable = { actual_manpower_k = state_population_k }
+	}
+
+	every_owned_state = {
+		limit = {
+			NOT = {
+				is_core_of = PREV 
+			} 
+		}
+		add_to_temp_variable = { PREV.actual_core_manpower_nocore_k = state_population_k }
+	}
+
+	every_country = {
+		set_variable = {
+			This.country_category_factor = 0
+		}
+		
+		set_variable = {
+			This.country_num_states = This.num_core_states
+		}
+
+	}	
+	every_state = {
+		limit = {
+			is_core_of = PREV
+		}
+		set_variable = { state_category_factor = 1 }
+		if = {
+			limit = { 
+				OR = { 
+					has_state_category = megalopolis
+				}
+			}
+			multiply_variable = { state_category_factor = 3 }
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					has_state_category = metropolis
+				}
+			}
+			multiply_variable = { state_category_factor = 2 }
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					has_state_category = large_city
+				}
+			}
+			multiply_variable = { state_category_factor = 1.5 }
+		}
+		else_if = {
+			limit = { 
+				OR = {
+						has_state_category = city 
+						has_state_category = major_port
+				}
+			}
+			multiply_variable = { state_category_factor = 1.25 }
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					has_state_category = large_town
+					has_state_category = port
+				}
+			}
+			multiply_variable = { state_category_factor = 1 }
+		}
+		else_if = {
+			limit = { 
+				OR = { 
+					has_state_category = town
+				}
+			}
+			multiply_variable = { state_category_factor = 0.75 }
+		}
+		else_if = {
+			limit = {
+				OR = {
+					has_state_category = rural
+				}  
+			}
+			multiply_variable = { state_category_factor = 0.6 }
+		}
+		else_if = {
+			limit = { 
+				OR = {
+					has_state_category = pastoral
+				}
+			}
+			multiply_variable = { state_category_factor = 0.25 }
+		}
+		else = {
+			multiply_variable = { state_category_factor = 0.1 }
+		}
+		OWNER = {
+			add_to_variable = { This.country_category_factor = Prev.state_category_factor }
+		}
+
+	}
+	every_country = {
+		divide_variable = { This.country_category_factor = This.country_num_states }
+		subtract_from_variable = { country_category_factor = 1 }
+		divide_variable = { country_category_factor = 10 }
+		set_variable = { country_category_factor_1 = 1 }
+		add_to_variable = { country_category_factor_1 = country_category_factor }
+	}	
+
+	set_variable = { temp_8 = country_category_factor_1 }
+
+
+	every_country = {
+		set_variable = {
+			This.country_average_inf = 0
+		}
+		set_variable = {
+			This.country_num_states = This.num_owned_states
+		}
+	}	
+	every_state = {
+		set_variable = {
+			state_inf = 0
+		}
+		add_to_variable = { state_inf = This.infrastructure_level }
+		OWNER = {
+			add_to_variable = { This.country_average_inf = Prev.state_inf }
+		}
+	}
+	every_country = {
+		divide_variable = { This.country_average_inf = This.country_num_states }
+	}	
+
+
+	
+	every_country = {
+		set_variable = {
+			This.country_civ = 0
+		}
+	}
+	every_state = {
+		set_variable = {
+			state_civ = 0
+		}
+		add_to_variable = { state_civ = This.industrial_complex_level }
+		controller = {
+			add_to_variable = { This.country_civ = Prev.state_civ }
+		}
+	}	
+	every_country = {
+		set_variable = {
+			This.country_civ_own = 0
+		}
+	}
+	every_state = {
+		set_variable = {
+			state_civ_own = 0
+		}
+		add_to_variable = { state_civ_own = This.industrial_complex_level }
+		OWNER = {
+			add_to_variable = { This.country_civ_own = Prev.state_civ_own }
+		}
+	}	
+
+	every_country = {
+		set_variable = {
+			This.country_civ_core = 0
+		}
+	}
+	every_state = {
+		limit = {
+			is_core_of = PREV
+		}
+		set_variable = {
+			state_civ_core = 0
+		}
+		add_to_variable = { state_civ_core = This.industrial_complex_level }
+		OWNER = {
+			add_to_variable = { This.country_civ_core = Prev.state_civ_core }
+		}
+	}	
+	set_variable = { country_civ_con = 0 }
+	add_to_variable = { country_civ_con = country_civ }
+
+
+	set_variable = { country_civ_ocp_temp = country_civ }
+	set_variable = { country_civ_coreown_temp = country_civ_core }
+	set_variable = { country_civ_noncore_temp = country_civ_own }
+	set_variable = { country_civ_core_temp = country_civ_core }
+	subtract_from_variable = { country_civ_ocp_temp = country_civ_own }
+	subtract_from_variable = { country_civ_noncore_temp  = country_civ_core_temp }
+	subtract_from_variable = { country_civ_con  = country_civ_noncore_temp }
+	
+	subtract_from_variable = { country_civ_ocp_temp = country_civ_noncore_temp }
+	clamp_variable = { var = country_civ_ocp_temp min = 0}
+
+	set_temp_variable = { temp_9 = country_civ_ocp_temp }
+	
+	subtract_from_variable = { country_civ_con = temp_9 }
+
+
+
+	set_temp_variable = { temp_civ_con = country_civ_con }
+	add_to_temp_variable = { temp_civ = temp_civ_con }
+	add_to_variable = { country_GDP = temp_civ }
+
+	
+	set_variable = { temp_civ_all = num_of_civilian_factories }
+	subtract_from_variable = { temp_civ_all = country_civ }
+	clamp_variable = { var = temp_civ_all min = 0}
+
+	set_temp_variable = { temp_2 = temp_civ_all }
+	divide_temp_variable = { temp_2 = 1 }
+	add_to_temp_variable = { temp_civ = temp_2 }
+
+	set_temp_variable = { temp_4 = country_civ_ocp_temp }
+	divide_temp_variable = { temp_4 = 10 }
+
+	set_temp_variable = { temp_6 = country_civ_noncore_temp }
+	divide_temp_variable = { temp_6 = 1.5 }
+
+
+
+	add_to_temp_variable = { temp_civ = temp_4 } 
+	
+	add_to_temp_variable = { temp_civ = temp_6 }
+
+
+
+
+
+	every_country = {
+		set_variable = {
+			This.country_arms = 0
+		}
+	}	
+	every_state = {
+		set_variable = {
+			state_arms = 0
+		}
+		add_to_variable = { state_arms = This.arms_factory_level }
+		controller = {
+			add_to_variable = { This.country_arms = Prev.state_arms }
+		}
+	}
+
+
+	every_country = {
+		set_variable = {
+			This.country_arms_own = 0
+		}
+	}
+	every_state = {
+		set_variable = {
+			state_arms_own = 0
+		}
+		add_to_variable = { state_arms_own = This.arms_factory_level }
+		OWNER = {
+			add_to_variable = { This.country_arms_own = Prev.state_arms_own }
+		}
+	}	
+
+	every_country = {
+		set_variable = {
+			This.country_arms_core = 0
+		}
+	}
+	every_state = {
+		limit = {
+			is_core_of = PREV
+		}
+		set_variable = {
+			state_arms_core = 0
+		}
+		add_to_variable = { state_arms_core = This.arms_factory_level }
+		OWNER = {
+			add_to_variable = { This.country_arms_core = Prev.state_arms_core }
+		}
+	}	
+
+
+	set_variable = { country_arms_con = 0 }
+	add_to_variable = { country_arms_con = country_arms }
+
+
+	set_variable = { country_arms_ocp_temp = country_arms }
+	set_variable = { country_arms_coreown_temp = country_arms_core }
+	set_variable = { country_arms_noncore_temp = country_arms_own }
+	set_variable = { country_arms_core_temp = country_arms_core }
+
+	subtract_from_variable = { country_arms_ocp_temp = country_arms_coreown_temp }
+
+	subtract_from_variable = { country_arms_noncore_temp  = country_arms_core_temp }
+
+	subtract_from_variable = { country_arms_con = country_arms_noncore_temp }
+
+	subtract_from_variable = { country_arms_ocp_temp = country_arms_noncore_temp }
+
+	clamp_variable = { var = country_arms_ocp_temp min = 0}
+	set_temp_variable = { temp_10 = country_civ_ocp_temp }
+	
+	subtract_from_variable = { country_arms_con = temp_10 }
+
+
+
+	set_temp_variable = { temp_arms_con = country_arms_con }
+	add_to_temp_variable = { temp_mil = temp_arms_con }
+
+	set_temp_variable = { temp_5 = country_arms_ocp_temp }
+	divide_temp_variable = { temp_5 = 20 }
+
+	set_temp_variable = { temp_7 = country_arms_noncore_temp }
+	divide_temp_variable = { temp_7 = 2.5 }
+
+
+	add_to_temp_variable = { temp_mil = temp_5 } #
+
+	add_to_temp_variable = { temp_mil = temp_7 } #
+	#is_full_controlled_by
+
+
+
+
+	
+
+	set_variable = { overlord_factor = 1 }
+	set_variable = { overlord_factor_2 = modifier@cic_to_overlord_factor }
+	multiply_variable = { overlord_factor_2 = 0.99 }
+	subtract_from_variable = { overlord_factor = overlord_factor_2 }
+	multiply_variable = { temp_civ = overlord_factor }
+
+	set_variable = { m_overlord_factor = 1 }
+	set_variable = { m_overlord_factor_2 = modifier@mic_to_overlord_factor }
+	multiply_variable = { m_overlord_factor_2 = 0.99 }
+	subtract_from_variable = { m_overlord_factor = m_overlord_factor_2 }
+	multiply_variable = { temp_mil = m_overlord_factor }
+	if = {
+		limit = {
+			has_idea = free_trade
+		}
+		multiply_temp_variable = { temp_civ = 1 }
+		multiply_temp_variable = { temp_mil = 1 }
+		multiply_temp_variable = { temp_doc = 1 }
+	}
+	else_if = {
+		 limit = {
+			  has_idea = export_focus
+		}
+		multiply_temp_variable = { temp_civ = 0.97 }
+		multiply_temp_variable = { temp_mil = 0.97 }
+		multiply_temp_variable = { temp_doc = 0.97 }
+	}
+	else_if = {
+		limit = {
+		has_idea = limited_exports
+		}
+		multiply_temp_variable = { temp_civ = 0.95 }
+		multiply_temp_variable = { temp_mil = 0.95 }
+		multiply_temp_variable = { temp_doc = 0.95 }
+	}
+	else_if = {
+		limit = {
+			has_idea = closed_economy
+		}
+		multiply_temp_variable = { temp_civ = 0.9 }
+		multiply_temp_variable = { temp_mil = 0.9 }
+		multiply_temp_variable = { temp_doc = 0.9 }
+	}
+	else_if = {
+		limit = {
+			has_idea = uncontrolled_exports
+		}
+		multiply_temp_variable = { temp_civ = 0.95 }
+		multiply_temp_variable = { temp_mil = 0.95 }
+		multiply_temp_variable = { temp_doc = 0.95 }
+	}
+
+	if = {
+		limit = {
+			has_idea = tot_economic_mobilisation
+		}
+		multiply_temp_variable = { temp_civ = 0.9 }
+		multiply_temp_variable = { temp_mil = 0.99 }
+		multiply_temp_variable = { temp_doc = 0.98 }
+	}
+	else_if = {
+		limit = {
+			has_idea = isolation
+		}
+		multiply_temp_variable = { temp_civ = 0.95 }
+		multiply_temp_variable = { temp_mil = 0.95 }
+		multiply_temp_variable = { temp_doc = 0.95 }
+	}
+	else_if = {
+		limit = {
+			has_idea = war_economy
+		}
+		multiply_temp_variable = { temp_civ = 0.93 }
+		multiply_temp_variable = { temp_mil = 0.98 }
+		multiply_temp_variable = { temp_doc = 0.96 }
+	}
+	else_if = {
+		limit = {
+			has_idea = partial_economic_mobilisation
+		}
+		multiply_temp_variable = { temp_civ = 0.96 }
+		multiply_temp_variable = { temp_mil = 0.93 }
+		multiply_temp_variable = { temp_doc = 0.93 }
+	}
+	else_if = {
+		limit = {
+			has_idea = undisturbed_isolation
+		}
+		multiply_temp_variable = { temp_civ  = 1 }
+		multiply_temp_variable = { temp_mil = 0.9 }
+		multiply_temp_variable = { temp_doc = 0.9 }
+	}
+	else_if = {
+		limit = {
+			has_idea = low_economic_mobilisation
+		}
+		multiply_temp_variable = { temp_civ  = 0.98 }
+		multiply_temp_variable = { temp_mil = 0.92 }
+		multiply_temp_variable = { temp_doc = 0.92 }
+	}
+
+	else_if = {
+		limit = {
+			has_idea = civilian_economy
+		}
+		multiply_temp_variable = { temp_civ = 1 }
+		multiply_temp_variable = { temp_mil = 0.9 }
+		multiply_temp_variable = { temp_doc = 0.9 }
+	}
+	if = {
+		limit = {
+			has_idea = service_by_requirement
+		}
+		multiply_temp_variable = { temp_civ = 0.98 }
+		multiply_temp_variable = { temp_mil = 0.9 }
+		multiply_temp_variable = { temp_doc = 0.9 }
+	}
+	else_if = {
+		limit = {
+			has_idea = all_adults_serve
+		}
+		multiply_temp_variable = { temp_civ = 0.95 }
+		multiply_temp_variable = { temp_mil = 0.85 }
+		multiply_temp_variable = { temp_doc = 0.85 }
+	}
+	else_if = {
+		limit = {
+			has_idea = scraping_the_barrel
+		}
+		multiply_temp_variable = { temp_civ = 0.7 }
+		multiply_temp_variable = { temp_mil = 0.5 }
+		multiply_temp_variable = { temp_doc = 0.5 }
+	}
+
+	set_temp_variable = { temp_0 = temp_mil }
+	multiply_temp_variable = { temp_0 = 3 }
+	divide_temp_variable = { temp_0 = 2 }
+
+
+	set_temp_variable = { temp_1 = temp_doc }
+	multiply_temp_variable = { temp_1 = 3 }
+	divide_temp_variable = { temp_1 = 2 }
+
+	add_to_variable = { country_GDP = temp_0 }
+	add_to_variable = { country_GDP = temp_1 }
+
+	set_variable = { population_modifier = 1 }
+	set_variable = { population_modifier_civ = 1 }
+	set_variable = { population_core_state = actual_core_manpower_k }
+	set_variable = { population_core_state_1 = actual_core_manpower_k }
+
+	set_variable = { population_modifier_1 = -1 }
+	set_variable = { temp_nocore =  actual_core_manpower_nocore_k }
+	divide_variable = { temp_nocore = 1.5 } #5M
+	add_to_variable = { population_core_state = temp_nocore }
+
+	divide_variable = { population_core_state = 3500 } #3.5M
+
+
+
+	add_to_variable = { population_modifier_1 = population_core_state }
+
+	if = { 
+		limit = {
+			check_variable = { population_core_state > 0.999 }
+		}
+
+		divide_variable = { population_modifier_1 = 500 }
+
+	}
+
+	add_to_variable = { population_modifier = population_modifier_1 }
+	divide_variable = { population_core_state_1 = 3500 }
+	divide_variable = { population_core_state_1 = 100 }
+	add_to_variable = { population_modifier_civ = population_core_state_1 }
+
+	clamp_variable = { var = population_modifier min = 0  max = 1.25 }
+
+	multiply_variable = { country_GDP = population_modifier }
+
+
+
+	clamp_variable = { var = population_modifier_civ min = 0  max = 5 }
+	multiply_temp_variable = { temp_civ = population_modifier_civ }
+
+	set_variable = { country_average_inf_1 = 1 }
+	multiply_variable = { country_average_inf = 0.1 }
+	add_to_variable = { country_average_inf_1 = country_average_inf }
+	multiply_variable = { country_average_inf_1  = population_modifier }
+	multiply_variable = { country_GDP = country_average_inf_1 }
+
+	multiply_variable = { temp_8 = population_modifier }
+	multiply_variable = { country_GDP = temp_8 }
+
+	multiply_temp_variable = { temp_civ = 3 }
+
+	set_variable = { temp_civ_resource = 1 }
+	set_variable = { temp_civ_resource_1 = temp_civ }
+	multiply_variable = { temp_civ_resource_1 = 0.5 }
+	add_to_variable = { temp_civ_resource = temp_civ_resource_1 }
+
+	set_temp_variable = { math_sqrt_number = resource_produced@oil }
+	divide_temp_variable = { math_sqrt_number = 2000 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_produced@aluminium }
+	divide_temp_variable = { math_sqrt_number = 2000 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+	
+	set_temp_variable = { math_sqrt_number = resource_produced@rubber }
+	divide_temp_variable = { math_sqrt_number = 3500 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+	
+	set_temp_variable = { math_sqrt_number = resource_produced@tungsten }
+	divide_temp_variable = { math_sqrt_number = 2500 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+	
+	set_temp_variable = { math_sqrt_number = resource_produced@steel }
+	divide_temp_variable = { math_sqrt_number = 2000 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+	
+	set_temp_variable = { math_sqrt_number = resource_produced@chromium }
+	divide_temp_variable = { math_sqrt_number = 3000 }
+	math_square_root = yes
+	multiply_temp_variable = { math_sqrt_output = temp_civ_resource }
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@oil }
+	divide_temp_variable = { math_sqrt_number = 50 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@aluminium }
+	divide_temp_variable = { math_sqrt_number = 50 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@rubber }
+	divide_temp_variable = { math_sqrt_number = 100 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@tungsten }
+	divide_temp_variable = { math_sqrt_number = 50 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@steel }
+	divide_temp_variable = { math_sqrt_number = 50 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	set_temp_variable = { math_sqrt_number = resource_exported@chromium }
+	divide_temp_variable = { math_sqrt_number = 50 }
+	math_square_root = yes
+
+	add_to_variable = { country_GDP = math_sqrt_output }
+
+	clamp_temp_variable = { var = temp_civ min = 1 }
+
+	set_variable = { factory_output = 1 }
+	set_variable = { factory_output_2 = modifier@industrial_capacity_factory }
+	multiply_variable = { factory_output_2 = 0.2 }
+	add_to_variable = { factory_output = factory_output_2 }
+	clamp_variable = { var = factory_output min = 0.5 max = 1.5 }
+	multiply_variable = { country_GDP = factory_output }
+
+	multiply_variable = { country_GDP = 0.107 }
+	
+	set_variable = { percentage_of_GDP = country_GDP }
+	multiply_variable = { percentage_of_GDP = 100 }
+	divide_variable = { percentage_of_GDP = global.GDP_total }
+	clamp_variable = { var = percentage_of_GDP min = 0 }
+	clamp_variable = { var = country_GDP min = 0 }
+
+	set_variable = { country_GDP_per_capita = country_GDP }
+	multiply_variable = { country_GDP_per_capita = 100 }
+	divide_variable = { country_GDP_per_capita = actual_core_manpower_k }
+	multiply_variable = { country_GDP_per_capita = 10 }
+	multiply_variable = { country_GDP_per_capita = 1000 }
+	clamp_variable = { var = country_GDP_per_capita min = 0 }
+	
+
+	if = {
+		limit = {
+			all_country = {
+				is_in_array = { global.GDP_list_array = THIS }
+			}
+		}
+		update_position = yes
+	}
+	add_to_variable = { country_GDP_B = country_GDP }
+	add_to_variable = { country_GDP_M = country_GDP }
+	add_to_variable = { country_GDP_T = country_GDP }
+	multiply_variable = { country_GDP_M = 1000 }
+	multiply_variable = { country_GDP_T = 0.001 }
+}
+
+update_position = {
+	clear_array = global.top_ten_GDP_array
+	clear_variable = global.GDP_total
+	clear_variable = global.GDP_per_capita_total
+	
+	set_temp_variable = { position = 0 }
+	set_variable = { sort_var = 1 }
+	set_variable = { last_sort_var = 0 }
+	create_GDP_sorted_array = yes
+
+	for_each_scope_loop = {
+		array = global.GDP_list_array
+
+		add_to_temp_variable = { position = 1 }
+		set_variable = { THIS.GDP_position = position }
+
+		if = {
+			limit = {
+				check_variable = { THIS.GDP_position < 11 }
+			}
+			add_to_array = { global.top_ten_GDP_array = THIS }
+		}
+		add_to_variable = { global.GDP_total = country_GDP }
+		add_to_variable = { global.GDP_per_capita_total = country_GDP_per_capita }
+	}
+
+	set_variable = { global.average_GDP = global.GDP_total }
+	divide_variable = { global.average_GDP = global.GDP_list_array^num }
+	set_variable = { global.average_GDP_per_capita = global.GDP_per_capita_total }
+	divide_variable = { global.average_GDP_per_capita = global.GDP_list_array^num }
+
+	force_update_map_mode = { mapmode = GDP_map_mode }
+	force_update_map_mode = { mapmode = GDP_per_capita_map_mode }
+}
+
+GDP_growth_calculation = { 
+	
+	set_variable = { gdp_growth = country_GDP }
+	
+	multiply_variable = { gdp_growth = 100 }
+	
+	divide_variable = { gdp_growth = gdp_last }
+	if = {
+	   limit = {
+		   OR = { 
+			   check_variable = {
+				   var = gdp_growth
+				   value = 100
+			   }
+			   check_variable = {
+				   var = gdp_growth
+				   value = 0
+			   }
+		   }
+	   
+	   }
+		subtract_from_variable = { gdp_growth = 100 }
+	}
+	if = {
+		limit = {
+			check_variable = { gdp_growth = -0.001 }
+		}
+		multiply_variable = { gdp_growth = 0 }
+	}
+	multiply_variable = { gdp_growth = 1 }
+	
+	set_variable = { gdp_last = country_GDP }
+
+}
+
+# Randomized Iterative Quicksort by Yard1
+
+# Feel free to use in your mods, but give credits to Yard1 (both in code, with comments; and on your download page)
+remove_GDP_buff = {
+if = {limit = {has_idea = idea_GDPPC_0_200}	remove_ideas =idea_GDPPC_0_200}
+if = {limit = {has_idea = idea_GDPPC_200_400}	remove_ideas =idea_GDPPC_200_400}
+if = {limit = {has_idea = idea_GDPPC_400_600}	remove_ideas =idea_GDPPC_400_600}
+if = {limit = {has_idea = idea_GDPPC_600_800}	remove_ideas =idea_GDPPC_600_800}
+if = {limit = {has_idea = idea_GDPPC_800_1200}	remove_ideas =idea_GDPPC_800_1200}
+if = {limit = {has_idea = idea_GDPPC_1200_1600}	remove_ideas =idea_GDPPC_1200_1600}
+if = {limit = {has_idea = idea_GDPPC_1600_2000}	remove_ideas =idea_GDPPC_1600_2000}
+if = {limit = {has_idea = idea_GDPPC_2000_2500}	remove_ideas =idea_GDPPC_2000_2500}
+if = {limit = {has_idea = idea_GDPPC_2500_3000}	remove_ideas =idea_GDPPC_2500_3000}
+if = {limit = {has_idea = idea_GDPPC_3000_3700}	remove_ideas =idea_GDPPC_3000_3700}
+if = {limit = {has_idea = idea_GDPPC_3700_4500}	remove_ideas =idea_GDPPC_3700_4500}
+if = {limit = {has_idea = idea_GDPPC_4500_5200}	remove_ideas =idea_GDPPC_4500_5200}
+if = {limit = {has_idea = idea_GDPPC_5200_6200}	remove_ideas =idea_GDPPC_5200_6200}
+if = {limit = {has_idea = idea_GDPPC_6200_7200}	remove_ideas =idea_GDPPC_6200_7200}
+if = {limit = {has_idea = idea_GDPPC_7200_8200}	remove_ideas =idea_GDPPC_7200_8200}
+if = {limit = {has_idea = idea_GDPPC_8200_0000}	remove_ideas =idea_GDPPC_8200_0000}
+if = {limit = {has_idea = idea_GDP_0_400}	remove_ideas =idea_GDP_0_400}
+if = {limit = {has_idea = idea_GDP_400_800}	remove_ideas =idea_GDP_400_800}
+if = {limit = {has_idea = idea_GDP_800_1200}	remove_ideas =idea_GDP_800_1200}
+if = {limit = {has_idea = idea_GDP_1200_1600}	remove_ideas =idea_GDP_1200_1600}
+if = {limit = {has_idea = idea_GDP_1600_2000}	remove_ideas =idea_GDP_1600_2000}
+if = {limit = {has_idea = idea_GDP_2000_2600}	remove_ideas =idea_GDP_2000_2600}
+if = {limit = {has_idea = idea_GDP_2600_3300}	remove_ideas =idea_GDP_2600_3300}
+if = {limit = {has_idea = idea_GDP_3300_3900}	remove_ideas =idea_GDP_3300_3900}
+if = {limit = {has_idea = idea_GDP_3900_4600}	remove_ideas =idea_GDP_3900_4600}
+if = {limit = {has_idea = idea_GDP_4600_5600}	remove_ideas =idea_GDP_4600_5600}
+if = {limit = {has_idea = idea_GDP_5600_6500}	remove_ideas =idea_GDP_5600_6500}
+if = {limit = {has_idea = idea_GDP_6500_7500}	remove_ideas =idea_GDP_6500_7500}
+if = {limit = {has_idea = idea_GDP_7500_8500}	remove_ideas =idea_GDP_7500_8500}
+if = {limit = {has_idea = idea_GDP_8500_10000}	remove_ideas =idea_GDP_8500_10000}
+if = {limit = {has_idea = idea_GDP_10000_0000}	remove_ideas =idea_GDP_10000_0000}
+
+}
+give_GDP_buff = {
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 0 }
+			check_variable = { country_GDP < 0.75 }
+		}
+		add_ideas = idea_GDP_0_400
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP = 0.75 }
+		}
+		add_ideas = idea_GDP_0_400
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 0.75 }
+			check_variable = { country_GDP < 1.5 }
+		}
+		add_ideas = idea_GDP_400_800
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 1.5 }
+		}
+		add_ideas = idea_GDP_400_800
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 1.50 }
+			check_variable = { country_GDP < 2.25 }
+		}
+		add_ideas = idea_GDP_800_1200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 2.25 }
+		}
+		add_ideas = idea_GDP_800_1200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 2.25 }
+			check_variable = { country_GDP < 3 }
+		}
+		add_ideas = idea_GDP_1200_1600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 3 }
+		}
+		add_ideas = idea_GDP_1200_1600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 3 }
+			check_variable = { country_GDP < 9 }
+		}
+		add_ideas = idea_GDP_1600_2000
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 9 }
+		}
+		add_ideas = idea_GDP_1600_2000
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 9 }
+			check_variable = { country_GDP < 12 }
+		}
+		add_ideas = idea_GDP_2000_2600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 12 }
+		}
+		add_ideas = idea_GDP_2000_2600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 12 }
+			check_variable = { country_GDP < 22.5 }
+		}
+		add_ideas = idea_GDP_2600_3300
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 22.5 }
+		}
+		add_ideas = idea_GDP_2600_3300
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 22.5 }
+			check_variable = { country_GDP < 33.75 }
+		}
+		add_ideas = idea_GDP_3300_3900
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 33.75 }
+		}
+		add_ideas = idea_GDP_3300_3900
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 33.75 }
+			check_variable = { country_GDP < 66.5 }
+		}
+		add_ideas = idea_GDP_3900_4600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 66.5 }
+		}
+		add_ideas = idea_GDP_3900_4600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 66.5 }
+			check_variable = { country_GDP < 116.75 }
+		}
+		add_ideas = idea_GDP_4600_5600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 116.75 }
+		}
+		add_ideas = idea_GDP_4600_5600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 116.75 }
+			check_variable = { country_GDP < 204.25 }
+		}
+		add_ideas = idea_GDP_5600_6500
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 204.25 }
+		}
+		add_ideas = idea_GDP_5600_6500
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 204.25 }
+			check_variable = { country_GDP < 255.25 }
+		}
+		add_ideas = idea_GDP_6500_7500
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 255.25 }
+		}
+		add_ideas = idea_GDP_6500_7500
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 255.25 }
+			check_variable = { country_GDP < 320 }
+		}
+		add_ideas = idea_GDP_7500_8500
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 320 }
+		}
+		add_ideas = idea_GDP_7500_8500
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 320 }
+			check_variable = { country_GDP < 350 }
+		}
+		add_ideas = idea_GDP_8500_10000
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP = 350 }
+		}
+		add_ideas = idea_GDP_8500_10000
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP > 350 }
+			check_variable = { country_GDP < 1000 }
+		}
+		add_ideas = idea_GDP_10000_0000
+	}
+
+
+
+
+}
+
+give_GDPPC_buff = {
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 0 }
+			check_variable = { country_GDP_per_capita < 50 }
+
+		}
+		add_ideas = idea_GDPPC_0_200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 50 }
+		}
+		add_ideas = idea_GDPPC_0_200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 50 }
+			check_variable = { country_GDP_per_capita < 100 }
+
+		}
+		add_ideas = idea_GDPPC_200_400
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 100 }
+		}
+		add_ideas = idea_GDPPC_200_400
+	}
+
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 100 }
+			check_variable = { country_GDP_per_capita < 150 }
+
+		}
+		add_ideas = idea_GDPPC_400_600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 150 }
+		}
+		add_ideas = idea_GDPPC_400_600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 150 }
+			check_variable = { country_GDP_per_capita < 200 }
+
+		}
+		add_ideas = idea_GDPPC_600_800
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 200 }
+		}
+		add_ideas = idea_GDPPC_600_800
+	}
+
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 200 }
+			check_variable = { country_GDP_per_capita < 300 }
+
+		}
+		add_ideas = idea_GDPPC_800_1200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 300 }
+		}
+		add_ideas = idea_GDPPC_800_1200
+	}
+
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 300 }
+			check_variable = { country_GDP_per_capita < 450 }
+
+		}
+		add_ideas = idea_GDPPC_1200_1600
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 450 }
+		}
+		add_ideas = idea_GDPPC_1200_1600
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 450 }
+			check_variable = { country_GDP_per_capita < 600 }
+
+		}
+		add_ideas = idea_GDPPC_1600_2000
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 600 }
+		}
+		add_ideas = idea_GDPPC_1600_2000
+	}
+
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 600 }
+			check_variable = { country_GDP_per_capita < 750 }
+
+		}
+		add_ideas = idea_GDPPC_2000_2500
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 750 }
+		}
+		add_ideas = idea_GDPPC_2000_2500
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 750 }
+			check_variable = { country_GDP_per_capita < 900 }
+
+		}
+		add_ideas = idea_GDPPC_2500_3000
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 900 }
+		}
+		add_ideas = idea_GDPPC_2500_3000
+	}
+
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 900 }
+			check_variable = { country_GDP_per_capita < 1250 }
+
+		}
+		add_ideas = idea_GDPPC_3000_3700
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 1250 }
+		}
+		add_ideas = idea_GDPPC_3000_3700
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 1250 }
+			check_variable = { country_GDP_per_capita < 1750 }
+
+		}
+		add_ideas = idea_GDPPC_3700_4500
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 1750 }
+		}
+		add_ideas = idea_GDPPC_3700_4500
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 1750 }
+			check_variable = { country_GDP_per_capita < 2250 }
+
+		}
+		add_ideas = idea_GDPPC_4500_5200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 2250 }
+		}
+		add_ideas = idea_GDPPC_4500_5200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 2250 }
+			check_variable = { country_GDP_per_capita < 3000 }
+
+		}
+		add_ideas = idea_GDPPC_5200_6200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 3000 }
+		}
+		add_ideas = idea_GDPPC_5200_6200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 3000 }
+			check_variable = { country_GDP_per_capita < 4000 }
+
+		}
+		add_ideas = idea_GDPPC_6200_7200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 4000 }
+		}
+		add_ideas = idea_GDPPC_6200_7200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 4000 }
+			check_variable = { country_GDP_per_capita < 5500 }
+
+		}
+		add_ideas = idea_GDPPC_7200_8200
+	}
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita = 5500 }
+		}
+		add_ideas = idea_GDPPC_7200_8200
+	}
+
+	if = {
+		limit = {
+			check_variable = { country_GDP_per_capita > 5500 }
+		}
+		add_ideas = idea_GDPPC_8200_0000
+	}
+
+}
+
+create_GDP_sorted_array = {
+	if = {
+		limit = {
+			check_variable = { last_sort_var = sort_var }
+		}
+		set_variable = { middle = global.GDP_list_array^num }
+		set_temp_variable = { len = global.GDP_list_array^num }
+		subtract_from_temp_variable = { len = 1 }
+		divide_variable = { middle = 2 }
+		round_variable = middle
+		for_loop_effect = {
+			start = 0
+			end = middle
+
+			set_temp_variable = { reverse = len }
+			subtract_from_temp_variable = { reverse = v }
+			set_temp_variable = { swap = global.GDP_list_array^v }
+			set_variable = { global.GDP_list_array^v = global.GDP_list_array^reverse }
+			set_variable = { global.GDP_list_array^reverse = swap }
+		}
+		clear_variable = middle
+		set_variable = { last_sort_var = 0 }
+	}
+
+	else = {
+		set_temp_variable = { temp_array_sort = 4 }
+		set_temp_variable = { temp_value_sort = 2 }
+		scoped_quicksort = yes
+		set_variable = { last_sort_var = sort_var }
+	}
+}
+
+create_GDP_per_capita_sorted_array = {
+	if = {
+		limit = {
+			check_variable = { last_sort_var = sort_var }
+		}
+		set_variable = { middle = global.GDP_list_array^num }
+		set_temp_variable = { len = global.GDP_list_array^num }
+		subtract_from_temp_variable = { len = 1 }
+		divide_variable = { middle = 2 }
+		round_variable = middle
+		for_loop_effect = {
+			start = 0
+			end = middle
+
+			set_temp_variable = { reverse = len }
+			subtract_from_temp_variable = { reverse = v }
+			set_temp_variable = { swap = global.GDP_list_array^v }
+			set_variable = { global.GDP_list_array^v = global.GDP_list_array^reverse }
+			set_variable = { global.GDP_list_array^reverse = swap }
+		}
+		clear_variable = middle
+		set_variable = { last_sort_var = 0 }
+	}
+	else = {
+		set_temp_variable = { temp_array_sort = 4 }
+		set_temp_variable = { temp_value_sort = 3 }
+		scoped_quicksort = yes
+		set_variable = { last_sort_var = sort_var }
+	}
+}
+# Randomized Iterative Quicksort by Yard1
+# Feel free to use in your mods, but give credits to Yard1 (both in code, with comments; and on your download page)
+# I added a meta effect & scripted loc to take in array arguments - reimu
+scoped_quicksort = {
+	meta_effect = {
+		text = {
+			set_variable = { high = [SORTARRAY]^num }
+			subtract_from_variable = { high = 1 }
+			set_variable = { low = 0 }
+
+			set_temp_variable = { stack_size = high }
+			subtract_from_temp_variable = { stack_size = low }
+			add_to_temp_variable = { stack_size = 1 }
+
+			resize_temp_array = {
+				array = stack
+				value = 0
+				size = stack_size
+			}
+
+			set_temp_variable = { top = 0 }
+			set_temp_variable = { stack^top = low }
+			add_to_temp_variable = { top = 1 }
+			set_temp_variable = { stack^top = high }
+
+			while_loop_effect = {
+				limit = { 
+					check_variable = {
+						var = top
+						value = 0
+						compare = greater_than_or_equals
+					}
+				}
+				set_variable = { high = stack^top }
+				subtract_from_temp_variable = { top = 1 }
+				set_variable = { low = stack^top }
+				subtract_from_temp_variable = { top = 1 }
+
+				set_variable = { random_pivot = random }
+				multiply_variable = { random_pivot = high }
+				round_variable = random_pivot
+				add_to_variable = { random_pivot = low }
+				clamp_variable = {
+					var = random_pivot
+					min = low
+					max = high
+				}
+				set_temp_variable = { swap = [SORTARRAY]^high }
+				set_variable = { [SORTARRAY]^high = [SORTARRAY]^random_pivot }
+				set_variable = { [SORTARRAY]^random_pivot = swap }
+
+				set_temp_variable = { idx = low }
+				subtract_from_temp_variable = { idx = 1 }
+
+				var:[SORTARRAY]^high = {
+					set_variable = { PREV.minimum = [SORTVALUE] }
+				}
+
+				for_loop_effect = {
+					start = low
+					end = high
+					var:[SORTARRAY]^v = {
+						set_variable = { PREV.tmp = [SORTVALUE] }
+					}
+					if = {
+						limit = {
+							check_variable = {
+								var = tmp
+								value = minimum
+								compare = greater_than_or_equals
+							}
+						}
+						add_to_temp_variable = { idx = 1 }
+						set_temp_variable = { swap = [SORTARRAY]^idx }
+						set_variable = { [SORTARRAY]^idx = [SORTARRAY]^v }
+						set_variable = { [SORTARRAY]^v = swap }
+					}
+				}
+
+				add_to_temp_variable = { idx = 1 }
+				set_temp_variable = { swap = [SORTARRAY]^idx }
+				set_variable = { [SORTARRAY]^idx = [SORTARRAY]^high }
+				set_variable = { [SORTARRAY]^high = swap }
+
+				set_temp_variable = { qs_partition_return = idx }
+
+				set_temp_variable = { qs_partition_return_plus_1 = qs_partition_return }
+				set_temp_variable = { qs_partition_return_minus_1 = qs_partition_return }
+				add_to_temp_variable = { qs_partition_return_plus_1 = 1 } 
+				subtract_from_temp_variable = { qs_partition_return_minus_1 = 1 } 
+
+				if = {
+					limit = { check_variable = { qs_partition_return_minus_1 > low } }
+					add_to_temp_variable = { top = 1 }
+					set_temp_variable = { stack^top = low }
+					add_to_temp_variable = { top = 1 }
+					set_temp_variable = { stack^top = qs_partition_return_minus_1 }
+				}
+				if = {
+					limit = { check_variable = { qs_partition_return_plus_1 < high } }
+					add_to_temp_variable = { top = 1 }
+					set_temp_variable = { stack^top = qs_partition_return_plus_1 }
+					add_to_temp_variable = { top = 1 }
+					set_temp_variable = { stack^top = high }
+				}
+			}
+			clear_variable = minimum
+			clear_variable = tmp
+			clear_variable = random_pivot
+		}
+		SORTARRAY = "[ROOT.GetSortArray]"
+		SORTVALUE = "[ROOT.GetSortValue]"
+	}
+}
+
+
+math_square_root = {
+	set_temp_variable = { math_sqrt_output = 1 }
+
+	for_loop_effect = {
+		start = 0
+		end = 10 # probably can converge way less before the end but keep at 10 just in case - maho
+
+		set_temp_variable = { sqrt_temp = math_sqrt_number }
+		divide_temp_variable = { sqrt_temp = math_sqrt_output }
+		add_to_temp_variable = { math_sqrt_output = sqrt_temp }
+		divide_temp_variable = { math_sqrt_output = 2 }
+	}
+}
+
+sum_cap = {
+	subtract_from_temp_variable = { temp_index = 1 }
+
+	# check to see if result overflows
+	set_temp_variable = { temp = temp_value_array^temp_index }
+	add_to_temp_variable = { temp = temp_value }
+
+	if = {
+		limit = {
+			check_variable = { temp > max }
+		}
+		subtract_from_temp_variable = { temp = max }
+		subtract_from_temp_variable = { temp_value = temp }
+	}
+	else_if = {
+		limit = {
+			check_variable = { temp < 0 }
+		}
+		multiply_temp_variable = { temp = -1 }
+		subtract_from_temp_variable = { temp_value = temp }
+	}
+
+	# adds all parties to temp_array
+	for_loop_effect = {
+		start = 0
+		end = temp_value_array^num
+
+		add_to_temp_array = { temp_array = v }
+	}
+
+	# remove from list of parties the party to be added/subtracted
+	remove_from_temp_array = { array = temp_array value = temp_index }
+
+	# give party new seat value
+	add_to_variable = { temp_value_array^temp_index = temp_value }
+
+	# if its add
+	if = {
+		limit = {
+			check_variable = { temp_value > 0 }
+		}
+		# loop until seats to be added is 0
+		while_loop_effect = {
+			limit = {
+				check_variable = { temp_value > 0 }
+			}
+
+			# loops through remaining parties, subtracting 1 seat each time
+			for_loop_effect = {
+				start = 0
+				end = temp_array^num
+
+				if = {
+					limit = {
+						check_variable = { temp_value_array^temp_array^v > 0 } # party must have more than 0 seats to be subtracted
+						check_variable = { temp_value > 0 } # seats to be added is bigger than 0 currently
+					}
+					subtract_from_variable = { temp_value_array^temp_array^v = 1 } # subtract from party 1 seat
+					subtract_from_temp_variable = { temp_value = 1 } # subtract from seats to be added
+				}
+			}
+		}
+	}
+	# if its subtract
+	else_if = {
+		limit = {
+			check_variable = { temp_value < 0 }
+		}
+		# loop until seats to be subtracted is 0
+		while_loop_effect = {
+			limit = {
+				check_variable = { temp_value < 0 }
+			}
+
+			# loops through remaining parties, adding 1 seat each time
+			for_loop_effect = {
+				start = 0
+				end = temp_array^num
+
+				if = {
+					limit = {
+						check_variable = { temp_value_array^temp_array^v < max } # party must have less than max seats to be added
+						check_variable = { temp_value < 0 } # seats to be subtracted is less than 0 currently
+					}
+					add_to_variable = { temp_value_array^temp_array^v = 1 } # add to party 1 seat
+					add_to_temp_variable = { temp_value = 1 } # add to seats to be subtracted
+				}
+			}
+		}
+	}
+}
+
+example_sum_cap_usage = {
+	set_temp_variable = { max = 100 } # maximum total of all variables
+	set_temp_variable = { temp_value = 10 } # value to add
+	set_temp_variable = { temp_index = 2 } # which variable to add it to (second variable in this case)
+
+	add_to_array = { temp_value_array = variable_1 } # first variable added
+	add_to_array = { temp_value_array = variable_2 } # second variable added
+	add_to_array = { temp_value_array = variable_3 } # third variable added
+
+	sum_cap = yes
+
+	set_variable = { variable_1 = temp_value_array^0 } # new first variable
+	set_variable = { variable_2 = temp_value_array^1 } # new second variable
+	set_variable = { variable_3 = temp_value_array^2 } # new third variable
+
+	clear_array = temp_value_array # not used anymore good practice to throw it away
+}
