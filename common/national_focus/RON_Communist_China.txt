@@ -31,7 +31,7 @@ focus_tree = {
 		id = PRC_recover_from_the_long_march
 		icon = GFX_goal_generic_build_tank
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = no
 		}
 		ai_will_do = {
@@ -43,7 +43,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 		}
 		bypass = {
@@ -83,7 +83,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = attack_japan2
 		prerequisite = { focus = PRC_recover_from_the_long_march }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			NOT = {
 				is_puppet_of = JAP
 				has_war_with = CHI
@@ -95,8 +95,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		bypass = {
 			has_war_with = JAP
 		}
-		x = 0
+		x = -3
 		y = 1
+		relative_position_id = PRC_recover_from_the_long_march
 		cost = 5
 		completion_reward = {
 			add_war_support = 0.05
@@ -123,43 +124,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_west_expedition
-		icon = GFX_goal_generic_allies_build_infantry
-		prerequisite = { focus = PRC_anti_japanese_aim focus = PRC_urge_zhang }
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			country_exists = XSM
-		}
-		bypass = {
-			NOT = {
-				country_exists = XSM
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				is_historical_focus_on = yes
-			}
-		}
-		x = 2
-		y = 4
-		cost = 10
-		completion_reward = {
-			custom_effect_tooltip = prc_west_expedition_tt
-					create_wargoal = {			
-				target = XSM
-				type = annex_everything
-				expire = 250
-			}
-			hidden_effect = {
-				load_oob = "PRC_west_expedition"
-			}
-		}
-	}
-
-
-	focus = {
 		id = PRC_approach_the_front
 		icon = GFX_goal_generic_territory_or_war
 		prerequisite = { focus = PRC_anti_japanese_aim }
@@ -174,7 +138,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			OR = {
 				is_ai = no
 				AND = {
@@ -201,11 +165,12 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		x = 0
-		y = 2
+		y = 1
+		relative_position_id = PRC_anti_japanese_aim
 		cost = 10
 		completion_reward = {
 			custom_effect_tooltip = prc_east_expedition_tt
-					create_wargoal = {			
+			create_wargoal = {			
 				expire = 250
 				target = SHX
 				type = annex_everything
@@ -217,11 +182,92 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
+		id = PRC_front_line_preparation
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = PRC_approach_the_front }
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_war = no
+			any_owned_state = {
+				any_neighbor_state = {
+					OR = {
+						is_owned_by = JAP
+						owner = {
+							is_puppet_of = JAP
+						}
+						is_controlled_by = JAP
+						controller = {
+							is_puppet_of = JAP
+						}
+					}
+				}
+			}
+		}
+		x = -1
+		y = 1
+		relative_position_id = PRC_approach_the_front
+		cost = 10
+
+		completion_reward = {
+			custom_effect_tooltip = prc_front_infras_tt
+			hidden_effect = {
+				every_owned_state = {
+					limit = {
+						any_neighbor_state = {
+							owner = {
+								OR = {
+									tag = JAP
+									is_puppet_of = JAP
+								}
+							}
+						}
+					}
+					add_building_construction = {
+						type = infrastructure
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_expand_taiyuan_arsenal
+		icon = GFX_goal_generic_construct_mil_factory
+		prerequisite = { focus = PRC_approach_the_front }
+		x = 1
+		y = 1
+		relative_position_id = PRC_approach_the_front
+		cost = 10
+		available = {
+			NOT = { is_puppet_of = JAP }
+			615 = {
+				is_owned_by = ROOT
+				is_controlled_by = ROOT
+			}
+		}
+
+		completion_reward = {
+			615 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = PRC_taiyuan_arsenal
+		}
+	}
+
+	focus = {
 		id = PRC_supply_line_from_sov
 		icon = GFX_goal_generic_army_artillery
 		prerequisite = { focus = PRC_west_expedition focus = PRC_approach_the_front }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			NOT = {
 				has_global_flag = PRC_defy_sov_order
 			}
@@ -280,7 +326,8 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		x = 0
-		y = 5
+		y = 3
+		relative_position_id = PRC_approach_the_front
 		cost = 10
 
 		completion_reward = {
@@ -292,51 +339,1785 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_front_line_preparation
-		icon = GFX_goal_generic_construct_infrastructure
-		prerequisite = { focus = PRC_approach_the_front }
+		id = PRC_the_grand_northwest_united_proposal
+		icon = GFX_focus_generic_soviet_politics
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_war = no
-			any_owned_state = {
-				any_neighbor_state = {
-					OR = {
-						is_owned_by = JAP
-						owner = {
-							is_puppet_of = JAP
+			NOT = { is_puppet_of = JAP }
+			NOT = {
+				has_global_flag = xian_incident_started
+				is_in_faction_with = CHI
+			}
+		}
+		x = 0
+		y = 2
+		relative_position_id = PRC_recover_from_the_long_march
+		cost = 5
+		prerequisite = {
+			focus = PRC_recover_from_the_long_march
+		}
+		completion_reward = {
+			SOV = { country_event = { id = prc.54 } }
+		}
+	}
+
+	focus = {
+		id = PRC_urge_zhang
+		icon = GFX_goal_generic_improve_relations
+		available = {
+			NOT = { is_puppet_of = JAP }
+			NOT = {
+				is_in_faction_with = CHI
+			}
+			OR = {
+				has_global_flag = PRC_defy_sov_order
+				has_global_flag = PRC_sov_approve
+			}
+
+		}
+		historical_ai = {
+			always = no
+		}
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_grand_northwest_united_proposal
+		cost = 5
+		bypass = {
+			has_global_flag = no_rescue_zhang
+			OR = {
+				has_global_flag = PRC_defy_sov_order
+				has_global_flag = PRC_sov_approve
+			}
+		}
+		prerequisite = {
+			focus = PRC_the_grand_northwest_united_proposal
+		}
+		completion_reward = {
+			country_event = { id = prc.55 }
+		}
+	}
+
+	focus = {
+		id = PRC_form_the_grand_northwest_united
+		icon = GFX_focus_generic_diplomatic_treaty
+		available = {
+			NOT = { is_puppet_of = JAP }
+			NOT = {
+				is_in_faction_with = CHI
+			}
+			owns_state = 283
+			controls_state = 283
+			OR = {
+				has_global_flag = PRC_defy_sov_order
+				has_global_flag = PRC_sov_approve
+			}
+		}
+		historical_ai = {
+			always = no
+		}
+		x = 1
+		y = 2
+		relative_position_id = PRC_urge_zhang
+		cost = 5
+		prerequisite = {
+			focus = PRC_urge_zhang
+		}
+		completion_reward = {
+			add_ideas = extensive_conscription
+			add_ideas = war_economy
+			set_global_flag = NWNDG_formed
+			set_cosmetic_tag = NWND
+			create_faction = grand_nw_united
+			set_capital = {
+				state = 283
+			}
+			if = {
+				limit = {
+					has_global_flag = zxl_as_gnwu_leader
+				}
+				add_popularity = {
+					ideology = fascism
+					popularity = 0.1
+				}
+				create_country_leader = {
+					name = "Zhang Xueliang"
+					desc = "POLITICS_ZHANG_XUELIANG_DESC"
+					picture = "gfx/leaders/kmt_mod/Portrait_Zhang_Xueliang.dds"
+					expire = "1965.1.1"
+					ideology = marxism
+					traits = {
+						fascism_follower
+						the_generals_that_dont_resist
+					}
+				}
+				custom_effect_tooltip = available_chief_of_navy
+				show_ideas_tooltip = PRC_zxl_navy
+				custom_effect_tooltip = available_chief_of_airforce
+				show_ideas_tooltip = PRC_zxl_air
+				custom_effect_tooltip = available_political_advisor
+				show_ideas_tooltip = PRC_li_bo_hai
+				set_global_flag = PRC_zxl_as_leader
+				hidden_effect = {
+					random_unit_leader = {
+						limit = { has_id = 3612 }
+						set_nationality = PRC
+					}
+					create_country_leader = {
+						name = "Zhang Xueliang"
+						desc = "POLITICS_ZHANG_XUELIANG_DESC"
+						picture = "gfx/leaders/kmt_mod/Portrait_Zhang_Xueliang.dds"
+						expire = "1965.1.1"
+						ideology = fascism_ideology
+						traits = {
+							fascism_follower
+							the_generals_that_dont_resist
 						}
-						is_controlled_by = JAP
-						controller = {
-							is_puppet_of = JAP
-						}
+					}
+					set_party_name = { ideology = communism long_name = PRC_nwnd_gov name = PRC_nwnd_gov_short }
+					set_party_name = { ideology = fascism long_name = PRC_nwnd_gov name = PRC_nwnd_gov_short }
+				}
+			}
+			if = {
+				limit = {
+					SOV = {
+						has_government = communism
+					}
+					country_exists = SIK
+					NOT = {
+						has_global_flag = PRC_defy_sov_order
+					}
+				}
+				country_event = { id = prc.123 }
+			}
+			hidden_effect = {
+				add_ideas = cg_false
+				#every_state = {
+				#	limit = {
+				#		is_core_of = ZXL
+				#	}
+				#	remove_core_of = ZXL
+				#}
+			}
+			add_ideas = cg_false
+		}
+	}
+
+	focus = {
+		id = PRC_destroy_mao_and_his_clique
+		icon = GFX_goal_generic_war_with_comintern
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_country_leader = {
+				name = "Zhang Xueliang"
+				ruling_only = yes
+			}
+			NOT = {
+				has_completed_focus = PRC_found_our_nation
+			}
+			fascism > 0.25
+		}
+		historical_ai = {
+			always = no
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		mutually_exclusive = { focus = PRC_trust_in_communism }
+		x = -2
+		y = 1
+		relative_position_id = PRC_form_the_grand_northwest_united
+		cost = 15
+		prerequisite = {
+			focus = PRC_form_the_grand_northwest_united
+		}
+		select_effect = {
+			country_event = { id = prc.62 }
+		}
+		completion_reward = {
+			custom_effect_tooltip = PRC_turn_fascist_when_select_tt
+			add_popularity = {
+				ideology = fascism
+				popularity = 0.15
+			}
+			add_popularity = {
+				ideology = communism
+				popularity = -0.35
+			}
+			add_timed_idea = {
+				days = 730
+				idea = reign_of_terror
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_social_democracy
+		icon = GFX_focus_prc_social_democracy
+		prerequisite = { focus = PRC_destroy_mao_and_his_clique }
+		x = 0
+		y = 1
+		relative_position_id = PRC_destroy_mao_and_his_clique
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 2
+			modifier = {
+				has_war_with = event_target:WTT_current_china_leader
+				factor = 0
+			} 
+		}
+
+		available = {
+			has_government = communism
+			OR = {
+				is_subject = no
+				is_subject_of = event_target:WTT_current_china_leader
+			}
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_stability = 0.1
+			if = {
+				limit = {
+					original_tag = PRC
+				}
+				remove_unit_leader = 61666
+				create_country_leader = {
+					name = "Zhang Lan"
+					desc = "POLITICS_ZHANG_LAN_DESC"
+					picture = "GFX_portrait_prc_zhang_lan"
+					expire = "1965.1.1"
+					ideology = authsocialism
+					traits = {
+						
 					}
 				}
 			}
+			set_politics = {
+				ruling_party = communism
+				elections_allowed = yes
+			}
 		}
-		x = -1
-		y = 3
+	}
+
+	focus = {
+		id = PRC_coalition_government
+		icon = GFX_focus_chi_united_front
+		prerequisite = { focus = PRC_social_democracy }
+		x = 0
+		y = 1
+		relative_position_id = PRC_social_democracy
+
 		cost = 10
 
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			if = {
+				limit = {
+					WTT_not_taking_over_national_leadership = no				
+				}
+				WTT_not_taking_over_national_leadership = yes
+			}
+			if = {
+				limit = {
+					WTT_not_china_leader_refused_to_give_up_national_leadership = no
+				}
+				WTT_not_china_leader_refused_to_give_up_national_leadership = yes
+			}
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_ANNEXATION }
 		completion_reward = {
-			custom_effect_tooltip = prc_front_infras_tt
+			event_target:WTT_current_china_leader = {
+				country_event = wtt_prc.1
+			}
+			custom_effect_tooltip = enable_power_struggle
 			hidden_effect = {
-				every_owned_state = {
-					limit = {
-						any_neighbor_state = {
-							owner = {
-								OR = {
-									tag = JAP
-									is_puppet_of = JAP
-								}
-							}
-						}
-					}
-					add_building_construction = {
-						type = infrastructure
-						level = 2
-						instant_build = yes
+				WTT_setup_political_struggle = yes
+				WTT_add_ROOT_to_political_struggle = yes
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_purge_the_radicals
+		icon = GFX_goal_generic_political_pressure
+		prerequisite = { focus = PRC_coalition_government }
+		x = 0
+		y = 2
+		relative_position_id = PRC_social_democracy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			set_cosmetic_tag = CHI_democratic
+			remove_ideas = PRC_power_struggles
+			add_political_power = -100
+			add_manpower = -1000
+				}	
+		}
+	
+
+	focus = {
+		id = PRC_strengthen_the_left_wing_of_the_kmt
+		icon = GFX_goal_socialist_star
+		prerequisite = { focus = PRC_purge_the_radicals }
+		x = 0
+		y = 3
+		relative_position_id = PRC_social_democracy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+			WTT_CHI_is_not_leader = yes
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			if = { limit = { CHI = { has_government = neutrality } }
+				CHI = {
+					add_popularity = { ideology = communism popularity = 0.1 }
+					add_popularity = { ideology = neutrality popularity = -0.2 }
+				}
+			}
+			else = {
+				CHI = {
+					add_popularity = { ideology = communism popularity = 0.3 }
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_remove_chiang_kai_shek
+		icon = GFX_focus_prc_remove_chiang_kai_shek
+		prerequisite = { focus = PRC_strengthen_the_left_wing_of_the_kmt }
+		x = 0
+		y = 4
+		relative_position_id = PRC_social_democracy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			WTT_has_politcal_support_points_30 = yes
+			not = { is_subject_of = event_target:WTT_current_china_leader }
+		}
+
+		bypass = {
+			OR = {
+				WTT_CHI_is_not_leader = yes
+				NOT = { CHI = { has_country_leader = { name = "Chiang Kai-Shek" } } }
+			}
+		}
+
+		cancel_if_invalid = no
+		continue_if_invalid = yes
+		available_if_capitulated = no
+
+		completion_reward = {
+			CHI = {
+				set_country_flag = deadchiang
+				kill_country_leader = yes
+				create_country_leader = {
+					name = "Wang Jingwei"
+					desc = ""
+					picture = "gfx/leaders/CHI/portrait_chi_wang_jingwei.dds"
+					expire = "1965.1.1"
+					ideology = despotism
+					traits = {
+						grand_premier
 					}
 				}
+				custom_effect_tooltip = loses_political_support_points_15
+				subtract_from_variable = { other_political_support = 15 }
+			}
+			WTT_political_struggle_recalculate_support = yes			
+		}
+	}
+
+	focus = {
+		id = PRC_second_chinese_elections
+		icon = GFX_goal_support_democracy
+		prerequisite = { focus = PRC_remove_chiang_kai_shek }
+		x = 0
+		y = 1
+		relative_position_id = PRC_remove_chiang_kai_shek
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			CHI = { exists = no }
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = no
+		continue_if_invalid = yes
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_stability = 0.1
+			add_popularity = { ideology = democratic popularity = 0.5 }
+			set_politics = { ruling_party = democratic elections_allowed = yes }
+			country_event = chi.71
+			hidden_effect = {
+				set_cosmetic_tag = CHI_BOTH
+				if = {
+					limit = { is_ai = yes }
+					add_ideas = limited_conscription
+				}
+				if = {
+					limit = { is_ai = yes }
+					add_ideas = export_focus
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_unification_day
+		icon = GFX_CHI_Unity_Through_Peace
+		prerequisite = { focus = PRC_second_chinese_elections }
+		x = 0
+		y = 1
+		relative_position_id = PRC_second_chinese_elections
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+			GXC = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+					has_war_with = ROOT
+				}
+			}
+			YUN = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+					has_war_with = ROOT
+				}
+			}
+			SHX = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+					has_war_with = ROOT
+				}
+			}
+			XSM = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+					has_war_with = ROOT
+				}
+			}
+			SIK = {
+				OR = {
+					exists = no
+					is_subject_of = ROOT
+					has_war_with = ROOT
+				}
+			}
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			every_other_country = {
+				limit = {
+					OR = {
+						tag = GXC
+						tag = YUN
+						tag = SHX
+						tag = XSM
+						tag = SIK
+					}
+				}
+				country_event = { id = chi.74 }
+			}
+			unlock_decision_category_tooltip = CHI_integrate_the_warlords
+			unlock_decision_tooltip = PRC_integrate_the_kuomintang_generals
+		}
+	}
+
+	focus = {
+		id = PRC_suns_dream_achieved
+		icon = GFX_CHI_Chinas_Dream_of_Democracy
+		prerequisite = { focus = PRC_unification_day }
+		prerequisite = { focus = PRC_socialist_market_economy }
+		x = 0
+		y = 3
+		relative_position_id = PRC_unification_day
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			has_government = democratic
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_stability = 0.05
+			add_popularity = { ideology = democratic popularity = 0.2 }
+		}
+	}
+
+	focus = {
+		id = PRC_the_new_chinese_economy
+		icon = GFX_LEP_tea_trade
+		prerequisite = { focus = PRC_suns_dream_achieved }
+		x = 0
+		y = 1
+		relative_position_id = PRC_suns_dream_achieved
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			if = {
+				limit = { NOT = { has_idea = free_trade } }
+				add_ideas = export_focus
+			}
+			add_ideas = {
+				controlled_economy_chi
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_a_happy_ending
+		icon = GFX_CHI_Democracy
+		prerequisite = { focus = PRC_the_new_chinese_economy }
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_new_chinese_economy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_ideas = of_the_people_by_the_people_for_the_people
+		}
+	}
+
+	focus = {
+		id = PRC_trust_in_communism
+		icon = GFX_goal_support_communism
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_country_leader = {
+				name = "Zhang Xueliang"
+				ruling_only = yes
+			}
+			NOT = {
+				has_completed_focus = PRC_the_second_northeast_flag_replacement
+			}
+			has_government = communism
+		}
+		ai_will_do = {
+			factor = 1
+		}
+		mutually_exclusive = { focus = PRC_destroy_mao_and_his_clique }
+		x = 2
+		y = 1
+		relative_position_id = PRC_form_the_grand_northwest_united
+		cost = 10
+		prerequisite = {
+			focus = PRC_form_the_grand_northwest_united
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					has_country_leader = {
+						name = "Zhang Xueliang"
+						ruling_only = yes
+					}
+				}
+				remove_country_leader_trait = fascism_follower
+				add_country_leader_trait = PRC_communism_follower
+				else = {
+					custom_effect_tooltip = PRC_remove_trait_from_zxl_tt
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_strengthen_the_central_secretariat
+		icon = GFX_goal_generic_intelligence_exchange
+		x = 0
+		y = 1
+
+		cost = 10
+		ai_will_do = {
+			factor = 4
+		}
+		prerequisite = {
+			focus = PRC_trust_in_communism
+		}
+		relative_position_id = PRC_trust_in_communism
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_political_power = 120
+		}
+	}
+
+	focus = {
+		id = PRC_the_unending_revolution
+		icon = GFX_goal_generic_war_with_comintern
+		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
+		mutually_exclusive = { focus = PRC_marxist_orthodoxy focus = PRC_agrarian_socialism }
+		x = -2
+		y = 1
+		relative_position_id = PRC_strengthen_the_central_secretariat
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			has_government = communism
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			if = {
+				limit = {
+					original_tag = PRC
+				}
+				remove_unit_leader = 61666
+				create_country_leader = {
+					name = "Kang Sheng"
+					desc = ""
+					picture = "gfx/leaders/PRC/Portrait_PRC_Kang_Sheng.tga"
+					expire = "1965.1.1"
+					ideology = stalinism
+					traits = {
+						nkvd_disciple
+					}
+				}
+			}
+			if = {
+				limit = { SOV = { has_government = communism } }
+				SOV = { 
+					add_opinion_modifier = { target = PRC modifier = large_increase  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_purge_the_opposition
+		icon = GFX_goal_generic_attack_allies
+		prerequisite = { focus = PRC_the_unending_revolution }
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_unending_revolution
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			remove_ideas = PRC_power_struggles			
+		}
+	}
+
+	focus = {
+		id = PRC_kill_your_landlord
+		icon = GFX_DAILI_Believe_In_Victory
+		prerequisite = { focus = PRC_purge_the_opposition }
+		prerequisite = { focus = PRC_soviet_economic_aid }
+		x = 0
+		y = 2
+		relative_position_id = PRC_purge_the_opposition
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_offsite_building = { type = industrial_complex level = 1 }
+			add_stability = 0.1
+		}
+	}
+
+	focus = {
+		id = PRC_eyes_on_all_sides
+		icon = GFX_focus_spr_crush_the_revolution
+		prerequisite = { focus = PRC_kill_your_landlord }
+		x = 0
+		y = 1
+		relative_position_id = PRC_kill_your_landlord
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_ideas = the_unending_revolution
+		}
+	}
+
+	focus = {
+		id = PRC_are_you_against_the_revolution #?
+		icon = GFX_Anti_Communist
+		prerequisite = { focus = PRC_eyes_on_all_sides }
+		x = 0
+		y = 1
+		relative_position_id = PRC_eyes_on_all_sides
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = the_unending_revolution
+				add_idea = the_unending_revolution2
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_marxist_orthodoxy
+		icon = GFX_goal_support_communism
+		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
+		mutually_exclusive = { focus = PRC_agrarian_socialism focus = PRC_the_unending_revolution }
+		x = 0
+		y = 1
+		relative_position_id = PRC_strengthen_the_central_secretariat
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 2
+			modifier = {
+				has_war_with = SOV
+				factor = 0
+			}
+		}
+
+		available = {
+			has_government = communism
+			OR = {
+				is_subject = no
+				is_subject_of = SOV
+			}
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			if = {
+				limit = {
+					original_tag = PRC
+				}
+				remove_unit_leader = 61666
+				create_country_leader = {
+					name = "Wang Ming"
+					desc = "POLITICS_WANG_MING_DESC"
+					picture = "GFX_portrait_prc_wang_ming"
+					expire = "1965.1.1"
+					ideology = marxism
+					traits = {
+						
+					}
+				}
+				create_field_marshal = {
+					name = "Wang Ming"
+					portrait_path = "gfx/leaders/PRC/portrait_prc_wang_ming.dds"
+					traits = { politically_connected trait_mountaineer }
+					id = 62666
+					skill = 4
+					attack_skill = 3
+					defense_skill = 2
+					planning_skill = 4
+					logistics_skill = 4
+				}
+			}
+			if = {
+				limit = { SOV = { has_government = communism } }
+				SOV = { 
+					add_opinion_modifier = { target = PRC modifier = large_increase  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_soviet_leadership
+		icon = GFX_focus_generic_soviet_politics
+		prerequisite = { focus = PRC_marxist_orthodoxy }
+		x = 0
+		y = 1
+		relative_position_id = PRC_marxist_orthodoxy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			NOT = {
+				has_war_with = SOV
+			}
+			OR = {
+				is_subject = no
+				is_subject_of = SOV
+			}
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			remove_ideas = PRC_power_struggles
+		}
+	}
+
+	focus = {
+		id = PRC_soviet_economic_aid
+		icon = GFX_goal_generic_soviet_construction
+		prerequisite = { focus = PRC_soviet_leadership focus = PRC_purge_the_opposition }
+		x = -1
+		y = 1
+		relative_position_id = PRC_soviet_leadership
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			NOT = { has_war_with = SOV }
+			OR = {
+				is_subject = no
+				is_subject_of = SOV
+				is_in_faction_with = SOV
+			}
+			OR = {
+			has_completed_focus = PRC_enforce_the_three_rules
+			has_completed_focus = PRC_boost_the_morale
+			}
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			if = {
+				limit = { has_idea = PRC_the_long_march_1 }
+				remove_ideas = PRC_the_long_march_1
+			}
+			else = {
+				remove_ideas = PRC_the_long_march_2 
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_internationalism
+		icon = GFX_focus_chi_mission_to_the_soviet_union
+		prerequisite = { focus = PRC_soviet_economic_aid }
+		prerequisite = { focus = PRC_soviet_leadership }
+		x = 0
+		y = 3
+		relative_position_id = PRC_marxist_orthodoxy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_stability = 0.1
+			if = {
+				limit = { SOV = { has_government = communism } }
+				SOV = { 
+					add_opinion_modifier = { target = PRC modifier = large_increase  } 
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_form_the_NRWB
+		icon = GFX_goal_generic_military_deal
+		prerequisite = { focus = PRC_internationalism }
+		x = 0
+		y = 1
+		relative_position_id = PRC_internationalism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_ideas = NRWB
+		}
+	}
+
+	focus = {
+		id = PRC_assisted_five_year_plan
+		icon = GFX_goal_generic_construct_civilian
+		prerequisite = { focus = PRC_form_the_NRWB }
+		x = 0
+		y = 1
+		relative_position_id = PRC_form_the_NRWB
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			NOT = { has_war_with = SOV }
+			OR = {
+				is_subject = no
+				is_subject_of = SOV
+				is_in_faction_with = SOV
+			}
+			any_owned_state = {
+				NOT = {
+					state = 622
+				}
+			}
+		}
+
+		bypass = {
+			
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			random_state = {
+				limit = {
+					is_owned_by = PRC
+					is_core_of = PRC
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_state = {
+				limit = {
+					is_owned_by = PRC
+					is_core_of = PRC
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_state = {
+				limit = {
+					is_owned_by = PRC
+					is_core_of = PRC
+				}
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_agrarian_socialism
+		icon = GFX_focus_prc_agrarian_socialism
+		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
+		mutually_exclusive = { focus = PRC_marxist_orthodoxy focus = PRC_the_unending_revolution }
+		x = 2
+		y = 1
+		relative_position_id = PRC_strengthen_the_central_secretariat
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			add_offsite_building = { type = industrial_complex level = 1 }
+			swap_ideas = {
+				remove_idea = PRC_the_long_march_1
+				add_idea = PRC_the_long_march_2
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_rectification_campaign
+		icon = GFX_goal_generic_secret_weapon
+		prerequisite = { focus = PRC_agrarian_socialism }
+		x = 0
+		y = 1
+		relative_position_id = PRC_agrarian_socialism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			remove_ideas = PRC_power_struggles
+		}
+	}
+
+	focus = {
+		id = PRC_maoism
+		icon = GFX_focus_prc_maoism
+		prerequisite = { focus = PRC_rectification_campaign}
+		x = 0
+		y = 2
+		relative_position_id = PRC_agrarian_socialism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+		completion_reward = {
+			add_ideas = PRC_maoism
+		}
+	}
+
+	focus = {
+		id = PRC_socialism_with_chinese_characteristics
+		icon = GFX_PRC_country
+		prerequisite = { focus = PRC_maoism }
+		x = 0
+		y = 3
+		relative_position_id = PRC_agrarian_socialism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			#is_subject = no
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PRC_maoism
+				add_idea = PRC_maoism2
+			}
+			#set_rule = { can_create_factions = yes }
+			#if = {
+			#	limit = {
+			#		is_in_faction = no
+			#	}
+			#	create_faction = PRC_mao_faction
+			#}
+		}
+	}
+
+	focus = {
+		id = PRC_cult_of_personality2
+		icon = GFX_PRC_great_leap_forwards
+		prerequisite = { focus = PRC_socialism_with_chinese_characteristics }
+		x = 0
+		y = 4
+		relative_position_id = PRC_agrarian_socialism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = PRC_maoism2
+				add_idea = PRC_maoism3
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_the_new_path_to_communism
+		icon = GFX_focus_chi_one_china_policy
+		prerequisite = { focus = PRC_cult_of_personality2 }
+		x = 0
+		y = 5
+		relative_position_id = PRC_agrarian_socialism
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			
+		}
+		
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_war_support = 0.1
+			set_rule = { can_create_factions = yes }
+			if = {
+				limit = {
+					is_in_faction = no
+				}
+				create_faction = PRC_mao_faction
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_proclaim_the_peoples_republic
+		icon = GFX_focus_prc_proclaim_the_peoples_republic 
+		prerequisite = { focus = PRC_assisted_five_year_plan focus = PRC_the_new_path_to_communism focus = PRC_are_you_against_the_revolution}
+		x = 0
+		y = 1
+		relative_position_id = PRC_assisted_five_year_plan
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			strength_ratio = {
+				tag = CHI
+				ratio > 0.5
+			}
+			NOT = {
+			has_idea = PRC_lack_skilled_personnel_1
+			}
+			hidden_trigger = {
+				NOT = {
+					OR = {
+						has_idea = PRC_lack_skilled_personnel_9
+						has_idea = PRC_lack_skilled_personnel_8
+						has_idea = PRC_lack_skilled_personnel_7
+						has_idea = PRC_lack_skilled_personnel_6
+						has_idea = PRC_lack_skilled_personnel_5
+						has_idea = PRC_lack_skilled_personnel_4
+						has_idea = PRC_lack_skilled_personnel_3
+						has_idea = PRC_lack_skilled_personnel_2
+						has_idea = PRC_lack_skilled_personnel_1
+						has_idea = PRC_lack_skilled_personnel
+					}
+				}
+			}
+			
+			num_of_factories > 49
+			NOT = { has_idea = PRC_the_long_march_1 }
+		}
+
+		bypass = {
+			has_completed_focus = PRC_found_our_nation
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_POLITICAL }
+		completion_reward = {
+			add_political_power = 120
+			if = {
+				limit = { has_country_leader = { ruling_only = yes name = "Kang Sheng" } }
+				set_cosmetic_tag = PRC_cursed
+			}
+			else_if = {
+				limit = { has_country_leader = { ruling_only = yes name = "Wang Ming" } }
+				set_cosmetic_tag = PRC_soviet
+			}
+			else = {
+				set_cosmetic_tag = PRC_proclaimed
+			}
+			hidden_effect = {
+				news_event = { id = wtt_news.37 days = 3 random_days = 3 }
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_the_Five_Principles_of_Peaceful_Coexistence
+		icon = GFX_focus_generic_diplomatic_treaty
+		cost = 5
+		x = 2
+		y = 1
+		prerequisite = {focus= PRC_proclaim_the_peoples_republic }
+		relative_position_id = PRC_proclaim_the_peoples_republic
+		ai_will_do = {
+			factor = 20
+		}
+		completion_reward = {
+			every_country = {
+				add_opinion_modifier = {
+					target = ROOT
+					modifier = the_Five_Principles_of_Peaceful_Coexistence
+				}
+			}
+		}
+	}
+	focus = {
+		id = PRC_territorial_sovereignty #主权
+		icon = GFX_focus_renounce_the_treaty_of_trianon
+		prerequisite = { focus = PRC_the_Five_Principles_of_Peaceful_Coexistence } 
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_Five_Principles_of_Peaceful_Coexistence
+	
+		cost = 10
+	
+		ai_will_do = {
+			factor = 10
+		}
+	
+		available = {
+			is_subject = no
+		}
+	
+		bypass = {
+
+		}
+	
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = yes
+	
+		completion_reward = {
+			unlock_decision_tooltip = PRC_decision_Sino_Indian_Border_Self_Defense_Counterattack_War
+			unlock_decision_tooltip = PRC_recover_Outer_Mongolia
+			unlock_decision_tooltip = PRC_zujie
+		}
+	}
+
+	focus = {
+		id = PRC_sandagaizao
+		icon = GFX_SOV_national_specialists_ccp_2d_sov_compatibility
+		x = -1
+		y = 1
+		prerequisite = {focus= PRC_proclaim_the_peoples_republic }
+		relative_position_id = PRC_proclaim_the_peoples_republic
+		cost = 10
+		ai_will_do = {
+			factor = 25
+		}
+		completion_reward = {
+			custom_effect_tooltip = PRC_socialist_industrialization_tt
+			every_controlled_state = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type=arms_factory
+					level=1
+					instant_build = yes
+				}
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_socialist_market_economy
+		icon = GFX_PRC_Industrialization
+		prerequisite = { focus = PRC_proclaim_the_peoples_republic focus = PRC_unification_day }
+		x = -3
+		y = 1
+		relative_position_id = PRC_proclaim_the_peoples_republic
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 4
+		}
+
+		available = {
+			num_of_factories > 49
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		search_filters = { FOCUS_FILTER_INDUSTRY }
+		completion_reward = {
+			custom_effect_tooltip = available_political_advisor
+			show_ideas_tooltip = PRC_deng_xiaoping_political_advisor
+			if = {
+				limit = { has_idea = PRC_the_long_march_1 }
+				custom_effect_tooltip = generic_skip_one_line_tt
+				remove_ideas = PRC_the_long_march_1
+			}
+			if = {
+				limit = { has_idea = PRC_the_long_march_2 }
+				custom_effect_tooltip = generic_skip_one_line_tt
+				remove_ideas = PRC_the_long_march_2 
+			}
+			if = {
+				limit = { has_idea = closed_economy }
+				custom_effect_tooltip = generic_skip_one_line_tt
+				add_ideas = limited_exports
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_the_great_leap_forward
+		icon = GFX_PRC_Propaganda
+		prerequisite = { focus = PRC_proclaim_the_peoples_republic }
+		prerequisite = { focus = PRC_socialist_market_economy }
+		x = 3
+		y = 1
+		relative_position_id = PRC_socialist_market_economy
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_manpower = -100000
+			add_ideas = workers_paradise
+		}
+	}
+
+	focus = {
+		id = PRC_the_cultural_revolution
+		icon = GFX_PRC_Census
+		prerequisite = { focus = PRC_the_great_leap_forward }
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_great_leap_forward
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			add_manpower = -50000
+			swap_ideas = {
+				remove_idea = workers_paradise
+				add_idea = workers_paradise2
+			}
+			hidden_effect = {
+				news_event = jos_news.50
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_the_laogai
+		icon = GFX_focus_CZE_german_puppet
+		prerequisite = { focus = PRC_the_cultural_revolution }
+		x = 0
+		y = 1
+		relative_position_id = PRC_the_cultural_revolution
+
+		cost = 10
+
+		ai_will_do = {
+			factor = 1
+		}
+
+		available = {
+			
+		}
+
+		bypass = {
+
+		}
+
+		cancel_if_invalid = yes
+		continue_if_invalid = no
+		available_if_capitulated = no
+
+		completion_reward = {
+			swap_ideas = {
+				remove_idea = workers_paradise2
+				add_idea = workers_paradise3
+			}
+		}
+	}
+
+	focus = {
+		id = PRC_west_expedition
+		icon = GFX_goal_generic_allies_build_infantry
+		prerequisite = { focus = PRC_anti_japanese_aim focus = PRC_urge_zhang }
+		available = {
+			NOT = { is_puppet_of = JAP }
+			country_exists = XSM
+		}
+		bypass = {
+			NOT = {
+				country_exists = XSM
+			}
+		}
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		x = -1
+		y = 1
+		relative_position_id = PRC_urge_zhang
+		cost = 10
+		completion_reward = {
+			custom_effect_tooltip = prc_west_expedition_tt
+			create_wargoal = {			
+				target = XSM
+				type = annex_everything
+				expire = 250
+			}
+			hidden_effect = {
+				load_oob = "PRC_west_expedition"
 			}
 		}
 	}
@@ -353,7 +2134,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 		}
 		bypass = {
@@ -395,7 +2176,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_prepare_for_war }
 		mutually_exclusive = { focus = PRC_initiative_in_war_time }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			is_in_faction_with = CHI
 			has_war = yes
 			CHI = { has_war = yes }
@@ -422,7 +2203,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_prepare_for_war }
 		mutually_exclusive = { focus = PRC_the_united_front }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = yes
 		}
 		continue_if_invalid = yes
@@ -445,7 +2226,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		available_if_capitulated = yes
 
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = yes
 			has_government = communism
 		}
@@ -462,7 +2243,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_anti_comintern_pact
 		prerequisite = { focus = PRC_boost_the_morale }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_idea = PRC_defeatism_2
 			custom_trigger_tooltip = {
 				tooltip = prc_root_out_defeatism_tt
@@ -572,7 +2353,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_production2
 		prerequisite = { focus = PRC_protracted_war }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -616,7 +2397,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_political_pressure
 		prerequisite = { focus = PRC_protracted_war }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -660,7 +2441,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_the_united_front focus = PRC_initiative_in_war_time }
 		mutually_exclusive = { focus = PRC_protracted_war }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -681,7 +2462,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_demand_sudetenland
 		prerequisite = { focus = PRC_swift_victory }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -724,7 +2505,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_major_war
 		prerequisite = { focus = PRC_swift_victory }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -771,7 +2552,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		cost = 10
 
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			OR = {
 				has_war = yes
 				threat > 0.15
@@ -797,7 +2578,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_military_sphere
 		prerequisite = { focus = PRC_protracted_war focus = PRC_swift_victory }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -820,7 +2601,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_major_war
 		prerequisite = { focus = PRC_self_perservation }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -890,7 +2671,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_secret_weapon
 		prerequisite = { focus = PRC_boost_the_morale }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_idea = PRC_underestimation
 			OR = {
 				AND = {
@@ -959,7 +2740,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			has_government = communism
 		}
@@ -991,9 +2772,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_focus_prc_proclaim_the_peoples_republic
 		prerequisite = { focus = PRC_rectification }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
-		#has_country_flag = prc_capital_decided
+			#has_country_flag = prc_capital_decided
 		}
 		x = 43
 		y = 1
@@ -1032,15 +2813,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 				can_send_volunteers = yes
 				can_puppet = yes
 			}
-			create_country_leader = {
-				name = "Mao Zedong"
-				desc = "POLITICS_MAO_ZEDONG_DESC"
-				picture = "portrait_prc_wang_ming.dds"
-				expire = "1965.1.1"
-				ideology = marxism
-				traits = {
-				}
-			}
+			promote_character = PRC_mao_zedong
 			custom_effect_tooltip = prc_set_government_rank
 			hidden_effect = {
 				drop_cosmetic_tag = yes
@@ -1059,8 +2832,8 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 							}
 						}
 					}
-							create_wargoal = {			
-				expire = 250
+					create_wargoal = {			
+						expire = 250
 						target = YUN
 						type = take_core_state
 					}
@@ -1080,7 +2853,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 							}
 						}
 					}
-							create_wargoal = {			
+					create_wargoal = {			
 						expire = 250
 						target = GXC
 						type = take_core_state
@@ -1101,8 +2874,8 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 							}
 						}
 					}
-							create_wargoal = {			
-				expire = 250
+					create_wargoal = {			
+						expire = 250
 						target = SHX
 						type = take_core_state
 					}
@@ -1394,57 +3167,291 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_the_first_five_year_plan
 		icon = GFX_goal_generic_construct_infrastructure
 		prerequisite = { focus = PRC_found_our_nation }
+		relative_position_id = PRC_found_our_nation
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = no
 		}
-		x = 49
-		y = 2
+		x = 6
+		y = 1
 		cost = 10
 
 		completion_reward = {
-			if = {
+			add_timed_idea = {
+				idea = PRC_15jihua
+				days = 1800
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = PRC_faw_group
+			custom_effect_tooltip = available_designer
+			show_ideas_tooltip = PRC_wuhan_ins_corp
+			#custom_effect_tooltip = PRC_wuhan_ins_ava_tt
+		}
+	}
+
+	focus = {
+		id = PRC_socialist_industrialization
+		icon = GFX_focus_generic_communist_industry
+		x = 0
+		y = 2
+		prerequisite = { focus = PRC_the_first_five_year_plan }
+		relative_position_id = PRC_the_first_five_year_plan
+		cost = 7.2
+		ai_will_do = {
+			factor = 25
+		}
+		completion_reward = {
+			add_ideas = PRC_socialist_industrialization_idea
+		}
+	}
+
+	focus = {
+		id = PRC_industrialization_NW
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
+		x = 1
+		y = 1
+		relative_position_id = PRC_the_first_five_year_plan
+		cost = 10
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_war = no
+			owns_state = 283
+			owns_state = 616
+			owns_state = 604
+			owns_state = 756
+			owns_state = 755
+			owns_state = 754
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
 				limit = {
-					620 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
+					OR = {
+						region = 145
+						AND = {
+							region = 200
+							NOT = {
+								state = 601
+								state = 751
+								state = 752
+							}
+						}
+						state = 283
+						state = 616
+						state = 756
+					}
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
 					}
 				}
-				620 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					OR = {
+						region = 145
+						AND = {
+							region = 200
+							NOT = {
+								state = 601
+								state = 751
+								state = 752
+							}
+						}
+						state = 283
+						state = 616
+						state = 756
+					}
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = kmt_nw_infra_tt
+			hidden_effect = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							region = 145
+							AND = {
+								region = 200
+								NOT = {
+									state = 601
+									state = 751
+									state = 752
+								}
+							}
+							state = 283
+							state = 616
+							state = 756
+						}
+					}
 					add_building_construction = {
 						type = infrastructure
-						level = 4
+						level = 3
 						instant_build = yes
 					}
 				}
 			}
-			if = {
+		}
+	}
+
+	focus = {
+		id = PRC_industrialization_S
+		icon = GFX_goal_generic_construct_infrastructure
+		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
+		x = 3
+		y = 1
+		relative_position_id = PRC_the_first_five_year_plan
+		cost = 10
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_war = no
+			owns_state = 591
+			owns_state = 594
+			owns_state = 592
+			owns_state = 593
+			owns_state = 599
+		}
+		completion_reward = {
+			random_owned_controlled_state = {
 				limit = {
-					620 = {
-						NOT = {
-							OR = {
-								is_controlled_by = ROOT
-								is_owned_by = ROOT
+					OR = {
+						AND = {
+							region = 165
+							NOT = {
+								state = 325
+								state = 602
+								state = 603
+								state = 747
+								state = 748
+								state = 750
+								state = 762
+								state = 773
+								state = 774
 							}
 						}
 					}
-				}
-				random_owned_controlled_state = {
-					add_building_construction = {
-						type = infrastructure
-						level = 4
-						instant_build = yes
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
 					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
 				}
 			}
-			if = {
+			random_owned_controlled_state = {
 				limit = {
-					622 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
+					OR = {
+						AND = {
+							region = 165
+							NOT = {
+								state = 325
+								state = 602
+								state = 603
+								state = 747
+								state = 748
+								state = 750
+								state = 762
+								state = 773
+								state = 774
+							}
+						}
+					}
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
 					}
 				}
-				622 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = kmt_south_infra_tt
+			hidden_effect = {
+				every_owned_state = {
+					limit = {
+						OR = {
+							AND = {
+								region = 165
+								NOT = {
+									state = 602
+									state = 603
+									state = 747
+									state = 748
+									state = 750
+									state = 762
+									state = 773
+									state = 774
+								}
+							}
+						}
+					}
 					add_building_construction = {
 						type = infrastructure
 						level = 3
@@ -1452,14 +3459,108 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 					}
 				}
 			}
-			if = {
+		}
+	}
+
+	focus = {
+		id = PRC_pioneering_the_north_east
+		icon = GFX_goal_generic_construct_civilian
+		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_war = no
+			owns_state = 609
+			owns_state = 610
+			owns_state = 716
+			owns_state = 715
+			owns_state = 328
+			owns_state = 717
+			owns_state = 714
+			owns_state = 761
+			owns_state = 767
+		}
+		x = 5
+		y = 1
+		relative_position_id = PRC_the_first_five_year_plan
+		cost = 10
+
+		completion_reward = {
+			random_owned_controlled_state = {
 				limit = {
-					605 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
+					OR = {
+						region = 155
+						state = 612
+						state = 609
+					}
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
 					}
 				}
-				605 = {
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			random_owned_controlled_state = {
+				limit = {
+					OR = {
+						region = 155
+						state = 612
+						state = 609
+					}
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+						include_locked = yes
+					}
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+						include_locked = yes
+					}
+				}
+				add_extra_state_shared_building_slots = 4
+				add_building_construction = {
+					type = industrial_complex
+					level = 2
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+			custom_effect_tooltip = KMT_pioneering_the_north_east_tt
+			hidden_effect = {
+				every_state = {
+					limit = {
+						OR = {
+							state = 609
+							state = 610
+							state = 716
+							state = 715
+							state = 328
+							state = 717
+							state = 714
+							state = 761
+							state = 767
+						}
+					}
 					add_building_construction = {
 						type = infrastructure
 						level = 3
@@ -1467,69 +3568,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 					}
 				}
 			}
-			if = {
-				limit = {
-					606 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
-					}
-				}
-				606 = {
-					add_building_construction = {
-						type = infrastructure
-						level = 2
-						instant_build = yes
-					}
-				}
-			}
-			if = {
-				limit = {
-					595 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
-					}
-				}
-				595 = {
-					add_building_construction = {
-						type = infrastructure
-						level = 2
-						instant_build = yes
-					}
-				}
-			}
-			if = {
-				limit = {
-					600 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
-					}
-				}
-				600 = {
-					add_building_construction = {
-						type = infrastructure
-						level = 2
-						instant_build = yes
-					}
-				}
-			}
-			if = {
-				limit = {
-					596 = {
-						is_controlled_by = ROOT
-						is_owned_by = ROOT
-					}
-				}
-				596 = {
-					add_building_construction = {
-						type = infrastructure
-						level = 2
-						instant_build = yes
-					}
-				}
-			}
-			custom_effect_tooltip = available_designer
-			show_ideas_tooltip = PRC_faw_group
-			custom_effect_tooltip = PRC_wuhan_ins_ava_tt
 		}
 	}
 
@@ -1538,29 +3576,47 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_construction2
 		prerequisite = { focus = PRC_industrialization_NW focus = PRC_industrialization_S focus = PRC_pioneering_the_north_east }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = no
 		}
-		x = 52
-		y = 4
+		x = 0
+		y = 1
+		relative_position_id = PRC_industrialization_S
 		cost = 10
 
 		completion_reward = {
-			#unlock_decision_tooltip = KMT_shandong_Al
-			#unlock_decision_tooltip = KMT_sichuan_Al
-			#unlock_decision_tooltip = KMT_yunnan_Al
-			#unlock_decision_tooltip = KMT_ganzhou_tungsten
-			#unlock_decision_tooltip = KMT_huaihua_tungsten
-			#unlock_decision_tooltip = KMT_hunan_tungsten
-			#unlock_decision_tooltip = KMT_jian_tungsten
-			#unlock_decision_tooltip = KMT_jiangxi_tungsten
-			#unlock_decision_tooltip = KMT_shaoguan_tungsten
-			#unlock_decision_tooltip = KMT_sichuan_tungsten
-			#unlock_decision_tooltip = KMT_guizhou_steel
-			#unlock_decision_tooltip = KMT_sichuan_steel
-			#unlock_decision_tooltip = KMT_suiyuan_steel
-			#unlock_decision_tooltip = KMT_wuhan_steel
+			unlock_decision_category_tooltip = prospect_for_resources
+			custom_effect_tooltip = generic_skip_one_line_tt
 			add_ideas = PRC_increased_exploitation
+		}
+	}
+
+	focus = {
+		id = PRC_infrastructure_construction
+		icon = GFX_focus_generic_railroad
+		prerequisite = {focus = PRC_resources_prospection }
+		cost = 10
+		available = {
+			NOT = { is_puppet_of = JAP }
+			has_war = no
+		}
+		x = 0
+		y = 1
+		relative_position_id = PRC_resources_prospection
+		ai_will_do = {
+			factor = 18
+		}
+		completion_reward = {
+			custom_effect_tooltip = PRC_infrastructure_construction_tt
+			custom_effect_tooltip = generic_skip_one_line_tt
+			every_controlled_state = {
+				add_extra_state_shared_building_slots = 3
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
 		}
 	}
 
@@ -1569,7 +3625,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_construct_civilian
 		prerequisite = { focus = PRC_found_our_nation }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 34
@@ -1606,7 +3662,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			NOT = {
 				has_completed_focus = PRC_social_democracy
 			}
-NOT = {	CHI = { is_puppet_of = JAP } }
+NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 32
@@ -1637,7 +3693,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_sov_cooperation }
 		prerequisite = { focus = PRC_the_first_five_year_plan }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			SOV = {
 				has_opinion = {
 					target = ROOT
@@ -1694,7 +3750,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_propaganda
 		prerequisite = { focus = PRC_suppress_counterrevolutionaries }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			OR = {
 				has_war = no
 				has_civil_war = yes
@@ -1728,7 +3784,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_soviet_construction
 		prerequisite = { focus = PRC_cult_of_personality }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_war = no
 			has_government = communism
 		}
@@ -1769,7 +3825,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_ndcprc
 		icon = GFX_goal_generic_army_doctrines
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_completed_focus = PRC_found_our_nation
 		}
 		prerequisite = { focus = PRC_pla }
@@ -1821,7 +3877,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_generic_navy_battleship
 		prerequisite = { focus = PRC_ndcprc }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			any_state = {
 				is_coastal = yes
 				is_owned_by = ROOT
@@ -2053,7 +4109,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			NOT = {
 				has_completed_focus = PRC_agrarian_socialism
 			}
-NOT = {	CHI = { is_puppet_of = JAP } }
+NOT = { is_puppet_of = JAP }
 			SOV = {
 				OR = {
 					NOT = { has_country_flag = counter_purge }
@@ -2102,7 +4158,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_found_our_nation }
 		mutually_exclusive = { focus = PRC_sov_cooperation }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 40
@@ -2183,7 +4239,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		icon = GFX_goal_demand_sudetenland
 		prerequisite = { focus = PRC_ndcprc }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			any_neighbor_country = {
 				tag = TIB
 			}
@@ -2370,7 +4426,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = KMT_great_leap_forawrd }
 		mutually_exclusive = { focus = PRC_generalissimo_lin }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_global_flag = CR_ended
 			has_country_flag = deng_xiao_ping
 		}
@@ -2402,7 +4458,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = KMT_great_leap_forawrd }
 		mutually_exclusive = { focus = PRC_economic_reform }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_global_flag = CR_ended
 			has_country_flag = lin_biao
 		}
@@ -2483,41 +4539,12 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_expand_taiyuan_arsenal
-		icon = GFX_goal_generic_construct_mil_factory
-		prerequisite = { focus = PRC_approach_the_front }
-		x = 1
-		y = 3
-		cost = 10
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			615 = {
-				is_owned_by = ROOT
-				is_controlled_by = ROOT
-			}
-		}
-
-		completion_reward = {
-			615 = {
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-			custom_effect_tooltip = available_designer
-			show_ideas_tooltip = PRC_taiyuan_arsenal
-		}
-	}
-
-	focus = {
 		id = PRC_lure_them_in_strategy
 		icon = GFX_goal_generic_army_doctrines
 		prerequisite = { focus = PRC_neccessary_flexibility focus = PRC_focus_on_red_army }
 		prerequisite = { focus = PRC_war_of_attrition focus = PRC_focus_on_red_army }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 		}
@@ -2551,7 +4578,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			OR = {
 				SOV = {
@@ -2584,7 +4611,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_increase_credibility_of_theory
 		icon = GFX_focus_generic_strike_at_democracy1
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			OR = {
 				AND = {
@@ -2619,415 +4646,10 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_industrialization_NW
-		icon = GFX_goal_generic_construct_infrastructure
-		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
-		x = 50
-		y = 3
-		cost = 10
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_war = no
-			283 = {
-				is_owned_by = PRC
-			}
-			616 = {
-				is_owned_by = PRC
-			}
-			604 = {
-				is_owned_by = PRC
-			}
-			756 = {
-				is_owned_by = PRC
-			}
-			755 = {
-				is_owned_by = PRC
-			}
-			754 = {
-				is_owned_by = PRC
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						region = 145
-						AND = {
-							region = 200
-							NOT = {
-								state = 601
-								state = 751
-								state = 752
-							}
-						}
-						state = 283
-						state = 616
-						state = 756
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						region = 145
-						AND = {
-							region = 200
-							NOT = {
-								state = 601
-								state = 751
-								state = 752
-							}
-						}
-						state = 283
-						state = 616
-						state = 756
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			custom_effect_tooltip = kmt_nw_infra_tt
-			hidden_effect = {
-				every_owned_state = {
-					limit = {
-						OR = {
-							region = 145
-							AND = {
-								region = 200
-								NOT = {
-									state = 601
-									state = 751
-									state = 752
-								}
-							}
-							state = 283
-							state = 616
-							state = 756
-						}
-					}
-					add_building_construction = {
-						type = infrastructure
-						level = 3
-						instant_build = yes
-					}
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_industrialization_S
-		icon = GFX_goal_generic_construct_infrastructure
-		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
-		x = 52
-		y = 3
-		cost = 10
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_war = no
-			591 = {
-				is_owned_by = PRC
-			}
-			594 = {
-				is_owned_by = PRC
-			}
-			592 = {
-				is_owned_by = PRC
-			}
-			593 = {
-				is_owned_by = PRC
-			}
-			599 = {
-				is_owned_by = PRC
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						AND = {
-							region = 165
-							NOT = {
-								state = 325
-								state = 602
-								state = 603
-								state = 747
-								state = 748
-								state = 750
-								state = 762
-								state = 773
-								state = 774
-							}
-						}
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						AND = {
-							region = 165
-							NOT = {
-								state = 325
-								state = 602
-								state = 603
-								state = 747
-								state = 748
-								state = 750
-								state = 762
-								state = 773
-								state = 774
-							}
-						}
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			custom_effect_tooltip = kmt_south_infra_tt
-			hidden_effect = {
-				every_owned_state = {
-					limit = {
-						OR = {
-							AND = {
-								region = 165
-								NOT = {
-									state = 602
-									state = 603
-									state = 747
-									state = 748
-									state = 750
-									state = 762
-									state = 773
-									state = 774
-								}
-							}
-						}
-					}
-					add_building_construction = {
-						type = infrastructure
-						level = 3
-						instant_build = yes
-					}
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_excavation_NE
-		icon = GFX_goal_generic_construction
-		prerequisite = { focus = PRC_resources_prospection }
-		x = 54
-		y = 5
-		cost = 10
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			num_of_factories > 100
-		}
-		completion_reward = {
-			#unlock_decision_tooltip = KMT_daqing_oil
-			#unlock_decision_tooltip = KMT_kirin_Al
-			#unlock_decision_tooltip = KMT_EHopeh_steel
-			#unlock_decision_tooltip = KMT_liaotung_steel
-			#unlock_decision_tooltip = KMT_kirin_chrome
-			#unlock_decision_tooltip = KMT_liaoning_chrome
-			#unlock_decision_tooltip = KMT_sungkiang_chrome
-		}
-	}
-
-	focus = {
-		id = PRC_pioneering_the_north_east
-		icon = GFX_goal_generic_construct_civilian
-		prerequisite = { focus = PRC_the_first_five_year_plan  focus = PRC_industrial_developement }
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_war = no
-			609 = { is_owned_by = ROOT }
-			610 = { is_owned_by = ROOT }
-			716 = { is_owned_by = ROOT }
-			715 = { is_owned_by = ROOT }
-			328 = { is_owned_by = ROOT }
-			717 = { is_owned_by = ROOT }
-			714 = { is_owned_by = ROOT }
-			761 = { is_owned_by = ROOT }
-			767 = { is_owned_by = ROOT }
-		}
-		x = 54
-		y = 3
-		cost = 10
-
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						region = 155
-						state = 612
-						state = 609
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			random_owned_controlled_state = {
-				limit = {
-					OR = {
-						region = 155
-						state = 612
-						state = 609
-					}
-					free_building_slots = {
-						building = arms_factory
-						size > 1
-						include_locked = yes
-					}
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-				}
-				add_extra_state_shared_building_slots = 4
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type = arms_factory
-					level = 2
-					instant_build = yes
-				}
-			}
-			custom_effect_tooltip = KMT_pioneering_the_north_east_tt
-			hidden_effect = {
-				every_state = {
-					limit = {
-						OR = {
-							state = 609
-							state = 610
-							state = 716
-							state = 715
-							state = 328
-							state = 717
-							state = 714
-							state = 761
-							state = 767
-						}
-					}
-					add_building_construction = {
-						type = infrastructure
-						level = 3
-						instant_build = yes
-					}
-				}
-			}
-		}
-	}
-	focus = {
 		id = PRC_front_line_behind_enemy_line
 		icon = GFX_goal_generic_military_deal
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 			any_country = {
@@ -3155,7 +4777,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_exploit_our_enemys_mistake
 		icon = GFX_goal_generic_more_territorial_claims
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 			has_war = yes
 			surrender_progress < 0.11
@@ -3196,7 +4818,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		prerequisite = { focus = PRC_the_goal_of_our_war }
 		prerequisite = { focus = PRC_military_civilian_corporation }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } } has_war = yes }
+			NOT = { is_puppet_of = JAP } has_war = yes }
 		x = 19
 		y = 3
 		cost = 10
@@ -3215,7 +4837,7 @@ NOT = {	CHI = { is_puppet_of = JAP } } has_war = yes }
 		icon = GFX_goal_generic_CAS
 		prerequisite = { focus = PRC_pla }
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			any_neighbor_country = {
 				tag = SIK
 			}
@@ -3264,230 +4886,10 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_restart_the_civil_war
-		icon = GFX_goal_generic_major_war
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-
-		}
-		available = {
-			NOT = {	CHI = { is_puppet_of = JAP } }
-			country_exists = CHI
-			NOT = {
-				has_war_with = CHI
-			}
-			has_war = no
-			is_puppet = no
-			date > 1940.1.1
-			OR = {
-			KOR = { exists = yes }
-			DPK = { exists = yes }
-			}
-			NOT = {
-				has_war_with = JAP
-				has_global_flag = MARPAC_voting_in_process
-			}
-		}
-		x = 6
-		y = 4
-		cost = 10
-		prerequisite = {
-			focus = PRC_ignite_civil_war
-		}
-		ai_will_do = {
-			factor = 1000
-		}
-		completion_reward = {
-			PRC = { leave_faction = yes }
-			CHI = { leave_faction = yes }
-			hidden_effect = {
-				country_event = marpac.130
-			}
-			PRC = { create_faction = "People's Liberation Army" }
-			CHI = { create_faction = "The Third United Front" }
-			hidden_effect = {
-				if = {
-					limit = {
-						NOT = {
-							has_completed_focus = PRC_found_our_nation
-						}
-					}
-					drop_cosmetic_tag = yes
-					set_cosmetic_tag = GCDcivilwar
-				}
-				CHI = { country_event = { id = china.110 } }
-				set_global_flag = PRC_civil_war_started
-			}
-		}
-	}
-
-
-	focus = {
-		id = PRC_the_grand_northwest_united_proposal
-		icon = GFX_focus_generic_soviet_politics
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			NOT = {
-				has_global_flag = xian_incident_started
-				is_in_faction_with = CHI
-			}
-		}
-		x = 3
-		y = 2
-		cost = 5
-		prerequisite = {
-			focus = PRC_recover_from_the_long_march
-		}
-		completion_reward = {
-			SOV = { country_event = { id = prc.54 } }
-		}
-	}
-
-	focus = {
-		id = PRC_urge_zhang
-		icon = GFX_goal_generic_improve_relations
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			NOT = {
-				is_in_faction_with = CHI
-			}
-			OR = {
-				has_global_flag = PRC_defy_sov_order
-				has_global_flag = PRC_sov_approve
-			}
-
-		}
-		historical_ai = {
-			always = no
-		}
-		x = 3
-		y = 3
-		cost = 5
-		bypass = {
-			has_global_flag = no_rescue_zhang
-			OR = {
-				has_global_flag = PRC_defy_sov_order
-				has_global_flag = PRC_sov_approve
-			}
-		}
-		prerequisite = {
-			focus = PRC_the_grand_northwest_united_proposal
-		}
-		completion_reward = {
-			country_event = { id = prc.55 }
-		}
-	}
-
-	focus = {
-		id = PRC_form_the_grand_northwest_united
-		icon = GFX_focus_generic_diplomatic_treaty
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			NOT = {
-				is_in_faction_with = CHI
-			}
-			owns_state = 283
-			controls_state = 283
-			OR = {
-				has_global_flag = PRC_defy_sov_order
-				has_global_flag = PRC_sov_approve
-			}
-		}
-		historical_ai = {
-			always = no
-		}
-		x = 4
-		y = 4
-		cost = 5
-		prerequisite = {
-			focus = PRC_urge_zhang
-		}
-		completion_reward = {
-			add_ideas = extensive_conscription
-			add_ideas = war_economy
-			set_global_flag = NWNDG_formed
-			set_cosmetic_tag = NWND
-			create_faction = grand_nw_united
-			set_capital = {
-				state = 283
-			}
-			if = {
-				limit = {
-					has_global_flag = zxl_as_gnwu_leader
-				}
-				add_popularity = {
-					ideology = fascism
-					popularity = 0.1
-				}
-				create_country_leader = {
-					name = "Zhang Xueliang"
-					desc = "POLITICS_ZHANG_XUELIANG_DESC"
-					picture = "gfx/leaders/kmt_mod/Portrait_Zhang_Xueliang.dds"
-					expire = "1965.1.1"
-					ideology = marxism
-					traits = {
-						fascism_follower
-						the_generals_that_dont_resist
-					}
-				}
-				custom_effect_tooltip = available_chief_of_navy
-				show_ideas_tooltip = PRC_zxl_navy
-				custom_effect_tooltip = available_chief_of_airforce
-				show_ideas_tooltip = PRC_zxl_air
-				custom_effect_tooltip = available_political_advisor
-				show_ideas_tooltip = PRC_li_bo_hai
-				set_global_flag = PRC_zxl_as_leader
-				hidden_effect = {
-					random_unit_leader = {
-						limit = { has_id = 3612 }
-						set_nationality = PRC
-					}
-					create_country_leader = {
-						name = "Zhang Xueliang"
-						desc = "POLITICS_ZHANG_XUELIANG_DESC"
-						picture = "gfx/leaders/kmt_mod/Portrait_Zhang_Xueliang.dds"
-						expire = "1965.1.1"
-						ideology = fascism_ideology
-						traits = {
-							fascism_follower
-							the_generals_that_dont_resist
-						}
-					}
-					set_party_name = { ideology = communism long_name = PRC_nwnd_gov name = PRC_nwnd_gov_short }
-					set_party_name = { ideology = fascism long_name = PRC_nwnd_gov name = PRC_nwnd_gov_short }
-				}
-			}
-			if = {
-				limit = {
-					SOV = {
-						has_government = communism
-					}
-					country_exists = SIK
-					NOT = {
-						has_global_flag = PRC_defy_sov_order
-					}
-				}
-				country_event = { id = prc.123 }
-			}
-			hidden_effect = {
-				add_ideas = cg_false
-				#every_state = {
-				#	limit = {
-				#		is_core_of = ZXL
-				#	}
-				#	remove_core_of = ZXL
-				#}
-			}
-			add_ideas = cg_false
-		}
-	}
-
-	focus = {
 		id = PRC_unite_against_the_jap
 		icon = GFX_align_to_taiwan
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_global_flag = PRC_no_wargoal_to_chi_with_gnwu
 			CHI = {
 				is_puppet = no
@@ -3515,94 +4917,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRC_destroy_mao_and_his_clique
-		icon = GFX_goal_generic_war_with_comintern
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_country_leader = {
-				name = "Zhang Xueliang"
-				ruling_only = yes
-			}
-			NOT = {
-				has_completed_focus = PRC_found_our_nation
-			}
-			fascism > 0.25
-		}
-		historical_ai = {
-			always = no
-		}
-		ai_will_do = {
-			factor = 1
-		}
-		mutually_exclusive = { focus = PRC_trust_in_communism }
-		x = 3
-		y = 6
-		cost = 15
-		prerequisite = {
-			focus = PRC_form_the_grand_northwest_united
-		}
-		select_effect = {
-			country_event = { id = prc.62 }
-		}
-		completion_reward = {
-			custom_effect_tooltip = PRC_turn_fascist_when_select_tt
-			add_popularity = {
-				ideology = fascism
-				popularity = 0.15
-			}
-			add_popularity = {
-				ideology = communism
-				popularity = -0.35
-			}
-			add_timed_idea = {
-				days = 730
-				idea = reign_of_terror
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_trust_in_communism
-		icon = GFX_goal_support_communism
-		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
-			has_country_leader = {
-				name = "Zhang Xueliang"
-				ruling_only = yes
-			}
-			NOT = {
-				has_completed_focus = PRC_the_second_northeast_flag_replacement
-			}
-			has_government = communism
-		}
-		ai_will_do = {
-			factor = 1
-		}
-		mutually_exclusive = { focus = PRC_destroy_mao_and_his_clique }
-		x = 5
-		y = 6
-		cost = 10
-		prerequisite = {
-			focus = PRC_form_the_grand_northwest_united
-		}
-		completion_reward = {
-			if = {
-				limit = {
-					has_country_leader = {
-						name = "Zhang Xueliang"
-						ruling_only = yes
-					}
-				}
-				remove_country_leader_trait = fascism_follower
-				add_country_leader_trait = PRC_communism_follower
-				else = {
-					custom_effect_tooltip = PRC_remove_trait_from_zxl_tt
-				}
-			}
-		}
-	}
-
-	focus = {
 		id = PRC_government_reshuffle
 		icon = GFX_goal_generic_intelligence_exchange
 		allow_branch = {
@@ -3611,7 +4925,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			has_country_leader = {
 				name = "Zhang Xueliang"
@@ -3644,7 +4958,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_invite_shx
 		icon = GFX_goal_generic_more_territorial_claims
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			any_owned_state = {
 				any_neighbor_state = {
 					state = 621
@@ -3767,7 +5081,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 
 			has_country_leader = {
 				name = "Zhang Xueliang"
@@ -3840,7 +5154,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_completed_focus = PRC_form_the_grand_northwest_united
 		}
 		prerequisite = { focus = PRC_government_reshuffle focus = PRC_boost_the_morale }
@@ -3907,7 +5221,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_fight_alone
 		icon = GFX_goal_generic_demand_territory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			NOT = {
 				custom_trigger_tooltip = {
 					tooltip = chi_accept_prc71_no_tt
@@ -3933,7 +5247,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_military_knowledge_exchange
 		icon = GFX_goal_generic_intelligence_exchange
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			is_in_faction_with = CHI
 		}
 		x = 15
@@ -3970,7 +5284,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_study_kmt_equipment
 		icon = GFX_goal_generic_axis_build_infantry
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 15
 		y = 3
@@ -3996,7 +5310,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			date < 1949.1.1
 		}
 		available = {
-			NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			has_global_flag = PRC_defy_sov_order
 			is_in_faction_with = CHI
@@ -4073,7 +5387,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_pressure_prince_dem
 		icon = GFX_goal_generic_forceful_treaty
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			any_owned_state = {
 				any_neighbor_state = {
 					state = 612
@@ -4099,7 +5413,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_reform_high_command
 		icon = GFX_goal_generic_army_doctrines
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 13
 		y = 3
@@ -4116,7 +5430,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_focus_on_red_army
 		icon = GFX_focus_generic_join_comintern
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 15
@@ -4135,7 +5449,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_focus_on_dong_beijun
 		icon = small_arms
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 13
 		y = 4
@@ -4154,7 +5468,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_guerrilla_operation_expansion
 		icon = GFX_goal_generic_political_pressure
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 15
 		y = 5
@@ -4172,7 +5486,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_stir_anti_japanese_sentiment
 		icon = GFX_goal_generic_demand_territory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 12
 		y = 5
@@ -4191,7 +5505,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_enforce_our_goal
 		icon = GFX_goal_generic_major_war
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 		}
 		x = 14
 		y = 7
@@ -4236,7 +5550,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_mongolia_issue
 		icon = GFX_goal_demand_sudetenland
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 41
@@ -4291,7 +5605,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_exert_influence_in_sea
 		icon = GFX_goal_generic_political_pressure
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 39
@@ -4328,7 +5642,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_coerce_korea
 		icon = GFX_goal_generic_forceful_treaty
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			country_exists = KOR
 			has_government = communism
 		}
@@ -4355,7 +5669,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_exert_influence_in_central_asia
 		icon = GFX_goal_generic_political_pressure
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 38
@@ -4389,7 +5703,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_exert_influence_in_india_and_mongolia
 		icon = GFX_goal_generic_political_pressure
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 40
@@ -4425,7 +5739,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_demand_return_of_trade_ports
 		icon = GFX_goal_generic_more_territorial_claims
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			OR = {
 				NOT = {
 					controls_state = 326
@@ -4560,7 +5874,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_the_permanent_revolution
 		icon = GFX_goal_support_fourth_int
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 
@@ -4613,7 +5927,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_aid_the_workers
 		icon = GFX_goal_support_communism
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 40
@@ -4656,7 +5970,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_hire_sov_experts
 		icon = GFX_focus_generic_socialist_science
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 46
@@ -4694,7 +6008,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_import_sov_machinery
 		icon = GFX_goal_generic_soviet_construction
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 48
@@ -4732,7 +6046,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_invest_in_new_companies
 		icon = GFX_goal_generic_construct_civ_factory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 50
@@ -4835,7 +6149,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_assistance_in_naval_industry
 		icon = GFX_goal_generic_construct_naval_dockyard
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 45
@@ -4902,7 +6216,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_study_soviet_ships
 		icon = GFX_goal_generic_navy_battleship
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 45
@@ -4925,7 +6239,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_study_sov_aircrafts
 		icon = GFX_goal_generic_air_fighter2
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 47
@@ -4948,7 +6262,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_study_sov_equipments
 		icon = GFX_focus_generic_combined_arms
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 47
@@ -4978,7 +6292,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_sov_military_advisor
 		icon = GFX_focus_generic_join_comintern
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = communism
 		}
 		x = 46
@@ -5008,7 +6322,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			custom_trigger_tooltip = {
 				tooltip = PRC_flag_replacement_tt
@@ -5074,7 +6388,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			
 			custom_trigger_tooltip = {
 				tooltip = PRC_resore_dbj_glory_tt
@@ -5119,7 +6433,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_revive_arsenals
 		icon = GFX_goal_generic_construct_mil_factory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 		}
 		x = 59
@@ -5185,7 +6499,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_revive_the_navy_and_air_force
 		icon = GFX_goal_generic_build_navy
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 		}
 		x = 61
@@ -5266,7 +6580,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_pact_with_jap
 		icon = GFX_align_to_japan2
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			country_exists = JAP
 			custom_trigger_tooltip = {
 				tooltip = PRC_same_ideology_with_jap
@@ -5293,7 +6607,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_king_of_dongbei
 		icon = GFX_goal_generic_territory_or_war
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 			NOT = {
 				custom_trigger_tooltip = {
@@ -5334,7 +6648,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_industrial_developement
 		icon = GFX_goal_generic_construct_civ_factory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 		}
 		x = 55
@@ -5391,7 +6705,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_study_foreign_equipment
 		icon = GFX_goal_generic_build_tank
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 		}
 		x = 57
@@ -5419,7 +6733,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_expand_unversity
 		icon = GFX_focus_research
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_government = fascism
 		}
 		x = 55
@@ -5529,7 +6843,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_joint_warfare
 		icon = GFX_goal_generic_secret_weapon
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_idea = PRC_our_general_staff
 		}
 		x = 59
@@ -5561,7 +6875,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_pressure_korea
 		icon = GFX_goal_generic_forceful_treaty
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			has_idea = PRC_our_general_staff
 			controls_state = 408
 			controls_state = 409
@@ -5973,7 +7287,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_introduce_jap_shipbuilding_tech
 		icon = GFX_goal_generic_construct_naval_dockyard
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			custom_trigger_tooltip = {
 				tooltip = has_pact_with_jap_tt
 				has_country_flag = has_pact_with_jap
@@ -6048,7 +7362,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_jap_military_advisor
 		icon = GFX_focus_generic_japanese_imperial_glory
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			custom_trigger_tooltip = {
 				tooltip = has_pact_with_jap_tt
 				has_country_flag = has_pact_with_jap
@@ -6068,7 +7382,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_west_pacific_alliance
 		icon = GFX_focus_generic_little_entente
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			custom_trigger_tooltip = {
 				tooltip = has_pact_with_jap_tt
 				has_country_flag = has_pact_with_jap
@@ -6100,7 +7414,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_coup_in_philipine
 		icon = GFX_goal_generic_occupy_states_ongoing_war
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			is_in_faction_with = JAP
 			custom_trigger_tooltip = {
 				tooltip = has_pact_with_jap_tt
@@ -6154,7 +7468,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_burn_the_bridge
 		icon = attack_japan2
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			custom_trigger_tooltip = {
 				tooltip = has_pact_with_jap_tt
 				has_country_flag = has_pact_with_jap
@@ -6208,7 +7522,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		id = PRC_battlefield_four
 		icon = GFX_focus_generic_strike_at_democracy3
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			NOT = {
 				owns_state = 378
 			}
@@ -6307,13 +7621,14 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 		available = {
-NOT = {	CHI = { is_puppet_of = JAP } }
+			NOT = { is_puppet_of = JAP }
 			country_exists = CHI
 		}
 		cancel = {
 		}
-		x = 6
+		x = 3
 		y = 1
+		relative_position_id = PRC_recover_from_the_long_march
 		cost = 5
 		completion_reward = {
 			add_war_support = 0.05
@@ -6322,7 +7637,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	}
 
 	focus = {
-		id = PRCkmt_infiltration
+		id = PRC_kmt_infiltration
 		icon = GFX_focus_prc_infiltration
 		prerequisite = { focus = PRC_plan_for_china }
 
@@ -6346,8 +7661,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		}
 		cancel = {
 		}
-		x = 6
-		y = 2
+		x = 0
+		y = 1
+		relative_position_id = PRC_plan_for_china
 		cost = 10
 		completion_reward = {
 			custom_effect_tooltip = PRC_allow_anti_kmt_communsits_cell_tt
@@ -6357,7 +7673,7 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 	focus = {
 		id = PRC_ignite_civil_war
 		icon = GFX_goal_generic_major_war
-		prerequisite = { focus = PRCkmt_infiltration }
+		prerequisite = { focus = PRC_kmt_infiltration }
 
 		ai_will_do = {
 			base = -1
@@ -6379,8 +7695,9 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		}
 		cancel = {
 		}
-		x = 6
-		y = 3
+		x = 0
+		y = 1
+		relative_position_id = PRC_kmt_infiltration
 		cost = 10
 		completion_reward = {
 			declare_war_on = {
@@ -6476,1301 +7793,67 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			}
 		}
 	}
-	focus = {
-		id = PRC_strengthen_the_central_secretariat
-		icon = GFX_goal_generic_intelligence_exchange
-		x = 5
-		y = 8
-
-		cost = 10
-		ai_will_do = {
-			factor = 4
-		}
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-		available = {
-			has_completed_focus = PRC_recover_from_the_long_march
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			add_political_power = 120
-		}
-	}
 
 	focus = {
-		id = PRC_the_unending_revolution
-		icon = GFX_goal_generic_war_with_comintern
-		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
-		mutually_exclusive = { focus = PRC_marxist_orthodoxy focus = PRC_agrarian_socialism focus = PRC_social_democracy }
-		x = -6
-		y = 1
-		relative_position_id = PRC_strengthen_the_central_secretariat
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
+		id = PRC_restart_the_civil_war
+		icon = GFX_goal_generic_major_war
 		available = {
-			has_government = communism
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			if = {
-				limit = {
-					original_tag = PRC
-				}
-				remove_unit_leader = 61666
-				create_country_leader = {
-					name = "Kang Sheng"
-					desc = ""
-					picture = "gfx/leaders/PRC/Portrait_PRC_Kang_Sheng.tga"
-					expire = "1965.1.1"
-					ideology = stalinism
-					traits = {
-						nkvd_disciple
-					}
-				}
-			}
-			if = {
-				limit = { SOV = { has_government = communism } }
-				SOV = { 
-					add_opinion_modifier = { target = PRC modifier = large_increase  } 
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_purge_the_opposition
-		icon = GFX_goal_generic_attack_allies
-		prerequisite = { focus = PRC_the_unending_revolution }
-		x = 0
-		y = 1
-		relative_position_id = PRC_the_unending_revolution
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			remove_ideas = PRC_power_struggles			
-		}
-	}
-
-	focus = {
-		id = PRC_kill_your_landlord
-		icon = GFX_DAILI_Believe_In_Victory
-		prerequisite = { focus = PRC_purge_the_opposition }
-		prerequisite = { focus = PRC_soviet_economic_aid }
-		x = 0
-		y = 2
-		relative_position_id = PRC_purge_the_opposition
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_offsite_building = { type = industrial_complex level = 1 }
-			add_stability = 0.1
-		}
-	}
-
-	focus = {
-		id = PRC_eyes_on_all_sides
-		icon = GFX_focus_spr_crush_the_revolution
-		prerequisite = { focus = PRC_kill_your_landlord }
-		x = 0
-		y = 1
-		relative_position_id = PRC_kill_your_landlord
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_ideas = the_unending_revolution
-		}
-	}
-
-	focus = {
-		id = PRC_are_you_against_the_revolution #?
-		icon = GFX_Anti_Communist
-		prerequisite = { focus = PRC_eyes_on_all_sides }
-		x = 0
-		y = 1
-		relative_position_id = PRC_eyes_on_all_sides
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = the_unending_revolution
-				add_idea = the_unending_revolution2
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_marxist_orthodoxy
-		icon = GFX_goal_support_communism
-		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
-		mutually_exclusive = { focus = PRC_agrarian_socialism focus = PRC_social_democracy focus = PRC_the_unending_revolution }
-		x = -2
-		y = 1
-		relative_position_id = PRC_strengthen_the_central_secretariat
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 2
-			modifier = {
-				has_war_with = SOV
-				factor = 0
-			}
-		}
-
-		available = {
-			has_government = communism
-			OR = {
-				is_subject = no
-				is_subject_of = SOV
-			}
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			if = {
-				limit = {
-					original_tag = PRC
-				}
-				remove_unit_leader = 61666
-				create_country_leader = {
-					name = "Wang Ming"
-					desc = "POLITICS_WANG_MING_DESC"
-					picture = "GFX_portrait_prc_wang_ming"
-					expire = "1965.1.1"
-					ideology = marxism
-					traits = {
-						
-					}
-				}
-				create_field_marshal = {
-					name = "Wang Ming"
-					portrait_path = "gfx/leaders/PRC/portrait_prc_wang_ming.dds"
-					traits = { politically_connected trait_mountaineer }
-					id = 62666
-					skill = 4
-					attack_skill = 3
-					defense_skill = 2
-					planning_skill = 4
-					logistics_skill = 4
-				}
-			}
-			if = {
-				limit = { SOV = { has_government = communism } }
-				SOV = { 
-					add_opinion_modifier = { target = PRC modifier = large_increase  } 
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_soviet_leadership
-		icon = GFX_focus_generic_soviet_politics
-		prerequisite = { focus = PRC_marxist_orthodoxy }
-		x = 0
-		y = 1
-		relative_position_id = PRC_marxist_orthodoxy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
+			NOT = { is_puppet_of = JAP }
+			country_exists = CHI
 			NOT = {
-				has_war_with = SOV
+				has_war_with = CHI
 			}
+			has_war = no
+			is_puppet = no
+			date > 1940.1.1
 			OR = {
-				is_subject = no
-				is_subject_of = SOV
-			}
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			remove_ideas = PRC_power_struggles
-		}
-	}
-
-	focus = {
-		id = PRC_soviet_economic_aid
-		icon = GFX_goal_generic_soviet_construction
-		prerequisite = { focus = PRC_soviet_leadership focus = PRC_purge_the_opposition }
-		x = -2
-		y = 2
-		relative_position_id = PRC_marxist_orthodoxy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			NOT = { has_war_with = SOV }
-			OR = {
-				is_subject = no
-				is_subject_of = SOV
-				is_in_faction_with = SOV
-			}
-			OR = {
-			has_completed_focus = PRC_enforce_the_three_rules
-			has_completed_focus = PRC_boost_the_morale
-			}
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			if = {
-				limit = { has_idea = PRC_the_long_march_1 }
-				remove_ideas = PRC_the_long_march_1
-			}
-			else = {
-				remove_ideas = PRC_the_long_march_2 
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_internationalism
-		icon = GFX_focus_chi_mission_to_the_soviet_union
-		prerequisite = { focus = PRC_soviet_economic_aid }
-		prerequisite = { focus = PRC_soviet_leadership }
-		x = 0
-		y = 3
-		relative_position_id = PRC_marxist_orthodoxy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-			
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_stability = 0.1
-			if = {
-				limit = { SOV = { has_government = communism } }
-				SOV = { 
-					add_opinion_modifier = { target = PRC modifier = large_increase  } 
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_form_the_NRWB
-		icon = GFX_goal_generic_military_deal
-		prerequisite = { focus = PRC_internationalism }
-		x = 0
-		y = 1
-		relative_position_id = PRC_internationalism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-			
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_ideas = NRWB
-		}
-	}
-
-	focus = {
-		id = PRC_assisted_five_year_plan
-		icon = GFX_goal_generic_construct_civilian
-		prerequisite = { focus = PRC_form_the_NRWB }
-		x = 0
-		y = 1
-		relative_position_id = PRC_form_the_NRWB
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			NOT = { has_war_with = SOV }
-			OR = {
-				is_subject = no
-				is_subject_of = SOV
-				is_in_faction_with = SOV
-			}
-			any_owned_state = {
-				NOT = {
-					state = 622
-				}
-			}
-		}
-
-		bypass = {
-			
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			random_state = {
-				limit = {
-					is_owned_by = PRC
-					is_core_of = PRC
-				}
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-			random_state = {
-				limit = {
-					is_owned_by = PRC
-					is_core_of = PRC
-				}
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-			random_state = {
-				limit = {
-					is_owned_by = PRC
-					is_core_of = PRC
-				}
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_agrarian_socialism
-		icon = GFX_focus_prc_agrarian_socialism
-		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
-		mutually_exclusive = { focus = PRC_marxist_orthodoxy focus = PRC_social_democracy focus = PRC_the_unending_revolution }
-		x = 2
-		y = 1
-		relative_position_id = PRC_strengthen_the_central_secretariat
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			add_offsite_building = { type = industrial_complex level = 1 }
-			swap_ideas = {
-				remove_idea = PRC_the_long_march_1
-				add_idea = PRC_the_long_march_2
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_rectification_campaign
-		icon = GFX_goal_generic_secret_weapon
-		prerequisite = { focus = PRC_agrarian_socialism }
-		x = 0
-		y = 1
-		relative_position_id = PRC_agrarian_socialism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			remove_ideas = PRC_power_struggles
-		}
-	}
-
-	focus = {
-		id = PRC_maoism
-		icon = GFX_focus_prc_maoism
-		prerequisite = { focus = PRC_rectification_campaign}
-		x = 0
-		y = 2
-		relative_position_id = PRC_agrarian_socialism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
-		completion_reward = {
-			add_ideas = PRC_maoism
-		}
-	}
-
-	focus = {
-		id = PRC_socialism_with_chinese_characteristics
-		icon = GFX_PRC_country
-		prerequisite = { focus = PRC_maoism }
-		x = 0
-		y = 3
-		relative_position_id = PRC_agrarian_socialism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			#is_subject = no
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = PRC_maoism
-				add_idea = PRC_maoism2
-			}
-			#set_rule = { can_create_factions = yes }
-			#if = {
-			#	limit = {
-			#		is_in_faction = no
-			#	}
-			#	create_faction = PRC_mao_faction
-			#}
-		}
-	}
-
-	focus = {
-		id = PRC_cult_of_personality2
-		icon = GFX_PRC_great_leap_forwards
-		prerequisite = { focus = PRC_socialism_with_chinese_characteristics }
-		x = 0
-		y = 4
-		relative_position_id = PRC_agrarian_socialism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = PRC_maoism2
-				add_idea = PRC_maoism3
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_the_new_path_to_communism
-		icon = GFX_focus_chi_one_china_policy
-		prerequisite = { focus = PRC_cult_of_personality2 }
-		x = 0
-		y = 5
-		relative_position_id = PRC_agrarian_socialism
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			
-		}
-		
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_war_support = 0.1
-			set_rule = { can_create_factions = yes }
-			if = {
-				limit = {
-					is_in_faction = no
-				}
-				create_faction = PRC_mao_faction
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_proclaim_the_peoples_republic
-		icon = GFX_focus_prc_proclaim_the_peoples_republic 
-		prerequisite = { focus = PRC_assisted_five_year_plan focus = PRC_the_new_path_to_communism focus = PRC_are_you_against_the_revolution}
-		x = 0
-		y = 1
-		relative_position_id = PRC_assisted_five_year_plan
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			strength_ratio = {
-				tag = CHI
-				ratio > 0.5
+			KOR = { exists = yes }
+			DPK = { exists = yes }
 			}
 			NOT = {
-			has_idea = PRC_lack_skilled_personnel_1
+				has_war_with = JAP
+				has_global_flag = MARPAC_voting_in_process
 			}
-			hidden_trigger = {
-				NOT = {
-					OR = {
-						has_idea = PRC_lack_skilled_personnel_9
-						has_idea = PRC_lack_skilled_personnel_8
-						has_idea = PRC_lack_skilled_personnel_7
-						has_idea = PRC_lack_skilled_personnel_6
-						has_idea = PRC_lack_skilled_personnel_5
-						has_idea = PRC_lack_skilled_personnel_4
-						has_idea = PRC_lack_skilled_personnel_3
-						has_idea = PRC_lack_skilled_personnel_2
-						has_idea = PRC_lack_skilled_personnel_1
-						has_idea = PRC_lack_skilled_personnel
-					}
-				}
-			}
-			
-			num_of_factories > 49
-			NOT = { has_idea = PRC_the_long_march_1 }
 		}
-
-		bypass = {
-			has_completed_focus = PRC_found_our_nation
+		x = 0
+		y = 1
+		relative_position_id = PRC_ignite_civil_war
+		cost = 10
+		prerequisite = {
+			focus = PRC_ignite_civil_war
 		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
+		ai_will_do = {
+			factor = 1000
+		}
 		completion_reward = {
-			add_political_power = 120
-			if = {
-				limit = { has_country_leader = { ruling_only = yes name = "Kang Sheng" } }
-				set_cosmetic_tag = PRC_cursed
-			}
-			else_if = {
-				limit = { has_country_leader = { ruling_only = yes name = "Wang Ming" } }
-				set_cosmetic_tag = PRC_soviet
-			}
-			else = {
-				set_cosmetic_tag = PRC_proclaimed
-			}
+			PRC = { leave_faction = yes }
+			CHI = { leave_faction = yes }
 			hidden_effect = {
-				news_event = { id = wtt_news.37 days = 3 random_days = 3 }
+				country_event = marpac.130
 			}
-		}
-	}
-
-	focus = {
-		id = PRC_the_Five_Principles_of_Peaceful_Coexistence
-		icon = GFX_focus_generic_diplomatic_treaty
-		cost = 5
-		x = -2
-		y = 1
-		prerequisite = {focus= PRC_proclaim_the_peoples_republic }
-		relative_position_id = PRC_proclaim_the_peoples_republic
-		ai_will_do = {
-			factor = 20
-		}
-		completion_reward = {
-			every_country = {
-				add_opinion_modifier = {
-					target = ROOT
-					modifier = the_Five_Principles_of_Peaceful_Coexistence
-				}
-			}
-		}
-	}
-	focus = {
-		id = PRC_territorial_sovereignty #主权
-		icon = GFX_focus_renounce_the_treaty_of_trianon
-		prerequisite = { focus = PRC_the_Five_Principles_of_Peaceful_Coexistence } 
-		x = 0
-		y = 1
-		relative_position_id = PRC_the_Five_Principles_of_Peaceful_Coexistence
-	
-		cost = 10
-	
-		ai_will_do = {
-			factor = 10
-		}
-	
-		available = {
-			is_subject = no
-		}
-	
-		bypass = {
-
-		}
-	
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = yes
-	
-		completion_reward = {
-			unlock_decision_tooltip = PRC_decision_Sino_Indian_Border_Self_Defense_Counterattack_War
-			unlock_decision_tooltip = PRC_recover_Outer_Mongolia
-			unlock_decision_tooltip = PRC_zujie
-		}
-	}
-
-	focus = {
-		id = PRC_sandagaizao
-		icon = GFX_SOV_national_specialists_ccp_2d_sov_compatibility
-		x = 1
-		y = 1
-		prerequisite = {focus= PRC_proclaim_the_peoples_republic }
-		relative_position_id = PRC_proclaim_the_peoples_republic
-		cost = 10
-		ai_will_do = {
-			factor = 25
-		}
-		completion_reward = {
-			custom_effect_tooltip = PRC_gongyehua_tt
-			every_controlled_state = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-				add_building_construction = {
-					type=arms_factory
-					level=1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_socialist_market_economy
-		icon = GFX_PRC_Industrialization
-		prerequisite = { focus = PRC_proclaim_the_peoples_republic focus = PRC_unification_day }
-		x = 4
-		y = 1
-		relative_position_id = PRC_proclaim_the_peoples_republic
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 4
-		}
-
-		available = {
-			num_of_factories > 49
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_INDUSTRY }
-		completion_reward = {
-			custom_effect_tooltip = available_political_advisor
-			show_ideas_tooltip = PRC_deng_xiaoping
-			if = {
-				limit = { has_idea = PRC_the_long_march_1 }
-				remove_ideas = PRC_the_long_march_1
-			}
-			if = {
-				limit = { has_idea = PRC_the_long_march_2 }
-				remove_ideas = PRC_the_long_march_2 
-			}
-			if = {
-				limit = { has_idea = closed_economy }
-				add_ideas = limited_exports
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_social_democracy
-		icon = GFX_focus_prc_social_democracy
-		prerequisite = { focus = PRC_strengthen_the_central_secretariat }
-		mutually_exclusive = { focus = PRC_agrarian_socialism focus = PRC_marxist_orthodoxy focus = PRC_the_unending_revolution }
-		x = 6
-		y = 1
-		relative_position_id = PRC_strengthen_the_central_secretariat
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 2
-			modifier = {
-				has_war_with = event_target:WTT_current_china_leader
-				factor = 0
-			} 
-		}
-
-		available = {
-			has_government = communism
-			OR = {
-				is_subject = no
-				is_subject_of = event_target:WTT_current_china_leader
-			}
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_POLITICAL }
-		completion_reward = {
-			add_stability = 0.1
-			if = {
-				limit = {
-					original_tag = PRC
-				}
-				remove_unit_leader = 61666
-				create_country_leader = {
-					name = "Zhang Lan"
-					desc = "POLITICS_ZHANG_LAN_DESC"
-					picture = "GFX_portrait_prc_zhang_lan"
-					expire = "1965.1.1"
-					ideology = authsocialism
-					traits = {
-						
-					}
-				}
-			}
-			set_politics = {
-				ruling_party = communism
-				elections_allowed = yes
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_coalition_government
-		icon = GFX_focus_chi_united_front
-		prerequisite = { focus = PRC_social_democracy }
-		x = 0
-		y = 1
-		relative_position_id = PRC_social_democracy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			if = {
-				limit = {
-					WTT_not_taking_over_national_leadership = no				
-				}
-				WTT_not_taking_over_national_leadership = yes
-			}
-			if = {
-				limit = {
-					WTT_not_china_leader_refused_to_give_up_national_leadership = no
-				}
-				WTT_not_china_leader_refused_to_give_up_national_leadership = yes
-			}
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		search_filters = { FOCUS_FILTER_ANNEXATION }
-		completion_reward = {
-			event_target:WTT_current_china_leader = {
-				country_event = wtt_prc.1
-			}
-			custom_effect_tooltip = enable_power_struggle
+			PRC = { create_faction = "People's Liberation Army" }
+			CHI = { create_faction = "The Third United Front" }
 			hidden_effect = {
-				WTT_setup_political_struggle = yes
-				WTT_add_ROOT_to_political_struggle = yes
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_purge_the_radicals
-		icon = GFX_goal_generic_political_pressure
-		prerequisite = { focus = PRC_coalition_government }
-		x = 0
-		y = 2
-		relative_position_id = PRC_social_democracy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			set_cosmetic_tag = CHI_democratic
-			remove_ideas = PRC_power_struggles
-			add_political_power = -100
-			add_manpower = -1000
-				}	
-		}
-	
-
-	focus = {
-		id = PRC_strengthen_the_left_wing_of_the_kmt
-		icon = GFX_goal_socialist_star
-		prerequisite = { focus = PRC_purge_the_radicals }
-		x = 0
-		y = 3
-		relative_position_id = PRC_social_democracy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-
-		}
-
-		bypass = {
-			WTT_CHI_is_not_leader = yes
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			if = { limit = { CHI = { has_government = neutrality } }
-				CHI = {
-					add_popularity = { ideology = communism popularity = 0.1 }
-					add_popularity = { ideology = neutrality popularity = -0.2 }
-				}
-			}
-			else = {
-				CHI = {
-					add_popularity = { ideology = communism popularity = 0.3 }
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_remove_chiang_kai_shek
-		icon = GFX_focus_prc_remove_chiang_kai_shek
-		prerequisite = { focus = PRC_strengthen_the_left_wing_of_the_kmt }
-		x = 0
-		y = 4
-		relative_position_id = PRC_social_democracy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			WTT_has_politcal_support_points_30 = yes
-			not = { is_subject_of = event_target:WTT_current_china_leader }
-		}
-
-		bypass = {
-			OR = {
-				WTT_CHI_is_not_leader = yes
-				NOT = { CHI = { has_country_leader = { name = "Chiang Kai-Shek" } } }
-			}
-		}
-
-		cancel_if_invalid = no
-		continue_if_invalid = yes
-		available_if_capitulated = no
-
-		completion_reward = {
-			CHI = {
-				set_country_flag = deadchiang
-				kill_country_leader = yes
-				create_country_leader = {
-					name = "Wang Jingwei"
-					desc = ""
-					picture = "gfx/leaders/CHI/portrait_chi_wang_jingwei.dds"
-					expire = "1965.1.1"
-					ideology = despotism
-					traits = {
-						grand_premier
-					}
-				}
-				custom_effect_tooltip = loses_political_support_points_15
-				subtract_from_variable = { other_political_support = 15 }
-			}
-			WTT_political_struggle_recalculate_support = yes			
-		}
-	}
-
-	focus = {
-		id = PRC_second_chinese_elections
-		icon = GFX_goal_support_democracy
-		prerequisite = { focus = PRC_remove_chiang_kai_shek }
-		x = 0
-		y = 1
-		relative_position_id = PRC_remove_chiang_kai_shek
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			CHI = { exists = no }
-		}
-
-		bypass = {
-			
-		}
-
-		cancel_if_invalid = no
-		continue_if_invalid = yes
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_stability = 0.1
-			add_popularity = { ideology = democratic popularity = 0.5 }
-			set_politics = { ruling_party = democratic elections_allowed = yes }
-			country_event = chi.71
-			hidden_effect = {
-				set_cosmetic_tag = CHI_BOTH
 				if = {
-					limit = { is_ai = yes }
-					add_ideas = limited_conscription
-				}
-				if = {
-					limit = { is_ai = yes }
-					add_ideas = export_focus
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_unification_day
-		icon = GFX_CHI_Unity_Through_Peace
-		prerequisite = { focus = PRC_second_chinese_elections }
-		x = 0
-		y = 1
-		relative_position_id = PRC_second_chinese_elections
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-			GXC = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
-					has_war_with = ROOT
-				}
-			}
-			YUN = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
-					has_war_with = ROOT
-				}
-			}
-			SHX = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
-					has_war_with = ROOT
-				}
-			}
-			XSM = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
-					has_war_with = ROOT
-				}
-			}
-			SIK = {
-				OR = {
-					exists = no
-					is_subject_of = ROOT
-					has_war_with = ROOT
-				}
-			}
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			every_other_country = {
-				limit = {
-					OR = {
-						tag = GXC
-						tag = YUN
-						tag = SHX
-						tag = XSM
-						tag = SIK
+					limit = {
+						NOT = {
+							has_completed_focus = PRC_found_our_nation
+						}
 					}
+					drop_cosmetic_tag = yes
+					set_cosmetic_tag = GCDcivilwar
 				}
-				country_event = { id = chi.74 }
+				CHI = { country_event = { id = china.110 } }
+				set_global_flag = PRC_civil_war_started
 			}
-			unlock_decision_category_tooltip = CHI_integrate_the_warlords
-			unlock_decision_tooltip = PRC_integrate_the_kuomintang_generals
 		}
 	}
 
 	focus = {
 		id = PRC_land_redistribution
 		icon = GFX_AUS_agriculture
-		x = 13
-		y = 0
-		relative_position_id = PRC_strengthen_the_central_secretariat
+		x = 15
+		y = 10
 
 		cost = 10
 
@@ -7782,15 +7865,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			date < 1949.1.1
 		}
 		available = {
-			OR = {
-				NOT = {
-					has_dlc = "Waking the Tiger"
-				}
-				has_completed_focus = PRC_agrarian_socialism
-				has_completed_focus = PRC_social_democracy
-				has_completed_focus = PRC_marxist_orthodoxy
-				has_completed_focus = PRC_the_unending_revolution
-			}
 		}
 
 
@@ -7799,7 +7873,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		available_if_capitulated = no
 
 		completion_reward = {
-			
 			PRC_low_popular_support_level_down = yes
 		}
 	}
@@ -8491,15 +8564,12 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 					autonomy_state = autonomy_collaboration_government
 					freedom_level=0.5
 				}
-			}
-			if = {
-				limit = {
-					NOT = { has_dlc = "Together for Victory" }
-				}
-				release_autonomy = {
-					target = KOR
-					autonomy_state = autonomy_puppet
-					freedom_level=0.5
+				else = {
+					release_autonomy = {
+						target = KOR
+						autonomy_state = autonomy_puppet
+						freedom_level=0.5
+					}
 				}
 			}
 			hidden_effect = {
@@ -8981,27 +9051,25 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 			factor = 49
 		}
 		available = {
-			if = {
-				limit = {
-					has_dlc = "By Blood Alone"
-				}				
-			}
 			any_state = {
 				is_coastal = yes
 				is_controlled_by = ROOT
 			}
 		}
+		allow_branch = {
+			always = no
+		}
 		completion_reward = { 
 			custom_effect_tooltip = PRC_Building_the_Navy_tt
-			hidden_effect = {
-				load_oob = "PRC_1939_naval_mtg"
-				set_technology = {
-					improved_small_airframe = 1
-				}
-				set_technology = {
-					air_torpedoe_2 = 1
-				}
-			}
+			#hidden_effect = {
+			#	load_oob = "PRC_1939_naval_mtg"
+			#	set_technology = {
+			#		improved_small_airframe = 1
+			#	}
+			#	set_technology = {
+			#		air_torpedoe_2 = 1
+			#	}
+			#}
 			create_equipment_variant = {
 				name = "Carrier Naval Bomber"
 				type = cv_small_plane_naval_bomber_airframe_2
@@ -9715,284 +9783,6 @@ NOT = {	CHI = { is_puppet_of = JAP } }
 		}
 	}
 
-	focus = {
-		id = PRC_the_great_leap_forward
-		icon = GFX_PRC_Propaganda
-		prerequisite = { focus = PRC_proclaim_the_peoples_republic }
-		prerequisite = { focus = PRC_socialist_market_economy }
-		x = -4
-		y = 1
-		relative_position_id = PRC_socialist_market_economy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_manpower = -100000
-			add_ideas = workers_paradise
-		}
-	}
-
-	focus = {
-		id = PRC_yiwujihua
-		icon = GFX_SOV_finish_the_five_year_plan_ccp_2d_sov_compatibility
-		x = 4
-		y = 1
-		prerequisite = {focus = PRC_the_great_leap_forward }
-		relative_position_id = PRC_the_great_leap_forward
-		cost = 5
-		ai_will_do = {
-			factor = 25
-		}
-		completion_reward = {
-			add_timed_idea = {
-				idea = PRC_15jihua
-				days = 1800
-			}
-		}
-	}
-	focus = {
-		id = PRC_gongyehua
-		icon = GFX_SOV_finish_the_five_year_plan_ccp_2d_sov_compatibility
-		x=0
-		y=1
-		prerequisite = {focus = PRC_yiwujihua}
-		relative_position_id = PRC_yiwujihua
-		cost = 5
-		ai_will_do = {
-			factor = 25
-		}
-		completion_reward = {
-			add_ideas = PRC_gongyehua_idea
-		}
-	}
-	focus = {
-		id = PRC_ziyuan
-		icon = GFX_goal_generic_construction2
-		cost = 5
-		x = -2
-		y = 1
-		prerequisite = {focus =PRC_yiwujihua }
-		relative_position_id = PRC_yiwujihua
-		ai_will_do = {
-			factor = 18
-		}
-		completion_reward = { 
-			unlock_decision_category_tooltip = prospect_for_resources
-			unlock_decision_tooltip = PRC_ziyuankaicai
-		}
-	}
-	focus = {
-		id = PRC_jichusheshi
-		icon = GFX_focus_generic_railroad
-		prerequisite = {focus =PRC_yiwujihua }
-		relative_position_id = PRC_yiwujihua
-		cost = 5
-		x = 2
-		y = 1
-		ai_will_do = {
-			factor = 18
-		}
-		completion_reward = {
-			custom_effect_tooltip = PRC_jichusheshi_tt
-			every_controlled_state = {
-				add_extra_state_shared_building_slots = 3
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_the_cultural_revolution
-		icon = GFX_PRC_Census
-		prerequisite = { focus = PRC_the_great_leap_forward }
-		x = 0
-		y = 1
-		relative_position_id = PRC_the_great_leap_forward
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_manpower = -50000
-			swap_ideas = {
-				remove_idea = workers_paradise
-				add_idea = workers_paradise2
-			}
-			hidden_effect = {
-				news_event = jos_news.50
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_the_laogai
-		icon = GFX_focus_CZE_german_puppet
-		prerequisite = { focus = PRC_the_cultural_revolution }
-		x = 0
-		y = 1
-		relative_position_id = PRC_the_cultural_revolution
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			swap_ideas = {
-				remove_idea = workers_paradise2
-				add_idea = workers_paradise3
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_suns_dream_achieved
-		icon = GFX_CHI_Chinas_Dream_of_Democracy
-		prerequisite = { focus = PRC_unification_day }
-		prerequisite = { focus = PRC_socialist_market_economy }
-		x = 0
-		y = 2
-		relative_position_id = PRC_unification_day
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			has_government = democratic
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_stability = 0.05
-			add_popularity = { ideology = democratic popularity = 0.2 }
-		}
-	}
-
-	focus = {
-		id = PRC_the_new_chinese_economy
-		icon = GFX_LEP_tea_trade
-		prerequisite = { focus = PRC_suns_dream_achieved }
-		x = 0
-		y = 1
-		relative_position_id = PRC_suns_dream_achieved
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			if = {
-				limit = { NOT = { has_idea = free_trade } }
-				add_ideas = export_focus
-			}
-			add_ideas = {
-				controlled_economy_chi
-			}
-		}
-	}
-
-	focus = {
-		id = PRC_a_happy_ending
-		icon = GFX_CHI_Democracy
-		prerequisite = { focus = PRC_the_new_chinese_economy }
-		x = 0
-		y = 1
-		relative_position_id = PRC_the_new_chinese_economy
-
-		cost = 10
-
-		ai_will_do = {
-			factor = 1
-		}
-
-		available = {
-			
-		}
-
-		bypass = {
-
-		}
-
-		cancel_if_invalid = yes
-		continue_if_invalid = no
-		available_if_capitulated = no
-
-		completion_reward = {
-			add_ideas = of_the_people_by_the_people_for_the_people
-		}
-	}
 	###############################################################################################################################
 	###############################################################################################################################
 	###############################################################################################################################
