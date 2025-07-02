@@ -8,7 +8,14 @@ focus_tree = {
 		}
 	}
 	default = no 
- reset_on_civilwar = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = {
+		x = 50
+		y = 1200
+	}
+
+	shared_focus = ww2_state_of_the_military
 
 	###############################################################################################################################
 	###############################################################################################################################
@@ -22,302 +29,46 @@ focus_tree = {
 	###############################################################################################################################
 
 	focus = {
-		id = MEN_army_effort
-		icon = GFX_goal_generic_allies_build_infantry
-		cost = 10.00
-		x = 1
+		id = MEN_choose_path
+		icon = GFX_goal_generic_position_armies
+		cost = 10
+		x = 10
 		y = 0
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-		}
-		available_if_capitulated = yes
-		completion_reward = {
-			army_experience = 5
-			add_tech_bonus = {
-				name = land_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = land_doctrine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_aviation_effort
-		icon = airforce
-		cost = 10.00
-		x = 5
-		y = 0
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-		available_if_capitulated = yes
-		complete_tooltip = {
-			air_experience = 100
-			if = {
-				limit = {
-					has_country_flag = aviation_effort_AB
-				}
-				add_building_construction = {
-					type = air_base
-					level = 2
-					instant_build = yes
-				}
-			}
-			add_tech_bonus = {
-				name = air_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = air_doctrine
-			}
-		}
-		completion_reward = {
-			air_experience = 100
-			if = {
-				limit = {
-					capital_scope = {
-						NOT = {
-							free_building_slots = {
-								building = air_base
-								size > 1
-							}
-						}
-					}
-				}
-				random_owned_controlled_state = {
-					limit = {
-						free_building_slots = {
-							building = air_base
-							size > 1
-						}
-					}
-					add_building_construction = {
-						type = air_base
-						level = 2
-						instant_build = yes
-					}
-					ROOT = {
-						set_country_flag = aviation_effort_AB
-					}
-				}
-			}
-			if = {
-				limit = {
-					capital_scope = {
-						free_building_slots = {
-							building = air_base
-							size > 1
-						}
-					}
-				}
-				capital_scope = {
-					add_building_construction = {
-						type = air_base
-						level = 2
-						instant_build = yes
-					}
-					ROOT = {
-						set_country_flag = aviation_effort_AB
-					}
-				}
-			}
-			add_tech_bonus = {
-				name = air_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = air_doctrine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_naval_effort
-		icon = GFX_goal_generic_construct_naval_dockyard
-		cost = 10.00
-		x = 9
-		y = 0
-		available_if_capitulated = yes
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-
-		}
-		available = {
-			any_state = {
-				is_coastal = yes
-				is_controlled_by = ROOT
-			}
-		}
-		complete_tooltip = {
-			navy_experience = 100
-			add_extra_state_shared_building_slots = 3
-			add_building_construction = {
-				type = dockyard
-				level = 3
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			navy_experience = 100
-			if = {
-				limit = {
-					NOT = {
-						any_owned_state = {
-							dockyard > 0
-							free_building_slots = {
-								building = dockyard
-								size > 2
-								include_locked = yes
-							}
-						}
-					}
-					any_owned_state = {
-						is_coastal = yes
-					}
-				}
-				random_owned_controlled_state = {
-					limit = {
-						is_coastal = yes
-						free_building_slots = {
-							building = dockyard
-							size > 2
-							include_locked = yes
-						}
-					}
-					add_extra_state_shared_building_slots = 3
-					add_building_construction = {
-						type = dockyard
-						level = 3
-						instant_build = yes
-					}
-				}
-				set_country_flag = naval_effort_built
-			}
-			if = {
-				limit = {
-					NOT = {
-						has_country_flag = naval_effort_built
-					}
-					any_owned_state = {
-						dockyard > 0
-						free_building_slots = {
-							building = dockyard
-							size > 2
-							include_locked = yes
-						}
-					}
-				}
-				random_owned_controlled_state = {
-					limit = {
-						dockyard > 0
-						free_building_slots = {
-							building = dockyard
-							size > 2
-							include_locked = yes
-						}
-					}
-					add_extra_state_shared_building_slots = 3
-					add_building_construction = {
-						type = dockyard
-						level = 3
-						instant_build = yes
-					}
-				}
-				set_country_flag = naval_effort_built
-			}
-			if = {
-				limit = {
-					NOT = {
-						has_country_flag = naval_effort_built
-					}
-					NOT = {
-						any_owned_state = {
-							free_building_slots = {
-								building = dockyard
-								size > 2
-								include_locked = yes
-							}
-						}
-					}
-				}
-				random_state = {
-					limit = {
-						controller = {
-							tag = ROOT
-						}
-						free_building_slots = {
-							building = dockyard
-							size > 2
-							include_locked = yes
-						}
-					}
-					add_extra_state_shared_building_slots = 3
-					add_building_construction = {
-						type = dockyard
-						level = 3
-						instant_build = yes
-					}
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_industrial_effort
-		icon = GFX_goal_generic_production
-		cost = 10.00
-		x = 13
-		y = 0
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = industrial_bonus
-				bonus = 0.5
-				uses = 1
-				category = industry
-			}
 		}
 		ai_will_do = {
-			factor = 3
-			modifier = {
-				factor = 0
-				date < 1939.1.1
-				OR = {
-					tag = GXC
-					tag = YUN
-					tag = SHX
-					tag = XSM
-					tag = BEL
-					tag = LUX
-					tag = HOL
-					tag = DEN
-					num_of_controlled_states < 2
-				}
-			}
+			base = 1
+		}
+		completion_reward = {
+			country_event = ww2_mengukuo.1
 		}
 
 	}
 	focus = {
 		id = MEN_consolidate
 		icon = GFX_goal_generic_position_armies
-		cost = 10.00
-		x = 21
-		y = 0
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
+		cost = 10
+		prerequisite = {
+			focus = MEN_choose_path
 		}
+		mutually_exclusive = {
+			focus = MEN_stay_with_china
+		}
+		x = -5
+		y = 1
+		relative_position_id = MEN_choose_path
 		ai_will_do = {
 			base = 0
 			modifier = {
 				add = 5
-				RON_can_do_focuses_1936 = yes
+				date > 1937.1.1
+			}
+			modifier = {
+				add = 255
+				date > 1937.1.1
+				is_historical_focus_on = yes
 			}
 		}
 		completion_reward = {
@@ -326,1335 +77,7 @@ focus_tree = {
 		}
 
 	}
-	focus = {
-		id = MEN_equipment_effort
-		icon = small_arms
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_army_effort
-		}
-		x = 0
-		y = 1
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = infantry_weapons_bonus
-				bonus = 0.5
-				uses = 1
-				category = infantry_weapons
-				category = artillery
-			}
-		}
 
-	}
-	focus = {
-		id = MEN_equipment_effort_2
-		icon = GFX_goal_generic_army_artillery
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_equipment_effort
-		}
-		x = 0
-		y = 3
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = infantry_artillery_bonus
-				bonus = 0.5
-				uses = 1
-				category = infantry_weapons
-				category = artillery
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_equipment_effort_3
-		icon = GFX_goal_generic_army_artillery2
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_equipment_effort_2
-		}
-		x = 0
-		y = 5
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = infantry_artillery_bonus
-				ahead_reduction = 1
-				uses = 1
-				category = infantry_weapons
-				category = artillery
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_doctrine_effort
-		icon = GFX_goal_generic_army_doctrines
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_army_effort
-		}
-		x = 1
-		y = 2
-		available_if_capitulated = yes
-		completion_reward = {
-			army_experience = 5
-			add_tech_bonus = {
-				name = land_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = land_doctrine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_doctrine_effort_2
-		icon = GFX_goal_generic_army_doctrines
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_doctrine_effort
-		}
-		x = 1
-		y = 4
-		available_if_capitulated = yes
-		completion_reward = {
-			army_experience = 5
-			add_tech_bonus = {
-				name = land_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = land_doctrine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_motorization_effort
-		icon = motorized
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_army_effort
-		}
-		x = 2
-		y = 1
-		bypass = {
-			has_tech = motorised_infantry
-		}
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = motorized_bonus
-				bonus = 0.75
-				technology = motorised_infantry
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_mechanization_effort
-		icon = GFX_goal_generic_build_tank
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_motorization_effort
-		}
-		x = 2
-		y = 3
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = motorized_bonus
-				ahead_reduction = 0.5
-				uses = 1
-				category = motorized_equipment
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_armor_effort
-		icon = GFX_goal_generic_army_tanks
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_mechanization_effort
-		}
-		x = 2
-		y = 5
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = armor_bonus
-				bonus = 0.5
-				uses = 2
-				category = armor
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_special_forces
-		icon = GFX_goal_generic_special_forces
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_equipment_effort_3
-		}
-		prerequisite = {
-			focus = MEN_doctrine_effort_2
-		}
-		prerequisite = {
-			focus = MEN_armor_effort
-		}
-		x = 1
-		y = 6
-		available_if_capitulated = yes
-		completion_reward = {
-			add_ideas = special_forces
-			add_tech_bonus = {
-				name = special_forces_bonus
-				bonus = 0.5
-				uses = 1
-				technology = paratroopers
-				technology = paratroopers2
-				technology = marines
-				technology = marines2
-				technology = tech_mountaineers
-				technology = tech_mountaineers2
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_fighter_focus
-		icon = GFX_goal_generic_air_fighter
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_aviation_effort
-		}
-		mutually_exclusive = {
-			focus = MEN_bomber_focus
-		}
-		x = 4
-		y = 1
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = fighter_bonus
-				bonus = 0.5
-				uses = 2
-				technology = early_fighter
-				technology = fighter1
-				technology = fighter2
-				technology = fighter3
-				technology = heavy_fighter1
-				technology = heavy_fighter2
-				technology = heavy_fighter3
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_bomber_focus
-		icon = GFX_goal_generic_air_bomber
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_aviation_effort
-		}
-		mutually_exclusive = {
-			focus = MEN_fighter_focus
-		}
-		x = 6
-		y = 1
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = bomber_bonus
-				bonus = 0.5
-				uses = 2
-				technology = strategic_bomber1
-				technology = strategic_bomber2
-				technology = strategic_bomber3
-				category = tactical_bomber
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_aviation_effort_2
-		icon = air_doctrine
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_bomber_focus
-			focus = MEN_fighter_focus
-		}
-		x = 5
-		y = 2
-		available_if_capitulated = yes
-		complete_tooltip = {
-			air_experience = 100
-			if = {
-				limit = {
-					has_country_flag = aviation_effort_2_AB
-				}
-				add_building_construction = {
-					type = air_base
-					level = 2
-					instant_build = yes
-				}
-			}
-			add_tech_bonus = {
-				name = air_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = air_doctrine
-			}
-		}
-		completion_reward = {
-			air_experience = 100
-			if = {
-				limit = {
-					capital_scope = {
-						OR = {
-							NOT = {
-								is_controlled_by = ROOT
-							}
-							NOT = {
-								free_building_slots = {
-									building = air_base
-									size > 1
-								}
-							}
-						}
-					}
-				}
-				random_owned_controlled_state = {
-					limit = {
-						free_building_slots = {
-							building = air_base
-							size > 1
-						}
-					}
-					add_building_construction = {
-						type = air_base
-						level = 2
-						instant_build = yes
-					}
-					ROOT = {
-						set_country_flag = aviation_effort_2_AB
-					}
-				}
-			}
-			if = {
-				limit = {
-					capital_scope = {
-						is_controlled_by = ROOT
-						free_building_slots = {
-							building = air_base
-							size > 1
-						}
-					}
-				}
-				capital_scope = {
-					add_building_construction = {
-						type = air_base
-						level = 2
-						instant_build = yes
-					}
-					ROOT = {
-						set_country_flag = aviation_effort_2_AB
-					}
-				}
-			}
-			add_tech_bonus = {
-				name = air_doc_bonus
-				bonus = 0.5
-				uses = 1
-				category = air_doctrine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_CAS_effort
-		icon = GFX_goal_generic_CAS
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_aviation_effort_2
-		}
-		prerequisite = {
-			focus = MEN_motorization_effort
-		}
-		x = 4
-		y = 3
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = CAS_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				category = cas_bomber
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_flexible_navy
-		icon = GFX_goal_generic_build_navy
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_naval_effort
-		}
-		mutually_exclusive = {
-			focus = MEN_large_navy
-		}
-		x = 8
-		y = 1
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = sub_op_bonus
-				bonus = 0.5
-				uses = 2
-				technology = convoy_interdiction_ti
-				technology = unrestricted_submarine_warfare
-				technology = wolfpacks
-				technology = advanced_submarine_warfare
-				technology = combined_operations_raiding
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_NAV_effort
-		icon = naval_bomber
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_aviation_effort_2
-		}
-		prerequisite = {
-			focus = MEN_flexible_navy
-		}
-		x = 6
-		y = 3
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = nav_bomber_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				category = naval_bomber
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_large_navy
-		icon = GFX_goal_generic_navy_doctrines_tactics
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_naval_effort
-		}
-		mutually_exclusive = {
-			focus = MEN_flexible_navy
-		}
-		x = 10
-		y = 1
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = fleet_in_being_bonus
-				bonus = 0.5
-				uses = 2
-				category = fleet_in_being_tree
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_submarine_effort
-		icon = GFX_goal_generic_navy_submarine
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_flexible_navy
-			focus = MEN_large_navy
-		}
-		x = 8
-		y = 2
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = ss_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				technology = early_submarine
-				technology = basic_submarine
-				technology = improved_submarine
-				technology = advanced_submarine
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_destroyer_effort
-		icon = GFX_goal_generic_wolf_pack
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_submarine_effort
-		}
-		x = 8
-		y = 3
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = dd_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				technology = early_destroyer
-				technology = basic_destroyer
-				technology = improved_destroyer
-				technology = advanced_destroyer
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_cruiser_effort
-		icon = GFX_goal_generic_navy_cruiser
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_large_navy
-			focus = MEN_flexible_navy
-		}
-		x = 10
-		y = 2
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			add_tech_bonus = {
-				name = cr_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				technology = improved_light_cruiser
-				technology = advanced_light_cruiser
-				technology = improved_heavy_cruiser
-				technology = advanced_heavy_cruiser
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_capital_ships_effort
-		icon = GFX_goal_generic_navy_battleship
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_cruiser_effort
-		}
-		x = 10
-		y = 3
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0
-				all_owned_state = {
-					OR = {
-						is_coastal = no
-						dockyard < 1
-					}
-				}
-			}
-		}
-		completion_reward = {
-			navy_experience = 100
-			add_tech_bonus = {
-				name = capital_ships_bonus
-				bonus = 0.5
-				ahead_reduction = 1
-				uses = 1
-				technology = basic_battlecruiser
-				technology = basic_battleship
-				technology = improved_battleship
-				technology = advanced_battleship
-				technology = heavy_battleship
-				technology = heavy_battleship2
-				technology = early_carrier
-				technology = basic_carrier
-				technology = improved_carrier
-				technology = advanced_carrier
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_construction_effort
-		icon = GFX_goal_generic_construct_civ_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_industrial_effort
-		}
-		x = 12
-		y = 1
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = construction_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = industrial_complex
-						size < 1
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = industrial_complex
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = industrial_complex
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = industrial_complex
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_construction_effort_2
-		icon = GFX_goal_generic_construct_civ_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_construction_effort
-		}
-		x = 12
-		y = 2
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = construction_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = industrial_complex
-						size < 1
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = industrial_complex
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = industrial_complex
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = industrial_complex
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = industrial_complex
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_infrastructure_effort
-		icon = GFX_goal_generic_construct_infrastructure
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_construction_effort_2
-		}
-		x = 12
-		y = 3
-		available_if_capitulated = yes
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = infrastructure_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = infrastructure
-						size < 1
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_building_construction = {
-				type = infrastructure
-				level = 1
-				instant_build = yes
-			}
-			add_building_construction = {
-				type = infrastructure
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = infrastructure
-						size > 0
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = infrastructure
-										size > 0
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = infrastructure
-						size > 1
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = infrastructure
-										size > 1
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_rocket_effort
-		icon = GFX_focus_rocketry
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_aviation_effort_2
-		}
-		prerequisite = {
-			focus = MEN_infrastructure_effort
-		}
-		x = 5
-		y = 4
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = jet_rocket_bonus
-				ahead_reduction = 0.5
-				uses = 2
-				category = rocketry
-				category = jet_technology
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0.25
-				always = yes
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_infrastructure_effort_2
-		icon = GFX_goal_generic_construct_infrastructure
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_infrastructure_effort
-		}
-		x = 12
-		y = 4
-		available_if_capitulated = yes
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = infrastructure_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = infrastructure
-						size < 1
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_building_construction = {
-				type = infrastructure
-				level = 1
-				instant_build = yes
-			}
-			add_building_construction = {
-				type = infrastructure
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = infrastructure
-						size > 0
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = infrastructure
-										size > 0
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 1
-					instant_build = yes
-				}
-			}
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = infrastructure
-						size > 1
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = infrastructure
-										size > 1
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_building_construction = {
-					type = infrastructure
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_nuclear_effort
-		icon = GFX_focus_wonderweapons
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_infrastructure_effort_2
-		}
-		x = 10
-		y = 5
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = nuclear_bonus
-				ahead_reduction = 0.5
-				category = nuclear
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0.25
-				always = yes
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_extra_tech_slot
-		icon = GFX_focus_research
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_infrastructure_effort_2
-		}
-		x = 12
-		y = 5
-		available_if_capitulated = yes
-		completion_reward = {
-			add_research_slot = 1
-		}
-
-	}
-	focus = {
-		id = MEN_extra_tech_slot_2
-		icon = GFX_focus_research
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_extra_tech_slot
-		}
-		x = 12
-		y = 6
-		available = {
-			num_of_factories > 50
-		}
-		cancel_if_invalid = no
-		continue_if_invalid = yes
-		available_if_capitulated = yes
-		completion_reward = {
-			add_research_slot = 1
-		}
-
-	}
-	focus = {
-		id = MEN_production_effort
-		icon = GFX_goal_generic_construct_mil_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_industrial_effort
-		}
-		x = 14
-		y = 1
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = production_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = arms_factory
-						size < 1
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = arms_factory
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = arms_factory
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = arms_factory
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_production_effort_2
-		icon = GFX_goal_generic_construct_mil_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_production_effort
-		}
-		x = 14
-		y = 2
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = production_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = arms_factory
-						size < 1
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = arms_factory
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = arms_factory
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = arms_factory
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_production_effort_3
-		icon = GFX_goal_generic_construct_mil_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_production_effort_2
-		}
-		x = 14
-		y = 3
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = production_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = arms_factory
-						size < 1
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 1
-			add_building_construction = {
-				type = arms_factory
-				level = 1
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = arms_factory
-						size > 0
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = arms_factory
-										size > 0
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 1
-				add_building_construction = {
-					type = arms_factory
-					level = 1
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_construction_effort_3
-		icon = GFX_goal_generic_construct_civ_factory
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_infrastructure_effort
-		}
-		x = 14
-		y = 4
-		available_if_capitulated = yes
-		ai_will_do = {
-			factor = 2
-		}
-		bypass = {
-			custom_trigger_tooltip = {
-				tooltip = construction_effort_tt
-				all_owned_state = {
-					free_building_slots = {
-						building = industrial_complex
-						size < 2
-						include_locked = yes
-					}
-				}
-			}
-		}
-		complete_tooltip = {
-			add_extra_state_shared_building_slots = 2
-			add_building_construction = {
-				type = industrial_complex
-				level = 2
-				instant_build = yes
-			}
-		}
-		completion_reward = {
-			random_owned_controlled_state = {
-				limit = {
-					free_building_slots = {
-						building = industrial_complex
-						size > 1
-						include_locked = yes
-					}
-					OR = {
-						is_in_home_area = yes
-						NOT = {
-							owner = {
-								any_owned_state = {
-									free_building_slots = {
-										building = industrial_complex
-										size > 1
-										include_locked = yes
-									}
-									is_in_home_area = yes
-								}
-							}
-						}
-					}
-				}
-				add_extra_state_shared_building_slots = 2
-				add_building_construction = {
-					type = industrial_complex
-					level = 2
-					instant_build = yes
-				}
-			}
-		}
-
-	}
-	focus = {
-		id = MEN_secret_weapons
-		icon = GFX_goal_generic_secret_weapon
-		cost = 10.00
-		prerequisite = {
-			focus = MEN_infrastructure_effort_2
-		}
-		x = 14
-		y = 5
-		available_if_capitulated = yes
-		completion_reward = {
-			add_tech_bonus = {
-				name = secret_bonus
-				bonus = 0.5
-				uses = 4
-				category = electronics
-				category = nuclear
-				category = rocketry
-			}
-		}
-		ai_will_do = {
-			factor = 1
-			modifier = {
-				factor = 0.25
-				always = yes
-			}
-		}
-
-	}
 	focus = {
 		id = MEN_prepare
 		icon = GFX_focus_generic_provoke_border_clashes
@@ -1662,15 +85,11 @@ focus_tree = {
 		prerequisite = {
 			focus = MEN_consolidate
 		}
-		x = 17
+		x = -4
 		y = 1
+		relative_position_id = MEN_consolidate
 		available = {
-			OR = {
-				NOT = {
-					has_global_flag = KMT_mod_enabled
-				}
-				is_subject_of = JAP
-			}
+			is_subject_of = JAP
 		}
 		ai_will_do = {
 			factor = 10
@@ -1704,12 +123,13 @@ focus_tree = {
 	focus = {
 		id = MEN_suiyuan_offensive
 		icon = GFX_focus_prc_infiltration
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_prepare
 		}
-		x = 17
-		y = 2
+		x = 0
+		y = 1
+		relative_position_id = MEN_prepare
 		ai_will_do = {
 			factor = 10
 		}
@@ -1731,12 +151,13 @@ focus_tree = {
 	focus = {
 		id = MEN_rebuild_army
 		icon = GFX_goal_generic_military_sphere
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_suiyuan_offensive
 		}
-		x = 16
-		y = 3
+		x = -1
+		y = 1
+		relative_position_id = MEN_suiyuan_offensive
 		ai_will_do = {
 			factor = 10
 		}
@@ -1771,8 +192,9 @@ focus_tree = {
 		prerequisite = {
 			focus = MEN_suiyuan_offensive
 		}
-		x = 18
-		y = 3
+		x = 1
+		y = 1
+		relative_position_id = MEN_suiyuan_offensive
 		completion_reward = {
 			add_manpower = 560
 			JAP = {
@@ -1792,13 +214,14 @@ focus_tree = {
 	focus = {
 		id = MEN_invade_ma
 		icon = GFX_goal_generic_position_armies
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_rebuild_army
 			focus = MEN_japanese_planes
 		}
-		x = 17
-		y = 4
+		x = 1
+		y = 1
+		relative_position_id = MEN_rebuild_army
 		ai_will_do = {
 			factor = 10
 		}
@@ -1820,44 +243,44 @@ focus_tree = {
 	focus = {
 		id = MEN_reassure_claims
 		icon = GFX_focus_generic_treaty
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_consolidate
 		}
-		x = 21
+		x = 0
 		y = 1
+		relative_position_id = MEN_consolidate
 		ai_will_do = {
 			factor = 2
 		}
 		available = {
-			OR = {
-				NOT = {
-					has_global_flag = KMT_mod_enabled
-				}
-				is_subject_of = JAP
-			}
+			is_subject_of = JAP
 		}
 		completion_reward = {
 			add_state_core = 616
 			add_state_core = 621
 			add_state_core = 746
-			MON = { every_owned_state = { add_core_of = ROOT
-			} }
+			MON = {
+				every_owned_state = {
+					add_core_of = ROOT
+				}
+			}
 		}
 
 	}
 	focus = {
 		id = MEN_feudal_republic
 		icon = GFX_goal_tfv_strengthen_commonwealth_ties
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_reassure_claims
 		}
 		mutually_exclusive = {
 			focus = MEN_monarchy
 		}
-		x = 20
-		y = 2
+		x = -1
+		y = 1
+		relative_position_id = MEN_reassure_claims
 		available = {
 			OR = {
 				has_government = fascism
@@ -1876,12 +299,14 @@ focus_tree = {
 	focus = {
 		id = MEN_royal_marriage
 		icon = GFX_goal_generic_major_alliance
-		cost = 10.00
+		cost = 10
 		prerequisite = {
-			focus = MEN_reassure_claims
+			focus = MEN_feudal_republic
+			focus = MEN_monarchy
 		}
-		x = 21
-		y = 3
+		x = 1
+		y = 1
+		relative_position_id = MEN_feudal_republic
 		available = {
 			OR = {
 				has_political_power > 200
@@ -1900,12 +325,13 @@ focus_tree = {
 	focus = {
 		id = MEN_standing_advisors
 		icon = GFX_goal_generic_military_deal
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_royal_marriage
 		}
-		x = 21
-		y = 4
+		x = 0
+		y = 1
+		relative_position_id = MEN_royal_marriage
 		available = {
 			OR = {
 				is_puppet_of = JAP
@@ -1926,13 +352,14 @@ focus_tree = {
 	focus = {
 		id = MEN_invade_MON
 		icon = GFX_goal_generic_major_war
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_standing_advisors
 			focus = MEN_invade_ma
 		}
-		x = 19
-		y = 5
+		x = 2
+		y = 1
+		relative_position_id = MEN_invade_ma
 		ai_will_do = {
 			factor = 10
 			modifier = {
@@ -1941,7 +368,17 @@ focus_tree = {
 			}
 		}
 		bypass = {
-			owns_state = 330
+			custom_trigger_tooltip = {
+				tooltip = MEN_invade_MON_tt
+				owns_state = 1015
+				owns_state = 1016
+				owns_state = 1017
+				owns_state = 330
+				owns_state = 1018
+				owns_state = 1019
+				owns_state = 1020
+				owns_state = 1021
+			}
 		}
 		available = {
 			owns_state = 616
@@ -1956,7 +393,7 @@ focus_tree = {
 		}
 		will_lead_to_war_with = MON
 		completion_reward = {
-			declare_war_on = {
+			create_wargoal = {
 				target = MON
 				type = annex_everything
 			}
@@ -1972,31 +409,42 @@ focus_tree = {
 	focus = {
 		id = MEN_independence_war
 		icon = attack_japan2
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_invade_MON
 		}
 		mutually_exclusive = {
 			focus = MEN_independence_peaceful
 		}
-		x = 18
-		y = 6
-		will_lead_to_war_with = JAP
+		x = -1
+		y = 1
+		relative_position_id = MEN_invade_MON
+		will_lead_to_war_with = OVERLORD
 		available = {
-			is_puppet_of = JAP
+			is_subject = yes
 		}
 		completion_reward = {
-			hidden_effect = {
-				random_other_country = {
+			effect_tooltip = {		
+				if = {
 					limit = {
-						has_war = no
-						is_puppet = no
+						is_in_faction_with = OVERLORD
 					}
-					puppet = MEN
-					end_puppet = MEN
+					leave_faction = yes
 				}
 				declare_war_on = {
-					target = JAP
+					target = OVERLORD
+					type = puppet_wargoal_focus
+				}
+			}
+			hidden_effect = {
+				if = {
+					limit = {
+						is_in_faction_with = event_target:overlord_target
+					}
+					leave_faction = yes
+				}
+				declare_war_on = {
+					target = event_target:overlord_target
 					type = puppet_wargoal_focus
 				}
 			}
@@ -2005,36 +453,22 @@ focus_tree = {
 	}
 	focus = {
 		id = MEN_independence_peaceful
-		icon = GFX_align_to_japan
-		cost = 10.00
+		icon = GFX_align_to_japan2
+		cost = 10
 		prerequisite = {
 			focus = MEN_invade_MON
 		}
 		mutually_exclusive = {
 			focus = MEN_independence_war
 		}
-		x = 20
-		y = 6
+		x = 1
+		y = 1
+		relative_position_id = MEN_invade_MON
 		available = {
 			is_puppet_of = JAP
 		}
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = {
-						has_dlc = "Together for Victory"
-					}
-				}
-				JAP = {
-					country_event = {
-						days = 150
-						id = MEN.11
-					}
-				}
-				else = {
-					add_ideas = MEN_JAP_partnership
-				}
-			}
+			add_ideas = MEN_JAP_partnership
 			set_country_flag = MEN_JAP_partnership_flag
 		}
 
@@ -2042,15 +476,16 @@ focus_tree = {
 	focus = {
 		id = MEN_monarchy
 		icon = GFX_focus_generic_home_defense
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_reassure_claims
 		}
 		mutually_exclusive = {
 			focus = MEN_feudal_republic
 		}
-		x = 22
-		y = 2
+		x = 1
+		y = 1
+		relative_position_id = MEN_reassure_claims
 		available = {
 			OR = {
 				has_government = fascism
@@ -2066,19 +501,15 @@ focus_tree = {
 	focus = {
 		id = MEN_central_academy
 		icon = GFX_focus_MEN_espionage
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_consolidate
 		}
-		x = 24
+		x = 3
 		y = 1
+		relative_position_id = MEN_consolidate
 		available = {
-			OR = {
-				NOT = {
-					has_global_flag = KMT_mod_enabled
-				}
-				is_subject_of = JAP
-			}
+			is_subject_of = JAP
 		}
 		completion_reward = {
 			add_ideas = MEN_central_academy
@@ -2086,65 +517,55 @@ focus_tree = {
 
 	}
 	focus = {
-		id = MEN_general_staff
+		id = MEN_general_staff_focus
 		icon = GFX_focus_generic_military_academy
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_central_academy
 		}
-		x = 24
-		y = 2
+		x = 0
+		y = 1
+		relative_position_id = MEN_central_academy
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = {
-						has_dlc = "Together for Victory"
-					}
-				}
-				add_ideas = MEN_general_staff
-				else = {
-					add_ideas = MEN_general_staff_tfv
-				}
-			}
+			add_ideas = MEN_general_staff
 		}
 
 	}
 	focus = {
 		id = MEN_bank
 		icon = GFX_goal_generic_consumer_goods
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_consolidate
 		}
-		x = 26
+		x = 5
 		y = 1
+		relative_position_id = MEN_consolidate
 		completion_reward = {
-			if = {
-				limit = {
-					NOT = {
-						has_dlc = "Together for Victory"
-					}
-				}
-				add_ideas = MEN_reformed_currency
-				else = {
-					add_ideas = MEN_reformed_currency_tfv
-				}
-			}
+			add_ideas = MEN_reformed_currency
 		}
 
 	}
 	focus = {
 		id = MEN_infrastructure
 		icon = GFX_goal_generic_construct_infrastructure
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_bank
 		}
-		x = 26
-		y = 2
+		x = 0
+		y = 1
+		relative_position_id = MEN_bank
 		completion_reward = {
 			add_ideas = MEN_logistics
+			custom_effect_tooltip = generic_skip_one_line_tt
 			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+					}
+				}
 				add_building_construction = {
 					type = infrastructure
 					level = 1
@@ -2152,6 +573,12 @@ focus_tree = {
 				}
 			}
 			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+					}
+				}
 				add_building_construction = {
 					type = infrastructure
 					level = 1
@@ -2164,12 +591,13 @@ focus_tree = {
 	focus = {
 		id = MEN_japanese_investors
 		icon = GFX_focus_jap_zaibatsu
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_infrastructure
 		}
-		x = 25
-		y = 3
+		x = -1
+		y = 1
+		relative_position_id = MEN_infrastructure
 		available = {
 			OR = {
 				is_puppet_of = JAP
@@ -2177,11 +605,18 @@ focus_tree = {
 			}
 		}
 		completion_reward = {
-			add_autonomy_ratio = {
-				value = -0.15
-				localization = MEN_japanese_investments
+			add_autonomy_score = {
+				value = -150
+				localization = MEX_japanese_investments
 			}
+			custom_effect_tooltip = generic_skip_one_line_tt
 			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = industrial_complex
+						size > 1
+					}
+				}
 				add_extra_state_shared_building_slots = 3
 				add_building_construction = {
 					type = industrial_complex
@@ -2190,6 +625,12 @@ focus_tree = {
 				}
 			}
 			random_owned_controlled_state = {
+				limit = {
+					free_building_slots = {
+						building = arms_factory
+						size > 1
+					}
+				}
 				add_extra_state_shared_building_slots = 3
 				add_building_construction = {
 					type = arms_factory
@@ -2203,15 +644,16 @@ focus_tree = {
 	focus = {
 		id = MEN_technology_sharing
 		icon = GFX_goal_tfv_generic_tech_sharing
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_standing_advisors
 		}
 		prerequisite = {
 			focus = MEN_japanese_investors
 		}
-		x = 23
-		y = 5
+		x = 2
+		y = 1
+		relative_position_id = MEN_standing_advisors
 		available = {
 			OR = {
 				is_in_faction_with = JAP
@@ -2220,68 +662,73 @@ focus_tree = {
 		}
 		completion_reward = {
 			add_research_slot = 1
-			if = {
-				limit = {
-					has_dlc = "Together for Victory"
-				}
-				JAP = {
-					add_to_tech_sharing_group = japanese_research
-				}
+			custom_effect_tooltip = generic_skip_one_line_tt
+			JAP = {
 				add_to_tech_sharing_group = japanese_research
-				else = {
-					add_tech_bonus = {
-						name = electronics_bonus
-						bonus = 0.5
-						uses = 1
-						category = electronics
-					}
-					add_tech_bonus = {
-						name = industrial_bonus
-						bonus = 0.5
-						uses = 1
-						category = industry
-					}
-					add_tech_bonus = {
-						name = infantry_weapons_bonus
-						bonus = 0.5
-						uses = 1
-						category = infantry_weapons
-						category = artillery
-					}
-				}
 			}
+			add_to_tech_sharing_group = japanese_research
 		}
 
 	}
 	focus = {
 		id = MEN_mining
 		icon = GFX_focus_generic_steel
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_infrastructure
 		}
-		x = 27
-		y = 3
+		x = 1
+		y = 1
+		relative_position_id = MEN_infrastructure
 		completion_reward = {
+			add_resource = {
+				type = steel
+				amount = 2
+				state = 612
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
 			add_ideas = YUG_idea_expanded_mining_industry
 		}
 	}
 	focus = {
 		id = MEN_greater_mongolia
 		icon = GFX_goal_generic_territory_or_war
-		cost = 10.00
+		cost = 10
 		prerequisite = {
 			focus = MEN_invade_MON
 		}
-		x = 19
-		y = 7
+		x = 0
+		y = 2
+		relative_position_id = MEN_invade_MON
 		available = {
-			owns_state = 330
+			custom_trigger_tooltip = {
+				tooltip = MEN_invade_MON_tt
+				owns_state = 1015
+				owns_state = 1016
+				owns_state = 1017
+				owns_state = 330
+				owns_state = 1018
+				owns_state = 1019
+				owns_state = 1020
+				owns_state = 1021
+			}
 		}
 		completion_reward = {
-			remove_country_leader_trait = spirit_of_genghis
-			add_country_leader_trait = spirit_of_genghis_improved
-			add_stability = 0.15
+			MEN_demchugdongrub = {
+				swap_country_leader_traits = {
+					ideology = despotism
+					remove = spirit_of_genghis
+					add = spirit_of_genghis_improved
+				}
+				hidden_effect = {
+					swap_country_leader_traits = {
+						ideology = rexism
+						remove = spirit_of_genghis
+						add = spirit_of_genghis_improved
+					}
+				}
+			}
+			custom_effect_tooltip = generic_skip_one_line_tt
 			add_state_core = 563
 			add_state_core = 564
 			add_state_core = 566
@@ -2289,6 +736,36 @@ focus_tree = {
 			add_state_core = 654
 			add_state_core = 329
 			add_state_core = 565
+		}
+
+	}
+
+
+	focus = {
+		id = MEN_stay_with_china
+		icon = GFX_align_to_taiwan
+		cost = 10
+		prerequisite = {
+			focus = MEN_choose_path
+		}
+		mutually_exclusive = {
+			focus = MEN_consolidate
+		}
+		x = 5
+		y = 1
+		relative_position_id = MEN_choose_path
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 5
+			}
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+		completion_reward = {
+			load_focus_tree = RON_Generic_WW2
 		}
 
 	}
