@@ -57,7 +57,7 @@ country_event = {
 			}
 		}
 		effect_tooltip = {
-			SOV = {
+			FROM = {
 				if = {
 					limit = { POL = { owns_state = 997 controls_state = 997 } }
 					transfer_state = 997
@@ -116,14 +116,14 @@ country_event = {
 				}
 			}
 		}
-		SOV = {country_event = { id = poland.3} }
+		FROM = {country_event = { id = poland.3} }
 	}
 
 	option = {
 		name = poland.2.b
 		ai_chance = { factor = 70 }
 		effect_tooltip = {
-			SOV = {
+			FROM = {
 				create_wargoal = {
 					type = take_state_focus
 					target = POL
@@ -131,7 +131,7 @@ country_event = {
 				}
 			}
 		}
-		SOV = { country_event = { id = poland.4 } }
+		FROM = { country_event = { id = poland.4 } }
 	}
 }
 
@@ -147,8 +147,8 @@ country_event = {
 	option = {
 		name = poland.3.a
 		if = {
-			limit = {
-				POL = {
+			limit = { 
+				POL = { 
 					owns_state = 997
 					controls_state = 997
 				}
@@ -192,8 +192,8 @@ country_event = {
 			transfer_state = 95
 		}
 		if = {
-			limit = {
-				POL = {
+			limit = { 
+				POL = { 
 					owns_state = 933
 					controls_state = 933
 				}
@@ -309,7 +309,21 @@ country_event = {
 	
 	option = {
 		name = poland.5.a
-		ai_chance = { factor = 40 }
+		ai_chance = {
+			base = 40
+			modifier = {
+				factor = 0
+				is_subject = yes
+				NOT = { is_subject_of = FROM }
+			}
+			modifier = { #If Germany has given guarantee through a focus, don't fold
+				factor = 0
+				is_guaranteed_by = GER
+				GER = { #RoN
+					has_completed_focus = GER_polish_recompense
+				}
+			}
+		}
 		effect_tooltip = {
 			add_state_claim = 5
 			add_state_claim = 63
@@ -321,7 +335,7 @@ country_event = {
 			add_state_claim = 802
 			add_state_claim = 803
 			custom_effect_tooltip = SOV_offer_poland_protection_tt
-			SOV = {
+			FROM = {
 				if = {
 					limit = { POL = { owns_state = 96 controls_state = 96 } }
 					transfer_state = 96
@@ -364,13 +378,50 @@ country_event = {
 				}
 			}
 		}
-		SOV = { country_event = { id = poland.6 } }
+		hidden_effect = {
+			#SOV and POL more keen on cooperation
+			add_ai_strategy = {
+				type = alliance
+				id = FROM		
+				value = 10
+			}
+			add_ai_strategy = {
+				type = befriend
+				id = FROM		
+				value = 5
+			}
+			FROM = {
+				add_ai_strategy = {
+					type = alliance
+					id = ROOT		
+					value = 10
+				}
+				add_ai_strategy = {
+					type = befriend
+					id = ROOT		
+					value = 5
+				}
+			}
+		}
+		FROM = { country_event = { id = poland.6 } }
 	}
+
 	option = {
 		name = poland.5.b
-		ai_chance = { factor = 60 }
+		ai_chance = {
+			base = 60
+			modifier = {
+				factor = 0
+				is_in_faction_with = FROM
+				OR = {
+					is_subject = no
+					is_subject_of = FROM
+				}
+				is_faction_leader = no
+			}
+		}
 		effect_tooltip = {
-			SOV = {
+			FROM = {
 				create_wargoal = {
 					type = take_state_focus
 					target = POL
@@ -378,7 +429,7 @@ country_event = {
 				}
 			}
 		}
-		SOV = { country_event = { id = poland.7 } }
+		FROM = { country_event = { id = poland.7 } }
 	}
 }
 
@@ -479,6 +530,7 @@ country_event = {
 	picture = GFX_report_event_polish_tanks_01
 	
 	trigger = {
+		POL = { has_country_flag = POL_accepted_soviet_protection }
 		date > 1933.1.1
 		date < 1949.1.1
 		POL = { has_country_flag = POL_accepted_soviet_protection }
@@ -507,7 +559,6 @@ country_event = {
 	mean_time_to_happen = {
 		days = 1
 	}
-	
 	option = {
 		name = poland.8.a
 		if = {
