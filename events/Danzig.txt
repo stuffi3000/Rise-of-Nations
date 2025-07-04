@@ -1,7 +1,7 @@
-add_namespace = bshistory
+add_namespace = danzig
 
 country_event = {
-	id = bshistory.1
+	id = danzig.1
 	fire_only_once = yes
 
 	hidden = yes
@@ -9,40 +9,40 @@ country_event = {
 	trigger = {
 		date > 1933.1.1
 		date < 1949.1.1
-		tag = DAN
-		DAN = { has_government = fascism }
-		85 = { is_owned_by = DAN }
+		tag = DNZ
+		DNZ = { has_government = fascism }
+		85 = { is_owned_by = DNZ }
 		country_exists = GER
 		NOT = {
 			OR = {
-				has_global_flag = DAN_joined_germany
-				has_global_flag = DAN_stay_independence
-				has_global_flag = DAN_joined_poland
+				has_global_flag = DNZ_joined_germany
+				has_global_flag = DNZ_stay_independence
+				has_global_flag = DNZ_joined_poland
 			}
 		}
 		GER = {
 			has_war_with = POL
-			NOT = { has_war_with = DAN }
+			NOT = { has_war_with = DNZ }
 		}
 	}
 
 	immediate = {
-		DAN = {
-			country_event = { id = bshistory.2 hours = 2 }
+		DNZ = {
+			country_event = { id = danzig.2 hours = 2 }
 		}
 	}
 }
 
 #Danzig choice
 country_event = {
-	id = bshistory.2
-	title = bshistory.2.t
-	desc = bshistory.2.d
+	id = danzig.2
+	title = danzig.2.t
+	desc = danzig.2.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #Danzig join Germany
-		name = bshistory.2.a
+		name = danzig.2.a
 		ai_chance = {
 			factor = 20
 			modifier = {
@@ -55,12 +55,12 @@ country_event = {
 
 		hidden_effect = {
 			GER = {
-				country_event = { id = bshistory.3 hours = 2 }
+				country_event = { id = danzig.3 hours = 2 }
 			}
 		}
 	}
 	option = { #Danzig join Poland
-		name = bshistory.2.b
+		name = danzig.2.b
 		ai_chance = {
 			factor = 5
 		}
@@ -69,12 +69,13 @@ country_event = {
 
 		hidden_effect = {
 			POL = {
-				country_event = { id = bshistory.4 hours = 2 }
+				country_event = { id = danzig.4 hours = 2 }
 			}
 		}
 	}
+
 	option = { #Danzig did nothing
-		name = bshistory.2.c
+		name = danzig.2.c
 		ai_chance = {
 			factor = 1
 		}
@@ -83,39 +84,200 @@ country_event = {
 		add_political_power = -100
 
 		hidden_effect = {
-			set_global_flag = DAN_stay_independence
+			set_global_flag = DNZ_stay_independence
 
 			GER = {
-				country_event = { id = bshistory.6 hours = 2 }
+				country_event = { id = danzig.6 hours = 2 }
 			}
 		}
+	}
+	option = { # Danzig declares war on Germany
+		name = danzig.2.d
+		ai_chance = {
+			base = 1
+			modifier = { factor = 0 is_historical_focus_on = yes }
+			modifier = { add = 15 any_country = { has_guaranteed = ROOT is_major = yes has_war_with = GER } }
+			modifier = { add = 10 GER = { surrender_progress > 0.2 } }
+			modifier = { add = -20 GER = { num_of_factories > 150 } } # Less likely if GER is super strong
+		}
+		add_stability = 0.05
+		add_war_support = 0.25
+		add_political_power = 75
+		declare_war_on = { target = GER type = annex_everything }
+		hidden_effect = {
+			set_global_flag = DNZ_declares_war_on_GER
+			GER = {
+				country_event = { id = danzig.99 hours = 2 }
+			}
+		}
+	}
+}
+country_event = {
+	id = danzig.99
+	title = danzig.99.t
+	desc = danzig.99.d
+	picture = GFX_report_event_german_speech
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = danzig.99.a
+		add_political_power = 10
+		add_war_support = 0.02
+		# War is already declared by DNZ, this is just a notification/reaction event for GER.
+	}
+} 
+country_event = {
+	id = danzig.20
+	title = danzig.20.t
+	desc = danzig.20.d
+	picture = GFX_report_event_german_politician
+	is_triggered_only = yes
+
+	option = {
+		name = danzig.20.a # A welcome development.
+		ai_will_do ={
+			factor = 100
+		}
+		DNZ = { add_opinion_modifier = { target = GER modifier = medium_increase  } }
+		add_opinion_modifier = { target = DNZ modifier = medium_increase  }
+		DNZ = { set_country_flag = dnz_german_alignment_initiated }
+	}
+	option = {
+		name = danzig.20.b # We have other priorities.
+		DNZ = { add_opinion_modifier = { target = GER modifier = GER_negative_response_danzig } }
+	}
+}
+
+# GER reacts to DNZ_return_to_the_reich
+country_event = {
+	id = danzig.22
+	title = danzig.22.t
+	desc = danzig.22.d
+	picture = GFX_report_event_german_speech
+	is_triggered_only = yes
+
+	option = {
+		name = danzig.22.a # Danzig ist Deutsch!
+		ai_chance = { factor = 70 }
+		annex_country = { target = DNZ transfer_troops = yes }
+		85 = { # Danzig state ID 85
+
+			add_core_of = GER
+			remove_core_of = DNZ
+		}
+		DNZ = { set_country_flag = dnz_annexed_by_germany_focus }
+		add_political_power = 25
+		add_stability = 0.03
+		hidden_effect = { DNZ = { game_over = yes } }
+	}
+	option = {
+		name = danzig.22.b # A Protectorate for now.
+		ai_chance = { factor = 25 }
+		DNZ = { GER = { set_autonomy = { target = DNZ autonomy_state = autonomy_reichsprotectorate } } }
+		if = {
+			limit = { GER = { is_faction_leader = yes } }
+			DNZ = { GER = { add_to_faction = PREV } }
+		}
+		DNZ = { set_country_flag = dnz_protectorate_of_germany_focus }
+		add_political_power = 10
+	}
+	option = {
+		name = danzig.22.c # They must remain independent, but allied.
+		ai_chance = { factor = 5 }
+		if = {
+			limit = { is_faction_leader = yes }
+			add_to_faction = DNZ
+		} 
+		DNZ = { GER = { give_guarantee = DNZ } }
+		DNZ = { set_country_flag = dnz_allied_to_germany_focus }
+	}
+}
+
+# POL reacts to DNZ_strengthen_polish_ties
+country_event = {
+	id = danzig.21
+	title = danzig.21.t
+	desc = danzig.21.d
+	picture = GFX_report_event_polish_politician # Placeholder
+	is_triggered_only = yes
+
+	option = {
+		name = danzig.21.a # A sensible move by Danzig.
+		DNZ = { add_opinion_modifier = { target = POL modifier = medium_increase  } }
+		add_opinion_modifier = { target = DNZ modifier = medium_increase  }
+		DNZ = { set_country_flag = dnz_polish_alignment_initiated }
+	}
+	option = {
+		name = danzig.21.b # Poland has other concerns.
+		DNZ = { add_opinion_modifier = { target = POL modifier = medium_increase  } }
+	}
+}
+
+# POL reacts to DNZ_pact_of_gdansk
+country_event = {
+	id = danzig.23
+	title = danzig.23.t
+	desc = danzig.23.d
+	picture = GFX_report_event_polish_diplomacy # Placeholder
+	is_triggered_only = yes
+
+	option = {
+		name = danzig.23.a # Integrate Gdansk into Poland.
+		ai_chance = { factor = 60 }
+		annex_country = { target = DNZ transfer_troops = yes }
+		85 = {
+			add_core_of = POL
+			remove_core_of = DNZ
+		}
+		DNZ = { set_country_flag = dnz_annexed_by_poland_focus }
+		add_political_power = 25
+		add_stability = 0.03
+		hidden_effect = { DNZ = { game_over = yes } }
+	}
+	option = {
+		name = danzig.23.b # A Formal Alliance.
+		ai_chance = { factor = 35 }
+		if = {
+			limit = { is_faction_leader = yes }
+			add_to_faction = DNZ
+		} 
+
+		DNZ = { POL = { give_guarantee = DNZ } }
+		DNZ = { set_country_flag = dnz_allied_to_poland_focus }
+		add_political_power = 10
+	}
+	option = {
+		name = danzig.23.c # We cannot commit to this now.
+		ai_chance = { factor = 5 }
+		DNZ = { add_opinion_modifier = { target = POL modifier = medium_increase  } }
 	}
 }
 
 #Danzig join Germany
 country_event = {
-	id = bshistory.3
-	title = bshistory.3.t
-	desc = bshistory.3.d
+	id = danzig.3 
+	title = danzig.3.t
+	desc = danzig.3.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #Danzig join Germany
-		name = bshistory.3.a
+		name = danzig.3.a
 		ai_chance = {
 			factor = 10
 		}
 
 		GER = {
-			annex_country = { target = DAN transfer_troops = yes }
+			annex_country = { target = DNZ transfer_troops = yes }
 		}
 		85 = {
 			add_core_of = GER
 			remove_claim_by = GER
-			remove_core_of = DAN
+			remove_core_of = DNZ
 		}
 		hidden_effect = {
-			set_global_flag = DAN_joined_germany
+			set_global_flag = DNZ_joined_germany
 
 		}
 	}
@@ -123,30 +285,30 @@ country_event = {
 
 #Danzig join Poland
 country_event = {
-	id = bshistory.4
-	title = bshistory.4.t
-	desc = bshistory.4.d
+	id = danzig.4
+	title = danzig.4.t
+	desc = danzig.4.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #Danzig join Poland
-		name = bshistory.4.a
+		name = danzig.4.a
 		ai_chance = {
 			factor = 10
 		}
 
 		POL = {
-			annex_country = { target = DAN transfer_troops = yes }
+			annex_country = { target = DNZ transfer_troops = yes }
 		}
 		85 = {
 			add_core_of = POL
-			remove_core_of = DAN
+			remove_core_of = DNZ
 		}
 		hidden_effect = {
-			set_global_flag = DAN_joined_poland
+			set_global_flag = DNZ_joined_poland
 
 			GER = {
-				country_event = { id = bshistory.5 hours = 2 }
+				country_event = { id = danzig.5 hours = 2 }
 			}
 
 		}
@@ -154,14 +316,14 @@ country_event = {
 }
 
 country_event = {
-	id = bshistory.5
-	title = bshistory.5.t
-	desc = bshistory.5.d
+	id = danzig.5
+	title = danzig.5.t
+	desc = danzig.5.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #Danzig joined Poland
-		name = bshistory.5.a
+		name = danzig.5.a
 		ai_chance = {
 			factor = 10
 		}
@@ -169,57 +331,126 @@ country_event = {
 }
 
 country_event = {
-	id = bshistory.6
-	title = bshistory.6.t
-	desc = bshistory.6.d
+	id = danzig.6
+	title = danzig.6.t
+	desc = danzig.6.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #War with Danzig
-		name = bshistory.6.a
+		name = danzig.6.a
 		ai_chance = {
 			factor = 20
 		}
 
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = annex_everything
-			target = DAN
+			target = DNZ
 		}
 	}
 
 	option = { #did nothing
-		name = bshistory.6.b
+		name = danzig.6.b
 		ai_chance = {
 			factor = 2
 		}
 	}
 }
 
+# Ban Nazi Party Annex
+country_event = {
+	id = danzig.7
+	title = danzig.7.t
+	desc = danzig.7.d
+	is_triggered_only = yes
+	picture = GFX_report_event_german_speech
+
+	option = {
+		name = danzig.7.b
+		ai_chance = {
+			factor = 5
+		}
+
+		custom_effect_tooltip = GAME_OVER_TT
+
+		hidden_effect = {
+			POL = {
+				country_event = { id = danzig.8 hours = 2 }
+			}
+		}
+	}
+
+	option = {
+		name = danzig.7.b
+		ai_chance = {
+			factor = 5
+			modifier = {
+				factor = 0
+				is_historical_focus_on = yes
+			}
+		}
+
+		custom_effect_tooltip = GAME_OVER_TT
+
+		hidden_effect = {
+			POL = {
+				country_event = { id = danzig.6 hours = 2 }
+			}
+		}
+	}
+}
+
+#Autonomy Decrease
+country_event = {
+	id = danzig.8
+	title = danzig.8.t
+	desc = danzig.8.d
+	is_triggered_only = yes
+	picture = GFX_report_event_german_speech
+
+	option = {
+		name = danzig.8.b
+		ai_chance = {
+			factor = 5
+		}
+
+		set_autonomy = {
+			target = DNZ
+			autonomy_state = autonomy_integrated_puppet
+		}
+		DNZ = {
+			add_popularity = {
+				ideology = fascism
+				popularity = -0.5
+			}
+		}
+	}
+}
+
 #Generic annex event
 country_event = {
-	id = bshistory.10
-	title = bshistory.10.t
-	desc = bshistory.10.d
+	id = danzig.10
+	title = danzig.10.t
+	desc = danzig.10.d
 	is_triggered_only = yes
 	picture = GFX_report_event_german_speech
 
 	option = { #Danzig join Germany
-		name = bshistory.10.a
+		name = danzig.10.a
 
 		custom_effect_tooltip = GAME_OVER_TT
 
 		GER = {
-			annex_country = { target = DAN transfer_troops = yes }
+			annex_country = { target = DNZ transfer_troops = yes }
 		}
 		85 = {
 			add_core_of = GER
 			remove_claim_by = GER
-			remove_core_of = DAN
+			remove_core_of = DNZ
 		}
 		hidden_effect = {
-			set_global_flag = DAN_joined_germany
-
+			set_global_flag = DNZ_joined_germany
 		}
 	}
 }
