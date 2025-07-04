@@ -1,4 +1,207 @@
+RON_initiate_crisis = {
 
+	custom_effect_tooltip = RON_initiate_crisis_tt
+
+	add_to_array = {
+		array = global.political_active_crisis_list
+		value = var:crisis_id
+	}
+	add_to_array = {
+		array = global.crisis_originators 
+		value = var:originator
+	}
+	add_to_array = {
+		array = global.crisis_receivers
+		value = var:defender
+	}
+	add_to_array = {
+		array = global.political_crisis_list_array
+		value = var:crisis_id
+	}
+	set_temp_variable = { num_crisis = global.political_crisis_list_array^num }
+	subtract_from_temp_variable = { num_crisis = 1}
+	add_to_array = {
+		array = global.crisis_progress
+		index = num_crisis
+		value = var:progress
+	}
+	#set_variable = {
+	#	global.crisis_progress^num_crisis = var:progress
+	#}
+	RON_diplo_crisis_warn = yes
+}
+RON_end_crisis = {
+	custom_effect_tooltip = RON_end_crisis_tt
+	for_each_loop = {
+		array = global.political_crisis_list_array
+
+		if = {
+			limit = { 
+				check_variable = { global.political_crisis_list_array^i = var:crisis_id}
+
+			}
+
+			remove_from_array = { global.crisis_receivers = global.crisis_receivers^i}
+			remove_from_array = { global.crisis_originators = global.crisis_originators^i}
+			remove_from_array = { array = global.crisis_progress value = global.crisis_progress^i}
+			remove_from_array =  { global.political_crisis_list_array = var:crisis_id}
+			
+		}
+		#remove_from_array = { global.political_active_crisis_list = var:crisis_id}
+	}
+	
+	#remove_from_array = {
+	#	array = global.political_active_crisis_list
+	#	index = 0
+	#} 
+	#remove_from_array = {
+	#	array = global.crisis_receivers 
+	#	index = 0
+	#}
+	#remove_from_array = {
+	#	array = global.crisis_originators
+	#	index = 0  
+	#}
+	#set_variable = {global.crisis_progress^0 = global.crisis_progress^1}
+	#remove_from_array = {
+	#	array = global.crisis_progress
+	#	index = 0
+	#}
+
+
+}
+RON_subtract_diplo_crisis_progress = {
+	custom_effect_tooltip = RON_subtract_diplo_crisis_progress_tt
+	if = {
+		limit = {
+			has_variable = crisis_id
+		}
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = { 
+					AND = {
+						check_variable = { global.political_crisis_list_array^i = var:crisis_id}
+						check_variable = { global.crisis_originators^i = var:aggressor_side }
+						check_variable = { global.crisis_receivers^i = var:defender_side }
+					}
+				}
+				subtract_from_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+
+	}
+	else = {
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = {
+					AND = {
+						check_variable = { global.crisis_originators^i = var:aggressor_side }
+						check_variable = { global.crisis_receivers^i = var:defender_side }
+					}
+				} 
+				subtract_from_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+	}
+
+}
+RON_set_diplo_crisis_progress = {
+	custom_effect_tooltip = RON_set_diplo_crisis_progress_tt
+	if = {
+		limit = {
+			has_variable = crisis_id
+		}
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = { 
+					AND = {
+						check_variable = { global.political_crisis_list_array^i = var:crisis_id}
+						check_variable = { global.crisis_originators^i = var:aggressor_side }
+						check_variable = { global.crisis_receivers^i = var:defender_side }
+					}
+				}
+				set_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+
+	}
+	else = {
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = {
+					AND = {
+						check_variable = { global.crisis_originators^i = var:aggressor_side }
+						check_variable = { global.crisis_receivers^i = var:defender_side }
+					}
+				} 
+				set_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+	}
+}
+RON_add_diplo_crisis_progress = {
+	custom_effect_tooltip = RON_add_diplo_crisis_progress_tt
+	if = {
+		limit = {
+			has_variable = crisis_id
+		}
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = { 
+					AND = {
+						check_variable = { global.political_crisis_list_array^i = var:crisis_id}
+						#check_variable = { global.crisis_originators^i = var:aggressor_side }
+						#check_variable = { global.crisis_receivers^i = var:defender_side } //TODO: check if this still works
+					}
+				}
+				add_to_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+
+	}
+	else = {
+		for_each_loop = {
+			array = global.political_active_crisis_list
+		
+			if = {
+				limit = {
+					AND = {
+						check_variable = { global.crisis_originators^i = var:aggressor_side }
+						check_variable = { global.crisis_receivers^i = var:defender_side }
+					}
+				} 
+				add_to_variable = { global.crisis_progress^i = var:amount }
+			}
+		}
+	}
+
+}
+
+RON_diplo_crisis_warn = {
+	every_country = {
+		limit = {
+			is_ai =  no
+		}
+		set_variable = { diplocrisis_open = 1 }
+		set_country_flag = diplo_crisis_warn_flag
+	}
+	
+
+}
+RON_reload_tree = {
+	load_focus_tree = generic_focus
+	mark_focus_tree_layout_dirty = yes
+}
 predection_house = {
 	set_variable = { phalfgop = republican_vote }
 set_variable = { phalfdem = democratic_vote } 
