@@ -13,8 +13,8 @@ focus_tree = {
 	reset_on_civilwar = no
 
 	continuous_focus_position = {
-		x = 200
-		y = 3000
+		x = 50
+		y = 1900
 	}
 	shared_focus = SPA_for_king_and_country
 	###############################################################################################################################
@@ -646,6 +646,7 @@ focus_tree = {
 		y = 1
 		cost = 2
 		allow_branch = {
+			has_global_flag = test_features
 			date > 1932.12.31
 			date < 1949.1.1
 		}
@@ -716,10 +717,6 @@ focus_tree = {
 		x = 0
 		y = 5
 
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
 		mutually_exclusive = {
 			focus = SPR_1933_broad_union
 		}
@@ -735,10 +732,6 @@ focus_tree = {
 		id = SPR_1933_broad_union
 		x = 2
 		y = 5
-		allow_branch = {
-			date > 1932.12.31
-			date < 1949.1.1
-		}
 		mutually_exclusive = {
 			focus = SPR_1933_right_union
 		}
@@ -753,6 +746,7 @@ focus_tree = {
 		y = 0
 
 		allow_branch = {
+			has_global_flag = test_features
 			has_completed_focus = SPR_1933_right_union
 		}
 
@@ -841,6 +835,24 @@ focus_tree = {
 	}
 	focus = {
 		id = SPR_civil_war_measures
+		icon = {
+			trigger = {
+				OR = {
+					has_government = communism
+					has_government = democratic
+				}
+			}
+			value = GFX_focus_generic_attack_nationalist_spain_focus
+		}
+		icon = {
+			trigger = {
+				NOT = {
+					has_government = fascism
+					has_government = neutrality
+				}
+			}
+			value = GFX_focus_generic_attack_republican_spain
+		}
 		allow_branch = {
 			date < 1949.1.1
 			date > 1932.12.31
@@ -853,21 +865,114 @@ focus_tree = {
 		}
 		x = 13
 		y = 0
+		cost = 2.9
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = communism
+						has_government = democratic
+					}
+				}
+				add_ideas = SCW_SPR_fervour
+				else = {
+					add_ideas = SCW_SPA_fervour
+				}
+			}
+		}
 	}
 	focus = {
 		id = SPR_seize_weapon_depots
+		icon = GFX_focus_AUS_raid_military_storages
 		relative_position_id = SPR_civil_war_measures
 		x = -2
 		y = 1
+		cost = 2.9
 		prerequisite = {
 			focus = SPR_civil_war_measures
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = communism
+						has_government = democratic
+					}
+				}
+				random_list = {
+					30 = {
+						SPA = {
+							send_equipment = {
+								equipment = infantry_equipment
+								amount = 3000
+								target = ROOT
+							}
+						}
+					}
+					40 = {
+						SPA = {
+							send_equipment = {
+								equipment = infantry_equipment
+								amount = 1000
+								target = ROOT
+							}
+						}
+					}
+					20 = {
+						SPA = {
+							send_equipment = {
+								equipment = infantry_equipment
+								amount = 500
+								target = ROOT
+							}
+						}
+					}
+					10 = {
+					}
+				}
+				else = {
+					random_list = {
+						30 = {
+							SPR = {
+								send_equipment = {
+									equipment = infantry_equipment
+									amount = 3000
+									target = ROOT
+								}
+							}
+						}
+						40 = {
+							SPR = {
+								send_equipment = {
+									equipment = infantry_equipment
+									amount = 1000
+									target = ROOT
+								}
+							}
+						}
+						20 = {
+							SPR = {
+								send_equipment = {
+									equipment = infantry_equipment
+									amount = 500
+									target = ROOT
+								}
+							}
+						}
+						10 = {
+						}
+					}
+				}
+			}
 		}
 	}
 	focus = {
 		id = SPR_capital_defense
+		icon = GFX_goal_generic_defence
 		relative_position_id = SPR_civil_war_measures
 		x = 0
 		y = 1
+		cost = 5
 		prerequisite = {
 			focus = SPR_civil_war_measures
 		}
@@ -878,14 +983,53 @@ focus_tree = {
 				}
 			}
 		}
+		completion_reward = {
+			capital_scope = {
+				construct_building_in_random_province = {
+					bunker = 3
+				}
+			}
+			capital_scope = {
+				construct_building_in_random_province = {
+					bunker = 3
+				}
+			}
+			capital_scope = {
+				construct_building_in_random_province = {
+					bunker = 3
+				}
+			}
+		}
 	}
 	focus = {
-		id = SPR_great_offensive 
+		id = SPR_great_offensive
+		icon = GFX_focus_SOV_the_glory_of_the_red_army_alternative
 		x = 2
 		y = 1
+		cost = 7.2
 		relative_position_id = SPR_civil_war_measures
 		prerequisite = {
 			focus = SPR_civil_war_measures
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					OR = {
+						has_government = communism
+						has_government = democratic
+					}
+				}
+				add_timed_idea = {
+					idea = SCW_SPR_great_offensive
+					days = 20
+				}
+				else = {
+					add_timed_idea = {
+						idea = SCW_SPA_great_offensive
+						days = 20
+					}
+				}
+			}
 		}
 	}
 	focus = {
@@ -2040,7 +2184,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Industry_focus
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_generic_modernize_industry
 		
 		x = 41
 		y = 0
@@ -2057,9 +2201,6 @@ focus_tree = {
 			date > 1932.12.31
 			date < 1949.1.1
 			
-		}
-		available = {
-			RON_can_do_focuses_1936 = yes
 		}
 
 		completion_reward = {
@@ -2115,7 +2256,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Colonial_infra
-		icon = GFX_goal_generic_construct_infrastructure
+		icon = GFX_focus_generic_africa_infrastructure
 		prerequisite = { focus = SPR_Industry_focus_2 }
 		available = {
 			controls_state = 699
@@ -2225,7 +2366,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Colonial_Industry
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_generic_africa_factory
 		prerequisite = { focus = SPR_Colonial_infra }
 		available = {
 			controls_state = 699
@@ -2261,7 +2402,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Industry_focus_3
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_generic_industry_2
 		prerequisite = { focus = SPR_Spain_infra }
 		available = {
 			controls_state = 166
@@ -2336,7 +2477,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Colonial_oil
-		icon = GFX_goal_generic_position_armies
+		icon = GFX_focus_generic_resource_extraction
 		prerequisite = { focus = SPR_Colonial_Industry }
 		available = {
 			controls_state = 699
@@ -2384,7 +2525,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Civ_Econ
-		icon = GFX_goal_generic_construct_civ_factory
+		icon = GFX_focus_spa_the_spanish_miracle
 		prerequisite = {
 			focus = SPR_Colonial_oil
 			focus = SPR_Mines
@@ -2426,7 +2567,7 @@ focus_tree = {
 
 	focus = {
 		id = SPR_Mil_industry
-		icon = GFX_goal_generic_construct_mil_factory
+		icon = GFX_focus_generic_military_industry
 
 		x = 44
 		y = 0
@@ -2446,7 +2587,6 @@ focus_tree = {
 		}
 
 		available = {
-			RON_can_do_focuses_1936 = yes
 			controls_state = 170
 			controls_state = 41
 		}
@@ -2602,7 +2742,7 @@ focus_tree = {
 	}
 	focus = {
 		id = SPR_Research
-		icon = GFX_focus_research
+		icon = GFX_goal_research_silver
 		prerequisite = { focus = SPR_Colonial_Forts }
 		relative_position_id = SPR_Colonial_Forts
 		x = 0
@@ -2642,9 +2782,6 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-		}
-		available = {
-			RON_can_do_focuses_1936 = yes
 		}
 
 		completion_reward = {
@@ -3041,7 +3178,6 @@ focus_tree = {
 			date < 1949.1.1
 		}
 		available = {
-			RON_can_do_focuses_1936 = yes
 			any_state = {
 				is_coastal = yes
 				is_controlled_by = ROOT
@@ -3273,9 +3409,6 @@ focus_tree = {
 		allow_branch = {
 			date > 1932.12.31
 			date < 1949.1.1
-		}
-		available = {
-			RON_can_do_focuses_1936 = yes
 		}
 
 		completion_reward = {
