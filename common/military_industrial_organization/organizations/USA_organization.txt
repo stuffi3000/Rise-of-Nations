@@ -166,17 +166,52 @@ chrysler_corporation_organization = {
     }
 }
 
-ford_motor_company_organization = {
-    name = "Ford Motor Company"
-    include = generic_infantry_tank_organization
-    icon = GFX_idea_generic_land_manufacturer_2
-    allowed = {
-        tag = USA
-    }
-    visible = {
-        date < 1949.1.1
+USA_ford_motor_company_organization = {
+	include = generic_motorized_mechanized_organization
+	icon = GFX_idea_ford_motor_company
+	
+	allowed = {	 
+		OR = {
+			tag = USA 
+			tag = POL # If Poland sets up a local one
+			tag = ROM
+		}
+	}
+	
+	visible = {
         date > 1933.1.1
-    }
+        date < 1949.1.1
+
+		IF = { 
+			limit = {
+				FROM = { tag = POL }
+			}
+			FROM = {
+				has_country_flag = POL_ford_motors
+			}
+		}
+	}
+	
+	available = {
+		# When in a Foreign MIO, countries need to be at peace with original country
+		IF = {
+			limit = {
+				FROM = { NOT = { original_tag = USA } }
+			}
+			FROM = { NOT = { has_war_with = USA } }
+		}
+
+		IF = {
+			limit = { FROM = { original_tag = ROM } }
+			FROM = { has_country_flag = USA_mot_chosen }
+		}
+	}
+	
+	initial_trait = {
+		equipment_bonus = {
+			build_cost_ic = -0.05
+		}
+	}
 }
 
 general_motors_organization1 = {
@@ -413,19 +448,6 @@ kaiser_shipyards_organization = {
     name = "Kaiser Shipyards"
     include = generic_battle_line_ship_organization
     icon = GFX_idea_generic_naval_manufacturer_1
-    allowed = {
-        tag = USA
-    }
-    visible = {
-        date < 1949.1.1
-        date > 1933.1.1
-    }
-}
-
-ford_motor_company_organization1 = {
-    name = "Ford Motor Company"
-    include = generic_infantry_tank_organization
-    icon = GFX_idea_generic_land_manufacturer_2
     allowed = {
         tag = USA
     }
