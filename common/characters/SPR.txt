@@ -39,7 +39,7 @@ characters={
 			traits = {
 				indecisive
 			}
-			expire="1949.1.1.1"			
+			expire="1949.1.1.12"
 		}
 	}
 
@@ -61,12 +61,16 @@ characters={
 		portraits = {
 			civilian = {
 				large = "gfx/leaders/SPR/Portrait_Spain_Caballero.dds"
+				small = GFX_idea_SPR_francisco_largo_caballero
 			}
 		}
 		country_leader = {
 			desc = POLITICS_CABALLERO_DESC
 			ideology = marxism
-			expire="1946.1.1.1"			
+			expire="1946.1.1.1"
+			traits = {
+				silent_workhorse captain_of_industry socialist
+			}	
 		}
 		advisor = {
 			can_be_fired = no
@@ -74,16 +78,17 @@ characters={
 			slot = political_advisor
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
 				date > 1918.1.1
 				date < 1946.1.1
+				is_country_leader = no
+				NOT = { has_government = fascism }
 			}
 			available = {
-				date > 1918.1.1
-				date < 1946.1.1
+				is_country_leader = no
+				NOT = { has_government = fascism }
 			}
 
 			traits = { captain_of_industry socialist }
@@ -99,7 +104,11 @@ characters={
 			civilian = {
 				large = "gfx/leaders/SPR/WW1/General-Miguel_Primo_de_Rivera.dds"
 			}
-		}	
+		}
+		country_leader = {
+			ideology = rw_nationalism
+			expire="1930.3.16.1"
+		}
 		field_marshal = {
 			traits = { trait_SPA_nationalist_sympathies old_guard offensive_doctrine aggressive_assaulter infantry_officer }				
 			skill = 4
@@ -111,10 +120,6 @@ characters={
 				date > 1910.1.1
 				date < 1930.3.16
 			}			
-		}
-		country_leader = {
-			ideology = rw_nationalism
-			expire="1930.3.16.1"			
 		}
 	}
 
@@ -264,12 +269,14 @@ characters={
 		portraits = {
 			civilian= {
 				large = "gfx/leaders/SPR/Portrait_Spain_Manuel_Azana.dds"
+				small = GFX_idea_SPA_manuel_azana
 			}
 		}
 		country_leader = {
-			desc = POLITICS_MANUEL_AZANA_DESC
+			desc = "SPR_manuel_azana_diaz_desc"
 			ideology = conservatism
-			expire="1940.11.3.1"			
+			traits = { modernist_and_reformer socialist }
+			expire="1940.11.3.1"
 		}
 		advisor = {
 			can_be_fired = no
@@ -279,10 +286,11 @@ characters={
 				date > 1931.1.1
 				date < 1940.1.1
 				has_government = democratic
+				is_country_leader = no
 			}
 			available = {
-				date > 1931.1.1
-				date < 1940.1.1
+				has_government = democratic
+				is_country_leader = no
 			}
 			traits = { modernist_and_reformer socialist }
 		}
@@ -337,11 +345,15 @@ characters={
 			}
 			army = {
 				large = "gfx/leaders/SPR/Portrait_Spain_Francisco_Franco.dds"
+				small = GFX_idea_francisco_franco
 			}
 		}
 		country_leader = {
-			ideology = falangism
 			desc = POLITICS_FRANCISCO_FRANCO_DESC
+			ideology = falangism
+			expire = "1975.11.20"
+			traits = { caudillo_1 }
+			id = -1
 		}
 		advisor = {
 			idea_token = SPR_fransisco_franco
@@ -349,27 +361,39 @@ characters={
 			allowed = {
 				original_tag = SPR
 			}
-
 			visible = {
 				date > 1925.1.1
 				date < 1975.11.20
+				if = {
+					limit = {
+						has_global_flag = spanish_civil_war
+					}
+					has_country_flag = veren_2_a_choosen
+				}
 			}
 			available = {
 				date > 1925.1.1
 				date < 1975.11.20
-				custom_trigger_tooltip = {
-					tooltip = spr_franco_unavailable_tooltip
-					OR = {
-						has_government = fascism
-						AND = {
-							NOT = { has_government = communism }
-							NOT = {
-								any_country = {
-									NOT = {
-										tag = ROOT
+				if = {
+					limit = {
+						NOT = {
+							has_global_flag = spanish_civil_war
+						}
+					}
+					custom_trigger_tooltip = {
+						tooltip = spr_franco_unavailable_tooltip
+						OR = {
+							has_government = fascism
+							AND = {
+								NOT = { has_government = communism }
+								NOT = {
+									any_country = {
+										NOT = {
+											tag = ROOT
+										}
+										original_tag = SPR
+										has_government = fascism
 									}
-									original_tag = SPR
-									has_government = fascism
 								}
 							}
 						}
@@ -386,16 +410,23 @@ characters={
 		}
 
 		field_marshal = {
+			traits = { nationalist_spanish organisational_leader logistics_wizard expert_delegator offensive_doctrine }
+			skill = 4
+			attack_skill = 4
+			defense_skill = 3
+			planning_skill = 4
+			logistics_skill = 3
+			legacy_id = 1108
 			visible = {
 				date > 1925.1.1
 				date < 1975.11.20
+				if = {
+					limit = {
+						has_global_flag = spanish_civil_war
+					}
+					has_country_flag = veren_2_a_choosen
+				}
 			}
-			traits = { nationalist_spanish organisational_leader logistics_wizard expert_delegator }
-			skill = 3
-			attack_skill = 3
-			defense_skill = 2
-			planning_skill = 3
-			logistics_skill = 2
 		}
 	}
 
@@ -566,7 +597,7 @@ characters={
 
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Salvador_Bermudez_de_Castro.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Salvador_Bermudez_de_Castro.dds"
 			}
 		}
 		advisor = {
@@ -591,7 +622,7 @@ characters={
 		name = "Manue Garcia Prieto"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Manuel_Garcia_Prieto.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Manuel_Garcia_Prieto.dds"
 			}
 		}
 		advisor = {
@@ -617,7 +648,7 @@ characters={
 		name = "Juan Navarro Reverter"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Juan_Navarro_Reverter.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Juan_Navarro_Reverter.dds"
 			}
 		}
 		advisor = {
@@ -643,7 +674,7 @@ characters={
 		name = "Antonio Lopez Munoz"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Antonio_Lopez_Munoz.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Antonio_Lopez_Munoz.dds"
 			}
 		}
 		advisor = {
@@ -669,7 +700,7 @@ characters={
 		name = "Miguel Villanueva"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Miguel_Villanueva.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Miguel_Villanueva.dds"
 			}
 		}
 		advisor = {
@@ -695,7 +726,7 @@ characters={
 		name = "Alvaro de Figueroa"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Alvaro_de_Figueroa.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Alvaro_de_Figueroa.dds"
 			}
 		}
 		advisor = {
@@ -721,7 +752,7 @@ characters={
 		name = "Amalio Gimeno"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Amalio_Gimeno.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Amalio_Gimeno.dds"
 			}
 		}
 		advisor = {
@@ -747,7 +778,7 @@ characters={
 		name = "Gabino Bugallal"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Gabino_Bugallal.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Gabino_Bugallal.dds"
 			}
 		}
 		advisor = {
@@ -773,7 +804,7 @@ characters={
 		name = "Jose Calvo Sotelo"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Jose_Calvo_Sotelo.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Jose_Calvo_Sotelo.dds"
 			}
 		}
 		advisor = {
@@ -799,7 +830,7 @@ characters={
 		name = "Augusto Gonzalez Besada"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Augusto_Gonzalez_Besada.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Augusto_Gonzalez_Besada.dds"
 			}
 		}
 		advisor = {
@@ -825,7 +856,7 @@ characters={
 		name = "Felix Suarez Inclan"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Felix_Suarez_Inclan.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Felix_Suarez_Inclan.dds"
 			}
 		}
 		advisor = {
@@ -851,7 +882,7 @@ characters={
 		name = "Angel Urzaiz"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Angel_Urzaiz.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Angel_Urzaiz.dds"
 			}
 		}
 		advisor = {
@@ -877,7 +908,7 @@ characters={
 		name = "Santiago Alba Bonifaz"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Santiago_Alba_Bonifaz.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Santiago_Alba_Bonifaz.dds"
 			}
 		}
 		advisor = {
@@ -903,7 +934,7 @@ characters={
 		name = "Jose Sanchez Guerra"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Jose_Sanchez_Guerra.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Jose_Sanchez_Guerra.dds"
 			}
 		}
 		advisor = {
@@ -929,7 +960,7 @@ characters={
 		name = "Joquin Ruiz Jimenez"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Joquin_Ruiz_Jimenez.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Joquin_Ruiz_Jimenez.dds"
 			}
 		}
 		advisor = {
@@ -955,7 +986,7 @@ characters={
 		name = "Alfredo Kindelan"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Alfredo_Kindelan.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Alfredo_Kindelan.dds"
 			}
 		}
 		advisor = {
@@ -981,7 +1012,7 @@ characters={
 		name = "Pedro Vives Vich"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Pedro_Vives_Vich.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Pedro_Vives_Vich.dds"
 			}
 		}
 		advisor = {
@@ -1007,7 +1038,7 @@ characters={
 		name = "Alfonso Bayo"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Alfonso_Bayo.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Alfonso_Bayo.dds"
 			}
 		}
 		advisor = {
@@ -1033,7 +1064,7 @@ characters={
 		name = "Augusto Miranda"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Augusto_Miranda.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Augusto_Miranda.dds"
 			}
 		}
 		advisor = {
@@ -1059,7 +1090,7 @@ characters={
 		name = "Ferdinando Primo de Rivera"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Ferdinando_Primo_de_Rivera.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Ferdinando_Primo_de_Rivera.dds"
 			}
 		}
 		advisor = {
@@ -1121,7 +1152,7 @@ characters={
 		name = "Augustin de Loque"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Augustin_de_Loque.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Augustin_de_Loque.dds"
 			}
 		}
 		advisor = {
@@ -1184,7 +1215,7 @@ characters={
 		name = "Ramon Echague"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPA/idea_SPA_Ramon_Echague.dds"
+				small = "gfx/interface/ideas/SPR/advisors/idea_SPA_Ramon_Echague.dds"
 			}
 		}
 		advisor = {
@@ -1438,10 +1469,10 @@ characters={
 			defense_skill=1
 			planning_skill=1
 			logistics_skill=1
-		    visible = {
+			visible = {
 			   date > 1925.1.1
 			   date < 1955.1.1
-		    }				
+			}				
 		}
 	}
 	SPR_emilio_mola_vidal = {
@@ -1505,8 +1536,6 @@ characters={
 				date > 1933.1.1
 				date < 1949.1.1
 			}
-
-
 
 			traits = { air_chief_ground_support_2 }
 
@@ -1797,8 +1826,6 @@ characters={
 				date < 1949.1.1
 			}
 
-
-
 			traits = { army_infantry_2 }
 
 			ai_will_do = {
@@ -1837,8 +1864,6 @@ characters={
 				date < 1949.1.1
 			}
 
-
-
 			traits = { air_air_combat_training_3 }
 
 			ai_will_do = {
@@ -1865,8 +1890,6 @@ characters={
 				date < 1949.1.1
 			}
 
-
-
 			traits = { air_strategic_bombing_2 }
 
 			ai_will_do = {
@@ -1876,12 +1899,16 @@ characters={
 	}
 	SPR_augusto_barcia_trelles = {
 		name = "Augusto Barcia Trelles"
+		portraits = {
+			civilian = {
+				small = GFX_idea_SPR_augusto_barcia_trelles
+			}
+		}
 		advisor = {
 			slot = political_advisor
 			idea_token = SPR_augusto_barcia_trelles
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -1889,8 +1916,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 			traits = { ideological_crusader }
@@ -1900,7 +1926,7 @@ characters={
 		name = "Dolores Ibarruri"
 		portraits = {
 			army = {
-				small = "gfx/interface/ideas/SPR/idea_dolores_ibarruri.dds"
+				small = GFX_idea_dolores_ibarruri
 			}
 		}
 		advisor = {
@@ -1908,7 +1934,6 @@ characters={
 			idea_token = SPR_dolores_ibarruri
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -1916,8 +1941,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 			traits = { communist_revolutionary }
@@ -1925,13 +1949,17 @@ characters={
 	}
 	SPR_diego_martinez_barrio = {
 		name = "Diego Martinez Barrio"
+		portraits = {
+			civilian = {
+				small = GFX_idea_SPR_diego_martinez_barrio
+			}
+		}
 		advisor = {
 			can_be_fired = no
 			slot = political_advisor
 			idea_token = SPR_diego_martinez_barrio
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -1939,8 +1967,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 			traits = { backroom_backstabber centrist }
@@ -1956,7 +1983,6 @@ characters={
 			idea_token = SPR_nicolas_molero
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -1964,8 +1990,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 
@@ -1984,7 +2009,6 @@ characters={
 			idea_token = SPR_andres_saborit_colomer
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -1992,8 +2016,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 			research_bonus = {
@@ -2010,7 +2033,6 @@ characters={
 			slot = army_chief
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2018,11 +2040,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { army_chief_defensive_2 }
 
@@ -2044,7 +2063,6 @@ characters={
 			idea_token = SPR_vincente_rojo_lluch
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2052,8 +2070,7 @@ characters={
 				date < 1966.1.1
 			}
 			available = {
-				date > 1922.1.1
-				date < 1966.1.1
+				NOT = { has_government = fascism }
 			}
 
 			traits = { army_chief_maneuver_2 }
@@ -2072,6 +2089,7 @@ characters={
 			visible = {
 				date > 1922.1.1
 				date < 1966.1.1
+				NOT = { has_government = fascism }
 			}			
 		}
 	}
@@ -2095,8 +2113,6 @@ characters={
 				date < 1959.1.1
 			}
 			available = {
-				date > 1923.1.1
-				date < 1959.1.1
 			}
 
 			traits = { army_chief_offensive_3 }
@@ -2126,7 +2142,6 @@ characters={
 			idea_token = SPR_ignacio_hidalgo_cisneros
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2134,11 +2149,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { air_chief_safety_2 }
 
@@ -2154,7 +2166,6 @@ characters={
 			idea_token = SPR_andres_garcia_calle
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2162,11 +2173,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { air_chief_ground_support_3 }
 
@@ -2182,7 +2190,6 @@ characters={
 			idea_token = SPR_louis_gonzalez_ubieta
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2190,11 +2197,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { navy_chief_naval_aviation_2 }
 
@@ -2210,7 +2214,6 @@ characters={
 			idea_token = SPR_indalecio_prieto_tuero
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2218,8 +2221,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 
@@ -2242,7 +2244,6 @@ characters={
 			idea_token = SPR_jose_miaja
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2250,8 +2251,7 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
 
 
@@ -2368,7 +2368,6 @@ characters={
 			idea_token = SPR_diego_hidalgo_duran
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2376,11 +2375,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { army_concealment_2 }
 
@@ -2401,7 +2397,6 @@ characters={
 			idea_token = SPR_miguel_buiza_femandez_palacios
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2409,11 +2404,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { navy_screen_2 }
 
@@ -2442,7 +2434,6 @@ characters={
 			idea_token = SPR_antonio_azarola_gresillon
 			allowed = {
 				original_tag = SPR
-				NOT = { has_government = fascism }
 			}
 
 			visible = {
@@ -2450,11 +2441,8 @@ characters={
 				date < 1949.1.1
 			}
 			available = {
-				date > 1933.1.1
-				date < 1949.1.1
+				NOT = { has_government = fascism }
 			}
-
-
 
 			traits = { navy_fleet_logistics_2 }
 
