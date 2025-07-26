@@ -7,6 +7,8 @@ NDefines.NAir.AIR_WING_MAX_STATS_DEFENCE = 1000
 NDefines.NAir.AIR_WING_MAX_STATS_SPEED = 8000
 NDefines.NAir.AIR_WING_MAX_STATS_BOMBING = 1000
 
+NDefines.NBuildings.MAX_SHARED_SLOTS = 100				-- Max slots shared by factories
+
 NDefines.NMilitary.CORPS_COMMANDER_DIVISIONS_CAP = 24			-- how many divisions a corps commander is limited to. 0 = inf, < 0 = blocked
 NDefines.NMilitary.CORPS_COMMANDER_ARMIES_CAP = -1				-- how many armies a corps commander is limited to. 0 = inf, < 0 = blocked
 NDefines.NMilitary.FIELD_MARSHAL_DIVISIONS_CAP = 30				-- how many divisions a field marshall is limited to. 0 = inf, < 0 = blocked
