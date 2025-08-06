@@ -1,0 +1,260 @@
+focus_tree = {
+	id = RON_Danzig
+
+	country = {
+		factor = 0
+		modifier = { 
+			add = 10
+			original_tag = DNZ
+		}
+	}
+ 
+	focus = {
+		id = DNZ_free_city_crossroads
+		icon = GFX_focus_GER_the_four_year_plan 
+		x = 0
+		y = 0
+		cost = 10
+
+		allow_branch = {
+			date > 1932.12.31
+			date < 1949.1.1
+		}
+
+		completion_reward = {
+			add_political_power = 50
+		}
+		ai_will_do = { factor = 10 }
+	}
+
+	# Economic Branch
+	focus = {
+		id = DNZ_expand_port_facilities
+		icon = GFX_focus_eng_concessions_to_the_trade_unions 
+		x = -4
+		y = 1
+		cost = 10
+		prerequisite = { focus = DNZ_free_city_crossroads }
+		completion_reward = {
+			85 = {
+			add_extra_state_shared_building_slots = 1
+
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		ai_will_do = { factor = 5 }
+	}
+
+	focus = {
+		id = DNZ_baltic_trade_hub
+		icon = GFX_goal_generic_major_alliance 
+		x = -4
+		y = 2
+		cost = 10
+		prerequisite = { focus = DNZ_expand_port_facilities }
+		completion_reward = {
+			add_ideas = dnz_baltic_trade_idea
+		}
+		ai_will_do = { factor = 3 }
+	}
+
+	focus = {
+		id = DNZ_develop_shipyards
+		icon = GFX_goal_generic_navy_battleship 
+		x = -6
+		y = 2 # Positioned to the left of Baltic Trade Hub
+		cost = 10
+		prerequisite = { focus = DNZ_expand_port_facilities }
+		completion_reward = {
+			state_scope = { # Danzig state ID 85
+				id = 85
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		add_tech_bonus = {
+				name = ships_bonus
+				bonus = 1.0
+				uses = 2
+				category = naval_equipment
+			}
+		}
+		ai_will_do = { factor = 2 }
+	}
+
+	# Military Branch
+	focus = {
+		id = DNZ_establish_heimwehr
+		icon = GFX_focus_generic_tank_production 
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = { focus = DNZ_free_city_crossroads }
+		completion_reward = {
+			add_manpower = 2000
+			add_equipment_to_stockpile = {
+				type = infantry_equipment_0
+				amount = 500
+			}
+			add_ideas = dnz_heimwehr_established
+		}
+		ai_will_do = { factor = 5 }
+	}
+
+	focus = {
+		id = DNZ_coastal_defenses
+		icon = GFX_focus_generic_coastal_fort 
+		x = 4
+		y = 2
+		cost = 10
+		prerequisite = { focus = DNZ_establish_heimwehr }
+		completion_reward = {
+			85 = {
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		ai_will_do = { factor = 3 }
+	}
+
+	# Political Branch
+	focus = {
+		id = DNZ_address_german_pressure
+		icon = GFX_goal_generic_political_pressure
+		x = 0
+		y = 2
+		cost = 10
+		prerequisite = { focus = DNZ_free_city_crossroads }
+		completion_reward = {
+			add_stability = 0.05
+		}
+		ai_will_do = { factor = 10 }
+	}
+
+	focus = {
+		id = DNZ_seek_german_alignment
+		icon = GFX_focus_GER_anschluss
+		x = -2
+		y = 4
+		cost = 10
+		prerequisite = { focus = DNZ_address_german_pressure }
+		mutually_exclusive = { focus = DNZ_strengthen_polish_ties focus = DNZ_assert_independence }
+		completion_reward = {
+			GER = { country_event = { id = danzig.20 hours = 2 } }
+		}
+		ai_will_do = {
+			factor = 3
+			modifier = {
+				GER = { has_government = fascism }
+				factor = 2 # More likely if GER is fascist
+			}
+		}
+	}
+
+	focus = {
+		id = DNZ_return_to_the_reich
+		icon = GFX_GER_himmler_ss
+		x = -2
+		y = 5
+		cost = 10
+		prerequisite = { focus = DNZ_seek_german_alignment }
+		available = { has_country_flag = dnz_german_alignment_initiated }
+		completion_reward = {
+			GER = { country_event = { id = danzig.22 hours = 2 } }
+			set_country_flag = dnz_aligned_german_focus
+		}
+		ai_will_do = { factor = 2 }
+	}
+
+	focus = {
+		id = DNZ_strengthen_polish_ties
+		icon = GFX_focus_generic_polish_deal 
+		x = 2
+		y = 4
+		cost = 10
+		prerequisite = { focus = DNZ_address_german_pressure }
+		mutually_exclusive = { focus = DNZ_seek_german_alignment focus = DNZ_assert_independence }
+		completion_reward = {
+			POL = { country_event = { id = danzig.21 hours = 2 } }
+		}
+		ai_will_do = { factor = 3 }
+	}
+
+	focus = {
+		id = DNZ_pact_of_gdansk
+		icon = GFX_goal_support_democracy 
+		x = 2
+		y = 5
+		cost = 10
+		prerequisite = { focus = DNZ_strengthen_polish_ties }
+		available = { has_country_flag = dnz_polish_alignment_initiated }
+		completion_reward = {
+			POL = { country_event = { id = danzig.23 hours = 2 } }
+			set_country_flag = dnz_aligned_polish_focus
+		}
+		ai_will_do = { factor = 2 }
+	}
+
+	focus = {
+		id = DNZ_assert_independence
+		icon = GFX_focus_ger_oppose_hitler 
+		x = 0
+		y = 4 # Centered under Address German Pressure
+		cost = 10
+		prerequisite = { focus = DNZ_address_german_pressure }
+		mutually_exclusive = { focus = DNZ_seek_german_alignment focus = DNZ_strengthen_polish_ties }
+		completion_reward = {
+			add_political_power = 75
+			add_war_support = 0.05
+		}
+		ai_will_do = { factor = 4 }
+	}
+
+	focus = {
+		id = DNZ_fortify_the_city
+		icon = GFX_goal_generic_army_artillery 
+		x = 0
+		y = 5
+		cost = 10
+		prerequisite = { focus = DNZ_assert_independence }
+		completion_reward = {
+			85 = { 
+				add_building_construction = {
+					type = bunker
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		ai_will_do = { factor = 3 }
+	}
+
+	focus = {
+		id = DNZ_armed_neutrality
+		icon = GFX_germania_4 
+		x = 0
+		y = 6
+		cost = 10
+		prerequisite = { focus = DNZ_fortify_the_city }
+		completion_reward = {
+			add_ideas = dnz_armed_neutrality_idea
+			add_political_power = 50
+			set_country_flag = dnz_asserted_independence_focus
+		}
+		ai_will_do = { factor = 2 }
+	}
+}

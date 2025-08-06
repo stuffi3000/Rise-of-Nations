@@ -3,12 +3,21 @@
 # Names and Surnames are randomly picked and will sometimes repeat, but will never repeat in combinations for example there will never be generated another "John Smith".
 # Assigning the callsign is random - may be assigned or not. If we use the callsign, it will never be assigned to anyone again. Callsigns are not obligatory to script.
 # Picking up a gender is random, and is influenced by the amount of names scripted.
+### Operations
+# Operations will randomly pick from national pools until exhausted
+# You can specify a strategic region for which an order name will be drawn
+# if any enemy province along the frontline matches this strategic region, this sub-pool will be considered and used in preference to default.
+# Whether this 'historical' name pool is exhausted is dependent on the define: HISTORICAL_ORDER_NAME_EXHAUSTION
+# Strategic region index '0' is the generic national pool.
+# You can specify the same name in several regions, though I would suggest not doing this too often, for performance reasons.
+# After this, a first and second will be randomly picked from the default pool
+# The prefix must be provided for all pools
 
 default = {
 	male = {
-		names = { "John" "Bob" "Lucas" "Marcus" "Alexander" "Alex" "Peter" "Jonas" "Jim" "Johannes" }
-		surnames = {}
-		callsigns = {}
+		names = { "John" "Bob" "Lucas" "Marcus" "Alexander" "Alex" "Peter" "Jonas" "Jim" "Johannes"}
+		surnames = { }
+		callsigns = { }
 	}
 	#female = {
 	#	names = { "Juliette" "Anna" }
@@ -16,7 +25,21 @@ default = {
 	#	callsigns = { "Queen Of The Sky" "The Red Princess" }
 	#}
 	surnames = { "Smith" "Jones" "Taylor" "Brown" "Williams" "Wilson" "Evans" "Walker" "White" "Roberts" }
-	callsigns = { "Easy Kill" "The Lightning" "The Devil" "Grasshopper" "Handsome" "Moose" "Mouse" "Pebbles" "Sunshine" Demon }
+	callsigns = { "Easy Kill" "The Lightning" "The Devil" "Grasshopper" "Handsome" "Moose" "Mouse" "Pebbles" "Sunshine" Demon}
+
+
+	#Operations - treat these as keys, not strings.
+	prefix = o_operation
+
+	operation = {
+		0 = { o_default_operation }
+	}
+
+	use_geographical_default_operation_names = yes
+	offensive_operation_suffix = o_strat_offensive_default
+	defensive_operation_suffix = o_strat_defensive_default
+	naval_operation_suffix = o_strat_naval_default
+
 }
 
 ###############################################################
@@ -24,18 +47,54 @@ default = {
 ###############################################################
 GER = {
 	male = {
-		names = { Maximilian Felix Erich Gerhard Gunther Otto Walter Wilhelm Heinz Hermann Heinrich
-			Theodor Hans Anton Joachim Max Emil Peter Fritz Otto Adolf Tobias Staffan Marco Karl
+		names = {
+			Adolf Alfred Anton Christian Dieter Emil Erich Erwin Felix Fritz Gabriel Gerhard
+			Gunther Hans Heinrich Heinz Helmuth Hermann Horst Joachim Karl Ludwig Marco
+			Markus Max Maximilian Otto Paul Peter Philipp Ralph Samuel Staffan Theodor
+			Tobias Walter Wilhelm
+
+			# From VGE
+			Willhelm Paul Walther Friedrich Ernst Willi Franz Gustav August Johannes Johann Rudolph
+			Alfred Georg Albert Richard Arthur Kurt Robert Josef Hugo Ludwig Bruno Bernhard Oskar Herbert
+			Martin Eduard Henri Werner Toni John Julius Christian Helmut Reinhold Erwin Ferdinand Gottlieb Siegfried
 		}
 	}
 	female = {
-		names = { Jessica Emma Hanna Sofia Marie }
+		names = {
+			Jessica Emma Hanna Sofia Marie Hildegard
+
+			# From VGE
+			Anna Frida Marta Erna Gertrud Margarethe Maria Elisabeth Berta Elsa Helene Louise Johanna Hedwig Klara Minna Else Paula Ella Ida Wilhelmine Mathilde
+		}
 	}
 	surnames = {
-		Muller Schmidt Schneider Fischer Meyer Weber Schulz Wagner Hartmann Rall Barkhorn
-		Becker Hoffmann Graf Erhler Hafner Lipfert Brendel Stotz Kirschner Lang Sturm
-		Beisswenger Duttmann Wilbs Berglen Behrmann
+		Barkhorn Becker Behrmann Beisswenger Berglen Blum Brandt Brendel Dietrich
+		Duttmann Ehrler Fischer Haas Hafner Hartmann Hoffmann Huber Kirschner Konig
+		Kraus Kuhn Lang Lehmann Lipfert Meyer Muller Rall Roth Schmidt Schneider Schulte
+		Schulz Sommer Stotz Sturm Vogt Wagner Weber Wilbs Winkler Winter Wolff Zimmermann
+
+		# From VGE
+		Adler Adolph Albach Albert Alles Alt Altergott Amen Appelhans Deisel Dellos Derr Detterer Diehl Dierlam Dieser Dietz
+		Ditmar Döll Dorn Dörr Dorsch Dortman Driess Dumler Eberhard Eberhardt Eberling Ebert Eckert Eckhardt Eckler Edel
+		Eich Eichhorn Eichmann Eisele Eisenach Eisenhuth Eitenmüller Elsässer Engel Engelhardt Erck Erder Eüler Euler
+		Eurich Ewig Faber Falkenstein Faust Fech Fein Fendel Feuerstein Göttmann Götz Gramlich Grasmück Grosch
+		Gross Grún Grünemeier Grünwald Gutherich Gutmann Gutscher Guttmann Hegele Hegwald Heidenreich Heimbüchner Hein
+		Heinrich Heitzenreder Helbrecht Heldt Helfenbein Heller Helmuth Helwig Hempel Henkel Henn Herber Herdt Hergenheim Hergert
+		Hessler Hettinger Hetzel Heusel Hieronymus Hildt Hill Kammerzell Kappel Kappes Kaucher Kechter Kembel Kempel Kexel Kiehn
+		Kildau Kimmel Kinderknecht Kindsvater Kirschbaum Kissler Kister Klamm Klaus Kleiber Klein Kleinfelder Klink Kloberdanz Kloster Knaus
+		Kniss Knödler Kober Koch Köhler Kohlmann Langlitz Lapp Laubhan Lauck Lauterbach Lederer Lederhos Legler Lehr Lei Leichner Leiker Lein
+		Leinweber Leister Lenz Leonhardt Lerch Lesser Licht Lichtenberger Lichtenwald Linenberg Lingelbach Link Lipps Lissmann Litzenberger
+		Mill Miltenberger Mohn Mohr Mohrlang Molko Moninger Morasch Moritz Morkel Müller Müller Müller Münster Müntermann Muth Mützig Näb Nafts
+		Nagelschmidt Nazarenus Neubauer Neuberger Neuhard Nickel Niedecker Niedenthal Oberheim Oberitter Oblander Ochsenhirt Oldt Orth Ostertag
+		Oswald Ott Pappenheim Pickelhaubt Pinnecker Plouqet Präfried Prasch Preisendorf Quindt Raab Rauh Rausch Ravensberg Rebuhn Reh Rehn Reifschneider
+		Reimer Rein Reinhardt Reinick Reis Reiswig Reiter Reitz Repp Rettig Reuscher Reuss Reuter Richter Ries Saalfeld Sack Sauer Sauerbrey
+		Schäfer Schreieck Schremser Schuh Schultheis Schultz Schwab Schwabauer Schwabenland Schwan Schwartz Schwartzkopf Seib Steinbach Steinbrecher
+		Stellwagen Stiehl Stoll Störger Stork Stössel Streck Stroh Strohmann Stromberger Stürtz Suppes Thierolf Traub Traudt Traut Trin
+		Trippel Trupp Ubert Uhrich Ulrich Urbach Urban Usinger Utz Vogel Vogler Voigt Völck Volk Volz Wasmuth Wassen Wassinger Weckesser
+		Weidemann Weidhardt Weigandt Weisgerber Weisheim Weiss Weitz Weitzel Welsch Wentz Wenzel Wenzereich Werth Wiedemann Wiederspahn Wiegand
+		Wilhelm Will Willmann Windecker Winkelhausen Wittwanger Würtz Zell Zentner Zieg Ziegler Zitzmann Zorn Zürckgiebel
 	}
+
 	callsigns = { "Bubi" "Assi" "The Black Devil" "The Blond Knight Of Germany" "Dolfo" "Fighter of Libau" "Petit Rouge" "Pritzl" "The Red Baron" "The Red Battle-flyer" "The Red Knight" "Reeste" }
 }
 
@@ -5767,7 +5826,7 @@ KSI = {
 	callsigns = { Buzzard Dusty Falcon Hawk Hammer Viper Banshee "The Baron" Lightning Duce Raven "Two Shot" Rosso }
 }
 
-PST = {
+PAP = {
 	male = {
 		names = {
 			Alessandro Alfonso Ambrogio Amedeo Andrea Angelo Antonio Benito Camillo Carlo
@@ -5858,7 +5917,7 @@ HES = {
 	callsigns = { "Bubi" "Assi" "The Black Devil" "The Blond Knight Of Germany" "Dolfo" "Fighter of Libau" "Petit Rouge" "Pritzl" "The Red Baron" "The Red Battle-flyer" "The Red Knight" "Reeste" }
 }
 
-RHR = {
+RHI = {
 	male = {
 		names = { Maximilian Felix Erich Gerhard Gunther Otto Walter Wilhelm Heinz Hermann Heinrich
 			Theodor Hans Anton Joachim Max Emil Peter Fritz Otto Adolf Tobias Staffan Marco Karl
