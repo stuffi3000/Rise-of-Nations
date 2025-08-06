@@ -4080,7 +4080,7 @@ RON_Wars_WW2 = {
 				NOR = {
 					is_subject_of = GER
 				}
-				RKN = {
+				RKG = {
 					is_subject_of = GER
 				}
 			}
@@ -4095,7 +4095,7 @@ RON_Wars_WW2 = {
 				HOL = {
 					is_subject_of = GER
 				}
-				RKH = {
+				RKN = {
 					is_subject_of = GER
 				}
 			}
@@ -5711,74 +5711,6 @@ RON_Wars_WW2 = {
 			country_event = ron_ww2wars.2
 		}
 	}
-	
-	PST_annex_vatican_city = {
-		icon = generic_army_support
-		allowed = {
-			tag = PST
-		}
-
-		visible = {
-			VCT = { exists = yes }
-		}
-
-		cost = 0
-		days_remove = 10
-
-		ai_will_do = {
-			factor = 1000
-			modifier = {
-				factor = 0
-				#Not worth the risk if We are already at War with a major
-				any_country = {
-					is_major = yes
-					has_war_with = ROOT
-				}
-			}
-			modifier = {
-				#Not worth the risk if we are losing the war
-				ROOT = {
-					surrender_progress > 0.05
-				}
-				factor = 0
-			}
-			modifier = {
-				#Need a land link
-				NOT = {
-					is_neighbor_of = VCT
-				}
-				factor = 0
-			}
-		}
-		remove_effect = {
-			if = {
-				limit = {
-					VCT = { 
-						is_ai = no 
-					}
-				}
-						create_wargoal = {			
-				expire = 100
-				type = annex_everything
-				target = PST
-				}
-			}
-			
-			if = {
-				limit = {
-					VCT = { 
-						is_ai = yes
-					}
-				}
-				annex_country = {
-				target = VCT
-				transfer_troops = yes
-				}
-			}
-			
-		}
-
-	}
 
 	BS_invade_monaco = {
 		icon = generic_army_support
@@ -7233,7 +7165,7 @@ RON_Wars_WW2 = {
 			release = ARM
 			release = ABK
 			release = GEO
-			release = CHE
+			release = CIN
 			release = HOL
 			release = BEL
 			release = LUX
@@ -7400,22 +7332,22 @@ RON_Wars_WW2 = {
 			}
 			if = {
 				limit = {
-					country_exists = PST
+					country_exists = PAP
 				}
 				ITA = {
 					annex_country = {
-    					target = PST
+    					target = PAP
     					transfer_troops = yes
 					}
 				}
 			}	
 			if = {
 				limit = {
-					country_exists = KTS
+					country_exists = TTS
 				}
 				ITA = {
 					annex_country = {
-    					target = KTS
+    					target = TTS
     					transfer_troops = yes
 					}
 				}
@@ -7546,22 +7478,22 @@ RON_Wars_WW2 = {
 			}
 			if = {
 				limit = {
-					country_exists = PST
+					country_exists = PAP
 				}
 				ITA = {
 					annex_country = {
-    					target = PST
+    					target = PAP
     					transfer_troops = yes
 					}
 				}
 			}	
 			if = {
 				limit = {
-					country_exists = KTS
+					country_exists = TTS
 				}
 				ITA = {
 					annex_country = {
-    					target = KTS
+    					target = TTS
     					transfer_troops = yes
 					}
 				}
@@ -8817,7 +8749,131 @@ RON_Wars_Cold = {
 	
 
 }
+RON_alliance_info = {
+renew_alliance = {
+	icon = generic_army_support
 
+		available = { 
+			NOT = {
+				has_global_flag = MARPAC_voting_in_process
+				has_country_flag = UNcooldownunvotecountry
+				has_global_flag = UNcooldownunvoteglobal
+			}		
+			is_faction_leader = yes
+       custom_trigger_tooltip = {
+            tooltip = "We can only convene after our unity is below 25"
+          check_variable = { ROOT.current_countryc < 25 }			
+        }			
+		}
+ 
+		visible = {
+			is_faction_leader = yes
+		}
+
+
+
+		cost = 50
+ 
+		complete_effect = {
+			add_to_variable = { ROOT.current_countryc = 25 }
+			
+			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 120 value = 1}
+				set_variable = { UNcooldownunvotecountry = 300 }
+
+				set_global_flag = { flag = UNcooldownunvoteglobal value = 1 days = 10 }
+			hidden_effect = {
+				set_country_flag = faction_renew_leader
+				set_global_flag = faction_renew_vote_start
+	set_variable = { global.UN_call_for_aid = THIS.id }
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = { 
+			OR = {
+				is_in_faction_with = ROOT
+				is_guaranteed_by = ROOT
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+			tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		add_to_array = {
+    	array = global.marpac_executive_array 
+    	value = THIS.id
+		}
+		}		 
+		set_global_flag = MARPAC_voting_in_process
+        set_country_flag = show_marpac_menu		
+		news_event = marpac.1000			
+		    add_to_array = {
+	        array = global.marpac_countries_for
+            value = THIS.id
+		}		
+			add_to_variable = {
+	        var = global.marpac_for_vote
+	        value = 1
+        }			
+		set_country_flag = MARPAC_voted
+		hidden_effect = {
+		every_country = {
+		limit = { 
+						AND = { 
+			OR = {
+				is_in_faction_with = ROOT
+				is_guaranteed_by = ROOT
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+			tag = TGR
+				tag = LON
+			}					
+			}		
+			}	
+		if = {
+			limit = {
+				is_ai = yes
+			} 
+		country_event = { 
+		id = marpac.5
+		days = 1
+		}			
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			set_country_flag = currently_voting
+		}
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 10
+		}		
+		}
+		}	
+		}
+	ai_will_do = {
+			base = 2000
+		}
+	}
+
+}
 RON_Wars_Modern = {
 	Gulf_war = {
 		fire_only_once = yes
