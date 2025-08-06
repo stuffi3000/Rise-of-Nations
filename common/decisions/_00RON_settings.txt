@@ -1,3 +1,629 @@
+
+
+internal_factions = {
+
+	seatscleared = {
+		allowed  ={
+			always = yes
+		}
+		days_mission_timeout = 129
+		is_good = yes
+
+		activation = {
+			OR = {
+			has_idea = RON_European_Union
+			has_idea = RON_LON_Member
+			}
+		}
+			available = {
+			NOT = {
+			OR = {
+			has_idea = RON_LON_Member
+			has_idea = RON_LON_Member
+			}
+			}
+		}	
+		timeout_effect = {
+			set_variable = { global.neutrality_lon_p = 0 }
+			set_variable = { global.communist_lon_p = 0 }
+			set_variable = { global.democratic_lon_p = 0 }
+			set_variable = { global.fascism_lon_p = 0 }
+			set_variable = { global.totalseatseu = 720 }
+		}	
+	}
+	election_lon = {
+		allowed  ={
+			always = yes
+		}
+		days_mission_timeout = 130
+		is_good = yes 
+		available = {
+			NOT = {
+			OR = {
+			has_idea = RON_LON_Member
+			has_idea = RON_LON_Member
+			}
+			}
+		}
+		activation = {
+			OR = {
+			has_idea = RON_European_Union
+			has_idea = RON_LON_Member
+			}
+		}
+
+		timeout_effect = {
+			if = {
+				limit = {
+					check_variable = {global.totalseatseu > 1 }
+				}
+				if = {
+					limit = {
+						check_variable = { neutralpop > 5 }
+					}
+					set_variable = { neutrality_lon_half = neutralpop }
+					divide_variable = { neutrality_lon_half = 2 }
+					round_variable = neutrality_lon_half 
+					subtract_from_variable = {global.totalseatseu = neutrality_lon_half}
+					add_to_variable = { global.neutrality_lon_p = neutrality_lon_half }
+				}
+				if = {
+					limit = {
+						check_variable = { communismpop > 5 }
+					}
+					set_variable = { communist_lon_half = communismpop }
+					divide_variable = { communist_lon_half = 2 }
+					round_variable = communist_lon_half
+					subtract_from_variable = {global.totalseatseu = communist_lon_half}
+					add_to_variable = { global.communist_lon_p = communist_lon_half }
+				}
+				if = {
+					limit = {
+						check_variable = { democraticpop > 5 }
+					}
+					set_variable = { democratic_lon_half = democraticpop }
+					divide_variable = { democratic_lon_half = 2 }
+					round_variable = democratic_lon_half
+					subtract_from_variable = {global.totalseatseu = democratic_lon_half}
+					add_to_variable = { global.democratic_lon_p = democratic_lon_half }
+				}
+				if = {
+					limit = {
+						check_variable = { fascismpop > 5 }
+					}
+					set_variable = { fascism_lon_half = fascismpop }
+					divide_variable = { fascism_lon_half = 2 }
+					round_variable = fascism_lon_half
+					subtract_from_variable = {global.totalseatseu = fascism_lon_half }
+					add_to_variable = { global.fascism_lon_p = fascism_lon_half }
+				}
+			}		
+		}
+	}
+
+	rrequest_peacekeepers = { #not a typo, conflicts with UN
+		icon = generic_army_support
+
+		available = {
+			has_war = yes
+			NOT = {
+				has_global_flag = MARPAC_voting_in_process
+				has_country_flag = UNcooldownunvotecountry
+				has_global_flag = UNcooldownunvoteglobal
+			}		
+			OR = {
+				is_faction_leader = yes
+				is_in_faction = no
+			}	
+		}
+ 
+		visible = {
+			has_idea = RON_LON_Member
+		}
+
+
+
+		cost = 50
+ 
+		complete_effect = {
+			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 300 value = 1}
+			set_variable = { UNcooldownunvotecountry = 300 }
+
+			set_global_flag = { flag = UNcooldownunvoteglobal value = 1 days = 10 }
+			hidden_effect = {
+				set_country_flag = UNaidcallcountry
+				set_global_flag = UNaidcallaidcountry
+				set_variable = { global.UN_call_for_aid = THIS.id }
+				set_variable = { global.marpac_for_vote = 0 }
+				set_variable = { global.marpac_against_vote = 0 }
+				clear_array = global.marpac_executive_array
+				every_country = {
+					limit = { 
+						OR = {
+							has_idea = RON_LON_Member
+							has_guaranteed = LON
+							country_exists = yes
+						}
+						not = {
+							tag = UNA
+							tag = DPK
+							tag = XXB
+							tag = KOR
+							tag = ZOM
+							tag = EUR
+							tag = TGR
+							tag = LON
+						}
+					}
+					add_to_array = {
+					 	array = global.marpac_executive_array 
+						value = THIS.id
+					}
+				}
+				set_global_flag = MARPAC_voting_in_process
+				set_country_flag = show_marpac_menu
+				news_event = marpac.1000
+				add_to_array = {
+					array = global.marpac_countries_for
+					value = THIS.id
+				}		
+				add_to_variable = {
+					var = global.marpac_for_vote
+					value = 1
+				}
+				set_country_flag = MARPAC_voted
+				every_country = {
+					limit = {
+						OR = {
+							has_idea = RON_LON_Member
+							country_exists = yes
+						}
+						not = {
+							tag = UNA
+							tag = XXB
+							tag = ZOM
+							tag = EUR
+							tag = TGR
+							tag = LON
+						}
+					}
+					if = {
+						limit = {
+							is_ai = yes
+						} 
+						country_event = { 
+							id = marpac.5
+							days = 5
+						}
+					}
+					if = {
+						limit = {
+							is_ai = no
+						}
+						set_country_flag = currently_voting
+					}
+
+					country_event = {
+						id = marpac.2
+						days = 15
+					}
+					country_event = {
+						id = marpac.23 
+						days = 14
+					}		
+				}
+			}
+		}	
+		ai_will_do = {
+			base = 200
+		}
+	}
+
+	ccall_for_ceasefire = { #not a typo, conflicts with UN
+		priority = 120 
+		available = {
+			has_war = yes
+			has_civil_war = no
+			OR = {
+				is_in_faction = no
+				is_faction_leader = yes
+			}
+			NOT = {
+				has_global_flag = MARPAC_voting_in_process
+				has_country_flag = UNcooldownunvotecountry
+				has_global_flag = UNcooldownunvoteglobal
+			}
+		}
+		visible = {
+			has_idea = RON_LON_Member
+		}
+		cost = 130
+		ai_will_do = {
+			base = 10
+			modifier = {
+				factor = 100
+				has_idea = superstate_size1
+			}
+		}
+		complete_effect = {
+			set_country_flag = { flag = UNcooldownunvotecountry value = 1 days = 230 value = 1}
+			set_global_flag = { flag = UNcooldownunvoteglobal value = 1 days = 20 value = 1}
+			set_variable = { UNcooldownunvotecountry = 85 }
+			set_global_flag = UNvoteforceceasefire
+			hidden_effect = {
+				set_country_flag = UNceasefire_call_country
+				set_variable = { global.UN_call_for_ceasefire = THIS.id }
+	set_variable = { global.marpac_for_vote = 0 }
+	set_variable = { global.marpac_against_vote = 0 }		
+	clear_array = global.marpac_executive_array
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_LON_Member
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = DPK
+				tag = XXB
+				tag = KOR
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}	
+		add_to_array = {
+		array = global.marpac_executive_array 
+		value = THIS.id
+		}
+		}
+		ROOT = {
+			add_to_array = {
+			array = global.marpac_countries_for
+			value = THIS.id
+		}		
+			add_to_variable = {
+			var = global.marpac_for_vote
+			value = 1
+		}	
+		set_country_flag = MARPAC_voted					
+		}		 
+		set_global_flag = MARPAC_voting_in_process
+		set_global_flag = UNceasefire_call_country
+		set_country_flag = show_marpac_menu		
+		news_event = marpac.1000	
+		hidden_effect = {
+		every_country = {
+		limit = { 
+			AND = {
+			OR = {
+			has_idea = RON_LON_Member
+			#has_guaranteed = UNA			
+			country_exists = yes
+			}
+			not = {
+				tag = UNA
+				tag = XXB
+				tag = ZOM
+				tag = EUR
+tag = TGR
+				tag = LON
+			}					
+			}				
+			}				
+		if = {
+			limit = {
+				is_ai = yes
+			} 
+		country_event = { 
+		id = marpac.5
+		days = 5
+		}			
+		}
+		if = {
+			limit = {
+				is_ai = no
+			}
+			set_country_flag = currently_voting
+		}
+		}	
+		
+		country_event = {
+		id = marpac.2
+		days = 15
+		}
+		}
+		}	
+	}
+	}
+	cacus_with_communist_majorty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+
+		}
+
+		available = {
+				custom_trigger_tooltip = {
+					tooltip = "Communist Favors above 15"
+					check_variable = {
+						?communist_loyalty > 15
+					}
+				}			
+				custom_trigger_tooltip = {
+					tooltip = "Communist Party popularity above 50"
+					check_variable = {
+						?communismpop > 50
+					}
+				}			
+				custom_trigger_tooltip = {
+					tooltip = "Communist Party has above 200 seats in parlement"
+					check_variable = {
+						?communismpop > 200
+					}
+				}							
+		}
+		cost = 30
+		complete_effect = {
+			add_timed_idea = {
+				idea = tot_economic_mobilisation
+				days = 120
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	cacus_with_democratic_majorty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+
+		}
+
+		available = {
+				custom_trigger_tooltip = {
+					tooltip = "Democratic Favors above 15"
+								check_variable = {?democratic_loyalty > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Democratic Party popularity above 50"
+								check_variable = {?democraticpop > 50}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Democratic Party has above 200 seats in parlement"
+								check_variable = {?democraticpop > 200}
+				}							
+		}
+		cost = 30
+		complete_effect = {
+			add_timed_idea = {
+				idea = tot_economic_mobilisation
+				days = 120
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+
+	cacus_with_fascist_majorty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+
+		}
+
+		available = {
+				custom_trigger_tooltip = {
+					tooltip = "National Socialist Favors above 15"
+								check_variable = {?fascism_loyalty > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "National Socialist Party popularity above 50"
+								check_variable = {?fascismpop > 50}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "National Socialist Party has above 200 seats in parlement"
+								check_variable = {?fascismpop > 200}
+				}							
+		}
+		cost = 30
+		complete_effect = {
+			add_timed_idea = {
+				idea = tot_economic_mobilisation
+				days = 120
+			}
+		}
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+cacus_with_authoritarian_majorty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+
+		}
+
+		available = {
+				custom_trigger_tooltip = {
+					tooltip = "Authoritarian Favors above 15"
+								check_variable = {?neutrality_loyalty > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Authoritarian Party popularity above 15"
+								check_variable = {?neutralpop > 50}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Authoritarian Party has above 200 seats in parlement"
+								check_variable = {?neutralpop > 200}
+				}							
+		}
+		cost = 30
+		complete_effect = {
+			add_timed_idea = {
+				idea = tot_economic_mobilisation
+				days = 120
+			}
+		}
+
+
+		ai_will_do = {
+			base = 10
+		}
+	}
+	enforce_communist_loyalty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+		}
+
+		available = {
+						custom_trigger_tooltip = {
+					tooltip = "Communist Party popularity above 15"
+								check_variable = {?communismpop > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Communist Party has above 30 seats in parlement"
+								check_variable = {?communismpop > 30}
+				}							
+		}
+		cost = 15
+		complete_effect = {
+					custom_effect_tooltip = "Communist Favors Increases By 10"
+			add_to_variable = {?communist_loyalty = 10}
+			add_popularity = {
+	ideology = communism
+	popularity = -0.05
+}
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+	}
+
+	enforce_democratic_loyalty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+		}
+
+		available = {
+						custom_trigger_tooltip = {
+					tooltip = "Democratic Party popularity above 15"
+								check_variable = {?democraticpop > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Democratic Party has above 30 seats in parlement"
+								check_variable = {?democraticpop > 30}
+				}							
+		}
+		cost = 15
+		complete_effect = {
+					custom_effect_tooltip = "Democratic Favors Increases By 10"
+			add_to_variable = {?democratic_loyalty = 10}		
+			add_popularity = {
+	ideology = democratic
+	popularity = -0.05
+}
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+	}
+
+	enforce_fascist_loyalty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+		}
+
+		available = {
+						custom_trigger_tooltip = {
+					tooltip = "National Socialist Party popularity above 15"
+								check_variable = {?fascismpop > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "National Socialist Party has above 30 seats in parlement"
+								check_variable = {?fascismpop > 30}
+				}							
+		}
+		cost = 15
+		complete_effect = {
+					custom_effect_tooltip = "National Socialist Favors Increases By 10"
+			add_to_variable = {?fascism_loyalty = 10}	
+			add_popularity = {
+	ideology = fascism
+	popularity = -0.05
+}
+		}
+
+		ai_will_do = {
+			base = 0
+		}
+	}	
+enforce_authoritarian_loyalty = {
+
+		icon = generic_civil_support
+
+		visible = {
+			always = yes
+
+		}
+
+		available = {
+
+						custom_trigger_tooltip = {
+					tooltip = "Authoritarian Party popularity above 15"
+								check_variable = {?neutralpop > 15}
+				}			
+						custom_trigger_tooltip = {
+					tooltip = "Authoritarian Party has above 30 seats in parlement"
+								check_variable = {?neutralpop > 30}
+				}							
+		}
+		cost = 15
+		complete_effect = {
+					custom_effect_tooltip = "Authoritarian Favors Increases By 10"
+			add_to_variable = {?neutrality_loyalty = 10}			
+			add_popularity = {
+	ideology = neutrality
+	popularity = -0.05
+}
+		}
+
+
+		ai_will_do = {
+			base = 0
+		}
+	}
+
+}
+
 RON_game_settings = {
 
 	RON_open_settings = {
@@ -8,38 +634,38 @@ RON_game_settings = {
 		}
 	}
 
-	RON_change_era_event = {
-		icon = generic_form_nation
-		allowed = {
-			RON_is_allowed_to_trigger_important_decisions = yes
-		}
-		available = {
-			RON_is_allowed_to_trigger_important_decisions = yes
-			custom_trigger_tooltip = {
-				tooltip = TT_era_needs_changing
-				RON_must_change_era = yes
-			}
-			NOT = {
-				has_global_flag = change_era_in_progress
-			}
-		}
-		cost = 0
-		ai_will_do = {
-			factor = 1000
-		}
-		days_re_enable = 30
-		visible = {
-			NOT = {
-				has_global_flag = change_era_in_progress
-			}
-		}
-		complete_effect = {
-			country_event = {
-				id = change_era.1
-			}
-			set_global_flag = change_era_in_progress
-		}
-	}
+	#RON_change_era_event = {
+	#	icon = generic_form_nation
+	#	allowed = {
+	#		RON_is_allowed_to_trigger_important_decisions = yes
+	#	}
+	#	available = {
+	#		RON_is_allowed_to_trigger_important_decisions = yes
+	#		custom_trigger_tooltip = {
+	#			tooltip = TT_era_needs_changing
+	#			RON_must_change_era = yes
+	#		}
+	#		NOT = {
+	#			has_global_flag = change_era_in_progress
+	#		}
+	#	}
+	#	cost = 0
+	#	ai_will_do = {
+	#		factor = 1000
+	#	}
+	#	days_re_enable = 30
+	#	visible = {
+	#		NOT = {
+	#			has_global_flag = change_era_in_progress
+	#		}
+	#	}
+	#	complete_effect = {
+	#		country_event = {
+	#			id = change_era.1
+	#		}
+	#		set_global_flag = change_era_in_progress
+	#	}
+	#}
 	RON_russian_weather_report = {
 		allowed = {
 			RON_is_allowed_to_trigger_russian_winter = yes
@@ -115,34 +741,33 @@ RON_game_settings = {
 		}
 	}
 	
-	Change_RAJ_focus_tree = {
-		icon = generic_form_nation
-		allowed = {
-			RON_is_allowed_to_trigger_important_decisions = yes
-		}
-		available = {
-		date > 1933.1.01
-		date < 1949.1.19
-		tag = IND
-		}
-		cost = 0
-		fire_only_once = yes
-		ai_will_do = {
-			factor = 1000
-		}
-		days_re_enable = 30
-		visible = {
-		date > 1933.1.01
-		date < 1949.1.19
-		tag = IND 
-		}
-		complete_effect = {
-			load_focus_tree = RON_British_Raj
-			complete_national_focus = RAJ_the_indian_national_congress
-			complete_national_focus = RAJ_abolish_the_caste_system
-
-		}
-	}
+	#Change_RAJ_focus_tree = {
+	#	icon = generic_form_nation
+	#	allowed = {
+	#		RON_is_allowed_to_trigger_important_decisions = yes
+	#	}
+	#	available = {
+	#	date > 1933.1.01
+	#	date < 1949.1.19
+	#	tag = IND
+	#	}
+	#	cost = 0
+	#	fire_only_once = yes
+	#	ai_will_do = {
+	#		factor = 1000
+	#	}
+	#	days_re_enable = 30
+	#	visible = {
+	#	date > 1933.1.01
+	#	date < 1949.1.19
+	#	tag = IND 
+	#	}
+	#	complete_effect = {
+	#		load_focus_tree = RON_British_Raj
+	#		complete_national_focus = RAJ_the_indian_national_congress
+	#		complete_national_focus = RAJ_abolish_the_caste_system
+	#	}
+	#}
 
 	reject_all_sphere_requests = {
 
@@ -167,6 +792,18 @@ RON_game_settings = {
 
 		ai_will_do = {
 			base = 0
+		}
+	}
+
+	RON_d_load_correct_trees = {
+		icon = generic_form_nation
+
+		visible = {
+			is_debug = yes
+		}
+
+		complete_effect = {
+			RON_handle_focus_trees = yes
 		}
 	}
 }
