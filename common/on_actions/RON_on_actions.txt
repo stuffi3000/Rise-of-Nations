@@ -1,0 +1,655 @@
+on_actions = {
+	on_startup = {
+		effect = {
+			every_country = {
+				update_all_pop = yes
+				HOUSE_init_parliament = yes
+			}
+			every_country = { 
+				limit = {
+					is_ai = no
+				}
+				add_to_array = { # It will automatically add the scope
+					array = global.players
+				}
+			}
+
+			#######Set Up Marpac Executive Council#####
+			#add_to_array = { global.marpac_executive_array = ENG }
+			#add_to_array = { global.marpac_executive_array = GER }
+			#add_to_array = { global.marpac_executive_array = FRA }
+			#add_to_array = { global.marpac_executive_array = USA }
+			#add_to_array = { global.marpac_executive_array = ITA }
+			#add_to_array = { global.marpac_executive_array = SOV }
+
+			every_country = {
+				limit = {
+					is_faction_leader = yes
+				}
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+			if = {
+				limit = {
+					date > 1945.1.1
+					date < 2000.1.1
+				}
+				set_variable = { GDP_real = 0}
+				set_variable = { global.number_of_commies = 0}
+				set_variable = { global.number_of_democraties = 0}
+				every_country = {
+					limit = {
+						has_government = communism
+					}
+					add_to_variable = { global.number_of_commies = 1}
+				}
+				every_country = {
+					limit = {
+						has_government = democratic
+					}
+					add_to_variable = { global.number_of_democraties = 1}
+				}
+
+			}
+			every_state = {
+				limit = {
+					is_core_of = MOR
+				}
+				remove_core_of = MOR
+			}
+			#every_state = {
+			#	limit = {
+			#		is_core_of = USA
+			#	}
+			#	remove_core_of = UWA
+			#	remove_core_of = KOA
+			#	remove_core_of = SSA
+			#	remove_core_of = JSA
+			#}
+
+			if = {
+				limit = {
+					has_start_date < 1918.1.1
+				}
+				BEL = {
+					give_resource_rights = { receiver = ENG state = 295 }
+				}
+			}
+		}
+	}
+
+	on_monthly_XXB = {
+		effect = {
+			if = {
+				limit = {
+					date > 1949.1.1
+					date < 2000.1.1
+				}
+				set_variable = { global.number_of_commies = 0}
+				set_variable = { global.number_of_democraties = 0}
+				every_country = {
+					limit = {
+						has_government = communism
+					}
+					add_to_variable = { global.number_of_commies = 1}
+				}
+				every_country = {
+					limit = {
+						has_government = democratic
+					}
+					add_to_variable = { global.number_of_democraties = 1}
+				}
+
+			}
+			if = {
+				# Checks for if it is Janurary (Year of previous month is a different year of current year)
+				limit = { NOT = { check_variable = { global.last_year = global.year } } }
+				set_variable = { global.last_year = global.year }
+				
+				# KDE System (System that fires pre-determined events with specified dates)
+				add_to_variable = { global.kde_counter = 1 }
+				log = "0: [?global.year]"
+				
+				if = {
+					limit = { check_variable = { global.kde_counter = 2 } }
+					meta_effect = {
+						text = {
+							KDE_bi_yearly_event_fire_[ID] = yes
+						}
+						ID = "[?global.year]"
+					}
+					
+					log = "1: [?global.year]"
+					set_variable = { global.kde_counter = 0 }
+				}
+			}
+		}
+	}
+	on_monthly = {
+		
+		effect = {
+			predection_house = yes
+			if = {
+				limit = {
+					check_variable = { ROOT.current_countryc < 0 }
+					has_war = no
+					is_faction_leader = yes
+				}
+			dismantle_faction = yes
+			}			
+			if = {
+				limit = {
+					OR = {
+						has_decision = interplanetary_transfer_decision
+						has_decision = martian_orbit_decision
+					}
+				}
+				random_list = {
+					30 = {
+						modifier = {
+							factor = 0.5
+							check_variable = { life_support_test_count > 5}
+						}
+						modifier = {
+							factor = 0.1
+							check_variable = { life_support_test_count > 7}
+						}
+						#RIP, accident happen
+
+						random_list = {
+							50 = {
+								#decompression
+								country_event = {
+									id = space_race.12
+								}
+							}
+							50 = {
+								#signal lost
+								country_event = {
+									id = space_race.13
+								}
+							}
+							50 = {
+								#fire
+								country_event = {
+									id = space_race.14
+								}
+							}
+						}
+					}
+
+					70 = {
+
+					}
+				}
+			}
+			if = {
+				# Checks for if it is Janurary (Year of previous month is a different year of current year)
+				limit = { NOT = { check_variable = { global.last_year = global.year } } }
+					
+				set_variable = { global.last_year = global.year }
+
+				every_character = {
+					limit = {
+						has_character_flag = recruited_unit_leader
+					}
+					if = {
+						limit = {
+							check_variable = {
+								years_of_service < 1
+							}
+						}
+						set_variable_to_random = {
+    						var = days_before_retire
+							min = 0
+    						max = 360
+    						integer = yes
+						}
+						unit_leader_event = { id = generic.206 days = var:THIS.days_before_retire}
+					}
+					subtract_from_variable = { years_of_service = 1 }
+					log = "[THIS.GetName] number of years remaining: [?THIS.years_of_service]"
+				}
+			}
+		}
+	}
+on_monthly = {
+	effect = {
+		
+		if = {
+			limit = {
+				is_faction_leader = yes
+				has_war = no
+			}
+			set_variable = { ROOT.current_countrya = root.num_faction_members }
+			divide_variable = { ROOT.current_countrya = 2}
+			subtract_from_variable = {ROOT.current_countryc = ROOT.current_countrya }
+		}
+if = {
+	limit = {
+		country_exists = CHI
+		NOT = {
+			country_exists = QIN
+		}	
+	}
+
+329 = { 
+    owner = {
+            set_variable = { QIN.color_array^1 = THIS }
+        }
+    }		
+
+1016 = { 
+    owner = {
+            set_variable = { QIN.color_array^2 = THIS }
+        }
+    }
+
+1018 = { 
+    owner = {
+            set_variable = { QIN.color_array^3 = THIS }
+        }
+    }
+
+761 = { 
+    owner = {
+            set_variable = { QIN.color_array^4 = THIS }
+        }
+    }
+
+714 = { 
+    owner = {
+            set_variable = { QIN.color_array^5 = THIS }
+        }
+    }
+
+717 = { 
+    owner = {
+            set_variable = { QIN.color_array^6 = THIS }
+        }
+    }
+
+1024 = { 
+    owner = {
+            set_variable = { QIN.color_array^7 = THIS }
+        }
+    }
+1026 = { 
+    owner = {
+            set_variable = { QIN.color_array^8 = THIS }
+        }
+    }
+1026 = { 
+    owner = {
+            set_variable = { QIN.color_array^9 = THIS }
+        }
+    }
+612 = { 
+    owner = {
+            set_variable = { QIN.color_array^10 = THIS }
+        }
+    }
+1021 = { 
+    owner = {
+            set_variable = { QIN.color_array^11 = THIS } 
+        }
+    } 			
+1015 = { 
+    owner = {
+            set_variable = { QIN.color_array^12 = THIS } 
+        }
+    } 		
+618 = { 
+    owner = {
+            set_variable = { QIN.color_array^13 = THIS } 
+        }
+    }
+287 = { 
+    owner = {
+            set_variable = { QIN.color_array^14 = THIS } 
+        }
+    }		
+755 = { 
+    owner = {
+            set_variable = { QIN.color_array^15 = THIS } 
+        }
+    }	
+616 = { 
+    owner = {
+            set_variable = { QIN.color_array^16 = THIS } 
+        }
+    }	
+614 = { 
+    owner = {
+            set_variable = { QIN.color_array^17 = THIS } 
+        }
+    }	
+761 = { 
+    owner = {
+            set_variable = { QIN.color_array^18 = THIS } 
+        }
+    }		
+743 = { 
+    owner = {
+            set_variable = { QIN.color_array^19 = THIS } 
+        }
+    }	
+607 = { 
+    owner = {
+            set_variable = { QIN.color_array^20 = THIS } 
+        }
+    }		
+
+605 = { 
+    owner = {
+            set_variable = { QIN.color_array^21 = THIS } 
+        }
+    }	
+322 = { 
+    owner = {
+            set_variable = { QIN.color_array^22 = THIS } 
+        }
+    }
+757 = { 
+    owner = {
+            set_variable = { QIN.color_array^23 = THIS } 
+        }
+    }	
+603 = { 
+    owner = {
+            set_variable = { QIN.color_array^24 = THIS } 
+        }
+    }		
+602 = { 
+    owner = {
+            set_variable = { QIN.color_array^25 = THIS } 
+		}
+    }		
+600 = { 
+    owner = {
+            set_variable = { QIN.color_array^26 = THIS } 
+        }
+    }	 
+596 = { 
+    owner = {
+            set_variable = { QIN.color_array^27 = THIS } 
+        }
+    }	
+595 = { 
+    owner = {
+            set_variable = { QIN.color_array^28 = THIS } 
+        }
+    }
+728 = { 
+    owner = {
+            set_variable = { QIN.color_array^29 = THIS } 
+        }
+    }		
+599 = { 
+    owner = {
+            set_variable = { QIN.color_array^30 = THIS } 
+        }
+    }
+}			
+	}
+}	
+	# country 
+	on_daily = {
+		effect = {
+			update_all_pop  = yes
+			add_to_variable = { spam_cooldownusa = 1 }
+			subtract_from_variable = { UNcooldownunvotecountry = 1 }
+			clamp_variable = {
+				var = UNcooldownunvotecountry
+				min = 0
+			}
+			update_wounded_veterians = yes
+			if = {
+				limit = {
+					has_decision = QIN_smuggle_weapons
+					
+				}
+				add_to_variable = {
+					foreign_suspicion_level = 1
+				}
+				else_if = {
+					limit = {
+						NOT = {
+							has_country_flag = investigations_underway
+						}
+					}
+					add_to_variable = {
+						foreign_suspicion_level = -0.5
+					}
+				}
+			}
+			if = {
+				limit = {
+					check_variable = {
+						foreign_suspicion_level > 89.5
+					}
+				}
+				set_country_flag = investigations_underway
+				else = {
+					clr_country_flag = investigations_underway
+				}
+			}
+			clamp_variable = {
+				var = foreign_suspicion_level
+				min = 0
+				max = 100
+			}
+
+		}
+	}
+	on_new_term_election = {
+		effect = {
+			
+			if = {
+				limit = { 
+					tag = USA 
+					NOT = {
+						has_active_mission = USA_campaign_runs_new
+						has_active_mission = USA_campaign_runs
+					}
+				}
+				RON_handle_American_Elections = yes
+			}
+			else_if = {
+				limit = {
+					tag = FRA
+					date < 1945.1.1
+				}
+				RON_handle_French_Elections = yes
+			}
+			else_if = {
+				limit = { tag = ARG }
+				RON_handle_Argentine_Elections = yes
+			}
+			else_if = {
+				limit = {
+					original_tag = SPR
+					date > 1936.1.1
+					date < 1936.3.3
+				}
+			}
+			else = {
+				country_event = { id = election.1 }
+			}
+		}
+	}
+
+	on_nuke_drop = {
+		effect = {
+			if = {
+				limit = {
+					OR = {
+						has_tech = RON_Antimatter_Bomb
+						has_tech = bba_strat_bombing_2060
+						date > 2000.1.1
+					}
+				}
+				FROM = {
+					decrease_population_on_nuke = yes
+					set_demilitarized_zone = yes
+				}
+			}
+		}
+	}
+
+	on_create_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}
+	}
+
+	on_join_faction = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}
+	}
+
+	on_declare_war = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					subtract_from_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_faction_formed = {
+		effect = {
+			ROOT = {
+				set_variable = { ROOT.current_countryc = 100 }
+			}
+		}
+	}
+
+	on_capitulation = {
+	 	# effect = {
+	 	# 	### Naval transfers
+	 	# 	if = {
+	 	# 		limit = {
+	 	# 			ROOT = {
+	 	# 				is_mexican_revolution_tag = yes
+	 	# 				is_in_faction = no
+	 	# 			}
+	 	# 			FROM = { is_mexican_revolution_tag = yes }
+	 	# 		}
+	 	# 		transfer_navy = { target = FROM }
+	 	# 		#Border cleanup
+	 	# 		FROM = {
+	 	# 			annex_country = ROOT
+	 	# 		}
+	 	# 	}
+	 	# }
+	}
+
+	on_uncapitulation = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					add_to_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_government_change = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					subtract_from_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_coup_succeeded = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					subtract_from_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_puppet = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					add_to_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_release_as_puppet = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					add_to_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_annex = {
+		effect = {
+			ROOT = {
+				if = {
+					limit = {
+						is_faction_leader = yes
+					}
+					add_to_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+		}
+	}
+
+	on_unit_leader_created = {
+		effect = {
+			character = {
+				set_character_flag = recruited_unit_leader
+				set_variable_to_random = {
+    				var = years_of_service
+					min = 30
+    				max = 35
+    				integer = yes
+				}
+			}
+		}
+	}
+
+	on_army_leader_promoted = {
+		effect = {
+			character = {
+				add_to_variable = { years_of_service = 5 }
+			}
+		}
+	}
+}
