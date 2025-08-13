@@ -124,6 +124,20 @@ on_actions = {
 			}
 		}
 	}
+	on_monthly_FRA = {
+		effect = {
+			if = {
+				limit = {
+					NOT = {
+						has_completed_focus = FRA1_liquidate_political_ennemies
+						has_country_flag = union_sacree
+					}
+				}
+				FRA_calculate_parliament = yes
+			}
+			
+		}
+	}
 	on_monthly = {
 		
 		effect = {
@@ -210,10 +224,6 @@ on_actions = {
 					log = "[THIS.GetName] number of years remaining: [?THIS.years_of_service]"
 				}
 			}
-		}
-	}
-	on_monthly = {
-		effect = {
 			
 			if = {
 				limit = {
@@ -522,6 +532,52 @@ on_actions = {
 					subtract_from_variable = { ROOT.current_countryc = 10 }
 				}
 			}
+
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = GER
+					}
+					FROM = {
+						tag = DNZ
+					}
+				}
+				DNZ = {
+					country_event = danzig.10
+				}
+			}
+
+			#Call Anti-Soviet pact members to war
+			if = {
+				limit = {
+					ROOT = { tag = SOV }
+					FROM = { has_idea = Anti_Soviet_Interest }
+				}
+				FROM = {
+					country_event = { id = soviet.66 days = 1 }
+				}
+			}
+
+			if = {
+				limit = {
+					OR = {
+						AND = {
+							tag = ENG
+							FROM = { tag = OTT }
+						}
+						AND = {
+							tag = OTT
+							FROM = { tag = ENG }
+						}
+					}
+					ENG = { has_completed_focus = ENGDNC_european_crusade_against_islam }
+				}
+				hidden_effect = {
+					ENG = { 
+						activate_mission = DNC_Jerusalem_Conquest
+					}
+				}
+			}
 		}
 	}
 
@@ -584,8 +640,8 @@ on_actions = {
 							is_controlled_by = ROOT
 							is_owned_by = ROOT
 							NOT = {
-								tag = REB
-								tag = ZOM
+								is_controlled_by = REB
+								is_controlled_by = ZOM
 							}					
 						}
 						transfer_state_to = FROM
@@ -601,6 +657,136 @@ on_actions = {
 					}
 				}
 			}
+
+			if = {
+				limit = {
+					ROOT = {
+						tag = DNZ
+					}
+				}
+				FROM = { annex_country = { target = DNZ } }
+			}
+
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = GER
+						has_government = fascism
+						has_civil_war = no
+					}
+				}
+				GER = {
+					country_event = { id = bs.12 }
+				}
+			}
+
+			if = { #Operation Countenance completion, full occupation
+				limit = {
+					original_tag = PER
+					Operation_countenance_in_progress = yes
+					ENG = { has_global_flag = sov_yes_cooperation_full_occupation }
+					#NOT = {
+					#	PER = { has_decision = PER_Surrender }
+					#}
+				}
+				ENG = { country_event = britain.93 }
+			}
+
+			if = { #Operation Countenance completion, partial occupation
+				limit = {
+					original_tag = PER
+					Operation_countenance_in_progress = yes
+					ENG = { has_global_flag = sov_yes_cooperation_partial_occupation }
+					#NOT = {
+					#	PER = { has_decision = PER_Surrender }
+					#}
+				}
+				ENG = { country_event = britain.932 }
+			}
+
+			if = { #Intervention in Iran completed, regime change
+				limit = {
+					original_tag = PER
+					Intervention_in_Iran_in_progress = yes
+					ENG = { has_global_flag = sov_no_cooperation }
+					#NOT = {
+					#	PER = { has_decision = PER_Surrender }
+					#}
+				}
+				ENG = { country_event = britain.94 }
+			}
+
+			#Defeat the Soviet Union to remove Comintern Influence
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = UKR
+						has_cosmetic_tag = UKRPR
+					}
+				}
+		
+				UKR = {
+					drop_cosmetic_tag = yes
+				}
+			}
+			if = {
+				limit = {
+					ROOT = {
+						original_tag = SOV
+					}
+				}
+				every_other_country = {
+					if = {
+						limit = { has_idea = Support_Freedom }
+						remove_ideas = Support_Freedom
+					}
+					if = {
+						limit = { has_idea = Comintern_Expansion }
+						remove_ideas = Comintern_Expansion
+					}
+					if = {
+						limit = { has_idea = communists_abroad2 }
+						remove_ideas = communists_abroad2
+					}
+					if = {
+						limit = { has_idea = soviet_anti_imperialism }
+						remove_ideas = soviet_anti_imperialism
+					}
+					if = {
+						limit = { has_idea = soviet_propaganda_campaign }
+						remove_ideas = soviet_propaganda_campaign
+					}
+					if = {
+						limit = { has_idea = under_the_soviet_thumb }
+						remove_ideas = under_the_soviet_thumb
+					}
+					if = {
+						limit = { has_idea = comintern_influence_lite }
+						remove_ideas = comintern_influence_lite
+					}
+					if = {
+						limit = { has_idea = comintern_influence }
+						remove_ideas = comintern_influence
+					}
+					if = {
+						limit = { has_idea = comintern_influence2 }
+						remove_ideas = comintern_influence2
+					}
+				}
+			}
+
+			if = {
+				limit = {
+					TAG = KAZ
+					KAZ = {
+						has_cosmetic_tag = ALASH
+					}
+					date < 1930.1.1
+				}
+				KAZ = {
+					drop_cosmetic_tag = yes
+				}
+			}
 	 	}
 	}
 
@@ -613,6 +799,15 @@ on_actions = {
 					}
 					add_to_variable = { ROOT.current_countryc = 10 }
 				}
+			}
+
+			if = {
+				limit = {
+					original_tag = GER
+					has_government = fascism
+					is_subject = no
+				}
+				drop_cosmetic_tag = yes
 			}
 		}
 	}
@@ -637,6 +832,32 @@ on_actions = {
 					id = germany_1933.2 days = 25 random_days = 10
 				}
 			}
+
+			every_country = {
+				limit = {
+					has_focus_tree = Hungary_WW2
+				}
+				mark_focus_tree_layout_dirty = yes
+			}
+
+			#Remove anti_soviet_pact
+			if = {
+				limit = { has_idea = Anti_Soviet_Interest }
+				remove_ideas = Anti_Soviet_Interest
+			}
+			#Replace the following two with events for SOV if they are not communist.
+			#if = {
+			#	limit = { 
+			#		OR = {
+			#			has_idea = trotskyite_plot 
+			#			has_idea = trotskyite_plot_purged
+			#		}
+			#		NOT = {
+			#			has_civil_war = yes
+			#		}
+			#	}
+			#	country_event = { id = soviet.54 }
+			#}
 		}
 	}
 
@@ -663,6 +884,26 @@ on_actions = {
 					add_to_variable = { ROOT.current_countryc = 10 }
 				}
 			}
+
+			if = {
+				limit = {
+					TAG = GRE
+					is_subject_of = GER
+					GER = { has_government = fascism }
+				}
+				set_cosmetic_tag = GRE_GER
+
+				create_country_leader = {
+					name = "Konstantinos Logothetopoulos"
+					desc = "POLITICS_KONSTANTINOS_LOGOTHETOPOULOS_DESC"
+					picture = "Portrait_Greece_Konstantinos_Logothetopoulos.dds"
+					expire = "1965.1.1"
+					ideology = fascism_ideology
+					traits = {
+						great_war_hero
+					}
+				}
+			}
 		}
 	}
 
@@ -674,6 +915,26 @@ on_actions = {
 						is_faction_leader = yes
 					}
 					add_to_variable = { ROOT.current_countryc = 10 }
+				}
+			}
+
+			if = {
+				limit = {
+					TAG = GRE
+					is_subject_of = GER
+					GER = { has_government = fascism }
+				}
+				set_cosmetic_tag = GRE_GER
+
+				create_country_leader = {
+					name = "Konstantinos Logothetopoulos"
+					desc = "POLITICS_KONSTANTINOS_LOGOTHETOPOULOS_DESC"
+					picture = "Portrait_Greece_Konstantinos_Logothetopoulos.dds"
+					expire = "1965.1.1"
+					ideology = fascism_ideology
+					traits = {
+						great_war_hero
+					}
 				}
 			}
 		}
@@ -756,6 +1017,57 @@ on_actions = {
 					ruling_party = communism
 					elections_allowed = no
 				}
+			}
+		}
+	}
+
+	on_state_control_changed = {
+		effect = {
+			if = {
+				limit = {
+					FROM.FROM = { state = 889 }
+					NOT = { has_global_flag = occupied_schutzzone }
+					ROOT = {
+						tag = SLO
+						is_puppet_of = GER
+						has_government = fascism
+					}
+				}
+				set_global_flag = schutzzone_treaty
+			}
+		}
+	}
+
+	on_subject_autonomy_level_change = {
+		effect = {
+			# Add to french tech group
+			if = {
+				limit = {
+					OR = {
+						has_autonomy_state = autonomy_colony
+						has_autonomy_state = autonomy_dominion
+					}
+					OVERLORD = {
+						is_in_tech_sharing_group = french_research
+					}
+				}
+				add_to_tech_sharing_group = french_research
+			}
+			if = {
+				limit = {
+					tag = VIN
+					tag = CAM
+					tag = LAO
+					tag = MOR
+					tag = TUN
+					tag = SYR
+					tag = LEB
+					NOT = {
+						has_autonomy_state = autonomy_colony
+						has_autonomy_state = autonomy_dominion
+					}
+				}
+				remove_from_tech_sharing_group = french_research
 			}
 		}
 	}
