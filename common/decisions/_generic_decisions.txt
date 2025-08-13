@@ -1,1088 +1,12 @@
-AI_paradrops = {
-	paradrop_in_FROM = {
-		visible = {
-			has_global_flag = test_features
-			ROOT = {
-				is_major = yes
-				has_war_with = FROM.CONTROLLER
-				has_tech = paratroopers
-			}
-			any_enemy_country = {
-				FROM = {
-					is_controlled_by = PREV
-				}
-			}
-			FROM = {
-				NOT = {
-					has_state_flag = paradrop
-				}
-			 	check_variable = {
-			 		days_since_last_strategic_bombing < 1
-			 	}
-			}
-			ROOT = {
-			 	any_country_division = {
-			 		division_has_battalion_in_template = paratrooper
-			 	}
-			}
-			
-		}
-		available = {
-			NOT = {
-				has_country_flag = is_paradropping
-			}
-		}
-		target_trigger = {
-			
-		}
-		state_target = yes
-		
-		ai_will_do = {
-			base = 10
-			modifier = {
-				factor = 0.8
-				
-				FROM.CONTROLLER = {
-					has_deployed_air_force_size = {
-    					size > 100
-    					type = fighter
-					}
-					has_deployed_air_force_size = {
-    					size < 200
-    					type = fighter
-					}
-				}
-			}
-			modifier = {
-				factor = 0.5
-				
-				FROM.CONTROLLER = {
-					has_deployed_air_force_size = {
-    					size > 200
-    					type = fighter
-					}
-					has_deployed_air_force_size = {
-    					size < 400
-    					type = fighter
-					}
-				}
-			}
-			modifier = {
-				factor = 0.2
-				
-				FROM.CONTROLLER = {
-					has_deployed_air_force_size = {
-    					size > 400
-    					type = fighter
-					}
-					has_deployed_air_force_size = {
-    					size < 500
-    					type = fighter
-					}
-				}
-			}
-			modifier = {
-				factor = 0
-				
-				FROM.CONTROLLER = {
-					has_deployed_air_force_size = {
-    					size > 500
-    					type = fighter
-					}
-				}
-			}
-			
-		}
-		cancel_trigger = {
-			FROM = {
-					
-				check_variable = {
-					days_since_last_strategic_bombing > 1
-				}
-			}
-			ROOT = {
-				NOT = {
-					has_war_with = FROM.CONTROLLER
-				}
-			}
-		}
-		complete_effect = {
-			ROOT = {
-				set_country_flag = is_paradropping
-			}
-			FROM = {
-				set_state_flag = paradrop
-			}
-			FROM.CONTROLLER = {
-				set_variable = { state_ai_paradrop = FROM.id}
-			}
-		}
-		days_remove = 5
-		remove_effect = {
-			FROM = {
-				clr_state_flag = paradrop
-			}
-			if = {
-				limit ={
-					ROOT = {
-						NOT = { has_template = "Paratroopers AI"}
-					}
-				}
-				division_template = {
-  					name = "Paratroopers AI"
-					division_cap = 5
-  					is_locked = yes
-  					priority = 2
-  					regiments = {
-  					    paratrooper = { x = 0 y = 0 }
-  					    paratrooper = { x = 0 y = 1 }
-  					    paratrooper = { x = 0 y = 2 }
-  					   
-  					}
-				}
-			}
-			FROM = {
-				create_unit = {
-   					division = "name = \"Artie\" division_template = \"Paratroopers AI\" start_manpower_factor = 0.3"
-   					owner = ROOT
-   					count = 1
-   					allow_spawning_on_enemy_provs = yes
-    			}
-			}
-			ROOT = {
-				clr_country_flag = is_paradropping
-			}
-			FROM.CONTROLLER = {
-				clear_variable = state_ai_paradrop
-			}
-		}
-		cancel_effect = {
-			ROOT = {clr_country_flag = is_paradropping}
-			FROM.CONTROLLER = {
-				clear_variable = state_ai_paradrop
-			}
-			FROM = {
-				clr_state_flag = paradrop
-			}
-		}
-	} 
-}
-generic_maritime_blockade = {
-	blockade_timer = {
-		is_good = yes
-		days_mission_timeout = 150
-		activation = { 
-			always = no
-		}
-		highlight_states = {
-			highlight_states_trigger = {
-				OR = {
-					state = 702
-					state = 296
-				}
-			}
-		}
-		available = {
-			hidden_trigger = {
-				always = no
-			}
-		}
-		cancel_trigger = {
-			has_global_flag = SPR_POR_blockade_lifted
-			POR = {
-				NOT = {
-					OR = {
-						controls_state = 702
-						controls_state = 296
-					}
-				}
-			}
-		}
-	}
-	blockade_issue_warning_salve = {
-		cost = 20
-		visible = {
-			has_country_flag = POR_navy_spotted
-		}
-		complete_effect = {
-			POR = {
-				country_event = ww2_spain.16
-			}
-		}
-	}
-	lift_blockade = {
-		cost = 5
-		visible = {
-			has_active_mission = blockade_timer
-		}
-		complete_effect = {
-			add_war_support = -0.1
-			set_global_flag = SPR_POR_blockade_lifted
-		}
-	}
-	blockade_timer_bad = {
-		is_good = no
-		days_mission_timeout = 30
-		activation = { 
-			always = no
-		}
-		highlight_states = {
-			highlight_states_trigger = {
-				OR = {
-					state = 702
-					state = 296
-				}
-			}
-		}
-		available = {
-			POR = {
-				ships_in_area = { 
-					area = 61 size > 0
-				} 
-			}
-		}
-		complete_effect = {
-			SPB = {
-				country_event = ww2_spain.13
-				set_country_flag = POR_navy_spotted
-			}
-		}
-		timeout_effect = {
-			SPB ={
-				transfer_state = 702
-				transfer_state = 296
-			}
-		}
-	}
-	blockade_timer_bad_2 = {
-		is_good = no
-		days_mission_timeout = 30
-		activation = { 
-			always = no
-		}
-		highlight_states = {
-			highlight_states_trigger = {
-				OR = {
-					state = 702
-					state = 296
-				}
-			}
-		}
-		available = {
-			POR = {
-				ships_in_area = { 
-					area = 61 size > 4
-				} 
-			}
-		}
-		complete_effect = {
-			SPB = {
-				country_event = ww2_spain.15
-				
-			}
-		}
-		timeout_effect = {
-			SPB ={
-				transfer_state = 702
-				transfer_state = 296
-			}
-		}
-	}
-}
-UNSC_decision_cat = {
-	resolution_vote_timer = {
-		icon = GFX_UN_decisions
-		days_mission_timeout = 21
-		
-		# activation = {
-		#   	#has_global_flag = UNSC_sanction_voting_ongoing
-		# 	always = no
-		# }
-		allowed = { always = no}
-		days_remove = 0
-		cancel_trigger = {
-		 	OR = {
-		 		NOT = {
-		 			has_global_flag = UNSC_sanction_voting_ongoing
-		 		}
-		# 		# check_variable = {
-		# 		# 	global.negative_disp > 50
-		# 		# }
-		# 		# check_variable = {
-		# 		# 	global.positive_disp > 50
-		# 		# }
-		 	}
-		}
-		available = {
-			hidden_trigger = {
-				always = no
-			}
-		}
-		timeout_effect = {
-			#country_event = {id = unsc.5}
-			if = {
-				limit = {
-					check_variable = {global.UNSC_vetos = 0 }
-				}
-				if = {
-					limit= {
-						check_variable = { global.negative_disp > global.positive_disp }
-					}
-					country_event = { id = unsc.4 }
-				}
-				if = {
-					limit = {
-						check_variable = { global.negative_disp < global.positive_disp }
-					}
-					country_event = { id = unsc.5 }
-				}
-			}
-			if = {
-				limit = {
-					check_variable = {global.UNSC_vetos > 0 }
-				}
-				country_event = { id = unsc.4 }
-			}
-			
-			#clr_global_flag = UNSC_sanction_voting_ongoing
-			
-		}
-		cancel_effect = {
-			
-			#end_vote = yes
-			#country_event = {id = unsc.5}
-		}
-	} 
-	
-	ai_veto_resolution = {
-		visible = {
-			OR = {
-				is_ai = yes
-				has_global_flag = test_features
-			}
-		}
-		available = {
-			has_global_flag = UNSC_sanction_voting_ongoing
-			NOT = {
-				has_country_flag = UN_has_voted
-			}
-		}
-		cancel_trigger = {
-			NOT = {
-				has_global_flag = UNSC_sanction_voting_ongoing
-			}
-		}
-		complete_effect = {
-			set_variable_to_random = {
-    			var = random_num
-    			max = 20
-    			integer = yes
-			}
-			set_country_flag = UN_has_voted
-		}
-		days_remove = var:random_num
-		remove_effect = {
-			add_to_variable = { global.UNSC_vetos = 1 }
-			calculate_voting_bar = yes
-			set_variable = {global.UNSC_veto_origin = ROOT}
-		}
-		ai_will_do = {
-			factor = 0
-
-			modifier = {
-				var:global.UN_sanctions_target = {
-					is_in_faction_with = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					has_war_with = ROOT
-				}
-				add = -100
-			}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					has_non_aggression_pact_with = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					is_guaranteed_by = ROOT
-				}
-				add = 25
-			}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					is_subject_of = ROOT
-				}
-				add = 1000
-			}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					tag = ROOT
-				}
-				add = 10000
-			}
-		}
-	}
-	
-	ai_abstain_resolution = {
-		visible = {
-			OR = {
-				is_ai = yes
-				has_global_flag = test_features
-			}
-		}
-		cancel_trigger = {
-			NOT = {
-				has_global_flag = UNSC_sanction_voting_ongoing
-			}
-		}
-		available = {
-			has_global_flag = UNSC_sanction_voting_ongoing
-			NOT = {
-				has_country_flag = UN_has_voted
-			}
-		}
-		complete_effect = {
-			set_variable_to_random = {
-    			var = random_num
-    			max = 20
-    			integer = yes
-			}
-			set_country_flag = UN_has_voted
-		}
-		days_remove = var:random_num
-		remove_effect = {
-			add_to_variable = { global.UNSC_abstain_votes = 1 }
-			calculate_voting_bar = yes
-			set_country_flag = UN_has_voted
-			set_country_flag = UNSC_voted_abstain
-		}
-		ai_will_do = {
-			factor = 0
-
-			modifier = {
-				has_government = neutrality
-				add = 25
-			}
-		}
-	}
-	ai_vote_against_resolution = {
-		visible = {
-			OR = {
-				is_ai = yes
-				has_global_flag = test_features
-			}
-		}
-		available = {
-			has_global_flag = UNSC_sanction_voting_ongoing
-			NOT = {
-				has_country_flag = UN_has_voted
-			}
-		}
-		cancel_trigger = {
-			NOT = {
-				has_global_flag = UNSC_sanction_voting_ongoing
-			}
-		}
-		complete_effect = {
-			set_variable_to_random = {
-    			var = random_num
-    			max = 20
-    			integer = yes
-			}
-			set_country_flag = UN_has_voted
-		}
-		days_remove = var:random_num
-		remove_effect = {
-			add_to_variable = { global.UNSC_negative_votes = 1 }
-			calculate_voting_bar = yes
-			set_country_flag = UN_has_voted
-			set_country_flag = UNSC_voted_against
-		}
-		ai_will_do = {
-			factor = 0
-
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 4 }
-			#	add = 5
-			#}
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 5 }
-			#	add = 10
-			#}
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 6 }
-			#	add = 20
-			#}
-			modifier = {
-				var:global.UN_sanctions_target = {
-					is_puppet_of = JAP 
-					OR = {
-					ROOT = {
-						has_government = communism
-					}
-					ROOT = {
-						has_government = democratic
-					}
-				}
-				}
-				add = 80
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { is_neighbor_of = ROOT }
-					OR = {
-						has_war_with = ROOT
-						NOT = { check_variable = { united_nations_generated_threat < 20 } }
-						ROOT = {
-							has_opinion = {
-								target = PREV
-								value < 0
-							}
-						}
-					}
-				}
-				add = 5
-			}
-			modifier = {
-				any_neighbor_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = {
-						OR = {
-							has_war_with = ROOT
-							NOT = { check_variable = { united_nations_generated_threat < 20 } }
-							ROOT = {
-								has_opinion = {
-									target = PREV
-									value < 0
-								}
-							}
-						}
-					}
-				}
-				add = 5
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { is_neighbor_of = ROOT }
-					NOT = {
-						OR = {
-							has_war_with = ROOT
-							NOT = { check_variable = { united_nations_generated_threat < 20 } }
-							ROOT = {
-								has_opinion = {
-									target = PREV
-									value < 0
-								}
-							}
-						}
-					}
-				}
-				add = 15
-			}
-			modifier = {
-				any_neighbor_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 0 }
-				}
-				add = 2
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 1 }
-				}
-				add = 2
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 2 }
-				}
-				add = 2
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 3 }
-				}
-				add = 3
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 4 }
-				}
-				add = 3
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 5 }
-				}
-				add = 5
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 6 }
-				}
-				add = 5
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 7 }
-				}
-				add = 5
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					check_variable = { num_of_active_united_nations_trade_sanctions > 8 }
-				}
-				add = 5
-			}
-			modifier = {
-				is_subject = yes
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					ROOT = { is_subject_of = PREV }
-				}
-				add = 1000
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					has_capitulated = yes
-				}
-				add = 10
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					has_government = ROOT
-				}
-				add = 10
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					is_in_faction_with = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { has_war_with = ROOT }
-				}
-				NOT = {
-					any_neighbor_country = {
-						OR = {
-							has_country_flag = sanctions_country_target_flag
-							any_neighbor_country = {
-								OR = {
-									has_country_flag = sanctions_country_target_flag
-									any_neighbor_country = {
-										OR = {
-											has_country_flag = sanctions_country_target_flag
-											any_neighbor_country = {
-												has_country_flag = sanctions_country_target_flag
-											}
-										}
-									}
-								}
-							}
-						}
-					}
-				}
-				add = 20
-			}
-			modifier = {
-				has_global_flag = united_nations_always_vote_no_cheat_flag
-				add = 10000
-			}
-		}
-			
-
-	}
-
-	ai_vote_for_resolution = {
-		available = {
-			has_global_flag = UNSC_sanction_voting_ongoing
-			NOT = {
-				has_country_flag = UN_has_voted
-			}
-		}
-		cancel_trigger = {
-			NOT = {
-				has_global_flag = UNSC_sanction_voting_ongoing
-			}
-		}
-		visible = {
-			OR = {
-				is_ai = yes
-				has_global_flag = test_features
-			}
-		}
-		complete_effect = {
-			set_variable_to_random = {
-    			var = random_num
-    			max = 20
-    			integer = yes
-			}
-			set_country_flag = UN_has_voted
-		}
-		days_remove = var:random_num
-		remove_effect = {
-			add_to_variable = { global.UNSC_positive_votes = 1 }
-				calculate_voting_bar = yes
-				set_country_flag = UN_has_voted
-				set_country_flag = UNSC_voted_for
-		}
-		ai_will_do = {
-			factor = 0
-			
-			modifier = {
-				surrender_progress > 0.5
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					has_war_with = ROOT
-				}
-				add = 100
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					has_offensive_war = yes
-				}
-				add = 20
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					ROOT = {
-						has_opinion = {
-							target = PREV
-							value < 0
-						}
-					}
-				}
-				add = 5
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_starter_flag
-					ROOT = {
-						has_opinion = {
-							target = PREV
-							value > 50
-						}
-					}
-				}
-				add = 5
-			}
-			modifier = {
-				has_capitulated = yes
-				any_owned_state = {
-					NOT = { is_controlled_by = ROOT }
-					controller = {
-						has_war_with = ROOT
-						has_country_flag = sanctions_country_target_flag
-					}
-				}
-				add = 100
-			}
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 1 }
-			#	add = 5
-			#}
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 2 }
-			#	add = 10
-			#}
-			#modifier = {
-			#	check_variable = { united_nations_neutrality_random_chance_in_voting = 3 }
-			#	add = 20
-			#}
-			modifier = {
-				any_neighbor_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { check_variable = { united_nations_generated_threat < 40 } }
-				}
-				add = 10
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { is_neighbor_of = ROOT }
-					NOT = { check_variable = { united_nations_generated_threat < 40 } }
-				}
-				add = 5
-			}
-			modifier = {
-				any_neighbor_country = {
-					has_country_flag = sanctions_country_target_flag
-					OR = {
-						has_war_with = ROOT
-						NOT = { check_variable = { united_nations_generated_threat < 20 } }
-						ROOT = {
-							has_opinion = {
-								target = PREV
-								value < 0
-							}
-						}
-					}
-				}
-				add = 10
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					NOT = { is_neighbor_of = ROOT }
-					OR = {
-						has_war_with = ROOT
-						NOT = { check_variable = { united_nations_generated_threat < 20 } }
-						ROOT = {
-							has_opinion = {
-								target = PREV
-								value < 0
-							}
-						}
-					}
-				}
-				add = 5
-			}
-			modifier = {
-				has_global_flag = ITA_ETH_voting
-				add = 4
-			}
-			modifier = {
-				any_country = {
-					has_country_flag = sanctions_country_target_flag
-					has_country_flag = last_united_nations_threat_static_change
-					has_country_flag = {
-						flag = last_united_nations_threat_static_change
-						days < 40
-					}
-					OR = {
-						check_variable = { last_united_nations_threat_static_change = 1 }
-						check_variable = { last_united_nations_threat_static_change = 2 }
-					}
-				}
-				add = 3
-			}
-			modifier = {
-				has_global_flag = united_nations_always_vote_yes_cheat_flag
-				add = 10000
-			}
-			modifier = {
-				any_other_country = {
-					is_justifying_wargoal_against = UNA
-				}
-				add = 100
-			}
-		}
-	}
-}
-demobilization = {
-	public_asks_for_demob = {
-		days_mission_timeout = 60
-		icon = revolt
-		activation = {
-			NOT = {
-				OR = {
-					has_country_flag = show_settings
-					has_country_flag = show_recent_changes
-					has_global_flag = KR_no_unit_limits
-				}
-			}
-			has_war = no
-			num_divisions > 4
-			NOT = {
-				has_country_flag = is_rearming
-			}
-			OR = {
-				has_excessive_army_size = yes
-				AND = {
-					needs_army_reduction_for_manpower = yes
-					is_ai = yes
-				}
-				has_reached_maximum_divisions = yes
-			}
-			NOT = {
-				any_other_country = {
-					OR = {
-						is_justifying_wargoal_against = ROOT
-						has_wargoal_against = ROOT
-						ROOT = { is_justifying_wargoal_against = PREV }
-						ROOT = { has_wargoal_against = PREV }
-					}
-				}
-			}
-		}
-		cancel_if_not_visible = yes
-		visible = {
-			NOT = {
-				OR = {
-					has_country_flag = show_settings
-					has_country_flag = show_recent_changes
-					has_global_flag = KR_no_unit_limits
-				}
-			}
-			NOT = {
-				OR = {
-					custom_trigger_tooltip = {
-						tooltip = army_demobilization_requirement_tt
-						has_reached_maximum_divisions = no
-					}
-					has_reached_maximum_divisions = no
-					has_war = yes
-					any_other_country = {
-						OR = {
-							is_justifying_wargoal_against = ROOT
-							has_wargoal_against = ROOT
-							ROOT = { is_justifying_wargoal_against = PREV }
-							ROOT = { has_wargoal_against = PREV }
-						}
-					}
-				}
-			}
-		}
-		ai_will_do = {
-			factor = 0
-		}
-		is_good = no
-		timeout_effect = {
-			if = {
-				limit = {
-					is_ai = yes
-				}
-				country_event = kr.political.121
-			}
-			else = {
-				increase_strikes = yes
-			}
-		}
-	}
-}
-
-
 political_actions = {
-	declare_neighbor_rebel_state = {
-		ai_will_do = {
-			factor = 100
-		}
-		visible = {
-			tag = REB
-		}
-		available = {
-		tag = REB
-		}
-		cost = 30
-		complete_effect = {
-			every_country = {
-				limit = {
-					is_neighbor_of = ROOT
-				}
-				    declare_war_on = {
-                target = ROOT
-                type = annex_everything
-            }				
-			}
 
-		}
-	}
-
-	rebel_against_sov = {
-		visible = {
-			OR = {
-			is_puppet_of = SOV
-			is_subject_of = SOV
-			}
-		}
-		available = {
-			OR = {
-			is_puppet_of = SOV
-			is_subject_of = SOV
-			}
-			NOT = {
-				has_government = communism
-			}
-		}
-		cost = 50
-		ai_will_do = {
-			factor = 100000
-			modifier = {
-				factor = 0
-				is_historical_focus_on = yes
-			}
-		}
-		complete_effect = {
-SOV = {
-	set_autonomy = {
-    target = ROOT
-    autonomous_state = autonomy_free
-    end_wars = yes
-    end_civil_wars = yes
-}	
-	create_wargoal = {
-    type = puppet_wargoal_focus
-    target = ROOT
-	expire = 50
-}
-}
-
-		}		
-	}
-	ask_for_more_divisions = {
-		allowed = {
-			#Comment by TK No need as maximum decisions are generous as is, also im not sure if you'd be asking "the people" rather than ongress/parliament.
-			always = no
-			#has_reached_maximum_divisions = yes
-		}
-		visible = {
-			#has_war = yes
-			always = no
-		}
-		cost = 20
-		ai_will_do = {
-			factor = 0
-			modifier = {
-				factor = 1000
-				has_reached_maximum_divisions = yes
-				surrender_progress > 0.8
-
-			}
-		}
-		complete_effect = {
-			add_war_support = -0.02
-			add_to_variable = {
-				ROOT.added_max_divisions = 10
-			}
-			hidden_effect = {
-				add_dynamic_modifier = { modifier = adding_more_units_dynamic_modifier }
-				add_ideas = {
-					RI_a_total_war
-				}
-			}
-
-			custom_effect_tooltip = icrease_division_by_10_tt
-		}
-	}
+	
 	targeted_race_for_the_bomb = {
 
 		icon = generic_research
 
 		allowed = {
-			always = no
+			always = yes
 		}
 
 		available = {
@@ -1093,17 +17,17 @@ SOV = {
 		}
 
 		target_root_trigger = {
-			has_tech = atomic_research
-			NOT = { has_global_flag = first_nuke_dropped }
-			NOT = { has_idea = race_for_the_bomb }
+            has_tech = atomic_research
+            NOT = { has_global_flag = first_nuke_dropped }
+            NOT = { has_idea = race_for_the_bomb }
 		}
 
 		#If this trigger matches a country.
 		target_trigger = {
 			#Target is FROM
 			FROM = {
-				NOT = { is_in_faction_with = ROOT }
-				has_tech = nuclear_reactor
+        		NOT = { is_in_faction_with = ROOT }
+				is_special_project_completed = sp:sp_nuclear_reactor
 				any_owned_state = {
 					nuclear_reactor > 0
 				}
@@ -1111,13 +35,13 @@ SOV = {
 		}
 
 		visible = {
-			#Target is FROM
-			has_tech = atomic_research
-			NOT = { has_global_flag = first_nuke_dropped }
-			NOT = { has_idea = race_for_the_bomb }
-			FROM = {
-				NOT = { is_in_faction_with = ROOT }
-				has_tech = nuclear_reactor
+            #Target is FROM
+            has_tech = atomic_research
+            NOT = { has_global_flag = first_nuke_dropped }
+            NOT = { has_idea = race_for_the_bomb }
+            FROM = {
+        		NOT = { is_in_faction_with = ROOT }
+				is_special_project_completed = sp:sp_nuclear_reactor
 				any_owned_state = {
 					nuclear_reactor > 0
 				}
@@ -1133,7 +57,7 @@ SOV = {
 			factor = 1
 			modifier = {
 				factor = 0
-				any_other_country = { has_tech = nukes }
+				any_other_country = { is_special_project_completed = sp:sp_nuclear_bomb }
 			}
 		}
 	}
@@ -1141,7 +65,7 @@ SOV = {
 	improved_worker_conditions = {
 
 		icon = generic_industry
-
+		priority = 10
 		available = {
 			has_stability < 1.0
 		}
@@ -1154,8 +78,9 @@ SOV = {
 
 		modifier = {
 			stability_weekly = 0.005
-			consumer_goods_factor = 0.05
+			consumer_goods_factor = 0.10
 			industrial_capacity_factory = -0.1
+			
 		}
 
 		days_remove = 180
@@ -1169,96 +94,20 @@ SOV = {
 
 		ai_will_do = {
 			base = 0
+			modifier = {
+				add = 1
+				has_stability < 0.6
+				has_political_power > 155 #Spend on other things first
+			}
 
 			modifier = {
-				add = 1000
-
+				add = 1
 				OR = {
-					has_stability < 0.7
-
-					AND = { has_stability < 0.8 NOT = { has_available_idea_with_traits = { idea = popular_figurehead limit = 1 } } }
+					AND = { has_stability < 0.7 NOT = { has_available_idea_with_traits = { idea = popular_figurehead limit = 1 } } }
+					AND = { has_stability < 0.7 NOT = { has_available_idea_with_traits = { idea = popular_figurehead2 limit = 1 } } }
+					AND = { has_stability < 0.7 NOT = { has_available_idea_with_traits = { idea = popular_figurehead3 limit = 1 } } }
 				}
-			}
-
-			modifier = {
-				factor = 0
-
-				has_available_idea_with_traits = { idea = military_theorist limit = 1 }
-				NOT = { has_idea_with_trait = military_theorist }
-			}
-
-			modifier = {
-				factor = 0
-
-				NOT = { is_major  = yes }
-
-				has_available_idea_with_traits = { idea = silent_workhorse limit = 1 }
-				NOT = { has_idea_with_trait = silent_workhorse }
-			}
-		}
-	}
-
-	promises_of_peace = {
-
-		icon = generic_political_discourse
-
-		available = {
-			has_war = no
-			has_war_support > 0.2
-			has_stability < 1.0
-		}
-
-		visible = {
-			always = yes
-		}
-
-		remove_trigger = {
-			has_war = yes
-			has_war_support < 0.05
-		}
-
-		fire_only_once = no
-
-		modifier = {
-			stability_weekly = 0.005
-			war_support_weekly = -0.01
-			political_power_gain = -0.5
-		}
-
-		days_remove = 90
-		days_re_enable = 360
-
-		cost = 50
-
-		complete_effect = {
-
-		}
-
-		ai_will_do = {
-			base = 0
-
-			modifier = {
-				add = 1000
-
-				has_war_support > 0.6
-
-				has_stability < 0.30
-			}
-
-			modifier = {
-				factor = 0
-
-				has_available_idea_with_traits = { idea = military_theorist limit = 1 }
-				NOT = { has_idea_with_trait = military_theorist }
-			}
-
-			modifier = {
-				factor = 0
-
-				NOT = { is_major  = yes }
-
-				has_available_idea_with_traits = { idea = silent_workhorse limit = 1 }
-				NOT = { has_idea_with_trait = silent_workhorse }
+				has_political_power > 505 #Spend on other things first
 			}
 		}
 	}
@@ -1271,7 +120,7 @@ economy_decisions = {
 		icon = generic_construction
 
 		allowed = {
-			NOT = { OR = { tag = GER tag = FRA } }
+			NOT = { OR = { original_tag = GER original_tag = FRA } }
 		}
 
 		cost = 50
@@ -1339,25 +188,115 @@ economy_decisions = {
 					}
 				}
 			}
+			if = {
+				limit = {
+					has_idea = FRA_protected_by_the_maginot_line
+				}
+				remove_ideas = FRA_protected_by_the_maginot_line
+			}
 		}
 	}
+
+	restructure_supply_system = { #one time boost to get a few cheap supply hubs
+
+		icon = GFX_decision_generic_construction
+
+		visible = { 
+			OR = {
+				is_major = no
+				AND = {
+					is_faction_leader = yes
+					num_of_factories < 51 #would be a minor if it wasn't for faction leader status
+				}
+			}
+		}
+		fire_only_once = yes
+
+		days_remove = 120
+
+		ai_will_do = {
+			factor = 1
+			modifier = {
+				num_of_factories < 30
+				factor = 0
+			}
+		}
+
+		modifier = {
+			production_speed_supply_node_factor = 3
+		}
+
+		complete_effect = {
+			set_variable = { node_goal = num_of_supply_nodes }
+			add_to_variable = { node_goal = 3 } #maximum 3 additional nodes
+		}
+
+		cancel_trigger = {
+			
+			 check_variable = { node_goal < num_of_supply_nodes } #if the number of supply nodes exceeds the old number by +3, immediately cancel
+		}
+	}
+	seize_some_trains_woo = { #repeating train seize
+
+		icon = GFX_decision_hol_draw_up_staff_plans	
+
+		visible = { 
+			num_of_factories < 60
+		}
+		
+		available = {
+			has_equipment = { train_equipment < 101 }
+			has_tech = basic_train
+		}
+		
+		days_remove = 180
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 1
+				has_stability > 0.74
+			}
+		}
+
+		complete_effect = {
+			add_equipment_to_stockpile = {
+				type = train_equipment
+				amount = 15
+			}
+			add_stability = -0.05
+		}
+	}			
 }
 
 propaganda_efforts = {
-
-	war_propaganda = {
+	war_propaganda = { 
 
 		icon = generic_prepare_civil_war
 
 		available = {
 			NOT = { has_country_flag = war_propaganda_campaign_running }
-			threat > 0.5
 			has_war_support < 0.5
-			has_offensive_war = no
+
+			if = {
+				limit = {
+					original_tag = SPR
+				}
+				has_global_flag = scw_over
+			}
 		}
 
 		visible = {
-
+			OR = {
+				has_war_with_non_exiled_country = yes  
+				any_neighbor_country = {
+					AND = {
+						NOT = { has_government = ROOT }
+						has_offensive_war = yes
+						has_added_tension_amount > 10
+					}
+				}
+			}
 		}
 
 		fire_only_once = no
@@ -1368,7 +307,7 @@ propaganda_efforts = {
 		cost = 150
 
 		modifier = {
-			war_support_weekly = 0.01
+			war_support_weekly = 0.005
 		}
 
 		complete_effect = {
@@ -1381,38 +320,33 @@ propaganda_efforts = {
 		ai_will_do = {
 			base = 0
 			modifier = {
-				add = 1000
-
-				OR = {
-					# has low war support
-					AND = {
-						has_war_support < 0.5
-
-						OR = {
-							threat > 0.5
-							has_war = yes
-							has_country_flag = mobilize_army
+				add = 1
+				has_war_support < 0.4
+				has_war = yes
+			}
+			modifier = {
+				add = 1
+				# taking tot_economic_mobilisation is possible 
+				AND = {
+					NOT = { has_idea = tot_economic_mobilisation }
+					any_enemy_country = {
+						ic_ratio = {
+							tag = ROOT
+							ratio > 0.5
 						}
-					}
-
-					# taking tot_economic_mobilisation is possible 
-					AND = {
-						NOT = { has_idea = tot_economic_mobilisation }
-						any_enemy_country = {
-							ic_ratio = {
-								tag = ROOT
-								ratio > 0.5
-							}
-						}
-					}
-
-					# doesnt have women_in_the_workforce but has tot_economic_mobilisation
-					AND = {
-						has_idea = tot_economic_mobilisation
-						NOT = { has_decision = women_in_the_workforce }
 					}
 				}
-
+			}
+			modifier = {
+				add = 1
+				# doesnt have women_in_the_workforce but has tot_economic_mobilisation
+				AND = {
+					has_idea = tot_economic_mobilisation
+					NOT = { has_decision = women_in_the_workforce }
+				}
+			}
+			modifier = {
+				add = 1
 				# war support needed for total mobilization and women_in_the_workforce
 				NOT = {
 					AND = {
@@ -1432,6 +366,314 @@ propaganda_efforts = {
 						has_war_support > 0.84
 					}
 				}
+			}
+		}
+	}
+
+	war_propaganda_casualties = { 
+
+		icon = generic_prepare_civil_war
+
+		available = {
+			#NOT = { has_country_flag = war_propaganda_campaign_running }
+			has_casualties_war_support < 0
+		}
+
+		visible = {
+			# has_war = yes
+			has_war_with_non_exiled_country = yes
+		}
+
+		fire_only_once = no
+
+		days_remove = 180
+		
+		remove_trigger = {
+			has_war = no
+        }
+		
+		cost = 100
+
+		modifier = {
+			weekly_casualties_war_support = 0.006
+		}
+
+		#complete_effect = {
+		#	set_country_flag = war_propaganda_campaign_running
+		#}
+		#remove_effect = {
+		#	clr_country_flag = war_propaganda_campaign_running
+		#}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10 #AI should probably just choose this one for general purposes.
+				has_war = yes
+				has_war_support < 0.7
+			}
+			modifier = {
+				add = 20
+				has_war = yes
+				has_war_support < 0.5
+			}
+			modifier = {
+				add = 30
+				has_war = yes
+				has_war_support < 0.3
+			}
+			modifier = {
+				add = 201 #ie; consider prio idea
+				has_war = yes
+				has_casualties_war_support < -0.25
+			}
+			modifier = {
+				factor = 0
+				has_manpower < 100000
+				has_political_power < 250
+				OR = {
+					has_idea = volunteer_only
+					has_idea = limited_conscription
+					has_idea = extensive_conscription
+				}
+			}
+		}
+	}
+	
+	war_propaganda_convoys = { 
+
+		icon = GFX_decision_generic_naval
+
+		available = {
+			#NOT = { has_country_flag = war_propaganda_campaign_running }
+			has_convoys_war_support < 0
+		}
+
+		visible = {
+			# has_war = yes
+			has_war_with_non_exiled_country = yes
+		}
+
+		fire_only_once = no
+
+		days_remove = 180
+		
+		remove_trigger = {
+			has_war = no
+        }
+		
+		cost = 100
+
+		modifier = {
+			weekly_convoys_war_support = 0.006
+		}
+
+		#complete_effect = {
+		#	set_country_flag = war_propaganda_campaign_running
+		#}
+		#remove_effect = {
+		#	clr_country_flag = war_propaganda_campaign_running
+		#}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 201 #ie; consider prio idea
+				has_war = yes
+				has_convoys_war_support < -0.29
+			}
+			modifier = {
+				factor = 0
+				has_manpower < 100000
+				has_political_power < 250
+				OR = {
+					has_idea = volunteer_only
+					has_idea = limited_conscription
+					has_idea = extensive_conscription
+				}
+			}
+		}
+	}
+	
+	war_propaganda_bombing = { 
+
+		icon = GFX_decision_generic_air
+
+		available = {
+		#	NOT = { has_country_flag = war_propaganda_campaign_running }
+			has_bombing_war_support < 0
+		}
+
+		visible = {
+			# has_war = yes
+			has_war_with_non_exiled_country = yes
+		}
+
+		fire_only_once = no
+
+		days_remove = 180
+		
+		remove_trigger = {
+			has_war = no
+        }
+		
+		cost = 100
+
+		modifier = {
+			weekly_bombing_war_support = 0.006
+		}
+
+		#complete_effect = {
+		#	set_country_flag = war_propaganda_campaign_running
+		#}
+		#remove_effect = {
+		#	clr_country_flag = war_propaganda_campaign_running
+		#}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 10 #AI should probably just choose this one for general purposes.
+				has_war = yes
+				has_war_support < 0.65
+			}
+			modifier = {
+				add = 20
+				has_war = yes
+				has_war_support < 0.50
+			}
+			modifier = {
+				add = 30
+				has_war = yes
+				has_war_support < 0.35
+			}
+			modifier = {
+				add = 201 #ie; consider prio idea
+				has_war = yes
+				has_bombing_war_support < -0.20
+			}
+			modifier = {
+				factor = 0
+				has_manpower < 100000
+				has_political_power < 250
+				OR = {
+					has_idea = volunteer_only
+					has_idea = limited_conscription
+					has_idea = extensive_conscription
+				}
+			}
+		}
+	}
+	
+	war_propaganda_radio_industry = { 
+
+		icon = generic_prepare_civil_war
+
+		available = {
+			IF = {
+				limit = {
+					tag = BRA
+				}
+				threat > 0.25
+				#has_tech = radio
+				has_completed_focus = BRA_radio_nacional
+			}
+			ELSE = {
+				threat > 0.25
+				has_tech = radio
+			}
+		
+
+			IF = {
+				limit = {
+					tag = AFG
+				}
+				threat > 0.25
+				#has_tech = radio
+				has_completed_focus = AFG_establish_radio_networks
+			}
+			ELSE = {
+				threat > 0.25
+				has_tech = radio
+			}
+		}
+
+		visible = {
+			if = {
+				limit = {
+					original_tag = SPR
+				}
+				has_global_flag = scw_over
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 75
+
+		complete_effect = {
+			add_war_support = 0.05
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 201
+				has_war_support < 0.6
+			}
+		}
+	}
+	
+	war_propaganda_film_industry = { 
+
+		icon = generic_prepare_civil_war
+
+		available = { 
+			has_war_with_non_exiled_country = yes
+			OR = {
+				is_major = yes
+				any_allied_country = {
+					is_major = yes
+				}
+			}
+			if = {
+				limit = {
+					NOT = { has_government = fascism }
+				}
+				threat > 0.5
+			}
+			else = {
+				threat > 0.30
+			}
+		}
+
+		visible = {
+			if = {
+				limit = {
+					original_tag = SPR
+				}
+				has_global_flag = scw_over
+			}
+		}
+
+		fire_only_once = yes
+
+		cost = 100 
+
+		complete_effect = {
+			effect_tooltip = {
+				add_war_support = 0.10
+			}
+			hidden_effect = {
+				country_event = political.33
+			}
+		}
+
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 201
+				has_war_support < 0.6
 			}
 		}
 	}
@@ -1706,517 +948,526 @@ propaganda_efforts = {
 }
 
 operations = {
-	#MTG_TEST_NAVAL_MIXED_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Mix vs Mix"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
-	#			add_fuel = 10000000
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#			set_stability = 1
-	#			set_war_support = 1
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_MIXED_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Mix vs Mix (with CVs)"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
-	#			add_fuel = 10000000
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#			set_stability = 1
-	#			set_war_support = 1
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_MIXED_VS_MIXED_SUBS_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Mix vs Mix (with subs)"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	modifier = {
-	#		navy_fuel_consumption_factor = -1
-	#	}
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_SUBS_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_SUBS_EARLY_RED"
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_SCREENS_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Screens vs Mix"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_battlecruiser = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_battlecruiser = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_SCREENS_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Screens vs Mix (with CV)"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_battlecruiser = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_battlecruiser = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_SCREENS_VS_CAPITALS_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Screens vs Capitals"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_battlecruiser = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_battlecruiser = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_RED"
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_CAPITALS_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#	name = "TEST: Capitals vs Mix"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_battlecruiser = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_battlecruiser = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
-	#MTG_TEST_NAVAL_CAPITALS_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
-	#
-	#	icon = generic
-	#
-	#	name = "TEST: Capitals vs Mix (with CV)"
-	#
-	#	allowed = {
-	#		tag = CUB
-	#	}
-	#
-	#	available = {
-	#	
-	#	}
-	#
-	#	cost = 0
-	#	
-	#	ai_will_do = {
-	#		factor = 0
-	#	}
-	#	days_remove = -1
-	#	complete_effect = {
-	#		set_technology = {
-	#			early_battleship = 1
-	#			early_battlecruiser = 1
-	#			early_heavy_cruiser = 1
-	#			early_light_cruiser = 1
-	#			early_destroyer = 1
-	#			early_carrier = 1
-	#			early_submarine = 1
-	#			cv_fighter1 = 1
-	#			cv_CAS1 = 1
-	#			cv_naval_bomber1 = 1
-	#		}
-	#		load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_BLUE"
-	#		add_ideas = {
-	#			MTG_TEST_NAVAL_IDEA
-	#		}
-	#		add_fuel = 10000000
-	#		DOM = {
-	#			set_technology = {
-	#				early_battleship = 1
-	#				early_battlecruiser = 1
-	#				early_heavy_cruiser = 1
-	#				early_light_cruiser = 1
-	#				early_destroyer = 1
-	#				early_carrier = 1
-	#				early_submarine = 1
-	#				cv_fighter1 = 1
-	#				cv_CAS1 = 1
-	#				cv_naval_bomber1 = 1
-	#			}
-	#			load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
-	#			add_ideas = {
-	#				MTG_TEST_NAVAL_IDEA
-	#			}
-	#			add_fuel = 10000000
-	#			set_stability = 1
-	#			set_war_support = 1
-	#		}
-	#		declare_war_on = { target = DOM type = annex_everything }
-	#		set_stability = 1
-	#		set_war_support = 1
-	#	}
-	#}
+	MTG_TEST_NAVAL_MIXED_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Mix vs Mix"
+	
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
+				add_fuel = 10000000
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+				set_stability = 1
+				set_war_support = 1
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_MIXED_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Mix vs Mix (with CVs)"
+	
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
+				add_fuel = 10000000
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+				set_stability = 1
+				set_war_support = 1
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_MIXED_VS_MIXED_SUBS_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Mix vs Mix (with subs)"
+
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		modifier = {
+			navy_fuel_consumption_factor = -1
+		}
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_SUBS_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_SUBS_EARLY_RED"
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_SCREENS_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Screens vs Mix"
+
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_battlecruiser = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_battlecruiser = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_SCREENS_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Screens vs Mix (with CV)"
+
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_battlecruiser = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_battlecruiser = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_SCREENS_VS_CAPITALS_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Screens vs Capitals"
+
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_battlecruiser = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_SCREENS_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_battlecruiser = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_RED"
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_CAPITALS_VS_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+		name = "TEST: Capitals vs Mix"
+	
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_battlecruiser = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_battlecruiser = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_MIXED_VS_MIXED_EARLY_RED"
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
+	MTG_TEST_NAVAL_CAPITALS_VS_CV_MIXED_EARLY = { #MTG_TODO_GABRIEL: remove before launch (no seriously do not ship with this (hehe get it don't SHIP with it)) 
+
+		icon = generic
+
+		name = "TEST: Capitals vs Mix (with CV)"
+	
+		allowed = {
+			tag = CUB
+			is_debug = yes
+		}
+
+		available = {
+		
+		}
+	
+		cost = 0
+		
+		ai_will_do = {
+			factor = 0
+		}
+		days_remove = -1
+		complete_effect = {
+			set_technology = {
+				early_battleship = 1
+				early_battlecruiser = 1
+				early_heavy_cruiser = 1
+				early_light_cruiser = 1
+				early_destroyer = 1
+				early_carrier = 1
+				early_submarine = 1
+				cv_fighter1 = 1
+				cv_CAS1 = 1
+				cv_naval_bomber1 = 1
+			}
+			load_oob = "MTG_NAVAL_TEST_OOB_CAPITAL_EARLY_BLUE"
+			add_ideas = {
+				MTG_TEST_NAVAL_IDEA
+			}
+			add_fuel = 10000000
+			DOM = {
+				set_technology = {
+					early_battleship = 1
+					early_battlecruiser = 1
+					early_heavy_cruiser = 1
+					early_light_cruiser = 1
+					early_destroyer = 1
+					early_carrier = 1
+					early_submarine = 1
+					cv_fighter1 = 1
+					cv_CAS1 = 1
+					cv_naval_bomber1 = 1
+				}
+				load_oob = "MTG_NAVAL_TEST_OOB_CV_MIXED_VS_CV_MIXED_EARLY_RED"
+				add_ideas = {
+					MTG_TEST_NAVAL_IDEA
+				}
+				add_fuel = 10000000
+				set_stability = 1
+				set_war_support = 1
+			}
+			declare_war_on = { target = DOM type = annex_everything }
+			set_stability = 1
+			set_war_support = 1
+		}
+	}
 
 	blow_suez_canal = {
 
 		icon = GFX_decision_generic_ignite_civil_war
-
+		allowed = {
+		}
 		available = {
 			controls_state = 446
 			controls_state = 453
@@ -2237,25 +1488,24 @@ operations = {
 				}
 			}
 		}
-
+	
 		visible = {
 			has_war = yes
 			NOT = { has_global_flag = SUEZ_CANAL_BLOCKED }
-			any_state = {
-				is_controlled_by = ROOT
+			any_controlled_state = {
 				OR = {
 					region = 28
 					region = 128
 				}
 			}
 		}
-
+	
 		fire_only_once = no
-
+	
 		days_remove = 30
-
+	
 		cost = 75
-
+	
 		modifier = {
 			civilian_factory_use = 5
 		}
@@ -2279,7 +1529,7 @@ operations = {
 				}
 			}
 		}
-
+	
 		remove_effect = {
 			if = {
 				limit = {
@@ -2290,7 +1540,7 @@ operations = {
 				}
 				set_country_flag = blew_up_suez
 				set_global_flag = SUEZ_CANAL_BLOCKED
-				country_event = { id = wtt_news.40 hours = 6 }
+				news_event = { id = wtt_news.40 hours = 6}
 			}
 			effect_tooltip = {
 				if = {
@@ -2394,7 +1644,7 @@ operations = {
 				}
 				set_country_flag = blew_up_panama
 				set_global_flag = PANAMA_CANAL_BLOCKED
-				country_event = { id = wtt_news.41 hours = 6 }
+				news_event = { id = wtt_news.41 hours = 6 }
 			}
 			effect_tooltip = {
 				if = {
@@ -2467,7 +1717,7 @@ special_projects = {
 				}
 				set_country_flag = rebuilt_suez
 				clr_global_flag = SUEZ_CANAL_BLOCKED
-				country_event = { id = wtt_news.42 hours = 6 }
+				news_event = { id = wtt_news.42 hours = 6 }
 			}
 		}
 
@@ -2546,7 +1796,7 @@ special_projects = {
 				}
 				set_country_flag = rebuilt_panama
 				clr_global_flag = PANAMA_CANAL_BLOCKED
-				country_event = { id = wtt_news.43 hours = 6 }
+				news_event = { id = wtt_news.43 hours = 6 }
 			}
 		}
 		ai_will_do = {
