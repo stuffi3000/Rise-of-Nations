@@ -1,18 +1,19 @@
 @echo off
 setlocal enabledelayedexpansion
 
+rem
 > _RON_kr_goals.gfx echo spriteTypes = {
 > _RON_kr_goals_shine.gfx echo spriteTypes = {
+
+set "base=%cd%"
 
 for /r %%F in (*.png *.dds *.jpg) do (
     set "filename=%%~nF"
     set "ext=%%~xF"
-    set "ext=!ext:~1!" 
-    
-    rem
+    set "ext=!ext:.=!"
+
     set "fullpath=%%~dpF"
-    set "relpath=!fullpath:%cd%\=!"
-    set "relpath=!relpath:\=/!"
+    set "relpath=!fullpath:%base%\=!"
 
     >> _RON_kr_goals.gfx echo     SpriteType = {
     >> _RON_kr_goals.gfx echo         name = "GFX_goal_!filename!"
