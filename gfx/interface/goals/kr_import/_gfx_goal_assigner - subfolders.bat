@@ -1,28 +1,24 @@
 @echo off
 setlocal enabledelayedexpansion
 
-:: Clear and initialize the output files with opening line
 > _RON_kr_goals.gfx echo spriteTypes = {
 > _RON_kr_goals_shine.gfx echo spriteTypes = {
 
-:: Loop through all files in current folder and subfolders with the specified formats
 for /r %%F in (*.png *.dds *.jpg) do (
     set "filename=%%~nF"
     set "ext=%%~xF"
-    set "ext=!ext:~1!"  :: remove dot from extension
+    set "ext=!ext:~1!" 
     
-    rem Get relative path from script's directory (strip drive and base path)
+    rem
     set "fullpath=%%~dpF"
     set "relpath=!fullpath:%cd%\=!"
-    set "relpath=!relpath:\=/!"  :: convert backslashes to forward slashes
-    
-    :: Append to _RON_kr_goals.gfx
+    set "relpath=!relpath:\=/!"
+
     >> _RON_kr_goals.gfx echo     SpriteType = {
     >> _RON_kr_goals.gfx echo         name = "GFX_goal_!filename!"
     >> _RON_kr_goals.gfx echo         texturefile = "gfx/interface/goals/kr_import/!relpath!!filename!.!ext!"
     >> _RON_kr_goals.gfx echo     }
 
-    :: Append to _RON_kr_goals_shine.gfx
     >> _RON_kr_goals_shine.gfx echo     SpriteType = {
     >> _RON_kr_goals_shine.gfx echo         name = "GFX_goal_!filename!_shine"
     >> _RON_kr_goals_shine.gfx echo         texturefile = "gfx/interface/goals/kr_import/!relpath!!filename!.!ext!"
@@ -55,7 +51,6 @@ for /r %%F in (*.png *.dds *.jpg) do (
     >> _RON_kr_goals_shine.gfx echo     }
 )
 
-:: Append closing brace once at the end of each file
 >> _RON_kr_goals.gfx echo }
 >> _RON_kr_goals_shine.gfx echo }
 
