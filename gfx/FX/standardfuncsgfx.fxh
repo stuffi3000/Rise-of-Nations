@@ -830,7 +830,7 @@ PixelShader =
 		
 		float stripeVal = cos( ( uv.x * cos( t ) * w ) + ( uv.y * sin( t ) * w ) ); 
 		float camDist = cam_distance( 100.0, 200.0 );
-		stripeVal += .75f + camDist;
+		stripeVal += 0.75f + camDist;
 
 		stripeVal = smoothstep(0.0, 1.0, stripeVal * 2 ) * lerp(1.0, 0.3, camDist);
 		stripeVal = lerp ( lerp( -.03, .01, stripeVal ), 0.f, camDist );
@@ -954,7 +954,7 @@ PixelShader =
 		vColorOpacity *= floor(vOldOutline);
 	
 		float vFullWidth = 2.25f / 255.f;
-		float vGradientWidth = .5f / 255.f;
+		float vGradientWidth = 0.5f / 255.f;
 
 		float vThick = smoothstep( 0.f, 1.f, Levels( vGBDist.a, vOutlineCutoff - vFullWidth, vOutlineCutoff - vFullWidth + vGradientWidth ) ) ;
 		//vThick *= floor(vOldOutline);
