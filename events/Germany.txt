@@ -1,8 +1,9 @@
-###########################
+#####################
 # German Events
 ###########################
 
 add_namespace = germany
+add_namespace = AAT_germany
 
 # Austrian Anschluss Completed
 country_event = {
@@ -13,11 +14,11 @@ country_event = {
 
 	is_triggered_only = yes
 
-	immediate = {
-		hidden_effect = {
-			add_named_threat = { threat = 10 name = germany.4.t }
-		}
-	}
+ 	immediate = {
+ 		hidden_effect = {
+ 			add_named_threat = { threat = 12 name = germany.4.t }
+ 		}
+ 	}
 
 	option = {
 		name = germany.4.a
@@ -28,16 +29,31 @@ country_event = {
 			}
 			add_core_of = GER
 		}
+		add_political_power = 75
+		add_war_support = 0.1
+		add_stability = 0.05
+		army_experience = 10
+
+		custom_effect_tooltip = generic_skip_one_line_tt
+
+		set_country_flag = AUS_annexed #if this is changed, notify Malin or change reqs for Bohme and Beyer in AUS character file
+
+
 		AUS = {
 			every_unit_leader = {
 				set_nationality = GER
 			}
 		}
 		annex_country = { target = AUS transfer_troops = yes }
-		add_political_power = 75
-		set_country_flag = AUS_annexed
-		add_war_support = 0.1
-		add_stability = 0.05
+		
+		custom_effect_tooltip = generic_skip_one_line_tt
+
+		GER_anschluss_modify_mefo_bills_or_economy_of_conquest = yes
+		GER_seize_gold_reserves_in_europe_peacefully = yes
+		add_to_variable = { var = GER_mefo_bill_counter value = -10 }
+
+		custom_effect_tooltip = generic_skip_one_line_tt
+
 		USA = {
 			set_country_flag = { flag = USA_anschluss_window days = 60 value = 1 }
 		}
@@ -61,12 +77,19 @@ country_event = {
 		}
 		hidden_effect = {
 			news_event = { hours = 6 id = news.36 }
+
+			BEL = {
+				country_event = {
+					id = AUS_political_events.63
+					hours = 12
+				}
+			}
 		}
 	}
 }
 
 #anti_comintern_pact
-# nations are asked to join pact, agreeing = relations with GER and hit with SOV 
+# nations are asked to join pact, agreeing = relations with GER and hit with SOV
 
 country_event = {
 	id = germany.5
@@ -79,9 +102,9 @@ country_event = {
 	option = {
 		name = germany.5.a		#join
 		ai_chance = {
-			factor = 75
+			base = 75
 			modifier = {
-				factor = 2
+				factor = 4
 				has_opinion = {
 					target = SOV
 					value < -10
@@ -97,38 +120,43 @@ country_event = {
 			modifier = {
 				factor = 0
 				has_war = yes
+				NOT = {
+					AND = {
+						tag = ITA
+						has_war_with = ETH #It doesn't really need to be more complicated than this
+					}
+				}
 			}
 			modifier = {
 				factor = 0
 				tag = JAP
-				#has_completed_focus = JCD_Path_of_Communism
-				has_government = communism
+				has_completed_focus = JAP_the_unthinkable_option
 			}
 			modifier = {
 				factor = 0
 				is_literally_china = yes
-				#JAP = { has_completed_focus = JAP_side_with_the_toseiha_faction }
+				JAP = { has_completed_focus = JAP_purge_the_kodoha_faction }
 			}
 			modifier = {
 				factor = 0
 				tag = JAP
-				#has_completed_focus = JAP_side_with_the_toseiha_faction
-				date < 1938.1.1
+				has_completed_focus = JAP_purge_the_kodoha_faction
+				date > 1938.1.1
 			}
 		}
 		set_country_flag = anti_comintern_member
 		GER = { add_opinion_modifier = { target = ROOT modifier = anti_comintern_pact_opinion } }
 		add_opinion_modifier = { target = GER modifier = anti_comintern_pact_opinion }
-		SOV = { add_opinion_modifier = { target = ROOT modifier = pact_against_us } }
+		SOV  = { add_opinion_modifier = { target = ROOT modifier = pact_against_us } }
 	}
 
 	option = {
 		name = germany.5.b		#refuse
-		trigger = { NOT = { is_puppet_of = GER } }
+		trigger = { NOT = { is_subject_of = GER } }
 		ai_chance = {
-			factor = 25
+			base = 25
 		}
-		GER = { add_opinion_modifier = { target = ROOT modifier = refused_anti_comintern_pact_opinion } }
+		GER =  { add_opinion_modifier = { target = ROOT modifier = refused_anti_comintern_pact_opinion } }
 	}
 
 }
@@ -140,7 +168,7 @@ country_event = {
 	id = germany.6
 	title = germany.6.t
 	desc = germany.6.d
-	picture = GFX_report_event_hitler_croatia_handshake
+	picture = [GetHitlerCroatianHandshakeEventPicture]
 
 
 	is_triggered_only = yes
@@ -155,7 +183,7 @@ country_event = {
 
 	option = {
 		name = germany.6.b		#refuse
-		trigger = { NOT = { is_puppet_of = GER } }
+		trigger = { NOT = { is_subject_of = GER } }
 		add_opinion_modifier = { target = GER modifier = refused_tripartite_pact_opinion }
 	}
 
@@ -177,7 +205,7 @@ country_event = {
 	option = {
 		name = germany.11.a	#sounds good
 		ai_chance = {
-			factor = 90
+			base = 90
 			modifier = {
 				factor = 0
 				GER = {
@@ -191,7 +219,7 @@ country_event = {
 				}
 			}
 		}
-		add_opinion_modifier = { target = GER modifier = MR_pact }# pact		
+		add_opinion_modifier = { target = GER modifier = MR_pact }# pact
 		custom_effect_tooltip = germany.11.a.tt
 		add_state_claim = 96
 		add_state_claim = 11
@@ -225,7 +253,7 @@ country_event = {
 		add_state_claim = 784
 		add_state_claim = 996
 		add_state_claim = 997
-		hidden_effect = { add_timed_idea = { idea = SOV_molotov_ribbentrop_pact days = 730 } }
+		hidden_effect =  { add_timed_idea = { idea = SOV_molotov_ribbentrop_pact days = 730 } }
 		GER = {
 			country_event = { days = 1 id = germany.12 }
 			effect_tooltip = {
@@ -238,7 +266,7 @@ country_event = {
 	option = {
 		name = germany.11.b	#no way
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
@@ -253,7 +281,7 @@ country_event = {
 			}
 		}
 		add_political_power = -50
-		add_opinion_modifier = { target = GER modifier = refused_MR_pact }# no pact 
+		add_opinion_modifier = { target = GER modifier = refused_MR_pact }# no pact
 		GER = {
 			country_event = { days = 1 id = germany.13 }
 		}
@@ -7682,3 +7710,163 @@ country_event = {
 }
 
 #TODO move to axis victory for now keep them here check axis victory for other events
+
+country_event = { #Germany wants resource rights for Sweden
+	id = AAT_germany.1
+	title = AAT_germany.1.t
+	desc = AAT_germany.10.desc #Intentional
+	picture = GFX_report_event_german_speech
+	is_triggered_only = yes
+	option = { #No
+		name = AAT_germany.1.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				date > 1942.12.1
+				OR = {
+					is_historical_focus_on = yes
+					has_government = democratic
+				}
+				factor = 3
+			} 
+
+			modifier = {
+				FROM = {
+					surrender_progress > 0.1
+				}
+				factor = 2
+			}
+			modifier = {
+				FROM = {
+					surrender_progress > 0.25
+				}
+				factor = 10
+			}
+
+			modifier = {
+				FROM = {
+					is_ai = no
+					surrender_progress < 0.03
+				}
+				factor = 0
+			}
+		}
+
+		add_political_power = -25
+
+		FROM = {
+			effect_tooltip = {
+				create_wargoal = {
+					type = take_state_focus
+					target = ROOT
+					expire = 0
+					generator = { 918 666 }
+				}
+			}
+			country_event = { id = AAT_germany.2 hours = 2 }
+		}
+	}
+
+	option = { #Yes
+		ai_chance = {
+			base = 30
+		}
+		name = AAT_germany.1.b
+
+		add_offsite_building = {
+			type = industrial_complex
+			level = 2
+		}
+
+		add_offsite_building = {
+			type = arms_factory
+			level = 1
+		}
+
+		add_timed_idea = {
+			idea = GER_german_swedish_trade_agreement
+			days = 480
+		}
+
+		give_resource_rights = {
+			receiver = FROM 
+			state = 918 #Västerbotten 
+		}
+
+		add_opinion_modifier = {
+			target = FROM # target of the relation
+			modifier = GER_SWE_historic_trade_Partners
+		}
+
+		FROM = {
+			add_opinion_modifier = {
+				target = PREV # target of the relation
+				modifier = GER_SWE_historic_trade_Partners
+			}
+			country_event = { id = AAT_germany.3 hours = 2 }
+		}
+	}
+}
+
+country_event = { #Rejects deal
+	id = AAT_germany.2
+	title = AAT_germany.2.t
+	desc = AAT_germany.2.desc
+	picture = GFX_report_event_finnish_letter
+
+	is_triggered_only = yes
+
+	option = { #NOPE
+		name = AAT_germany.2.a
+		create_wargoal = {
+			type = take_state_focus
+			target = FROM
+			expire = 0
+			generator = { 918 666 }
+		}
+	}
+}
+
+
+country_event = { #Accepts deal
+	id = AAT_germany.3
+	title = AAT_germany.3.t
+	desc = AAT_germany.3.desc
+	picture = [GetHitlerCroatianHandshakeEventPicture]
+
+	is_triggered_only = yes
+
+	option = { #NOPE
+		name = AAT_germany.3.a
+
+		effect_tooltip = {
+			FROM = {
+
+				add_offsite_building = {
+					type = industrial_complex
+					level = 2
+				}
+
+				add_offsite_building = {
+					type = arms_factory
+					level = 1
+				}
+
+				add_timed_idea = {
+					idea = GER_german_swedish_trade_agreement
+					days = 480
+				}
+
+				give_resource_rights = {
+					receiver = PREV 
+					state = 918 #Västerbotten 
+				}
+				add_opinion_modifier = {
+					target = PREV # target of the relation
+					modifier = GER_SWE_historic_trade_Partners
+				}
+			}
+		}
+	}
+}
+
