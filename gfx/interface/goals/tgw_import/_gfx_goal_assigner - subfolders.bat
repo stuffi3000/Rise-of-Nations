@@ -7,13 +7,18 @@ rem
 
 set "base=%cd%"
 
-for /r %%F in (*.png *.dds *.jpg) do (
+for /r %%F in (*.png *.dds *.jpg *.tga) do (
     set "filename=%%~nF"
     set "ext=%%~xF"
     set "ext=!ext:.=!"
 
     set "fullpath=%%~dpF"
     set "relpath=!fullpath:%base%\=!"
+
+    rem Only replace backslashes if the file is in a subfolder
+    if not "!relpath!"=="" (
+        set "relpath=!relpath:\=/!"
+    )
 
     >> _RON_tgw_goals.gfx echo     SpriteType = {
     >> _RON_tgw_goals.gfx echo         name = "GFX_goal_!filename!"
