@@ -436,18 +436,275 @@ country_event = {
 	option = {
 		name = "We will abide by the Resolution"
 		add_stability = 0.3
-			every_country = {
-				limit = {
-					is_in_faction_with = global.UN_call_for_ceasefire
-				}
-				white_peace = PREV
-			}	
+
+				if = {
+					limit = {
+						is_in_faction = no
+					}
+					# create_faction = Neutral_Bloc bad idea, the world gets cluttered with Neutral_Bloc factions
+					add_timed_idea = {
+						idea = RI_Peace_prop_no_faction_joining
+						days = 100
+					}
+					
+				}			
+		global.UN_call_for_ceasefire = {
+			add_threat = -100
+			}
+			FROM = {
+			add_threat = -100
+			}
+ 			#We are losing pls peace (Bad Ending)
+ 			if = {
+ 				limit = {
+ 					global.UN_call_for_ceasefire = {
+ 						surrender_progress > 0.3
+ 					}
+ 				}
+ 				ROOT = {
+ 					every_country = {
+ 						limit = {
+ 							is_in_faction_with = global.UN_call_for_ceasefire
+ 						}
+ 						every_owned_state = {							
+ 							limit = {
+ 								is_controlled_by = PREV.PREV								
+ 							}
+ 							set_state_flag = state_to_be_transfered							
+ 						}
+ 					}
+ 				}
+ 				every_state = {
+ 					limit = {
+ 						has_state_flag = state_to_be_transfered
+ 					}
+ 					PREV = {
+ 						transfer_state = PREV
+ 					}
+ 					clr_state_flag = state_to_be_transfered
+ 				}
+ 				if = {
+ 					# global.UN_call_for_ceasefire is leader  of  the faction, all countries wp
+ 					limit = {
+ 						global.UN_call_for_ceasefire = {
+ 							is_faction_leader = yes
+ 						}
+ 					}
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = PREV
+ 								is_subject_of = PREV
+ 								tag = PREV
+ 							}
+ 						}
+ 						every_country = {
+ 							limit = {
+ 								OR = {
+ 									is_in_faction_with = global.UN_call_for_ceasefire
+ 									is_subject_of = global.UN_call_for_ceasefire
+ 									tag = global.UN_call_for_ceasefire
+ 								}
+ 							}
+ 							white_peace = {
+ 								tag = PREV
+ 							}
+ 						}
+ 					}
+ 				}
+ 				else = {
+ 					# global.UN_call_for_ceasefire is not faction leader, in that case only wp with him
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = PREV
+ 								is_subject_of = PREV
+ 								tag = PREV
+ 							}
+ 						}
+ 						white_peace = {
+ 							tag = global.UN_call_for_ceasefire
+ 						}
+ 					}
+ 					global.UN_call_for_ceasefire = {
+ 						leave_faction = yes
+ 						add_timed_idea = {
+ 							idea = RI_Peace_prop_no_faction_joining
+ 							days = 100
+ 						}
+ 					}
+ 				}
+ 				log = "[global.UN_call_for_ceasefire.GetName] (was loosing) proposed peace to [ROOT.GetName] and was accepted"
+ 			}
+ 			#We are winning (Good Ending)
+ 			else_if = {
+ 				limit = {
+ 					ROOT = {
+ 						surrender_progress > 0.3
+ 					}
+ 				}
+ 				every_country = {
+ 					limit = {
+ 						OR = {
+ 							is_in_faction_with = PREV
+ 							tag = PREV
+ 						}
+ 					}
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = global.UN_call_for_ceasefire
+ 								is_subject_of = global.UN_call_for_ceasefire
+ 								tag = global.UN_call_for_ceasefire
+ 							}
+ 						}
+ 						every_controlled_state = {
+ 							limit = {
+ 								is_owned_by = PREV.PREV
+ 							}
+ 							PREV = {
+ 								transfer_state = PREV
+ 							}
+ 						}
+ 					}
+ 				}
+ 				if = {
+ 					# ROOT is leader  of  the faction, all countries wp
+ 					limit = {
+ 						ROOT = {
+ 							is_faction_leader = yes
+ 						}
+ 					}
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = global.UN_call_for_ceasefire
+ 								is_subject_of = global.UN_call_for_ceasefire
+ 								tag = global.UN_call_for_ceasefire
+ 							}
+ 						}
+ 						every_country = {
+ 							limit = {
+ 								OR = {
+ 									is_in_faction_with = PREV.PREV
+ 									is_subject_of = PREV.PREV
+ 									tag = PREV.PREV
+ 								}
+ 							}
+ 							white_peace = {
+ 								tag = PREV
+ 							}
+ 						}
+ 					}
+ 				}
+ 				else = {
+ 					# ROOT is not faction leader, in that case only wp with him
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = PREV
+ 								is_subject_of = PREV
+ 								tag = PREV
+ 							}
+ 						}
+ 						white_peace = {
+ 							tag = global.UN_call_for_ceasefire
+ 						}
+ 					}
+ 					PREV = {
+ 						leave_faction = yes
+ 						add_timed_idea = {
+ 							idea = RI_Peace_prop_no_faction_joining
+ 							days = 100
+ 						}
+ 					}
+ 				}
+ 				log = "[global.UN_call_for_ceasefire.GetName] (was winnig) proposed peace to [ROOT.GetName] and was accepted"
+ 			}
+ 			#Just a standard wp (Neutral Ending)
+ 			else = {
+ 				log = "[global.UN_call_for_ceasefire.GetName] (neutral) proposed peace to [ROOT.GetName] and was accepted"
+ 				if = {
+ 					# global.UN_call_for_ceasefire is leader  of  the faction, all countries wp
+ 					limit = {
+ 						global.UN_call_for_ceasefire = {
+ 							is_faction_leader = yes
+ 						}
+ 					}
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = PREV
+ 								is_subject_of = PREV
+ 								tag = PREV
+ 							}
+ 						}
+ 						every_country = {
+ 							limit = {
+ 								OR = {
+ 									is_in_faction_with = global.UN_call_for_ceasefire
+ 									is_subject_of = global.UN_call_for_ceasefire
+ 									tag = global.UN_call_for_ceasefire
+ 								}
+ 							}
+ 							white_peace = {
+ 								tag = PREV
+ 							}
+ 						}
+ 					}
+ 				}
+ 				else = {
+ 					# global.UN_call_for_ceasefire is not faction leader, in that case only wp with him
+ 					every_country = {
+ 						limit = {
+ 							OR = {
+ 								is_in_faction_with = PREV
+ 								is_subject_of = PREV
+ 								tag = PREV
+ 							}
+ 						}
+ 						white_peace = {
+ 							tag = global.UN_call_for_ceasefire
+ 						}
+ 					}
+ 					global.UN_call_for_ceasefire = {
+ 						leave_faction = yes
+ 						add_timed_idea = {
+ 							idea = RI_Peace_prop_no_faction_joining
+ 							days = 100
+ 						}
+ 					}
+ 				}
+ 			}
+ 			global.UN_call_for_ceasefire = {
+ 				set_variable = { peace_cost = 5 }
+ 			}
+ 			#Reset the days at war modifier 
+ 			ROOT = {
+ 				set_variable = { days_at_war_with_multiplier_@global.UN_call_for_ceasefire = 0 }
+ 			}
+ 			global.UN_call_for_ceasefire = {
+ 				set_variable = { days_at_war_with_multiplier_@global.UN_call_for_ceasefire = 0 }
+ 			}
 	}
 
 	option = {
 		name = "We will not abide by the Resolution"
-		add_stability = -0.3		
-	}
+		add_stability = -0.3	
+		if = {
+			not = {
+				has_idea = RON_European_Union 
+			}
+			add_timed_idea ={
+				idea = RON_EU_Trade_Sanctions
+				days = 300
+			} 
+		}
+			add_timed_idea ={
+				idea = UNSC_trade_sanctions_idea
+				days = 250
+			} 
+				}
 }
 country_event = {
 	id = unsc.10
