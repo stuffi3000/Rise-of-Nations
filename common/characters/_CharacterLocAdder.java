@@ -27,7 +27,7 @@ public class _CharacterLocAdder {
 
             // Write combined _CharacterLocAdderOutput.yml
             List<String> outputLines = new ArrayList<>();
-            outputLines.add("l_english");
+            outputLines.add("l_english:");
             for (Map.Entry<String, LinkedHashMap<String, String>> entry : allCharNames.entrySet()) {
                 String fileName = entry.getKey();
                 LinkedHashMap<String, String> charMap = entry.getValue();
