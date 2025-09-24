@@ -1,8 +1,9 @@
-###########################
+#####################
 # German Events
 ###########################
 
 add_namespace = germany
+add_namespace = AAT_germany
 
 # Austrian Anschluss Completed
 country_event = {
@@ -13,11 +14,11 @@ country_event = {
 
 	is_triggered_only = yes
 
-	immediate = {
-		hidden_effect = {
-			add_named_threat = { threat = 10 name = germany.4.t }
-		}
-	}
+ 	immediate = {
+ 		hidden_effect = {
+ 			add_named_threat = { threat = 12 name = germany.4.t }
+ 		}
+ 	}
 
 	option = {
 		name = germany.4.a
@@ -28,16 +29,31 @@ country_event = {
 			}
 			add_core_of = GER
 		}
+		add_political_power = 75
+		add_war_support = 0.1
+		add_stability = 0.05
+		army_experience = 10
+
+		custom_effect_tooltip = generic_skip_one_line_tt
+
+		set_country_flag = AUS_annexed #if this is changed, notify Malin or change reqs for Bohme and Beyer in AUS character file
+
+
 		AUS = {
 			every_unit_leader = {
 				set_nationality = GER
 			}
 		}
 		annex_country = { target = AUS transfer_troops = yes }
-		add_political_power = 75
-		set_country_flag = AUS_annexed
-		add_war_support = 0.1
-		add_stability = 0.05
+		
+		custom_effect_tooltip = generic_skip_one_line_tt
+
+		GER_anschluss_modify_mefo_bills_or_economy_of_conquest = yes
+		GER_seize_gold_reserves_in_europe_peacefully = yes
+		add_to_variable = { var = GER_mefo_bill_counter value = -10 }
+
+		custom_effect_tooltip = generic_skip_one_line_tt
+
 		USA = {
 			set_country_flag = { flag = USA_anschluss_window days = 60 value = 1 }
 		}
@@ -51,7 +67,6 @@ country_event = {
 
 		if = {
 			limit = {
-				has_dlc = "Death or Dishonor"
 				country_exists = YUG
 				YUG = { has_war = no }
 			}
@@ -62,12 +77,19 @@ country_event = {
 		}
 		hidden_effect = {
 			news_event = { hours = 6 id = news.36 }
+
+			BEL = {
+				country_event = {
+					id = AUS_political_events.63
+					hours = 12
+				}
+			}
 		}
 	}
 }
 
 #anti_comintern_pact
-# nations are asked to join pact, agreeing = relations with GER and hit with SOV 
+# nations are asked to join pact, agreeing = relations with GER and hit with SOV
 
 country_event = {
 	id = germany.5
@@ -78,11 +100,11 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.5.a        #join
+		name = germany.5.a		#join
 		ai_chance = {
-			factor = 75
+			base = 75
 			modifier = {
-				factor = 2
+				factor = 4
 				has_opinion = {
 					target = SOV
 					value < -10
@@ -98,38 +120,43 @@ country_event = {
 			modifier = {
 				factor = 0
 				has_war = yes
+				NOT = {
+					AND = {
+						tag = ITA
+						has_war_with = ETH #It doesn't really need to be more complicated than this
+					}
+				}
 			}
 			modifier = {
 				factor = 0
 				tag = JAP
-				#has_completed_focus = JCD_Path_of_Communism
-				has_government = communism
+				has_completed_focus = JAP_the_unthinkable_option
 			}
 			modifier = {
 				factor = 0
 				is_literally_china = yes
-				#JAP = { has_completed_focus = JAP_side_with_the_toseiha_faction }
+				JAP = { has_completed_focus = JAP_purge_the_kodoha_faction }
 			}
 			modifier = {
 				factor = 0
 				tag = JAP
-				#has_completed_focus = JAP_side_with_the_toseiha_faction
-				date < 1938.1.1
+				has_completed_focus = JAP_purge_the_kodoha_faction
+				date > 1938.1.1
 			}
 		}
 		set_country_flag = anti_comintern_member
 		GER = { add_opinion_modifier = { target = ROOT modifier = anti_comintern_pact_opinion } }
 		add_opinion_modifier = { target = GER modifier = anti_comintern_pact_opinion }
-		SOV = { add_opinion_modifier = { target = ROOT modifier = pact_against_us } }
+		SOV  = { add_opinion_modifier = { target = ROOT modifier = pact_against_us } }
 	}
 
 	option = {
-		name = germany.5.b        #refuse
-		trigger = { NOT = { is_puppet_of = GER } }
+		name = germany.5.b		#refuse
+		trigger = { NOT = { is_subject_of = GER } }
 		ai_chance = {
-			factor = 25
+			base = 25
 		}
-		GER = { add_opinion_modifier = { target = ROOT modifier = refused_anti_comintern_pact_opinion } }
+		GER =  { add_opinion_modifier = { target = ROOT modifier = refused_anti_comintern_pact_opinion } }
 	}
 
 }
@@ -141,13 +168,13 @@ country_event = {
 	id = germany.6
 	title = germany.6.t
 	desc = germany.6.d
-	picture = GFX_report_event_hitler_croatia_handshake
+	picture = [GetHitlerCroatianHandshakeEventPicture]
 
 
 	is_triggered_only = yes
 
 	option = {
-		name = germany.6.a        #join
+		name = germany.6.a		#join
 		remove_opinion_modifier = { target = GER modifier = anti_comintern_pact_opinion }
 		add_opinion_modifier = { target = GER modifier = tripartite_pact_opinion }
 		remove_opinion_modifier = { target = SOV modifier = pact_against_us }
@@ -155,8 +182,8 @@ country_event = {
 	}
 
 	option = {
-		name = germany.6.b        #refuse
-		trigger = { NOT = { is_puppet_of = GER } }
+		name = germany.6.b		#refuse
+		trigger = { NOT = { is_subject_of = GER } }
 		add_opinion_modifier = { target = GER modifier = refused_tripartite_pact_opinion }
 	}
 
@@ -176,9 +203,9 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.11.a    #sounds good
+		name = germany.11.a	#sounds good
 		ai_chance = {
-			factor = 90
+			base = 90
 			modifier = {
 				factor = 0
 				GER = {
@@ -192,7 +219,7 @@ country_event = {
 				}
 			}
 		}
-		add_opinion_modifier = { target = GER modifier = MR_pact }# pact		
+		add_opinion_modifier = { target = GER modifier = MR_pact }# pact
 		custom_effect_tooltip = germany.11.a.tt
 		add_state_claim = 96
 		add_state_claim = 11
@@ -226,7 +253,7 @@ country_event = {
 		add_state_claim = 784
 		add_state_claim = 996
 		add_state_claim = 997
-		hidden_effect = { add_timed_idea = { idea = SOV_molotov_ribbentrop_pact days = 730 } }
+		hidden_effect =  { add_timed_idea = { idea = SOV_molotov_ribbentrop_pact days = 730 } }
 		GER = {
 			country_event = { days = 1 id = germany.12 }
 			effect_tooltip = {
@@ -237,9 +264,9 @@ country_event = {
 	}
 
 	option = {
-		name = germany.11.b    #no way
+		name = germany.11.b	#no way
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
@@ -254,7 +281,7 @@ country_event = {
 			}
 		}
 		add_political_power = -50
-		add_opinion_modifier = { target = GER modifier = refused_MR_pact }# no pact 
+		add_opinion_modifier = { target = GER modifier = refused_MR_pact }# no pact
 		GER = {
 			country_event = { days = 1 id = germany.13 }
 		}
@@ -272,7 +299,7 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.12.a    #neat
+		name = germany.12.a	#neat
 		every_other_country = {
 			limit = {
 				NOT = { tag = GER }
@@ -286,7 +313,7 @@ country_event = {
 			set_country_flag = { flag = USA_MR_window days = 60 value = 1 }
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.32 }
+			news_event = { hours = 6 id = news.32 }
 		}
 	}
 }
@@ -301,7 +328,7 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.13.a    #bah
+		name = germany.13.a	#bah
 		add_opinion_modifier = { target = SOV modifier = refused_MR_pact }# no pact
 	}
 }
@@ -406,13 +433,11 @@ country_event = {
 			base = 1
 			modifier = {
 				factor = 0
-				AND = {
-					POL = {
-						is_ai = no
-						has_civil_war = no
-					}
-					is_in_faction_with = POL
+				POL = {
+					is_ai = no
+					has_civil_war = no
 				}
+				is_in_faction_with = POL
 			}
 		}
 		name = germany.14.a
@@ -609,8 +634,8 @@ country_event = {
 			add_state_claim = 784
 			add_state_claim = 996
 			effect_tooltip = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = annex_everything
 					target = GER
 				}
@@ -655,8 +680,8 @@ country_event = {
 
 	option = {
 		name = germany.16.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = annex_everything
 			target = GER
 		}
@@ -751,8 +776,8 @@ country_event = {
 
 	option = {
 		name = germany.21.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = ROM
 			generator = { 76 }
@@ -776,7 +801,7 @@ country_event = {
 			add_state_core = 188
 		}
 		hidden_effect = {
-			country_event = { days = 1 id = news.19 }
+			news_event = { days = 1 id = news.19 }
 		}
 	}
 }
@@ -792,14 +817,14 @@ country_event = {
 
 	option = {
 		name = germany.23.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {			
+			expire = 100
 			type = take_state_focus
 			target = LIT
 			generator = { 188 }
 		}
 		hidden_effect = {
-			country_event = { days = 1 id = news.20 }
+			news_event = { days = 1 id = news.20 }
 		}
 	}
 }
@@ -997,12 +1022,56 @@ country_event = {
 				add = 20
 				is_in_faction_with = GER
 			}
+			modifier = {
+				factor = 0.5
+				FROM = {
+					has_war = yes
+					surrender_progress > 0.1
+				}
+			}
+			modifier = { 
+				factor = 0
+				fighting_army_strength_ratio = {
+					tag = FROM
+					ratio > 1
+				}
+			}
 		}
+
 		GER = {
-			country_event = { hours = 2 id = germany.4 }
+			country_event = { 
+				hours = 2 
+				id = germany.4 
+			}
 		}
+
 		custom_effect_tooltip = GAME_OVER_TT
+
+		AUS = {
+			clr_country_flag = AUS_antischluss_active_flag
+		}
+
+		hidden_effect = {
+			IF = {
+				limit = {
+					ITA = {
+						OR = {
+							has_completed_focus = ITA_guarantee_austrian_independence
+							has_guaranteed = AUS
+						}
+					}
+				}
+
+				ITA = {
+					country_event = {
+						id = AUS_political_events.107
+						hours = 12
+					}
+				}
+			}
+		}
 	}
+
 	option = { # Refuse
 		name = germany.28.b
 		ai_chance = {
@@ -1061,25 +1130,42 @@ country_event = {
 
 	option = {
 		name = germany.29.a
+
+		add_war_support = 0.05
+
+		custom_effect_tooltip = generic_skip_one_line_tt
+
 		add_state_claim = 4
 		add_state_claim = 152
 		add_state_claim = 153
 		add_state_claim = 806
-		add_state_claim = 807
+		add_state_claim = 865
 		add_state_claim = 810
 		add_state_claim = 1107
-				create_wargoal = {			
-				expire = 100
+		
+		custom_effect_tooltip = generic_skip_one_line_tt
+
+		create_wargoal = {
 			type = take_state_focus
 			target = AUS
-			generator = { 4 152 153 806 807 810 1107 }
+			generator = { 4 152 153 806 865 810 1107 }
 		}
+
+		hidden_effect = {
+			# Hitler has faced resistance once now
+			add_to_variable = { 
+				GER_hitlers_blunders_variable = 1
+			}
+
+			set_country_flag = GER_anscluss_rejected
+		}
+
 	}
 }
 
 ### Munich Conference
 
-# Britain
+# Britain / HOL - Germany demands sudetenland (Munich Conference) - Event for ENG (historical) or HOL (if they form EU and CZE is part of it)
 country_event = {
 	id = germany.40
 	title = germany.40.t
@@ -1104,112 +1190,119 @@ country_event = {
 
 	option = { # Abandon the Czechs
 		name = germany.40.a
+
+		trigger = {
+			NOT = { has_war_with = GER }
+			is_subject = no # can't do anything if puppet
+		}
+		
 		ai_chance = {
-			factor = 90
+			base = 90
 			modifier = {
 				factor = 0.3
 				has_government = communism
 				CZE = { has_government = communism }
 			}
-			modifier = {
+			modifier = { #ROOT is less willing to accept the deal if Germany has raised world tension
+				factor = 0.9
+				FROM = {
+					has_added_tension_amount > 0.09
+				}
+			}
+			modifier = { #ROOT is less willing to accept the deal if Germany has raised world tension
+				factor = 0.8
+				FROM = {
+					has_added_tension_amount > 0.14
+				}
+			}
+			modifier = { #ROOT is less willing to accept the deal if Germany has raised world tension
+				factor = 0.7
+				FROM = {
+					has_added_tension_amount > 0.19
+				}
+			}
+			modifier = { #ROOT is less willing to accept the deal if Germany has gone to war already
+				factor = 0.5
 				has_global_flag = GER_has_started_war
-				NOT = { is_in_faction_with = GER }
-				factor = 0
+			}
+			modifier = { #ROOT is less willing to accept the deal if Germany is losing a war
+				factor = 0.5
+				FROM = {
+					has_war = yes
+					surrender_progress > 0.1
+				}
 			}
 			modifier = {
 				factor = 0
 				OR = {
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = DEMOCRATIC_HISTORICAL
+					AND = {
+						has_global_flag = GER_has_started_war
+						NOT = { is_in_faction_with = GER }
 					}
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = DEMOCRATIC_ALTERNATE
-					}
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = FASCIST
-					}
+					has_war_with = GER # Should be impossible due to option trigger, but just in case
+					is_in_faction_with = CZE
+					CZE = { is_subject_of = ROOT }
 				}
 			}
 		}
-		trigger = {
-			NOT = { has_war_with = GER }
-			is_puppet = no # can't do anything if puppet
-		}
-		if = {
-			limit = {
-				has_completed_focus = ENG_no_further_appeasement
-			}
-			add_political_power = -200
-		}
-		if = {
-			limit = {
-				tag = HOL
-			}
-			ENG = { country_event = germany.40 }
-		}
+
+		#Send follow-up event to next country
 		if = {
 			limit = {
 				tag = ENG
 			}
-			FRA = { country_event = germany.41 }
+			FRA = { 
+				country_event = {
+					id = germany.41 
+					hours = 2
+				}
+			}
+			if = {
+				limit = {
+					has_completed_focus = ENG_no_further_appeasement
+				}
+				add_political_power = -200
+			}
 		}
+		else_if = {
+			limit = {
+				tag = HOL
+			}
+			ENG = { 
+				country_event = {
+					id = germany.40
+					hours = 2
+				}
+			}
+		}
+
+		#Edit diplomatic relations and opinions
+		if = {
+			limit = {
+				CZE = { is_guaranteed_by = ROOT }
+			}
+			diplomatic_relation = {
+					country = CZE
+					relation = guarantee
+					active = no
+				}
+				add_ai_strategy = {
+				type = protect
+				id = CZE
+				value = -100
+			}
+		}
+
+		if = {
+			limit = {
+				CZE = { is_in_faction_with = ROOT }
+				is_faction_leader = yes
+			}
+			remove_from_faction = CZE
+		}
+
 		CZE = {
 			add_opinion_modifier = { target = ROOT modifier = western_betrayal }
-		}
-		if = {
-			limit = {
-				tag = HOL
-				CZE = { is_guaranteed_by = HOL }
-			}
-			HOL = {
-				diplomatic_relation = {
-					country = CZE
-					relation = guarantee
-					active = no
-				}
-				add_ai_strategy = {
-					type = ignore
-					id = "CZE"
-					value = 100
-				}
-			}
-		}
-		if = {
-			limit = {
-				tag = ENG
-				CZE = { is_guaranteed_by = ENG }
-			}
-			ENG = {
-				diplomatic_relation = {
-					country = CZE
-					relation = guarantee
-					active = no
-				}
-				add_ai_strategy = {
-					type = ignore
-					id = "CZE"
-					value = 100
-				}
-			}
-		}
-		if = {
-			limit = {
-				tag = HOL
-				CZE = { is_in_faction_with = HOL }
-				HOL = { is_faction_leader = yes }
-			}
-			CZE = { remove_from_faction = yes }
-		}
-		if = {
-			limit = {
-				tag = ENG
-				CZE = { is_in_faction_with = ENG }
-				ENG = { is_faction_leader = yes }
-			}
-			CZE = { remove_from_faction = yes }
 		}
 	}
 	option = { # Support the Czechs
@@ -1222,25 +1315,12 @@ country_event = {
 			}
 			modifier = {
 				factor = 0
-				ENG_is_on_historical_plan_trigger = yes
+				is_historical_focus_on = yes
 			}
 			modifier = {
 				factor = 3
 				has_government = communism
 				CZE = { has_government = communism }
-			}
-			modifier = {
-				factor = 0
-				OR = {
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = NEUTRALITY
-					}
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = COMMUNIST
-					}
-				}
 			}
 		}
 		if = {
@@ -1266,8 +1346,8 @@ country_event = {
 		add_opinion_modifier = { target = GER modifier = condemn_aggression }
 		effect_tooltip = {
 			GER = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {			
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1416,8 +1496,8 @@ country_event = {
 		GER = {
 			country_event = germany.48
 			effect_tooltip = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1547,8 +1627,8 @@ country_event = {
 		GER = {
 			country_event = germany.47
 			effect_tooltip = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1596,8 +1676,8 @@ country_event = {
 		GER = {
 			country_event = germany.47
 			effect_tooltip = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1637,8 +1717,8 @@ country_event = {
 		name = germany.44.a
 		effect_tooltip = {
 			GER = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1661,8 +1741,8 @@ country_event = {
 		name = germany.45.a
 		effect_tooltip = {
 			GER = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -1755,8 +1835,8 @@ country_event = {
 					}
 					GER = { remove_from_faction = CZE }
 				}
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 74 884 886 887 888 }
@@ -1777,8 +1857,8 @@ country_event = {
 
 	option = {
 		name = germany.47.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = CZE
 			generator = { 69 74 884 886 887 888 }
@@ -1807,8 +1887,8 @@ country_event = {
 
 	option = {
 		name = germany.48.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = CZE
 			generator = { 69 74 884 886 887 888 }
@@ -1820,7 +1900,7 @@ country_event = {
 		add_state_claim = 887
 		add_state_claim = 888
 		hidden_effect = {
-			country_event = { hours = 6 id = news.58 }
+			news_event = { hours = 6 id = news.58 }
 		}
 	}
 }
@@ -1836,8 +1916,8 @@ country_event = {
 
 	option = {
 		name = germany.49.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = CZE
 			generator = { 69 74 884 886 887 888 }
@@ -1857,7 +1937,7 @@ country_event = {
 			GER = { remove_from_faction = CZE }
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.59 }
+			news_event = { hours = 6 id = news.59 }
 		}
 	}
 }
@@ -1900,10 +1980,9 @@ country_event = {
 			}
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.56 }
+			news_event = { hours = 6 id = news.56 }
 			if = {
 				limit = {
-					has_dlc = "Death or Dishonor"
 					country_exists = YUG
 					YUG = { has_war = no }
 					ENG = { NOT = { has_war_with = YUG } }
@@ -2044,7 +2123,6 @@ country_event = {
 		}
 		if = {
 			limit = {
-				has_DLC = "Death or Dishonor"
 				country_exists = YUG
 				YUG = { has_war = no }
 			}
@@ -2167,8 +2245,8 @@ country_event = {
 			}
 			add_state_claim = 885
 		}
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = annex_everything
 			target = CZE
 		}
@@ -2304,7 +2382,7 @@ country_event = {
 		GER_mefo_bills_level_down = yes
 
 		hidden_effect = {
-			country_event = { hours = 6 id = news.60 }
+			news_event = { hours = 6 id = news.60 }
 			set_global_flag = GER_slovakia_become_puppet
 			every_state = {
 				limit = {
@@ -2373,7 +2451,7 @@ country_event = {
 			HUN = { country_event = DOD_hungary.106 }
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.62 }
+			news_event = { hours = 6 id = news.62 }
 		}
 		custom_effect_tooltip = end_of_czechoslovakia_mefo_bills_tt
 		add_to_variable = { var = GER_mefo_bill_counter value = -5 }
@@ -2437,7 +2515,7 @@ country_event = {
 			}
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.61 }
+			news_event = { hours = 6 id = news.61 }
 		}
 	}
 	option = {
@@ -2557,7 +2635,7 @@ country_event = {
 			POL = { transfer_state = 72 } # Give Poland Zaolzie
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.60 }
+			news_event = { hours = 6 id = news.60 }
 		}
 	}
 	option = {
@@ -2569,7 +2647,7 @@ country_event = {
 			annex_country = { target = CZE }
 		}
 		hidden_effect = {
-			country_event = { hours = 6 id = news.62 }
+			news_event = { hours = 6 id = news.62 }
 		}
 	}
 }
@@ -2688,19 +2766,6 @@ country_event = {
 				has_global_flag = GER_has_started_war
 				factor = 0
 			}
-			modifier = {
-				factor = 0
-				OR = {
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = DEMOCRATIC_ALTERNATE
-					}
-					has_game_rule = {
-						rule = ENG_ai_behavior
-						option = FASCIST
-					}
-				}
-			}
 		}
 		FRA = {
 			country_event = { hours = 6 id = germany.63 }
@@ -2718,13 +2783,6 @@ country_event = {
 				strength_ratio = {
 					tag = GER
 					ratio > 0.7
-				}
-			}
-			modifier = {
-				factor = 0
-				has_game_rule = {
-					rule = ENG_ai_behavior
-					option = NEUTRALITY
 				}
 			}
 		}
@@ -2983,7 +3041,7 @@ country_event = {
 		42 = { set_demilitarized_zone = yes }
 		51 = { set_demilitarized_zone = yes }
 		788 = { set_demilitarized_zone = yes }
-		789 = { set_demilitarized_zone = yes }
+		1055 = { set_demilitarized_zone = yes }
 		790 = { set_demilitarized_zone = yes }
 		791 = { set_demilitarized_zone = yes }
 		792 = { set_demilitarized_zone = yes }
@@ -3022,7 +3080,7 @@ country_event = {
 			declare_war_on = {
 				target = GER
 				type = take_state_focus
-				generator = { 42 51 788 789 790 791 792 }
+				generator = { 42 51 788 1055 790 791 792 }
 			}
 			country_event = germany.92
 			if = {
@@ -3061,7 +3119,7 @@ country_event = {
 		42 = { set_demilitarized_zone = yes }
 		51 = { set_demilitarized_zone = yes }
 		788 = { set_demilitarized_zone = yes }
-		789 = { set_demilitarized_zone = yes }
+		1055 = { set_demilitarized_zone = yes }
 		790 = { set_demilitarized_zone = yes }
 		791 = { set_demilitarized_zone = yes }
 		792 = { set_demilitarized_zone = yes }
@@ -3121,7 +3179,7 @@ country_event = {
 	trigger = {
 		date > 1933.1.1
 		date < 1949.1.1
-		has_country_leader = { name = "Adolf Hitler" }
+		has_country_leader = { character = GER_adolf_hitler ruling_only = yes }
 		tag = GER
 		AND = {
 			CZE = { has_capitulated = no }
@@ -3173,15 +3231,23 @@ country_event = {
 	option = { # Himmler
 		name = germany.71.a
 		# Himmler becomes the new Fascist leader of Germany
-		kill_country_leader = yes
+		effect_tooltip = {
+			kill_country_leader = yes
+		}
+		hidden_effect = {
+			retire_character = GER_adolf_hitler
+		}
 		add_stability = 0.05
-		create_country_leader = {
-			name = "Heinrich Himmler"
-			desc = "POLITICS_HEINRICH_HIMMLER_DESC"
-			picture = "Portrait_Germany_Heinrich_Himmler.dds"
-			expire = "2060.1.1"
-			ideology = nazism
-			traits = {
+		add_country_leader_role = {
+			character = GER_heinrich_himmler
+			promote_leader = yes
+			country_leader = {
+				desc = "POLITICS_HEINRICH_HIMMLER_DESC"
+				expire = "2060.1.1"
+				ideology = esoteric_nazism
+				traits = {
+					dictator reichsfueher_of_the_schutzstaffel 
+				}
 			}
 		}
 		hidden_effect = {
@@ -3191,15 +3257,23 @@ country_event = {
 	option = { # Göring
 		name = germany.71.b
 		# Göring becomes the new Fascist leader of Germany
-		kill_country_leader = yes
+		effect_tooltip = {
+			kill_country_leader = yes
+		}
+		hidden_effect = {
+			retire_character = GER_adolf_hitler
+		}
 		add_stability = 0.1
-		create_country_leader = {
-			name = "Hermann Göring"
-			desc = "POLITICS_HERMANN_GORING_DESC"
-			picture = "Portrait_Germany_Hermann_Goring.dds"
-			expire = "2060.1.1"
-			ideology = nazism
-			traits = {
+		add_country_leader_role = {
+			character = GER_hermann_goering
+			promote_leader = yes
+			country_leader = {
+				desc = "POLITICS_HERMANN_GORING_DESC"
+				expire = "2060.1.1"
+				ideology = nazism
+				traits = {
+					dictator guns_over_butter_advocate 
+				}
 			}
 		}
 		hidden_effect = {
@@ -3239,14 +3313,22 @@ country_event = {
 		name = germany.73.a
 		trigger = { is_ai = no }
 		set_country_flag = german_rebels
-		kill_country_leader = yes
-		create_country_leader = {
-			name = "Heinrich Himmler"
-			desc = "POLITICS_HEINRICH_HIMMLER_DESC"
-			picture = "Portrait_Germany_Heinrich_Himmler.dds"
-			expire = "2060.1.1"
-			ideology = nazism
-			traits = {
+		effect_tooltip = {
+			kill_country_leader = yes
+		}
+		hidden_effect = {
+			retire_character = GER_adolf_hitler
+		}
+		add_country_leader_role = {
+			character = GER_heinrich_himmler
+			promote_leader = yes
+			country_leader = {
+				desc = "POLITICS_HEINRICH_HIMMLER_DESC"
+				expire = "2060.1.1"
+				ideology = esoteric_nazism
+				traits = {
+					dictator reichsfueher_of_the_schutzstaffel 
+				}
 			}
 		}
 		if = {
@@ -3282,14 +3364,22 @@ country_event = {
 	option = { # Side with Himmler
 		name = germany.73.b
 		# Himmler becomes the new Fascist leader of Germany
-		kill_country_leader = yes
-		create_country_leader = {
-			name = "Heinrich Himmler"
-			desc = "POLITICS_HEINRICH_HIMMLER_DESC"
-			picture = "Portrait_Germany_Heinrich_Himmler.dds"
-			expire = "2060.1.1"
-			ideology = nazism
-			traits = {
+		effect_tooltip = {
+			kill_country_leader = yes
+		}
+		hidden_effect = {
+			retire_character = GER_adolf_hitler
+		}
+		add_country_leader_role = {
+			character = GER_heinrich_himmler
+			promote_leader = yes
+			country_leader = {
+				desc = "POLITICS_HEINRICH_HIMMLER_DESC"
+				expire = "2060.1.1"
+				ideology = esoteric_nazism
+				traits = {
+					dictator reichsfueher_of_the_schutzstaffel 
+				}
 			}
 		}
 		if = {
@@ -3388,7 +3478,7 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.75.a    #sounds good
+		name = germany.75.a	#sounds good
 		GER = {
 			country_event = { days = 1 id = germany.76 }
 			add_opinion_modifier = {
@@ -3415,7 +3505,7 @@ country_event = {
 	}
 
 	option = {
-		name = germany.75.b    #no way
+		name = germany.75.b	#no way
 		add_timed_idea = { idea = SOV_scientist_defect days = 365 }
 		ai_chance = { factor = 0 }
 		add_political_power = -10
@@ -3436,7 +3526,7 @@ country_event = {
 	is_triggered_only = yes
 
 	option = {
-		name = germany.76.a    #bah
+		name = germany.76.a	#bah
 		# REVISIT Balance research bonus
 		if = {
 			limit = {
@@ -3453,7 +3543,6 @@ country_event = {
 		if = {
 			limit = {
 				has_dlc = "No Step Back"
-
 			}
 			add_tech_bonus = {
 				name = GER_soviet_treaty
@@ -3613,8 +3702,8 @@ country_event = {
 			}
 		}
 		GER = {
-					create_wargoal = {			
-				expire = 100
+			create_wargoal = {
+			expire = 100
 				target = TUR
 				type = puppet_wargoal_focus
 			}
@@ -3669,7 +3758,7 @@ country_event = {
 			}
 			GER = {
 				transfer_state = 85
-				transfer_state = 865
+				transfer_state = 807
 			}
 		}
 	}
@@ -3706,11 +3795,11 @@ country_event = {
 				}
 			}
 			effect_tooltip = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = POL
-					generator = { 85 865 }
+					generator = { 85 807 }
 				}
 			}
 		}
@@ -3753,18 +3842,18 @@ country_event = {
 			POL = { transfer_state = 664 }
 		}
 		if = {
-			limit = { NOT = { country_exists = DAN } }
+			limit = { NOT = { country_exists = DNZ } }
 
 			transfer_state = 85
 		}
 		if = {
-			limit = { country_exists = DAN }
+			limit = { country_exists = DNZ }
 
-			DAN = {
-				country_event = { hours = 1 id = bshistory.10 }
+			DNZ = {
+				country_event = { hours = 1 id = danzig.10 }
 			}
 		}
-		transfer_state = 865
+		transfer_state = 807
 		if = {
 			limit = {
 				ENG = {
@@ -3808,11 +3897,11 @@ country_event = {
 
 	option = {
 		name = germany.82.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = POL
-			generator = { 865 }
+			generator = { 807 }
 		}
 		add_state_claim = 85
 	}
@@ -3831,7 +3920,7 @@ country_event = {
 		ai_chance = {
 			factor = 10
 		}
-		name = germany.83.a        #join
+		name = germany.83.a		#join
 		add_ideas = anti_soviet_pact
 		SOV = {
 			remove_opinion_modifier = { target = ROOT modifier = pact_against_us }
@@ -3840,7 +3929,7 @@ country_event = {
 	}
 
 	option = {
-		name = germany.83.b        #refuse
+		name = germany.83.b		#refuse
 		trigger = { NOT = { is_puppet_of = GER } }
 		ai_chance = {
 			factor = 2
@@ -4008,8 +4097,8 @@ country_event = {
 			GER = {
 				transfer_state = 85
 				add_state_core = 85
-				transfer_state = 865
-				add_state_core = 865
+				transfer_state = 807
+				add_state_core = 807
 				transfer_state = 86
 				add_state_core = 86
 				transfer_state = 762
@@ -4071,7 +4160,7 @@ country_event = {
 				declare_war_on = {
 					target = POL
 					type = take_state
-					generator = { 85 865 86 762 }
+					generator = { 85 807 86 762 }
 				}
 			}
 		}
@@ -4090,18 +4179,18 @@ country_event = {
 	option = {
 		name = germany.87.a
 		if = {
-			limit = { NOT = { country_exists = DAN } }
+			limit = { NOT = { country_exists = DNZ } }
 
 			transfer_state = 85
 		}
 		if = {
-			limit = { country_exists = DAN }
+			limit = { country_exists = DNZ }
 
-			DAN = {
-				country_event = { hours = 1 id = bshistory.10 }
+			DNZ = {
+				country_event = { hours = 1 id = danzig.10 }
 			}
 		}
-		transfer_state = 865
+		transfer_state = 807
 		transfer_state = 86
 		transfer_state = 762
 		if = {
@@ -4142,16 +4231,16 @@ country_event = {
 
 	option = {
 		name = germany.88.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state
 			target = POL
-			generator = { 85 86 865 762 }
+			generator = { 85 86 807 762 }
 		}
 		add_state_core = 85
 		add_state_core = 86
 		add_state_core = 762
-		add_state_core = 865
+		add_state_core = 807
 		if = {
 			limit = {
 				ENG = {
@@ -4276,8 +4365,8 @@ country_event = {
 			country_event = germany.90
 			effect_tooltip = {
 				remove_ideas = soviet_german_friendship
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = SOV
 					generator = { 219 217 } # Moscow and Stalingrad
@@ -4300,8 +4389,8 @@ country_event = {
 	option = {
 		name = germany.90.a
 		remove_ideas = soviet_german_friendship
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = SOV
 			generator = { 219 217 } # Moscow and Stalingrad
@@ -4379,8 +4468,8 @@ country_event = {
 
 	option = {
 		name = germany.93.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {			
+			expire = 100
 			type = take_state_focus
 			target = YUG
 			generator = { 102 934 935 936 }
@@ -4392,24 +4481,41 @@ country_event = {
 	}
 }
 
-# Germany (Yugoslavia Surrenders Slovenia) //Removed
-#country_event = {
-#	id = germany.94
-#	title = germany.94.t
-#	desc = germany.94.d
-#	picture = GFX_report_event_german_politician_speech
-#	
-#	is_triggered_only = yes
-#	
-#	option = {
-#		name = germany.94.a
-#		GER = { transfer_state = 102 }
-#		set_country_flag = slovenia_acquired
-#		hidden_effect = {
-#			news_event = { id = news.163 hours = 6 }
-#		}
-#	}
-#}
+# Germany (Yugoslavia Surrenders Slovenia)
+country_event = {
+	id = germany.94
+	title = germany.94.t
+	desc = germany.94.d
+	picture = GFX_report_event_german_politician_speech
+	
+	is_triggered_only = yes
+	
+	option = {
+		name = germany.94.a
+		if = {
+			limit = {
+				YUG = {
+					controls_state = 934
+					owns_state = 934
+				}
+			}
+			GER = { transfer_state = 934 }
+		}
+		if = {
+			limit = {
+				YUG = {
+					controls_state = 935
+					owns_state = 935
+				}
+			}
+			GER = { transfer_state = 935 }
+		}
+		set_country_flag = slovenia_acquired
+		hidden_effect = {
+			news_event = { id = news.163 hours = 6 }
+		}
+	}
+}
 
 # Germany (Yugoslavia Surrenders Slovenia)
 country_event = {
@@ -4507,8 +4613,8 @@ country_event = {
 
 	option = {
 		name = germany.95.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {			
+			expire = 100
 			type = take_state_focus
 			target = YUG
 			generator = { 102 934 935 936 }
@@ -4530,8 +4636,8 @@ country_event = {
 
 	option = {
 		name = germany.96.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = YUG
 			generator = { 102 934 935 936 }
@@ -4553,8 +4659,8 @@ country_event = {
 
 	option = {
 		name = germany.97.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = take_state_focus
 			target = YUG
 			generator = { 102 934 935 936 }
@@ -5139,8 +5245,8 @@ country_event = {
 
 	option = {
 		name = germany.102.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = puppet_wargoal_focus
 			target = GRE
 		}
@@ -5162,8 +5268,8 @@ country_event = {
 
 	option = {
 		name = germany.103.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = puppet_wargoal_focus
 			target = GRE
 		}
@@ -5174,9 +5280,9 @@ country_event = {
 country_event = {
 	id = germany.104
 	title = germany.104.t
-	desc = { text = germany.104.d_Savoy                    trigger = { has_global_flag = ITA_claims_on_france_735 has_global_flag = ITA_claims_on_france_821 has_global_flag = ITA_claims_on_france_823 } }
-	desc = { text = germany.104.d_Corsica                trigger = { has_global_flag = ITA_claims_on_france_1 } }
-	desc = { text = germany.104.d_Savoy_Corsica    trigger = { has_global_flag = ITA_claims_on_france_735 has_global_flag = ITA_claims_on_france_821 has_global_flag = ITA_claims_on_france_823 has_global_flag = ITA_claims_on_france_1 } }
+	desc = { text = germany.104.d_Savoy					trigger = { has_global_flag = ITA_claims_on_france_735 has_global_flag = ITA_claims_on_france_821 has_global_flag = ITA_claims_on_france_823 } }
+	desc = { text = germany.104.d_Corsica				trigger = { has_global_flag = ITA_claims_on_france_1 } }
+	desc = { text = germany.104.d_Savoy_Corsica	trigger = { has_global_flag = ITA_claims_on_france_735 has_global_flag = ITA_claims_on_france_821 has_global_flag = ITA_claims_on_france_823 has_global_flag = ITA_claims_on_france_1 } }
 
 
 	picture = GFX_report_event_german_italian_pact
@@ -5465,8 +5571,8 @@ country_event = {
 
 	option = {
 		name = germany.111.a
-				create_wargoal = {			
-				expire = 100
+		create_wargoal = {
+			expire = 100
 			type = annex_everything
 			target = YUG
 		}
@@ -5523,8 +5629,8 @@ country_event = {
 		has_civil_war = no
 		owns_state = 85
 		controls_state = 85
-		owns_state = 865
-		controls_state = 865
+		owns_state = 807
+		controls_state = 807
 	}
 
 	fire_only_once = yes
@@ -5564,14 +5670,14 @@ country_event = {
 			effect_tooltip = {
 				if = {
 					limit = {
-						country_exists = DAN
+						country_exists = DNZ
 					}
 					add_state_claim = 85
 				}
 				declare_war_on = {
 					target = POL
 					type = take_state
-					generator = { 85 865 }
+					generator = { 85 807 }
 				}
 			}
 		}
@@ -5590,18 +5696,18 @@ country_event = {
 	option = {
 		name = germany.115.a
 		if = {
-			limit = { NOT = { country_exists = DAN } }
+			limit = { NOT = { country_exists = DNZ } }
 
 			transfer_state = 85
 		}
 		if = {
-			limit = { country_exists = DAN }
+			limit = { country_exists = DNZ }
 
-			DAN = {
-				country_event = { hours = 1 id = bshistory.10 }
+			DNZ = {
+				country_event = { hours = 1 id = danzig.10 }
 			}
 		}
-		transfer_state = 865
+		transfer_state = 807
 		remove_state_claim = 86
 	}
 }
@@ -5624,7 +5730,7 @@ country_event = {
 		declare_war_on = {
 			target = POL
 			type = take_state
-			generator = { 865 }
+			generator = { 807 }
 		}
 		add_state_claim = 85
 	}
@@ -5750,13 +5856,13 @@ country_event = {
 				add_state_core = 58
 				add_state_core = 59
 				add_state_core = 788
-				add_state_core = 789
+				add_state_core = 1055
 				add_state_core = 790
 				add_state_core = 791
 				add_state_core = 792
 				add_state_core = 796
 				add_state_core = 798
-				add_state_core = 799
+				add_state_core = 877
 				add_state_core = 800
 				add_state_core = 1105
 			}
@@ -5826,13 +5932,13 @@ country_event = {
 			add_state_core = 58
 			add_state_core = 59
 			add_state_core = 788
-			add_state_core = 789
+			add_state_core = 1055
 			add_state_core = 790
 			add_state_core = 791
 			add_state_core = 792
 			add_state_core = 796
 			add_state_core = 798
-			add_state_core = 799
+			add_state_core = 877
 			add_state_core = 800
 			add_state_core = 1105
 		}
@@ -5871,8 +5977,8 @@ country_event = {
 			factor = 0
 		}
 		hidden_effect = {
-					create_wargoal = {			
-				expire = 100
+			create_wargoal = {
+			expire = 100
 				type = liberate_wargoal
 				target = DDR
 			}
@@ -5882,8 +5988,8 @@ country_event = {
 				id = germany.120
 			}
 			hidden_effect = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = liberate_wargoal
 					target = WGR
 				}
@@ -6301,8 +6407,8 @@ country_event = {
 				add_state_claim = 886
 				add_state_claim = 887
 				add_state_claim = 888
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 74 884 886 887 888 }
@@ -6404,8 +6510,8 @@ country_event = {
 		69 = {
 			controller = {
 				GER = {
-							create_wargoal = {			
-				expire = 100
+					create_wargoal = {
+					expire = 100
 						type = take_state_focus
 						target = PREV
 						generator = { 69 74 884 886 887 888 }
@@ -6501,8 +6607,8 @@ country_event = {
 				}
 			}
 			FROM = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					target = PREV
 					type = annex_everything
 				}
@@ -6623,106 +6729,126 @@ country_event = {
 		release = PRE
 		PRE = { change_tag_from = GER }
 		hidden_effect = {
-		transfer_state = 64
-		transfer_state = 794
-		transfer_state = 1105
-		set_global_flag = GER_country_collapse
+			transfer_state = 64
+			transfer_state = 794
+			transfer_state = 1105
+			set_global_flag = GER_country_collapse
 		}
 		GER = {
 			create_country_leader = {
-	name = "Hermann Göring"
-	picture = "gfx/leaders/GER/Portrait_Germany_Hermann_Goring.dds"
-	expire = "1960.1.1"
-	ideology = nazism
-	}
-	}
-		
+				name = "Hermann Göring"
+				picture = "gfx/leaders/GER/Portrait_Germany_Hermann_Goring.dds"
+				expire = "1960.1.1"
+				ideology = nazism
+			}
+		}
 		release = WSP
 		release = HES
-		release = RHR
-		789 = { add_claim_by = GER }	
+		release = RHI
+		1055 = { add_claim_by = GER }	
 		42 = { add_claim_by = GER } 
 		28 = { add_claim_by = GER } 
 		release = MEK
 		release = SHL
 		release = SAX
-		release = BAV
+		release = BAY
 		release = HAN
 		release = BDW
-		hidden_effect = {
 		FRA = {
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = RHR }
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = BDW }
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAR }
-			789 = {add_claim_by = FRA }
-			792 = {add_claim_by = FRA }
-			789 = {add_claim_by = FRA }
-			51 = {add_claim_by = FRA }
-			42 = {add_claim_by = FRA } 
-			791 = {add_claim_by = FRA }
-			}
-	DEN = {
-				create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SHL }
-			796 = {add_claim_by = DEN }
-			}
-	52 = { set_demilitarized_zone = yes }
-	54 = { set_demilitarized_zone = yes }
-	PRE = {
-		load_oob = GER_1919
-	}
-	WSP = {
-		load_oob = GER_1919
-	}
-	HAN = {
-		load_oob = GER_1919
-	}
-	SAX = {
-		load_oob = GER_1919
-	}
-	BAV = {
-		load_oob = GER_1919
-	}
-	PRE = { 		create_wargoal = {			
+			create_wargoal = {
 				expire = 100
-    type = puppet_wargoal_focus
-    target = GER
-	} 
- PRE = {
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAX }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HAN }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SHL }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HES }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = BAV }
- }
- PRE = { 
- load_focus_tree = german_focus
- set_cosmetic_tag = NGC
- load_oob = GER_1919
- load_oob = GER_1936
- load_oob = GER_1919
- unlock_national_focus = GER_reichstag_fire_decree 
- unlock_national_focus = GER_enabling_act
- unlock_national_focus = GER_establish_the_gestapo
- unlock_national_focus = GER_give_himmler_command_of_all_police_forces
- unlock_national_focus = GER_the_night_of_the_long_knives
- unlock_national_focus = GER_poltical_sphere
- complete_national_focus = GER_legit_hitler
- }
- }
-	}
+				type = puppet_wargoal_focus
+				target = RHI
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = BDW
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SAR
+			}
+			add_state_claim = 1055
+			add_state_claim = 792
+			add_state_claim = 51
+			add_state_claim = 42
+			add_state_claim = 791
+		}
+		DEN = {
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SHL
+			}
+			add_state_claim = 796
+		}
+		52 = { set_demilitarized_zone = yes }
+		54 = { set_demilitarized_zone = yes }
+		PRE = {
+			load_oob = GER_1919
+		}
+		WSP = {
+			load_oob = GER_1919
+		}
+		HAN = {
+			load_oob = GER_1919
+		}
+		SAX = {
+			load_oob = GER_1919
+		}
+		BAY = {
+			load_oob = GER_1919
+		}
+		PRE = {
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = GER
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SAX
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HAN
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = WSP
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SHL
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HES
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = BAY
+			}
+			load_focus_tree = Germany_WW2
+			set_cosmetic_tag = NGC
+			load_oob = GER_1919
+			load_oob = GER_1936
+			unlock_national_focus = GER_reichstag_fire_decree
+			unlock_national_focus = GER_enabling_act
+			unlock_national_focus = GER_establish_the_gestapo
+			unlock_national_focus = GER_give_himmler_command_of_all_police_forces
+			unlock_national_focus = GER_the_night_of_the_long_knives
+			#unlock_national_focus = GER_poltical_sphere
+			complete_national_focus = GER_legit_hitler
+		}
 	}
 	
 	option = {
@@ -6730,129 +6856,165 @@ country_event = {
 		news_event = germany.135
 		release = PRE
 		hidden_effect = {
-		transfer_state = 64
-		transfer_state = 794
-		transfer_state = 1105
-		set_global_flag = GER_country_collapse
-				GER = {
+			transfer_state = 64
+			transfer_state = 794
+			transfer_state = 1105
+			set_global_flag = GER_country_collapse
+		}
+		GER = {
 			create_country_leader = {
-	name = "Hermann Göring"
-	picture = "gfx/leaders/GER/Portrait_Germany_Hermann_Goring.dds"
-	expire = "1960.1.1"
-	ideology = nazism
-	}
-	}
+				name = "Hermann Göring"
+				picture = "gfx/leaders/GER/Portrait_Germany_Hermann_Goring.dds"
+				expire = "1960.1.1"
+				ideology = nazism
+			}
 		}
 		release = WSP
 		release = HES
-		release = RHR
-		789 = { add_claim_by = GER }	
+		release = RHI
+		1055 = { add_claim_by = GER }	
 		42 = { add_claim_by = GER } 
 		28 = { add_claim_by = GER } 
 		release = MEK
 		release = SHL
 		release = SAX
-		release = BAV
+		release = BAY
 		release = HAN
 		GER = {
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAX }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HAN }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SHL }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = PRE }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = RHR }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAR }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HES }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = BAV }
-  }
-		release = BDW
-		hidden_effect = {
-		FRA = {
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = RHR }
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAR }
-					create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = LUX }
-			789 = {add_claim_by = FRA }
-			792 = {add_claim_by = FRA }
-			789 = {add_claim_by = FRA }
-			51 = {add_claim_by = FRA }
-			42 = {add_claim_by = FRA } 
-			791 = {add_claim_by = FRA }
-			}
-	DEN = {
-				create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SHL }
-			796 = {add_claim_by = DEN }
-			}
-	52 = { set_demilitarized_zone = yes }
-	54 = { set_demilitarized_zone = yes }
-	PRE = {
-		load_oob = GER_1919
-	}
-	WSP = {
-		load_oob = GER_1919
-	}
-	HAN = {
-		load_oob = GER_1919
-	}
-	SAX = {
-		load_oob = GER_1919
-	}
-	BAV = {
-		load_oob = GER_1919
-	}
-	PRE = { 		create_wargoal = {			
+			create_wargoal = {
 				expire = 100
-    type = puppet_wargoal_focus
-    target = GER
- } }
- PRE = {
-	set_cosmetic_tag = NGC
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAX }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HAN }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SHL }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = WSP }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = HES }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = BAV }
- }
-
- PRE = { 
- load_focus_tree = german_focus
- load_oob = GER_1919
- load_oob = GER_1936
- load_oob = GER_1919
- unlock_national_focus = GER_reichstag_fire_decree 
- unlock_national_focus = GER_enabling_act
- unlock_national_focus = GER_establish_the_gestapo
- unlock_national_focus = GER_give_himmler_command_of_all_police_forces
- unlock_national_focus = GER_the_night_of_the_long_knives
- unlock_national_focus = GER_poltical_sphere
- complete_national_focus = GER_legit_hitler
- }
- 	}
- }
- }
+				type = puppet_wargoal_focus
+				target = GER
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SAX
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HAN
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = WSP
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SHL
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HES
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = BAY
+			}
+		}
+		release = BDW
+		FRA = {
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = RHI
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = BDW
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = LUX
+			}
+			add_state_claim = 1055
+			add_state_claim = 792
+			add_state_claim = 51
+			add_state_claim = 42
+			add_state_claim = 791
+		}
+		DEN = {
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SHL
+			}
+			add_state_claim = 796
+		}
+		52 = { set_demilitarized_zone = yes }
+		54 = { set_demilitarized_zone = yes }
+		PRE = {
+			load_oob = GER_1919
+		}
+		WSP = {
+			load_oob = GER_1919
+		}
+		HAN = {
+			load_oob = GER_1919
+		}
+		SAX = {
+			load_oob = GER_1919
+		}
+		BAY = {
+			load_oob = GER_1919
+		}
+		PRE = {
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = GER
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SAX
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HAN
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = WSP
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = SHL
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = HES
+			}
+			create_wargoal = {
+				expire = 100
+				type = puppet_wargoal_focus
+				target = BAY
+			}
+			load_focus_tree = Germany_WW2
+			set_cosmetic_tag = NGC
+			load_oob = GER_1919
+			load_oob = GER_1936
+			unlock_national_focus = GER_reichstag_fire_decree
+			unlock_national_focus = GER_enabling_act
+			unlock_national_focus = GER_establish_the_gestapo
+			unlock_national_focus = GER_give_himmler_command_of_all_police_forces
+			unlock_national_focus = GER_the_night_of_the_long_knives
+			#unlock_national_focus = GER_poltical_sphere
+			complete_national_focus = GER_legit_hitler
+		}
+	}
+}
 country_event = { #Final Struggle 
 	is_triggered_only = no
 	fire_only_once = yes
@@ -6873,27 +7035,39 @@ country_event = { #Final Struggle
 	}
 	option = {
 		name = germany.129.a
-				create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = BDW }
-				create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = RHR }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = SAR }
-			create_wargoal = {			
-				expire = 100 type = puppet_wargoal_focus target = FRA }
-	annex_country = {
-		target = BDW
-    transfer_troops = yes
-	}
-	PRE = {
+		create_wargoal = {
+			expire = 100
+			type = puppet_wargoal_focus
+			target = BDW
+		}
+		create_wargoal = {
+			expire = 100
+			type = puppet_wargoal_focus
+			target = RHI
+		}
+		create_wargoal = {
+			expire = 100
+			type = puppet_wargoal_focus
+			target = SAR
+		}
+		create_wargoal = {
+			expire = 100
+			type = puppet_wargoal_focus
+			target = FRA
+		}
+		annex_country = {
+			target = BDW
+			transfer_troops = yes
+		}
+		PRE = {
 			load_oob = GER_1919
 			load_oob = GER_1936
-	}
-	791 = { set_demilitarized_zone = no }
-	52 = { set_demilitarized_zone = no }
-	54 = { set_demilitarized_zone = no }
 		}
+		791 = { set_demilitarized_zone = no }
+		52 = { set_demilitarized_zone = no }
+		54 = { set_demilitarized_zone = no }
 	}
+}
 country_event = { #Delete Duplicate 
 	is_triggered_only = no
 	fire_only_once = no
@@ -6910,12 +7084,12 @@ country_event = { #Delete Duplicate
 	}
 	option = {
 		name = germany.129.a
-	annex_country = {
-		target = WGR
-    transfer_troops = yes
-	}
+		annex_country = {
+			target = WGR
+			transfer_troops = yes
 		}
 	}
+}
 
 country_event = { #French Victory 
 	is_triggered_only = no
@@ -6926,7 +7100,7 @@ country_event = { #French Victory
 	trigger= {
 		has_global_flag = GER_country_collapse
 		tag = PRE
-		PRE ={
+		PRE = {
 			controls_state = 59
 			controls_state = 60
 			controls_state = 1105
@@ -6939,14 +7113,14 @@ country_event = { #French Victory
 	}
 	option = {
 		name = germany.134.a
-		add_war_support = .1
-		hidden_effect = {
-		GER = { change_tag_from = PRE }
-	GER = {	annex_country = {
-		target = PRE
-    transfer_troops = yes
-	} 
-		
+		add_war_support = 0.1
+		GER = {
+			change_tag_from = PRE
+			annex_country = {
+				target = PRE
+				transfer_troops = yes
+			}
+		}
 		set_cosmetic_tag = GER
 		activate_decision = RON_Formable_Decision80 
 		unlock_national_focus = GER_eliminate_facist_resistance
@@ -6955,10 +7129,9 @@ country_event = { #French Victory
 		unlock_national_focus = GER_new_german_constitution
 		complete_national_focus = GER_restore_hohenzollern
 	}
-		}
-		}
+
 	
-option = {
+	option = {
 		name = germany.134.b
 		white_peace = FRA
 		white_peace = ENG
@@ -6967,48 +7140,43 @@ option = {
 		ai_chance = {
 			base = 100
 		}
-		hidden_effect = {
 		FRA = {
 			start_civil_war = {
-	ideology = communism
-	size = 0.3
-	}
+				ideology = communism
+				size = 0.3
+			}
 		}
-		}
-	GER = {	transfer_state = 51
-		transfer_state = 792
-		transfer_state = 28
-		transfer_state = 51
-		set_politics = {
-	ruling_party = neutrality
-	elections_allowed = no
-}
-		transfer_state = 8
-		hidden_effect = {
 		GER = {
+			transfer_state = 51
+			transfer_state = 792
+			transfer_state = 28
+			transfer_state = 51
+			set_politics = {
+				ruling_party = neutrality
+				elections_allowed = no
+			}
 			transfer_state = 8
+			hidden_effect = {
+				GER = {
+					transfer_state = 8
+					change_tag_from = PRE
+					annex_country = {
+						target = PRE 
+						transfer_troops = yes
+					}
+				}
+				clr_country_flag  = GER_country_collapse
+			}
+			set_cosmetic_tag = GER
+			activate_decision = RON_Formable_Decision80 
+			unlock_national_focus = GER_eliminate_facist_resistance
+			unlock_national_focus = GER_fascism_censorship_campaigns
+			unlock_national_focus = GER_consolidate_the_new_state
+			unlock_national_focus = GER_new_german_constitution
+			complete_national_focus = GER_restore_hohenzollern
 		}
-		GER = { change_tag_from = PRE }
-	GER = {	annex_country = {
-		target = PRE 
-    transfer_troops = yes
-	} }
-	clr_country_flag  = GER_country_collapse
-
-		}
-		set_cosmetic_tag = GER
-		hidden_effect = {
-		activate_decision = RON_Formable_Decision80 
-		unlock_national_focus = GER_eliminate_facist_resistance
-		unlock_national_focus = GER_fascism_censorship_campaigns
-		unlock_national_focus = GER_consolidate_the_new_state
-		unlock_national_focus = GER_new_german_constitution
-		complete_national_focus = GER_restore_hohenzollern
 	}
-	}
-	}
-	}
-	
+}
 
 news_event = { #News German Collapse
 	is_triggered_only = yes
@@ -7021,7 +7189,8 @@ news_event = { #News German Collapse
 	option = {
 		name = germany.129.a
 	}
-	} 
+}
+
 country_event = { #News German Collapse
 	is_triggered_only = no
 	fire_only_once = yes 
@@ -7033,19 +7202,19 @@ country_event = { #News German Collapse
 		tag = GER
 		has_global_flag = GER_country_collapse
 		OR = {
-		NOT = { country_exists = PRE }
-		PRE = { is_puppet_of = GER }
+			NOT = { country_exists = PRE }
+			PRE = { is_puppet_of = GER }
 		}
 	} 
 	option = {
 		name = germany.129.a
 		unlock_national_focus = GER_eliminate_facist_resistance
 		annex_country = {
-		target = PRE
-    transfer_troops = yes
+			target = PRE
+			transfer_troops = yes
+		}
 	}
-	}
-	}
+}
 
 # Hitler Dead!
 country_event = {
@@ -7213,8 +7382,8 @@ country_event = {
 		add_opinion_modifier = { target = GER modifier = condemn_aggression }
 		effect_tooltip = {
 			GER = {
-						create_wargoal = {			
-				expire = 100
+				create_wargoal = {
+					expire = 100
 					type = take_state_focus
 					target = CZE
 					generator = { 69 884 886 887 888 }
@@ -7271,7 +7440,7 @@ country_event = {
 		GER = {
 		transfer_state = 85
 		transfer_state = 5
-		transfer_state = 865
+		transfer_state = 807
 		transfer_state = 997
 		transfer_state = 63
 		}
@@ -7292,9 +7461,9 @@ country_event = {
 
 	if = {
 		limit = {
-	SOV = {	owns_state = 807 }
+	SOV = {	owns_state = 865 }
 		}
-		transfer_state = 807
+		transfer_state = 865
 	}
 	SOV = { puppet = GER }
 	}
@@ -7400,51 +7569,51 @@ country_event = {
 	option = { 
 	name = germany.4007.a
 	news_event = germany.4009
-	DMA = { transfer_state = 777 }
-			DMA = { transfer_state = 773 }
-			DMA = { transfer_state = 897 }
-			DMA = { transfer_state = 899 }
-			DMA = { transfer_state = 546 }
-			DMA = { transfer_state = 541 }
-			DMA = { transfer_state = 1056 }
-			DMA = { transfer_state = 1057 }
+	RKA = { transfer_state = 777 }
+			RKA = { transfer_state = 773 }
+			RKA = { transfer_state = 897 }
+			RKA = { transfer_state = 899 }
+			RKA = { transfer_state = 546 }
+			RKA = { transfer_state = 541 }
+			RKA = { transfer_state = 1056 }
+			RKA = { transfer_state = 1057 }
 			GER = { transfer_state = 743 }	
 			
-			DMA = { transfer_state = 1049 }	
-			DMA = { transfer_state = 900 }	
-			DMA = { transfer_state = 901 }
-			DMA = { transfer_state = 898 }
-			DMA = { transfer_state = 896 }
-			DMA = { transfer_state = 768 }
-			DMA = { transfer_state = 769 }	
+			RKA = { transfer_state = 1049 }	
+			RKA = { transfer_state = 900 }	
+			RKA = { transfer_state = 901 }
+			RKA = { transfer_state = 898 }
+			RKA = { transfer_state = 896 }
+			RKA = { transfer_state = 768 }
+			RKA = { transfer_state = 769 }	
 
 			#Bonus States
-			DMA = { transfer_state = 895 }
-			DMA = { transfer_state = 539 }
-			DMA = { transfer_state = 772 }	
+			RKA = { transfer_state = 895 }
+			RKA = { transfer_state = 539 }
+			RKA = { transfer_state = 772 }	
 			
-			DMA = { transfer_state = 547 }
-			DMA = { transfer_state = 548 }	
-			DMA = { transfer_state = 770 }
-			DMA = { transfer_state = 771 }
+			RKA = { transfer_state = 547 }
+			RKA = { transfer_state = 548 }	
+			RKA = { transfer_state = 770 }
+			RKA = { transfer_state = 771 }
 
 			SAF = { transfer_state = 545 }
 			SAF = { transfer_state = 542 }
 
-			DMA = { transfer_state = 774 }
-			DMA = { transfer_state = 660 }	
-			DMA = { transfer_state = 558 }	
-			DMA = { transfer_state = 776 }
-			DMA = { transfer_state = 274 }	
-			DMA = { transfer_state = 779 }	
-			DMA = { transfer_state = 780 }
-			DMA = { transfer_state = 700 }	
-			DMA = { transfer_state = 272 }
-			DMA = { transfer_state = 701 }	
-			DMA = { transfer_state = 557 }	
-			DMA = { transfer_state = 556 }	
-			DMA = { transfer_state = 778 }	
-			DMA = { transfer_state = 781 }				
+			RKA = { transfer_state = 774 }
+			RKA = { transfer_state = 660 }	
+			RKA = { transfer_state = 558 }	
+			RKA = { transfer_state = 776 }
+			RKA = { transfer_state = 274 }	
+			RKA = { transfer_state = 779 }	
+			RKA = { transfer_state = 780 }
+			RKA = { transfer_state = 700 }	
+			RKA = { transfer_state = 272 }
+			RKA = { transfer_state = 701 }	
+			RKA = { transfer_state = 557 }	
+			RKA = { transfer_state = 556 }	
+			RKA = { transfer_state = 778 }	
+			RKA = { transfer_state = 781 }				
 			
 			GER = { transfer_state = 918 }
 			GER = { transfer_state = 737 }
@@ -7454,12 +7623,12 @@ country_event = {
 			GER = { transfer_state = 695 }
 			GER = { transfer_state = 309 }
 			
-			every_state = { limit = { is_core_of = COG } transfer_state_to = DMA }
-			every_state = { limit = { is_core_of = RWA } transfer_state_to = DMA }
-			every_state = { limit = { is_core_of = BRD } transfer_state_to = DMA }
+			every_state = { limit = { is_core_of = COG } transfer_state_to = RKA }
+			every_state = { limit = { is_core_of = RWA } transfer_state_to = RKA }
+			every_state = { limit = { is_core_of = BRD } transfer_state_to = RKA }
 			
 			GER = {
-			set_autonomy = { target = DMA  autonomy_state = autonomy_reichskommissariat }
+			set_autonomy = { target = RKA  autonomy_state = autonomy_reichskommissariat }
 			}
 	}
 }
@@ -7472,10 +7641,14 @@ country_event = {
 	is_triggered_only = yes
  
 	option = { 
-	name = germany.4008.a
-					 GER = {
-remove_guarantee= VIF						
-					 }	
+		name = germany.4008.a
+		GER = {
+			diplomatic_relation = {
+				country = VIF
+				relation = guarantee
+				active = no
+			}
+		}
 				SSB = { 
 					transfer_state = 817
 					transfer_state = 815
@@ -7501,84 +7674,86 @@ remove_guarantee= VIF
 					load_oob = GER_Waffen_SS_10
 					load_oob = volkssturm_frankfurt
 					}
-						create_wargoal = {			
-				expire = 100
-                target = VIF
-                type = annex_everything
-            }				
+				create_wargoal = {
+					expire = 100
+				target = VIF
+				type = annex_everything
+			}				
 					 }
 	}
 	option = { 
-	name = germany.4008.b
-
-						create_wargoal = {			
-				expire = 100
-                target = SSB
-                type = annex_everything
-            }
-				SSB = { 
-					transfer_state = 817
-					transfer_state = 815
-					transfer_state = 816
-					transfer_state = 17 
-					transfer_state = 817
-					transfer_state = 892
-					transfer_state = 3  
-					transfer_state = 814	
-					hidden_effect = {	
-					country_event = ron_decolonizationdiplo.30
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10					
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10
-					}				
-				}		
+		name = germany.4008.b
+		create_wargoal = {
+			expire = 100
+			target = SSB
+			type = annex_everything
+		}
+		SSB = {
+			transfer_state = 817
+			transfer_state = 815
+			transfer_state = 816
+			transfer_state = 17 
+			transfer_state = 817
+			transfer_state = 892
+			transfer_state = 3  
+			transfer_state = 814
+			hidden_effect = {
+				country_event = ron_decolonizationdiplo.30
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+			}
+		}
 	}
-option = { 
-	name = germany.4008.c
-					 GER = {
-remove_guarantee= VIF						
-					 }	
-				SSB = { 
-					transfer_state = 817
-					transfer_state = 815
-					transfer_state = 816
-					transfer_state = 17 
-					transfer_state = 817
-					transfer_state = 892
-					transfer_state = 3  
-					transfer_state = 814				
-					hidden_effect = {
-					country_event = ron_decolonizationdiplo.30
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = volkssturm_frankfurt
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10					
-					load_oob = GER_Waffen_SS_10
-					load_oob = GER_Waffen_SS_10
-					load_oob = volkssturm_frankfurt
-					}
-						create_wargoal = {			
-				expire = 100
-                target = VIF
-                type = annex_everything
-            }				
-					change_tag_from = GER
-					 }
 
-	}		
+	option = { 
+		name = germany.4008.c
+		GER = {
+			diplomatic_relation = {
+				country = VIF
+				relation = guarantee
+				active = no
+			}
+		}
+		SSB = {
+			transfer_state = 817
+			transfer_state = 815
+			transfer_state = 816
+			transfer_state = 17 
+			transfer_state = 817
+			transfer_state = 892
+			transfer_state = 3  
+			transfer_state = 814
+			hidden_effect = {
+				country_event = ron_decolonizationdiplo.30
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = volkssturm_frankfurt
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+				load_oob = GER_Waffen_SS_10
+			}
+			create_wargoal = {
+				expire = 100
+				target = VIF
+				type = annex_everything
+			}
+			change_tag_from = GER
+		}
+	}
 }
 news_event = {
 	id = germany.4009
@@ -7588,7 +7763,7 @@ news_event = {
 	is_triggered_only = yes
 	major = yes
 	option = { 
-	name = germany.4007.a
+		name = germany.4007.a
 	}
 }
 country_event = {
@@ -7600,28 +7775,183 @@ country_event = {
 	is_triggered_only = yes 
  
 	option = { 
-	name = germany.4010.a
-	ALG = {add_ideas = {
-			FRA_terror_bombing
-	}
-	}
+		name = germany.4010.a
+		ALG = {
+			add_ideas = FRA_terror_bombing
+		}
 		every_country = {
 			limit = {
 				has_government = democratic
-				}
+			}
+			send_embargo = GER
 		}
-		add_opinion_modifier = { target = GER modifier = embargo }
-			
-	
-	
+	}
+	option = {
+		name = germany.4010.b
+		VIF = {
+			add_ideas = FRA_unrecoginized_state
+		}
  	}
-	option = { 
-	name = germany.4010.b
-	VIF = { add_ideas = {
-			FRA_unrecoginized_state
-	}
-	}
- 	}	
 }
+
 #TODO move to axis victory for now keep them here check axis victory for other events
-##################################################################################################################
+
+country_event = { #Germany wants resource rights for Sweden
+	id = AAT_germany.1
+	title = AAT_germany.1.t
+	desc = AAT_germany.10.desc #Intentional
+	picture = GFX_report_event_german_speech
+	is_triggered_only = yes
+	option = { #No
+		name = AAT_germany.1.a
+		ai_chance = {
+			base = 1
+			modifier = {
+				date > 1942.12.1
+				OR = {
+					is_historical_focus_on = yes
+					has_government = democratic
+				}
+				factor = 3
+			} 
+
+			modifier = {
+				FROM = {
+					surrender_progress > 0.1
+				}
+				factor = 2
+			}
+			modifier = {
+				FROM = {
+					surrender_progress > 0.25
+				}
+				factor = 10
+			}
+
+			modifier = {
+				FROM = {
+					is_ai = no
+					surrender_progress < 0.03
+				}
+				factor = 0
+			}
+		}
+
+		add_political_power = -25
+
+		FROM = {
+			effect_tooltip = {
+				create_wargoal = {
+					type = take_state_focus
+					target = ROOT
+					expire = 0
+					generator = { 918 666 }
+				}
+			}
+			country_event = { id = AAT_germany.2 hours = 2 }
+		}
+	}
+
+	option = { #Yes
+		ai_chance = {
+			base = 30
+		}
+		name = AAT_germany.1.b
+
+		add_offsite_building = {
+			type = industrial_complex
+			level = 2
+		}
+
+		add_offsite_building = {
+			type = arms_factory
+			level = 1
+		}
+
+		add_timed_idea = {
+			idea = GER_german_swedish_trade_agreement
+			days = 480
+		}
+
+		give_resource_rights = {
+			receiver = FROM 
+			state = 918 #Västerbotten 
+		}
+
+		add_opinion_modifier = {
+			target = FROM # target of the relation
+			modifier = GER_SWE_historic_trade_Partners
+		}
+
+		FROM = {
+			add_opinion_modifier = {
+				target = PREV # target of the relation
+				modifier = GER_SWE_historic_trade_Partners
+			}
+			country_event = { id = AAT_germany.3 hours = 2 }
+		}
+	}
+}
+
+country_event = { #Rejects deal
+	id = AAT_germany.2
+	title = AAT_germany.2.t
+	desc = AAT_germany.2.desc
+	picture = GFX_report_event_finnish_letter
+
+	is_triggered_only = yes
+
+	option = { #NOPE
+		name = AAT_germany.2.a
+		create_wargoal = {
+			type = take_state_focus
+			target = FROM
+			expire = 0
+			generator = { 918 666 }
+		}
+	}
+}
+
+
+country_event = { #Accepts deal
+	id = AAT_germany.3
+	title = AAT_germany.3.t
+	desc = AAT_germany.3.desc
+	picture = [GetHitlerCroatianHandshakeEventPicture]
+
+	is_triggered_only = yes
+
+	option = { #NOPE
+		name = AAT_germany.3.a
+
+		effect_tooltip = {
+			FROM = {
+
+				add_offsite_building = {
+					type = industrial_complex
+					level = 2
+				}
+
+				add_offsite_building = {
+					type = arms_factory
+					level = 1
+				}
+
+				add_timed_idea = {
+					idea = GER_german_swedish_trade_agreement
+					days = 480
+				}
+
+				give_resource_rights = {
+					receiver = PREV 
+					state = 918 #Västerbotten 
+				}
+				add_opinion_modifier = {
+					target = PREV # target of the relation
+					modifier = GER_SWE_historic_trade_Partners
+				}
+			}
+		}
+	}
+}
+
