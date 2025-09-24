@@ -36,35 +36,7 @@ on_actions = {
 			set_variable = { global.country_devastation_stability_factor = -3.00 }
 			set_variable = { global.country_devastation_war_support_factor = -4.00 }
 			set_variable = { global.country_devastation_production_speed_buildings_factor = -3.5 }
-			
-			# how much the refugee stability impact wears off monthly
-			# 	lower value means faster wearing off
-			set_variable = { global.monthly_refugee_stability_weekly = -0.5 }
-			
-			# the percentage of casualties that will be generated for every migration.
-			# 	higher value means more casualties, min should always be lower than max
-			# 	for example, if 1000 civilians will migrate, 450 to 600 civilians 
-			# 	will fail to migrate and become casualties.
-			set_variable = { global.casualty_multiplier_min = 0.05 }	# 0.1 originally 0.45
-			set_variable = { global.casualty_multiplier_max = 0.3 }	# 0.15 originally 0.6
-			
-			# pops assimilation
-			set_variable = { global.passive_assimilation_min = 0.01 }
-			set_variable = { global.passive_assimilation_max = 0.08 }
-			set_variable = { global.nationwide_drive_assimilation_min = 0.1 }
-			set_variable = { global.nationwide_drive_assimilation_max = 0.2 }
-			set_variable = { global.expel_refugees_min = 0.15 }
-			set_variable = { global.expel_refugees_max = 0.3 }
-			
-			# for every 0.1% unassimilated, have the following effects
-			set_variable = { global.unassimilated_stability_factor = -0.2 } # can only do up to one decimal point (0.X),not (0.XX or 0.XXX)
-			# when can the decision to expel be active
-			set_variable = { global.unassimilated_expel_minimum_stability_factor = -5 } # can only do up to one decimal point (0.X),not (0.XX or 0.XXX)
-			
-			# mass exodus after state control changed multiplier
-			set_variable = { global.mass_exodus_multiplier = 5.0 } # 5.0  1.0 is 100% (normal value for migrations)
-			set_variable = { global.casualty_exodus_multiplier_min = 0.01 }
-			set_variable = { global.casualty_exodus_multiplier_max = 0.05 }
+
 			# how much casualties per nuke in a state
 			set_variable = { global.nuke_population_multiplier_min = 0.025 } # 2.5% of the population
 			set_variable = { global.nuke_population_multiplier_max = 0.1 } # 10% of the population
@@ -99,23 +71,11 @@ on_actions = {
 				calc_pop_change = yes
 				clamp_variable = { var = state_devastation_value min = 0 max = 100 }
 			}
-			calc_total_external_refugees_in_game = yes
 			devastation_country_calc_value = yes
 			#devastation_country_calc_modifiers = yes
-			devastation_country_calc_unassimilated = yes
 			calc_casualties = yes
 			every_controlled_state = {
 				devastation_state_calc_value = yes
-			}
-			
-			if = {
-				limit = {
-					NOT = { has_decision = assimilation_passive_decision } 
-					any_controlled_state = {
-						has_unassimilated_pops = yes
-					}
-				}
-				activate_decision = assimilation_passive_decision
 			}
 		}
 	}
@@ -178,9 +138,6 @@ on_actions = {
 				set_temp_variable = { global.state_original_controller = FROM.ID }
 			
 				FROM.FROM = {
-					set_temp_variable = { exodus_migration = global.mass_exodus_multiplier }
-					#migration_get_chance = yes
-					devastation_state_trigger_migration = yes
 					add_to_variable = { state_control_changed_count = 1 }
 				}
 			}
