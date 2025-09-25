@@ -101,16 +101,17 @@ country_event = {        #######Resolution: hidden check
 	clr_global_flag = MARPAC_resolution_1
 	clr_global_flag = MARPAC_resolution_51
 	clr_global_flag = UNaidcallaidcountry
+	clr_global_flag = faction_renew_vote_start
 	clr_global_flag = MARPAC_resolution_80
 	clr_global_flag = MARPAC_resolution_10
 	clr_global_flag = MARPAC_resolution_240
 	clr_global_flag = MARPAC_resolution_130
 	clr_global_flag = MARPAC_resolution_50
 	clr_global_flag = MARPAC_voting_in_process	
+	clr_country_flag = faction_renew_leader
 	clr_country_flag = currently_voting
 	clear_array = global.marpac_countries_against
 	clear_array = global.marpac_countries_for
-
 	}	
 }
 
@@ -138,7 +139,6 @@ news_event = {        #######Resolution  passed
 			every_country = {
 				limit = {
 					has_war_with = global.UN_call_for_ceasefire
-					is_faction_leader = yes
 				}
 				country_event = unsc.9
 			}			
@@ -232,7 +232,7 @@ country_event = {
 			has_war = no
 			has_war_with = BOX
 			has_government = neutrality			
-			has_war_support > .6	
+			has_war_support > 0.6	
 			 controls_state = 729
 			 controls_state = 728
 			 controls_state = 326
@@ -258,10 +258,10 @@ country_event = {
 				casualties > 2000000
 				has_capitulated = yes
 				AND = {
-					has_stability < .5
+					has_stability < 0.5
 					has_government = democratic
 				}
-				has_war_support < .5
+				has_war_support < 0.5
 			}
 			}				 
 			 }
@@ -281,6 +281,22 @@ country_event = {
 			}
 			}			
 			} 
+			modifier = {
+			add = 40000
+			has_global_flag = faction_renew_vote_start
+			OR = {
+		NOT = {
+			OR = {
+				has_idea = isolation
+				has_idea = foreign_isolationism
+				is_puppet = yes
+				is_subject = yes
+				has_war = yes				
+			}
+			}
+			}
+			}			
+						
 			modifier = {
 			add = 40000
 						AND = {
@@ -303,11 +319,16 @@ country_event = {
 			add = 40000
 			AND = {
 			has_global_flag = UNvoteforceceasefire
+			OR = {
+				has_war_support > 0.3
+				AND = {
+				has_government = democratic
 			has_opinion = {
                  target = FROM
-                 value > 50
+                 value > 30
             }	
-				has_war_support > .3
+				}
+			}
 			}
 			}
 			modifier = {
@@ -318,7 +339,7 @@ country_event = {
                  target = FROM
                  value > 19
             }	
-				has_war_support < .4
+				has_war_support < 0.4
 			}
 			}						
 			modifier = {
@@ -340,7 +361,7 @@ country_event = {
 					has_government = fascism
 					has_government = neutrality
 				}
-				has_war_support > .5
+				has_war_support > 0.5
 			}
 			}			
 		}
@@ -380,6 +401,12 @@ country_event = {
 			}
 			set_country_flag = votedyesinaid					
 		}	
+		if = {
+			limit = {
+				has_global_flag = faction_renew_vote_start
+			}
+			set_country_flag = stayinfaction					
+		}			
 		if = { 
 			limit = { 
 				has_global_flag = MARPAC_resolution_50
@@ -426,6 +453,23 @@ country_event = {
 				declare_war_on = { type = annex_everything target = CHI }
 			}				
 		}
+		if = { 
+			limit = { 
+				has_global_flag = faction_renew_vote_start 
+			}
+			if = {
+				limit = {
+					is_in_faction = yes
+				}
+				leave_faciton = yes
+			}
+			if = {
+				limit = {
+					is_faction_leader = yes
+				}
+				dismantle_faction = yes
+			}		
+		}		
 			add_to_variable = {
 	        var = global.marpac_against_vote
 	        value = 1
@@ -444,7 +488,7 @@ country_event = {
 		}
 		trigger = {
 					NOT = {
-	has_country_flag = MARPAC_voted 
+	has_country_flag = MARPAC_voted
 					}			
 		}
 	}
@@ -453,6 +497,10 @@ country_event = {
 		trigger = {
 			OR = {
 				has_idea = foreign_neutral
+			}
+			NOT = {
+				is_subject = no
+				is_puppet = no
 			}
 		}
 		ai_chance = {

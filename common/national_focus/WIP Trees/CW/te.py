@@ -2,7 +2,7 @@ import os
 import re
 
 # Define the input and output file paths
-input_file = r"C:\Users\mikeg\Documents\Paradox Interactive\Hearts of Iron IV\mod\Riseofnations\common\national_focus\RON_Bhutan.txt"
+input_file = r"C:\Users\mikeg\Documents\Paradox Interactive\Hearts of Iron IV\mod\Riseofnations\common\national_focus\Bhutan_WW2.txt"
 output_file = r"C:\Users\mikeg\Documents\Paradox Interactive\Hearts of Iron IV\mod\Riseofnations\common\national_focus\WIP Trees\CW\extracted_ids.txt"
 
 # Define a regular expression pattern to match the desired lines

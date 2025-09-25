@@ -80,11 +80,101 @@ vickers_armstrong_organization = {
 	include = generic_artillery_organization
 	icon = GFX_idea_vickers_armstrong_eng
 	allowed = {
-		tag = ENG
+		OR = {
+			tag = ENG
+			AND = {
+				tag = CAN
+				is_in_faction_with = ENG
+			}
+		}
 	}
 	visible = {
-		date > 1933.1.1
 		date < 1949.1.1
+	}
+
+	initial_trait = {
+		name = vickers_armstrong_organization_initial
+		organization_modifier = {
+			military_industrial_organisation_research_bonus = 0.05
+		}
+
+		production_bonus = {
+			production_efficiency_cap_factor = 0.1
+		}
+
+		equipment_bonus = {
+			soft_attack = 0.05
+			reliability = 0.1
+		}
+	}
+	trait = {
+		token = serial_production_vickers_armstrong_organization
+		icon = GFX_generic_mio_trait_icon_production_capacity
+
+		position = {
+			x = 0
+			y = 0
+		}
+
+		equipment_bonus = {
+		}
+
+		production_bonus = {
+			production_efficiency_cap_factor = 0.15
+			production_efficiency_gain_factor = 0.1
+		}
+	}
+	trait = {
+		token = improved_firepower_vickers_armstrong_organization
+		icon = GFX_generic_mio_department_icon_artillery
+
+		position = {
+			x = 0
+			y = 3
+		}
+
+		relative_position_id = serial_production_vickers_armstrong_organization
+
+		all_parents = {
+			serial_production_vickers_armstrong_organization
+		}
+
+		equipment_bonus = {
+			soft_attack = 0.15
+			reliability = -0.1
+		}
+
+		production_bonus = {
+			production_cost_factor = 0.1
+		}
+	}
+
+	trait = {
+
+		token = CAN_artillerysoft_attack_bonus_DLC2
+		name = CAN_soft_attack_bonus_DLC2_artillery
+		icon = GFX_generic_mio_department_icon_artillery
+
+		position = {
+			x = 0
+			y = 3
+		}
+
+		relative_position_id = improved_firepower_vickers_armstrong_organization
+
+		all_parents = {
+			improved_firepower_vickers_armstrong_organization
+		}
+
+		equipment_bonus = {
+			soft_attack = 0.15
+		}
+
+		production_bonus = {
+			production_resource_need_factor = 0.2
+			production_resource_penalty_factor = 0.2
+			production_cost_factor = 0.1
+		}
 	}
 }
 
@@ -204,12 +294,37 @@ ENG_vauxhall_organization = {
 		OR = {
 			tag = ENG
 			tag = SAF
+			tag = POL # If Poland sets up a local one
 		}
 	}
 
 	visible = {
 		date > 1933.1.1
 		date < 1949.1.1
+
+		IF = { 
+			limit = {
+				FROM = { original_tag = POL }
+			}
+			FROM = {
+				has_country_flag = POL_vauxhall_motors
+			}
+		}
+		IF = {
+			limit = { FROM = { original_tag = ETH } }
+			FROM = { has_completed_focus = ETH_invite_foreign_industrialists }
+		}
+	
+	}
+
+	available = {
+		# When in a Foreign MIO, countries need to be at peace with original country
+		IF = {
+			limit = {
+				FROM = { NOT = { original_tag = ENG } }
+			}
+			FROM = { NOT = { has_war_with = ENG } }
+		}
 	}
 
 	initial_trait = {
@@ -331,8 +446,60 @@ ENG_de_havilland_organization = {
 	allowed = {	
 		tag = ENG
 	}
-    visible = {
+	visible = {
 		date > 1933.1.1
 		date < 1949.1.1
+	}
+}
+
+ENG_vauxhall_automotive_organization = {
+	include = generic_motorized_mechanized_organization
+	icon = GFX_idea_vauxhall
+	name = ENG_vauxhall_organization
+	
+	allowed = {	
+		OR = {
+			tag = ENG
+			tag = POL # If Poland sets up a local one
+			tag = ROM
+		}
+	}
+	
+	visible = {
+		date > 1933.1.1
+		date < 1949.1.1
+
+		IF = { 
+			limit = {
+				FROM = { original_tag = POL }
+			}
+			FROM = {
+				has_country_flag = POL_vauxhall_motors
+			}
+		}
+		IF = {
+			limit = { FROM = { original_tag = ETH } }
+			FROM = { has_completed_focus = ETH_invite_foreign_industrialists }
+		}	
+	}
+	
+	available = {
+		# When in a Foreign MIO, countries need to be at peace with original country
+		IF = {
+			limit = {
+				FROM = { NOT = { original_tag = ENG } }
+			}
+			FROM = { NOT = { has_war_with = ENG } }
+		}
+		IF = {
+			limit = { FROM = { original_tag = ROM } }
+			FROM = { has_country_flag = ENG_mot_chosen }
+		}	
+	}
+	
+	initial_trait = {
+		equipment_bonus = {
+			maximum_speed = 0.05
+		}
 	}
 }
