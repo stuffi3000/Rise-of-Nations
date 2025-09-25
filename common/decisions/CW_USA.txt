@@ -1,0 +1,104 @@
+USA_Marshall_plan = {
+	add_europe_to_MP = {
+		complete_effect = {
+			every_country = {
+				limit = {
+					has_government = democratic   
+					capital_scope = {
+						is_on_continent = europe
+					}
+				}
+				add_dynamic_modifier = { modifier = EUROPE_marshall_plan }
+				add_to_array = { global.marshall_plan_receiver = THIS}
+			} 
+			add_dynamic_modifier = { modifier = USA_marshall_plan }
+		}     
+	}
+	debug_add_5_factories = {
+		complete_effect = {
+			random_country = {
+				limit = {
+					has_government = democratic
+					capital_scope = {
+						is_on_continent = europe
+					}
+				} 
+				add_to_variable = { marshall_plan_received_factories = 5}
+			}  
+		}
+	}
+	debug_clear_MP = {
+		complete_effect = {
+			clear_array = global.marshall_plan_receiver
+		}
+	}
+	ask_to_ban_communists = {
+		target_array = global.marshall_plan_receiver
+		visible = {
+			FROM = {
+				check_variable = { marshall_plan_received_factories > 0 }
+			}
+		}
+	}
+	influence_inner_politics = {
+		target_array = global.marshall_plan_receiver
+		visible = {
+			FROM = {
+				check_variable = { marshall_plan_received_factories > 1 }
+			}
+		}
+	}
+	request_monetary_control = {
+		target_array = global.marshall_plan_receiver
+		visible = {
+			FROM = {
+				check_variable = { marshall_plan_received_factories > 4 }
+			}
+		}
+	}
+}
+
+political_actions = {
+
+	USA_civil_rights_act = {
+
+		icon = GFX_decision_eng_trade_unions_support
+	
+		allowed = {
+			original_tag = USA
+		}
+		available = {
+			NOT = { has_country_leader = { name = "William Dudley Pelley" ruling_only = yes } }
+			has_stability > 0.8
+			if = {
+				limit = {
+					has_dlc = "Man the Guns"
+				}
+				congress_high_support_trigger = yes
+			}
+		}
+		visible = {
+			has_idea = jim_crow
+		}
+		cost = 250
+		fire_only_once = yes
+		ai_will_do = {
+			factor = 0
+			modifier = {
+				surrender_progress > 0.05
+				add = 5000
+			}
+		}
+		complete_effect = {
+			add_stability = -0.1
+			remove_ideas = jim_crow
+			if = {
+				limit = {
+					has_dlc = "Man the Guns"
+				}
+				USA_congress_medium_opposition = yes
+			}
+		}
+	}
+
+}
