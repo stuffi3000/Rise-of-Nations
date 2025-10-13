@@ -680,10 +680,13 @@ country_event = {
 
 	option = {
 		name = germany.16.a
+		hidden_effect = {
+			news_event = news.153
+		}
 		create_wargoal = {
-			expire = 100
 			type = annex_everything
-			target = GER
+			expire = 365 #longer on purpose
+			target = FROM
 		}
 	}
 }
@@ -696,19 +699,75 @@ country_event = {
 	picture = GFX_report_event_vienna_award_hungary
 
 	fire_only_once = yes
-	
+
+	#is_triggered_only = yes
+
+	immediate = { 
+		set_country_flag = GER_second_vienna_award_flag
+	}
+
 	trigger = {
-		tag = GER
-		HUN = { is_friend_or_potential_friend_of_GER = yes }
-		GER = { has_completed_focus = GER_demand_sudetenland }
-		GER = { owns_state = 69 }
-		date > 1940.6.1
-		date < 1941.1.1
+		date > 1940.7.15
+		date < 1949.1.1
+		original_tag = GER
+		GER = {
+			has_government = fascism
+			has_war_with_major = yes
+			is_subject = no
+			has_capitulated = no
+			#OR = {
+			#	AND = { #Either Germany is allied with both countries
+			#		is_in_faction_with = ROM
+			#		is_in_faction_with = HUN
+			#	}
+			#	AND = { #Or Germany is allied with Hungary and is more than willing to hand some Romainian territory to its ally
+			#		NOT = { is_in_faction_with = ROM }
+			#		is_in_faction_with = HUN
+			#	}
+			#}
+		}
+		HUN = {
+			exists = yes
+			is_subject = no
+			has_capitulated = no
+			is_friend_or_potential_friend_of_GER = yes
+			OR = {
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		ROM = {
+			exists = yes
+			is_subject = no
+			has_capitulated = no
+			NOT = {
+				has_war_with = GER
+				has_war_with = HUN
+			}
+			controls_state = 76
+			controls_state = 77
+			controls_state = 83
+			controls_state = 84
+		}
+		#BUL = { is_friend_or_potential_friend_of_GER = yes }
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 0.1
+			GER = {
+				is_in_faction_with = ROM
+				is_in_faction_with = HUN
+			}
+		}
 	}
 
 	option = { # Give Hungary Northern Transylvania
 		name = germany.20.a
-		ai_chance = { factor = 80 }
+		ai_chance = {
+			base = 80
+		}
 		add_named_threat = { threat = 2 name = GER_second_vienna_award_HUN_north }
 		HUN = {
 			set_country_flag = GER_second_vienna_award_HUN_north
@@ -716,7 +775,10 @@ country_event = {
 		}
 		ROM = {
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_ROM_north }
-			country_event = { id = romania.2 }
+			country_event = { 
+				id = romania.2 
+				hours = 6
+			}
 		}
 	}
 	option = { # Give Hungary all of Transylvania
@@ -729,7 +791,7 @@ country_event = {
 		}
 		name = germany.20.b
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
@@ -742,25 +804,34 @@ country_event = {
 		}
 		ROM = {
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_ROM_all }
-			country_event = { id = romania.3 }
+			country_event = { 
+				id = romania.3 
+				hours = 6
+			}
 		}
 	}
 	option = { # Give Hungary nothing
 		name = germany.20.c
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
 			}
 		}
 		ROM = {
-			country_event = { id = romania.4 }
+			country_event = { 
+				id = romania.4 
+				hours = 6
+			}
 		}
 		HUN = {
 			set_country_flag = GER_second_vienna_award_noland
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_noland }
-			country_event = { id = hungary.1 }
+			country_event = { 
+				id = hungary.1 
+				hours = 6
+			}
 		}
 	}
 }
@@ -796,13 +867,16 @@ country_event = {
 
 	option = {
 		name = germany.22.a
+
 		GER = {
 			transfer_state = 188
 			add_state_core = 188
 		}
+
 		hidden_effect = {
 			news_event = { days = 1 id = news.19 }
 		}
+		
 	}
 }
 
@@ -817,12 +891,14 @@ country_event = {
 
 	option = {
 		name = germany.23.a
-		create_wargoal = {			
-			expire = 100
+
+		create_wargoal = {
 			type = take_state_focus
-			target = LIT
+			expire = 100
+			target = FROM
 			generator = { 188 }
 		}
+
 		hidden_effect = {
 			news_event = { days = 1 id = news.20 }
 		}
