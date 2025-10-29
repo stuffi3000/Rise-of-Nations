@@ -1,6 +1,8 @@
 add_namespace = DNC_Spain
 add_namespace = DNC_Spain_News
 add_namespace = dnc_spain
+add_namespace = dnc_carlism
+add_namespace = dnc_spain_vik
 
 country_event = {
 	id = dnc_spain.1222
@@ -26,6 +28,127 @@ country_event = {
 				
 			}
 		}
+	}
+}
+
+# Failed Attempt on Alfonso XIII
+news_event = {
+	id = DNC_Spain_News.1
+	title = DNC_Spain_News.1.t
+	desc = DNC_Spain_News.1.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Spain_News.1.a
+	}
+}
+
+# Coronation of Alfonso XIII
+news_event = {
+	id = DNC_Spain_News.2
+	title = DNC_Spain_News.2.t
+	desc = DNC_Spain_News.2.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Spain_News.2.a
+	}
+}
+
+country_event = {
+	id = dnc_carlism.1
+	title = dnc_carlism.1.t
+	desc = dnc_carlism.1.d
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = dnc_carlism.1.a
+		hidden_effect = {
+			set_global_flag = { flag = SPR_civil_war_startup value = 1 days = 3 } # Make AI avoid attacking for a few days
+			set_country_flag = SPRDNC_carlist_war
+			set_cosmetic_tag = SPR_carlist_spain
+			if =  {
+				limit = {
+					has_completed_focus = SPRDNC_heroes_of_the_3rd_carlist_war
+				}
+				add_manpower = 75000
+			}
+			if = {
+				limit = {
+					has_completed_focus = SPRDNC_lessons_of_the_past
+				}
+				add_timed_idea = {
+					idea = SPR_lessons_from_the_past_idea
+					days = 180
+				}
+			}
+			every_state = {
+				limit = {
+					is_core_of = SPR
+				}
+				add_core_of = SPA
+			}
+			SPR = {
+				every_owned_state = {
+					limit = {
+						NOT = {
+							has_state_flag = SPRDNC_carlist_control
+						}
+					}
+					transfer_state_to = SPA
+				}
+			}
+			create_country_leader = {
+				name = SPR_carlos_VII
+				expire = 1909.7.18
+			}
+			transfer_units_fraction = {
+				target = SPA
+				size = 0.33
+				stockpile_ratio = 0.7
+				army_ratio = 0.45
+				navy_ratio = 0.8
+				air_ratio = 0
+			}
+			SPA = {
+				drop_cosmetic_tag
+				set_politics = {
+					ruling_party = neutrality
+					elections_allowed = no
+				}
+				set_popularities = {
+					neutrality = 85
+					communism = 15
+				}
+				add_ideas = {
+					SPR_the_regency_of_maria_christina_idea
+					SPR_underage_monarch_idea
+					SPR_an_empire_in_decline_idea
+					SPR_agarian_economy_idea
+					ww1_Scramble_for_Africa
+					SPR_rigged_elections_idea
+					SPR_memories_of_the_spanish_american_war_idea
+				}
+			}
+			remove_ideas = {
+				SPR_the_regency_of_maria_christina_idea
+				SPR_underage_monarch_idea
+				SPR_rigged_elections_idea
+			}
+			declare_war_on = {
+				target = SPA
+				type = civil_war
+			}
+		}	
 	}
 }
 
