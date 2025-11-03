@@ -99,6 +99,30 @@ news_event = {
 	}
 }
 
+# Alfonso XIII wedding attack
+news_event = {
+	id = DNC_Spain_News.4
+	picture = GFX_anarchist_attack_event
+	title = DNC_Spain_News.4.t
+	desc = DNC_Spain_News.4.desc
+
+	trigger = {
+		tag = SPR
+		has_completed_focus = SPRDNC_the_regency
+		date > 1906.5.30
+		has_start_date < 1905.1.1
+	}
+
+	option = {
+		name = DNC_Spain_News.4.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = neutrality
+			popularity = -0.025
+		}
+	}
+}
+
 # 4th Carlist war setup
 country_event = {
 	id = dnc_carlism.1
@@ -109,12 +133,13 @@ country_event = {
 
 	fire_only_once = yes
 
-	immediate = { ### Probably the worst code I've ever written - Viktoria ###
+	option = { ### Probably the worst code I've ever written - Viktoria ###
 		name = dnc_carlism.1.a
 		hidden_effect = {
 			set_global_flag = { flag = SPR_civil_war_startup value = 1 days = 3 } # Make AI avoid attacking for a few days
 			set_country_flag = SPRDNC_carlist_war
 			set_cosmetic_tag = SPR_carlist_spain
+			promote_character = SPR_Carlos_VII
 			if =  {
 				limit = {
 					has_completed_focus = SPRDNC_heroes_of_the_3rd_carlist_war
@@ -146,10 +171,6 @@ country_event = {
 					transfer_state_to = SPD
 				}
 			}
-			create_country_leader = {
-				name = SPR_carlos_VII
-				expire = 1909.7.18
-			}
 			if = {
 				limit = {
 					check_variable = { SPRDNC_carlist_states = 1 }
@@ -162,8 +183,43 @@ country_event = {
 					navy_ratio = 1
 				}
 			}
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states < 3 }
+				}
+				transfer_units_fraction = {
+					target = SPD
+					size = 0.75
+					stockpile_ratio = 0.6
+					army_ratio = 0.75
+					navy_ratio = 0.8
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states < 5 }
+				}
+				transfer_units_fraction = {
+					target = SPD
+					size = 0.5
+					stockpile_ratio = 0.5
+					army_ratio = 0.5
+					navy_ratio = 0.75
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states > 4 }
+				}
+				transfer_units_fraction = {
+					target = SPD
+					size = 0.3
+					stockpile_ratio = 0.2
+					army_ratio = 0.3
+					navy_ratio = 0.5
+				}
+			}
 			SPD = {
-				drop_cosmetic_tag
 				set_politics = {
 					ruling_party = neutrality
 					elections_allowed = no
@@ -172,19 +228,37 @@ country_event = {
 					neutrality = 85
 					communism = 15
 				}
+				recruit_character = SPR_Alfonso_XIII
+				set_nationality = {
+					target_country = SPD
+					character = SPR_Alfonso_XIII
+				}
+				promote_character = SPR_Alfonso_XIII
 				add_ideas = {
 					SPR_the_regency_of_maria_christina_idea
-					SPR_underage_monarch_idea
 					SPR_an_empire_in_decline_idea
 					SPR_agarian_economy_idea
 					ww1_Scramble_for_Africa
 					SPR_rigged_elections_idea
-					SPR_memories_of_the_spanish_american_war_idea
+				}
+				if = {
+					limit = {
+						SPR = {
+							has_completed_focus = SPRDNC_el_desastre_del_98
+						}
+					}
+					add_ideas = {
+						SPR_memories_of_the_spanish_american_war_idea1
+					}
+				}
+				else = {
+					add_ideas = {
+						SPR_memories_of_the_spanish_american_war_idea
+					}
 				}
 			}
 			remove_ideas = {
 				SPR_the_regency_of_maria_christina_idea
-				SPR_underage_monarch_idea
 				SPR_rigged_elections_idea
 			}
 			declare_war_on = {
@@ -198,6 +272,7 @@ country_event = {
 # Sabino Arana's telegram
 country_event = {
 	id = DNC_Internal_Politics_Spain.1
+	picture = GFX_report_event_spanish_parliament
 	title = DNC_Internal_Politics_Spain.1.t
 	desc = DNC_Internal_Politics_Spain.1.desc
 
@@ -205,7 +280,7 @@ country_event = {
 
 	fire_only_once = yes
 
-	option = { # Imprisonment
+	option = { # Imprisonment, historical
 		name = DNC_Internal_Politics_Spain.1.a
 		add_political_power = -25
 		add_popularity = {
@@ -228,6 +303,45 @@ country_event = {
 			target = USA
 			modifier = support_arana_telegram
 		}
+	}
+}
+
+# Election of 1903 crisis
+country_event = {
+	id = DNC_Internal_Politics_Spain.2
+	picture = GFX_report_event_spanish_parliament
+	title = DNC_Internal_Politics_Spain.2.t
+	desc = DNC_Internal_Politics_Spain.2.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Internal_Politics_Spain.2.a
+		add_power_balance_value = {
+			id = SPRDNC_king_and_country
+			value = -0.2
+		}
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+		add_stability = -0.025
+	}
+}
+
+news_event = {
+	id = DNC_Internal_Politics_Spain.3
+	title = DNC_Internal_Politics_Spain.3.t
+	desc = DNC_Internal_Politics_Spain.3.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Internal_Politics_Spain.3.a
 	}
 }
 
