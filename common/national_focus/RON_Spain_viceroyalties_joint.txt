@@ -30,15 +30,20 @@ joint_focus = {
 		tag = SPR
 		num_subjects > 3
 		has_completed_focus = SPRDNC_reestablish_the_viceroyalties
+		has_government = neutrality
 	}
 
-	cost = 5
+	cost = 10
 
 	completion_reward_joint_originator = {
 		set_rule = {
 			can_create_factions = yes
 		}
 		create_faction = "Imperio Español"
+		swap_ruler_traits = {
+			remove = SPR_carlist_pretender
+			add = SPR_emperor_of_spain
+		}
 	}
 
 	completion_reward_joint_member = {
@@ -77,6 +82,7 @@ joint_focus = {
 
 	completion_reward_joint_originator = {
 		add_to_tech_sharing_group = spr_empire_research
+		add_research_slot = 1
 	}
 
 	completion_reward_joint_member = {
@@ -84,6 +90,44 @@ joint_focus = {
 		add_autonomy_score = {
 			value = -50
 		}
+	}
+}
+
+joint_focus = {
+	id = SPRVR_an_empire_reborn
+	icon = GFX_goal_SPR_una_grande_y_libre
+	x = 0
+	y = 3
+	relative_position_id = SPRVR_imperial_research
+
+	prerequisite = {
+		focus = SPRVR_imperial_research
+	}
+
+	joint_trigger = {
+		OR = {
+			tag = SPR
+			tag = SWN
+			tag = VRR
+			tag = VRP
+			tag = VRS
+			tag = VRG
+			tag = VRB
+		}
+		exists = yes
+	}
+
+	cost = 10
+
+	completion_reward_joint_originator = {
+		swap_ideas = {
+			add_idea = SPR_empire_reborn_idea
+			remove_idea = SPR_memories_of_empire_idea
+		}
+	}
+
+	completion_reward_joint_member = {
+		add_stability = 0.05
 	}
 }
 
@@ -130,6 +174,12 @@ joint_focus = {
 
 	prerequisite = {
 		focus = SPRVR_rebuild_the_armada
+	}
+
+	available = {
+		NOT = {
+			has_completed_focus = SPRVR_una_unida
+		}
 	}
 
 	joint_trigger = {
@@ -186,6 +236,60 @@ joint_focus = {
 
 	prerequisite = {
 		focus = SPRVR_rebuild_the_armada
+	}
+
+	cost = 10
+}
+
+joint_focus = {
+	id = SPRVR_remember_lepanto
+	icon = GFX_RON_Bismarck_Focus
+	x = 1
+	y = 1
+	relative_position_id = SPRVR_armada_imperial
+
+	joint_trigger = {
+		OR = {
+			tag = SPR
+			tag = SWN
+			tag = VRR
+			tag = VRP
+			tag = VRS
+			tag = VRG
+			tag = VRB
+		}
+		exists = yes
+	}
+
+	prerequisite = {
+		focus = SPRVR_armada_imperial
+	}
+
+	cost = 10
+}
+
+joint_focus = {
+	id = SPRVR_armada_invencible
+	icon = GFX_goal_SPR_armada_invencible
+	x = 0
+	y = 1
+	relative_position_id = SPRVR_remember_lepanto
+
+	joint_trigger = {
+		OR = {
+			tag = SPR
+			tag = SWN
+			tag = VRR
+			tag = VRP
+			tag = VRS
+			tag = VRG
+			tag = VRB
+		}
+		exists = yes
+	}
+
+	prerequisite = {
+		focus = SPRVR_remember_lepanto
 	}
 
 	cost = 10
@@ -300,13 +404,20 @@ joint_focus = {
 
 joint_focus = {
 	id = SPRVR_una_unida
-	icon = GFX_focus_spa_supremacy_of_the_communion
-	x = 0
-	y = 4
-	relative_position_id = SPRVR_imperial_research
+	icon = GFX_goal_SPR_cross_of_burgundy_inf
+	x = -2
+	y = 1
+	relative_position_id = SPRVR_an_empire_reborn
 
 	prerequisite = {
-		focus = SPRVR_imperial_research
+		focus = SPRVR_an_empire_reborn
+	}
+	prerequisite = {
+		focus = SPRVR_armada_invencible
+	}
+
+	mutually_exclusive = {
+		focus = SPRVR_federal_empire
 	}
 
 	joint_trigger = {
@@ -378,18 +489,58 @@ joint_focus = {
 			}
 			every_state = {
 				limit = {
-					OR = {
-						SPR_is_SWN_state = yes
-						SPR_is_VRB_state = yes
-						SPR_is_VRG_state = yes
-						SPR_is_VRP_state = yes
-						SPR_is_VRR_state = yes
-						SPR_is_VRS_state = yes
-						SPR_is_VRS_state2 = yes
-					}
+					SPR_is_spanish_empire_state = yes
 				}
 				add_core_of = SPR
 			}
 		}
+	}
+}
+
+joint_focus = {
+	id = SPRVR_federal_empire
+	icon = GFX_focus_BRA_north_and_south_america
+	x = 2
+	y = 1
+	relative_position_id = SPRVR_an_empire_reborn
+
+	prerequisite = {
+		focus = SPRVR_an_empire_reborn
+	}
+	prerequisite = {
+		focus = SPRVR_armada_invencible
+	}
+
+	mutually_exclusive = {
+		focus = SPRVR_una_unida
+	}
+
+	joint_trigger = {
+		OR = {
+			tag = SPR
+			tag = SWN
+			tag = VRR
+			tag = VRP
+			tag = VRS
+			tag = VRG
+			tag = VRB
+		}
+		exists = yes
+	}
+
+	available = {
+		tag = SPR
+		has_war = no
+	}
+
+	cost = 5
+
+	completion_reward_joint_member = {
+		custom_effect_tooltip = SPRVR_federal_empire_tt
+	}
+
+	completion_reward_joint_originator = {
+		add_stability = 0.1
+		add_political_power = 75
 	}
 }
