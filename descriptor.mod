@@ -11,7 +11,7 @@ tags={
 	"Map"
 	"Military"
 }
-name="Rise of Nation"
+name="Rise of Nations [Beta]"
 picture="Rise_of_Nations.gif"
 replace_path="common/ai_focuses"
 replace_path="common/ai_strategy"
