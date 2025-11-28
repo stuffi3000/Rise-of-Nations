@@ -223,9 +223,9 @@ country_event = {
 		custom_effect_tooltip = germany.11.a.tt
 		add_state_claim = 96
 		add_state_claim = 11
-		add_state_claim = 879
+		add_state_claim = 1152
 		add_state_claim = 12
-		add_state_claim = 880
+		add_state_claim = 1153
 		add_state_claim = 881
 		add_state_claim = 891
 		add_state_claim = 882
@@ -680,10 +680,13 @@ country_event = {
 
 	option = {
 		name = germany.16.a
+		hidden_effect = {
+			news_event = news.153
+		}
 		create_wargoal = {
-			expire = 100
 			type = annex_everything
-			target = GER
+			expire = 365 #longer on purpose
+			target = FROM
 		}
 	}
 }
@@ -696,19 +699,75 @@ country_event = {
 	picture = GFX_report_event_vienna_award_hungary
 
 	fire_only_once = yes
-	
+
+	#is_triggered_only = yes
+
+	immediate = { 
+		set_country_flag = GER_second_vienna_award_flag
+	}
+
 	trigger = {
-		tag = GER
-		HUN = { is_friend_or_potential_friend_of_GER = yes }
-		GER = { has_completed_focus = GER_demand_sudetenland }
-		GER = { owns_state = 69 }
-		date > 1940.6.1
-		date < 1941.1.1
+		date > 1940.7.15
+		date < 1949.1.1
+		original_tag = GER
+		GER = {
+			has_government = fascism
+			has_war_with_major = yes
+			is_subject = no
+			has_capitulated = no
+			#OR = {
+			#	AND = { #Either Germany is allied with both countries
+			#		is_in_faction_with = ROM
+			#		is_in_faction_with = HUN
+			#	}
+			#	AND = { #Or Germany is allied with Hungary and is more than willing to hand some Romainian territory to its ally
+			#		NOT = { is_in_faction_with = ROM }
+			#		is_in_faction_with = HUN
+			#	}
+			#}
+		}
+		HUN = {
+			exists = yes
+			is_subject = no
+			has_capitulated = no
+			is_friend_or_potential_friend_of_GER = yes
+			OR = {
+				has_government = neutrality
+				has_government = fascism
+			}
+		}
+		ROM = {
+			exists = yes
+			is_subject = no
+			has_capitulated = no
+			NOT = {
+				has_war_with = GER
+				has_war_with = HUN
+			}
+			controls_state = 76
+			controls_state = 77
+			controls_state = 83
+			controls_state = 84
+		}
+		#BUL = { is_friend_or_potential_friend_of_GER = yes }
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 0.1
+			GER = {
+				is_in_faction_with = ROM
+				is_in_faction_with = HUN
+			}
+		}
 	}
 
 	option = { # Give Hungary Northern Transylvania
 		name = germany.20.a
-		ai_chance = { factor = 80 }
+		ai_chance = {
+			base = 80
+		}
 		add_named_threat = { threat = 2 name = GER_second_vienna_award_HUN_north }
 		HUN = {
 			set_country_flag = GER_second_vienna_award_HUN_north
@@ -716,7 +775,10 @@ country_event = {
 		}
 		ROM = {
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_ROM_north }
-			country_event = { id = romania.2 }
+			country_event = { 
+				id = romania.2 
+				hours = 6
+			}
 		}
 	}
 	option = { # Give Hungary all of Transylvania
@@ -729,7 +791,7 @@ country_event = {
 		}
 		name = germany.20.b
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
@@ -742,25 +804,34 @@ country_event = {
 		}
 		ROM = {
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_ROM_all }
-			country_event = { id = romania.3 }
+			country_event = { 
+				id = romania.3 
+				hours = 6
+			}
 		}
 	}
 	option = { # Give Hungary nothing
 		name = germany.20.c
 		ai_chance = {
-			factor = 10
+			base = 10
 			modifier = {
 				factor = 0
 				is_historical_focus_on = yes
 			}
 		}
 		ROM = {
-			country_event = { id = romania.4 }
+			country_event = { 
+				id = romania.4 
+				hours = 6
+			}
 		}
 		HUN = {
 			set_country_flag = GER_second_vienna_award_noland
 			add_opinion_modifier = { target = GER modifier = GER_second_vienna_award_noland }
-			country_event = { id = hungary.1 }
+			country_event = { 
+				id = hungary.1 
+				hours = 6
+			}
 		}
 	}
 }
@@ -796,13 +867,16 @@ country_event = {
 
 	option = {
 		name = germany.22.a
+
 		GER = {
 			transfer_state = 188
 			add_state_core = 188
 		}
+
 		hidden_effect = {
 			news_event = { days = 1 id = news.19 }
 		}
+		
 	}
 }
 
@@ -817,12 +891,14 @@ country_event = {
 
 	option = {
 		name = germany.23.a
-		create_wargoal = {			
-			expire = 100
+
+		create_wargoal = {
 			type = take_state_focus
-			target = LIT
+			expire = 100
+			target = FROM
 			generator = { 188 }
 		}
+
 		hidden_effect = {
 			news_event = { days = 1 id = news.20 }
 		}
@@ -1350,7 +1426,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1500,7 +1576,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1631,7 +1707,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1680,7 +1756,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1721,7 +1797,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1745,7 +1821,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -1839,7 +1915,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 74 884 886 887 888 }
+					generator = { 69 74 884 972 887 888 }
 				}
 			}
 		}
@@ -1861,12 +1937,12 @@ country_event = {
 			expire = 100
 			type = take_state_focus
 			target = CZE
-			generator = { 69 74 884 886 887 888 }
+			generator = { 69 74 884 972 887 888 }
 		}
 		add_state_claim = 69
 		add_state_claim = 74
 		add_state_claim = 884
-		add_state_claim = 886
+		add_state_claim = 972
 		add_state_claim = 887
 		add_state_claim = 888
 		hidden_effect = {
@@ -1891,12 +1967,12 @@ country_event = {
 			expire = 100
 			type = take_state_focus
 			target = CZE
-			generator = { 69 74 884 886 887 888 }
+			generator = { 69 74 884 972 887 888 }
 		}
 		add_state_claim = 69
 		add_state_claim = 74
 		add_state_claim = 884
-		add_state_claim = 886
+		add_state_claim = 972
 		add_state_claim = 887
 		add_state_claim = 888
 		hidden_effect = {
@@ -1920,12 +1996,12 @@ country_event = {
 			expire = 100
 			type = take_state_focus
 			target = CZE
-			generator = { 69 74 884 886 887 888 }
+			generator = { 69 74 884 972 887 888 }
 		}
 		add_state_claim = 69
 		add_state_claim = 74
 		add_state_claim = 884
-		add_state_claim = 886
+		add_state_claim = 972
 		add_state_claim = 887
 		add_state_claim = 888
 		if = {
@@ -1959,8 +2035,8 @@ country_event = {
 		GER = { transfer_state = 74 }
 		884 = { add_core_of = GER }
 		GER = { transfer_state = 884 }
-		886 = { add_core_of = GER }
-		GER = { transfer_state = 886 }
+		972 = { add_core_of = GER }
+		GER = { transfer_state = 972 }
 		887 = { add_core_of = GER }
 		GER = { transfer_state = 887 }
 		888 = { add_core_of = GER }
@@ -3043,7 +3119,7 @@ country_event = {
 		788 = { set_demilitarized_zone = yes }
 		1055 = { set_demilitarized_zone = yes }
 		790 = { set_demilitarized_zone = yes }
-		791 = { set_demilitarized_zone = yes }
+		978 = { set_demilitarized_zone = yes }
 		792 = { set_demilitarized_zone = yes }
 		add_timed_idea = {
 			idea = rhineland_challenge_met
@@ -3080,7 +3156,7 @@ country_event = {
 			declare_war_on = {
 				target = GER
 				type = take_state_focus
-				generator = { 42 51 788 1055 790 791 792 }
+				generator = { 42 51 788 1055 790 978 792 }
 			}
 			country_event = germany.92
 			if = {
@@ -3121,7 +3197,7 @@ country_event = {
 		788 = { set_demilitarized_zone = yes }
 		1055 = { set_demilitarized_zone = yes }
 		790 = { set_demilitarized_zone = yes }
-		791 = { set_demilitarized_zone = yes }
+		978 = { set_demilitarized_zone = yes }
 		792 = { set_demilitarized_zone = yes }
 		add_timed_idea = {
 			idea = rhineland_challenge_met
@@ -5223,7 +5299,7 @@ country_event = {
 					NOT = { has_global_flag = GER_second_ljubljana_award_GER_976 }
 				}
 				GER = { transfer_state = 47 }
-				GER = { transfer_state = 978 }
+				GER = { transfer_state = 791 }
 			}
 		}
 	}
@@ -5858,9 +5934,9 @@ country_event = {
 				add_state_core = 788
 				add_state_core = 1055
 				add_state_core = 790
-				add_state_core = 791
+				add_state_core = 978
 				add_state_core = 792
-				add_state_core = 796
+				add_state_core = 909
 				add_state_core = 798
 				add_state_core = 877
 				add_state_core = 800
@@ -5884,7 +5960,7 @@ country_event = {
 				add_state_core = 5
 				add_state_core = 797
 				add_state_core = 801
-				add_state_core = 802
+				add_state_core = 878
 				add_state_core = 803
 			}
 			SOV = {
@@ -5934,9 +6010,9 @@ country_event = {
 			add_state_core = 788
 			add_state_core = 1055
 			add_state_core = 790
-			add_state_core = 791
+			add_state_core = 978
 			add_state_core = 792
-			add_state_core = 796
+			add_state_core = 909
 			add_state_core = 798
 			add_state_core = 877
 			add_state_core = 800
@@ -5960,7 +6036,7 @@ country_event = {
 			add_state_core = 5
 			add_state_core = 797
 			add_state_core = 801
-			add_state_core = 802
+			add_state_core = 878
 			add_state_core = 803
 		}
 		SOV = {
@@ -6404,14 +6480,14 @@ country_event = {
 				add_state_claim = 69
 				add_state_claim = 74
 				add_state_claim = 884
-				add_state_claim = 886
+				add_state_claim = 972
 				add_state_claim = 887
 				add_state_claim = 888
 				create_wargoal = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 74 884 886 887 888 }
+					generator = { 69 74 884 972 887 888 }
 				}
 			}
 		}
@@ -6463,7 +6539,7 @@ country_event = {
 				transfer_state = 69
 				transfer_state = 74
 				transfer_state = 884
-				transfer_state = 886
+				transfer_state = 972
 				transfer_state = 887
 				transfer_state = 888
 			}
@@ -6493,7 +6569,7 @@ country_event = {
 		add_state_claim = 69
 		add_state_claim = 74
 		add_state_claim = 884
-		add_state_claim = 886
+		add_state_claim = 972
 		add_state_claim = 887
 		add_state_claim = 888
 		if = {
@@ -6514,7 +6590,7 @@ country_event = {
 					expire = 100
 						type = take_state_focus
 						target = PREV
-						generator = { 69 74 884 886 887 888 }
+						generator = { 69 74 884 972 887 888 }
 					}
 				}
 			}
@@ -6540,8 +6616,8 @@ country_event = {
 		transfer_state = 74
 		add_state_core = 884
 		transfer_state = 884
-		add_state_core = 886
-		transfer_state = 886
+		add_state_core = 972
+		transfer_state = 972
 		add_state_core = 887
 		transfer_state = 887
 		add_state_core = 888
@@ -6768,13 +6844,13 @@ country_event = {
 			create_wargoal = {
 				expire = 100
 				type = puppet_wargoal_focus
-				target = SAR
+				target = SAL
 			}
 			add_state_claim = 1055
 			add_state_claim = 792
 			add_state_claim = 51
 			add_state_claim = 42
-			add_state_claim = 791
+			add_state_claim = 978
 		}
 		DEN = {
 			create_wargoal = {
@@ -6782,7 +6858,7 @@ country_event = {
 				type = puppet_wargoal_focus
 				target = SHL
 			}
-			add_state_claim = 796
+			add_state_claim = 909
 		}
 		52 = { set_demilitarized_zone = yes }
 		54 = { set_demilitarized_zone = yes }
@@ -6938,7 +7014,7 @@ country_event = {
 			add_state_claim = 792
 			add_state_claim = 51
 			add_state_claim = 42
-			add_state_claim = 791
+			add_state_claim = 978
 		}
 		DEN = {
 			create_wargoal = {
@@ -6946,7 +7022,7 @@ country_event = {
 				type = puppet_wargoal_focus
 				target = SHL
 			}
-			add_state_claim = 796
+			add_state_claim = 909
 		}
 		52 = { set_demilitarized_zone = yes }
 		54 = { set_demilitarized_zone = yes }
@@ -7048,7 +7124,7 @@ country_event = { #Final Struggle
 		create_wargoal = {
 			expire = 100
 			type = puppet_wargoal_focus
-			target = SAR
+			target = SAL
 		}
 		create_wargoal = {
 			expire = 100
@@ -7063,7 +7139,7 @@ country_event = { #Final Struggle
 			load_oob = GER_1919
 			load_oob = GER_1936
 		}
-		791 = { set_demilitarized_zone = no }
+		978 = { set_demilitarized_zone = no }
 		52 = { set_demilitarized_zone = no }
 		54 = { set_demilitarized_zone = no }
 	}
@@ -7386,7 +7462,7 @@ country_event = {
 					expire = 100
 					type = take_state_focus
 					target = CZE
-					generator = { 69 884 886 887 888 }
+					generator = { 69 884 972 887 888 }
 				}
 			}
 		}
@@ -7454,7 +7530,7 @@ country_event = {
 		transfer_state = 887
 		transfer_state = 885
 		transfer_state = 69
-		transfer_state = 886
+		transfer_state = 972
 		}
 	}
 
@@ -7580,8 +7656,8 @@ country_event = {
 			GER = { transfer_state = 743 }	
 			
 			RKA = { transfer_state = 1049 }	
-			RKA = { transfer_state = 900 }	
-			RKA = { transfer_state = 901 }
+			RKA = { transfer_state = 1142 }	
+			RKA = { transfer_state = 1143 }
 			RKA = { transfer_state = 898 }
 			RKA = { transfer_state = 896 }
 			RKA = { transfer_state = 768 }
@@ -7603,6 +7679,9 @@ country_event = {
 			RKA = { transfer_state = 774 }
 			RKA = { transfer_state = 660 }	
 			RKA = { transfer_state = 558 }	
+			RKA = { transfer_state = 900 }
+			RKA = { transfer_state = 901 }
+			RKA = { transfer_state = 902 }
 			RKA = { transfer_state = 776 }
 			RKA = { transfer_state = 274 }	
 			RKA = { transfer_state = 779 }	
