@@ -13,6 +13,10 @@ ww1_small_unit_tactics = {
 	xp_cost = 100
 	xp_type = army
 
+	available = {
+		always = yes
+	}
+
 	ai_will_do = {
 		base = 1
 		modifier = {
@@ -30,6 +34,10 @@ ww1_large_scale_operations = {
 
 	xp_cost = 100
 	xp_type = army
+
+	available = {
+		always = yes
+	}
 
 	ai_will_do = {
 		base = 1
@@ -50,14 +58,86 @@ ww1_massed_artillery = {
 
 	xp_cost = 100
 	xp_type = army
+
+	available = {
+		always = yes
+	}
 	
 	ai_will_do = {
 		base = 1
 		modifier = {
 			factor = 5
-			has_grand_doctrine = {
+			has_doctrine = {
 				ww1_rolling_barrage
 			}
+		}
+	}
+
+	category_line_artillery = {
+        max_organisation = 5
+    }
+	category_artillery = {
+		soft_attack = 0.1
+	}
+
+	rewards = {
+		suppressing_fire = {
+			category_support_artillery = {
+				soft_attack = 0.1
+			}
+			army_infantry_defence_factor = 0.05
+		}
+		lighter_construction = {
+			category_artillery = {
+				plains = {
+        		    movement = 0.1
+        		}
+        		forest = {
+        		    movement = 0.1
+        		}
+			}
+		}
+		heavy_artillery_barrage = {
+			super_heavy_artillery = {
+    		    battalion_mult = {
+    		        category = category_army
+    		        soft_attack = 0.1
+    		        defense = 0.1
+    		    }
+    		}
+		
+    		equipment_bonus = {
+    		    railway_gun_equipment = {
+    		        railway_gun_attack = 0.25
+    		        instant = yes
+    		    }
+    		    super_heavy_railway_gun_equipment = {
+    		        railway_gun_attack = 0.25
+    		        instant = yes
+    		    }
+    		}
+		}
+		weakpoint_studies = {
+            anti_tank_brigade = {
+                ap_attack = 0.1
+                hard_attack = 0.1
+            }
+            artillery_brigade = {
+                hard_attack = 0.1
+            }
+        }
+		superior_firepower = {
+			artillery_brigade = {
+				combat_width = -0.5
+			}
+		}
+	}
+
+	mastery = {
+		multiplier = 2
+		categories = {
+			category_line_artillery
+			category_support_artillery
 		}
 	}
 }
@@ -70,8 +150,103 @@ ww1_gas = {
 	xp_cost = 100
 	xp_type = army
 
+	available = {
+		always = yes
+	}
+
 	ai_will_do = {
 		base = 1
+	}
+}
+
+ww1_field_engineering = {
+	track = ww1_combat_support
+    name = SUBDOCTRINE_FIELD_ENGINEERING
+    description = SUBDOCTRINE_FIELD_ENGINEERING_DESC
+    icon = GFX_doctrine_field_engineering_medium
+
+    xp_cost = 100
+    xp_type = army
+
+	available = {
+		always = yes
+	}
+	
+	ai_will_do = {
+		base = 1
+		modifier = {
+			factor = 10
+			surrender_progress > 0.25
+		}
+	}
+
+	engineer = {
+        river = {
+            movement = 0.2
+        }
+        forest = {
+            movement = 0.2
+        }
+    }
+
+	rewards = {
+		trench_building_equipment = {
+            engineer = {
+                max_organisation = 2
+                battalion_mult = {
+                    category = category_all_infantry
+                    entrenchment = 0.075
+                }
+            }
+        }
+		engineer_dug_gun_emplacements = {
+            engineer = {
+                battalion_mult = {
+                    category = category_artillery
+                    soft_attack = 0.1
+                    defense = 0.1
+                }
+                battalion_mult = {
+                    category = category_all_infantry
+                    soft_attack = 0.05
+                }
+            }
+        }
+		sapper_fieldcraft = {
+            engineer = {
+                max_strength = 0.25
+                defense = 0.1
+				battalion_mult = {
+                    category = category_all_infantry
+                    entrenchment = 0.025
+                }
+            }
+            category_all_infantry = {
+                soft_attack = 0.1
+            }
+        }
+		supply_line_maintenance = {
+			supply_company = {
+				max_organisation = 4
+			}
+			attrition = -0.1
+		}
+		mine_tunneling = {
+			engineer = {
+				soft_attack = 0.25
+				battalion_mult = {
+					category = category_all_infantry
+					breakthrough = 0.05
+				}
+			}
+		}
+	}
+
+	mastery = {
+		multiplier = 10
+		sub_units = {
+			engineer
+		}
 	}
 }
 
@@ -100,7 +275,6 @@ ww1_assault_infantry = {
 			factor = 5
 			OR = {
 				tag = GER
-				tag = RUS
 				tag = BUL
 				tag = AUH
 			}
@@ -139,6 +313,14 @@ ww1_assault_infantry = {
 			}
 		}
 	}
+
+	mastery = {
+		multiplier = 1
+		categories = {
+			category_all_infantry
+			category_special_forces
+		}
+	}
 }
 
 ww1_beasts_of_steel = {
@@ -163,6 +345,10 @@ ww1_beasts_of_steel = {
 				tag = ENG
 			}
 		}
+		modifier = {
+			factor = 0.25
+			is_major = no
+		}
 	}
 
 	# EFFECTS
@@ -176,7 +362,7 @@ ww1_beasts_of_steel = {
 				defense = 0.05
 			}
 			category_all_armor = {
-				max_organisation = 0.1
+				max_organisation = 4
 			}
 		}
 		extra_machineguns = {
@@ -194,6 +380,99 @@ ww1_beasts_of_steel = {
 		}
 		early_combined_arms = {
 			coordination_bonus = 0.075
+		}
+	}
+
+	mastery = {
+		multiplier = 5
+		categories = {
+			category_all_armor
+		}
+	}
+}
+
+ww1_mounted_infantry = {
+	track = ww1_ofensive
+	name = SUBDOCTRINE_MOUNTED_INFANTRY
+	description = SUBDOCTRINE_MOUNTED_INFANTRY_DESC
+	icon = GFX_doctrine_mounted_infantry_medium
+
+	xp_cost = 100
+	xp_type = army
+
+	available = {
+		always = yes
+	}
+
+	ai_will_do = {
+		base = 1
+		modifier = {
+			factor = 5
+			tag = RUS
+		}
+	}
+
+	# EFFECTS
+	cavalry = {
+		max_organisation = 5
+	}
+
+	rewards = {
+		traditions_of_old = {
+			unit_cavalry_design_cost_factor = -1
+			cavalry = {
+				defense = 0.1
+			}
+		}
+		cavalry_oriented_weapon_designs = {
+			cavalry = {
+				soft_attack = 0.1
+			}
+		}
+		mounted_skirmish_groups = {
+            recon = {
+                max_organisation = 10
+                soft_attack = 0.2
+                battalion_mult = {
+                    category = category_light_infantry
+                    soft_attack = 0.1
+                    defense = 0.1
+                }
+                battalion_mult = {
+                    category = category_light_infantry
+                    max_organisation = 5
+                    add = yes
+                }
+            } 
+            cavalry = {
+                max_organisation = 5
+            }
+        }
+		beasts_of_war = {
+            cavalry = {
+                maximum_speed = 0.5 
+                max_strength = 0.05 
+            }
+            recon = {
+                maximum_speed = 0.5
+            }
+        }
+		cavalry_charges = {
+            cavalry = {
+                breakthrough = 0.2
+                attack = 0.1
+            }
+        }
+	}
+
+	mastery = {
+		multiplier = 2
+		sub_units = {
+			cavalry
+		}
+		equipment = {
+			armored_car
+			light_armor
 		}
 	}
 }
