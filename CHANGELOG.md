@@ -70,3 +70,51 @@
 ## GFX
 - Improved focus icons: WW2 Albania
 - Improved a few portraits
+
+# November Update - 1.7.0
+## Updated to 1.17
+## Additions
+- Added Belgian Congo for all scenarios before 1960.
+- Reworked WW2 Polish focus tree
+- Reworked WW2 Nationalist Chinese focus tree
+- Revamped WW2 Cuban focus tree
+- Added WW2 Congolese focus tree
+- Added DNC Morocco focus tree
+- Added a mini event chain for Rommel's forced suicide
+- Partially reintegrated Expert AI
+- Added Iceland for Interwar/WW2 as Danish subject
+- Added Devastation
+- Added more game rules and settings
+- Added Soviet Defence missions from vanilla
+- Added War Exhaustion
+- 2nd Libyan Civil War is more accurate
+## Bugfixes
+- Fixed USA election events
+- Fixed gaps in Interservice Rivalry BOP for WW2 Japan
+- Fixed missing portraits in MD
+- Fixed swapped OOBs for the Congos (1949-2016)
+- WW2 Yugoslav Pressure events appear correctly
+- Fixed missing capital city for Siberia
+- Fixed the nuke system
+- Fixed the requirements to form Generalgouvernment
+- Many events will display as they were intended to
+- Greece will no longer have base game national spirits
+- Economic Effect of Versailles is replaced by The Great Depression
+- Fixed some mistakes in start dates
+- Fixed a ton of typos
+## QoL
+- Ungern-Sternberg lives up to 1959 if he's not killed and has new cool traits 😎
+- Added 100 building slots
+- Drastically reduced lag
+- Synchronized vanilla traits
+- Partially synchronized the map
+- Added cores for Silesia, Kashubia, Corsica, Balochistan, Nenetsia
+## GFX
+- Added new generic portraits
+- Added a lot of WW1 portraits
+- Improved focus icons through WW2
+- China's blue...
+- Improved German advisor icons
+## Removals
+- Removed the economy system
+- Removed the dual tree for WW2 Communist China, Brazil
