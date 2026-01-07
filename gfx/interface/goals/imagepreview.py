@@ -104,60 +104,70 @@ class VirtualImageBrowser:
         self.input_text.configure(yscrollcommand=scroll.set)
 
     def run_script_fixer(self):
-        """Analyzes text and replaces icons with closest matches"""
-        if not self.images:
-            messagebox.showwarning("Wait", "Still scanning images. Please wait a moment.")
-            return
-
-        text_content = self.input_text.get("1.0", tk.END)
-        if not text_content.strip():
-            return
-
-        # 1. Create a dictionary of valid names (without extension)
-        # Using a dict to map "clean name" -> "original filename if needed"
-        # We strip extensions because HOI4 script usually refers to the sprite name, not the .dds file directly
-        valid_names = {}
-        for img in self.images:
-            clean_name = os.path.splitext(img['name'])[0]
-            valid_names[clean_name] = clean_name  # key = value for now
+            """Analyzes text and replaces icons with closest matches, adding GFX_ prefix"""
+            if not self.images:
+                messagebox.showwarning("Wait", "Still scanning images. Please wait a moment.")
+                return
+    
+            text_content = self.input_text.get("1.0", tk.END)
+            if not text_content.strip():
+                return
+    
+            # 1. Create a dictionary mapping: 
+            # Key = Clean Filename (what we match against)
+            # Value = HOI4 Sprite Name (what we output, usually GFX_ + filename)
+            valid_names = {}
+            for img in self.images:
+                clean_name = os.path.splitext(img['name'])[0]
+                
+                # CHECK: Does it already start with GFX_?
+                # If yes, keep it. If no, prepend GFX_.
+                if clean_name.upper().startswith("GFX_"):
+                    sprite_name = clean_name
+                else:
+                    sprite_name = f"GFX_{clean_name}"
+                    
+                valid_names[clean_name] = sprite_name
+                
+            valid_keys = list(valid_names.keys())
+            changes_count = 0
             
-        valid_keys = list(valid_names.keys())
-        changes_count = 0
-        
-        def replacer(match):
-            nonlocal changes_count
-            prefix = match.group(1) # "icon = "
-            current_val = match.group(2) # The name provided in script
+            def replacer(match):
+                nonlocal changes_count
+                prefix = match.group(1) # "icon = "
+                current_val = match.group(2) # The name provided in script
+                
+                # Check if it exists exactly (Case sensitive check)
+                if current_val in valid_keys:
+                    # Even if it matches exactly, ensure we return the GFX_ version
+                    return f"{prefix}{valid_names[current_val]}"
+                
+                # Use difflib to find closest match based on the filename
+                # cutoff=0.4 means it needs to be at least 40% similar.
+                closest = difflib.get_close_matches(current_val, valid_keys, n=1, cutoff=0.4)
+                
+                if closest:
+                    best_match_key = closest[0] # This is the filename
+                    final_sprite_name = valid_names[best_match_key] # This is GFX_filename
+                    
+                    changes_count += 1
+                    print(f"Fixing: '{current_val}' -> '{final_sprite_name}'")
+                    return f"{prefix}{final_sprite_name}"
+                else:
+                    # No close match found, keep original
+                    return match.group(0)
+    
+            # Regex explanation:
+            # (icon\s*=\s*)  -> Group 1: Matches 'icon =' with variable spacing
+            # ([^\s#\}]+)    -> Group 2: Matches the value (chars that aren't space, #, or })
+            new_text = re.sub(r'(icon\s*=\s*)([^\s#\}]+)', replacer, text_content, flags=re.IGNORECASE)
             
-            # Check if it exists exactly (Case sensitive check)
-            if current_val in valid_keys:
-                return match.group(0)
+            # Update text widget
+            self.input_text.delete("1.0", tk.END)
+            self.input_text.insert("1.0", new_text)
             
-            # Use difflib to find closest match
-            # cutoff=0.4 means it needs to be at least 40% similar.
-            closest = difflib.get_close_matches(current_val, valid_keys, n=1, cutoff=0.4)
-            
-            if closest:
-                best_match = closest[0]
-                changes_count += 1
-                print(f"Fixing: '{current_val}' -> '{best_match}'")
-                return f"{prefix}{best_match}"
-            else:
-                # No close match found, keep original
-                return match.group(0)
-
-        # Regex explanation:
-        # (icon\s*=\s*)  -> Group 1: Matches 'icon =' with variable spacing
-        # ([^\s#\}]+)    -> Group 2: Matches the value (chars that aren't space, #, or })
-        new_text = re.sub(r'(icon\s*=\s*)([^\s#\}]+)', replacer, text_content, flags=re.IGNORECASE)
-        
-        # Update text widget
-        self.input_text.delete("1.0", tk.END)
-        self.input_text.insert("1.0", new_text)
-        
-        self.log_label.configure(text=f"Process complete. Fixed {changes_count} invalid icons.")
-        messagebox.showinfo("Complete", f"Replaced {changes_count} invalid icons with their closest matches.")
-
+            self.log_label.configure(text=f"Process complete. Fixed {changes_count} invalid icons.")
+            messagebox.showinfo("Complete", f"Replaced {changes_count} invalid icons with proper GFX_ format.")
     def setup_browser_ui(self, parent):
         # Top frame with search
         top_frame = ttk.Frame(parent, padding=10)
