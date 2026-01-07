@@ -6,6 +6,8 @@ import threading
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
 import queue
+import re
+import difflib
 
 class VirtualImageBrowser:
     def __init__(self, root, base_path):
@@ -30,23 +32,20 @@ class VirtualImageBrowser:
         self.placeholder = None
         self.error_placeholder = None
         
-        self.setup_ui()
         self.create_placeholders()
+        self.setup_ui() # Modified to support tabs
         self.scan_images()
         self.start_loader_thread()
         
     def create_placeholders(self):
         """Create placeholder images"""
-        # Loading placeholder
         img = Image.new('RGB', self.thumbnail_size, (60, 60, 60))
         self.placeholder = ImageTk.PhotoImage(img)
-        
-        # Error placeholder
         img_err = Image.new('RGB', self.thumbnail_size, (80, 40, 40))
         self.error_placeholder = ImageTk.PhotoImage(img_err)
         
     def setup_ui(self):
-        self.root.title("HOI4 Goal Image Browser (5k+ Images)")
+        self.root.title("HOI4 Goal Image Browser & Script Fixer")
         self.root.geometry("1400x900")
         self.root.configure(bg='#2b2b2b')
         
@@ -56,9 +55,112 @@ class VirtualImageBrowser:
         style.configure('TFrame', background='#2b2b2b')
         style.configure('TLabel', background='#2b2b2b', foreground='white')
         style.configure('TEntry', fieldbackground='#3c3c3c', foreground='white')
+        style.configure('TButton', background='#3c3c3c', foreground='white', borderwidth=1)
+        style.map('TButton', background=[('active', '#505050')])
         
+        # Create Notebook (Tabs)
+        self.notebook = ttk.Notebook(self.root)
+        self.notebook.pack(fill=tk.BOTH, expand=True)
+        
+        # --- TAB 1: Image Browser ---
+        self.browser_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.browser_tab, text=" 🖼️ Image Browser ")
+        self.setup_browser_ui(self.browser_tab)
+        
+        # --- TAB 2: Script Fixer ---
+        self.fixer_tab = ttk.Frame(self.notebook)
+        self.notebook.add(self.fixer_tab, text=" 🛠️ Script Fixer ")
+        self.setup_fixer_ui(self.fixer_tab)
+
+    def setup_fixer_ui(self, parent):
+        """UI for the script fixing tool"""
+        # Controls Frame
+        ctrl_frame = ttk.Frame(parent, padding=10)
+        ctrl_frame.pack(fill=tk.X)
+        
+        ttk.Label(ctrl_frame, text="Paste your focus tree code below. The tool will replace invalid icons with the closest image filename found.", 
+                 font=('Segoe UI', 10)).pack(side=tk.LEFT)
+        
+        # Buttons
+        btn_frame = ttk.Frame(parent, padding=10)
+        btn_frame.pack(side=tk.BOTTOM, fill=tk.X)
+        
+        ttk.Button(btn_frame, text="✨ Auto-Fix Icons", command=self.run_script_fixer).pack(side=tk.RIGHT, padx=5)
+        ttk.Button(btn_frame, text="Clear", command=lambda: self.input_text.delete("1.0", tk.END)).pack(side=tk.RIGHT, padx=5)
+        
+        self.log_label = ttk.Label(btn_frame, text="Ready", foreground="#aaaaaa")
+        self.log_label.pack(side=tk.LEFT)
+        
+        # Text Area
+        text_frame = ttk.Frame(parent, padding=(10, 0, 10, 0))
+        text_frame.pack(fill=tk.BOTH, expand=True)
+        
+        self.input_text = tk.Text(text_frame, bg='#1e1e1e', fg='#dcdcdc', 
+                                  insertbackground='white', font=('Consolas', 10), undo=True)
+        self.input_text.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        
+        scroll = ttk.Scrollbar(text_frame, orient=tk.VERTICAL, command=self.input_text.yview)
+        scroll.pack(side=tk.RIGHT, fill=tk.Y)
+        self.input_text.configure(yscrollcommand=scroll.set)
+
+    def run_script_fixer(self):
+        """Analyzes text and replaces icons with closest matches"""
+        if not self.images:
+            messagebox.showwarning("Wait", "Still scanning images. Please wait a moment.")
+            return
+
+        text_content = self.input_text.get("1.0", tk.END)
+        if not text_content.strip():
+            return
+
+        # 1. Create a dictionary of valid names (without extension)
+        # Using a dict to map "clean name" -> "original filename if needed"
+        # We strip extensions because HOI4 script usually refers to the sprite name, not the .dds file directly
+        valid_names = {}
+        for img in self.images:
+            clean_name = os.path.splitext(img['name'])[0]
+            valid_names[clean_name] = clean_name  # key = value for now
+            
+        valid_keys = list(valid_names.keys())
+        changes_count = 0
+        
+        def replacer(match):
+            nonlocal changes_count
+            prefix = match.group(1) # "icon = "
+            current_val = match.group(2) # The name provided in script
+            
+            # Check if it exists exactly (Case sensitive check)
+            if current_val in valid_keys:
+                return match.group(0)
+            
+            # Use difflib to find closest match
+            # cutoff=0.4 means it needs to be at least 40% similar.
+            closest = difflib.get_close_matches(current_val, valid_keys, n=1, cutoff=0.4)
+            
+            if closest:
+                best_match = closest[0]
+                changes_count += 1
+                print(f"Fixing: '{current_val}' -> '{best_match}'")
+                return f"{prefix}{best_match}"
+            else:
+                # No close match found, keep original
+                return match.group(0)
+
+        # Regex explanation:
+        # (icon\s*=\s*)  -> Group 1: Matches 'icon =' with variable spacing
+        # ([^\s#\}]+)    -> Group 2: Matches the value (chars that aren't space, #, or })
+        new_text = re.sub(r'(icon\s*=\s*)([^\s#\}]+)', replacer, text_content, flags=re.IGNORECASE)
+        
+        # Update text widget
+        self.input_text.delete("1.0", tk.END)
+        self.input_text.insert("1.0", new_text)
+        
+        self.log_label.configure(text=f"Process complete. Fixed {changes_count} invalid icons.")
+        messagebox.showinfo("Complete", f"Replaced {changes_count} invalid icons with their closest matches.")
+
+    def setup_browser_ui(self, parent):
         # Top frame with search
-        top_frame = ttk.Frame(self.root, padding=10)
+        top_frame = ttk.Frame(parent, padding=10)
         top_frame.pack(fill=tk.X)
         
         ttk.Label(top_frame, text="🔍 Search:", font=('Segoe UI', 11, 'bold')).pack(side=tk.LEFT)
@@ -84,7 +186,7 @@ class VirtualImageBrowser:
         ttk.Label(top_frame, textvariable=self.status_var, font=('Segoe UI', 10)).pack(side=tk.RIGHT)
         
         # Path label
-        path_frame = ttk.Frame(self.root, padding=(10, 0))
+        path_frame = ttk.Frame(parent, padding=(10, 0))
         path_frame.pack(fill=tk.X)
         ttk.Label(path_frame, text=f"📁 {self.base_path}", font=('Segoe UI', 9)).pack(side=tk.LEFT)
         
@@ -93,7 +195,7 @@ class VirtualImageBrowser:
         ttk.Label(path_frame, textvariable=self.range_var, font=('Segoe UI', 9)).pack(side=tk.RIGHT)
         
         # Main canvas area with virtual scrolling
-        canvas_frame = ttk.Frame(self.root)
+        canvas_frame = ttk.Frame(parent)
         canvas_frame.pack(fill=tk.BOTH, expand=True, padx=5, pady=5)
         
         # Canvas
