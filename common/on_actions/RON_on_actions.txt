@@ -385,6 +385,47 @@ on_actions = {
 	# country 
 	on_daily = {
 		effect = {
+        for_each_loop = {
+                array = global.political_active_crisis_list
+                
+
+                if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 0 }
+                        check_variable = { global.crisis_progress^i < 20 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.001 }
+                }
+                if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i < 0 }
+                    }
+					RON_end_crisis = yes
+                }                
+
+                else_if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 1 }
+                        check_variable = { global.crisis_progress^i < 60 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.01 }
+                }
+                
+
+                else_if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 2 }
+                        check_variable = { global.crisis_progress^i < 100 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.01 }
+                }
+                
+
+                clamp_variable = {
+                    var = global.crisis_progress^i
+                    max = 100
+                }
+            }
 			update_all_pop  = yes
 			add_to_variable = { spam_cooldownusa = 1 }
 			subtract_from_variable = { UNcooldownunvotecountry = 1 }
@@ -478,6 +519,7 @@ on_actions = {
 	}
 	on_daily_QIN = {
 		effect = {
+	
 			if = {
 				limit = {
 					has_decision = QIN_smuggle_weapons

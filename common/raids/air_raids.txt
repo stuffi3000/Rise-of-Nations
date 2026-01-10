@@ -8,552 +8,743 @@ types = {
 #   #  #  ##  ### ### ###  #    #       ##   #  #  # ### # # ###
 
 ################################################################
-	infrastructure_strike = {
-		days_to_prepare = 90
+infrastructure_strike = {
+    days_to_prepare = 90
 
-		ai_will_do = {
-			base = 2
-			modifier = {
-				factor = 0
-				industrial_complex < 30
-			}
-			modifier = {
-				add = 0.15
-				has_idea = foreign_icandowhatilike 
-			}		
-			modifier = {
-				# Don't target anyone who is not a potential enemy
-				factor = 0
-				NOT = {
-					is_in_array = {
-						array = potential_and_current_enemies
-						value = FROM  # Target country
-					}
-				}
-			}
-		}
+    ai_will_do = {
+        base = 2
+        modifier = {
+            factor = 0
+            industrial_complex < 30
+        }
+        modifier = {
+            add = 0.15
+            has_idea = foreign_icandowhatilike 
+        }
+        modifier = {
+            # Don't target anyone who is not in a crisis with us
+            factor = 0
+            NOT = {
+                any_of = {
+                    array = global.political_active_crisis_list
+                    index = i
+                    AND = {
+                        check_variable = { global.crisis_originators^i = ROOT }
+                        check_variable = { global.crisis_receivers^i = FROM }
+                        check_variable = { global.crisis_progress^i > 19 }
+                        check_variable = { global.crisis_progress^i < 100 }
+                    }
+                }
+            }
+        }
+        # More likely if crisis is stuck at threshold
+        modifier = {
+            factor = 3
+            any_of = {
+                array = global.political_active_crisis_list
+                index = i
+                AND = {
+                    check_variable = { global.crisis_originators^i = ROOT }
+                    check_variable = { global.crisis_receivers^i = FROM }
+                    check_variable = { global.crisis_progress^i > 35 }
+                    check_variable = { global.crisis_progress^i < 100 }
+                }
+            }
+        }
+    }
 
-		category = air_raids
+    category = air_raids
 
-		command_power = 25
+    command_power = 25
 
-		allowed = {
-			has_dlc = "Gotterdammerung"
-		}
+    allowed = {
+        has_dlc = "Gotterdammerung"
+    }
 
-		# Raid Type is visible
-		visible = {
+    # Raid Type is visible
+    visible = {
+        # Must have at least one active crisis as originator
+        is_in_array = { global.crisis_originators = ROOT }
+    }
+    
+    # Specific Target is visible - only countries we have a crisis with
+    show_target = {
+        NOT = { is_in_faction_with = FROM }
+        NOT = { has_war_with = FROM }
+        
+        # Must have active crisis between ROOT and FROM
+        any_of = {
+            array = global.political_active_crisis_list
+            index = i
+            AND = {
+                check_variable = { global.crisis_originators^i = ROOT }
+                check_variable = { global.crisis_receivers^i = FROM }
+                check_variable = { global.crisis_progress^i > 19 } # Past embargo stage
+                check_variable = { global.crisis_progress^i < 100 } 
+            }
+        }
+    }
 
-		}
-		# Specific Target is visible
-		show_target = {
-			NOT = { is_in_faction_with = FROM }
-		}
+    # Can prepare
+    available = {
+        custom_trigger_tooltip = {
+            tooltip = crisis_raid_available_tt
+            any_of = {
+                array = global.political_active_crisis_list
+                index = i
+                AND = {
+                    check_variable = { global.crisis_originators^i = ROOT }
+                    check_variable = { global.crisis_receivers^i = FROM }
+                    check_variable = { global.crisis_progress^i > 19 }
+                }
+            }
+        }
+    }
+    
+    launchable = {
+        # Can launch when prepared
+    }
 
-		# Can prepare
-		available = {
+    target_type = {
+        state = {
+            infrastructure > 1
+        }
+    }
+    
+    target_icon = GFX_other_target_icon
+    launch_sound = raid_launch_air
+    custom_map_icon = GFX_raid_type_icon_facility_raid
 
-		}
-		launchable = {
-		#	has_war_with = FROM
-		}
+    arrow = {
+        type = air
+    }
 
-		target_type = {
-	state = {
-				infrastructure > 1
+    unit_requirements = {
+        equipment = {
+            type = { tactical_bomber }
+            amount = { min = 70 }
+        }
+    }
+    unit_requirements = {
+        equipment = {
+            type = { strategic_bomber }
+            amount = { min = 70 }
+        }
+    }
 
-			}
-		}
-		target_icon = GFX_other_target_icon
-		launch_sound = raid_launch_air
-		custom_map_icon = GFX_raid_type_icon_facility_raid
+    starting_point = {
+        types = { air_base }
+    }
 
-		arrow = {
-		    type = air
-		}
+    success_factors = {
+        success = {
+            base = 0.65
 
+            experience = {
+                weight = 0.2
+                start_weight = -0.2
+                reference = 1000
+            }
+            air_agility = {
+                reference = 100.0
+                weight = 0.1
+                start_weight = -0.1
+            }
+            reliability = {
+                reference = 1
+                weight = 0.05
+                start_weight = -0.1
+            }
+            air_defence = {
+                reference = 100
+                weight = 0.05
+                start_weight = -0.05
+            }
+            air_superiority = {
+                reference = 1
+                weight = 0.1
+                start_weight = -0.1
+            }
 
-		# Intel requirements
-		#intel_levels = {
-		#	#launch = 40 # minimum intel level to launch the raid
-		#}
+            anti_air = {
+                reference = 5
+                weight = -0.25
+            }
+            interception = {
+                reference = 500
+                weight = -0.2
+            }
+            intel = {
+                weight = 0.3
+                reference = 100
+            }
+        }
 
-		unit_requirements = {
-			equipment = {
-				type = { tactical_bomber }
-				amount = { min = 70 }
-			}
-		#	experience = { min = 0 }
-		}
-		unit_requirements = {
-			equipment = {
-				type = { strategic_bomber }
-				amount = { min = 70 }
-			}
-		#	experience = { min = 0 }
-		}
+        critical = {
+            base = 0.15
+        }
+    }
 
-		starting_point = {
-		    types = { air_base }
-		}
-
-		success_factors = {
-			success = {
-				base = 0.65
-
-				# Raiding unit modifiers
-				experience = {
-					weight = 0.2
-					start_weight = -0.2
-					reference = 1000
-				}
-				air_agility = {
-					reference = 100.0 # As air unit agility approaches 100 (as defined by the value above), increase chance by this value
-					weight = 0.1 # At 0 agility, the modifier will have negative effect.
-					start_weight = -0.1 # The modifier will scale linearly, meaning at 50 agility, the modifier will be 0.
-				}
-				reliability = {
-					reference = 1
-					weight = 0.05
-					start_weight = -0.1
-				}
-				air_defence = {
-					reference = 100
-					weight = 0.05
-					start_weight = -0.05
-				}
-				air_superiority = {
-					reference = 1
-					weight = 0.1
-					start_weight = -0.1
-				}
-
-				### Target Modifiers
-				anti_air = {
-					reference = 5
-					weight = -0.25
-				}
-				interception = {
-					reference = 500 # More than 500 fighters won't really make any difference
-					weight = -0.2
-				}
-				intel = {
-					weight = 0.3
-					#start_reference = 50
-					reference = 100
-				}
-			}
-
-			critical = {
-				base = 0.15
-			}
-		}
-
-		success_levels = {
-			failure = {
-				victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 5
-						}
-						hidden_effect = {
-							damage_building = {
-								tags = infrastructure
-								damage = 0.05 # levels of damage
-								province = var:ROOT.target_province
-							}
-						}
-					}
-				}
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 70
-						ratio = no
-					}
-					raid_add_unit_experience = 0.05
-				}
-				visual_effect = {
-					entity = "raid_failed_entity"
-					animation = "attack"
-					}
-			}
-			limited_success = {
-			    victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 15
-						}
-						hidden_effect = {
-							damage_building = {
-								type = infrastructure
-								damage = 0.15 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.05
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.05
-					}
-
-			    }
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 40
-						ratio = no
-					}
-					raid_add_unit_experience = 0.1
-				}
-				visual_effect = {
-					entity = "air_raids_1_limited_success_entity"
-					animation = "attack"
-				}
-			}
-			success = {
-				victim_effects = {
-
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 55
-						}
-						hidden_effect = {
-							damage_building = {
-								type = infrastructure
-								damage = 0.55 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.25
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.15
-					}
-				}
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 30
-						ratio = no
-					}
-					raid_add_unit_experience = 0.2
-				}
-				visual_effect = {
-					entity = "air_raids_1_success_entity"
-					animation = "attack"
-				}
-			}
-			critical_success = {
-			    victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 85
-						}
-						hidden_effect = {
-							damage_building = {
-								type = infrastructure
-								damage = 0.85 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.50
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.25
-					}
-			    }
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 10
-						ratio = no
-					}
-					raid_add_unit_experience = 0.35
-				}
-				visual_effect = {
-					entity = "air_raids_1_critical_success_entity"
-					animation = "attack"
-				}
-			}
-		}
-	}
-	mil_factory_strike = {
-		days_to_prepare = 90
-
-		ai_will_do = {
-			base = 2
-			modifier = {
-				factor = 0
-				industrial_complex < 30
-			}
-			modifier = {
-				factor = .40
-				is_major = yes
-			}			
-			modifier = {
-				add = 0.15
-				has_idea = foreign_icandowhatilike 
-			}		
-			modifier = {
-				# Don't target anyone who is not a potential enemy
-				factor = 0
-				NOT = {
-					is_in_array = {
-						array = potential_and_current_enemies
-						value = FROM  # Target country
-					}
-				}
-			}
-		}
-
-		category = air_raids
-
-		command_power = 25
-
-		allowed = {
-			has_dlc = "Gotterdammerung"
-		}
-
-		# Raid Type is visible
-		visible = {
-
-		}
-		# Specific Target is visible
-		show_target = {
-			NOT = { is_in_faction_with = FROM }
-			NOT = {
-				FROM = {
-					has_opinion = {
-    target = ROOT
-    value < 0
+    success_levels = {
+        failure = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 5
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = infrastructure
+                            damage = 0.05
+                            province = var:ROOT.target_province
+                        }
+                    }
+                }
+                # Crisis still escalates - you attacked them!
+                ROOT = {
+                    set_variable = { temp_aggressor = ROOT }
+                    set_variable = { temp_defender = FROM }
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 70
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.05
+                
+                # Advance crisis progress (small amount for failure)
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 3 }
+                RON_add_diplo_crisis_progress = yes
+                
+                # Unlock next stage if needed
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "raid_failed_entity"
+                animation = "attack"
+            }
+        }
+        
+        limited_success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 15
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = infrastructure
+                            damage = 0.15
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.05
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.05
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 40
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.1
+                
+                # Advance crisis progress
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 5 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_limited_success_entity"
+                animation = "attack"
+            }
+        }
+        
+        success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 55
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = infrastructure
+                            damage = 0.55
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.25
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.15
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 30
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.2
+                
+                # Advance crisis progress (larger amount)
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 10 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_success_entity"
+                animation = "attack"
+            }
+        }
+        
+        critical_success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 85
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = infrastructure
+                            damage = 0.85
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.50
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.25
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 10
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.35
+                
+                # Advance crisis progress (maximum)
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 15 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_critical_success_entity"
+                animation = "attack"
+            }
+        }
+    }
 }
-				}
-			}
-			FROM = {
-				is_major = no
-				is_subject = no 
-				is_puppet = no
-			}
-		}
 
-		# Can prepare
-		available = {
+mil_factory_strike = {
+    days_to_prepare = 90
 
-		}
-		launchable = {
+    ai_will_do = {
+        base = 2
+        modifier = {
+            factor = 0
+            industrial_complex < 30
+        }
+        modifier = {
+            factor = 0.40
+            is_major = yes
+        }
+        modifier = {
+            add = 0.15
+            has_idea = foreign_icandowhatilike 
+        }
+        modifier = {
+            factor = 0
+            NOT = {
+                any_of = {
+                    array = global.political_active_crisis_list
+                    index = i
+                    AND = {
+                        check_variable = { global.crisis_originators^i = ROOT }
+                        check_variable = { global.crisis_receivers^i = FROM }
+                        check_variable = { global.crisis_progress^i > 19 }
+                        check_variable = { global.crisis_progress^i < 100 }
+                    }
+                }
+            }
+        }
+        modifier = {
+            factor = 3
+            any_of = {
+                array = global.political_active_crisis_list
+                index = i
+                AND = {
+                    check_variable = { global.crisis_originators^i = ROOT }
+                    check_variable = { global.crisis_receivers^i = FROM }
+                    check_variable = { global.crisis_progress^i > 35 }
+                    check_variable = { global.crisis_progress^i < 100 }
+                }
+            }
+        }
+    }
 
-		}
+    category = air_raids
 
-		target_type = {
-	state = {
-				industrial_complex > 1
+    command_power = 25
 
-			}
-		}
-		target_icon = GFX_facility_icon
-		launch_sound = raid_launch_air
-		custom_map_icon = GFX_raid_type_icon_facility_raid
+    allowed = {
+        has_dlc = "Gotterdammerung"
+    }
 
-		arrow = {
-		    type = air
-		}
+    visible = {
+        is_in_array = { global.crisis_originators = ROOT }
+    }
+    
+    show_target = {
+        NOT = { is_in_faction_with = FROM }
+        NOT = { has_war_with = FROM }
+        
+        any_of = {
+            array = global.political_active_crisis_list
+            index = i
+            AND = {
+                check_variable = { global.crisis_originators^i = ROOT }
+                check_variable = { global.crisis_receivers^i = FROM }
+                check_variable = { global.crisis_progress^i > 19 }
+                check_variable = { global.crisis_progress^i < 100 }
+            }
+        }
+    }
 
+    available = {
+        custom_trigger_tooltip = {
+            tooltip = crisis_raid_available_tt
+            any_of = {
+                array = global.political_active_crisis_list
+                index = i
+                AND = {
+                    check_variable = { global.crisis_originators^i = ROOT }
+                    check_variable = { global.crisis_receivers^i = FROM }
+                    check_variable = { global.crisis_progress^i > 19 }
+                }
+            }
+        }
+    }
+    
+    launchable = {
+    }
 
-		# Intel requirements
-		#intel_levels = {
-		#	#launch = 40 # minimum intel level to launch the raid
-		#}
+    target_type = {
+        state = {
+            industrial_complex > 1
+        }
+    }
+    
+    target_icon = GFX_facility_icon
+    launch_sound = raid_launch_air
+    custom_map_icon = GFX_raid_type_icon_facility_raid
 
-		unit_requirements = {
-			equipment = {
-				type = { tactical_bomber }
-				amount = { min = 70 }
-			}
-		#	experience = { min = 0 }
-		}
-		unit_requirements = {
-			equipment = {
-				type = { strategic_bomber }
-				amount = { min = 70 }
-			}
-		#	experience = { min = 0 }
-		}
+    arrow = {
+        type = air
+    }
 
-		starting_point = {
-		    types = { air_base }
-		}
+    unit_requirements = {
+        equipment = {
+            type = { tactical_bomber }
+            amount = { min = 70 }
+        }
+    }
+    unit_requirements = {
+        equipment = {
+            type = { strategic_bomber }
+            amount = { min = 70 }
+        }
+    }
 
-		success_factors = {
-			success = {
-				base = 0.65
+    starting_point = {
+        types = { air_base }
+    }
 
-				# Raiding unit modifiers
-				experience = {
-					weight = 0.2
-					start_weight = -0.2
-					reference = 1000
-				}
-				air_agility = {
-					reference = 100.0 # As air unit agility approaches 100 (as defined by the value above), increase chance by this value
-					weight = 0.1 # At 0 agility, the modifier will have negative effect.
-					start_weight = -0.1 # The modifier will scale linearly, meaning at 50 agility, the modifier will be 0.
-				}
-				reliability = {
-					reference = 1
-					weight = 0.05
-					start_weight = -0.1
-				}
-				air_defence = {
-					reference = 100
-					weight = 0.05
-					start_weight = -0.05
-				}
-				air_superiority = {
-					reference = 1
-					weight = 0.1
-					start_weight = -0.1
-				}
+    success_factors = {
+        success = {
+            base = 0.65
 
-				### Target Modifiers
-				anti_air = {
-					reference = 5
-					weight = -0.25
-				}
-				interception = {
-					reference = 500 # More than 500 fighters won't really make any difference
-					weight = -0.2
-				}
-				intel = {
-					weight = 0.3
-					#start_reference = 50
-					reference = 100
-				}
-			}
+            experience = {
+                weight = 0.2
+                start_weight = -0.2
+                reference = 1000
+            }
+            air_agility = {
+                reference = 100.0
+                weight = 0.1
+                start_weight = -0.1
+            }
+            reliability = {
+                reference = 1
+                weight = 0.05
+                start_weight = -0.1
+            }
+            air_defence = {
+                reference = 100
+                weight = 0.05
+                start_weight = -0.05
+            }
+            air_superiority = {
+                reference = 1
+                weight = 0.1
+                start_weight = -0.1
+            }
 
-			critical = {
-				base = 0.15
-			}
-		}
+            anti_air = {
+                reference = 5
+                weight = -0.25
+            }
+            interception = {
+                reference = 500
+                weight = -0.2
+            }
+            intel = {
+                weight = 0.3
+                reference = 100
+            }
+        }
 
-		success_levels = {
-			failure = {
-				victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 5
-						}
-						hidden_effect = {
-							damage_building = {
-								type = industrial_complex
-								damage = 0.05 # levels of damage
-								province = var:ROOT.target_province
-							}
-						}
-					}
-				}
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 70
-						ratio = no
-					}
-					raid_add_unit_experience = 0.05
-				}
-				visual_effect = {
-					entity = "raid_failed_entity"
-					animation = "attack"
-					}
-			}
-			limited_success = {
-			    victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 15
-						}
-						hidden_effect = {
-							damage_building = {
-								type = industrial_complex
-								damage = 0.15 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.05
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.05
-					}
+        critical = {
+            base = 0.15
+        }
+    }
 
-			    }
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 40
-						ratio = no
-					}
-					raid_add_unit_experience = 0.1
-				}
-				visual_effect = {
-					entity = "air_raids_1_limited_success_entity"
-					animation = "attack"
-				}
-			}
-			success = {
-				victim_effects = {
-
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 55
-						}
-						hidden_effect = {
-							damage_building = {
-								tags = industrial_complex
-								damage = 0.55 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.25
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.15
-					}
-				}
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 30
-						ratio = no
-					}
-					raid_add_unit_experience = 0.2
-				}
-				visual_effect = {
-					entity = "air_raids_1_success_entity"
-					animation = "attack"
-				}
-			}
-			critical_success = {
-			    victim_effects = {
-					var:target_state = {
-						custom_effect_tooltip = {
-							localization_key = raid_facility_damage_tt
-							DAMAGE = 85
-						}
-						hidden_effect = {
-							damage_building = {
-								type = industrial_complex
-								damage = 0.85 # levels of damage
-								province = var:ROOT.target_province
-								repair_speed_modifier = -0.50
-							}
-						}
-						raid_reduce_project_progress_ratio = 0.25
-					}
-			    }
-				actor_effects = {
-					raid_damage_units = {
-						plane_loss = 10
-						ratio = no
-					}
-					raid_add_unit_experience = 0.35
-				}
-				visual_effect = {
-					entity = "air_raids_1_critical_success_entity"
-					animation = "attack"
-				}
-			}
-		}
-	}
-	
+    success_levels = {
+        failure = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 5
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = industrial_complex
+                            damage = 0.05
+                            province = var:ROOT.target_province
+                        }
+                    }
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 70
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.05
+                
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 3 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "raid_failed_entity"
+                animation = "attack"
+            }
+        }
+        
+        limited_success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 15
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = industrial_complex
+                            damage = 0.15
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.05
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.05
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 40
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.1
+                
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 5 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_limited_success_entity"
+                animation = "attack"
+            }
+        }
+        
+        success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 55
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = industrial_complex
+                            damage = 0.55
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.25
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.15
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 30
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.2
+                
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 10 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_success_entity"
+                animation = "attack"
+            }
+        }
+        
+        critical_success = {
+            victim_effects = {
+                var:target_state = {
+                    custom_effect_tooltip = {
+                        localization_key = raid_facility_damage_tt
+                        DAMAGE = 85
+                    }
+                    hidden_effect = {
+                        damage_building = {
+                            type = industrial_complex
+                            damage = 0.85
+                            province = var:ROOT.target_province
+                            repair_speed_modifier = -0.50
+                        }
+                    }
+                    raid_reduce_project_progress_ratio = 0.25
+                }
+            }
+            actor_effects = {
+                raid_damage_units = {
+                    plane_loss = 10
+                    ratio = no
+                }
+                raid_add_unit_experience = 0.35
+                
+                set_variable = { aggressor_side = ROOT }
+                set_variable = { defender_side = FROM }
+                set_variable = { amount = 15 }
+                RON_add_diplo_crisis_progress = yes
+                
+                for_each_loop = {
+                    array = global.political_active_crisis_list
+                    if = {
+                        limit = {
+                            check_variable = { global.crisis_originators^i = ROOT }
+                            check_variable = { global.crisis_receivers^i = FROM }
+                        }
+                        set_variable = { global.crisis_unlock_step_3^i = yes }
+                    }
+                }
+            }
+            visual_effect = {
+                entity = "air_raids_1_critical_success_entity"
+                animation = "attack"
+            }
+        }
+    }
+}
 	facility_strike = {
 		days_to_prepare = 90
 
