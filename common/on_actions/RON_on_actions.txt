@@ -387,7 +387,14 @@ on_actions = {
 		effect = {
         for_each_loop = {
                 array = global.political_active_crisis_list
-                
+      if = {
+                    limit = {
+                        check_variable = { global.crisis_progress^i < 1 }
+                    }
+                    # Set the correct crisis_id from the crisis list array
+                    set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
+                    RON_end_crisis = yes
+                }                            
 
                 if = {
                     limit = {
@@ -396,12 +403,7 @@ on_actions = {
                     }
                     add_to_variable = { global.crisis_progress^i = 0.001 }
                 }
-                if = {
-                    limit = {
-                        check_variable = { global.crisis_stage^i < 0 }
-                    }
-					RON_end_crisis = yes
-                }                
+    
 
                 else_if = {
                     limit = {
@@ -424,6 +426,7 @@ on_actions = {
                 clamp_variable = {
                     var = global.crisis_progress^i
                     max = 100
+					min = 0 
                 }
             }
 			update_all_pop  = yes
@@ -1148,4 +1151,5 @@ if = {
 			}
 		}
 	}
+}
 }
