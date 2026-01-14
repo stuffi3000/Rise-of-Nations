@@ -120,19 +120,12 @@ on_actions = {
 	}
 	on_monthly_FRA = {
 		effect = {
-			if = {
-				limit = {
-					NOT = {
-						has_completed_focus = FRA1_liquidate_political_ennemies
-						has_country_flag = union_sacree
-					}
-				}
 				FRA_calculate_parliament = yes
-			}
-			
+
 		}
+
 	}
-	on_monthly = {
+	on_monthly_USA = {
 		
 		effect = {
 			predection_house = yes
@@ -392,6 +385,49 @@ on_actions = {
 	# country 
 	on_daily = {
 		effect = {
+        for_each_loop = {
+                array = global.political_active_crisis_list
+      if = {
+                    limit = {
+                        check_variable = { global.crisis_progress^i < 1 }
+                    }
+
+                    set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
+                    RON_end_crisis = yes
+                }                            
+                if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 0 }
+                        check_variable = { global.crisis_progress^i < 20 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.001 }
+                }
+    
+
+                else_if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 1 }
+                        check_variable = { global.crisis_progress^i < 60 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.001 }
+                }
+                
+
+                else_if = {
+                    limit = {
+                        check_variable = { global.crisis_stage^i = 2 }
+                        check_variable = { global.crisis_progress^i < 100 }
+                    }
+                    add_to_variable = { global.crisis_progress^i = 0.001 }
+                }
+                
+
+                clamp_variable = {
+                    var = global.crisis_progress^i
+                    max = 100
+					min = 0 
+                }
+            }
 			update_all_pop  = yes
 			add_to_variable = { spam_cooldownusa = 1 }
 			subtract_from_variable = { UNcooldownunvotecountry = 1 }
@@ -485,6 +521,7 @@ on_actions = {
 	}
 	on_daily_QIN = {
 		effect = {
+	
 			if = {
 				limit = {
 					has_decision = QIN_smuggle_weapons
@@ -675,40 +712,72 @@ on_actions = {
 					OVERLORD = { set_autonomy = { target = ROOT autonomy_state = autonomy_free } }
 				}
 			}
-			FROM = { 
-				if = {
-					limit = {
-						has_global_flag = disable_border_gore
-					}
-				
-					white_peace = ROOT
-
-					every_state = {
-						limit = {
-							OR = {
-								is_core_of = FROM
-								is_claimed_by = FROM
-							}
-							is_controlled_by = ROOT
-							is_owned_by = ROOT
-							NOT = {
-								is_controlled_by = REB
-								is_controlled_by = ZOM
-							}					
-						}
-						transfer_state_to = FROM
-					}
-					puppet = ROOT
-					if = {
-						limit = {
-							FROM = {
-								is_in_faction = yes
-							}
-						}
-						add_to_faction = ROOT
-					}
-				}
-			}
+			FROM = {
+if = {
+    limit = {
+        has_global_flag = disable_border_gore
+    }
+   
+    FROM = {
+        add_threat = -100
+        white_peace = ROOT
+    }
+   
+    every_state = {
+        limit = {
+            is_controlled_by = FROM
+            is_core_of = FROM
+        }
+        transfer_state_to = FROM
+    }
+   
+    every_state = {
+        limit = {
+            is_controlled_by = FROM
+            is_core_of = ROOT
+            NOT = { is_core_of = FROM }
+        }
+        transfer_state_to = ROOT
+    }
+   
+    if = {
+        limit = {
+            country_exists = UNA
+            has_idea = RON_United_Nations
+			has_government = democratic
+        }
+        every_state = {
+            limit = {
+                is_controlled_by = FROM
+                NOT = { is_core_of = FROM }
+                NOT = { is_core_of = ROOT }
+            }
+            transfer_state_to = UNA
+            add_core_of = UNA
+        }
+    }
+   
+    every_country = {
+        limit = {
+            has_war_with = ROOT
+            is_in_faction_with = FROM
+        }
+        white_peace = ROOT
+    }
+   
+    every_country = {
+        limit = {
+            has_war_with = FROM
+            is_in_faction_with = ROOT
+        }
+        white_peace = FROM
+    }
+   
+    FROM = {
+        puppet = ROOT
+    }
+}
+ 
 
 			if = {
 				limit = {
@@ -1081,4 +1150,5 @@ on_actions = {
 			}
 		}
 	}
+}
 }
