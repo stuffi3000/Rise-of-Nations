@@ -8,22 +8,18 @@ scripted_diplomatic_actions = {
 			is_major = no
 			is_a_puppet = no
 			is_subject = no
-
 			}
-			has_war = yes				
  		}
  		selectable = {								
                         country_exists = ROOT
                         ROOT = { is_subject = no}
  FROM = {            
+    			                num_of_factories > 7
+
                              NOT = {
                                 is_major = yes
-										#	num_units > 40 
-			#num_of_military_factories > 50
-			has_war_with = ROOT
 
                              }
-							 has_war = yes         
         }
         }
  		requires_acceptance = no
@@ -31,14 +27,10 @@ scripted_diplomatic_actions = {
         
  		cost = 100
 on_sent_effect = {
-    ROOT = {
 set_variable = { waiting_for_response = 1 }
-            declare_war_on = {
-                target = ROOT
-                type = annex_everything
-            }
+
  }
-    }
+   
 
 		reject_effect = {
             ROOT = {
@@ -46,21 +38,24 @@ set_variable = { waiting_for_response = 1 }
             }
         }
  		complete_effect = {
+            random_list = {
+                50 = {
+                  custom_effect_tooltip = "The crisis fizzles out we gain warsupport and political power"
+                  add_political_power = 300
+                  add_war_support = 0.3
+                }
+                50 = {
 			ROOT = {
 				clear_variable = waiting_for_response
             }
-if = {
-    limit = {
-        ROOT = {
-            tag = USA
-        }
-    }
-    FROM = {
-            declare_war_on = {
-                target = ROOT
-                type = annex_everything
-            }    }
-}
+        set_temp_variable = { originator = ROOT }
+        set_temp_variable = { defender = FROM }
+        set_temp_variable = { progress = 10 }
+       # set_temp_variable = { crisis_type = 10 } # types are just localiaztion now generic should work for everything i think
+        
+        RON_initiate_generic_crisis = yes
+                }
+            }
 
 }
 			
@@ -193,7 +188,7 @@ AND = {
             distance = {
                 base = 0
                 modifier = {
-                    add = -7
+                    add = -15
                     NOT = {
                         FROM = {
                         is_neighbor_of = ROOT                            
@@ -715,58 +710,395 @@ AND = {
 				}
 			}			
         }
- 		ai_desire = {			            
-	
-		    base = 0
-		    modifier = {
-			    ROOT = {
-                    check_variable = { waiting_for_response = 0 }
+ 	ai_desire = {
+    base = 10 
 
-                    }
-			    tag = FROM
-                NOT = {
-                    has_war = yes
-                    has_capitulated = yes
-                }
-                OR = {
-                    AND = {
-                            NOT = {
-                              has_idea = sov_economic_help
-                              has_idea = rus_economic_help
-                              has_idea = usa_economic_help
-                              has_idea = eng_economic_help
-                              has_idea = ger_economic_help
-                              has_idea = jap_economic_help
-                              has_idea = prc_economic_help
-                              has_idea = ita_economic_help
-                              has_idea = ott_economic_help
-                              has_idea = fra_economic_help
-                              has_idea = spr_economic_help
-                              has_idea = spa_economic_help
-                              has_idea = auh_economic_help
-                              has_idea = chi_economic_help
-                            }
-                            is_ai = no                
-                    }
-                    is_ai = yes
-                }
-                OR = {
-                    is_puppet_of = ROOT
-                    is_subject_of = ROOT
-                    has_idea = superstate_size1
-                    has_idea = superstate_size2 
-                    has_idea = superstate_size3
-                    has_stability < 0.2
-                    is_guaranteed_by = ROOT
-					is_neighbor_of = ROOT              
-                    has_opinion = {
-                        target = ROOT
-                        value > 30
-                    }
-                                  
-		        }
-			    add = 100
-	        }
+    
+    # Must be a major power to use this
+    modifier = {
+        add = 50
+        ROOT = {
+            is_major = yes
+            NOT = { has_war = yes }
+            NOT = { has_variable = waiting_for_response }
         }
+        FROM = {
+            is_major = no
+            is_subject = no
+            is_puppet = no
+            NOT = { has_war_with = ROOT }
+        }
+    }
+
+    # ============ STRATEGIC VALUE ============
+    
+    # Neighbor - high priority
+    modifier = {
+        add = 30
+        FROM = { is_neighbor_of = ROOT }
+    }
+
+    # Has resources we want
+    modifier = {
+        add = 15
+        FROM = {
+            any_owned_state = {
+                OR = {
+                    has_resources_amount = { resource = oil amount > 10 }
+                    has_resources_amount = { resource = rubber amount > 10 }
+                    has_resources_amount = { resource = tungsten amount > 10 }
+                    has_resources_amount = { resource = chromium amount > 10 }
+                }
+            }
+        }
+    }
+
+    # Industrial value
+    modifier = {
+        add = 10
+        FROM = { num_of_factories > 15 }
+    }
+    modifier = {
+        add = 10
+        FROM = { num_of_factories > 30 }
+    }
+
+    
+    # Same ideology - less reason to intervene aggressively
+    modifier = {
+        add = -20
+        ROOT = { has_government = FROM }
+    }
+
+    # Different ideology - more reason to intervene
+    modifier = {
+        add = 20
+        NOT = { ROOT = { has_government = FROM } }
+    }
+
+    # Fascist AI more aggressive
+    modifier = {
+        add = 25
+        ROOT = { has_government = fascism }
+    }
+
+    # Communist AI - spread the revolution
+    modifier = {
+        add = 20
+        ROOT = { has_government = communism }
+        FROM = { NOT = { has_government = communism } }
+    }
+
+    # Democratic AI - less aggressive overall
+    modifier = {
+        add = -15
+        ROOT = { has_government = democratic }
+    }
+
+    
+    # Target is weak
+    modifier = {
+        add = 20
+        FROM = {
+            OR = {
+                has_idea = superstate_size1
+                has_idea = superstate_size2
+                has_idea = superstate_size3
+            }
+        }
+    }
+
+    # Target has low stability - easy pickings
+    modifier = {
+        add = 25
+        FROM = { has_stability < 0.3 }
+    }
+    modifier = {
+        add = 15
+        FROM = { has_stability < 0.5 }
+    }
+
+    # Target has low war support
+    modifier = {
+        add = 15
+        FROM = { has_war_support < 0.3 }
+    }
+
+    # Target is at war (distracted)
+    modifier = {
+        add = 20
+        FROM = { has_war = yes }
+    }
+
+    # We are much stronger
+    modifier = {
+        add = 25
+        ROOT = {
+            strength_ratio = { tag = FROM ratio > 3.0 }
+        }
+    }
+    modifier = {
+        add = 15
+        ROOT = {
+            strength_ratio = { tag = FROM ratio > 2.0 }
+        }
+    }
+
+
+    modifier = {
+        add = 40
+        OR = {
+            AND = { ROOT = { tag = USA } FROM = { has_idea = usa_economic_help } }
+            AND = { ROOT = { tag = SOV } FROM = { has_idea = sov_economic_help } }
+            AND = { ROOT = { tag = RUS } FROM = { has_idea = rus_economic_help } }
+            AND = { ROOT = { tag = ENG } FROM = { has_idea = eng_economic_help } }
+            AND = { ROOT = { tag = GER } FROM = { has_idea = ger_economic_help } }
+            AND = { ROOT = { tag = JAP } FROM = { has_idea = jap_economic_help } }
+            AND = { ROOT = { tag = ITA } FROM = { has_idea = ita_economic_help } }
+            AND = { ROOT = { tag = OTT } FROM = { has_idea = ott_economic_help } }
+            AND = { ROOT = { tag = FRA } FROM = { has_idea = fra_economic_help } }
+            AND = { ROOT = { tag = SPR } FROM = { has_idea = spr_economic_help } }
+            AND = { ROOT = { tag = SPA } FROM = { has_idea = spa_economic_help } }
+            AND = { ROOT = { tag = AUH } FROM = { has_idea = auh_economic_help } }
+            AND = { ROOT = { tag = CHI } FROM = { has_idea = chi_economic_help } }
+            AND = { ROOT = { tag = PRC } FROM = { has_idea = prc_economic_help } }
+        }
+    }
+
+    # Target is in RIVAL sphere - challenge them
+    modifier = {
+        add = 30
+        FROM = {
+            OR = {
+                has_idea = usa_economic_help
+                has_idea = sov_economic_help
+                has_idea = rus_economic_help
+                has_idea = eng_economic_help
+                has_idea = ger_economic_help
+                has_idea = jap_economic_help
+                has_idea = ita_economic_help
+                has_idea = ott_economic_help
+                has_idea = fra_economic_help
+                has_idea = spr_economic_help
+                has_idea = spa_economic_help
+                has_idea = auh_economic_help
+                has_idea = chi_economic_help
+                has_idea = prc_economic_help
+            }
+        }
+        NOT = {
+            OR = {
+                AND = { ROOT = { tag = USA } FROM = { has_idea = usa_economic_help } }
+                AND = { ROOT = { tag = SOV } FROM = { has_idea = sov_economic_help } }
+                AND = { ROOT = { tag = RUS } FROM = { has_idea = rus_economic_help } }
+                AND = { ROOT = { tag = ENG } FROM = { has_idea = eng_economic_help } }
+                AND = { ROOT = { tag = GER } FROM = { has_idea = ger_economic_help } }
+                AND = { ROOT = { tag = JAP } FROM = { has_idea = jap_economic_help } }
+                AND = { ROOT = { tag = ITA } FROM = { has_idea = ita_economic_help } }
+                AND = { ROOT = { tag = OTT } FROM = { has_idea = ott_economic_help } }
+                AND = { ROOT = { tag = FRA } FROM = { has_idea = fra_economic_help } }
+                AND = { ROOT = { tag = SPR } FROM = { has_idea = spr_economic_help } }
+                AND = { ROOT = { tag = SPA } FROM = { has_idea = spa_economic_help } }
+                AND = { ROOT = { tag = AUH } FROM = { has_idea = auh_economic_help } }
+                AND = { ROOT = { tag = CHI } FROM = { has_idea = chi_economic_help } }
+                AND = { ROOT = { tag = PRC } FROM = { has_idea = prc_economic_help } }
+            }
+        }
+    }
+
+    # Target has our influence flag
+    modifier = {
+        add = 25
+        OR = {
+            AND = { ROOT = { tag = USA } FROM = { has_country_flag = USA_influnced } }
+            AND = { ROOT = { tag = RUS } FROM = { has_country_flag = RUS_influnced } }
+            AND = { ROOT = { tag = SOV } FROM = { has_country_flag = SOV_influnced } }
+            AND = { ROOT = { tag = ENG } FROM = { has_country_flag = ENG_influnced } }
+            AND = { ROOT = { tag = GER } FROM = { has_country_flag = GER_influnced } }
+            AND = { ROOT = { tag = JAP } FROM = { has_country_flag = JAP_influnced } }
+            AND = { ROOT = { tag = ITA } FROM = { has_country_flag = ITA_influnced } }
+            AND = { ROOT = { tag = OTT } FROM = { has_country_flag = OTT_influnced } }
+            AND = { ROOT = { tag = FRA } FROM = { has_country_flag = FRA_influnced } }
+            AND = { ROOT = { tag = SPR } FROM = { has_country_flag = SPR_influnced } }
+            AND = { ROOT = { tag = SPA } FROM = { has_country_flag = SPA_influnced } }
+            AND = { ROOT = { tag = AUH } FROM = { has_country_flag = AUH_influnced } }
+            AND = { ROOT = { tag = CHI } FROM = { has_country_flag = CHI_influnced } }
+        }
+    }
+
+    
+    # Good relations - less likely to intervene
+    modifier = {
+        add = -30
+        FROM = {
+            has_opinion = { target = ROOT value > 50 }
+        }
+    }
+
+    # Bad relations - more likely
+    modifier = {
+        add = 20
+        FROM = {
+            has_opinion = { target = ROOT value < 0 }
+        }
+    }
+    modifier = {
+        add = 20
+        FROM = {
+            has_opinion = { target = ROOT value < -50 }
+        }
+    }
+
+    # In same faction - don't intervene
+    modifier = {
+        add = -100
+        FROM = { is_in_faction_with = ROOT }
+    }
+
+    # We guarantee them - less aggressive
+    modifier = {
+        add = -20
+        ROOT = { is_guaranteeing = FROM }
+    }
+
+    # Is our puppet/subject - no need
+    modifier = {
+        add = -100
+        FROM = {
+            OR = {
+                is_puppet_of = ROOT
+                is_subject_of = ROOT
+            }
+        }
+    }
+
+    
+    # Different continent - less interest
+    modifier = {
+        add = -25
+        NOT = { FROM = { is_neighbor_of = ROOT } }
+        OR = {
+            AND = {
+                ROOT = { capital_scope = { is_on_continent = europe } }
+                FROM = { capital_scope = { NOT = { is_on_continent = europe } } }
+            }
+            AND = {
+                ROOT = { capital_scope = { is_on_continent = asia } }
+                FROM = { capital_scope = { NOT = { is_on_continent = asia } } }
+            }
+            AND = {
+                ROOT = { capital_scope = { is_on_continent = north_america } }
+                FROM = { capital_scope = { NOT = { is_on_continent = north_america } } }
+            }
+            AND = {
+                ROOT = { capital_scope = { is_on_continent = south_america } }
+                FROM = { capital_scope = { NOT = { is_on_continent = south_america } } }
+            }
+            AND = {
+                ROOT = { capital_scope = { is_on_continent = africa } }
+                FROM = { capital_scope = { NOT = { is_on_continent = africa } } }
+            }
+        }
+    }
+
+    # ============ PREVENT SPAM ============
+    
+    # Already have crisis with this country
+    modifier = {
+        add = -1000
+        any_of = {
+            array = global.political_active_crisis_list
+            index = i
+            AND = {
+                check_variable = { global.crisis_originators^i = ROOT }
+                check_variable = { global.crisis_receivers^i = FROM }
+            }
+        }
+    }
+
+    # Too many active crises already
+    modifier = {
+        add = -50
+        check_variable = { global.political_active_crisis_list^num > 2 }
+    }
+
+    # Already at war - focus on that
+    modifier = {
+        add = -100
+        ROOT = { has_war = yes }
+    }
+
+    # Low political power - can't afford it
+    modifier = {
+        add = -50
+        ROOT = { political_power < 150 }
+    }
+
+
+    
+    # USA - Monroe Doctrine (Americas priority)
+    modifier = {
+        add = 40
+        ROOT = { tag = USA }
+        FROM = {
+            capital_scope = {
+                OR = {
+                    is_on_continent = north_america
+                    is_on_continent = south_america
+                }
+            }
+        }
+    }
+
+    # Japan - Asia priority
+    modifier = {
+        add = 30
+        ROOT = { tag = JAP }
+        FROM = {
+            capital_scope = { is_on_continent = asia }
+        }
+    }
+
+    # European powers - Europe/Africa priority
+    modifier = {
+        add = 25
+        ROOT = {
+            OR = {
+                tag = ENG
+                tag = FRA
+                tag = GER
+                tag = ITA
+            }
+        }
+        FROM = {
+            capital_scope = {
+                OR = {
+                    is_on_continent = europe
+                    is_on_continent = africa
+                }
+            }
+        }
+    }
+
+    # Russia/Soviet - Eurasia priority
+    modifier = {
+        add = 30
+        ROOT = {
+            OR = {
+                tag = RUS
+                tag = SOV
+            }
+        }
+        FROM = {
+            capital_scope = {
+                OR = {
+                    is_on_continent = europe
+                    is_on_continent = asia
+                }
+            }
+        }
+    }
+}
+    
     }
 }
