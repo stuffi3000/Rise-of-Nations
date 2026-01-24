@@ -1367,75 +1367,137 @@ RON_initiate_claim_crisis = {
     # Calculate initial strength
     set_temp_variable = { crisis_index = new_index }
     RON_calculate_crisis_strength = yes
-    RON_update_crisis_gui_values = yes
+
 
     RON_diplo_crisis_warn = yes
 }
 RON_end_crisis = {
     custom_effect_tooltip = RON_end_crisis_tt
-
-    # Find the index of this crisis in the main array
+    
+    # Find the index of this crisis
     set_temp_variable = { found_index = -1 }
-    set_temp_variable = { search_index = 0 }
     
     for_each_loop = {
         array = global.political_crisis_list_array
+        
         if = {
-            limit = { 
-                check_variable = { v = crisis_id }
-                check_variable = { found_index = -1 }
+            limit = {
+                check_variable = { global.political_crisis_list_array^i = crisis_id }
             }
-            set_temp_variable = { found_index = search_index }
+            set_temp_variable = { found_index = i }
         }
-        add_to_temp_variable = { search_index = 1 }
     }
     
-    # Only proceed if we found the crisis
+    # Only remove if found
     if = {
-        limit = { check_variable = { found_index >= 0 } }
-        
-        # Clear backer country flags
-        for_each_loop = {
-            array = global.crisis_originator_backers^found_index
-            var:v = {
-                clr_country_flag = backing_originator_side
-            }
-        }
-        for_each_loop = {
-            array = global.crisis_receiver_backers^found_index
-            var:v = {
-                clr_country_flag = backing_receiver_side
-            }
+        limit = {
+            check_variable = { found_index > -1 }
         }
         
-        # Clear backer arrays
-        clear_array = global.crisis_originator_backers^found_index
-        clear_array = global.crisis_receiver_backers^found_index
+        # Clear visual gridboxes
+        clear_gridbox = political_crisis
+        clear_gridbox = originator_flag
+        clear_gridbox = receiver_flag
         
-        # Reset indexed variables to 0
-        set_variable = { global.crisis_originator_strength^found_index = 0 }
-        set_variable = { global.crisis_receiver_strength^found_index = 0 }
-        set_variable = { global.crisis_strength_ratio^found_index = 0 }
-        set_variable = { global.crisis_target_state^found_index = 0 }
-        set_variable = { global.crisis_progress^found_index = 0 }
-        set_variable = { global.crisis_stage^found_index = 0 }
+        # Create temporary arrays
+        clear_array = global.temp_crisis_list
+        clear_array = global.temp_originators
+        clear_array = global.temp_receivers
+        clear_array = global.temp_progress
+        clear_array = global.temp_stage
+        clear_array = global.temp_active
         
-        # Remove from parallel arrays BY INDEX (this is critical!)
-        remove_from_array = { array = global.crisis_originators index = found_index }
-        remove_from_array = { array = global.crisis_receivers index = found_index }
-        remove_from_array = { array = global.political_crisis_list_array index = found_index }
+        # Copy all EXCEPT the one we want to remove
+        for_each_loop = {
+            array = global.political_crisis_list_array
+            
+            if = {
+                limit = {
+                    NOT = { check_variable = { i = found_index } }
+                }
+                add_to_array = { global.temp_crisis_list = global.political_crisis_list_array^i }
+                add_to_array = { global.temp_originators = global.crisis_originators^i }
+                add_to_array = { global.temp_receivers = global.crisis_receivers^i }
+                add_to_array = { global.temp_progress = global.crisis_progress^i }
+                add_to_array = { global.temp_stage = global.crisis_stage^i }
+            }
+        }
         
-        # Remove from active list by value
-        remove_from_array = { array = global.political_active_crisis_list value = crisis_id }
+        # Also rebuild active list
+        for_each_loop = {
+            array = global.political_active_crisis_list
+            
+            if = {
+                limit = {
+                    NOT = { check_variable = { global.political_active_crisis_list^i = crisis_id } }
+                }
+                add_to_array = { global.temp_active = global.political_active_crisis_list^i }
+            }
+        }
+        
+        # Clear original arrays
+        clear_array = global.political_crisis_list_array
+        clear_array = global.crisis_originators
+        clear_array = global.crisis_receivers
+        clear_array = global.crisis_progress
+        clear_array = global.crisis_stage
+        clear_array = global.political_active_crisis_list
+        
+        # Copy back from temp
+        for_each_loop = {
+            array = global.temp_crisis_list
+            
+            add_to_array = { global.political_crisis_list_array = global.temp_crisis_list^i }
+            add_to_array = { global.crisis_originators = global.temp_originators^i }
+            add_to_array = { global.crisis_receivers = global.temp_receivers^i }
+            add_to_array = { global.crisis_progress = global.temp_progress^i }
+            add_to_array = { global.crisis_stage = global.temp_stage^i }
+        }
+        
+        for_each_loop = {
+            array = global.temp_active
+            
+            add_to_array = { global.political_active_crisis_list = global.temp_active^i }
+        }
+        
+        # Clear temp arrays
+        clear_array = global.temp_crisis_list
+        clear_array = global.temp_originators
+        clear_array = global.temp_receivers
+        clear_array = global.temp_progress
+        clear_array = global.temp_stage
+        clear_array = global.temp_active
+        
+        # Rebuild UI (if needed)
+        for_each_loop = {
+            array = global.political_crisis_list_array
+            
+            add_to_gridbox = {
+                name = political_crisis
+                element = political_crisis_entry
+            }
+            
+            var:global.crisis_originators^i = {
+                add_to_gridbox = {
+                    name = originator_flag
+                    element = originator_flag_entry
+                }
+            }
+            
+            var:global.crisis_receivers^i = {
+                add_to_gridbox = {
+                    name = receiver_flag
+                    element = receiver_flag_entry
+                }
+            }
+        }
     }
 }
-
 RON_update_crisis_gui_values = {
     set_temp_variable = { loop_index = 0 }
     for_each_loop = {
         array = global.political_active_crisis_list
         
-        # Calculate strength ratio for the comparison bar (0-100, 50 = even)
         set_temp_variable = { orig = global.crisis_originator_strength^loop_index }
         set_temp_variable = { recv = global.crisis_receiver_strength^loop_index }
         set_temp_variable = { total = orig }

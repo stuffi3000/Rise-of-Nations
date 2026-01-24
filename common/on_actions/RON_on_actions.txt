@@ -382,36 +382,43 @@ on_actions = {
 			}
 		}
 	}	
-	# country 
 	on_daily = {
-		effect = {
+    effect = {
+        clear_array = global.crisis_to_remove
+        
         for_each_loop = {
-                array = global.political_active_crisis_list
-set_temp_variable = { crisis_index = i }
-                    if = {
+            array = global.political_active_crisis_list
+            
+            set_temp_variable = { crisis_index = i }
+            
+            clamp_variable = {
+                var = global.crisis_progress^i
+                max = 100
+                min = 0 
+            }
+            
+            if = {
                 limit = {
                     check_variable = { global.crisis_progress^i > 70 }
                 }
                 RON_check_crisis_backdown = yes
             }
+            
             RON_calculate_crisis_strength = yes
-			if = {
-                    limit = {
-                        check_variable = { global.crisis_progress^i < 1 }
-                    }
-
-                    set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
-                    RON_end_crisis = yes
-                }                            
+            
+            if = {
+                limit = {
+                    check_variable = { global.crisis_progress^i < 1 }
+                }
+                add_to_array = { global.crisis_to_remove = global.political_crisis_list_array^i }
+            }
+            else = {
                 if = {
                     limit = {
-                        check_variable = { global.crisis_stage^i = 0 }
                         check_variable = { global.crisis_progress^i < 20 }
                     }
                     add_to_variable = { global.crisis_progress^i = 0.001 }
                 }
-    
-
                 else_if = {
                     limit = {
                         check_variable = { global.crisis_stage^i = 1 }
@@ -419,8 +426,6 @@ set_temp_variable = { crisis_index = i }
                     }
                     add_to_variable = { global.crisis_progress^i = 0.001 }
                 }
-                
-
                 else_if = {
                     limit = {
                         check_variable = { global.crisis_stage^i = 2 }
@@ -428,105 +433,96 @@ set_temp_variable = { crisis_index = i }
                     }
                     add_to_variable = { global.crisis_progress^i = 0.001 }
                 }
-                
-
-                clamp_variable = {
-                    var = global.crisis_progress^i
-                    max = 100
-					min = 0 
-                }
             }
-			update_all_pop  = yes
-			add_to_variable = { spam_cooldownusa = 1 }
-			subtract_from_variable = { UNcooldownunvotecountry = 1 }
-			clamp_variable = {
-				var = UNcooldownunvotecountry
-				min = 0
-			}
-			update_wounded_veterians = yes
+        }
+        
+        for_each_loop = {
+            array = global.crisis_to_remove
+            
+            set_temp_variable = { crisis_id = v }
+            RON_end_crisis = yes
+        }
+        
+        clear_array = global.crisis_to_remove
+        
+        update_all_pop = yes
+        add_to_variable = { spam_cooldownusa = 1 }
+        subtract_from_variable = { UNcooldownunvotecountry = 1 }
+        clamp_variable = {
+            var = UNcooldownunvotecountry
+            min = 0
+        }
+        update_wounded_veterians = yes
 
-			# Wery inefficient but it is how it is
-			# ERA CHANGES
-			if = {
-				limit = {
-					date > 1909.12.31
-					date < 1910.1.3
-					NOT = {
-						has_global_flag = ww1_loaded
-					}
-				}
-				set_global_flag = ww1_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-			if = {
-				limit = {
-					date > 1918.12.31
-					date < 1919.1.3
-					NOT = {
-						has_global_flag = interwar_loaded
-					}
-				}
-				set_global_flag = interwar_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-			if = {
-				limit = {
-					date > 1932.12.31
-					date < 1933.1.3
-					NOT = {
-						has_global_flag = ww2_loaded
-					}
-				}
-				set_global_flag = ww2_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-			if = {
-				limit = {
-					date > 1948.12.31
-					date < 1949.1.3
-					NOT = {
-						has_global_flag = cold_war_loaded
-					}
-				}
-				set_global_flag = cold_war_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-			if = {
-				limit = {
-					date > 1979.12.31
-					date < 1980.1.3
-					NOT = {
-						has_global_flag = late_cold_war_loaded
-					}
-				}
-				set_global_flag = late_cold_war_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-			if = {
-				limit = {
-					date > 1999.12.31
-					date < 2000.1.3
-					NOT = {
-						has_global_flag = modern_day_loaded
-					}
-				}
-				set_global_flag = modern_day_loaded
-				random_country = {
-					country_event = change_era.1
-				}
-			}
-		}
-	}
+        # ERA CHANGES
+        if = {
+            limit = {
+                date > 1909.12.31
+                date < 1910.1.3
+                NOT = { has_global_flag = ww1_loaded }
+            }
+            set_global_flag = ww1_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+        if = {
+            limit = {
+                date > 1918.12.31
+                date < 1919.1.3
+                NOT = { has_global_flag = interwar_loaded }
+            }
+            set_global_flag = interwar_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+        if = {
+            limit = {
+                date > 1932.12.31
+                date < 1933.1.3
+                NOT = { has_global_flag = ww2_loaded }
+            }
+            set_global_flag = ww2_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+        if = {
+            limit = {
+                date > 1948.12.31
+                date < 1949.1.3
+                NOT = { has_global_flag = cold_war_loaded }
+            }
+            set_global_flag = cold_war_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+        if = {
+            limit = {
+                date > 1979.12.31
+                date < 1980.1.3
+                NOT = { has_global_flag = late_cold_war_loaded }
+            }
+            set_global_flag = late_cold_war_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+        if = {
+            limit = {
+                date > 1999.12.31
+                date < 2000.1.3
+                NOT = { has_global_flag = modern_day_loaded }
+            }
+            set_global_flag = modern_day_loaded
+            random_country = {
+                country_event = change_era.1
+            }
+        }
+    }
+}
 	on_daily_QIN = {
 		effect = {
 	
@@ -918,7 +914,7 @@ if = {
 			}
 	 	}
 	}
-
+	}
 	on_uncapitulation = {
 		effect = {
 
@@ -1158,5 +1154,4 @@ if = {
 			}
 		}
 	}
-}
 }
