@@ -1,492 +1,492 @@
 diplomatic_crisis_category = {
 
-    start_claim_crisis_against_FROM = {
-        icon = GFX_decision_generic_nationalism
-        
-        target_trigger = {
-            FROM = {
-                NOT = { tag = ROOT }
-                exists = yes
-                NOT = { has_war_with = ROOT }
-                OR = {
-                    any_owned_state = { is_core_of = ROOT }
-                    any_owned_state = { is_claimed_by = ROOT }
-                    ROOT = { any_owned_state = { is_core_of = FROM } }
-                }
-            }
-        }
-        
-        visible = {
-            NOT = { has_war_with = FROM }
-            # Not already in a crisis with them (either direction)
-            NOT = {
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    OR = {
-                        AND = {
-                            check_variable = { global.crisis_originators^i = ROOT }
-                            check_variable = { global.crisis_receivers^i = FROM }
-                        }
-                        AND = {
-                            check_variable = { global.crisis_originators^i = FROM }
-                            check_variable = { global.crisis_receivers^i = ROOT }
-                        }
-                    }
-                }
-            }
-        }
-        
-        available = {
-            OR = {
-                FROM = { any_owned_state = { is_core_of = ROOT } }
-                FROM = { any_owned_state = { is_claimed_by = ROOT } }
-            }
+	start_claim_crisis_against_FROM = {
+		icon = GFX_decision_generic_nationalism
+		
+		target_trigger = {
+			FROM = {
+				NOT = { tag = ROOT }
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				OR = {
+					any_owned_state = { is_core_of = ROOT }
+					any_owned_state = { is_claimed_by = ROOT }
+					ROOT = { any_owned_state = { is_core_of = FROM } }
+				}
+			}
+		}
+		
+		visible = {
+			NOT = { has_war_with = FROM }
+			# Not already in a crisis with them (either direction)
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					OR = {
+						AND = {
+							check_variable = { global.crisis_originators^i = ROOT }
+							check_variable = { global.crisis_receivers^i = FROM }
+						}
+						AND = {
+							check_variable = { global.crisis_originators^i = FROM }
+							check_variable = { global.crisis_receivers^i = ROOT }
+						}
+					}
+				}
+			}
+		}
+		
+		available = {
+			OR = {
+				FROM = { any_owned_state = { is_core_of = ROOT } }
+				FROM = { any_owned_state = { is_claimed_by = ROOT } }
+			}
 			country_exists = FROM 
-            NOT = { has_non_aggression_pact_with = FROM }
-            NOT = { is_in_faction_with = FROM }
-            has_war = no
-        }
-        
-        cost = 75
-        
-        ai_will_do = {
-            base = 15
-            modifier = {
-                add = 40
-                FROM = { any_owned_state = { is_core_of = ROOT } }
-            }
-            modifier = {
-                add = 20
-                FROM = { any_owned_state = { is_claimed_by = ROOT } }
-            }
-            modifier = {
-                factor = 0.3
-                FROM = { is_major = yes }
-            }
-            modifier = {
-                add = 25
-                strength_ratio = { tag = FROM ratio > 1.5 }
-            }
-            modifier = {
-                factor = 0.5
-                strength_ratio = { tag = FROM ratio < 0.8 }
-            }
-        }
-        
-        complete_effect = {
-            set_temp_variable = { originator = ROOT }
-            set_temp_variable = { defender = FROM }
-            set_temp_variable = { progress = 10 }
-            
-            random_state = {
-                limit = {
-                    is_owned_by = FROM
-                    is_core_of = ROOT
-                }
-                set_temp_variable = { target_state = THIS.id }
-            }
-            if = {
-                limit = { NOT = { has_temp_variable = target_state } }
-                random_state = {
-                    limit = {
-                        is_owned_by = FROM
-                        is_claimed_by = ROOT
-                    }
-                    set_temp_variable = { target_state = THIS.id }
-                }
-            }
-            
-            RON_initiate_claim_crisis = yes
-        }
-    }
-    back_aggressor_in_crisis_FROM = {
-        icon = GFX_decision_generic_military
-        target_array = global.crisis_originators
-        
-        visible = {
-            NOT = { is_in_array = { global.crisis_originators = ROOT } }
-            NOT = { is_in_array = { global.crisis_receivers = ROOT } }
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { is_in_faction_with = FROM }
+			has_war = no
+		}
+		
+		cost = 75
+		
+		ai_will_do = {
+			base = 15
+			modifier = {
+				add = 40
+				FROM = { any_owned_state = { is_core_of = ROOT } }
+			}
+			modifier = {
+				add = 20
+				FROM = { any_owned_state = { is_claimed_by = ROOT } }
+			}
+			modifier = {
+				factor = 0.3
+				FROM = { is_major = yes }
+			}
+			modifier = {
+				add = 25
+				strength_ratio = { tag = FROM ratio > 1.5 }
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = { tag = FROM ratio < 0.8 }
+			}
+		}
+		
+		complete_effect = {
+			set_temp_variable = { originator = ROOT }
+			set_temp_variable = { defender = FROM }
+			set_temp_variable = { progress = 10 }
+			
+			random_state = {
+				limit = {
+					is_owned_by = FROM
+					is_core_of = ROOT
+				}
+				set_temp_variable = { target_state = THIS.id }
+			}
+			if = {
+				limit = { NOT = { has_temp_variable = target_state } }
+				random_state = {
+					limit = {
+						is_owned_by = FROM
+						is_claimed_by = ROOT
+					}
+					set_temp_variable = { target_state = THIS.id }
+				}
+			}
+			
+			RON_initiate_claim_crisis = yes
+		}
+	}
+	back_aggressor_in_crisis_FROM = {
+		icon = GFX_decision_generic_military
+		target_array = global.crisis_originators
+		
+		visible = {
+			NOT = { is_in_array = { global.crisis_originators = ROOT } }
+			NOT = { is_in_array = { global.crisis_receivers = ROOT } }
 			is_major = yes 
-            NOT = {
+			NOT = {
 				tag = FROM 
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_originators^i = FROM }
-                        OR = {
-                            is_in_array = { global.crisis_originator_backers^i = ROOT }
-                            is_in_array = { global.crisis_receiver_backers^i = ROOT }
-                        }
-                    }
-                }
-            }
-        }
-        
-        available = {
-            has_war = no
-            political_power > 20
-            NOT = {
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_originators^i = FROM }
-                        is_in_faction_with = var:global.crisis_receivers^i
-                    }
-                }
-            }
-        }
-        
-        cost = 25
-        
-        ai_will_do = {
-            base = 5
-            modifier = { add = 25 has_government = FROM }
-            modifier = { add = 40 is_in_faction_with = FROM }
-            modifier = { add = 30 is_guaranteeing = FROM }
-            modifier = { add = 15 has_government = fascism }
-            modifier = { factor = 0.5 has_government = democratic }
-        }
-        
-        complete_effect = {
-            # Find the crisis index where FROM is the originator
-            set_temp_variable = { found = 0 }
-            set_temp_variable = { idx = 0 }
-            for_each_loop = {
-                array = global.political_crisis_list_array
-                if = {
-                    limit = { 
-                        check_variable = { global.crisis_originators^idx = FROM }
-                        check_variable = { found = 0 }
-                    }
-                    set_temp_variable = { crisis_index = idx }
-                    set_temp_variable = { backing_side = 1 }
-                    set_temp_variable = { found = 1 }
-                }
-                add_to_temp_variable = { idx = 1 }
-            }
-            
-            if = {
-                limit = { check_variable = { found = 1 } }
-                RON_join_crisis_as_backer = yes
-                custom_effect_tooltip = backing_aggressor_tt
-                FROM = { country_event = { id = crisis_backing.1 days = 1 } }
-            }
-        }
-    }
-        back_defender_in_crisis_FROM = {
-        icon = GFX_decision_generic_prepare_civil_war
-        target_array = global.crisis_receivers
-        
-        visible = {
-            NOT = { is_in_array = { global.crisis_originators = ROOT } }
-            NOT = { is_in_array = { global.crisis_receivers = ROOT } }
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = FROM }
+						OR = {
+							is_in_array = { global.crisis_originator_backers^i = ROOT }
+							is_in_array = { global.crisis_receiver_backers^i = ROOT }
+						}
+					}
+				}
+			}
+		}
+		
+		available = {
+			has_war = no
+			political_power > 20
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = FROM }
+						is_in_faction_with = var:global.crisis_receivers^i
+					}
+				}
+			}
+		}
+		
+		cost = 25
+		
+		ai_will_do = {
+			base = 5
+			modifier = { add = 25 has_government = FROM }
+			modifier = { add = 40 is_in_faction_with = FROM }
+			modifier = { add = 30 is_guaranteeing = FROM }
+			modifier = { add = 15 has_government = fascism }
+			modifier = { factor = 0.5 has_government = democratic }
+		}
+		
+		complete_effect = {
+			# Find the crisis index where FROM is the originator
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = { 
+						check_variable = { global.crisis_originators^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_index = idx }
+					set_temp_variable = { backing_side = 1 }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				RON_join_crisis_as_backer = yes
+				custom_effect_tooltip = backing_aggressor_tt
+				FROM = { country_event = { id = crisis_backing.1 days = 1 } }
+			}
+		}
+	}
+		back_defender_in_crisis_FROM = {
+		icon = GFX_decision_generic_prepare_civil_war
+		target_array = global.crisis_receivers
+		
+		visible = {
+			NOT = { is_in_array = { global.crisis_originators = ROOT } }
+			NOT = { is_in_array = { global.crisis_receivers = ROOT } }
 			is_major = yes
-            NOT = {
+			NOT = {
 				tag = FROM
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_receivers^i = FROM }
-                        OR = {
-                            is_in_array = { global.crisis_originator_backers^i = ROOT }
-                            is_in_array = { global.crisis_receiver_backers^i = ROOT }
-                        }
-                    }
-                }
-            }
-        }
-        
-        available = {
-            has_war = no
-            political_power > 20
-            NOT = {
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_receivers^i = FROM }
-                        is_in_faction_with = var:global.crisis_originators^i
-                    }
-                }
-            }
-        }
-        
-        cost = 25
-        
-        ai_will_do = {
-            base = 10
-            modifier = { add = 25 has_government = FROM }
-            modifier = { add = 50 is_in_faction_with = FROM }
-            modifier = { add = 60 is_guaranteeing = FROM }
-            modifier = { add = 20 has_government = democratic }
-        }
-        
-        complete_effect = {
-            set_temp_variable = { found = 0 }
-            set_temp_variable = { idx = 0 }
-            for_each_loop = {
-                array = global.political_crisis_list_array
-                if = {
-                    limit = { 
-                        check_variable = { global.crisis_receivers^idx = FROM }
-                        check_variable = { found = 0 }
-                    }
-                    set_temp_variable = { crisis_index = idx }
-                    set_temp_variable = { backing_side = 2 }
-                    set_temp_variable = { found = 1 }
-                }
-                add_to_temp_variable = { idx = 1 }
-            }
-            
-            if = {
-                limit = { check_variable = { found = 1 } }
-                RON_join_crisis_as_backer = yes
-                custom_effect_tooltip = backing_defender_tt
-                FROM = { country_event = { id = crisis_backing.2 days = 1 } }
-            }
-        }
-    }
-    withdraw_backing_from_crisis = {
-        icon = GFX_decision_generic_civil_support
-        
-        visible = {
-            OR = {
-                has_country_flag = backing_originator_side
-                has_country_flag = backing_receiver_side
-            }
-        }
-        
-        available = {
-            always = yes
-        }
-        
-        cost = 10
-        
-        ai_will_do = {
-            base = 0
-            modifier = { add = 50 has_war = yes }
-            modifier = { add = 30 has_stability < 0.3 }
-        }
-        
-        complete_effect = {
-            set_temp_variable = { idx = 0 }
-            for_each_loop = {
-                array = global.political_crisis_list_array
-                # Remove from originator backers
-                if = {
-                    limit = { is_in_array = { global.crisis_originator_backers^idx = ROOT } }
-                    remove_from_array = { array = global.crisis_originator_backers^idx value = ROOT }
-                }
-                # Remove from receiver backers
-                if = {
-                    limit = { is_in_array = { global.crisis_receiver_backers^idx = ROOT } }
-                    remove_from_array = { array = global.crisis_receiver_backers^idx value = ROOT }
-                }
-                add_to_temp_variable = { idx = 1 }
-            }
-            
-            clr_country_flag = backing_originator_side
-            clr_country_flag = backing_receiver_side
-            
-            add_political_power = -25
-            add_war_support = -0.05
-            
-            custom_effect_tooltip = withdraw_backing_tt
-        }
-    }
-    back_down_from_crisis_FROM = {
-        icon = GFX_decision_generic_civil_support
-        target_array = global.crisis_receivers
-        
-        visible = {
-            is_in_array = { global.crisis_originators = ROOT }
-            any_of = {
-                array = global.political_crisis_list_array
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                }
-            }
-        }
-        
-        ai_will_do = {
-            base = 0
-            modifier = {
-                add = 100
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_originators^i = ROOT }
-                        check_variable = { global.crisis_receivers^i = FROM }
-                        check_variable = { global.crisis_originator_strength^i > 0 }
-                        check_variable = { global.crisis_receiver_strength^i > 0 }
-                        # Check if severely outmatched
-                        check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
-                    }
-                }
-            }
-        }
-        
-        complete_effect = {
-            set_temp_variable = { found = 0 }
-            set_temp_variable = { idx = 0 }
-            for_each_loop = {
-                array = global.political_crisis_list_array
-                if = {
-                    limit = {
-                        check_variable = { global.crisis_originators^idx = ROOT }
-                        check_variable = { global.crisis_receivers^idx = FROM }
-                        check_variable = { found = 0 }
-                    }
-                    set_temp_variable = { crisis_id = global.political_crisis_list_array^idx }
-                    set_temp_variable = { found = 1 }
-                }
-                add_to_temp_variable = { idx = 1 }
-            }
-            
-            if = {
-                limit = { check_variable = { found = 1 } }
-                
-                # Penalty for backing down
-                add_political_power = -75
-                add_war_support = -0.1
-                add_stability = -0.05
-                
-                # Winner gets their cores
-                FROM = {
-                    every_state = {
-                        limit = {
-                            is_core_of = FROM
-                            is_owned_by = ROOT
-                        }
-                        transfer_state_to = FROM
-                    }
-                    add_political_power = 50
-                    add_war_support = 0.05
-                }
-                
-                # End the crisis
-                RON_end_crisis = yes
-            }
-        }
-    }
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_receivers^i = FROM }
+						OR = {
+							is_in_array = { global.crisis_originator_backers^i = ROOT }
+							is_in_array = { global.crisis_receiver_backers^i = ROOT }
+						}
+					}
+				}
+			}
+		}
+		
+		available = {
+			has_war = no
+			political_power > 20
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_receivers^i = FROM }
+						is_in_faction_with = var:global.crisis_originators^i
+					}
+				}
+			}
+		}
+		
+		cost = 25
+		
+		ai_will_do = {
+			base = 10
+			modifier = { add = 25 has_government = FROM }
+			modifier = { add = 50 is_in_faction_with = FROM }
+			modifier = { add = 60 is_guaranteeing = FROM }
+			modifier = { add = 20 has_government = democratic }
+		}
+		
+		complete_effect = {
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = { 
+						check_variable = { global.crisis_receivers^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_index = idx }
+					set_temp_variable = { backing_side = 2 }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				RON_join_crisis_as_backer = yes
+				custom_effect_tooltip = backing_defender_tt
+				FROM = { country_event = { id = crisis_backing.2 days = 1 } }
+			}
+		}
+	}
+	withdraw_backing_from_crisis = {
+		icon = GFX_decision_generic_civil_support
+		
+		visible = {
+			OR = {
+				has_country_flag = backing_originator_side
+				has_country_flag = backing_receiver_side
+			}
+		}
+		
+		available = {
+			always = yes
+		}
+		
+		cost = 10
+		
+		ai_will_do = {
+			base = 0
+			modifier = { add = 50 has_war = yes }
+			modifier = { add = 30 has_stability < 0.3 }
+		}
+		
+		complete_effect = {
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				# Remove from originator backers
+				if = {
+					limit = { is_in_array = { global.crisis_originator_backers^idx = ROOT } }
+					remove_from_array = { array = global.crisis_originator_backers^idx value = ROOT }
+				}
+				# Remove from receiver backers
+				if = {
+					limit = { is_in_array = { global.crisis_receiver_backers^idx = ROOT } }
+					remove_from_array = { array = global.crisis_receiver_backers^idx value = ROOT }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			clr_country_flag = backing_originator_side
+			clr_country_flag = backing_receiver_side
+			
+			add_political_power = -25
+			add_war_support = -0.05
+			
+			custom_effect_tooltip = withdraw_backing_tt
+		}
+	}
+	back_down_from_crisis_FROM = {
+		icon = GFX_decision_generic_civil_support
+		target_array = global.crisis_receivers
+		
+		visible = {
+			is_in_array = { global.crisis_originators = ROOT }
+			any_of = {
+				array = global.political_crisis_list_array
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+				}
+			}
+		}
+		
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_originator_strength^i > 0 }
+						check_variable = { global.crisis_receiver_strength^i > 0 }
+						# Check if severely outmatched
+						check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
+					}
+				}
+			}
+		}
+		
+		complete_effect = {
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = {
+						check_variable = { global.crisis_originators^idx = ROOT }
+						check_variable = { global.crisis_receivers^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_id = global.political_crisis_list_array^idx }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				
+				# Penalty for backing down
+				add_political_power = -75
+				add_war_support = -0.1
+				add_stability = -0.05
+				
+				# Winner gets their cores
+				FROM = {
+					every_state = {
+						limit = {
+							is_core_of = FROM
+							is_owned_by = ROOT
+						}
+						transfer_state_to = FROM
+					}
+					add_political_power = 50
+					add_war_support = 0.05
+				}
+				
+				# End the crisis
+				RON_end_crisis = yes
+			}
+		}
+	}
 
-    escalate_crisis_to_war_FROM = {
-        target_array = global.crisis_receivers
-        icon = GFX_decision_generic_ignite_civil_war
-        
-        visible = {
-            is_in_array = { global.crisis_originators = ROOT }
-            any_of = {
-                array = global.political_crisis_list_array
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                    check_variable = { global.crisis_progress^i > 99 }
-                }
-            }
-        }
-        
-        available = {
-            has_war = no
-        }
-        
-        ai_will_do = {
-            base = 30
-            modifier = {
-                add = 50
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_originators^i = ROOT }
-                        check_variable = { global.crisis_receivers^i = FROM }
-                        check_variable = { global.crisis_originator_strength^i > global.crisis_receiver_strength^i }
-                    }
-                }
-            }
-            modifier = {
-                factor = 0.1
-                any_of = {
-                    array = global.political_crisis_list_array
-                    index = i
-                    AND = {
-                        check_variable = { global.crisis_originators^i = ROOT }
-                        check_variable = { global.crisis_receivers^i = FROM }
-                        check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
-                    }
-                }
-            }
-        }
-        
-        war_with_target_on_remove = yes
-        days_remove = 5
-        
-        complete_effect = {
-            # Store crisis info for remove_effect
-            set_temp_variable = { idx = 0 }
-            for_each_loop = {
-                array = global.political_crisis_list_array
-                if = {
-                    limit = {
-                        check_variable = { global.crisis_originators^idx = ROOT }
-                        check_variable = { global.crisis_receivers^idx = FROM }
-                    }
-                    set_variable = { ROOT.escalating_crisis_index = idx }
-                    set_variable = { ROOT.escalating_crisis_id = global.political_crisis_list_array^idx }
-                }
-                add_to_temp_variable = { idx = 1 }
-            }
-        }
-        
-        remove_effect = {
-            set_temp_variable = { crisis_index = ROOT.escalating_crisis_index }
-            set_temp_variable = { crisis_id = ROOT.escalating_crisis_id }
-            
-            # Declare war
-            declare_war_on = {
-                target = FROM
-                type = take_core_state
-                generator = owned_states
-            }
-            
-            # Originator backers join
-            for_each_loop = {
-                array = global.crisis_originator_backers^crisis_index
-                var:v = {
-                    add_to_war = {
-                        targeted_alliance = ROOT
-                        enemy = FROM
-                    }
-                }
-            }
-            
-            # Receiver backers join
-            for_each_loop = {
-                array = global.crisis_receiver_backers^crisis_index
-                var:v = {
-                    add_to_war = {
-                        targeted_alliance = FROM
-                        enemy = ROOT
-                    }
-                }
-            }
-            
-            # Clean up
-            clear_variable = ROOT.escalating_crisis_index
-            clear_variable = ROOT.escalating_crisis_id
-            
-            RON_end_crisis = yes
-        }
-    }
-    
+	escalate_crisis_to_war_FROM = {
+		target_array = global.crisis_receivers
+		icon = GFX_decision_generic_ignite_civil_war
+		
+		visible = {
+			is_in_array = { global.crisis_originators = ROOT }
+			any_of = {
+				array = global.political_crisis_list_array
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+			}
+		}
+		
+		available = {
+			has_war = no
+		}
+		
+		ai_will_do = {
+			base = 30
+			modifier = {
+				add = 50
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_originator_strength^i > global.crisis_receiver_strength^i }
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
+					}
+				}
+			}
+		}
+		
+		war_with_target_on_remove = yes
+		days_remove = 5
+		
+		complete_effect = {
+			# Store crisis info for remove_effect
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = {
+						check_variable = { global.crisis_originators^idx = ROOT }
+						check_variable = { global.crisis_receivers^idx = FROM }
+					}
+					set_variable = { ROOT.escalating_crisis_index = idx }
+					set_variable = { ROOT.escalating_crisis_id = global.political_crisis_list_array^idx }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+		}
+		
+		remove_effect = {
+			set_temp_variable = { crisis_index = ROOT.escalating_crisis_index }
+			set_temp_variable = { crisis_id = ROOT.escalating_crisis_id }
+			
+			# Declare war
+			declare_war_on = {
+				target = FROM
+				type = take_core_state
+				generator = owned_states
+			}
+			
+			# Originator backers join
+			for_each_loop = {
+				array = global.crisis_originator_backers^crisis_index
+				var:v = {
+					add_to_war = {
+						targeted_alliance = ROOT
+						enemy = FROM
+					}
+				}
+			}
+			
+			# Receiver backers join
+			for_each_loop = {
+				array = global.crisis_receiver_backers^crisis_index
+				var:v = {
+					add_to_war = {
+						targeted_alliance = FROM
+						enemy = ROOT
+					}
+				}
+			}
+			
+			# Clean up
+			clear_variable = ROOT.escalating_crisis_index
+			clear_variable = ROOT.escalating_crisis_id
+			
+			RON_end_crisis = yes
+		}
+	}
+	
 
 
 	remove_diplomatic_crisis_test = {
@@ -516,7 +516,7 @@ diplomatic_crisis_category = {
 			clear_array = global.political_active_crisis_list
 			clear_array = global.crisis_progress
 
-			 
+			
 			#set_variable = {
 			#	global.crisis_progress^0 = 0
 			#}
@@ -555,21 +555,21 @@ diplomatic_crisis_category = {
 			
 		}
 	}
-political_crisis_list_add = {
-    visible = { 
-        is_debug = yes
-    }
-    complete_effect = {
-        # Set the variables the script expects
-        set_temp_variable = { originator = GER }
-        set_temp_variable = { defender = FRA }
-        set_temp_variable = { crisis_id = 5 }
-        set_temp_variable = { progress = 10 }
+	political_crisis_list_add = {
+		visible = { 
+			is_debug = yes
+		}
+		complete_effect = {
+			# Set the variables the script expects
+			set_temp_variable = { originator = GER }
+			set_temp_variable = { defender = FRA }
+			set_temp_variable = { crisis_id = 5 }
+			set_temp_variable = { progress = 10 }
 
-        # RUN THE SCRIPT
-        RON_initiate_crisis = yes
-    }
-}
+			# RUN THE SCRIPT
+			RON_initiate_crisis = yes
+		}
+	}
 	political_crisis_list_add2 = {
 		visible = {
 			is_debug = yes
@@ -613,7 +613,7 @@ political_crisis_list_add = {
 			set_temp_variable = { defender = RUS }
 			set_temp_variable = { progress = 80}
 			RON_initiate_crisis = yes
- 
+
 
 			set_temp_variable = { crisis_id = 1} 
 			set_temp_variable = { originator = FRA }
@@ -661,7 +661,7 @@ political_crisis_list_add = {
 	#		#	array = global.political_active_crisis_list
 	#		#	
 	#		#	set_variable = { global.crisis_progress^i = 100 }
-##
+	##
 	#		#}
 	#		set_variable = { global.crisis_progress^0 = 100 }
 	#		#set_variable = { global.crisis_progress^1 = 100 }
@@ -670,124 +670,124 @@ political_crisis_list_add = {
 
 	issue_embargo_against_FROM = {
 		target_array = global.crisis_receivers
-    visible = {
-        is_in_array = { global.crisis_originators = ROOT }
-        
-        any_of = {
-            array = global.political_active_crisis_list
-            index = i
+	visible = {
+		is_in_array = { global.crisis_originators = ROOT }
+		
+		any_of = {
+			array = global.political_active_crisis_list
+			index = i
 
-            AND = {
-                check_variable = { global.crisis_originators^i = ROOT }
-                check_variable = { global.crisis_receivers^i = FROM }
-                check_variable = { global.crisis_progress^i > 19 }
-                check_variable = { global.crisis_stage^i = 0 }  
-            }
-        }
-    }
-    ai_will_do = {
-        base = 10
-        modifier = {
-            add = 2
-            strength_ratio = { tag = FROM ratio > 1.5 }
-        }
-        modifier = {
-            add = 3
-            strength_ratio = { tag = FROM ratio > 2.0 }
-        }
-        modifier = {
-            add = 0.5
-            strength_ratio = { tag = FROM ratio < 0.8 }
-        }
-        modifier = {
-            add = 0.1
-            strength_ratio = { tag = FROM ratio < 0.5 }
-        }
-        modifier = {
-            add = 1.5
-            NOT = { has_government = FROM }
-        }
-        modifier = {
-            add = 2
-            has_claims_on_ROOT = yes
-        }
+			AND = {
+				check_variable = { global.crisis_originators^i = ROOT }
+				check_variable = { global.crisis_receivers^i = FROM }
+				check_variable = { global.crisis_progress^i > 19 }
+				check_variable = { global.crisis_stage^i = 0 }  
+			}
+		}
+	}
+	ai_will_do = {
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
 
-        modifier = {
-            add = 1.5
-            has_opinion = { target = FROM value < 0 }
-        }
-        modifier = {
-            add = 2
-            has_opinion = { target = FROM value < -50 }
-        }
-        modifier = {
-            add = 0
-            is_in_faction_with = FROM
-        }
-        modifier = {
-            add = 0.2
-            has_non_aggression_pact_with = FROM
-        }
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
 
-        modifier = {
-            add = 1.5
-            any_of = {
-                array = global.political_active_crisis_list
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                    check_variable = { global.crisis_progress^i > 40 }
-                }
-            }
-        }
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 0.3
-            has_war = yes
-        }
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
 
-        modifier = {
-            add = 1.5
-            is_major = yes
-        }
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
 
-        modifier = {
-            add = 0.3
-            FROM = {
-                is_puppet = yes
-                overlord = {
-                    strength_ratio = { tag = ROOT ratio > 1.0 }
-                }
-            }
-        }
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 1.5
-            has_government = fascism
-        }
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
 
-        modifier = {
-            add = 0.7
-            has_government = democratic
-        }
-    }
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}
 		complete_effect = {
 			send_embargo = FROM
 			FROM = {
 				send_embargo = ROOT
 			}
-        for_each_loop = {
-            array = global.political_active_crisis_list
-            
-            if = {
-                limit = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                }
-                set_variable = { global.crisis_stage^i = 1 }
-            }
-        }			
+		for_each_loop = {
+			array = global.political_active_crisis_list
+			
+			if = {
+				limit = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+				}
+				set_variable = { global.crisis_stage^i = 1 }
+			}
+		}			
 		}
 	}
 	initiate_border_war_against_FROM = {
@@ -815,93 +815,93 @@ political_crisis_list_add = {
 			NOT = { has_non_aggression_pact_with = FROM }
 			NOT = { FROM = {is_puppet_of = ROOT} }
 		} 
-	    ai_will_do = {
-        base = 40
-        modifier = {
-            add = 2
-            strength_ratio = { tag = FROM ratio > 1.5 }
-        }
-        modifier = {
-            add = 3
-            strength_ratio = { tag = FROM ratio > 2.0 }
-        }
-        modifier = {
-            add = 0.5
-            strength_ratio = { tag = FROM ratio < 0.8 }
-        }
-        modifier = {
-            add = 0.1
-            strength_ratio = { tag = FROM ratio < 0.5 }
-        }
-        modifier = {
-            add = 1.5
-            NOT = { has_government = FROM }
-        }
-        modifier = {
-            add = 2
-            has_claims_on_ROOT = yes
-        }
+		ai_will_do = {
+		base = 40
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
 
-        modifier = {
-            add = 1.5
-            has_opinion = { target = FROM value < 0 }
-        }
-        modifier = {
-            add = 2
-            has_opinion = { target = FROM value < -50 }
-        }
-        modifier = {
-            add = 0
-            is_in_faction_with = FROM
-        }
-        modifier = {
-            add = 0.2
-            has_non_aggression_pact_with = FROM
-        }
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
 
-        modifier = {
-            add = 1.5
-            any_of = {
-                array = global.political_active_crisis_list
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                    check_variable = { global.crisis_progress^i > 40 }
-                }
-            }
-        }
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 0.3
-            has_war = yes
-        }
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
 
-        modifier = {
-            add = 1.5
-            is_major = yes
-        }
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
 
-        modifier = {
-            add = 0.3
-            FROM = {
-                is_puppet = yes
-                overlord = {
-                    strength_ratio = { tag = ROOT ratio > 1.0 }
-                }
-            }
-        }
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 1.5
-            has_government = fascism
-        }
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
 
-        modifier = {
-            add = 0.7
-            has_government = democratic
-        }
-    }
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}
 		visible = {
 			
 			is_in_array = { global.crisis_originators = ROOT }
@@ -951,13 +951,13 @@ political_crisis_list_add = {
 		war_with_target_on_remove = yes
 
 		complete_effect = {
-        if = {
-            limit = {
-                check_variable = { global.crisis_originators^i = ROOT }
-                check_variable = { global.crisis_receivers^i = FROM }
-            }
-            set_variable = { global.crisis_stage^i = 2 }
-        }			
+		if = {
+			limit = {
+				check_variable = { global.crisis_originators^i = ROOT }
+				check_variable = { global.crisis_receivers^i = FROM }
+			}
+			set_variable = { global.crisis_stage^i = 2 }
+		}			
 			hidden_effect = {
 				FROM = {
 					random_owned_controlled_state = {
@@ -1054,100 +1054,100 @@ political_crisis_list_add = {
 				}
 
 			}  
-  
+
 		}
 		available = {
 			NOT = {
 				has_active_mission = congress_timer_mission
 			}
 		}
-    ai_will_do = {
-        base = 10
-        modifier = {
-            add = 2
-            strength_ratio = { tag = FROM ratio > 1.5 }
-        }
-        modifier = {
-            add = 3
-            strength_ratio = { tag = FROM ratio > 2.0 }
-        }
-        modifier = {
-            add = 0.5
-            strength_ratio = { tag = FROM ratio < 0.8 }
-        }
-        modifier = {
-            add = 0.1
-            strength_ratio = { tag = FROM ratio < 0.5 }
-        }
-        modifier = {
-            add = 1.5
-            NOT = { has_government = FROM }
-        }
-        modifier = {
-            add = 2
-            has_claims_on_ROOT = yes
-        }
+	ai_will_do = {
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
 
-        modifier = {
-            add = 1.5
-            has_opinion = { target = FROM value < 0 }
-        }
-        modifier = {
-            add = 2
-            has_opinion = { target = FROM value < -50 }
-        }
-        modifier = {
-            add = 0
-            is_in_faction_with = FROM
-        }
-        modifier = {
-            add = 0.2
-            has_non_aggression_pact_with = FROM
-        }
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
 
-        modifier = {
-            add = 1.5
-            any_of = {
-                array = global.political_active_crisis_list
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                    check_variable = { global.crisis_progress^i > 40 }
-                }
-            }
-        }
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 0.3
-            has_war = yes
-        }
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
 
-        modifier = {
-            add = 1.5
-            is_major = yes
-        }
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
 
-        modifier = {
-            add = 0.3
-            FROM = {
-                is_puppet = yes
-                overlord = {
-                    strength_ratio = { tag = ROOT ratio > 1.0 }
-                }
-            }
-        }
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 1.5
-            has_government = fascism
-        }
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
 
-        modifier = {
-            add = 0.7
-            has_government = democratic
-        }
-    }
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}
 	cost = 50
 		complete_effect = {
 			for_each_loop = {
@@ -1169,97 +1169,97 @@ political_crisis_list_add = {
 			activate_mission = congress_timer_mission
 		}
 	}
-  
+
 	escalate_diplo_crisis = {
 		target_array = global.crisis_receivers
 		icon = GFX_decision_generic_ignite_civil_war
-    ai_will_do = {
-        base = 10
-        modifier = {
-            add = 2
-            strength_ratio = { tag = FROM ratio > 1.5 }
-        }
-        modifier = {
-            add = 3
-            strength_ratio = { tag = FROM ratio > 2.0 }
-        }
-        modifier = {
-            add = 0.5
-            strength_ratio = { tag = FROM ratio < 0.8 }
-        }
-        modifier = {
-            add = 0.1
-            strength_ratio = { tag = FROM ratio < 0.5 }
-        }
-        modifier = {
-            add = 1.5
-            NOT = { has_government = FROM }
-        }
-        modifier = {
-            add = 2
-            has_claims_on_ROOT = yes
-        }
+	ai_will_do = {
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
 
-        modifier = {
-            add = 1.5
-            has_opinion = { target = FROM value < 0 }
-        }
-        modifier = {
-            add = 2
-            has_opinion = { target = FROM value < -50 }
-        }
-        modifier = {
-            add = 0
-            is_in_faction_with = FROM
-        }
-        modifier = {
-            add = 0.2
-            has_non_aggression_pact_with = FROM
-        }
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
 
-        modifier = {
-            add = 1.5
-            any_of = {
-                array = global.political_active_crisis_list
-                index = i
-                AND = {
-                    check_variable = { global.crisis_originators^i = ROOT }
-                    check_variable = { global.crisis_receivers^i = FROM }
-                    check_variable = { global.crisis_progress^i > 40 }
-                }
-            }
-        }
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 0.3
-            has_war = yes
-        }
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
 
-        modifier = {
-            add = 1.5
-            is_major = yes
-        }
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
 
-        modifier = {
-            add = 0.3
-            FROM = {
-                is_puppet = yes
-                overlord = {
-                    strength_ratio = { tag = ROOT ratio > 1.0 }
-                }
-            }
-        }
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
 
-        modifier = {
-            add = 1.5
-            has_government = fascism
-        }
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
 
-        modifier = {
-            add = 0.7
-            has_government = democratic
-        }
-    }		
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}		
 		visible = {
 			
 			is_in_array = { global.crisis_originators = ROOT }
@@ -1284,8 +1284,8 @@ political_crisis_list_add = {
 				target = FROM
 				type = annex_everything
 			}
-		 set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
-                    RON_end_crisis = yes
+		set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
+					RON_end_crisis = yes
 		}
 
 	}
