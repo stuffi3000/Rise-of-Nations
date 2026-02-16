@@ -162,9 +162,9 @@ PixelShader =
 		float3 vOverlayGamma = ToGamma(vOverlay);
 
 		float3 res;
-		res.r = vOverlayGamma.r < 0.5 ? (2 * vOverlayGamma.r * vColorGamma.r) : (1 - 2 * (1 - vOverlayGamma.r) * (1 - vColorGamma.r));
-		res.g = vOverlayGamma.g < 0.5 ? (2 * vOverlayGamma.g * vColorGamma.g) : (1 - 2 * (1 - vOverlayGamma.g) * (1 - vColorGamma.g));
-		res.b = vOverlayGamma.b < 0.5 ? (2 * vOverlayGamma.b * vColorGamma.b) : (1 - 2 * (1 - vOverlayGamma.b) * (1 - vColorGamma.b));
+		res.r = vOverlayGamma.r < .5 ? (2 * vOverlayGamma.r * vColorGamma.r) : (1 - 2 * (1 - vOverlayGamma.r) * (1 - vColorGamma.r));
+		res.g = vOverlayGamma.g < .5 ? (2 * vOverlayGamma.g * vColorGamma.g) : (1 - 2 * (1 - vOverlayGamma.g) * (1 - vColorGamma.g));
+		res.b = vOverlayGamma.b < .5 ? (2 * vOverlayGamma.b * vColorGamma.b) : (1 - 2 * (1 - vOverlayGamma.b) * (1 - vColorGamma.b));
 		res = ToLinear(res);
 		return lerp( vColor, res, vOverlayPercent );
 	}
@@ -830,7 +830,7 @@ PixelShader =
 		
 		float stripeVal = cos( ( uv.x * cos( t ) * w ) + ( uv.y * sin( t ) * w ) ); 
 		float camDist = cam_distance( 100.0, 200.0 );
-		stripeVal += 0.75f + camDist;
+		stripeVal += .75f + camDist;
 
 		stripeVal = smoothstep(0.0, 1.0, stripeVal * 2 ) * lerp(1.0, 0.3, camDist);
 		stripeVal = lerp ( lerp( -.03, .01, stripeVal ), 0.f, camDist );
@@ -843,7 +843,7 @@ PixelShader =
 
 		const float PulseSpeedMult = 3.5f;
 		float FX = tex2D( gbTex2, uv ).b;
-		vStrength *= lerp( lerp( 0.45f, 1.0f, 1.0f - FX ), 1.0f, ( sin( vGlobalTime * PulseSpeedMult ) + 1.0f ) / 2 );
+		vStrength = 1.0f;// *= lerp( lerp( 0.45f, 1.0f, 1.0f - FX ), 1.0f, ( sin( vGlobalTime * PulseSpeedMult ) + 1.0f ) / 2 );
 
 		float vFullWidth = 5.25f / 255.0f;//lerp( 5.25f, 0.01f, FX ) / 255.f;
 		float vGradientWidth = 0.5f / 255.0f;//lerp( 0.5f, 0.1f, FX ) / 255.f;
@@ -954,7 +954,7 @@ PixelShader =
 		vColorOpacity *= floor(vOldOutline);
 	
 		float vFullWidth = 2.25f / 255.f;
-		float vGradientWidth = 0.5f / 255.f;
+		float vGradientWidth = .5f / 255.f;
 
 		float vThick = smoothstep( 0.f, 1.f, Levels( vGBDist.a, vOutlineCutoff - vFullWidth, vOutlineCutoff - vFullWidth + vGradientWidth ) ) ;
 		//vThick *= floor(vOldOutline);
@@ -988,6 +988,81 @@ PixelShader =
 		vOccupationMask *= vColorMask.a;
 		vBloomAlpha = vBloomAlpha * ( 1.0f - vOccupationMask );
 		vColor = lerp( vColor, vColorMask.rgb, vOccupationMask );
+	}
+	
+	void dominance_fx_apply(inout float3 Color, float3 Normal, float2 UV, in sampler2D Texture1, in sampler2D Texture2, in sampler2D Texture3, float2 OutlineCutoff, float2 CameraDistOverride, float OutlineMult)
+	{
+		// Since the gradient border texture is divided in two vertically, we need to map the UV to the expected part
+
+		float HalfPix = 0.5f / GB_TextureHeight;
+		float2 GBUV = float2(UV.x, UV.y * 0.5f - HalfPix);
+		
+		float4 Sample = tex2D( Texture2, GBUV );
+		float4 ColorMask = float4(ToGamma(Sample.rgb),saturate(ceil(Sample.a*2)*0.5f));
+
+		// Some constants, defining them here probably isn't best practice, 
+		// but they only impact this function, and it seems excessive to try to 
+		// send any of these except potentially TexSize through the constant buffer.
+		const float FadeSpeed = 1.5f;
+		const float ContestedPulseSpeed = 2.5f;
+		const float MinFade = 0.2;
+		const float MaxFade = 0.23;
+
+		float3 EnemyColor = tex2D(Texture3, float2(0,0)).rgb;
+		float3 FriendlyColor = tex2D(Texture3, float2(1,0)).rgb;
+
+		// Calculate the pulsating effect, very simple sine function with some parameters.
+		float Opacity = lerp( MinFade, MaxFade, ( sin( vGlobalTime * FadeSpeed ) + 1 ) * 0.5);
+		float ContestedIntensity = lerp( 0.8f, 1.5f, ( sin( vGlobalTime * FadeSpeed*2 ) + 1 ) * 0.5);
+
+		// Mapped direction is whether the dominance is increasing or decreasing, where 1 is increasing, -1 is decreasing, and 0 is neither.
+		// ColorMask.a will be in 0-1 space, where 0-0.49999... will be neither. values of 0.5 - 1.0 will be mapped to -1 and 1. 
+		// We do a bit of math magic to transpose it to the desired values.
+		// Control of the region is the same, but with the red channel instead of the alpha
+		float ContestedBy = round(Sample.a) * ( Sample.a * 4.f - 3.f );
+		float Control = round(ColorMask.r) * ( ColorMask.r * 4.f - 3.f );
+		float3 OverlayColor = abs(Control)*lerp(EnemyColor, FriendlyColor, (Control + 1)/2);
+		
+		/* This part is taken from the gradient_border_apply function */ 
+		/* It calculates the actual border gradient, and we use it for the alpha*/
+		float4 GBDist =  gradient_border_multisample_alpha(tex2D( Texture1, GBUV ), Texture1, GBUV );
+		float Alpha = GBDist.a;
+	
+		float IsRegionRelevant = saturate(abs(Control) + abs(ContestedBy))* (1- floor(Alpha));
+		if (IsRegionRelevant < 0.99)
+		{
+			return;
+		}
+	
+		float ColorOpacity = Levels( Alpha, 0.0f, OutlineCutoff.x );
+		float Outline = 1.0f - Levels( Alpha,OutlineCutoff.x, 1.0f );
+		float OldOutline = Outline;
+		Outline *= floor(ColorOpacity);
+		if (Outline > 0)
+		{
+			return;
+		}
+		Outline *= OutlineMult;
+
+		float GBCamDist = gradient_border_camera_distance();
+		float SaturatedCamDistOveride = saturate( ( GBCamDist * int( 1.0f - CameraDistOverride.x ) ) + CameraDistOverride.x );
+		ColorOpacity = gradient_border_distance_to_alpha( ColorOpacity, SaturatedCamDistOveride );
+		ColorOpacity *= floor(OldOutline);
+		float MaxGradient = max(ColorOpacity,Outline);
+
+		float OuterFade = 1.f - MaxGradient;
+		if (abs(ContestedBy) > 0.7f)
+		{
+			float3 ContestedColor = lerp(EnemyColor, FriendlyColor, (ContestedBy + 1)/2);
+			OverlayColor = lerp(OverlayColor, ContestedColor,saturate(MaxGradient * ContestedIntensity));
+			OuterFade = saturate(OuterFade * 2);
+		}
+ 		/* ------------------------------------------------------------ */
+
+		// Finally, we apply it to the input color by interpolating our resulting color, 
+		// using our numerous alphas as the t value. Most of them are either 1 or 0, 
+		// which essentially filters out the effect for regions that shouldn't be affected by it
+		Color = lerp( Color, OverlayColor, Opacity * OuterFade);
 	}
 
 	// Taken out from pdxmap.lua so other shaders can have access to it
