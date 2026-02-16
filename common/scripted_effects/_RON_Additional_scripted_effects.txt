@@ -1186,428 +1186,428 @@ decrease_population_on_nuke = {
 }
 # Calculate strength for both sides of a crisis
 RON_calculate_crisis_strength = {
-	# Calculate originator side strength
-	set_temp_variable = { originator_strength = 0 }
-	var:global.crisis_originators^crisis_index = {
-		add_to_temp_variable = { originator_strength = num_of_military_factories }
-		add_to_temp_variable = { originator_strength = num_of_civilian_factories }
-		set_temp_variable = { div_count = num_divisions }
-		multiply_temp_variable = { div_count = 2 }
-		add_to_temp_variable = { originator_strength = div_count }
-	}
-	
-	# Add backer strength for originator
-	for_each_loop = {
-		array = global.crisis_originator_backers^crisis_index
-		var:v = {
-			add_to_temp_variable = { originator_strength = num_of_military_factories }
-			add_to_temp_variable = { originator_strength = num_of_civilian_factories }
-			set_temp_variable = { div_count = num_divisions }
-			multiply_temp_variable = { div_count = 2 }
-			add_to_temp_variable = { originator_strength = div_count }
-		}
-	}
-	set_variable = { global.crisis_originator_strength^crisis_index = originator_strength }
-	
-	# Calculate receiver side strength
-	set_temp_variable = { receiver_strength = 0 }
-	var:global.crisis_receivers^crisis_index = {
-		add_to_temp_variable = { receiver_strength = num_of_military_factories }
-		add_to_temp_variable = { receiver_strength = num_of_civilian_factories }
-		set_temp_variable = { div_count = num_divisions }
-		multiply_temp_variable = { div_count = 2 }
-		add_to_temp_variable = { receiver_strength = div_count }
-	}
-	
-	# Add backer strength for receiver
-	for_each_loop = {
-		array = global.crisis_receiver_backers^crisis_index
-		var:v = {
-			add_to_temp_variable = { receiver_strength = num_of_military_factories }
-			add_to_temp_variable = { receiver_strength = num_of_civilian_factories }
-			set_temp_variable = { div_count = num_divisions }
-			multiply_temp_variable = { div_count = 2 }
-			add_to_temp_variable = { receiver_strength = div_count }
-		}
-	}
-	set_variable = { global.crisis_receiver_strength^crisis_index = receiver_strength }
+    # Calculate originator side strength
+    set_temp_variable = { originator_strength = 0 }
+    var:global.crisis_originators^crisis_index = {
+        add_to_temp_variable = { originator_strength = num_of_military_factories }
+        add_to_temp_variable = { originator_strength = num_of_civilian_factories }
+        set_temp_variable = { div_count = num_divisions }
+        multiply_temp_variable = { div_count = 2 }
+        add_to_temp_variable = { originator_strength = div_count }
+    }
+    
+    # Add backer strength for originator
+    for_each_loop = {
+        array = global.crisis_originator_backers^crisis_index
+        var:v = {
+            add_to_temp_variable = { originator_strength = num_of_military_factories }
+            add_to_temp_variable = { originator_strength = num_of_civilian_factories }
+            set_temp_variable = { div_count = num_divisions }
+            multiply_temp_variable = { div_count = 2 }
+            add_to_temp_variable = { originator_strength = div_count }
+        }
+    }
+    set_variable = { global.crisis_originator_strength^crisis_index = originator_strength }
+    
+    # Calculate receiver side strength
+    set_temp_variable = { receiver_strength = 0 }
+    var:global.crisis_receivers^crisis_index = {
+        add_to_temp_variable = { receiver_strength = num_of_military_factories }
+        add_to_temp_variable = { receiver_strength = num_of_civilian_factories }
+        set_temp_variable = { div_count = num_divisions }
+        multiply_temp_variable = { div_count = 2 }
+        add_to_temp_variable = { receiver_strength = div_count }
+    }
+    
+    # Add backer strength for receiver
+    for_each_loop = {
+        array = global.crisis_receiver_backers^crisis_index
+        var:v = {
+            add_to_temp_variable = { receiver_strength = num_of_military_factories }
+            add_to_temp_variable = { receiver_strength = num_of_civilian_factories }
+            set_temp_variable = { div_count = num_divisions }
+            multiply_temp_variable = { div_count = 2 }
+            add_to_temp_variable = { receiver_strength = div_count }
+        }
+    }
+    set_variable = { global.crisis_receiver_strength^crisis_index = receiver_strength }
 }
 
 RON_join_crisis_as_backer = {
-	if = {
-		limit = { check_variable = { backing_side = 1 } }
-		add_to_array = { array = global.crisis_originator_backers^crisis_index value = ROOT }
-		set_country_flag = backing_originator_side
-	}
-	else_if = {
-		limit = { check_variable = { backing_side = 2 } }
-		add_to_array = { array = global.crisis_receiver_backers^crisis_index value = ROOT }
-		set_country_flag = backing_receiver_side
-	}
-	
-	RON_calculate_crisis_strength = yes
-	RON_check_crisis_backdown = yes
+    if = {
+        limit = { check_variable = { backing_side = 1 } }
+        add_to_array = { array = global.crisis_originator_backers^crisis_index value = ROOT }
+        set_country_flag = backing_originator_side
+    }
+    else_if = {
+        limit = { check_variable = { backing_side = 2 } }
+        add_to_array = { array = global.crisis_receiver_backers^crisis_index value = ROOT }
+        set_country_flag = backing_receiver_side
+    }
+    
+    RON_calculate_crisis_strength = yes
+    RON_check_crisis_backdown = yes
 }
 
 RON_check_crisis_backdown = {
-	set_temp_variable = { orig_str = global.crisis_originator_strength^crisis_index }
-	set_temp_variable = { recv_str = global.crisis_receiver_strength^crisis_index }
-	
-	# Prevent division by zero
-	if = {
-		limit = { check_variable = { orig_str < 1 } }
-		set_temp_variable = { orig_str = 1 }
-	}
-	if = {
-		limit = { check_variable = { recv_str < 1 } }
-		set_temp_variable = { recv_str = 1 }
-	}
-	
-	set_temp_variable = { strength_ratio = orig_str }
-	divide_temp_variable = { strength_ratio = recv_str }
-	
-	# If originator is severely outmatched (ratio < 0.35)
-	if = {
-		limit = {
-			check_variable = { strength_ratio < 0.35 }
-			check_variable = { global.crisis_progress^crisis_index > 60 }
-		}
-		set_temp_variable = { crisis_id = global.political_crisis_list_array^crisis_index }
-		var:global.crisis_originators^crisis_index = { 
-			country_event = { id = crisis_backdown.1 days = 1 } 
-		}
-	}
-	
-	# If receiver is severely outmatched (ratio > 2.8)
-	else_if = {
-		limit = {
-			check_variable = { strength_ratio > 2.8 }
-			check_variable = { global.crisis_progress^crisis_index > 60 }
-		}
-		set_temp_variable = { crisis_id = global.political_crisis_list_array^crisis_index }
-		var:global.crisis_receivers^crisis_index = { 
-			country_event = { id = crisis_backdown.2 days = 1 } 
-		}
-	}
+    set_temp_variable = { orig_str = global.crisis_originator_strength^crisis_index }
+    set_temp_variable = { recv_str = global.crisis_receiver_strength^crisis_index }
+    
+    # Prevent division by zero
+    if = {
+        limit = { check_variable = { orig_str < 1 } }
+        set_temp_variable = { orig_str = 1 }
+    }
+    if = {
+        limit = { check_variable = { recv_str < 1 } }
+        set_temp_variable = { recv_str = 1 }
+    }
+    
+    set_temp_variable = { strength_ratio = orig_str }
+    divide_temp_variable = { strength_ratio = recv_str }
+    
+    # If originator is severely outmatched (ratio < 0.35)
+    if = {
+        limit = {
+            check_variable = { strength_ratio < 0.35 }
+            check_variable = { global.crisis_progress^crisis_index > 60 }
+        }
+        set_temp_variable = { crisis_id = global.political_crisis_list_array^crisis_index }
+        var:global.crisis_originators^crisis_index = { 
+            country_event = { id = crisis_backdown.1 days = 1 } 
+        }
+    }
+    
+    # If receiver is severely outmatched (ratio > 2.8)
+    else_if = {
+        limit = {
+            check_variable = { strength_ratio > 2.8 }
+            check_variable = { global.crisis_progress^crisis_index > 60 }
+        }
+        set_temp_variable = { crisis_id = global.political_crisis_list_array^crisis_index }
+        var:global.crisis_receivers^crisis_index = { 
+            country_event = { id = crisis_backdown.2 days = 1 } 
+        }
+    }
 }
 
 # Backdown effect - transfer cores and end crisis
 RON_crisis_backdown_effect = {
-	custom_effect_tooltip = RON_crisis_backdown_tt
-	
-	# Winner gets their cores back from loser
-	var:winner = {
-		every_state = {
-			limit = {
-				is_core_of = PREV
-				is_owned_by = var:loser
-			}
-			transfer_state_to = PREV
-		}
-		add_political_power = 100
-		add_war_support = 0.1
-		add_stability = 0.05
-	}
-	
-	# Loser suffers
-	var:loser = {
-		add_political_power = -100
-		add_war_support = -0.15
-		add_stability = -0.1
-	}
-	
-	# Clear all backer flags
-	every_country = {
-		clr_country_flag = backing_crisis_@var:crisis_id
-		clr_country_flag = backing_originator_side
-		clr_country_flag = backing_receiver_side
-	}
-	
-	RON_end_crisis = yes
+    custom_effect_tooltip = RON_crisis_backdown_tt
+    
+    # Winner gets their cores back from loser
+    var:winner = {
+        every_state = {
+            limit = {
+                is_core_of = PREV
+                is_owned_by = var:loser
+            }
+            transfer_state_to = PREV
+        }
+        add_political_power = 100
+        add_war_support = 0.1
+        add_stability = 0.05
+    }
+    
+    # Loser suffers
+    var:loser = {
+        add_political_power = -100
+        add_war_support = -0.15
+        add_stability = -0.1
+    }
+    
+    # Clear all backer flags
+    every_country = {
+        clr_country_flag = backing_crisis_@var:crisis_id
+        clr_country_flag = backing_originator_side
+        clr_country_flag = backing_receiver_side
+    }
+    
+    RON_end_crisis = yes
 }
 RON_initiate_claim_crisis = {
-	custom_effect_tooltip = RON_initiate_claim_crisis_tt
+    custom_effect_tooltip = RON_initiate_claim_crisis_tt
 
-	if = {
-		limit = { NOT = { has_variable = global.crisis_counter } }
-		set_variable = { global.crisis_counter = 100 }
-	}
-	
-	add_to_variable = { global.crisis_counter = 1 }
-	set_temp_variable = { crisis_id = global.crisis_counter }
-	
-	if = {
-		limit = { NOT = { check_variable = { progress > 0 } } }
-		set_temp_variable = { progress = 10 }
-	}
+    if = {
+        limit = { NOT = { has_variable = global.crisis_counter } }
+        set_variable = { global.crisis_counter = 100 }
+    }
+    
+    add_to_variable = { global.crisis_counter = 1 }
+    set_temp_variable = { crisis_id = global.crisis_counter }
+    
+    if = {
+        limit = { NOT = { check_variable = { progress > 0 } } }
+        set_temp_variable = { progress = 10 }
+    }
 
-	# Add to main tracking arrays
-	add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
-	add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
-	add_to_array = { array = global.crisis_originators value = var:originator }
-	add_to_array = { array = global.crisis_receivers value = var:defender }
-	
-	# Get the new index
-	set_temp_variable = { new_index = global.political_crisis_list_array^num }
-	subtract_from_temp_variable = { new_index = 1 }
-	
-	# Initialize crisis data at this index
-	set_variable = { global.crisis_progress^new_index = progress }
-	set_variable = { global.crisis_stage^new_index = 0 }
-	set_variable = { global.crisis_originator_strength^new_index = 0 }
-	set_variable = { global.crisis_receiver_strength^new_index = 0 }
-	set_variable = { global.crisis_strength_ratio^new_index = 50 }
-	
-	# Store target state if provided
-	if = {
-		limit = { has_temp_variable = target_state }
-		set_variable = { global.crisis_target_state^new_index = target_state }
-	}
-	
-	# Calculate initial strength
-	set_temp_variable = { crisis_index = new_index }
-	RON_calculate_crisis_strength = yes
+    # Add to main tracking arrays
+    add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
+    add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
+    add_to_array = { array = global.crisis_originators value = var:originator }
+    add_to_array = { array = global.crisis_receivers value = var:defender }
+    
+    # Get the new index
+    set_temp_variable = { new_index = global.political_crisis_list_array^num }
+    subtract_from_temp_variable = { new_index = 1 }
+    
+    # Initialize crisis data at this index
+    set_variable = { global.crisis_progress^new_index = progress }
+    set_variable = { global.crisis_stage^new_index = 0 }
+    set_variable = { global.crisis_originator_strength^new_index = 0 }
+    set_variable = { global.crisis_receiver_strength^new_index = 0 }
+    set_variable = { global.crisis_strength_ratio^new_index = 50 }
+    
+    # Store target state if provided
+    if = {
+        limit = { has_temp_variable = target_state }
+        set_variable = { global.crisis_target_state^new_index = target_state }
+    }
+    
+    # Calculate initial strength
+    set_temp_variable = { crisis_index = new_index }
+    RON_calculate_crisis_strength = yes
 
 
-	RON_diplo_crisis_warn = yes
+    RON_diplo_crisis_warn = yes
 }
 RON_end_crisis = {
-	custom_effect_tooltip = RON_end_crisis_tt
-	
-	# Find the index of this crisis
-	set_temp_variable = { found_index = -1 }
-	
-	for_each_loop = {
-		array = global.political_crisis_list_array
-		
-		if = {
-			limit = {
-				check_variable = { global.political_crisis_list_array^i = crisis_id }
-			}
-			set_temp_variable = { found_index = i }
-		}
-	}
-	
-	# Only remove if found
-	if = {
-		limit = {
-			check_variable = { found_index > -1 }
-		}
-		
-		# Clear visual gridboxes
-		clear_gridbox = political_crisis
-		clear_gridbox = originator_flag
-		clear_gridbox = receiver_flag
-		
-		# Create temporary arrays
-		clear_array = global.temp_crisis_list
-		clear_array = global.temp_originators
-		clear_array = global.temp_receivers
-		clear_array = global.temp_progress
-		clear_array = global.temp_stage
-		clear_array = global.temp_active
-		
-		# Copy all EXCEPT the one we want to remove
-		for_each_loop = {
-			array = global.political_crisis_list_array
-			
-			if = {
-				limit = {
-					NOT = { check_variable = { i = found_index } }
-				}
-				add_to_array = { global.temp_crisis_list = global.political_crisis_list_array^i }
-				add_to_array = { global.temp_originators = global.crisis_originators^i }
-				add_to_array = { global.temp_receivers = global.crisis_receivers^i }
-				add_to_array = { global.temp_progress = global.crisis_progress^i }
-				add_to_array = { global.temp_stage = global.crisis_stage^i }
-			}
-		}
-		
-		# Also rebuild active list
-		for_each_loop = {
-			array = global.political_active_crisis_list
-			
-			if = {
-				limit = {
-					NOT = { check_variable = { global.political_active_crisis_list^i = crisis_id } }
-				}
-				add_to_array = { global.temp_active = global.political_active_crisis_list^i }
-			}
-		}
-		
-		# Clear original arrays
-		clear_array = global.political_crisis_list_array
-		clear_array = global.crisis_originators
-		clear_array = global.crisis_receivers
-		clear_array = global.crisis_progress
-		clear_array = global.crisis_stage
-		clear_array = global.political_active_crisis_list
-		
-		# Copy back from temp
-		for_each_loop = {
-			array = global.temp_crisis_list
-			
-			add_to_array = { global.political_crisis_list_array = global.temp_crisis_list^i }
-			add_to_array = { global.crisis_originators = global.temp_originators^i }
-			add_to_array = { global.crisis_receivers = global.temp_receivers^i }
-			add_to_array = { global.crisis_progress = global.temp_progress^i }
-			add_to_array = { global.crisis_stage = global.temp_stage^i }
-		}
-		
-		for_each_loop = {
-			array = global.temp_active
-			
-			add_to_array = { global.political_active_crisis_list = global.temp_active^i }
-		}
-		
-		# Clear temp arrays
-		clear_array = global.temp_crisis_list
-		clear_array = global.temp_originators
-		clear_array = global.temp_receivers
-		clear_array = global.temp_progress
-		clear_array = global.temp_stage
-		clear_array = global.temp_active
-		
-		# Rebuild UI (if needed)
-		for_each_loop = {
-			array = global.political_crisis_list_array
-			
-			add_to_gridbox = {
-				name = political_crisis
-				element = political_crisis_entry
-			}
-			
-			var:global.crisis_originators^i = {
-				add_to_gridbox = {
-					name = originator_flag
-					element = originator_flag_entry
-				}
-			}
-			
-			var:global.crisis_receivers^i = {
-				add_to_gridbox = {
-					name = receiver_flag
-					element = receiver_flag_entry
-				}
-			}
-		}
-	}
+    custom_effect_tooltip = RON_end_crisis_tt
+    
+    # Find the index of this crisis
+    set_temp_variable = { found_index = -1 }
+    
+    for_each_loop = {
+        array = global.political_crisis_list_array
+        
+        if = {
+            limit = {
+                check_variable = { global.political_crisis_list_array^i = crisis_id }
+            }
+            set_temp_variable = { found_index = i }
+        }
+    }
+    
+    # Only remove if found
+    if = {
+        limit = {
+            check_variable = { found_index > -1 }
+        }
+        
+        # Clear visual gridboxes
+        clear_gridbox = political_crisis
+        clear_gridbox = originator_flag
+        clear_gridbox = receiver_flag
+        
+        # Create temporary arrays
+        clear_array = global.temp_crisis_list
+        clear_array = global.temp_originators
+        clear_array = global.temp_receivers
+        clear_array = global.temp_progress
+        clear_array = global.temp_stage
+        clear_array = global.temp_active
+        
+        # Copy all EXCEPT the one we want to remove
+        for_each_loop = {
+            array = global.political_crisis_list_array
+            
+            if = {
+                limit = {
+                    NOT = { check_variable = { i = found_index } }
+                }
+                add_to_array = { global.temp_crisis_list = global.political_crisis_list_array^i }
+                add_to_array = { global.temp_originators = global.crisis_originators^i }
+                add_to_array = { global.temp_receivers = global.crisis_receivers^i }
+                add_to_array = { global.temp_progress = global.crisis_progress^i }
+                add_to_array = { global.temp_stage = global.crisis_stage^i }
+            }
+        }
+        
+        # Also rebuild active list
+        for_each_loop = {
+            array = global.political_active_crisis_list
+            
+            if = {
+                limit = {
+                    NOT = { check_variable = { global.political_active_crisis_list^i = crisis_id } }
+                }
+                add_to_array = { global.temp_active = global.political_active_crisis_list^i }
+            }
+        }
+        
+        # Clear original arrays
+        clear_array = global.political_crisis_list_array
+        clear_array = global.crisis_originators
+        clear_array = global.crisis_receivers
+        clear_array = global.crisis_progress
+        clear_array = global.crisis_stage
+        clear_array = global.political_active_crisis_list
+        
+        # Copy back from temp
+        for_each_loop = {
+            array = global.temp_crisis_list
+            
+            add_to_array = { global.political_crisis_list_array = global.temp_crisis_list^i }
+            add_to_array = { global.crisis_originators = global.temp_originators^i }
+            add_to_array = { global.crisis_receivers = global.temp_receivers^i }
+            add_to_array = { global.crisis_progress = global.temp_progress^i }
+            add_to_array = { global.crisis_stage = global.temp_stage^i }
+        }
+        
+        for_each_loop = {
+            array = global.temp_active
+            
+            add_to_array = { global.political_active_crisis_list = global.temp_active^i }
+        }
+        
+        # Clear temp arrays
+        clear_array = global.temp_crisis_list
+        clear_array = global.temp_originators
+        clear_array = global.temp_receivers
+        clear_array = global.temp_progress
+        clear_array = global.temp_stage
+        clear_array = global.temp_active
+        
+        # Rebuild UI (if needed)
+        for_each_loop = {
+            array = global.political_crisis_list_array
+            
+            add_to_gridbox = {
+                name = political_crisis
+                element = political_crisis_entry
+            }
+            
+            var:global.crisis_originators^i = {
+                add_to_gridbox = {
+                    name = originator_flag
+                    element = originator_flag_entry
+                }
+            }
+            
+            var:global.crisis_receivers^i = {
+                add_to_gridbox = {
+                    name = receiver_flag
+                    element = receiver_flag_entry
+                }
+            }
+        }
+    }
 }
 RON_update_crisis_gui_values = {
-	set_temp_variable = { loop_index = 0 }
-	for_each_loop = {
-		array = global.political_active_crisis_list
-		
-		set_temp_variable = { orig = global.crisis_originator_strength^loop_index }
-		set_temp_variable = { recv = global.crisis_receiver_strength^loop_index }
-		set_temp_variable = { total = orig }
-		add_to_temp_variable = { total = recv }
-		
-		if = {
-			limit = { check_variable = { total > 0 } }
-			set_temp_variable = { ratio = orig }
-			divide_temp_variable = { ratio = total }
-			multiply_temp_variable = { ratio = 100 }
-		}
-		else = {
-			set_temp_variable = { ratio = 50 }
-		}
-		
-		clamp_temp_variable = { var = ratio min = 5 max = 95 }
-		set_variable = { global.crisis_strength_ratio^loop_index = ratio }
-		
-		add_to_temp_variable = { loop_index = 1 }
-	}
+    set_temp_variable = { loop_index = 0 }
+    for_each_loop = {
+        array = global.political_active_crisis_list
+        
+        set_temp_variable = { orig = global.crisis_originator_strength^loop_index }
+        set_temp_variable = { recv = global.crisis_receiver_strength^loop_index }
+        set_temp_variable = { total = orig }
+        add_to_temp_variable = { total = recv }
+        
+        if = {
+            limit = { check_variable = { total > 0 } }
+            set_temp_variable = { ratio = orig }
+            divide_temp_variable = { ratio = total }
+            multiply_temp_variable = { ratio = 100 }
+        }
+        else = {
+            set_temp_variable = { ratio = 50 }
+        }
+        
+        clamp_temp_variable = { var = ratio min = 5 max = 95 }
+        set_variable = { global.crisis_strength_ratio^loop_index = ratio }
+        
+        add_to_temp_variable = { loop_index = 1 }
+    }
 }
 
 RON_initiate_crisis = {
-	custom_effect_tooltip = RON_initiate_crisis_tt
+    custom_effect_tooltip = RON_initiate_crisis_tt
 
-	add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
-	add_to_array = { array = global.crisis_originators value = var:originator }
-	add_to_array = { array = global.crisis_receivers value = var:defender }
-	add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
-	
-	set_temp_variable = { num_crisis = global.political_crisis_list_array^num }
-	subtract_from_temp_variable = { num_crisis = 1}
-	
-	add_to_array = { array = global.crisis_progress index = num_crisis value = var:progress }
-	add_to_array = { array = global.crisis_stage index = num_crisis value = 0 }
+    add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
+    add_to_array = { array = global.crisis_originators value = var:originator }
+    add_to_array = { array = global.crisis_receivers value = var:defender }
+    add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
+    
+    set_temp_variable = { num_crisis = global.political_crisis_list_array^num }
+    subtract_from_temp_variable = { num_crisis = 1}
+    
+    add_to_array = { array = global.crisis_progress index = num_crisis value = var:progress }
+    add_to_array = { array = global.crisis_stage index = num_crisis value = 0 }
 
-	add_to_gridbox = {
-		name = political_crisis          
-		element = political_crisis_entry 
-	}
+    add_to_gridbox = {
+        name = political_crisis          
+        element = political_crisis_entry 
+    }
 
-	var:originator = {
-		add_to_gridbox = {
-			name = originator_flag
-			element = originator_flag_entry
-		}
-	}
+    var:originator = {
+        add_to_gridbox = {
+            name = originator_flag
+            element = originator_flag_entry
+        }
+    }
 
-	# Spawn the Receiver Flag (Right)
-	# We scope this to the COUNTRY (var:defender)
-	var:defender = {
-		add_to_gridbox = {
-			name = receiver_flag
-			element = receiver_flag_entry
-		}
-	}
+    # Spawn the Receiver Flag (Right)
+    # We scope this to the COUNTRY (var:defender)
+    var:defender = {
+        add_to_gridbox = {
+            name = receiver_flag
+            element = receiver_flag_entry
+        }
+    }
 
-	RON_diplo_crisis_warn = yes
+    RON_diplo_crisis_warn = yes
 }
 
 RON_initiate_generic_crisis = {
-	custom_effect_tooltip = RON_initiate_crisis_tt
+    custom_effect_tooltip = RON_initiate_crisis_tt
 
-	if = {
-		limit = {
-			NOT = { has_variable = global.crisis_counter }
-		}
-		set_variable = { global.crisis_counter = 100 }
-	}
-	
-	add_to_variable = { global.crisis_counter = 1 }
-	set_temp_variable = { crisis_id = global.crisis_counter }
-	if = {
-		limit = {
-			NOT = { check_variable = { progress > 0 } }
-		}
-		set_temp_variable = { progress = 10 }
-	}
+    if = {
+        limit = {
+            NOT = { has_variable = global.crisis_counter }
+        }
+        set_variable = { global.crisis_counter = 100 }
+    }
+    
+    add_to_variable = { global.crisis_counter = 1 }
+    set_temp_variable = { crisis_id = global.crisis_counter }
+    if = {
+        limit = {
+            NOT = { check_variable = { progress > 0 } }
+        }
+        set_temp_variable = { progress = 10 }
+    }
 
-	add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
-	add_to_array = { array = global.crisis_originators value = var:originator }
-	add_to_array = { array = global.crisis_receivers value = var:defender }
-	add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
-	
-	set_temp_variable = { num_crisis = global.political_crisis_list_array^num }
-	subtract_from_temp_variable = { num_crisis = 1 }
-	
-	add_to_array = { array = global.crisis_progress index = num_crisis value = var:progress }
-	set_variable = { global.crisis_type^num_crisis = var:crisis_type }
+    add_to_array = { array = global.political_active_crisis_list value = var:crisis_id }
+    add_to_array = { array = global.crisis_originators value = var:originator }
+    add_to_array = { array = global.crisis_receivers value = var:defender }
+    add_to_array = { array = global.political_crisis_list_array value = var:crisis_id }
+    
+    set_temp_variable = { num_crisis = global.political_crisis_list_array^num }
+    subtract_from_temp_variable = { num_crisis = 1 }
+    
+    add_to_array = { array = global.crisis_progress index = num_crisis value = var:progress }
+    set_variable = { global.crisis_type^num_crisis = var:crisis_type }
 
-	add_to_gridbox = {
-		name = political_crisis
-		element = political_crisis_entry
-	}
+    add_to_gridbox = {
+        name = political_crisis
+        element = political_crisis_entry
+    }
 
-	var:originator = {
-		add_to_gridbox = {
-			name = originator_flag
-			element = originator_flag_entry
-		}
-	}
+    var:originator = {
+        add_to_gridbox = {
+            name = originator_flag
+            element = originator_flag_entry
+        }
+    }
 
-	var:defender = {
-		add_to_gridbox = {
-			name = receiver_flag
-			element = receiver_flag_entry
-		}
-	}
+    var:defender = {
+        add_to_gridbox = {
+            name = receiver_flag
+            element = receiver_flag_entry
+        }
+    }
 
-	RON_diplo_crisis_warn = yes
+    RON_diplo_crisis_warn = yes
 }
 RON_subtract_diplo_crisis_progress = {
 	custom_effect_tooltip = RON_subtract_diplo_crisis_progress_tt
@@ -1727,8 +1727,8 @@ RON_add_diplo_crisis_progress = {
 }
 
 RON_diplo_crisis_warn = {
-	every_country = {
-		limit = { is_ai = no }
-		set_country_flag = diplo_crisis_warn_flag
-	}
+    every_country = {
+        limit = { is_ai = no }
+        set_country_flag = diplo_crisis_warn_flag
+    }
 }
