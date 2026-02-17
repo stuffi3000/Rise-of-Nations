@@ -1,5 +1,166 @@
 add_namespace = generic_debug
 add_namespace = optimization
+add_namespace = crisis_backdown
+add_namespace = crisis_backing
+
+# Originator forced to back down
+country_event = {
+    id = crisis_backdown.1
+    title = crisis_backdown.1.t
+    desc = crisis_backdown.1.d
+    picture = GFX_report_event_generic_diplomacy
+    
+    is_triggered_only = yes
+    
+    immediate = {
+        hidden_effect = {
+            set_variable = { backdown_crisis_id = crisis_id }
+            set_variable = { backdown_winner = winner }
+        }
+    }
+    
+    option = {
+        name = crisis_backdown.1.a # We must yield
+        
+        # Transfer our cores to the winner (if they have claims)
+        var:backdown_winner = {
+            every_state = {
+                limit = {
+                    is_core_of = PREV
+                    is_owned_by = ROOT
+                }
+                transfer_state_to = PREV
+            }
+            add_political_power = 100
+            add_war_support = 0.1
+            country_event = { id = crisis_backdown.3 days = 1 }
+        }
+        
+        add_political_power = -100
+        add_war_support = -0.15
+        add_stability = -0.1
+        
+        every_country = {
+            clr_country_flag = backing_crisis_@var:backdown_crisis_id
+            clr_country_flag = backing_originator_side
+            clr_country_flag = backing_receiver_side
+        }
+        
+        set_temp_variable = { crisis_id = backdown_crisis_id }
+        RON_end_crisis = yes
+        
+        clear_variable = backdown_crisis_id
+        clear_variable = backdown_winner
+    }
+}
+
+# Receiver forced to back down
+country_event = {
+    id = crisis_backdown.2
+    title = crisis_backdown.2.t
+    desc = crisis_backdown.2.d
+    picture = GFX_report_event_generic_diplomacy
+    
+    is_triggered_only = yes
+    
+    immediate = {
+        hidden_effect = {
+            set_variable = { backdown_crisis_id = crisis_id }
+            set_variable = { backdown_winner = winner }
+        }
+    }
+    
+    option = {
+        name = crisis_backdown.2.a # We cannot resist
+        
+        # Transfer winner's cores that we hold
+        var:backdown_winner = {
+            every_state = {
+                limit = {
+                    is_core_of = PREV
+                    is_owned_by = ROOT
+                }
+                transfer_state_to = PREV
+            }
+            # Also transfer claimed states
+            every_state = {
+                limit = {
+                    is_claimed_by = PREV
+                    is_owned_by = ROOT
+                }
+                transfer_state_to = PREV
+            }
+            add_political_power = 100
+            add_war_support = 0.1
+            country_event = { id = crisis_backdown.3 days = 1 }
+        }
+        
+        add_political_power = -100
+        add_war_support = -0.15
+        add_stability = -0.1
+        
+        every_country = {
+            clr_country_flag = backing_crisis_@var:backdown_crisis_id
+            clr_country_flag = backing_originator_side
+            clr_country_flag = backing_receiver_side
+        }
+        
+        set_temp_variable = { crisis_id = backdown_crisis_id }
+        RON_end_crisis = yes
+        
+        clear_variable = backdown_crisis_id
+        clear_variable = backdown_winner
+    }
+}
+
+# Winner notification
+country_event = {
+    id = crisis_backdown.3
+    title = crisis_backdown.3.t
+    desc = crisis_backdown.3.d
+    picture = GFX_report_event_generic_diplomacy
+    
+    is_triggered_only = yes
+    
+    option = {
+        name = crisis_backdown.3.a # Excellent!
+        add_stability = 0.05
+    }
+}
+
+# Notification: Someone backed the aggressor
+country_event = {
+    id = crisis_backing.1
+    title = crisis_backing.1.t
+    desc = crisis_backing.1.d
+    picture = GFX_report_event_generic_diplomacy
+    
+    is_triggered_only = yes
+    
+    option = {
+        name = crisis_backing.1.a
+        tooltip = {
+            FROM = { effect_tooltip = { add_political_power = 0 } }
+        }
+    }
+}
+
+# Notification: Someone backed the defender
+country_event = {
+    id = crisis_backing.2
+    title = crisis_backing.2.t
+    desc = crisis_backing.2.d
+    picture = GFX_report_event_generic_diplomacy
+    
+    is_triggered_only = yes
+    
+    option = {
+        name = crisis_backing.2.a
+        tooltip = {
+            FROM = { effect_tooltip = { add_political_power = 0 } }
+        }
+    }
+}
 # debug event used for creating agency & cryptology
 country_event = {
 	id = generic_debug.42
