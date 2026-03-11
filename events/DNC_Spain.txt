@@ -2,7 +2,8 @@ add_namespace = DNC_Spain
 add_namespace = DNC_Spain_News
 add_namespace = dnc_spain
 add_namespace = dnc_carlism
-add_namespace = dnc_spain_vik
+add_namespace = DNC_Internal_Politics_Spain
+add_namespace = Consejo_de_ministros
 
 country_event = {
 	id = dnc_spain.1222
@@ -31,24 +32,32 @@ country_event = {
 	}
 }
 
-# Failed Attempt on Alfonso XIII
+# Sagasta death
 news_event = {
 	id = DNC_Spain_News.1
+	picture = GFX_mateo_sagasta_event
 	title = DNC_Spain_News.1.t
-	desc = DNC_Spain_News.1.d
+	desc = DNC_Spain_News.1.desc
 
-	is_triggered_only = yes
+	trigger = {
+		tag = SPR
+		date > 1903.1.1
+		date < 1904.1.1
+	}
 
 	fire_only_once = yes
 
 	option = {
 		name = DNC_Spain_News.1.a
+		add_stability = -0.025
+		retire_character = SPR_praxedes_mateo_sagasta
 	}
 }
 
 # Coronation of Alfonso XIII
 news_event = {
 	id = DNC_Spain_News.2
+	picture = GFX_alfonso_xiii_cortes
 	title = DNC_Spain_News.2.t
 	desc = DNC_Spain_News.2.d
 
@@ -58,9 +67,146 @@ news_event = {
 
 	option = {
 		name = DNC_Spain_News.2.a
+
+		remove_ideas = {
+			SPR_the_regency_of_maria_christina_idea
+		}
+		remove_country_leader_trait = SPR_underage_monarch
+		hidden_effect = {
+			country_event = {
+				id = DNC_Internal_Politics_Spain.1
+				days = 10
+				random_days = 20
+			}
+
+			country_event = {
+				id = DNC_Internal_Politics_Spain.2
+				days = 50
+				random_days = 30
+			}
+		}
 	}
 }
 
+# Alfonso XIII wedding attack
+news_event = {
+	id = DNC_Spain_News.4
+	picture = GFX_anarchist_attack_event
+	title = DNC_Spain_News.4.t
+	desc = DNC_Spain_News.4.desc
+
+	trigger = {
+		tag = SPR
+		has_completed_focus = SPRDNC_the_regency
+		date > 1906.5.30
+		has_start_date < 1905.1.1
+	}
+
+	option = {
+		name = DNC_Spain_News.4.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = neutrality
+			popularity = -0.025
+		}
+	}
+}
+
+# Sabino Arana's telegram
+country_event = {
+	id = DNC_Internal_Politics_Spain.1
+	picture = GFX_report_event_spanish_parliament
+	title = DNC_Internal_Politics_Spain.1.t
+	desc = DNC_Internal_Politics_Spain.1.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # Imprisonment, historical
+		name = DNC_Internal_Politics_Spain.1.a
+		add_political_power = -25
+		add_popularity = {
+			ideology = neutrality
+			popularity = 0.05
+		}
+		ai_chance = {
+			base = 10
+		}
+	}
+
+	option = {
+		name = DNC_Internal_Politics_Spain.1.b
+		add_stability = -0.05
+
+		reverse_add_opinion_modifier = {
+			target = CUB
+			modifier = support_arana_telegram
+		}
+
+		reverse_add_opinion_modifier = {
+			target = USA
+			modifier = support_arana_telegram
+		}
+	}
+}
+
+# Election of 1903 crisis
+country_event = {
+	id = DNC_Internal_Politics_Spain.2
+	picture = GFX_report_event_spanish_parliament
+	title = DNC_Internal_Politics_Spain.2.t
+	desc = DNC_Internal_Politics_Spain.2.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Internal_Politics_Spain.2.a
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+		add_stability = -0.025
+	}
+}
+
+news_event = { # Empty event
+	id = DNC_Internal_Politics_Spain.3
+	title = DNC_Internal_Politics_Spain.3.t
+	desc = DNC_Internal_Politics_Spain.3.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = DNC_Internal_Politics_Spain.3.a
+	}
+}
+
+#country_event = { # First signs of weakness
+#	id = DNC_Internal_Politics_Spain.4
+#	picture = GFX_report_event_spanish_parliament
+#	title = DNC_Internal_Politics_Spain.4.t
+#	desc = DNC_Internal_Politics_Spain.4.desc
+#
+#	is_triggered_only = yes
+#
+#	fire_only_once = yes
+#
+#	option = {
+#		name = DNC_Internal_Politics_Spain.4.a
+#		add_popularity = {
+#			ideology = democratic
+#			popularity = 0.05
+#		}
+#		add_stability = -0.025
+#	}
+#}
+
+# 4th Carlist war setup
 country_event = {
 	id = dnc_carlism.1
 	title = dnc_carlism.1.t
@@ -70,12 +216,13 @@ country_event = {
 
 	fire_only_once = yes
 
-	option = {
+	option = { ### Probably the worst code I've ever written - Viktoria ###
 		name = dnc_carlism.1.a
 		hidden_effect = {
 			set_global_flag = { flag = SPR_civil_war_startup value = 1 days = 3 } # Make AI avoid attacking for a few days
 			set_country_flag = SPRDNC_carlist_war
 			set_cosmetic_tag = SPR_carlist_spain
+			promote_character = SPR_Carlos_VII
 			if =  {
 				limit = {
 					has_completed_focus = SPRDNC_heroes_of_the_3rd_carlist_war
@@ -107,20 +254,67 @@ country_event = {
 					transfer_state_to = SPA
 				}
 			}
-			create_country_leader = {
-				name = SPR_carlos_VII
-				expire = 1909.7.18
+			if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states = 1 }
+				}
+				transfer_units_fraction = {
+					target = SPA
+					size = 0.9
+					stockpile_ratio = 0.85
+					army_ratio = 0.9
+					navy_ratio = 1
+				}
 			}
-			transfer_units_fraction = {
-				target = SPA
-				size = 0.33
-				stockpile_ratio = 0.7
-				army_ratio = 0.45
-				navy_ratio = 0.8
-				air_ratio = 0
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states < 3 }
+				}
+				transfer_units_fraction = {
+					target = SPA
+					size = 0.75
+					stockpile_ratio = 0.6
+					army_ratio = 0.75
+					navy_ratio = 0.8
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states < 5 }
+				}
+				transfer_units_fraction = {
+					target = SPA
+					size = 0.5
+					stockpile_ratio = 0.5
+					army_ratio = 0.5
+					navy_ratio = 0.75
+				}
+			}
+			else_if = {
+				limit = {
+					check_variable = { SPRDNC_carlist_states > 4 }
+				}
+				transfer_units_fraction = {
+					target = SPA
+					size = 0.3
+					stockpile_ratio = 0.2
+					army_ratio = 0.3
+					navy_ratio = 0.5
+				}
+			}
+			every_possible_country = {
+    			limit = {
+					has_character = SPR_Alfonso_XIII
+				}
+   				random_character = {
+        			limit = {
+						is_character = SPR_Alfonso_XIII
+					}
+			   		set_nationality = SPA
+    			}
 			}
 			SPA = {
-				drop_cosmetic_tag
+				set_cosmetic_tag = SPR_KINGDOM
 				set_politics = {
 					ruling_party = neutrality
 					elections_allowed = no
@@ -129,26 +323,206 @@ country_event = {
 					neutrality = 85
 					communism = 15
 				}
+				promote_character = SPR_Alfonso_XIII
 				add_ideas = {
 					SPR_the_regency_of_maria_christina_idea
-					SPR_underage_monarch_idea
 					SPR_an_empire_in_decline_idea
 					SPR_agarian_economy_idea
 					ww1_Scramble_for_Africa
 					SPR_rigged_elections_idea
-					SPR_memories_of_the_spanish_american_war_idea
+				}
+				load_focus_tree = Spain_DNC
+				if = {
+					limit = {
+						SPR = {
+							has_completed_focus = SPRDNC_el_desastre_del_98
+						}
+					}
+					add_ideas = {
+						SPR_memories_of_the_spanish_american_war_idea1
+					}
+					unlock_national_focus = SPRDNC_el_desastre_del_98
+				}
+				else = {
+					add_ideas = {
+						SPR_memories_of_the_spanish_american_war_idea
+					}
 				}
 			}
 			remove_ideas = {
 				SPR_the_regency_of_maria_christina_idea
-				SPR_underage_monarch_idea
 				SPR_rigged_elections_idea
 			}
 			declare_war_on = {
 				target = SPA
 				type = civil_war
 			}
-		}	
+		}
+		complete_national_focus = SPRDNC_the_4th_carlist_war
+
+		every_state = {
+			clr_state_flag = SPRDNC_carlist_control
+		}
+	}
+}
+
+news_event = { # End of civil war, carlist victory
+	id = dnc_carlism.2
+	picture = GFX_madrid_funeral
+	title = dnc_carlism.2.t
+	desc = dnc_carlism.2.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	hidden = yes
+
+	option = {
+		name = dnc_carlism.2.a
+		delete_unit_template_and_units = {
+			template = "Milicia Carlista"
+		}
+	}
+}
+
+country_event = { # Portugal ultimatum
+	id = dnc_carlism.3
+	title = dnc_carlism.3.t
+	desc = dnc_carlism.3.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # Acceptance
+		name = dnc_carlism.3.a
+		SPR = {
+			set_autonomy = {
+				target = POR
+				autonomous_state = autonomy_personal_union
+			}
+		}
+	}
+
+	option = {
+		name = dnc_carlism.3.b
+		SPR = {
+			create_wargoal = {
+				type = puppet_wargoal_focus
+				target = POR
+			}
+		}
+	}
+}
+
+country_event = { # annexation of central american and carribean countries
+	id = dnc_carlism.4
+	title = dnc_carlism.4.t
+	desc = dnc_carlism.4.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = { # Acceptance
+		name = dnc_carlism.3.a
+		SPR = {
+			annex_country = {
+				target = PREV
+				transfer_troops = yes
+			}
+		}
+
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = 10
+				has_opinion = {
+					target = SPR
+					value > 25
+				}
+			}
+		}
+	}
+
+	option = {
+		name = dnc_carlism.3.b
+		SPR = {
+			create_wargoal = {
+				type = annex_everything
+				target = PREV
+			}
+		}
+		ai_chance = {
+			base = 1
+			modifier = {
+				add = 10
+				has_opinion = {
+					target = SPR
+					value < 0
+				}
+			}
+		}
+	}
+}
+
+country_event = { # gibraltar ultimatum
+	id = dnc_carlism.5
+	title = dnc_carlism.5.t
+	desc = dnc_carlism.5.desc
+
+	is_triggered_only = yes
+
+	fire_only_once = yes
+
+	option = {
+		name = dnc_carlism.5.a
+		SPR = {
+			transfer_state = 118
+		}
+	}
+
+	option = {
+		name = dnc_carlism.5.b
+		SPR = {
+			create_wargoal = {
+				type = take_claimed_state
+				target = PREV
+			}
+		}
+	}
+}
+
+news_event = { # Death of Carlos VII
+	id = dnc_carlism.6
+	picture = GFX_madrid_funeral
+	title = dnc_carlism.6.t
+	desc = dnc_carlism.6.desc
+
+	trigger = {
+		tag = SPR
+		has_country_leader = SPR_Carlos_VII
+		date > 1909.7.17
+	}
+
+	fire_only_once = yes
+
+	option = {
+		name = dnc_carlism.6.a
+		hidden_effect = {
+			retire_character = SPR_Carlos_VII
+			promote_character = SPR_Jaime_III
+			if = {
+				limit = {
+					has_completed_focus = SPRVR_imperio_espanol
+				}
+				add_country_leader_trait = SPR_emperor_of_spain
+			}
+			else = {
+				add_country_leader_trait = SPR_carlist_pretender
+			}
+		}
 	}
 }
 
