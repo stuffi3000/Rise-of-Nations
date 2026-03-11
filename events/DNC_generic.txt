@@ -450,7 +450,8 @@ country_event = {
 			factor = 1000
 		}
 
-		create_faction = TripleEntente
+		create_faction_from_template = faction_template_entente
+
 		hidden_effect = {
 			RUS = { country_event = { id = generic.5 days = 1 } }
 		}
@@ -474,10 +475,11 @@ country_event = {
 			factor = 1000
 		}
 
-					create_faction_from_template = faction_template_central_powers
+		create_faction_from_template = faction_template_central_powers
 
-		AUH = { country_event = { id = generic.5 hours = 1 } }
-
+		hidden_effect = {
+			RUS = { country_event = { id = generic.5 days = 1 } }
+		}
 	}
 
 }
@@ -1370,112 +1372,114 @@ country_event = {
 	desc = dnctree.40.desc
 
 	is_triggered_only = yes
-    immediate = {
-	set_variable = { global.marpac_for_vote = 0 }
-	set_variable = { global.marpac_against_vote = 0 }		
-	clear_array = global.marpac_executive_array
-	hidden_effect = {
-	every_country = {
-		limit = { 
-			OR = {
-			tag = AUH
-			tag = ENG
-			tag = FRA
-			tag = GER
-			tag = ITA
-			tag = JAP
-			is_major = yes
-			tag = RUS					
-			}			
-			NOT = {
-				tag = QIN
-				tag = CHI
-			}				
+
+	immediate = {
+		set_variable = { global.marpac_for_vote = 0 }
+		set_variable = { global.marpac_against_vote = 0 }
+		clear_array = global.marpac_executive_array
+		hidden_effect = {
+			every_country = {
+				limit = { 
+					OR = {
+						tag = AUH
+						tag = ENG
+						tag = FRA
+						tag = GER
+						tag = ITA
+						tag = JAP
+						is_major = yes
+						tag = RUS
+					}
+					NOT = {
+						tag = QIN
+						tag = CHI
+					}
+				}
+				if = {
+					limit = {
+						is_ai = no
+					}
+					set_country_flag = currently_voting
+				}
+				add_to_array = {
+					array = global.marpac_executive_array
+					value = THIS.id
+				}
 			}
-		if = {
-			limit = {
-				is_ai = no
-			}
-			set_country_flag = currently_voting
 		}
-		add_to_array = {
-    	array = global.marpac_executive_array
-    	value = THIS.id
-		}
-		}			
-	}
 	
 	}
+
 	option = {
 		name = dnctree.40.a
 		set_global_flag = MARPAC_voting_in_process
 		set_global_flag = MARPAC_resolution_1
-        set_country_flag = show_marpac_menu			
+		set_country_flag = show_marpac_menu
 		set_global_flag = eight_nation_alliance_created
-		create_faction = faction_eight_nations
-		news_event = marpac.1000	
-			set_country_flag = MARPAC_voted	 
-		    add_to_array = {
-	        array = global.marpac_countries_for
-            value = THIS.id
-		}		
-			add_to_variable = {
-	        var = global.marpac_for_vote
-	        value = 1
-        }		
+		create_faction_from_template = {
+			name = faction_eight_nations
+			template = faction_template_allies
+		}
+		news_event = marpac.1000
+		set_country_flag = MARPAC_voted
+		add_to_array = {
+			array = global.marpac_countries_for
+			value = THIS.id
+		}
+		add_to_variable = {
+			var = global.marpac_for_vote
+			value = 1
+		}
 		hidden_effect = {		
-		every_country = {
-		limit = {  
-			OR = {
-			tag = AUH
-			tag = ENG
-			tag = FRA
-			tag = GER
-			tag = ITA
-			tag = JAP
-			tag = RUS		
-			is_major = yes			
-			}		
-			NOT = {
-				tag = QIN
-				tag = CHI
+			every_country = {
+				limit = {  
+					OR = {
+						tag = AUH
+						tag = ENG
+						tag = FRA
+						tag = GER
+						tag = ITA
+						tag = JAP
+						tag = RUS
+						is_major = yes
+					}
+					NOT = {
+						tag = QIN
+						tag = CHI
+					}
+				}
+				if = {
+					limit = {
+						is_ai = no
+					}
+					set_country_flag = currently_voting
+				}
+				if = {
+					limit = {
+						is_ai = yes
+					}
+					country_event = {
+						id = marpac.5
+						days = 5
+					}
+				}
+
 			}
-		}
-		if = {
-			limit = {
-				is_ai = no
+
+			country_event = {
+				id = marpac.2
+				days = 20
 			}
-			set_country_flag = currently_voting
-		}
-		if = {
-			limit = {
-				is_ai = yes
-			}
-		country_event = { 
-		id = marpac.5
-		days = 5
-		}			
-		}
-		
-		}	
-		
-		country_event = {
-		id = marpac.2
-		days = 20
-		}
 		}
 	}
+
 	option = {
 		name = dnctree.40.b
 		ai_chance = {
 			factor = 0
 		}
-
 		set_global_flag = eight_nation_alliance_denied
-
 	}
-
-
 }
 
 ##Disband French Faction
@@ -1484,8 +1488,11 @@ country_event = {
 	picture = GFX_report_event_military_planning
 	title = dnctree.41.title
 	desc = dnctree.41.desc
+
 	fire_only_once = yes
+
 	hidden = yes
+
 	trigger = {
 		tag = FRA
 		is_faction_leader = yes
