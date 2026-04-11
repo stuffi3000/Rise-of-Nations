@@ -1,103 +1,165 @@
 scripted_gui = {
 
-	international_politics = {
-		context_type = decision_category
-		#parent_window_token = selected_country_view_diplomacy
-		window_name = "international_instances_window_container"
+    # Top bar button
+    #crisis_topbar_button = {
+    #    context_type = player_context
+    #    window_name = "crisis_topbar_button_container"
+    #    
+    #    visible = {
+    #        always = yes
+    #    }
+    #    
+    #    effects = {
+    #        open_crisis_window_button_click = {
+    #            if = {
+    #                limit = { has_country_flag = crisis_window_open }
+    #                clr_country_flag = crisis_window_open
+    #            }
+    #            else = {
+    #                set_country_flag = crisis_window_open
+    #            }
+    #        }
+    #    }
+    #    
+    #    triggers = {
+    #        crisis_warning_icon_visible = {
+    #            check_variable = { global.political_active_crisis_list^num > 0 }
+    #        }
+    #        crisis_count_text_visible = {
+    #            check_variable = { global.political_active_crisis_list^num > 0 }
+    #        }
+    #    }
+    #    
+    #    properties = {
+    #        crisis_warning_icon = {
+    #            frame = 2
+    #        }
+    #    }
+    #}
 
-        dynamic_lists = {
-            political_crisis = {
-                entry_container = political_crisis_entry  
-                array = global.political_crisis_list_array
-				index = global.political_crisis_list_index   
-				#change_scope = yes
+    # Main crisis window
+    crisis_main_window_gui = {
+        context_type = player_context
+        window_name = "crisis_main_window"
+        
+        visible = {
+            has_country_flag = crisis_window_open
+        }
+        
+        effects = {
+            close_button_click = {
+                clr_country_flag = crisis_window_open
             }
-			originator_flag = {
-				entry_container = originator_flag_entry
-				array = global.crisis_originators 
-				index = global.crisis_originators_index
-				change_scope = yes
-			}
-			receiver_flag = {
-				entry_container = receiver_flag_entry
-				array = global.crisis_receivers
-				index = global.crisis_receivers_index
-				change_scope = yes 
-			}
-        }  
-		visible = {
-			has_country_flag = show_political_crisis   
-		}
-		effects = { 
-			close_button_click = {
-				clr_country_flag = show_political_crisis
-			}
-		}
-		triggers = {
-			flag1_visible = {
-				is_in_array = {
-					array = global.political_active_crisis_list
-					value = global.political_crisis_list_array^global.crisis_originators_index
-				}
-			}
-			flag2_visible = {
-				is_in_array = {
-					array = global.political_active_crisis_list
-					value = global.political_crisis_list_array^global.crisis_receivers_index
-				}
-			}
-			crisis_progressbar_visible = {
-				is_in_array = {
-					array = global.political_active_crisis_list
-					value = global.political_crisis_list_array^global.political_crisis_list_index   
-				}
-			}
-			country_flag1_frame_visible = {
-				is_in_array = {
-					array = global.political_active_crisis_list
-					value = global.political_crisis_list_array^global.crisis_originators_index
-				}
-			}
-			country_flag2_frame_visible = {
-				is_in_array = {
-					array = global.political_active_crisis_list
-					value = global.political_crisis_list_array^global.crisis_receivers_index
-				}
-			}
-		}
-		properties = {
-			flag1 = {
-				image = "[THIS.GetFlag]"
-			}
-			flag2 = {
-				image = "[THIS.GetFlag]"  
-			}
-			crisis_modifier_1 = {
-				frame = 1
-			}
-			crisis_modifier_2 = {
-				frame = 2
-			} 
-			crisis_modifier_3 = {
-				frame = 3
-			}
-			crisis_modifier_4 = {
-				frame = 4
-			}
-			crisis_modifier_5 = {
-				frame = 5
-			}
-			crisis_progressbar = {
-				
-				frame = var:global.crisis_progress^global.political_crisis_list_index 
-			}
-		} 
-#
-		#	house_icon = {
-		#		frame = current_house_icon_frame
-		#	}
-		#} 
-	}
+        }
+        
+        triggers = {
+            no_crisis_text_visible = {
+                check_variable = { global.political_active_crisis_list^num < 1 }
+            }
+        }
+        
+        dynamic_lists = {
+            crisis_entries = {
+                array = global.political_active_crisis_list
+                entry_container = crisis_entry
+                index = crisis_gui_index
+            }
+        }
+        
+        triggers = {
+            # Main flags always visible for active entries
+            originator_flag_visible = {
+                always = yes
+            }
+            receiver_flag_visible = {
+                always = yes
+            }
+            originator_flag_frame_visible = {
+                always = yes
+            }
+            receiver_flag_frame_visible = {
+                always = yes
+            }
+            
+            # Stage icons
+            stage_1_visible = {
+                always = yes
+            }
+            stage_2_visible = {
+                check_variable = { global.crisis_stage^crisis_gui_index > 0 }
+            }
+            stage_3_visible = {
+                check_variable = { global.crisis_stage^crisis_gui_index > 1 }
+            }
+            
+            # Originator backers
+            orig_backer_0_visible = {
+                check_variable = { global.crisis_originator_backers^crisis_gui_index^num > 0 }
+            }
+            orig_backer_1_visible = {
+                check_variable = { global.crisis_originator_backers^crisis_gui_index^num > 1 }
+            }
+            orig_backer_2_visible = {
+                check_variable = { global.crisis_originator_backers^crisis_gui_index^num > 2 }
+            }
+            orig_backer_more_visible = {
+                check_variable = { global.crisis_originator_backers^crisis_gui_index^num > 3 }
+            }
+            
+            # Receiver backers
+            recv_backer_0_visible = {
+                check_variable = { global.crisis_receiver_backers^crisis_gui_index^num > 0 }
+            }
+            recv_backer_1_visible = {
+                check_variable = { global.crisis_receiver_backers^crisis_gui_index^num > 1 }
+            }
+            recv_backer_2_visible = {
+                check_variable = { global.crisis_receiver_backers^crisis_gui_index^num > 2 }
+            }
+            recv_backer_more_visible = {
+                check_variable = { global.crisis_receiver_backers^crisis_gui_index^num > 3 }
+            }
+        }
+        
+        properties = {
+            # Main party flags
+            originator_flag = {
+                image = "[?global.crisis_originators^crisis_gui_index.GetFlag]"
+            }
+            receiver_flag = {
+                image = "[?global.crisis_receivers^crisis_gui_index.GetFlag]"
+            }
+            
+            # Stage icons
+            stage_1 = {
+                frame = 1
+            }
+            stage_2 = {
+                frame = 2
+            }
+            stage_3 = {
+                frame = 3
+            }
+            
+            # Progress bar
+            progress_bar = {
+                frame = global.crisis_progress^crisis_gui_index
+            }
+            
+    strength_compare_bar = {
+                frame = global.crisis_strength_ratio^crisis_gui_index
+            }
+            
+            # Originator backer flags
+            orig_backer_0 = {
+                image = "[?global.crisis_originator_backers^crisis_gui_index.0.GetFlag]"
+            }
+         
+            # Receiver backer flags
+            recv_backer_0 = {
+                image = "[?global.crisis_receiver_backers^crisis_gui_index.0.GetFlag]"
+            }
 
+        }
+    }
 }
-
