@@ -1,739 +1,1295 @@
-RON_economy = {
+diplomatic_crisis_category = {
 
-	offer_economic_subsidies = {
-		is_good = no
-		fire_only_once = no
-		available = {
-			NOT ={
-				has_global_flag = closede
+	start_claim_crisis_against_FROM = {
+		icon = GFX_decision_generic_nationalism
+		
+		target_trigger = {
+			FROM = {
+				NOT = { tag = ROOT }
+				exists = yes
+				NOT = { has_war_with = ROOT }
+				OR = {
+					any_owned_state = { is_core_of = ROOT }
+					any_owned_state = { is_claimed_by = ROOT }
+					ROOT = { any_owned_state = { is_core_of = FROM } }
+				}
 			}
-			always = yes
 		}
+		
 		visible = {
-			has_idea = economic_crisis
-		}
-		available = {
-			has_idea = economic_crisis
-		}	
-		cost = 50
-		days_remove = 37
-		ai_will_do = {
-			base = 100
-		}
-		complete_effect = {
-			if = {
-				limit = {
-					NOT = {
-						has_idea = DNC_subsidised_businesses
+			NOT = { has_war_with = FROM }
+			# Not already in a crisis with them (either direction)
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					OR = {
+						AND = {
+							check_variable = { global.crisis_originators^i = ROOT }
+							check_variable = { global.crisis_receivers^i = FROM }
+						}
+						AND = {
+							check_variable = { global.crisis_originators^i = FROM }
+							check_variable = { global.crisis_receivers^i = ROOT }
+						}
 					}
 				}
-			add_timed_idea = {
-				idea = DNC_subsidised_businesses
-				days = 35
-			}				
 			}
-			add_to_variable = { stimulated_boost = 35 }
-			if = {
-				limit = {
+		}
+		
+		available = {
 			OR = {
-				has_idea = economic_stability
-				has_idea = economic_boom
-				AND = {
-					NOT = {
-						has_idea = economic_stability
-						has_idea = economic_boom						
+				FROM = { any_owned_state = { is_core_of = ROOT } }
+				FROM = { any_owned_state = { is_claimed_by = ROOT } }
+			}
+			country_exists = FROM 
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { is_in_faction_with = FROM }
+			has_war = no
+		}
+		
+		cost = 75
+		
+		ai_will_do = {
+			base = 15
+			modifier = {
+				add = 40
+				FROM = { any_owned_state = { is_core_of = ROOT } }
+			}
+			modifier = {
+				add = 20
+				FROM = { any_owned_state = { is_claimed_by = ROOT } }
+			}
+			modifier = {
+				factor = 0.3
+				FROM = { is_major = yes }
+			}
+			modifier = {
+				add = 25
+				strength_ratio = { tag = FROM ratio > 1.5 }
+			}
+			modifier = {
+				factor = 0.5
+				strength_ratio = { tag = FROM ratio < 0.8 }
+			}
+		}
+		
+		complete_effect = {
+			set_temp_variable = { originator = ROOT }
+			set_temp_variable = { defender = FROM }
+			set_temp_variable = { progress = 10 }
+			
+			random_state = {
+				limit = {
+					is_owned_by = FROM
+					is_core_of = ROOT
+				}
+				set_temp_variable = { target_state = THIS.id }
+			}
+			if = {
+				limit = { NOT = { has_temp_variable = target_state } }
+				random_state = {
+					limit = {
+						is_owned_by = FROM
+						is_claimed_by = ROOT
+					}
+					set_temp_variable = { target_state = THIS.id }
+				}
+			}
+			
+			RON_initiate_claim_crisis = yes
+		}
+	}
+	back_aggressor_in_crisis_FROM = {
+		icon = GFX_decision_generic_military
+		target_array = global.crisis_originators
+		
+		visible = {
+			NOT = { is_in_array = { global.crisis_originators = ROOT } }
+			NOT = { is_in_array = { global.crisis_receivers = ROOT } }
+			is_major = yes 
+			NOT = {
+				tag = FROM 
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = FROM }
+						OR = {
+							is_in_array = { global.crisis_originator_backers^i = ROOT }
+							is_in_array = { global.crisis_receiver_backers^i = ROOT }
+						}
 					}
 				}
-			}							
+			}
+		}
+		
+		available = {
+			has_war = no
+			political_power > 20
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = FROM }
+						is_in_faction_with = var:global.crisis_receivers^i
+					}
 				}
-				remove_ideas = economic_crisis
+			}
+		}
+		
+		cost = 25
+		
+		ai_will_do = {
+			base = 5
+			modifier = { add = 25 has_government = FROM }
+			modifier = { add = 40 is_in_faction_with = FROM }
+			modifier = { add = 30 is_guaranteeing = FROM }
+			modifier = { add = 15 has_government = fascism }
+			modifier = { factor = 0.5 has_government = democratic }
+		}
+		
+		complete_effect = {
+			# Find the crisis index where FROM is the originator
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = { 
+						check_variable = { global.crisis_originators^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_index = idx }
+					set_temp_variable = { backing_side = 1 }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				RON_join_crisis_as_backer = yes
+				custom_effect_tooltip = backing_aggressor_tt
+				FROM = { country_event = { id = crisis_backing.1 days = 1 } }
 			}
 		}
 	}
-	next_economic_cycle = {
-		is_good = no
-		priority = 100
-		fire_only_once = no
-		activation = {
-			NOT ={
-				has_global_flag = closede
+		back_defender_in_crisis_FROM = {
+		icon = GFX_decision_generic_prepare_civil_war
+		target_array = global.crisis_receivers
+		
+		visible = {
+			NOT = { is_in_array = { global.crisis_originators = ROOT } }
+			NOT = { is_in_array = { global.crisis_receivers = ROOT } }
+			is_major = yes
+			NOT = {
+				tag = FROM
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_receivers^i = FROM }
+						OR = {
+							is_in_array = { global.crisis_originator_backers^i = ROOT }
+							is_in_array = { global.crisis_receiver_backers^i = ROOT }
+						}
+					}
+				}
 			}
+		}
+		
+		available = {
+			has_war = no
+			political_power > 20
+			NOT = {
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_receivers^i = FROM }
+						is_in_faction_with = var:global.crisis_originators^i
+					}
+				}
+			}
+		}
+		
+		cost = 25
+		
+		ai_will_do = {
+			base = 10
+			modifier = { add = 25 has_government = FROM }
+			modifier = { add = 50 is_in_faction_with = FROM }
+			modifier = { add = 60 is_guaranteeing = FROM }
+			modifier = { add = 20 has_government = democratic }
+		}
+		
+		complete_effect = {
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = { 
+						check_variable = { global.crisis_receivers^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_index = idx }
+					set_temp_variable = { backing_side = 2 }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				RON_join_crisis_as_backer = yes
+				custom_effect_tooltip = backing_defender_tt
+				FROM = { country_event = { id = crisis_backing.2 days = 1 } }
+			}
+		}
+	}
+	withdraw_backing_from_crisis = {
+		icon = GFX_decision_generic_civil_support
+		
+		visible = {
+			OR = {
+				has_country_flag = backing_originator_side
+				has_country_flag = backing_receiver_side
+			}
+		}
+		
+		available = {
 			always = yes
 		}
-		days_re_enable = 370
-		days_mission_timeout = 370
+		
+		cost = 10
+		
+		ai_will_do = {
+			base = 0
+			modifier = { add = 50 has_war = yes }
+			modifier = { add = 30 has_stability < 0.3 }
+		}
+		
+		complete_effect = {
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				# Remove from originator backers
+				if = {
+					limit = { is_in_array = { global.crisis_originator_backers^idx = ROOT } }
+					remove_from_array = { array = global.crisis_originator_backers^idx value = ROOT }
+				}
+				# Remove from receiver backers
+				if = {
+					limit = { is_in_array = { global.crisis_receiver_backers^idx = ROOT } }
+					remove_from_array = { array = global.crisis_receiver_backers^idx value = ROOT }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			clr_country_flag = backing_originator_side
+			clr_country_flag = backing_receiver_side
+			
+			add_political_power = -25
+			add_war_support = -0.05
+			
+			custom_effect_tooltip = withdraw_backing_tt
+		}
+	}
+	back_down_from_crisis_FROM = {
+		icon = GFX_decision_generic_civil_support
+		target_array = global.crisis_receivers
+		
+		visible = {
+			is_in_array = { global.crisis_originators = ROOT }
+			any_of = {
+				array = global.political_crisis_list_array
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+				}
+			}
+		}
+		
+		ai_will_do = {
+			base = 0
+			modifier = {
+				add = 100
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_originator_strength^i > 0 }
+						check_variable = { global.crisis_receiver_strength^i > 0 }
+						# Check if severely outmatched
+						check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
+					}
+				}
+			}
+		}
+		
+		complete_effect = {
+			set_temp_variable = { found = 0 }
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = {
+						check_variable = { global.crisis_originators^idx = ROOT }
+						check_variable = { global.crisis_receivers^idx = FROM }
+						check_variable = { found = 0 }
+					}
+					set_temp_variable = { crisis_id = global.political_crisis_list_array^idx }
+					set_temp_variable = { found = 1 }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+			
+			if = {
+				limit = { check_variable = { found = 1 } }
+				
+				# Penalty for backing down
+				add_political_power = -75
+				add_war_support = -0.1
+				add_stability = -0.05
+				
+				# Winner gets their cores
+				FROM = {
+					every_state = {
+						limit = {
+							is_core_of = FROM
+							is_owned_by = ROOT
+						}
+						transfer_state_to = FROM
+					}
+					add_political_power = 50
+					add_war_support = 0.05
+				}
+				
+				# End the crisis
+				RON_end_crisis = yes
+			}
+		}
+	}
+
+	escalate_crisis_to_war_FROM = {
+		target_array = global.crisis_receivers
+		icon = GFX_decision_generic_ignite_civil_war
+		
+		visible = {
+			is_in_array = { global.crisis_originators = ROOT }
+			any_of = {
+				array = global.political_crisis_list_array
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+			}
+		}
+		
 		available = {
-				has_global_flag = closede
-		}	
+			has_war = no
+		}
+		
+		ai_will_do = {
+			base = 30
+			modifier = {
+				add = 50
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_originator_strength^i > global.crisis_receiver_strength^i }
+					}
+				}
+			}
+			modifier = {
+				factor = 0.1
+				any_of = {
+					array = global.political_crisis_list_array
+					index = i
+					AND = {
+						check_variable = { global.crisis_originators^i = ROOT }
+						check_variable = { global.crisis_receivers^i = FROM }
+						check_variable = { global.crisis_receiver_strength^i > global.crisis_originator_strength^i }
+					}
+				}
+			}
+		}
+		
+		war_with_target_on_remove = yes
+		days_remove = 5
+		
+		complete_effect = {
+			# Store crisis info for remove_effect
+			set_temp_variable = { idx = 0 }
+			for_each_loop = {
+				array = global.political_crisis_list_array
+				if = {
+					limit = {
+						check_variable = { global.crisis_originators^idx = ROOT }
+						check_variable = { global.crisis_receivers^idx = FROM }
+					}
+					set_variable = { ROOT.escalating_crisis_index = idx }
+					set_variable = { ROOT.escalating_crisis_id = global.political_crisis_list_array^idx }
+				}
+				add_to_temp_variable = { idx = 1 }
+			}
+		}
+		
+		remove_effect = {
+			set_temp_variable = { crisis_index = ROOT.escalating_crisis_index }
+			set_temp_variable = { crisis_id = ROOT.escalating_crisis_id }
+			
+			# Declare war
+			declare_war_on = {
+				target = FROM
+				type = take_core_state
+				generator = owned_states
+			}
+			
+			# Originator backers join
+			for_each_loop = {
+				array = global.crisis_originator_backers^crisis_index
+				var:v = {
+					add_to_war = {
+						targeted_alliance = ROOT
+						enemy = FROM
+					}
+				}
+			}
+			
+			# Receiver backers join
+			for_each_loop = {
+				array = global.crisis_receiver_backers^crisis_index
+				var:v = {
+					add_to_war = {
+						targeted_alliance = FROM
+						enemy = ROOT
+					}
+				}
+			}
+			
+			# Clean up
+			clear_variable = ROOT.escalating_crisis_index
+			clear_variable = ROOT.escalating_crisis_id
+			
+			RON_end_crisis = yes
+		}
+	}
+	
+
+
+	remove_diplomatic_crisis_test = {
+
+		visible = {
+			is_debug = yes
+		}
+
+		complete_effect = {
+			set_temp_variable = { crisis_id = 2}
+			RON_end_crisis = yes
+
+
+			
+		}
+
+
+	}
+	debug_remove_all_crisis = {
+		visible ={
+		is_debug = yes 
+		}
+		complete_effect = {
+			clear_array = global.political_crisis_list_array
+			clear_array = global.crisis_originators
+			clear_array = global.crisis_receivers
+			clear_array = global.political_active_crisis_list
+			clear_array = global.crisis_progress
+
+			
+			#set_variable = {
+			#	global.crisis_progress^0 = 0
+			#}
+			#set_variable = {
+			#	global.crisis_progress^1 = 0
+			#}
+			#set_variable = {
+			#	global.crisis_progress^2 = 0
+			#}
+		}
+	}
+	congress_timer_mission = {
+		icon = GFX_decision_eng_trade_unions_support
+		available = {
+			has_country_flag = congress_over_flag
+		}
+
+		days_mission_timeout = 10
+
+		activation = {
+			always = no
+		}
+
 		timeout_effect = {
-			activate_mission = next_economic_cycle
-			hidden_effect = {
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery				
-		ROOT = {	
-			random_list = {
-10 = {
-    # Clearing all country flags and setting the flag for economic_crisis
-    set_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+			add_political_power = 10
 
-    # Adding the idea for economic_crisis
-    add_ideas = economic_crisis
-    # Removing ideas for other conditions
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
+			set_temp_variable = { aggressor_side = var:congress_aggressor_side }
+			set_temp_variable = { defender_side = var:congress_defender_side }  
+			set_temp_variable = { amount = 10 } 
+			RON_subtract_diplo_crisis_progress = yes
+			clear_variable = congress_aggressor_side
+			clear_variable = congress_defender_side
+		}
 
-18 = {
-    
-}
+		complete_effect = {
+			
+		}
+	}
+	political_crisis_list_add = {
+		visible = { 
+			is_debug = yes
+		}
+		complete_effect = {
+			# Set the variables the script expects
+			set_temp_variable = { originator = GER }
+			set_temp_variable = { defender = FRA }
+			set_temp_variable = { crisis_id = 5 }
+			set_temp_variable = { progress = 10 }
 
-6 = {
-    # Clearing all country flags and setting the flag for rubber_shortage
-    set_country_flag = rubber_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+			# RUN THE SCRIPT
+			RON_initiate_crisis = yes
+		}
+	}
+	political_crisis_list_add2 = {
+		visible = {
+			is_debug = yes
+		}
+		complete_effect = {
+			add_to_array = {
+				array = global.political_active_crisis_list
+				value = 2
+			} 
+			add_to_array = {
+				array = global.crisis_originators 
+				value = USA
+			}
+			add_to_array = {
+				array = global.crisis_receivers
+				value = PHI
+			}
+			add_to_array = {
+				array = global.political_crisis_list_array
+				value = 2
+			}
+			set_variable = {
+				global.crisis_progress^2 = 60
+			}
+		}
+	} 
+	political_crisis_list_add3 = {
+		visible = {
+			is_debug = yes
+		}
 
-    # Adding the idea for rubber_shortage
-    add_ideas = rubber_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
+		complete_effect = {
+			#set_temp_variable = { crisis_id = 0}
+			#set_temp_variable = { originator = FRA }
+			#set_temp_variable = { defender = GER }
+			#set_temp_variable = { progress = 35}
+			#RON_initiate_crisis = yes
 
-6 = {
-    # Clearing all country flags and setting the flag for oil_shortage
-    set_country_flag = oil_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+			set_temp_variable = { crisis_id = 2}
+			set_temp_variable = { originator = FRA }
+			set_temp_variable = { defender = RUS }
+			set_temp_variable = { progress = 80}
+			RON_initiate_crisis = yes
 
-    # Adding the idea for oil_shortage
-    add_ideas = oil_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
 
-6 = {
-    # Clearing all country flags and setting the flag for iron_shortage
-    set_country_flag = iron_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+			set_temp_variable = { crisis_id = 1} 
+			set_temp_variable = { originator = FRA }
+			set_temp_variable = { defender = GER }
+			set_temp_variable = { progress = 50}
+			RON_initiate_crisis = yes
+		}
+	}
+	testfgvrdfvdf = {
+		visible = {  
+			#check_variable = {
+			#	global.crisis_progress^2 = 60 
+			#}
+			is_debug = yes
+		}
+		complete_effect = {
+			add_political_power = global.crisis_progress^0
+			add_political_power = global.crisis_progress^1
+			add_political_power = global.crisis_progress^2
+			add_political_power = global.crisis_progress^3
+			add_political_power = global.crisis_progress^4
+			add_political_power = global.crisis_progress^5
+			add_political_power = global.crisis_progress^6
+			add_political_power = global.crisis_progress^7
+			add_political_power = global.crisis_progress^8
+			add_political_power = global.crisis_progress^9
+			add_political_power = global.crisis_progress^10
+		}
+	}
+	#testtttt_yhdspfg = {
+	#	visible = {
+	#		is_debug = yes
+	#	}
+	#	complete_effect = {
+	#		
+	#	}
+	#}
 
-    # Adding the idea for iron_shortage
-    add_ideas = iron_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
+	#set_diplo_crisis_to_100 = {
+	#	visible = {
+	#		is_debug = yes
+	#	}
+	#	complete_effect = {
+	#		#for_each_loop = {
+	#		#	array = global.political_active_crisis_list
+	#		#	
+	#		#	set_variable = { global.crisis_progress^i = 100 }
+	##
+	#		#}
+	#		set_variable = { global.crisis_progress^0 = 100 }
+	#		#set_variable = { global.crisis_progress^1 = 100 }
+	#	}
+	#}
 
-6 = {
-    # Clearing all country flags and setting the flag for aluminum_shortage
-    set_country_flag = aluminum_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+	issue_embargo_against_FROM = {
+		target_array = global.crisis_receivers
+	visible = {
+		is_in_array = { global.crisis_originators = ROOT }
+		
+		any_of = {
+			array = global.political_active_crisis_list
+			index = i
 
-    # Adding the idea for aluminum_shortage
-    add_ideas = aluminum_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
+			AND = {
+				check_variable = { global.crisis_originators^i = ROOT }
+				check_variable = { global.crisis_receivers^i = FROM }
+				check_variable = { global.crisis_progress^i > 19 }
+				check_variable = { global.crisis_stage^i = 0 }  
+			}
+		}
+	}
+	ai_will_do = {
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
 
-6 = {
-    # Clearing all country flags and setting the flag for tungsten_shortage
-    set_country_flag = tungsten_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
 
-    # Adding the idea for tungsten_shortage
-    add_ideas = tungsten_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
 
-6 = {
-    # Clearing all country flags and setting the flag for chromium_shortage
-    set_country_flag = chromium_shortage
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
-
-    # Adding the idea for chromium_shortage
-    add_ideas = chromium_shortage
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
-
-6 = {
-    # Clearing all country flags and setting the flag for production_boost
-    set_country_flag = production_boost
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
-
-    # Adding the idea for production_boost
-    add_ideas = production_boost
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
-
-6 = {
-    # Clearing all country flags and setting the flag for austerity_measures
-    set_country_flag = austerity_measures
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
-
-    # Adding the idea for austerity_measures
-    add_ideas = austerity_measures
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
-
-6 = {
-
-	if = {
-		limit = {
+		modifier = {
+			add = 0.3
 			has_war = yes
 		}
-    # Clearing all country flags and setting the flag for wartime_economy
-    set_country_flag = wartime_economy
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
 
-    # Adding the idea for wartime_economy
-    add_ideas = wartime_economy
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
+
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
+
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
 	}
-}
+		complete_effect = {
+			send_embargo = FROM
+			FROM = {
+				send_embargo = ROOT
+			}
+		for_each_loop = {
+			array = global.political_active_crisis_list
+			
+			if = {
+				limit = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+				}
+				set_variable = { global.crisis_stage^i = 1 }
+			}
+		}			
+		}
+	}
+	initiate_border_war_against_FROM = {
+		
+		icon = border_war		
+		target_array = global.crisis_receivers
+		available = {
+			has_war = no
 
-6 = {
-	if = {
-		limit = {
-check_variable = { ROOT.woundedsoldiers > 0 }		
+		
+	
+			FROM = {
+				any_owned_state = {
+					is_controlled_by = FROM
+					any_neighbor_state = {
+						is_fully_controlled_by = ROOT
+						set_temp_variable = { var:attacker_state_temp = id }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+					}
+					NOT = { has_state_flag = border_incident_active }
+					set_temp_variable = { var:defender_state_temp = id }
+				}
+			}
+			NOT = { has_non_aggression_pact_with = FROM }
+			NOT = { FROM = {is_puppet_of = ROOT} }
+		} 
+		ai_will_do = {
+		base = 40
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
+
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
+
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
+
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
+
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
+
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 59 }
+				}
+				
+			}  
+
+		}
+
+			# VPI by Yard1
+		
+
+		highlight_states = {
+			highlight_states_trigger = {
+				OR = {
+					state = FROM.defender_state_vs_@ROOT
+					AND = {
+						is_owned_and_controlled_by = FROM
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						any_neighbor_state = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							has_ROOT_at_least_1_div_in_current_state_scope = yes
+							is_fully_controlled_by = ROOT
+						}
+					}
+				}
+			}
 		}
 	
-    # Clearing all country flags and setting the flag for war_damages
-    set_country_flag = war_damages
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_economy_boost
-    clr_country_flag = economic_recovery
-
-    # Adding the idea for war_damages
-    add_ideas = war_damages
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_economy_boost
-    remove_ideas = economic_recovery
-}
-}
-
-6 = {
-    # Clearing all country flags and setting the flag for war_economy_boost
-    set_country_flag = war_economy_boost
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = economic_recovery
-
-    # Adding the idea for war_economy_boost
-    add_ideas = war_economy_boost
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = economic_recovery
-}
-
-6 = {
-    # Clearing all country flags and setting the flag for economic_recovery
-    set_country_flag = economic_recovery
-    clr_country_flag = economic_crisis
-    clr_country_flag = economic_boom
-    clr_country_flag = economic_recession
-    clr_country_flag = economic_stability
-    clr_country_flag = rubber_shortage
-    clr_country_flag = oil_shortage
-    clr_country_flag = iron_shortage
-    clr_country_flag = aluminum_shortage
-    clr_country_flag = tungsten_shortage
-    clr_country_flag = chromium_shortage
-    clr_country_flag = production_boost
-    clr_country_flag = austerity_measures
-    clr_country_flag = wartime_economy
-    clr_country_flag = war_damages
-    clr_country_flag = war_economy_boost
-
-    # Adding the idea for economic_recovery
-    add_ideas = economic_recovery
-    # Removing ideas for other conditions
-    remove_ideas = economic_crisis
-    remove_ideas = economic_boom
-    remove_ideas = economic_recession
-    remove_ideas = economic_stability
-    remove_ideas = rubber_shortage
-    remove_ideas = oil_shortage
-    remove_ideas = iron_shortage
-    remove_ideas = aluminum_shortage
-    remove_ideas = tungsten_shortage
-    remove_ideas = chromium_shortage
-    remove_ideas = production_boost
-    remove_ideas = austerity_measures
-    remove_ideas = wartime_economy
-    remove_ideas = war_damages
-    remove_ideas = war_economy_boost
-}
-
-			 
-			}
-		}
-			}
-		}
-	}
-	stimulate_economy = {
-		icon = generic_army_support
-
-		visible = {
-			#always = yes
-			NOT = {
-				has_global_flag = closede
-			}
-		}
+	
+		cost = 175
+	
+		fire_only_once = no
+	
+		days_remove = 20
+		days_re_enable = 30
+	
+		war_with_target_on_remove = yes
 
 		complete_effect = {
-			add_to_variable = { stimulated_boost = 30 }
+		if = {
+			limit = {
+				check_variable = { global.crisis_originators^i = ROOT }
+				check_variable = { global.crisis_receivers^i = FROM }
+			}
+			set_variable = { global.crisis_stage^i = 2 }
+		}			
+			hidden_effect = {
+				FROM = {
+					random_owned_controlled_state = {
+						limit = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							any_neighbor_state = {
+								hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+								has_ROOT_at_least_1_div_in_current_state_scope = yes
+								is_fully_controlled_by = ROOT
+							}
+						}
+						save_event_target_as = defender_state
+						set_variable = { FROM.defender_state_vs_@ROOT = id }
+						set_temp_variable = { defender_state_temp = id }
+						set_state_flag = border_incident_active
+					}
+				}
+				random_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						any_neighbor_state = {
+							state = var:FROM.defender_state_vs_@ROOT
+						}
+					}
+					save_event_target_as = attacker_state
+					set_variable = { FROM.attacker_state_vs_@ROOT = id }
+					set_temp_variable = { attacker_state_temp = id }
+					set_state_flag = border_incident_active
+				}
+			}
+			custom_effect_tooltip = WTT_border_incident_delay_until_new_incident_180
+			FROM = {
+				country_event = { id = wtt_border_incident_defender_warning.1 hours = 1 }
+				activate_targeted_decision = { target = ROOT decision = WTT_border_conflict_incident_warning_defender }				
+			}
 		}
-		days_remove = 30
-		cost = 10
-		ai_will_do = {
-			base = 0
-		}		
-	}	
-	stimulate_economy2 = {
-		icon = GFX_decision_eng_propaganda_campaigns
+		remove_effect = {
+			hidden_effect = {
+				var:FROM.defender_state_vs_@ROOT = {
+					save_event_target_as = defender_state 
+				}
+				var:FROM.attacker_state_vs_@ROOT = {
+					save_event_target_as = attacker_state 
+				}
+				FROM = {
+					random_owned_controlled_state = {
+						limit = {
+							hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							any_neighbor_state = {
+								is_fully_controlled_by = ROOT
+								has_ROOT_at_least_1_div_in_current_state_scope = yes
+								hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+							}
+						}
+						set_temp_variable = { defender_state_temp = id }
+					}
+				}
+				random_state = {
+					limit = {
+						is_fully_controlled_by = ROOT
+						hidden_trigger = { NOT = { has_state_flag = border_incident_active } }
+						has_ROOT_at_least_1_div_in_current_state_scope = yes
+						any_neighbor_state = {
+							state = var:FROM.defender_state_vs_@ROOT
+						}
+					}
+					set_temp_variable = { attacker_state_temp = id }
+				}
+			}
+			activate_targeted_decision = { target = FROM decision = WTT_escalate_incident_to_border_conflict }
+		}
+		
 
+
+
+	}
+	organise_congress_with_FROM = {
+		icon = GFX_decision_eng_trade_unions_support
+		target_array = global.crisis_originators
 		visible = {
-			#always = yes
+			
+			is_in_array = { global.crisis_receivers  = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+			
+				AND = { 
+					check_variable = { global.crisis_receivers^i = ROOT}
+					check_variable = { global.crisis_originators^i = FROM}
+					check_variable = { global.crisis_progress^i > 0 }
+				}
+
+			}  
+
+		}
+		available = {
 			NOT = {
-				has_global_flag = closede
+				has_active_mission = congress_timer_mission
+			}
+		}
+	ai_will_do = {
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
+
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
+
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
 			}
 		}
 
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
+
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
+
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
+
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}
+	cost = 50
 		complete_effect = {
-			add_to_variable = { consumtion_boost = 30 }
+			for_each_loop = {
+				array = global.political_active_crisis_list
+				if = {
+					limit = {
+						AND = {
+							check_variable = { global.crisis_receivers^i = ROOT} 
+							check_variable = { global.crisis_originators^i = FROM}
+						}
+					}
+					subtract_from_variable = {
+						global.crisis_progress^i = 5
+					}
+				}
+				set_variable = { congress_aggressor_side = FROM }
+				set_variable = { congress_defender_side = ROOT }
+			}
+			activate_mission = congress_timer_mission
 		}
-		days_remove = 30
-		cost = 10
-		ai_will_do = {
-			base = 0
-		}		
-	}
-weaken_economy = {
-	icon = generic_army_support
-
-	visible = {
-		NOT = {
-			has_global_flag = closede
-		}
 	}
 
-	complete_effect = {
-		add_to_variable = { stimulated_boost = -10 }
-		add_to_variable = { consumtion_boost = -10 }
-	}
-	days_remove = 10
-	cost = 5
+	escalate_diplo_crisis = {
+		target_array = global.crisis_receivers
+		icon = GFX_decision_generic_ignite_civil_war
 	ai_will_do = {
-		base = 0
+		base = 10
+		modifier = {
+			add = 2
+			strength_ratio = { tag = FROM ratio > 1.5 }
+		}
+		modifier = {
+			add = 3
+			strength_ratio = { tag = FROM ratio > 2.0 }
+		}
+		modifier = {
+			add = 0.5
+			strength_ratio = { tag = FROM ratio < 0.8 }
+		}
+		modifier = {
+			add = 0.1
+			strength_ratio = { tag = FROM ratio < 0.5 }
+		}
+		modifier = {
+			add = 1.5
+			NOT = { has_government = FROM }
+		}
+		modifier = {
+			add = 2
+			has_claims_on_ROOT = yes
+		}
+
+		modifier = {
+			add = 1.5
+			has_opinion = { target = FROM value < 0 }
+		}
+		modifier = {
+			add = 2
+			has_opinion = { target = FROM value < -50 }
+		}
+		modifier = {
+			add = 0
+			is_in_faction_with = FROM
+		}
+		modifier = {
+			add = 0.2
+			has_non_aggression_pact_with = FROM
+		}
+
+		modifier = {
+			add = 1.5
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT }
+					check_variable = { global.crisis_receivers^i = FROM }
+					check_variable = { global.crisis_progress^i > 40 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 0.3
+			has_war = yes
+		}
+
+		modifier = {
+			add = 1.5
+			is_major = yes
+		}
+
+		modifier = {
+			add = 0.3
+			FROM = {
+				is_puppet = yes
+				overlord = {
+					strength_ratio = { tag = ROOT ratio > 1.0 }
+				}
+			}
+		}
+
+		modifier = {
+			add = 1.5
+			has_government = fascism
+		}
+
+		modifier = {
+			add = 0.7
+			has_government = democratic
+		}
+	}		
+		visible = {
+			
+			is_in_array = { global.crisis_originators = ROOT }
+			
+			any_of = {
+				array = global.political_active_crisis_list
+				index = i
+
+				AND = {
+					check_variable = { global.crisis_originators^i = ROOT}
+					check_variable = { global.crisis_receivers^i = FROM}
+					check_variable = { global.crisis_progress^i > 99 }
+				}
+				
+			}  
+
+		}
+		war_with_target_on_remove = yes
+		days_remove = 5
+		remove_effect = {
+			create_wargoal = {
+				target = FROM
+				type = annex_everything
+			}
+		set_temp_variable = { crisis_id = global.political_crisis_list_array^i }
+					RON_end_crisis = yes
+		}
+
 	}
 }
-
-boost_inflation = {
-	icon = GFX_decision_eng_propaganda_campaigns
-
-	visible = {
-		NOT = {
-			has_global_flag = closede
-		}
-	}
-
-	complete_effect = {
-		add_to_variable = { stimulated_boost = -20 }
-		add_to_variable = { consumtion_boost = 20 }
-	}
-	days_remove = 20
-	cost = 10
-	ai_will_do = {
-		base = 0
-	}
-}
-
-drain_investments = {
-	icon = generic_army_support
-
-	visible = {
-		NOT = {
-			has_global_flag = closede
-		}
-	}
-
-	complete_effect = {
-		add_to_variable = { stimulated_boost = -30 }
-		add_to_variable = { consumtion_boost = 15 }
-	}
-	days_remove = 30
-	cost = 15
-	ai_will_do = {
-		base = 0
-	}
-}
-
-stabilize_infrastructure = {
-	icon = GFX_decision_eng_propaganda_campaigns
-
-	visible = {
-		NOT = {
-			has_global_flag = closede
-		}
-	}
-
-	complete_effect = {
-		add_to_variable = { stimulated_boost = 40 }
-		add_to_variable = { stimulated_boost = -40 }
-	}
-	days_remove = 40
-	cost = 20
-	ai_will_do = {
-		base = 0
-	}
-}
-
-}	
 
 fascism_on_the_rise = {
 	prepare_for_fascist_civil_war = {
@@ -995,6 +1551,7 @@ fascism_on_the_rise = {
 
 		available = {
 			has_stability < 0.5
+			fascism > 0.8
 		}
 
 		visible = {
@@ -1502,6 +2059,7 @@ democratic_on_the_rise = {
 
 		available = {
 			has_stability < 0.5
+			democratic < 0.8
 		}
 
 		visible = {
@@ -2007,6 +2565,7 @@ communism_on_the_rise = {
 
 		available = {
 			has_stability < 0.5
+			communism < 0.8
 		}
 
 		visible = {
@@ -2363,14 +2922,12 @@ subtract_from_variable = {global.UNAstoredarms = 1000}
 	set_variable = { global.marpac_against_vote = 0 }		
 	clear_array = global.marpac_executive_array
 		every_country = {
-		limit = { 
-			AND = { 
+		limit = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
 			has_idea = RON_United_Nations
 			has_guaranteed = UNA
-			country_exists = yes
 			}
 			not = {
 				tag = UNA
@@ -2379,10 +2936,9 @@ subtract_from_variable = {global.UNAstoredarms = 1000}
 				tag = KOR
 				tag = ZOM
 				tag = EUR
-			tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
+			}			
 			}	
 		add_to_array = {
     	array = global.marpac_executive_array 
@@ -2404,23 +2960,20 @@ subtract_from_variable = {global.UNAstoredarms = 1000}
 		hidden_effect = {
 		every_country = {
 		limit = { 
-			AND = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
 			has_idea = RON_United_Nations
-			has_guaranteed = UNA			
-			country_exists = yes
+			has_guaranteed = UNA
 			}
 			not = {
 				tag = UNA
 				tag = XXB
 				tag = ZOM
 				tag = EUR
-tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
+			}							
 			}	
 		if = {
 			limit = {
@@ -2496,13 +3049,11 @@ tag = TGR
 	clear_array = global.marpac_executive_array
 		every_country = {
 		limit = { 
-			AND = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
 			has_idea = RON_United_Nations
 			has_guaranteed = UNA
-			country_exists = yes
 			}
 			not = {
 				tag = UNA
@@ -2511,10 +3062,9 @@ tag = TGR
 				tag = KOR
 				tag = ZOM
 				tag = EUR
-tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
+			}			
 			}	
 		add_to_array = {
     	array = global.marpac_executive_array 
@@ -2539,23 +3089,20 @@ tag = TGR
 		hidden_effect = {
 		every_country = {
 		limit = { 
-			AND = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
 			has_idea = RON_United_Nations
 			has_guaranteed = UNA			
-			country_exists = yes
 			}
 			not = {
 				tag = UNA
 				tag = XXB
 				tag = ZOM
 				tag = EUR
-tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
+			}			
 			}				
 		if = {
 			limit = {
@@ -2775,7 +3322,7 @@ war_expands = {
 					}
 				}
 				USA = {
-				create_faction = NATO	
+				create_faction_from_template = faction_template_natoo	
 				}				
 			}				
 			if = {
@@ -2961,26 +3508,23 @@ tag = TGR
 	clear_array = global.marpac_executive_array
 		every_country = {
 		limit = { 
-			AND = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
 			has_idea = RON_United_Nations
 			has_guaranteed = UNA
-			country_exists = yes
 			}
-			not = {
+			NOT = {
 				tag = UNA
 				tag = DPK
 				tag = XXB
 				tag = KOR
 				tag = ZOM
 				tag = EUR
-tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
-			}					
+			}
+			}
 		}	
 		add_to_array = {
     	array = global.marpac_executive_array 
@@ -2996,7 +3540,6 @@ tag = TGR
 		hidden_effect = {
 		every_country = {
 		limit = { 
-			AND = {
 			OR = {
 			has_idea = RON_United_Nations_Security_Council
 			has_idea = RON_United_Nations_Security_Council_NP
@@ -3011,11 +3554,10 @@ tag = TGR
 				tag = KOR
 				tag = ZOM
 				tag = EUR
-tag = TGR
+				tag = TGR
 				tag = LON
-			}					
-			}				
-			}	
+			}
+			}
 		if = {
 			limit = {
 				is_ai = yes

@@ -47,21 +47,6 @@ on_actions = {
 		}
 	}
 
-	# country
-	on_new_term_election = {
-		random_events = {
-			100 = election.2
-			100 = election.3
-			100 = election.4
-			100 = election.5
-			100 = election.6
-			100 = election.11
-			100 = election.12
-			100 = election.13
-			100 = election.14
-			100 = election.15
-		}
-	}
 
 	# Ace pilots
 	# country, FROM = ace
@@ -120,7 +105,6 @@ on_actions = {
 	# triggered daily, so make sure there is a sink somewhere not firing events
 	# country, FROM = target nation
 	on_justifying_wargoal_pulse = {
-
 		random_events = {
 			100 = war_justification.1
 			100 = war_justification.2
@@ -141,6 +125,7 @@ on_actions = {
 			100 = war_justification.17
 			100 = war_justification.18
 			100 = war_justification.19
+			30000 = 0
 		}
 	}
 
@@ -229,17 +214,17 @@ on_actions = {
 				}
 				set_global_flag = JAP_nuke_1
 			}
-			#if = { #Readd with the state sync
-			#	limit = {
-			#		FROM = {
-			#			state = 953
-			#		}
-			#		NOT = {
-			#			has_global_flag = land_of_fire_flag
-			#		}
-			#	}
-			#	set_global_flag = land_of_fire_flag
-			#}
+			if = { #Readd with the state sync
+				limit = {
+					FROM = {
+						state = 512
+					}
+					NOT = {
+						has_global_flag = land_of_fire_flag
+					}
+				}
+				set_global_flag = land_of_fire_flag
+			}
 
 			news_event = { id = nuke_dropped.2 days = 1 }
 			news_event = { id = nuke_dropped.3 days = 1 }
@@ -353,7 +338,7 @@ on_actions = {
 			# Sunset invasion check
 			if = {
 				limit = {
-					is_puppet = no
+					is_subject = no
 					OR = {
 						AND = {
 							tag = MEX
@@ -1253,6 +1238,53 @@ on_actions = {
 	}
 
 	#Not run on a specific country.
+	on_weekly_FRA = {
+		effect = {
+			FRA = {
+			calc_parliament_totals = yes
+			}
+		}
+	}
+	on_new_term_election ={
+		effect= {
+			if = {
+				limit = {
+					tag = FRA
+				}
+				clear_parliament_gui_arrays = yes
+				add_to_array = { parliament_seat_array = 0 } # SFIC
+				add_to_array = { parliament_seat_array = 0 } # PRRRS-PRS
+				add_to_array = { parliament_seat_array = 0 } # SFIO
+				add_to_array = { parliament_seat_array = 0 } # AD
+				add_to_array = { parliament_seat_array = 0 } # PDP
+				add_to_array = { parliament_seat_array = 0 } # FR
+				add_to_array = { parliament_seat_array = 200 } # INDEP
+				add_to_array = { parliament_seat_array = 0 } #AF
+
+				# parliament_member_array stores the list of parties
+				# This basically assigns an id for each party, so Party A = 1, Party B = 2, etc. (must start from 1 and is in order)
+				add_to_array = { parliament_member_array = 1 } # SFIC
+				add_to_array = { parliament_member_array = 2 } # PRRRS
+				add_to_array = { parliament_member_array = 3 } # SFIO
+				add_to_array = { parliament_member_array = 4 } # AD
+				add_to_array = { parliament_member_array = 5 } # PDP
+				add_to_array = { parliament_member_array = 6 } # FR
+				add_to_array = { parliament_member_array = 7 } # INDEP
+				add_to_array = { parliament_member_array = 8 } # AF
+				# Set up the positions of the dots for the semicircle parliament
+				parliament_gui_positions = yes
+
+				# Modify what shows up in the gui
+				reload_parliament_gui = yes
+				parliament_gui_positions = yes
+				hidden_effect = {
+				reload_parl = yes
+				}
+			}
+		# Modify what shows up in the gui
+		reload_parliament_gui = yes 
+		}
+	}
 	on_startup = {
 
 		effect = {  
@@ -1770,7 +1802,9 @@ on_actions = {
 					trait = wounded
 					days = 90
 				}
-				unit_leader_event = { id = generic.18 }
+				FROM = {
+					country_event = generic.18
+				}
 			}
 		}
 	}
@@ -1791,7 +1825,9 @@ on_actions = {
 					trait = wounded
 					days = 90
 				}
-				unit_leader_event = { id = generic.18 }
+				FROM = {
+					country_event = generic.18
+				}
 			}
 		}
 	}
