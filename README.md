@@ -21,10 +21,10 @@
 [reddit-badge]: https://img.shields.io/static/v1?label=Reddit&message=Discuss&color=orange&logo=reddit&style=for-the-badge
 [reddit-link]: https://www.reddit.com/r/RiseOfNationMod/
 
-[github-size]: https://img.shields.io/github/repo-size/stuffi3000/Rise-of-Nations?label=MOD%20SIZE&style=for-the-badge
-[github-stars]: https://img.shields.io/github/stars/stuffi3000/Rise-of-Nations?style=for-the-badge
+[github-size]: https://img.shields.io/github/repo-size/Rise-of-Nations-Team/Rise-of-Nations?label=MOD%20SIZE&style=for-the-badge
+[github-stars]: https://img.shields.io/github/stars/Rise-of-Nations-Team/Rise-of-Nations?style=for-the-badge
 
-[github-latest]: https://img.shields.io/github/last-commit/stuffi3000/Rise-of-Nations?label=Latest%20Commit&color=blue&style=for-the-badge
-[github-activity]: https://img.shields.io/github/commit-activity/m/stuffi3000/Rise-of-Nations?label=Team%20Activity&style=for-the-badge
-[github-beta-backlog]: https://img.shields.io/github/commits-since/stuffi3000/Rise-of-Nations/1.7.4?label=Ahead%20Of%20Steam&style=for-the-badge&color=blue
+[github-latest]: https://img.shields.io/github/last-commit/Rise-of-Nations-Team/Rise-of-Nations?label=Latest%20Commit&color=blue&style=for-the-badge
+[github-activity]: https://img.shields.io/github/commit-activity/m/Rise-of-Nations-Team/Rise-of-Nations?label=Team%20Activity&style=for-the-badge
+[github-beta-backlog]: https://img.shields.io/github/commits-since/Rise-of-Nations-Team/Rise-of-Nations/1.7.7?label=Ahead%20Of%20Steam&style=for-the-badge&color=blue
 [discord-link]: https://img.shields.io/discord/696379419895398411?color=lightgrey&label=DISCORD&style=for-the-badge
