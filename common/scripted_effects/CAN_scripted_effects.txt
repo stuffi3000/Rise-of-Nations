@@ -1,0 +1,460 @@
+# ##############################################################################
+# CAN_scripted_effects - The Blood Tax
+# cause ids, spelled out by CAN_scripted_localisation.txt
+#
+# RAISERS                                        amount
+#   1  Order in Council 1899, Boer contingent      +10
+#   2  Paardeberg, Feb 1900                         +5
+#   3  Autonomy Bills school clause, Jul 1905       +8
+#   4  Regulation 17, Jun 1912             +10 then +1/yr
+#   5  Naval Aid Bill, Dec 1912                     +8
+#   6  King's declaration of war, Aug 1914          +5
+#   7  Half-million proclamation, Jan 1916         +10
+#   8  Military Service Act, Aug 1917              +25
+#   9  War-time Elections Act, Sep 1917             +5
+#  10  Quebec Easter riots, Mar 1918                +8
+#  11  Order of Apr 1918, farm exemptions void      +4
+#  12  Chanak: Ready, Aye, Ready, Sep 1922          +8
+#  13  The Imperial Bloc, Balfour report refused    +6
+#  14  Aerodrome of Democracy, Dec 1939     +3 per focus
+#  15  National Resources Mobilization Act 1940    +10
+#  16  Mayor Houde interned, Aug 1940               +6
+#  17  Plebiscite of Apr 1942                      +15
+#  18  Bill 80, Jul 1942                            +5
+#  19  Ralston Stays: the sixteen thousand 1944    +25
+#  20  Home defence men sent overseas         +1 per 30d
+#  32  Not Necessarily Conscription, Nov 1944      +15
+#  33  The Assembly has spoken, Francoeur     +1 per 90d
+#  34  Province run from Ottawa, thaw              +10
+#
+# RELIEFS - negative under add, positive under reduce
+#  21  French Canadian battalions raised           -15
+#  22  Bilingual schools compromise, 1927          -10
+#  23  The Voluntary Compact 1917         cancels cause 8
+#  24  Separate declaration of war, Sep 1939        -8
+#  25  The Pledge of No Conscription kept     -1 per 30d
+#  26  Quebec lieutenant in post            -0.5 per 30d
+#  27  Uncle Louis, Aug 1948 convention            -20
+#  28  Years of peace, natural decay         -1 per 180d
+#  29  A Word from the Lieutenant, decision         -5
+#  30  Public Works for the District, decision      -3
+#  31  The pact conceded, crisis outcome (c)  set to 40
+# ##############################################################################
+
+
+# ##############################################################################
+# 1. INITIALISATION
+# ##############################################################################
+
+CAN_initialize_blood_tax = {
+
+	set_variable = { CAN_bt_ceiling = 100 }
+	set_variable = { CAN_bt_crises = 0 }
+	set_variable = { CAN_bt_days_since_riser = 0 }
+	set_variable = { CAN_bt_decay_days = 0 }
+	set_variable = { CAN_bt_pending = 0 }
+	set_variable = { CAN_bt_pending_cause = 0 }
+	set_variable = { CAN_bt_last_relief = 0 }
+
+	# --- start value by bookmark ---
+	if = {
+		# 1900 - Boer contingent
+		limit = { has_start_date < 1910.1.1 }
+		set_variable = { CAN_blood_tax = 10 }
+		set_variable = { CAN_bt_last_cause = 1 }
+	}
+	else_if = {
+		# 1910 - Naval Service Act
+		limit = { has_start_date < 1919.1.1 }
+		set_variable = { CAN_blood_tax = 25 }
+		set_variable = { CAN_bt_last_cause = 5 }
+	}
+	else_if = {
+		# 1919 - Military Service Act
+		limit = { has_start_date < 1933.1.1 }
+		set_variable = { CAN_blood_tax = 75 }
+		set_variable = { CAN_bt_last_cause = 8 }
+	}
+	else_if = {
+		# 1933-1939 - fifteen-year decay
+		limit = { has_start_date < 1940.1.1 }
+		set_variable = { CAN_blood_tax = 45 }
+		set_variable = { CAN_bt_last_cause = 22 }
+	}
+	else_if = {
+		# 1940-1941 - NRMA
+		limit = { has_start_date < 1942.1.1 }
+		set_variable = { CAN_blood_tax = 55 }
+		set_variable = { CAN_bt_last_cause = 15 }
+	}
+	else_if = {
+		# 1942-1943 - the plebiscite
+		limit = { has_start_date < 1944.1.1 }
+		set_variable = { CAN_blood_tax = 70 }
+		set_variable = { CAN_bt_last_cause = 17 }
+	}
+	else_if = {
+		# 1944 - the sixteen thousand
+		limit = { has_start_date < 1945.1.1 }
+		set_variable = { CAN_blood_tax = 90 }
+		set_variable = { CAN_bt_last_cause = 19 }
+	}
+	else_if = {
+		# 1945-1948 - slow decay
+		limit = { has_start_date < 1949.1.1 }
+		set_variable = { CAN_blood_tax = 80 }
+		set_variable = { CAN_bt_last_cause = 28 }
+	}
+	else = {
+		# 1949+ - floor under St Laurent
+		set_variable = { CAN_blood_tax = 65 }
+		set_variable = { CAN_bt_last_cause = 27 }
+	}
+
+	clamp_variable = { var = CAN_blood_tax min = 10 max = CAN_bt_ceiling }
+
+	set_country_flag = CAN_blood_tax_initialized
+
+	CAN_update_blood_tax = yes
+}
+
+
+# ##############################################################################
+# 2. RAISE AND RELIEF
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# CAN_add_blood_tax - args: value, cause
+# ------------------------------------------------------------------------------
+CAN_add_blood_tax = {
+
+	set_variable = { CAN_bt_pending = CAN_bt_arg_value }
+	set_variable = { CAN_bt_pending_cause = CAN_bt_arg_cause }
+
+	# --- arbitration, raises only ---
+	if = {
+		limit = { check_variable = { var = CAN_bt_pending value = 0 compare = greater_than } }
+
+		if = {
+			# can_voluntary_compact is lowercase
+			limit = {
+				has_country_flag = can_voluntary_compact
+				check_variable = { var = CAN_bt_pending_cause value = 8 compare = equals }
+			}
+			set_variable = { CAN_bt_pending = 0 }
+			custom_effect_tooltip = CAN_blood_tax_compact_holds_tt
+		}
+		else_if = {
+			# 1944 under compact: Ralston 25 -> 12
+			limit = {
+				has_country_flag = can_voluntary_compact
+				check_variable = { var = CAN_bt_pending_cause value = 19 compare = equals }
+			}
+			set_variable = { CAN_bt_pending = 12 }
+			custom_effect_tooltip = CAN_blood_tax_compact_halves_tt
+		}
+		else_if = {
+			# 1944 under compact: King 15 -> 7
+			limit = {
+				has_country_flag = can_voluntary_compact
+				check_variable = { var = CAN_bt_pending_cause value = 32 compare = equals }
+			}
+			set_variable = { CAN_bt_pending = 7 }
+			custom_effect_tooltip = CAN_blood_tax_compact_halves_tt
+		}
+		else_if = {
+			# french-canadian battalions: later raises x0.8
+			limit = { has_country_flag = CAN_done_raise_french_canadian_battalions }
+			multiply_variable = { CAN_bt_pending = 0.8 }
+			round_variable = CAN_bt_pending
+			custom_effect_tooltip = CAN_blood_tax_battalions_temper_tt
+		}
+	}
+
+	# --- apply ---
+	if = {
+		limit = { check_variable = { var = CAN_bt_pending value = 0 compare = greater_than } }
+
+		add_to_variable = { CAN_blood_tax = CAN_bt_pending }
+		set_variable = { CAN_bt_last_cause = CAN_bt_pending_cause }
+		set_variable = { CAN_bt_days_since_riser = 0 }
+		set_variable = { CAN_bt_decay_days = 0 }
+
+		clamp_variable = { var = CAN_blood_tax min = 10 max = CAN_bt_ceiling }
+
+		CAN_update_blood_tax = yes
+		CAN_blood_tax_check_ceiling = yes
+
+		custom_effect_tooltip = CAN_blood_tax_raised_tt
+	}
+	else_if = {
+		# negative value = relief, accepted
+		limit = { check_variable = { var = CAN_bt_pending value = 0 compare = less_than } }
+
+		multiply_variable = { CAN_bt_pending = -1 }
+		CAN_apply_blood_tax_relief = yes
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# CAN_reduce_blood_tax - value written positive
+# ------------------------------------------------------------------------------
+CAN_reduce_blood_tax = {
+
+	set_variable = { CAN_bt_pending = CAN_bt_arg_value }
+	set_variable = { CAN_bt_pending_cause = CAN_bt_arg_cause }
+
+	CAN_apply_blood_tax_relief = yes
+}
+
+
+# ------------------------------------------------------------------------------
+# relief body, internal
+# ------------------------------------------------------------------------------
+CAN_apply_blood_tax_relief = {
+
+	subtract_from_variable = { CAN_blood_tax = CAN_bt_pending }
+	set_variable = { CAN_bt_last_relief = CAN_bt_pending_cause }
+
+	clamp_variable = { var = CAN_blood_tax min = 10 max = CAN_bt_ceiling }
+
+	# ceiling flag clears, crisis count never does
+	if = {
+		limit = {
+			has_country_flag = CAN_blood_tax_ceiling_hit
+			check_variable = { var = CAN_blood_tax value = 100 compare = less_than }
+		}
+		clr_country_flag = CAN_blood_tax_ceiling_hit
+	}
+
+	CAN_update_blood_tax = yes
+
+	custom_effect_tooltip = CAN_blood_tax_eased_tt
+}
+
+
+# ##############################################################################
+# 3. CEILING BREACH
+# no event fired here: reads flag and CAN_bt_crises
+# ##############################################################################
+
+CAN_blood_tax_check_ceiling = {
+
+	if = {
+		limit = {
+			check_variable = { var = CAN_blood_tax value = 100 compare = greater_than_or_equals }
+			NOT = { has_country_flag = CAN_blood_tax_ceiling_hit }
+		}
+		set_country_flag = CAN_blood_tax_ceiling_hit
+		add_to_variable = { CAN_bt_crises = 1 }
+	}
+}
+
+
+# ##############################################################################
+# 4. DERIVED VALUES AND TIER
+# globals only: state modifiers resolve in state scope
+# ##############################################################################
+
+CAN_update_blood_tax = {
+
+	# --- national stability ---
+	set_variable = { global.CAN_bt_stability = CAN_blood_tax }
+	multiply_variable = { global.CAN_bt_stability = -0.0025 }
+
+	# --- political power ---
+	set_variable = { global.CAN_bt_political = CAN_blood_tax }
+	multiply_variable = { global.CAN_bt_political = -0.002 }
+
+	# --- war support, turns at 50 ---
+	if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 50 compare = less_than_or_equals } }
+		set_variable = { global.CAN_bt_war_support = CAN_blood_tax }
+		multiply_variable = { global.CAN_bt_war_support = 0.002 }
+	}
+	else = {
+		set_variable = { global.CAN_bt_war_support = CAN_blood_tax }
+		subtract_from_variable = { global.CAN_bt_war_support = 50 }
+		multiply_variable = { global.CAN_bt_war_support = -0.006 }
+		add_to_variable = { global.CAN_bt_war_support = 0.10 }
+	}
+
+	# --- francophone manpower ---
+	set_variable = { global.CAN_bt_qc_manpower = CAN_blood_tax }
+	multiply_variable = { global.CAN_bt_qc_manpower = -0.005 }
+
+	# --- acadian half effect ---
+	set_variable = { global.CAN_bt_acadian_manpower = global.CAN_bt_qc_manpower }
+	multiply_variable = { global.CAN_bt_acadian_manpower = 0.5 }
+
+	# --- francophone construction, none under 60 ---
+	if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 60 compare = less_than_or_equals } }
+		set_variable = { global.CAN_bt_qc_production = 0 }
+	}
+	else = {
+		set_variable = { global.CAN_bt_qc_production = CAN_blood_tax }
+		subtract_from_variable = { global.CAN_bt_qc_production = 60 }
+		multiply_variable = { global.CAN_bt_qc_production = -0.01 }
+	}
+
+	# --- anglophone manpower ---
+	if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 60 compare = less_than_or_equals } }
+		set_variable = { global.CAN_bt_roc_manpower = CAN_blood_tax }
+		multiply_variable = { global.CAN_bt_roc_manpower = 0.0025 }
+	}
+	else = {
+		set_variable = { global.CAN_bt_roc_manpower = CAN_blood_tax }
+		subtract_from_variable = { global.CAN_bt_roc_manpower = 60 }
+		multiply_variable = { global.CAN_bt_roc_manpower = -0.0075 }
+		add_to_variable = { global.CAN_bt_roc_manpower = 0.15 }
+	}
+
+	CAN_update_blood_tax_tier = yes
+	CAN_apply_blood_tax_modifiers = yes
+}
+
+
+# ------------------------------------------------------------------------------
+# tier is display only
+# ------------------------------------------------------------------------------
+CAN_update_blood_tax_tier = {
+
+	if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 100 compare = greater_than_or_equals } }
+		set_variable = { CAN_bt_tier = 6 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 80 compare = greater_than_or_equals } }
+		set_variable = { CAN_bt_tier = 5 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 60 compare = greater_than_or_equals } }
+		set_variable = { CAN_bt_tier = 4 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 40 compare = greater_than_or_equals } }
+		set_variable = { CAN_bt_tier = 3 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 20 compare = greater_than_or_equals } }
+		set_variable = { CAN_bt_tier = 2 }
+	}
+	else = {
+		set_variable = { CAN_bt_tier = 1 }
+	}
+}
+
+
+# ##############################################################################
+# 5. MODIFIER PLACEMENT
+# ##############################################################################
+
+CAN_apply_blood_tax_modifiers = {
+
+	# --- national modifier ---
+	if = {
+		limit = { NOT = { has_dynamic_modifier = { modifier = CAN_blood_tax_modifier } } }
+		add_dynamic_modifier = { modifier = CAN_blood_tax_modifier }
+	}
+
+	# --- francophone states, full effect ---
+	466 = { CAN_place_a_war_not_ours = yes }
+	468 = { CAN_place_a_war_not_ours = yes }
+	842 = { CAN_place_a_war_not_ours = yes }
+	834 = { CAN_place_a_war_not_ours = yes }
+
+	# --- half effect ---
+	465 = { CAN_place_a_war_not_ours_half = yes }
+
+	# 683 takes it once Ungava is a QUE core
+	683 = {
+		if = {
+			limit = { is_core_of = QUE }
+			CAN_place_a_war_not_ours_half = yes
+		}
+	}
+
+	# --- anglophone states ---
+	276 = { CAN_place_imperial_pride = yes }
+	682 = { CAN_place_imperial_pride = yes }
+	464 = { CAN_place_imperial_pride = yes }
+	467 = { CAN_place_imperial_pride = yes }
+	469 = { CAN_place_imperial_pride = yes }
+	470 = { CAN_place_imperial_pride = yes }
+	473 = { CAN_place_imperial_pride = yes }
+	739 = { CAN_place_imperial_pride = yes }
+	740 = { CAN_place_imperial_pride = yes }
+
+	# 331 and 332 join on their own in 1949
+	331 = { CAN_place_imperial_pride = yes }
+	332 = { CAN_place_imperial_pride = yes }
+}
+
+
+# ------------------------------------------------------------------------------
+# three guarded placements, state scope
+# ------------------------------------------------------------------------------
+CAN_place_a_war_not_ours = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_a_war_not_ours_modifier } }
+		}
+		add_dynamic_modifier = { modifier = CAN_a_war_not_ours_modifier }
+	}
+}
+
+CAN_place_a_war_not_ours_half = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_a_war_not_ours_half_modifier } }
+		}
+		add_dynamic_modifier = { modifier = CAN_a_war_not_ours_half_modifier }
+	}
+}
+
+CAN_place_imperial_pride = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_imperial_pride_modifier } }
+		}
+		add_dynamic_modifier = { modifier = CAN_imperial_pride_modifier }
+	}
+}
+
+
+# ##############################################################################
+# 6. WEEKLY TICK
+# ##############################################################################
+
+CAN_blood_tax_weekly = {
+
+	add_to_variable = { CAN_bt_days_since_riser = 7 }
+
+	if = {
+		limit = {
+			has_war = no
+			check_variable = { var = CAN_bt_days_since_riser value = 365 compare = greater_than_or_equals }
+			check_variable = { var = CAN_blood_tax value = 10 compare = greater_than }
+		}
+		add_to_variable = { CAN_bt_decay_days = 7 }
+
+		if = {
+			limit = { check_variable = { var = CAN_bt_decay_days value = 180 compare = greater_than_or_equals } }
+			subtract_from_variable = { CAN_bt_decay_days = 180 }
+			set_variable = { CAN_bt_arg_value = 1 }
+			set_variable = { CAN_bt_arg_cause = 28 }
+			CAN_reduce_blood_tax = yes
+		}
+	}
+	else = {
+		set_variable = { CAN_bt_decay_days = 0 }
+	}
+
+	CAN_update_blood_tax = yes
+}

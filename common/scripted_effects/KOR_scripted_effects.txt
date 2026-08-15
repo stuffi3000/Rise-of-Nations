@@ -1,0 +1,101 @@
+##############################
+# KOR BORROWED CADRE
+##############################
+# KOR_borrowed_cadre 0-100, KOR_erosion 0-100
+# KOR_recognition 0-10
+# capability in 1945 is the debt billed in 1948
+
+KOR_open_the_cadre_file = {
+	if = {
+		limit = { NOT = { has_country_flag = KOR_cadre_file_open } }
+		set_country_flag = KOR_cadre_file_open
+
+		# starting positions by bookmark
+		if = {
+			limit = { date > 1949.1.1 }
+			set_variable = { KOR_borrowed_cadre = 78 }
+			set_variable = { KOR_recognition = 6 }
+			set_variable = { KOR_erosion = 70 }
+		}
+		else_if = {
+			limit = { date > 1946.1.1 }
+			set_variable = { KOR_borrowed_cadre = 85 }
+			set_variable = { KOR_recognition = 2 }
+			set_variable = { KOR_erosion = 75 }
+		}
+		else_if = {
+			limit = { date > 1939.1.1 }
+			set_variable = { KOR_borrowed_cadre = 72 }
+			set_variable = { KOR_recognition = 0 }
+			set_variable = { KOR_erosion = 60 }
+		}
+		else_if = {
+			limit = { date > 1933.1.1 }
+			set_variable = { KOR_borrowed_cadre = 66 }
+			set_variable = { KOR_recognition = 0 }
+			set_variable = { KOR_erosion = 45 }
+		}
+		else_if = {
+			limit = { date > 1919.1.1 }
+			set_variable = { KOR_borrowed_cadre = 50 }
+			set_variable = { KOR_recognition = 0 }
+			set_variable = { KOR_erosion = 30 }
+		}
+		else_if = {
+			limit = { date > 1910.1.1 }
+			set_variable = { KOR_borrowed_cadre = 35 }
+			set_variable = { KOR_recognition = 0 }
+			set_variable = { KOR_erosion = 15 }
+		}
+		else = {
+			set_variable = { KOR_borrowed_cadre = 20 }
+			set_variable = { KOR_recognition = 4 }
+			set_variable = { KOR_erosion = 5 }
+		}
+	}
+}
+
+# add KOR_arg_cadre, clamp, floors, test ceiling
+# locked from 1949
+KOR_move_the_cadre = {
+	if = {
+		limit = { NOT = { has_country_flag = KOR_cadre_locked } }
+		add_to_variable = { KOR_borrowed_cadre = KOR_arg_cadre }
+		clamp_variable = { var = KOR_borrowed_cadre min = 0 max = 100 }
+		# hastings floor: 25
+		if = {
+			limit = { has_country_flag = KOR_hastings_floor }
+			clamp_variable = { var = KOR_borrowed_cadre min = 25 max = 100 }
+		}
+		if = {
+			limit = {
+				check_variable = { KOR_borrowed_cadre > 84 }
+				NOT = { has_country_flag = KOR_an_army_that_served_against_us }
+			}
+			# top band: army and police untriable
+			set_country_flag = KOR_an_army_that_served_against_us
+		}
+	}
+}
+
+KOR_move_recognition = {
+	add_to_variable = { KOR_recognition = KOR_arg_recognition }
+	clamp_variable = { var = KOR_recognition min = 0 max = 10 }
+	# 1910-1932: no envoy received
+	if = {
+		limit = {
+			date > 1910.8.29
+			date < 1932.1.1
+		}
+		set_variable = { KOR_recognition = 0 }
+	}
+}
+
+KOR_move_erosion = {
+	add_to_variable = { KOR_erosion = KOR_arg_erosion }
+	clamp_variable = { var = KOR_erosion min = 0 max = 100 }
+	if = {
+		limit = { has_country_flag = KOR_names_kept }
+		clamp_variable = { var = KOR_erosion min = 0 max = 30 }
+	}
+}

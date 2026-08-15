@@ -1,0 +1,2832 @@
+###############################################################################
+##### AUSTRIA-HUNGARY - NATIONALITIES, COLUMN C
+###############################################################################
+# Slovaks x 220-226, Romanians x 228-234
+# Bosnians x 260-267, Italians x 268-275
+# the road is chosen on row one and never chosen again
+# SLO_support and ITA_support are created by this lot
+# devolution lowers gemeinsamkeit, direct rule raises it
+
+
+###############################################################################
+##### SLOVAKS - THE PARTY OF MARTIN, x 220-226
+###############################################################################
+
+shared_focus = {
+	id = AUHNAT_SLO_the_slovak_national_party
+	icon = GFX_focus_generic_befriend_slovakia
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 288
+	y = 0
+	cost = 10
+	allow_branch = {
+		any_owned_state = { is_core_of = SLO }
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_timed_idea = { idea = AUH_SLO_the_seven_deputies days = 1825 }
+		custom_effect_tooltip = AUHNAT_tt_slo_seven_deputies
+		add_to_variable = { SLO_support = 5 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		add_ideas = AUH_SLO_the_slovak_question
+	}
+}
+
+##### ROW ONE, AND NO WAY BACK
+
+shared_focus = {
+	id = AUHNAT_SLO_the_martin_memorandum
+	icon = GFX_focus_generic_concessions
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 284
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_the_slovak_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_SLO_leave_it_to_budapest
+		focus = AUHNAT_SLO_magyarise_the_uplands
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_SLO_road_martin }
+		custom_effect_tooltip = AUHNAT_tt_slo_road_martin
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { SLO_support = 10 }
+		subtract_from_variable = { HUN_support = 5 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_SLO_the_school_laws_of_1907 }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_school_laws_of_1907
+				add_idea = AUH_SLO_the_martin_programme
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_the_martin_programme
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_leave_it_to_budapest
+	icon = GFX_focus_generic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 288
+	y = 1
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_the_slovak_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_SLO_the_martin_memorandum
+		focus = AUHNAT_SLO_magyarise_the_uplands
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_SLO_road_budapest }
+		custom_effect_tooltip = AUHNAT_tt_slo_road_budapest
+		add_political_power = 75
+		add_to_variable = { HUN_support = 10 }
+		subtract_from_variable = { SLO_support = 5 }
+		add_to_variable = { AUH_gemeinsamkeit = 2 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_timed_idea = { idea = AUH_SLO_the_uplands_deferred days = 1460 }
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_magyarise_the_uplands
+	icon = GFX_goal_generic_forceful_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 292
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_the_slovak_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_SLO_the_martin_memorandum
+		focus = AUHNAT_SLO_leave_it_to_budapest
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_SLO_road_magyar }
+		custom_effect_tooltip = AUHNAT_tt_slo_road_magyar
+		subtract_from_variable = { SLO_support = 10 }
+		add_to_variable = { HUN_support = 10 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_SLO_magyarisation_of_the_uplands
+	}
+}
+
+##### CONCESSION, x 220
+
+# the matica reopens
+shared_focus = {
+	id = AUHNAT_SLO_reopen_matica_slovenska
+	icon = GFX_focus_generic_university_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 314
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_the_martin_memorandum }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_matica
+		add_ideas = AUH_SLO_the_martin_press
+		add_to_variable = { SLO_support = 5 }
+		subtract_from_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+	}
+}
+
+# schooled in prague
+shared_focus = {
+	id = AUHNAT_SLO_the_hlasist_generation
+	icon = GFX_focus_generic_university_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 314
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_reopen_matica_slovenska }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_hlas
+		add_tech_bonus = {
+			name = AUHNAT_SLO_the_hlasist_generation
+			bonus = 1.0
+			uses = 1
+			category = electronics
+		}
+		add_to_variable = { SLO_support = 5 }
+		add_to_variable = { CZE_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_hodza_and_the_belvedere
+	icon = GFX_goal_CZE_danube_monarchy
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 293
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_the_hlasist_generation }
+	mutually_exclusive = {
+		focus = AUHNAT_SLO_hlinkas_peoples_party
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_belvedere
+		add_political_power = 75
+		add_to_variable = { SLO_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_SLO_the_slovak_question }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_slovak_question
+				add_idea = AUH_SLO_hodza_at_the_belvedere
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_hodza_at_the_belvedere
+		}
+	}
+}
+
+# the moravian cadastre, moved south
+shared_focus = {
+	id = AUHNAT_SLO_a_slovak_curia_in_the_diet
+	icon = GFX_focus_generic_court
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 245
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_hodza_and_the_belvedere }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_curia
+		add_ideas = AUH_SLO_the_slovak_curia
+		add_to_variable = { SLO_support = 5 }
+		subtract_from_variable = { HUN_support = 5 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 2 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+# a name and a budget line
+shared_focus = {
+	id = AUHNAT_SLO_the_upper_hungarian_land
+	icon = GFX_goal_CZE_bratislava_memorandum
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 247
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_a_slovak_curia_in_the_diet }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_upper_land
+		add_to_variable = { SLO_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 8 }
+		add_to_variable = { AUH_quote = 3 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		70 = {
+			add_extra_state_shared_building_slots = 1
+		}
+		add_ideas = AUH_SLO_the_upper_hungarian_land
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_slovensko_a_land_of_the_crown
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 249
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHNAT_SLO_the_upper_hungarian_land }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_ninth_land
+		add_stability = 0.10
+		add_to_variable = { SLO_support = 15 }
+		subtract_from_variable = { HUN_support = 15 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 15 }
+		add_to_variable = { AUH_quote = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		every_owned_state = {
+			limit = { is_core_of = SLO }
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_idea = AUH_SLO_the_upper_hungarian_land }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_upper_hungarian_land
+				add_idea = AUH_SLO_slovensko_the_ninth_land
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_slovensko_the_ninth_land
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 501 }
+			set_variable = { AUH_news_scope = 1 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### STATUS QUO, x 222
+
+# law XLIV, never applied
+shared_focus = {
+	id = AUHNAT_SLO_the_nationalities_law_of_1868
+	icon = GFX_focus_generic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 318
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_leave_it_to_budapest }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_law_1868
+		add_ideas = AUH_SLO_the_law_of_1868
+		add_to_variable = { SLO_support = 2 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+	}
+}
+
+# nothing decided, and the file grows
+shared_focus = {
+	id = AUHNAT_SLO_the_question_deferred
+	icon = GFX_goal_generic_neutrality_focus
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 318
+	y = 3
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_the_nationalities_law_of_1868 }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_deferred
+		add_political_power = 50
+		subtract_from_variable = { SLO_support = 2 }
+		add_to_variable = { HUN_support = 2 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		add_timed_idea = { idea = AUH_SLO_the_uplands_deferred days = 1460 }
+	}
+}
+
+##### REPRESSION, x 224
+
+shared_focus = {
+	id = AUHNAT_SLO_the_lex_apponyi
+	icon = GFX_focus_generic_strike_at_democracy1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 322
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_magyarise_the_uplands }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_csernova
+		subtract_from_variable = { SLO_support = 10 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		add_ideas = AUH_SLO_the_school_laws_of_1907
+		hidden_effect = {
+			set_variable = { AUH_news_id = 500 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# the inspector holds the subsidy
+shared_focus = {
+	id = AUHNAT_SLO_the_school_inspectorate
+	icon = GFX_goal_generic_political_pressure
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 322
+	y = 3
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_the_lex_apponyi }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_ideas = AUH_SLO_the_inspector_and_the_subsidy
+		subtract_from_variable = { SLO_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+	}
+}
+
+# the party loses its register
+shared_focus = {
+	id = AUHNAT_SLO_dissolve_the_national_party
+	icon = GFX_goal_generic_secret_police
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 301
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_the_school_inspectorate }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_party_dissolved
+		subtract_from_variable = { SLO_support = 10 }
+		add_to_variable = { HUN_support = 5 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_SLO_the_uplands_under_administration
+	}
+}
+
+# a post in every market town
+shared_focus = {
+	id = AUHNAT_SLO_the_upland_gendarmerie
+	icon = GFX_focus_generic_home_defense
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	x = 257
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_dissolve_the_national_party }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = early_infantry_equipment_1900
+			amount = 400
+			producer = AUH
+		}
+		add_tech_bonus = {
+			name = AUHNAT_SLO_the_upland_gendarmerie
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+		add_ideas = AUH_SLO_the_upland_gendarmerie
+		subtract_from_variable = { SLO_support = 10 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+# one station board at a time
+shared_focus = {
+	id = AUHNAT_SLO_magyarise_the_place_names
+	icon = GFX_goal_generic_propaganda
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 259
+	y = 6
+	cost = 5
+	prerequisite = { focus = AUHNAT_SLO_the_upland_gendarmerie }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_place_names
+		add_timed_idea = { idea = AUH_SLO_the_place_name_register days = 1825 }
+		set_province_name = { id = 9692 name = "Pozsony" }
+		subtract_from_variable = { SLO_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_no_slovak_nation
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 245
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHNAT_SLO_magyarise_the_place_names }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_one_nation
+		subtract_from_variable = { SLO_support = 15 }
+		add_to_variable = { HUN_support = 15 }
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_SLO_the_uplands_under_administration }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_uplands_under_administration
+				add_idea = AUH_SLO_one_political_nation_in_hungary
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_one_political_nation_in_hungary
+		}
+	}
+}
+
+##### THE COUNTRY THAT LEAVES, x 226
+
+# the ticket costs less than land
+shared_focus = {
+	id = AUHNAT_SLO_the_american_emigration
+	icon = GFX_focus_generic_manpower
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_MANPOWER }
+	x = 326
+	y = 2
+	cost = 5
+	prerequisite = {
+		focus = AUHNAT_SLO_the_martin_memorandum
+		focus = AUHNAT_SLO_leave_it_to_budapest
+		focus = AUHNAT_SLO_magyarise_the_uplands
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_emigration
+		subtract_from_variable = { SLO_support = 5 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		add_ideas = AUH_SLO_the_american_emigration
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_SLO_hlinkas_peoples_party
+	icon = GFX_goal_Orthodox_Church
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 326
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_the_american_emigration }
+	mutually_exclusive = {
+		focus = AUHNAT_SLO_hodza_and_the_belvedere
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_hlinka
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_to_variable = { SLO_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_SLO_the_slovak_question }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_slovak_question
+				add_idea = AUH_SLO_the_slovak_peoples_party
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_the_slovak_peoples_party
+		}
+	}
+}
+
+# wages against the steamship ticket
+shared_focus = {
+	id = AUHNAT_SLO_stem_the_emigration
+	icon = GFX_goal_generic_construct_civ_factory
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 265
+	y = 5
+	cost = 10
+	prerequisite = {
+		focus = AUHNAT_SLO_hlinkas_peoples_party
+		focus = AUHNAT_SLO_hodza_and_the_belvedere
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_slo_stem
+		if = {
+			limit = { has_idea = AUH_SLO_the_american_emigration }
+			swap_ideas = {
+				remove_idea = AUH_SLO_the_american_emigration
+				add_idea = AUH_SLO_the_emigration_stemmed
+			}
+		}
+		else = {
+			add_ideas = AUH_SLO_the_emigration_stemmed
+		}
+		add_to_variable = { SLO_support = 5 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		every_owned_state = {
+			limit = { is_core_of = SLO }
+			add_extra_state_shared_building_slots = 1
+		}
+	}
+}
+
+# iron in the northern valleys
+shared_focus = {
+	id = AUHNAT_SLO_the_upland_ironworks
+	icon = GFX_focus_generic_industry_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 267
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_SLO_stem_the_emigration }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_ideas = AUH_SLO_the_ironworks_of_the_uplands
+		add_tech_bonus = {
+			name = AUHNAT_SLO_the_upland_ironworks
+			bonus = 1.0
+			uses = 1
+			category = industry
+		}
+		add_to_variable = { SLO_support = 5 }
+		subtract_from_variable = { HUN_support = 2 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		70 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+
+###############################################################################
+##### ROMANIANS OF TRANSYLVANIA, x 228-234
+###############################################################################
+
+shared_focus = {
+	id = AUHNAT_ROM_the_romanian_national_party
+	icon = GFX_focus_generic_little_entente
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 300
+	y = 0
+	cost = 10
+	allow_branch = {
+		any_owned_state = { is_core_of = ROM }
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_three_million
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_ROM_the_transylvanian_question
+	}
+}
+
+##### ROW ONE, AND NO WAY BACK
+
+shared_focus = {
+	id = AUHNAT_ROM_open_the_memorandum
+	icon = GFX_focus_generic_concessions
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 296
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_romanian_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_ROM_returned_unopened
+		focus = AUHNAT_ROM_dissolve_the_national_party
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ROM_road_petition }
+		custom_effect_tooltip = AUHNAT_tt_rom_road_petition
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { ROM_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { country_exists = ROM }
+			add_opinion_modifier = { target = ROM modifier = improve_relation }
+		}
+		add_ideas = AUH_ROM_the_crown_hears_the_petition
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_returned_unopened
+	icon = GFX_focus_generic_monarchy_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 300
+	y = 1
+	cost = 5
+	prerequisite = { focus = AUHNAT_ROM_the_romanian_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_ROM_open_the_memorandum
+		focus = AUHNAT_ROM_dissolve_the_national_party
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ROM_road_silence }
+		custom_effect_tooltip = AUHNAT_tt_rom_road_silence
+		add_political_power = 75
+		add_to_variable = { HUN_support = 5 }
+		subtract_from_variable = { ROM_support = 5 }
+		add_to_variable = { AUH_gemeinsamkeit = 2 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_dissolve_the_national_party
+	icon = GFX_goal_generic_secret_police
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 304
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_romanian_national_party }
+	mutually_exclusive = {
+		focus = AUHNAT_ROM_open_the_memorandum
+		focus = AUHNAT_ROM_returned_unopened
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ROM_road_courtroom }
+		custom_effect_tooltip = AUHNAT_tt_rom_road_courtroom
+		subtract_from_variable = { ROM_support = 10 }
+		add_to_variable = { HUN_support = 10 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { country_exists = ROM }
+			reverse_add_opinion_modifier = { target = ROM modifier = protest_action }
+		}
+		add_ideas = AUH_ROM_the_party_dissolved
+	}
+}
+
+##### CONCESSION, x 228
+
+# the schools keep the language
+shared_focus = {
+	id = AUHNAT_ROM_the_confessional_schools
+	icon = GFX_focus_generic_university_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 330
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_open_the_memorandum }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_confessional
+		add_ideas = AUH_ROM_the_confessional_schools
+		add_to_variable = { ROM_support = 5 }
+		subtract_from_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# abstention ends
+shared_focus = {
+	id = AUHNAT_ROM_the_activist_turn
+	icon = GFX_focus_generic_court
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 330
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_confessional_schools }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_activist
+		hidden_effect = {
+			set_variable = { AUH_news_id = 502 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_the_tisza_negotiations
+	icon = GFX_goal_generic_improve_relations
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 305
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_activist_turn }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_tisza
+		add_to_variable = { ROM_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		AUH_clamp_nationality_support = yes
+		add_timed_idea = { idea = AUH_ROM_the_price_of_the_talks days = 730 }
+		if = {
+			limit = { has_idea = AUH_ROM_the_crown_hears_the_petition }
+			swap_ideas = {
+				remove_idea = AUH_ROM_the_crown_hears_the_petition
+				add_idea = AUH_ROM_the_transylvanian_settlement
+			}
+		}
+		else = {
+			add_ideas = AUH_ROM_the_transylvanian_settlement
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 502 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# the districts follow the voters
+shared_focus = {
+	id = AUHNAT_ROM_redraw_the_electoral_districts
+	icon = GFX_focus_generic_self_management
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 261
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_tisza_negotiations }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_districts
+		add_ideas = AUH_ROM_the_redrawn_districts
+		add_to_variable = { ROM_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+# a land inside the kingdom
+shared_focus = {
+	id = AUHNAT_ROM_a_romanian_land_in_transylvania
+	icon = GFX_goal_generic_more_territorial_claims
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 263
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_redraw_the_electoral_districts }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_land
+		add_to_variable = { ROM_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 8 }
+		add_to_variable = { AUH_quote = 3 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		84 = {
+			add_extra_state_shared_building_slots = 1
+		}
+		add_ideas = AUH_ROM_the_romanian_land
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_the_grand_principality_restored
+	icon = GFX_focus_generic_monarchy_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 253
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHNAT_ROM_a_romanian_land_in_transylvania }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_principality
+		add_stability = 0.10
+		add_to_variable = { ROM_support = 15 }
+		subtract_from_variable = { HUN_support = 15 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 15 }
+		add_to_variable = { AUH_quote = 5 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		every_owned_state = {
+			limit = { is_core_of = ROM }
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_idea = AUH_ROM_the_romanian_land }
+			swap_ideas = {
+				remove_idea = AUH_ROM_the_romanian_land
+				add_idea = AUH_ROM_the_grand_principality
+			}
+		}
+		else = {
+			add_ideas = AUH_ROM_the_grand_principality
+		}
+	}
+}
+
+##### STATUS QUO, x 230
+
+shared_focus = {
+	id = AUHNAT_ROM_the_memorandum_of_1892
+	icon = GFX_focus_generic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 334
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_returned_unopened }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_cluj_trial
+		subtract_from_variable = { ROM_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_ROM_the_memorandum_returned
+	}
+}
+
+# an alliance nobody may read
+shared_focus = {
+	id = AUHNAT_ROM_the_secret_alliance_of_1883
+	icon = GFX_focus_generic_diplomatic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_DIPLOMACY }
+	x = 334
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_memorandum_of_1892 }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_secret_treaty
+		if = {
+			limit = { country_exists = ROM }
+			add_opinion_modifier = { target = ROM modifier = improve_relation }
+			reverse_add_opinion_modifier = { target = ROM modifier = improve_relation }
+			diplomatic_relation = { country = ROM relation = non_aggression_pact }
+		}
+		add_to_variable = { HUN_support = 2 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the king says nothing
+shared_focus = {
+	id = AUHNAT_ROM_king_carols_silence
+	icon = GFX_focus_generic_monarchy_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_DIPLOMACY }
+	x = 309
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHNAT_ROM_the_secret_alliance_of_1883 }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_carol
+		add_timed_idea = { idea = AUH_ROM_the_kings_silence days = 1460 }
+		subtract_from_variable = { ROM_support = 2 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the file goes back in the drawer
+shared_focus = {
+	id = AUHNAT_ROM_the_question_adjourned
+	icon = GFX_goal_generic_neutrality_focus
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 269
+	y = 5
+	cost = 5
+	prerequisite = { focus = AUHNAT_ROM_king_carols_silence }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_command_power = 25
+		subtract_from_variable = { ROM_support = 2 }
+		add_to_variable = { HUN_support = 2 }
+		AUH_clamp_nationality_support = yes
+		add_timed_idea = { idea = AUH_ROM_the_price_of_the_talks days = 1460 }
+	}
+}
+
+##### REPRESSION, x 232
+
+# the school act goes to transylvania
+shared_focus = {
+	id = AUHNAT_ROM_apponyi_in_transylvania
+	icon = GFX_focus_generic_strike_at_democracy1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 338
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_dissolve_the_national_party }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_apponyi
+		subtract_from_variable = { ROM_support = 10 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_ROM_the_state_school_network
+	}
+}
+
+# state credit chooses the buyer
+shared_focus = {
+	id = AUHNAT_ROM_the_settlement_policy
+	icon = GFX_goal_generic_soviet_construction
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 338
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_apponyi_in_transylvania }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_settlement
+		add_ideas = AUH_ROM_the_settlement_villages
+		subtract_from_variable = { ROM_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		84 = {
+			add_extra_state_shared_building_slots = 1
+		}
+	}
+}
+
+# state schools replace the others
+shared_focus = {
+	id = AUHNAT_ROM_the_state_schools_of_the_banat
+	icon = GFX_goal_generic_propaganda
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 313
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHNAT_ROM_the_settlement_policy }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_ideas = AUH_ROM_the_state_school_network
+		subtract_from_variable = { ROM_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		82 = {
+			add_extra_state_shared_building_slots = 1
+		}
+	}
+}
+
+# a foreign society under hungarian law
+shared_focus = {
+	id = AUHNAT_ROM_break_the_liga_culturala
+	icon = GFX_focus_generic_secret_operation
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 273
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_state_schools_of_the_banat }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_liga
+		add_tech_bonus = {
+			name = AUHNAT_ROM_break_the_liga_culturala
+			bonus = 1.0
+			uses = 1
+			category = decryption_tech
+		}
+		add_ideas = AUH_ROM_the_transylvanian_surveillance
+		subtract_from_variable = { ROM_support = 10 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { country_exists = ROM }
+			reverse_add_opinion_modifier = { target = ROM modifier = protest_action_strong }
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_one_political_nation
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 271
+	y = 6
+	cost = 15
+	prerequisite = { focus = AUHNAT_ROM_break_the_liga_culturala }
+	mutually_exclusive = {
+		focus = AUHNAT_ROM_vaida_voevod_at_the_belvedere
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_one_nation
+		subtract_from_variable = { ROM_support = 15 }
+		add_to_variable = { HUN_support = 15 }
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_ROM_the_party_dissolved }
+			swap_ideas = {
+				remove_idea = AUH_ROM_the_party_dissolved
+				add_idea = AUH_ROM_one_political_nation
+			}
+		}
+		else = {
+			add_ideas = AUH_ROM_one_political_nation
+		}
+	}
+}
+
+# the passes are the last policy
+shared_focus = {
+	id = AUHNAT_ROM_the_carpathian_frontier
+	icon = GFX_focus_generic_attack_romania
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY FOCUS_FILTER_ANNEXATION }
+	x = 257
+	y = 7
+	cost = 10
+	available = {
+		NOT = { has_war_with = ROM }
+		country_exists = ROM
+	}
+	bypass = {
+		OR = {
+			NOT = { country_exists = ROM }
+			ROM = { is_subject_of = AUH }
+		}
+	}
+	prerequisite = { focus = AUHNAT_ROM_one_political_nation }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_passes
+		army_experience = 25
+		add_war_support = 0.05
+		add_tech_bonus = {
+			name = AUHNAT_ROM_the_carpathian_frontier
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+		every_owned_state = {
+			limit = { is_core_of = ROM }
+			add_building_construction = {
+				type = bunker
+				level = 1
+				instant_build = yes
+				province = {
+					all_provinces = yes
+					limit_to_border = yes
+				}
+			}
+		}
+		create_wargoal = {
+			type = annex_everything
+			target = ROM
+		}
+		add_opinion_modifier = { target = ROM modifier = AUH_preventive_war_declared }
+		add_named_threat = { threat = 2 name = AUHNAT_threat_rom_passes }
+		add_ideas = AUH_ROM_the_carpathian_frontier
+	}
+}
+
+##### CHURCH, SCHOOL AND FURNACE, x 234
+
+# sibiu elects its own bishops
+shared_focus = {
+	id = AUHNAT_ROM_the_orthodox_metropolitanate
+	icon = GFX_goal_Orthodox_Church
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 342
+	y = 2
+	cost = 5
+	prerequisite = {
+		focus = AUHNAT_ROM_open_the_memorandum
+		focus = AUHNAT_ROM_returned_unopened
+		focus = AUHNAT_ROM_dissolve_the_national_party
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_sibiu
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_ideas = AUH_ROM_the_metropolitanate_of_sibiu
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# blaj taught the nation to read
+shared_focus = {
+	id = AUHNAT_ROM_the_see_of_blaj
+	icon = GFX_focus_generic_monarchy_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 342
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_orthodox_metropolitanate }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_blaj
+		add_ideas = AUH_ROM_the_uniate_church
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { country_exists = PAP }
+			add_opinion_modifier = { target = PAP modifier = improve_relation }
+		}
+	}
+}
+
+# reading rooms and a library
+shared_focus = {
+	id = AUHNAT_ROM_the_astra_society
+	icon = GFX_focus_generic_university_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 317
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHNAT_ROM_the_see_of_blaj }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_astra
+		add_ideas = AUH_ROM_the_astra_reading_rooms
+		add_tech_bonus = {
+			name = AUHNAT_ROM_the_astra_society
+			bonus = 1.0
+			uses = 1
+			category = electronics
+		}
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the old frontier furnaces
+shared_focus = {
+	id = AUHNAT_ROM_the_resita_ironworks
+	icon = GFX_focus_generic_industry_3
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 277
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_astra_society }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		add_ideas = AUH_ROM_the_banat_works
+		add_tech_bonus = {
+			name = AUHNAT_ROM_the_resita_ironworks
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		add_to_variable = { ROM_support = 5 }
+		AUH_clamp_nationality_support = yes
+		82 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+			add_resource = {
+				type = steel
+				amount = 4
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_vaida_voevod_at_the_belvedere
+	icon = GFX_goal_CZE_danube_monarchy
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 275
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_ROM_the_resita_ironworks }
+	mutually_exclusive = {
+		focus = AUHNAT_ROM_one_political_nation
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_vaida
+		add_political_power = 75
+		add_to_variable = { ROM_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_ROM_the_belvedere_memorandum
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ROM_popovici_and_the_fifteen_states
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 257
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHNAT_ROM_vaida_voevod_at_the_belvedere }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_rom_popovici
+		add_to_variable = { ROM_support = 15 }
+		add_to_variable = { CZE_support = 5 }
+		add_to_variable = { CRO_support = 5 }
+		subtract_from_variable = { HUN_support = 20 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 10 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_ROM_the_belvedere_memorandum }
+			swap_ideas = {
+				remove_idea = AUH_ROM_the_belvedere_memorandum
+				add_idea = AUH_ROM_the_fifteen_states
+			}
+		}
+		else = {
+			add_ideas = AUH_ROM_the_fifteen_states
+		}
+	}
+}
+
+
+###############################################################################
+##### BOSNIA AND HERZEGOVINA, x 260-267
+###############################################################################
+
+shared_focus = {
+	id = AUHNAT_BOS_the_muslim_national_organisation
+	icon = GFX_focus_generic_balkans_focus
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 348
+	y = 0
+	cost = 10
+	allow_branch = {
+		OR = {
+			any_owned_state = { is_core_of = BOS }
+			any_subject_country = { tag = BOS }
+		}
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_two_million
+		add_to_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_condominium
+	}
+}
+
+##### ROW ONE, AND NO WAY BACK
+
+shared_focus = {
+	id = AUHNAT_BOS_a_constitution_for_bosnia
+	icon = GFX_focus_generic_court
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 344
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_muslim_national_organisation }
+	mutually_exclusive = {
+		focus = AUHNAT_BOS_the_kallay_system
+		focus = AUHNAT_BOS_end_the_condominium
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_BOS_road_statute }
+		custom_effect_tooltip = AUHNAT_tt_bos_road_statute
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { BOS_support = 10 }
+		add_to_variable = { SER_support = 5 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_BOS_the_bosnian_diet
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_the_kallay_system
+	icon = GFX_focus_generic_national_security
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 348
+	y = 1
+	cost = 5
+	prerequisite = { focus = AUHNAT_BOS_the_muslim_national_organisation }
+	mutually_exclusive = {
+		focus = AUHNAT_BOS_a_constitution_for_bosnia
+		focus = AUHNAT_BOS_end_the_condominium
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_BOS_road_kallay }
+		custom_effect_tooltip = AUHNAT_tt_bos_road_kallay
+		add_political_power = 75
+		subtract_from_variable = { BOS_support = 2 }
+		AUH_clamp_nationality_support = yes
+		add_timed_idea = { idea = AUH_BOS_the_provincial_deadlock days = 1460 }
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_end_the_condominium
+	icon = GFX_goal_generic_territory_or_war
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_ANNEXATION }
+	x = 352
+	y = 1
+	cost = 10
+	bypass = {
+		has_global_flag = annexation_of_bosnia
+	}
+	prerequisite = { focus = AUHNAT_BOS_the_muslim_national_organisation }
+	mutually_exclusive = {
+		focus = AUHNAT_BOS_a_constitution_for_bosnia
+		focus = AUHNAT_BOS_the_kallay_system
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_BOS_road_annexation }
+		custom_effect_tooltip = AUHNAT_tt_bos_road_annexation
+		add_war_support = 0.08
+		add_to_variable = { AUH_gemeinsamkeit = 6 }
+		subtract_from_variable = { BOS_support = 5 }
+		subtract_from_variable = { SER_support = 10 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { country_exists = SER }
+			reverse_add_opinion_modifier = { target = SER modifier = protest_action_strong }
+		}
+		if = {
+			limit = { country_exists = OTT }
+			reverse_add_opinion_modifier = { target = OTT modifier = protest_action }
+			add_ideas = AUH_BOS_the_ottoman_boycott
+		}
+		add_named_threat = { threat = 3 name = AUHNAT_threat_bos_annexation }
+		add_ideas = AUH_BOS_the_annexed_provinces
+		hidden_effect = {
+			set_variable = { AUH_news_id = 503 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### THE STATUTE, x 260
+
+# the foundations elect their boards
+shared_focus = {
+	id = AUHNAT_BOS_the_waqf_autonomy
+	icon = GFX_focus_generic_self_management
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 384
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_a_constitution_for_bosnia }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_waqf
+		add_stability = 0.05
+		add_to_variable = { BOS_support = 10 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_waqf_statute
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_the_landesstatut_of_1910
+	icon = GFX_focus_generic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 394
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_waqf_autonomy }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_landesstatut
+		add_stability = 0.05
+		add_to_variable = { BOS_support = 10 }
+		add_to_variable = { SER_support = 5 }
+		add_to_variable = { CRO_support = 5 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_idea = AUH_BOS_the_bosnian_diet }
+			swap_ideas = {
+				remove_idea = AUH_BOS_the_bosnian_diet
+				add_idea = AUH_BOS_the_landesstatut
+			}
+		}
+		else = {
+			add_ideas = AUH_BOS_the_landesstatut
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 504 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# ninety-two seats by confession
+shared_focus = {
+	id = AUHNAT_BOS_the_sabor_of_sarajevo
+	icon = GFX_focus_generic_court
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 369
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_landesstatut_of_1910 }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_sabor
+		add_ideas = AUH_BOS_the_sabor_of_sarajevo
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { BOS_support = 5 }
+		add_to_variable = { SER_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the state buys out the bey's share
+shared_focus = {
+	id = AUHNAT_BOS_redeem_the_kmet_holdings
+	icon = GFX_goal_generic_consumer_goods
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 329
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_sabor_of_sarajevo }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_kmet
+		add_to_variable = { SER_support = 10 }
+		subtract_from_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		104 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = AUH_BOS_the_agrarian_redemption
+	}
+}
+
+# neither vienna nor budapest
+shared_focus = {
+	id = AUHNAT_BOS_the_third_land
+	icon = GFX_goal_generic_more_territorial_claims
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 316
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_redeem_the_kmet_holdings }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_third_land
+		add_to_variable = { BOS_support = 10 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 6 }
+		add_to_variable = { AUH_quote = 3 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_BOS_the_corpus_separatum
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_a_crownland_of_its_own
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 298
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHNAT_BOS_the_third_land }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_crownland
+		add_stability = 0.10
+		add_to_variable = { BOS_support = 15 }
+		add_to_variable = { SER_support = 5 }
+		subtract_from_variable = { HUN_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 12 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		every_owned_state = {
+			limit = { is_core_of = BOS }
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_idea = AUH_BOS_the_corpus_separatum }
+			swap_ideas = {
+				remove_idea = AUH_BOS_the_corpus_separatum
+				add_idea = AUH_BOS_the_bosnian_crownland
+			}
+		}
+		else = {
+			add_ideas = AUH_BOS_the_bosnian_crownland
+		}
+	}
+}
+
+##### THE OCCUPATION KEPT, x 262
+
+shared_focus = {
+	id = AUHNAT_BOS_the_occupation_of_1878
+	icon = GFX_goal_generic_occupy_start_war
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 388
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_kallay_system }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_occupation
+		add_command_power = 25
+		subtract_from_variable = { BOS_support = 2 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_thirty_years_of_occupation
+	}
+}
+
+# one nation taught to bar two
+shared_focus = {
+	id = AUHNAT_BOS_the_bosnian_nation_doctrine
+	icon = GFX_goal_generic_propaganda
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 398
+	y = 3
+	cost = 5
+	prerequisite = { focus = AUHNAT_BOS_the_occupation_of_1878 }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_bosnjastvo
+		add_popularity = { ideology = neutrality popularity = 0.05 }
+		add_timed_idea = { idea = AUH_BOS_bosnjastvo days = 2555 }
+		subtract_from_variable = { SER_support = 5 }
+		subtract_from_variable = { CRO_support = 5 }
+		add_to_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# a ministry of accounts governs
+shared_focus = {
+	id = AUHNAT_BOS_burian_and_the_common_finances
+	icon = GFX_goal_tax_reform
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_INDUSTRY }
+	x = 373
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_bosnian_nation_doctrine }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_burian
+		add_political_power = 75
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_BOS_burians_administration
+	}
+}
+
+# neither treasury signs the invoice
+shared_focus = {
+	id = AUHNAT_BOS_neither_half_will_pay
+	icon = GFX_goal_generic_neutrality_focus
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 333
+	y = 5
+	cost = 5
+	prerequisite = { focus = AUHNAT_BOS_burian_and_the_common_finances }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_no_payer
+		add_command_power = 25
+		subtract_from_variable = { AUH_quote = 2 }
+		subtract_from_variable = { BOS_support = 2 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+##### THE ANNEXED LAND, x 265
+
+shared_focus = {
+	id = AUHNAT_BOS_the_sandjak_railway
+	icon = GFX_focus_generic_railroad
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_INDUSTRY }
+	x = 392
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_end_the_condominium }
+	mutually_exclusive = {
+		focus = AUHNAT_BOS_evacuate_the_sandjak
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_uvac
+		add_tech_bonus = {
+			name = AUHNAT_BOS_the_sandjak_railway
+			bonus = 1.0
+			uses = 1
+			category = excavation_tech
+		}
+		104 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_named_threat = { threat = 2 name = AUHNAT_threat_bos_uvac }
+		if = {
+			limit = { country_exists = RUS }
+			reverse_add_opinion_modifier = { target = RUS modifier = protest_action_strong }
+		}
+		add_ideas = AUH_BOS_izvolskys_grievance
+	}
+}
+
+# administered by neither parliament
+shared_focus = {
+	id = AUHNAT_BOS_incorporate_the_reichsland
+	icon = GFX_goal_generic_demand_territory
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_ANNEXATION }
+	x = 402
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_sandjak_railway }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_reichsland
+		add_to_variable = { AUH_gemeinsamkeit = 6 }
+		subtract_from_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		every_owned_state = {
+			limit = { is_core_of = BOS }
+			add_core_of = AUH
+		}
+		if = {
+			limit = { has_idea = AUH_BOS_the_condominium }
+			swap_ideas = {
+				remove_idea = AUH_BOS_the_condominium
+				add_idea = AUH_BOS_the_common_finance_ministry
+			}
+		}
+		else = {
+			add_ideas = AUH_BOS_the_common_finance_ministry
+		}
+	}
+}
+
+# all three registers struck at once
+shared_focus = {
+	id = AUHNAT_BOS_dissolve_the_three_organisations
+	icon = GFX_goal_generic_secret_police
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 377
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_incorporate_the_reichsland }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_three_orgs
+		subtract_from_variable = { BOS_support = 10 }
+		subtract_from_variable = { SER_support = 10 }
+		subtract_from_variable = { CRO_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_dissolved_organisations
+	}
+}
+
+# the statute minus its articles
+shared_focus = {
+	id = AUHNAT_BOS_the_exceptional_measures
+	icon = GFX_goal_generic_forceful_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 337
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_dissolve_the_three_organisations }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_exceptional
+		add_command_power = 25
+		subtract_from_variable = { BOS_support = 10 }
+		subtract_from_variable = { SER_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_suspended_statute
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_a_province_like_any_other
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 321
+	y = 6
+	cost = 15
+	prerequisite = { focus = AUHNAT_BOS_the_exceptional_measures }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_province
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		subtract_from_variable = { BOS_support = 15 }
+		subtract_from_variable = { SER_support = 10 }
+		AUH_clamp_nationality_support = yes
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_BOS_the_suspended_statute }
+			swap_ideas = {
+				remove_idea = AUH_BOS_the_suspended_statute
+				add_idea = AUH_BOS_the_reichsland
+			}
+		}
+		else = {
+			add_ideas = AUH_BOS_the_reichsland
+		}
+	}
+}
+
+##### THE PROVINCE ITSELF, x 267
+
+shared_focus = {
+	id = AUHNAT_BOS_evacuate_the_sandjak
+	icon = GFX_focus_generic_diplomatic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_DIPLOMACY }
+	x = 396
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = AUHNAT_BOS_a_constitution_for_bosnia
+		focus = AUHNAT_BOS_the_kallay_system
+		focus = AUHNAT_BOS_end_the_condominium
+	}
+	mutually_exclusive = {
+		focus = AUHNAT_BOS_the_sandjak_railway
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_sandjak_out
+		add_command_power = 25
+		if = {
+			limit = { country_exists = OTT }
+			add_opinion_modifier = { target = OTT modifier = improve_relation }
+		}
+		if = {
+			limit = { country_exists = MNT }
+			add_opinion_modifier = { target = MNT modifier = improve_relation }
+		}
+		add_to_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_sandjak_abandoned
+		hidden_effect = {
+			set_variable = { AUH_news_id = 505 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# raised outside both conscription laws
+shared_focus = {
+	id = AUHNAT_BOS_the_bosniaken_regiments
+	icon = GFX_focus_generic_diverse_army
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	x = 406
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_evacuate_the_sandjak }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_bosniaken
+		army_experience = 25
+		add_manpower = 15000
+		add_ideas = AUH_BOS_the_bosniaken_regiments
+		add_doctrine_cost_reduction = {
+			name = AUHNAT_BOS_the_bosniaken_regiments
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		add_to_variable = { BOS_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# narrow gauge into every valley
+shared_focus = {
+	id = AUHNAT_BOS_the_narrow_gauge_network
+	icon = GFX_focus_generic_railroad
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 381
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_bosniaken_regiments }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_gauge
+		add_ideas = AUH_BOS_the_narrow_gauge_network
+		add_tech_bonus = {
+			name = AUHNAT_BOS_the_narrow_gauge_network
+			bonus = 1.0
+			uses = 1
+			category = construction_tech
+		}
+		104 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 2
+				instant_build = yes
+			}
+		}
+	}
+}
+
+# the monopoly sets the price
+shared_focus = {
+	id = AUHNAT_BOS_the_sarajevo_tobacco_monopoly
+	icon = GFX_focus_generic_industry_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 341
+	y = 5
+	cost = 5
+	prerequisite = { focus = AUHNAT_BOS_the_narrow_gauge_network }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_tobacco
+		add_ideas = AUH_BOS_the_tobacco_monopoly
+		104 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = industrial_complex
+				level = 1
+				instant_build = yes
+			}
+		}
+		subtract_from_variable = { BOS_support = 2 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_BOS_the_serb_national_organisation
+	icon = GFX_goal_Orthodox_Church
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 325
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHNAT_BOS_the_sarajevo_tobacco_monopoly }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_bos_three_communities
+		add_to_variable = { SER_support = 10 }
+		add_to_variable = { BOS_support = 5 }
+		add_to_variable = { CRO_support = 5 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_BOS_the_three_communities
+	}
+}
+
+
+###############################################################################
+##### ITALIANS OF THE LITTORAL AND THE TRENTINO, x 268-275
+###############################################################################
+
+shared_focus = {
+	id = AUHNAT_ITA_the_italians_of_the_littoral
+	icon = GFX_focus_generic_italy_first
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 360
+	y = 0
+	cost = 10
+	allow_branch = {
+		any_owned_state = { is_core_of = ITA }
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_seven_hundred_thousand
+		add_to_variable = { ITA_support = 5 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_ideas = AUH_ITA_the_littoral_question
+	}
+}
+
+##### ROW ONE, AND NO WAY BACK
+
+shared_focus = {
+	id = AUHNAT_ITA_a_faculty_for_trieste
+	icon = GFX_goal_AUS_demand_trieste
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 356
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_italians_of_the_littoral }
+	mutually_exclusive = {
+		focus = AUHNAT_ITA_a_faculty_anywhere_but_trieste
+		focus = AUHNAT_ITA_no_faculty_at_all
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ITA_road_trieste }
+		custom_effect_tooltip = AUHNAT_tt_ita_road_trieste
+		add_research_slot = 1
+		add_to_variable = { ITA_support = 15 }
+		subtract_from_variable = { AUS_support = 10 }
+		subtract_from_variable = { SLV_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { country_exists = ITA }
+			add_opinion_modifier = { target = ITA modifier = improve_relation }
+		}
+		add_ideas = AUH_ITA_the_university_of_trieste
+		hidden_effect = {
+			set_variable = { AUH_news_id = 507 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_a_faculty_anywhere_but_trieste
+	icon = GFX_focus_generic_university_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_RESEARCH }
+	x = 360
+	y = 1
+	cost = 5
+	prerequisite = { focus = AUHNAT_ITA_the_italians_of_the_littoral }
+	mutually_exclusive = {
+		focus = AUHNAT_ITA_a_faculty_for_trieste
+		focus = AUHNAT_ITA_no_faculty_at_all
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ITA_road_innsbruck }
+		custom_effect_tooltip = AUHNAT_tt_ita_road_innsbruck
+		add_tech_bonus = {
+			name = AUHNAT_ITA_a_faculty_anywhere_but_trieste
+			bonus = 1.0
+			uses = 1
+			category = electronics
+		}
+		add_to_variable = { ITA_support = 2 }
+		subtract_from_variable = { AUS_support = 2 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_no_faculty_at_all
+	icon = GFX_goal_generic_forceful_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 364
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_italians_of_the_littoral }
+	mutually_exclusive = {
+		focus = AUHNAT_ITA_a_faculty_for_trieste
+		focus = AUHNAT_ITA_a_faculty_anywhere_but_trieste
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		hidden_effect = { set_country_flag = AUH_ITA_road_refusal }
+		custom_effect_tooltip = AUHNAT_tt_ita_road_refusal
+		add_to_variable = { AUS_support = 10 }
+		subtract_from_variable = { ITA_support = 15 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { country_exists = ITA }
+			reverse_add_opinion_modifier = { target = ITA modifier = protest_action }
+		}
+		add_ideas = AUH_ITA_the_german_tyrol
+	}
+}
+
+##### THE CONCESSION, x 268
+
+# the valley diets get their own budget
+shared_focus = {
+	id = AUHNAT_ITA_autonomy_for_the_trentino
+	icon = GFX_focus_generic_self_management
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 404
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_a_faculty_for_trieste }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_trentino
+		add_ideas = AUH_ITA_the_trentine_autonomy
+		add_to_variable = { ITA_support = 10 }
+		subtract_from_variable = { AUS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		867 = {
+			add_extra_state_shared_building_slots = 1
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_de_gasperi_and_the_popular_union
+	icon = GFX_focus_generic_monarchy_2
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 410
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_autonomy_for_the_trentino }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_de_gasperi
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		add_to_variable = { ITA_support = 10 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_ideas = AUH_ITA_the_trentine_notables
+	}
+}
+
+# the city answers to the crown
+shared_focus = {
+	id = AUHNAT_ITA_the_immediate_city_of_trieste
+	icon = GFX_goal_generic_positive_trade_relations
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 385
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_de_gasperi_and_the_popular_union }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_free_port
+		add_ideas = AUH_ITA_the_free_port_of_trieste
+		add_to_variable = { ITA_support = 5 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		993 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+# one diet for the three provinces
+shared_focus = {
+	id = AUHNAT_ITA_the_littoral_land
+	icon = GFX_focus_generic_court
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 345
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_immediate_city_of_trieste }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_littoral_diet
+		add_to_variable = { ITA_support = 10 }
+		subtract_from_variable = { SLV_support = 5 }
+		subtract_from_variable = { AUS_support = 5 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		add_ideas = AUH_ITA_the_littoral_diet
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_an_italian_land_of_the_empire
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 329
+	y = 6
+	cost = 15
+	prerequisite = { focus = AUHNAT_ITA_the_littoral_land }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_italian_land
+		add_stability = 0.10
+		add_to_variable = { ITA_support = 15 }
+		subtract_from_variable = { AUS_support = 10 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 10 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { country_exists = ITA }
+			add_opinion_modifier = { target = ITA modifier = improve_relation }
+		}
+		993 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		867 = {
+			add_extra_state_shared_building_slots = 1
+		}
+		if = {
+			limit = { has_idea = AUH_ITA_the_littoral_diet }
+			swap_ideas = {
+				remove_idea = AUH_ITA_the_littoral_diet
+				add_idea = AUH_ITA_the_italian_land
+			}
+		}
+		else = {
+			add_ideas = AUH_ITA_the_italian_land
+		}
+	}
+}
+
+##### THE MIDDLE ROAD, x 270
+
+shared_focus = {
+	id = AUHNAT_ITA_the_facts_of_innsbruck
+	icon = GFX_focus_generic_university_1
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 408
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_a_faculty_anywhere_but_trieste }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_innsbruck
+		subtract_from_variable = { ITA_support = 5 }
+		subtract_from_variable = { AUS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_war_support = 0.03
+		add_ideas = AUH_ITA_the_university_question
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_article_seven_of_the_alliance
+	icon = GFX_focus_generic_diplomatic_treaty
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_DIPLOMACY }
+	x = 414
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_facts_of_innsbruck }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_article_seven
+		if = {
+			limit = { country_exists = ITA }
+			add_opinion_modifier = { target = ITA modifier = improve_relation }
+			reverse_add_opinion_modifier = { target = ITA modifier = improve_relation }
+		}
+		add_command_power = 25
+		add_ideas = AUH_ITA_article_seven
+	}
+}
+
+# the ally insures himself in paris
+shared_focus = {
+	id = AUHNAT_ITA_the_ally_across_the_isonzo
+	icon = GFX_goal_generic_neutrality_focus
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 389
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHNAT_ITA_article_seven_of_the_alliance }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_prinetti
+		add_command_power = 25
+		add_tech_bonus = {
+			name = AUHNAT_ITA_the_ally_across_the_isonzo
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+	}
+}
+
+##### THE REFUSAL, x 272
+
+shared_focus = {
+	id = AUHNAT_ITA_the_hohenlohe_decrees
+	icon = GFX_goal_generic_political_pressure
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 416
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_no_faculty_at_all }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_hohenlohe
+		add_political_power = 75
+		subtract_from_variable = { ITA_support = 10 }
+		add_to_variable = { AUS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_ideas = AUH_ITA_the_hohenlohe_decrees
+	}
+}
+
+# the register decides the city
+shared_focus = {
+	id = AUHNAT_ITA_german_and_slovene_trieste
+	icon = GFX_goal_generic_propaganda
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 426
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_hohenlohe_decrees }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_umgangssprache
+		add_ideas = AUH_ITA_the_hohenlohe_administration
+		subtract_from_variable = { ITA_support = 5 }
+		add_to_variable = { SLV_support = 5 }
+		add_to_variable = { AUS_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+	}
+}
+
+# the schools society struck off
+shared_focus = {
+	id = AUHNAT_ITA_dissolve_the_lega_nazionale
+	icon = GFX_goal_generic_secret_police
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 396
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_german_and_slovene_trieste }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_lega
+		subtract_from_variable = { ITA_support = 10 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { country_exists = ITA }
+			reverse_add_opinion_modifier = { target = ITA modifier = protest_action_strong }
+		}
+		add_ideas = AUH_ITA_the_lega_dissolved
+	}
+}
+
+# a file on every reading room
+shared_focus = {
+	id = AUHNAT_ITA_the_evidenzbureau_in_the_littoral
+	icon = GFX_focus_generic_secret_operation
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_RESEARCH }
+	x = 356
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_dissolve_the_lega_nazionale }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_evidenzbureau
+		add_tech_bonus = {
+			name = AUHNAT_ITA_the_evidenzbureau_in_the_littoral
+			bonus = 1.0
+			uses = 1
+			category = decryption_tech
+		}
+		subtract_from_variable = { ITA_support = 5 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_ideas = AUH_ITA_the_littoral_surveillance
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_the_littoral_is_austrian
+	icon = GFX_goal_generic_national_unity
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	x = 340
+	y = 6
+	cost = 15
+	prerequisite = { focus = AUHNAT_ITA_the_evidenzbureau_in_the_littoral }
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_austrian_littoral
+		add_war_support = 0.05
+		add_to_variable = { AUS_support = 15 }
+		subtract_from_variable = { ITA_support = 15 }
+		add_to_variable = { AUH_gemeinsamkeit = 6 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { has_country_flag = AUH_ausgleich_open }
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		if = {
+			limit = { has_idea = AUH_ITA_the_german_tyrol }
+			swap_ideas = {
+				remove_idea = AUH_ITA_the_german_tyrol
+				add_idea = AUH_ITA_the_austrian_littoral
+			}
+		}
+		else = {
+			add_ideas = AUH_ITA_the_austrian_littoral
+		}
+	}
+}
+
+##### THE PORT AND THE ALLIANCE, x 273-275
+
+# the yard that built the Habsburg class
+shared_focus = {
+	id = AUHNAT_ITA_the_stabilimento_tecnico_triestino
+	icon = GFX_goal_generic_build_navy
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	x = 420
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = AUHNAT_ITA_a_faculty_for_trieste
+		focus = AUHNAT_ITA_a_faculty_anywhere_but_trieste
+		focus = AUHNAT_ITA_no_faculty_at_all
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_stabilimento
+		navy_experience = 25
+		add_ideas = AUH_ITA_the_stabilimento_tecnico
+		add_tech_bonus = {
+			name = AUHNAT_ITA_the_stabilimento_tecnico_triestino
+			bonus = 1.0
+			uses = 1
+			category = naval_equipment
+		}
+		993 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_lloyd_austriaco
+	icon = GFX_goal_generic_trade
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS FOCUS_FILTER_INDUSTRY }
+	x = 422
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_the_stabilimento_tecnico_triestino }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_piazza_borsa
+		add_ideas = AUH_ITA_lloyd_austriaco
+		add_to_variable = { ITA_support = 5 }
+		add_to_variable = { SLV_support = 5 }
+		AUH_clamp_nationality_support = yes
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		993 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 506 }
+			set_variable = { AUH_news_scope = 1 }
+			AUH_headline = yes
+		}
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_battisti_and_the_socialists
+	icon = GFX_focus_generic_italy_propaganda
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	x = 400
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_lloyd_austriaco }
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_battisti
+		add_popularity = { ideology = communism popularity = 0.05 }
+		add_to_variable = { ITA_support = 5 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		add_ideas = AUH_ITA_the_irredentist_press
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_renew_the_triple_alliance
+	icon = GFX_goal_generic_alliance
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL FOCUS_FILTER_DIPLOMACY }
+	x = 360
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHNAT_ITA_battisti_and_the_socialists }
+	mutually_exclusive = {
+		focus = AUHNAT_ITA_conrads_memorandum_on_italy
+	}
+	ai_will_do = {
+		factor = 10
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_renewal
+		if = {
+			limit = { country_exists = ITA }
+			add_opinion_modifier = { target = ITA modifier = improve_relation }
+			reverse_add_opinion_modifier = { target = ITA modifier = improve_relation }
+		}
+		add_ideas = AUH_ITA_the_triple_alliance_renewed
+	}
+}
+
+shared_focus = {
+	id = AUHNAT_ITA_conrads_memorandum_on_italy
+	icon = GFX_goal_generic_attack_italy_alt
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY FOCUS_FILTER_ANNEXATION }
+	x = 364
+	y = 5
+	cost = 10
+	available = {
+		NOT = { has_war_with = ITA }
+		country_exists = ITA
+	}
+	bypass = {
+		OR = {
+			NOT = { country_exists = ITA }
+			ITA = { is_subject_of = AUH }
+		}
+	}
+	prerequisite = { focus = AUHNAT_ITA_battisti_and_the_socialists }
+	mutually_exclusive = {
+		focus = AUHNAT_ITA_renew_the_triple_alliance
+	}
+	ai_will_do = {
+		factor = 5
+	}
+	completion_reward = {
+		custom_effect_tooltip = AUHNAT_tt_ita_conrad
+		add_war_support = 0.08
+		army_experience = 25
+		add_command_power = 25
+		add_tech_bonus = {
+			name = AUHNAT_ITA_conrads_memorandum_on_italy
+			bonus = 1.0
+			uses = 1
+			category = mountaineers_tech
+		}
+		subtract_from_variable = { ITA_support = 10 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		if = {
+			limit = { country_exists = ITA }
+			reverse_add_opinion_modifier = { target = ITA modifier = protest_action_strong }
+		}
+		create_wargoal = {
+			type = annex_everything
+			target = ITA
+		}
+		add_opinion_modifier = { target = ITA modifier = AUH_preventive_war_declared }
+		add_named_threat = { threat = 2 name = AUHNAT_threat_ita_conrad }
+		add_ideas = AUH_ITA_the_preventive_war_on_italy
+	}
+}

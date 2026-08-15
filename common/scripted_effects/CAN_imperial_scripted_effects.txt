@@ -1,0 +1,262 @@
+# ##############################################################################
+# CAN_imperial_scripted_effects.txt
+# helpers for the imperial chain events
+# ##############################################################################
+#
+# modifier pairs, Commons division, 1926 division
+# blood tax is not touched here, see CAN_add_blood_tax
+# ##############################################################################
+
+
+# ##############################################################################
+# 1. the fracture
+#    mirror effects, one side up, the other down
+#    french states: 466 468 842 834 465, 683 if Quebec core
+#    english states: 276 682 464 467 469 470 473 739 740 331 332
+#    an event never calls both
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# english Canada rallies, Quebec resents. country scope
+# ------------------------------------------------------------------------------
+CAN_imperial_english_canada_rallies = {
+
+	276 = { CAN_imperial_place_enthusiasm = yes }
+	682 = { CAN_imperial_place_enthusiasm = yes }
+	464 = { CAN_imperial_place_enthusiasm = yes }
+	467 = { CAN_imperial_place_enthusiasm = yes }
+	469 = { CAN_imperial_place_enthusiasm = yes }
+	470 = { CAN_imperial_place_enthusiasm = yes }
+	473 = { CAN_imperial_place_enthusiasm = yes }
+	739 = { CAN_imperial_place_enthusiasm = yes }
+	740 = { CAN_imperial_place_enthusiasm = yes }
+	331 = { CAN_imperial_place_enthusiasm = yes }
+	332 = { CAN_imperial_place_enthusiasm = yes }
+
+	466 = { CAN_imperial_place_resentment = yes }
+	468 = { CAN_imperial_place_resentment = yes }
+	842 = { CAN_imperial_place_resentment = yes }
+	834 = { CAN_imperial_place_resentment = yes }
+	465 = { CAN_imperial_place_resentment = yes }
+
+	683 = {
+		if = {
+			limit = { is_core_of = QUE }
+			CAN_imperial_place_resentment = yes
+		}
+	}
+
+	custom_effect_tooltip = CAN_imperial_english_canada_rallies_tt
+}
+
+
+# ------------------------------------------------------------------------------
+# Quebec rallies, english Canada resents. country scope
+# ------------------------------------------------------------------------------
+CAN_imperial_french_canada_rallies = {
+
+	466 = { CAN_imperial_place_enthusiasm = yes }
+	468 = { CAN_imperial_place_enthusiasm = yes }
+	842 = { CAN_imperial_place_enthusiasm = yes }
+	834 = { CAN_imperial_place_enthusiasm = yes }
+	465 = { CAN_imperial_place_enthusiasm = yes }
+
+	683 = {
+		if = {
+			limit = { is_core_of = QUE }
+			CAN_imperial_place_enthusiasm = yes
+		}
+	}
+
+	276 = { CAN_imperial_place_resentment = yes }
+	682 = { CAN_imperial_place_resentment = yes }
+	464 = { CAN_imperial_place_resentment = yes }
+	467 = { CAN_imperial_place_resentment = yes }
+	469 = { CAN_imperial_place_resentment = yes }
+	470 = { CAN_imperial_place_resentment = yes }
+	473 = { CAN_imperial_place_resentment = yes }
+	739 = { CAN_imperial_place_resentment = yes }
+	740 = { CAN_imperial_place_resentment = yes }
+	331 = { CAN_imperial_place_resentment = yes }
+	332 = { CAN_imperial_place_resentment = yes }
+
+	custom_effect_tooltip = CAN_imperial_french_canada_rallies_tt
+}
+
+
+# ------------------------------------------------------------------------------
+# guarded setters, state scope, internal
+# remove both first, so an opposite event flips the state
+# the owner check keeps british Newfoundland out
+# ------------------------------------------------------------------------------
+CAN_imperial_place_enthusiasm = {
+	if = {
+		limit = { OWNER = { original_tag = CAN } }
+
+		if = {
+			limit = { has_dynamic_modifier = { modifier = CAN_imperial_resentment_modifier } }
+			remove_dynamic_modifier = { modifier = CAN_imperial_resentment_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = CAN_imperial_enthusiasm_modifier } }
+			remove_dynamic_modifier = { modifier = CAN_imperial_enthusiasm_modifier }
+		}
+
+		add_dynamic_modifier = {
+			modifier = CAN_imperial_enthusiasm_modifier
+			days = 730
+		}
+	}
+}
+
+CAN_imperial_place_resentment = {
+	if = {
+		limit = { OWNER = { original_tag = CAN } }
+
+		if = {
+			limit = { has_dynamic_modifier = { modifier = CAN_imperial_enthusiasm_modifier } }
+			remove_dynamic_modifier = { modifier = CAN_imperial_enthusiasm_modifier }
+		}
+		if = {
+			limit = { has_dynamic_modifier = { modifier = CAN_imperial_resentment_modifier } }
+			remove_dynamic_modifier = { modifier = CAN_imperial_resentment_modifier }
+		}
+
+		add_dynamic_modifier = {
+			modifier = CAN_imperial_resentment_modifier
+			days = 730
+		}
+	}
+}
+
+
+# ##############################################################################
+# 2. the Commons division
+#    called by can_imperial.15 in CAN scope
+#    245 seats, the ministry starts 5 votes up
+#    read: stability, war support, blood tax, a -2..+2 roll
+#    blood tax alone can flip the result past 80
+# ##############################################################################
+
+CAN_house_resolve_vote = {
+
+	set_variable = { CAN_house_margin = 5 }
+
+	# --- the ministry's footing ---
+	if = {
+		limit = { has_stability > 0.7 }
+		add_to_variable = { CAN_house_margin = 4 }
+	}
+	else_if = {
+		limit = { has_stability > 0.5 }
+		add_to_variable = { CAN_house_margin = 2 }
+	}
+	else_if = {
+		limit = { has_stability > 0.3 }
+		add_to_variable = { CAN_house_margin = -2 }
+	}
+	else = {
+		add_to_variable = { CAN_house_margin = -5 }
+	}
+
+	# --- what the country wants to hear ---
+	if = {
+		limit = { has_war_support > 0.7 }
+		add_to_variable = { CAN_house_margin = 4 }
+	}
+	else_if = {
+		limit = { has_war_support > 0.5 }
+		add_to_variable = { CAN_house_margin = 2 }
+	}
+	else_if = {
+		limit = { has_war_support > 0.3 }
+		add_to_variable = { CAN_house_margin = -2 }
+	}
+	else = {
+		add_to_variable = { CAN_house_margin = -5 }
+	}
+
+	# --- what Quebec will not vote for ---
+	if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 90 compare = greater_than_or_equals } }
+		add_to_variable = { CAN_house_margin = -12 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 75 compare = greater_than_or_equals } }
+		add_to_variable = { CAN_house_margin = -8 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 60 compare = greater_than_or_equals } }
+		add_to_variable = { CAN_house_margin = -4 }
+	}
+	else_if = {
+		limit = { check_variable = { var = CAN_blood_tax value = 40 compare = greater_than_or_equals } }
+		add_to_variable = { CAN_house_margin = -1 }
+	}
+
+	# --- the Quebec lieutenant, when there is one ---
+	# the 1917 voluntary compact returns french votes
+	if = {
+		limit = { has_country_flag = can_voluntary_compact }
+		add_to_variable = { CAN_house_margin = 4 }
+	}
+	if = {
+		limit = { has_country_flag = CAN_done_raise_french_canadian_battalions }
+		add_to_variable = { CAN_house_margin = 3 }
+	}
+
+	# --- the backbenches ---
+	random_list = {
+		20 = { add_to_variable = { CAN_house_margin = -2 } }
+		20 = { add_to_variable = { CAN_house_margin = -1 } }
+		20 = { add_to_variable = { CAN_house_margin = 0 } }
+		20 = { add_to_variable = { CAN_house_margin = 1 } }
+		20 = { add_to_variable = { CAN_house_margin = 2 } }
+	}
+
+	# --- the count, 245 seats ---
+	set_variable = { CAN_house_ayes = 123 }
+	add_to_variable = { CAN_house_ayes = CAN_house_margin }
+	clamp_variable = { var = CAN_house_ayes min = 90 max = 200 }
+
+	set_variable = { CAN_house_noes = 245 }
+	subtract_from_variable = { CAN_house_noes = CAN_house_ayes }
+}
+
+
+# ##############################################################################
+# 3. the division of 2 July 1926
+#    called by can_imperial.8 in CAN scope
+#    Meighen beaten 95 to 94, so the roll is worth one vote
+#    margin negative, the ministry falls, else it holds
+# ##############################################################################
+
+CAN_kingbyng_resolve_vote = {
+
+	set_variable = { CAN_kb_margin = -1 }
+
+	# a settled ministry holds one more vote
+	if = {
+		limit = { has_stability > 0.6 }
+		add_to_variable = { CAN_kb_margin = 1 }
+	}
+
+	# appealing to the King costs a progressive vote
+	if = {
+		limit = { has_country_flag = CAN_imperial_appeal_to_the_king }
+		add_to_variable = { CAN_kb_margin = -1 }
+	}
+
+	# the roll, plus or minus one vote
+	random_list = {
+		50 = { add_to_variable = { CAN_kb_margin = 0 } }
+		50 = { add_to_variable = { CAN_kb_margin = 1 } }
+	}
+
+	set_variable = { CAN_kb_ayes = 95 }
+	add_to_variable = { CAN_kb_ayes = CAN_kb_margin }
+	clamp_variable = { var = CAN_kb_ayes min = 92 max = 97 }
+
+	set_variable = { CAN_kb_noes = 189 }
+	subtract_from_variable = { CAN_kb_noes = CAN_kb_ayes }
+}

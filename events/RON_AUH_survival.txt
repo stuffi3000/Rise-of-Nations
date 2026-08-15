@@ -1,0 +1,311 @@
+###########################
+# AUSTRIA-HUNGARY - THE EMPIRE THAT OUTLIVED 1918
+###########################
+# 1 imperial health, 2 the succession, 3 the term falls due, 4 the neighbours answer
+# 5 the land commission, 6 Paris offers, 7 Rome names its price, 8 the award enforced
+# 9 a petition from the Tyrol, 10 the settlement of 1945
+# every one of these is counterfactual
+
+add_namespace = auh_survival
+
+# a pneumonia at thirty-four killed him in the other world
+country_event = {
+	id = auh_survival.1
+	title = auh_survival.1.t
+	desc = auh_survival.1.d
+	picture = GFX_report_event_generic_funeral
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.1.a
+		ai_chance = { factor = 70 }
+		add_stability = 0.03
+		custom_effect_tooltip = auh_survival_the_emperor_recovers_tt
+		hidden_effect = {
+			set_country_flag = AUH_the_emperor_recovered
+		}
+	}
+
+	option = {
+		name = auh_survival.1.b
+		ai_chance = { factor = 30 }
+		trigger = {
+			NOT = { has_country_flag = AUH_the_emperor_recovered }
+		}
+		add_political_power = 50
+		add_ideas = AUH_the_regency_council
+		set_country_flag = AUH_the_regency_is_open
+		country_event = { id = auh_survival.2 days = 60 }
+	}
+}
+
+# who governs until the boy is eighteen
+country_event = {
+	id = auh_survival.2
+	title = auh_survival.2.t
+	desc = auh_survival.2.d
+	picture = GFX_report_event_internal_focus
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.2.a
+		ai_chance = { factor = 55 }
+		add_stability = 0.05
+		add_to_variable = { AUH_gemeinsamkeit = 3 }
+		hidden_effect = {
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+
+	option = {
+		name = auh_survival.2.b
+		ai_chance = { factor = 45 }
+		add_political_power = 75
+		add_war_support = 0.05
+		add_to_variable = { HUN_support = 6 }
+		subtract_from_variable = { AUS_support = 3 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the ten year term, and it can still fail
+country_event = {
+	id = auh_survival.3
+	title = auh_survival.3.t
+	desc = auh_survival.3.d
+	picture = GFX_report_event_hungarian_support
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.3.a
+		ai_chance = { factor = 60 }
+		add_political_power = -50
+		add_to_variable = { AUH_quote = 2 }
+		add_to_variable = { HUN_support = 8 }
+		AUH_clamp_nationality_support = yes
+		hidden_effect = {
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+
+	option = {
+		name = auh_survival.3.b
+		ai_chance = { factor = 40 }
+		custom_effect_tooltip = auh_survival_provisorium_tt
+		add_stability = -0.05
+		subtract_from_variable = { AUH_gemeinsamkeit = 5 }
+		add_to_variable = { AUS_support = 4 }
+		AUH_clamp_nationality_support = yes
+		hidden_effect = {
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+}
+
+# Belgrade, Bucharest and Prague reply
+country_event = {
+	id = auh_survival.4
+	title = auh_survival.4.t
+	desc = auh_survival.4.d
+	picture = GFX_report_event_AUH_minorities
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.4.a
+		ai_chance = { factor = 60 }
+		add_opinion_modifier = { target = ROM modifier = medium_increase }
+		add_opinion_modifier = { target = YUG modifier = medium_increase }
+		add_political_power = 25
+	}
+
+	option = {
+		name = auh_survival.4.b
+		ai_chance = { factor = 40 }
+		add_war_support = 0.05
+		army_experience = 15
+		add_named_threat = { threat = 1 name = AUHSUR_threat_the_ring }
+	}
+}
+
+# the survey lands on the desk
+country_event = {
+	id = auh_survival.5
+	title = auh_survival.5.t
+	desc = auh_survival.5.d
+	picture = GFX_report_event_home_front
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.5.a
+		ai_chance = { factor = 55 }
+		add_stability = 0.05
+		add_to_variable = { ROM_support = 6 }
+		add_to_variable = { SLO_support = 6 }
+		clamp_variable = { var = SLO_support min = 0 max = 100 }
+		AUH_clamp_nationality_support = yes
+	}
+
+	option = {
+		name = auh_survival.5.b
+		ai_chance = { factor = 45 }
+		add_political_power = 50
+		add_to_variable = { HUN_support = 6 }
+		AUH_clamp_nationality_support = yes
+		custom_effect_tooltip = auh_survival_survey_buried_tt
+	}
+}
+
+# a preferential group of five, offered from Paris
+country_event = {
+	id = auh_survival.6
+	title = auh_survival.6.t
+	desc = auh_survival.6.d
+	picture = GFX_report_event_generic_read_write
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.6.a
+		ai_chance = { factor = 65 }
+		add_opinion_modifier = { target = FRA modifier = large_increase }
+		add_to_variable = { AUH_gemeinsamkeit = 3 }
+		hidden_effect = {
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+	}
+
+	option = {
+		name = auh_survival.6.b
+		ai_chance = { factor = 35 }
+		add_political_power = 50
+		add_opinion_modifier = { target = FRA modifier = small_decrease }
+		custom_effect_tooltip = auh_survival_hold_out_tt
+	}
+}
+
+# Rome quotes the treaty of 26 April 1915
+country_event = {
+	id = auh_survival.7
+	title = auh_survival.7.t
+	desc = auh_survival.7.d
+	picture = GFX_report_event_gathering_protest
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.7.a
+		ai_chance = { factor = 50 }
+		add_opinion_modifier = { target = ITA modifier = large_increase }
+		add_to_variable = { ITA_support = 8 }
+		subtract_from_variable = { SLV_support = 8 }
+		clamp_variable = { var = ITA_support min = 0 max = 100 }
+		AUH_clamp_nationality_support = yes
+	}
+
+	option = {
+		name = auh_survival.7.b
+		ai_chance = { factor = 50 }
+		add_war_support = 0.05
+		navy_experience = 25
+		add_opinion_modifier = { target = ITA modifier = medium_decrease }
+		add_to_variable = { SLV_support = 6 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# somebody has to make the award stick
+country_event = {
+	id = auh_survival.8
+	title = auh_survival.8.t
+	desc = auh_survival.8.d
+	picture = GFX_report_event_hungarian_soldiers
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.8.a
+		ai_chance = { factor = 55 }
+		army_experience = 25
+		add_command_power = 25
+		add_stability = -0.03
+		add_named_threat = { threat = 1 name = AUHSUR_threat_the_award }
+	}
+
+	option = {
+		name = auh_survival.8.b
+		ai_chance = { factor = 45 }
+		add_political_power = 50
+		custom_effect_tooltip = auh_survival_let_them_settle_tt
+		add_opinion_modifier = { target = ROM modifier = small_increase }
+	}
+}
+
+# ninety-eight per cent, and a delegation at the door
+country_event = {
+	id = auh_survival.9
+	title = auh_survival.9.t
+	desc = auh_survival.9.d
+	picture = GFX_report_event_german_reichstag_gathering
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.9.a
+		ai_chance = { factor = 50 }
+		add_to_variable = { AUS_support = 8 }
+		AUH_clamp_nationality_support = yes
+		add_political_power = -25
+		custom_effect_tooltip = auh_survival_delegation_received_tt
+	}
+
+	option = {
+		name = auh_survival.9.b
+		ai_chance = { factor = 50 }
+		add_stability = 0.03
+		subtract_from_variable = { AUS_support = 6 }
+		AUH_clamp_nationality_support = yes
+		add_ideas = AUH_the_watch_on_the_north
+	}
+}
+
+# what the empire becomes between two blocs
+country_event = {
+	id = auh_survival.10
+	title = auh_survival.10.t
+	desc = auh_survival.10.d
+	picture = GFX_report_event_martin_declaration
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_survival.10.a
+		ai_chance = { factor = 40 }
+		add_stability = 0.05
+		add_research_slot = 1
+		custom_effect_tooltip = auh_survival_hodza_tt
+	}
+
+	option = {
+		name = auh_survival.10.b
+		ai_chance = { factor = 35 }
+		add_political_power = 75
+		add_war_support = 0.05
+		custom_effect_tooltip = auh_survival_armed_tt
+	}
+
+	option = {
+		name = auh_survival.10.c
+		ai_chance = { factor = 25 }
+		add_stability = 0.08
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		hidden_effect = {
+			AUH_refresh_the_ausgleich_tier = yes
+		}
+		custom_effect_tooltip = auh_survival_quiet_tt
+	}
+}

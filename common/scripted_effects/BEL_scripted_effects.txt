@@ -1,0 +1,89 @@
+##############################
+# BEL GUARANTEE, FRACTURE, CROWN
+##############################
+# BEL_guarantee 0-100, BEL_fracture 0-100
+# BEL_crown_exposure 0-100
+# capability costs guarantee, raises fracture
+
+BEL_open_the_ledger = {
+	if = {
+		limit = { NOT = { has_country_flag = BEL_ledger_open } }
+		set_country_flag = BEL_ledger_open
+
+		if = {
+			limit = { date > 1945.1.1 }
+			set_variable = { BEL_guarantee = 20 }
+			set_variable = { BEL_fracture = 70 }
+			set_variable = { BEL_crown_exposure = 40 }
+		}
+		else_if = {
+			limit = { date > 1933.1.1 }
+			set_variable = { BEL_guarantee = 55 }
+			set_variable = { BEL_fracture = 55 }
+			set_variable = { BEL_crown_exposure = 0 }
+		}
+		else_if = {
+			limit = { date > 1919.1.1 }
+			set_variable = { BEL_guarantee = 45 }
+			set_variable = { BEL_fracture = 50 }
+			set_variable = { BEL_crown_exposure = 20 }
+		}
+		else_if = {
+			limit = { date > 1910.1.1 }
+			set_variable = { BEL_guarantee = 78 }
+			set_variable = { BEL_fracture = 35 }
+			set_variable = { BEL_crown_exposure = 0 }
+		}
+		else = {
+			set_variable = { BEL_guarantee = 85 }
+			set_variable = { BEL_fracture = 30 }
+			set_variable = { BEL_crown_exposure = 0 }
+		}
+	}
+}
+
+# add the three args, clamp, test crises
+BEL_move_the_ledger = {
+	add_to_variable = { BEL_guarantee = BEL_arg_guarantee }
+	add_to_variable = { BEL_fracture = BEL_arg_fracture }
+	add_to_variable = { BEL_crown_exposure = BEL_arg_crown }
+	clamp_variable = { var = BEL_guarantee min = 0 max = 100 }
+	clamp_variable = { var = BEL_fracture min = 0 max = 100 }
+	clamp_variable = { var = BEL_crown_exposure min = 0 max = 100 }
+
+	# fracture ceiling: the country of two peoples
+	if = {
+		limit = {
+			check_variable = { BEL_fracture > 99 }
+			NOT = { has_country_flag = BEL_the_country_of_two_peoples }
+		}
+		set_country_flag = BEL_the_country_of_two_peoples
+	}
+
+	# guarantee floor: both neighbours get a war goal
+	if = {
+		limit = {
+			check_variable = { BEL_guarantee < 1 }
+			has_war = no
+			NOT = { has_country_flag = BEL_the_guarantee_is_void }
+		}
+		set_country_flag = BEL_the_guarantee_is_void
+	}
+
+	# guarantee bands
+	if = {
+		limit = { check_variable = { BEL_guarantee > 79 } }
+		set_country_flag = BEL_band_guaranteed
+		clr_country_flag = BEL_band_compromised
+	}
+	else_if = {
+		limit = { check_variable = { BEL_guarantee > 39 } }
+		clr_country_flag = BEL_band_guaranteed
+		set_country_flag = BEL_band_compromised
+	}
+	else = {
+		clr_country_flag = BEL_band_guaranteed
+		clr_country_flag = BEL_band_compromised
+		set_country_flag = BEL_band_a_scrap_of_paper
+	}
+}

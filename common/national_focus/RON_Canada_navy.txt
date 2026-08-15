@@ -1,0 +1,1929 @@
+########################################################################################
+##### CANADA - NAVY
+########################################################################################
+# one trunk, 1900 to 1949
+# dates moved inside the branch
+# the fork at y=1 never reopens
+
+########################################################################
+##### TRUNK HEAD
+########################################################################
+
+shared_focus = {
+	id = CAN_the_fisheries_protection_service
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 208
+	y = 0
+	cost = 10
+	available = {
+		NOT = { has_country_flag = can_no_fleet_locked }
+	}
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_fisheries_protection_service
+		464 = { add_extra_state_shared_building_slots = 1 }
+		set_country_flag = CAN_done_the_fisheries_protection_service
+	}
+}
+
+########################################################################
+##### THE FORK - PAY THE ADMIRALTY OR RAISE A SERVICE
+########################################################################
+
+# camp a, a service of our own
+shared_focus = {
+	id = CAN_a_navy_under_our_own_flag
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_build_navy
+	x = 200
+	y = 1
+	cost = 15
+	prerequisite = { focus = CAN_the_fisheries_protection_service }
+	mutually_exclusive = {
+		focus = CAN_the_new_zealand_example
+		focus = CAN_no_naval_policy_without_the_people
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_war_support = 0.05
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = CAN_idea_a_navy_under_our_own_flag
+		set_country_flag = CAN_done_a_navy_under_our_own_flag
+	}
+}
+
+# camp b, the cheque
+shared_focus = {
+	id = CAN_the_new_zealand_example
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_navy_battleship
+	x = 212
+	y = 1
+	cost = 10
+	prerequisite = { focus = CAN_the_fisheries_protection_service }
+	mutually_exclusive = {
+		focus = CAN_a_navy_under_our_own_flag
+		focus = CAN_no_naval_policy_without_the_people
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_cash_contribution
+		add_tech_bonus = {
+			name = CAN_admiralty_designs
+			bonus = 0.5
+			uses = 2
+			category = naval_equipment
+		}
+		set_country_flag = CAN_done_the_new_zealand_example
+	}
+}
+
+# camp c, monk
+shared_focus = {
+	id = CAN_no_naval_policy_without_the_people
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_neutrality_focus
+	x = 220
+	y = 1
+	cost = 5
+	prerequisite = { focus = CAN_the_fisheries_protection_service }
+	mutually_exclusive = {
+		focus = CAN_a_navy_under_our_own_flag
+		focus = CAN_the_new_zealand_example
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_stability = 0.10
+		add_ideas = CAN_idea_no_naval_policy_without_the_people
+		set_country_flag = can_no_fleet_locked
+		set_country_flag = CAN_done_no_naval_policy_without_the_people
+	}
+}
+
+########################################################################
+##### CAMP A - THE DOMINION SERVICE
+########################################################################
+
+shared_focus = {
+	id = CAN_the_cruiser_canada
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_naval_academy
+	x = 196
+	y = 2
+	cost = 10
+	prerequisite = { focus = CAN_a_navy_under_our_own_flag }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		464 = { add_extra_state_shared_building_slots = 1 }
+		custom_effect_tooltip = CAN_the_cruiser_canada_tt
+		set_country_flag = CAN_done_the_cruiser_canada
+	}
+}
+
+shared_focus = {
+	id = CAN_built_on_the_lakes
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 204
+	y = 2
+	cost = 10
+	prerequisite = { focus = CAN_a_navy_under_our_own_flag }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		276 = { add_extra_state_shared_building_slots = 1 }
+		276 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		custom_effect_tooltip = CAN_built_on_the_lakes_tt
+		set_country_flag = CAN_done_built_on_the_lakes
+	}
+}
+
+# london, august 1909
+shared_focus = {
+	id = CAN_the_imperial_defence_conference
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_military_sphere
+	x = 208
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_navy_under_our_own_flag
+		focus = CAN_the_new_zealand_example
+		focus = CAN_no_naval_policy_without_the_people
+	}
+	allow_branch = {
+		date > 1908.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = { has_country_flag = CAN_done_a_navy_under_our_own_flag }
+			add_ideas = CAN_idea_the_fleet_unit_precedent
+		}
+		else_if = {
+			limit = { has_country_flag = CAN_done_the_new_zealand_example }
+			add_ideas = CAN_idea_a_seat_at_the_admiralty_table
+		}
+		else = {
+		}
+		hidden_effect = {
+			set_variable = { CAN_news_id = 501 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_imperial_defence_conference_tt
+		set_country_flag = CAN_done_the_imperial_defence_conference
+	}
+}
+
+shared_focus = {
+	id = CAN_the_hydrographic_survey
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_intelligence_exchange
+	x = 196
+	y = 3
+	cost = 10
+	prerequisite = { focus = CAN_the_cruiser_canada }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 15
+		add_ideas = CAN_idea_charts_of_our_own_coasts
+		set_country_flag = CAN_done_the_hydrographic_survey
+	}
+}
+
+shared_focus = {
+	id = CAN_the_coastal_wireless_stations
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_radar
+	x = 204
+	y = 3
+	cost = 10
+	prerequisite = { focus = CAN_built_on_the_lakes }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_coastal_wireless_chain
+		add_tech_bonus = {
+			name = CAN_coastal_wireless
+			bonus = 0.5
+			uses = 1
+			category = radar_tech
+		}
+		set_country_flag = CAN_done_the_coastal_wireless_stations
+	}
+}
+
+# the garrisons go, the yards stay
+shared_focus = {
+	id = CAN_the_yards_at_halifax_and_esquimalt
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 200
+	y = 4
+	cost = 15
+	prerequisite = {
+		focus = CAN_the_hydrographic_survey
+		focus = CAN_the_coastal_wireless_stations
+	}
+	allow_branch = {
+		date > 1904.12.31
+	}
+
+	bypass = {
+		OR = {
+			has_start_date > 1918.12.31
+			num_of_naval_factories > 4
+		}
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		740 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		464 = {
+			add_building_construction = {
+				type = naval_base
+				level = 1
+				instant_build = yes
+				province = {
+					all_provinces = yes
+					limit_to_naval_base = yes
+				}
+			}
+		}
+		set_country_flag = CAN_done_the_yards_at_halifax_and_esquimalt
+	}
+}
+
+shared_focus = {
+	id = CAN_a_naval_militia
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_special_forces
+	x = 196
+	y = 5
+	cost = 10
+	prerequisite = { focus = CAN_the_yards_at_halifax_and_esquimalt }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_naval_militia
+		set_country_flag = CAN_done_a_naval_militia
+	}
+}
+
+shared_focus = {
+	id = CAN_bring_kingsmill_home
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_naval_academy
+	x = 204
+	y = 5
+	cost = 5
+	prerequisite = { focus = CAN_the_yards_at_halifax_and_esquimalt }
+	allow_branch = {
+		date > 1907.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 30
+		custom_effect_tooltip = CAN_bring_kingsmill_home_tt
+		set_country_flag = CAN_done_bring_kingsmill_home
+	}
+}
+
+# 4 may 1910
+shared_focus = {
+	id = CAN_the_naval_service_act
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 200
+	y = 6
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_naval_militia
+		focus = CAN_bring_kingsmill_home
+	}
+	allow_branch = {
+		date > 1909.12.31
+	}
+	available = {
+		NOT = { has_country_flag = can_no_fleet_locked }
+	}
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		if = {
+			limit = { has_idea = CAN_idea_no_fleet_of_our_own_2 }
+			swap_ideas = {
+				remove_idea = CAN_idea_no_fleet_of_our_own_2
+				add_idea = CAN_idea_the_tin_pot_navy
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_idea = CAN_idea_the_tin_pot_navy }
+			}
+			add_ideas = CAN_idea_the_tin_pot_navy
+		}
+		hidden_effect = {
+			set_variable = { CAN_news_id = 500 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_naval_service_act_tt
+		set_country_flag = CAN_done_the_naval_service_act
+	}
+}
+
+# halifax and esquimalt, 1910
+shared_focus = {
+	id = CAN_niobe_and_rainbow
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 196
+	y = 7
+	cost = 10
+	prerequisite = { focus = CAN_the_naval_service_act }
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = CAN_idea_niobe_and_rainbow
+		set_country_flag = CAN_done_niobe_and_rainbow
+	}
+}
+
+shared_focus = {
+	id = CAN_the_royal_naval_college
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_naval_academy
+	x = 204
+	y = 7
+	cost = 10
+	prerequisite = { focus = CAN_the_naval_service_act }
+	allow_branch = {
+		date > 1910.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_royal_naval_college
+		custom_effect_tooltip = CAN_the_royal_naval_college_tt
+		set_country_flag = CAN_done_the_royal_naval_college
+	}
+}
+
+shared_focus = {
+	id = CAN_a_fleet_unit_of_our_own
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 200
+	y = 8
+	cost = 15
+	prerequisite = {
+		focus = CAN_niobe_and_rainbow
+		focus = CAN_the_royal_naval_college
+	}
+	mutually_exclusive = {
+		focus = CAN_dreadnoughts_for_the_empire
+		focus = CAN_plebiscite_on_the_navy
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		if = {
+			limit = { has_idea = CAN_idea_no_fleet_of_our_own_2 }
+			swap_ideas = {
+				remove_idea = CAN_idea_no_fleet_of_our_own_2
+				add_idea = CAN_idea_no_fleet_of_our_own_1
+			}
+		}
+		add_timed_idea = {
+			idea = CAN_idea_built_here_and_slowly
+			days = 1825
+		}
+		custom_effect_tooltip = CAN_a_fleet_unit_of_our_own_tt
+		set_country_flag = CAN_done_a_fleet_unit_of_our_own
+	}
+}
+
+########################################################################
+##### CAMP B - THE CONTRIBUTION
+########################################################################
+
+shared_focus = {
+	id = CAN_a_cheque_to_whitehall
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_positive_trade_relations
+	x = 212
+	y = 2
+	cost = 10
+	prerequisite = { focus = CAN_the_new_zealand_example }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = { has_idea = CAN_idea_the_cash_contribution }
+			swap_ideas = {
+				remove_idea = CAN_idea_the_cash_contribution
+				add_idea = CAN_idea_the_naval_estimate_goes_to_london
+			}
+		}
+		else = {
+			add_ideas = CAN_idea_the_naval_estimate_goes_to_london
+		}
+		add_doctrine_cost_reduction = {
+			name = CAN_admiralty_doctrine
+			cost_reduction = 0.25
+			uses = 2
+			category = naval_doctrine
+		}
+		set_country_flag = CAN_done_a_cheque_to_whitehall
+	}
+}
+
+shared_focus = {
+	id = CAN_the_navy_league_of_canada
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_WAR_SUPPORT }
+	icon = GFX_goal_generic_propaganda
+	x = 212
+	y = 3
+	cost = 10
+	prerequisite = { focus = CAN_a_cheque_to_whitehall }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_navy_league
+		set_country_flag = CAN_done_the_navy_league_of_canada
+	}
+}
+
+# borden in london, 1912
+shared_focus = {
+	id = CAN_the_churchill_memorandum
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_admirality
+	x = 212
+	y = 4
+	cost = 10
+	prerequisite = { focus = CAN_the_navy_league_of_canada }
+	allow_branch = {
+		date > 1911.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_german_emergency
+		add_tech_bonus = {
+			name = CAN_capital_ship_designs
+			bonus = 1.0
+			uses = 1
+			category = bb_tech
+		}
+		set_country_flag = CAN_done_the_churchill_memorandum
+	}
+}
+
+# monk resigns, december 1912
+shared_focus = {
+	id = CAN_the_naval_aid_bill
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_navy_battleship
+	x = 212
+	y = 5
+	cost = 10
+	prerequisite = { focus = CAN_the_churchill_memorandum }
+	allow_branch = {
+		date > 1912.1.1
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 25
+		add_ideas = CAN_idea_thirty_five_millions
+		hidden_effect = {
+			set_variable = { CAN_news_id = 502 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		set_country_flag = CAN_done_the_naval_aid_bill
+	}
+}
+
+# the first closure ever moved
+shared_focus = {
+	id = CAN_the_first_closure
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_political_pressure
+	x = 212
+	y = 6
+	cost = 10
+	prerequisite = { focus = CAN_the_naval_aid_bill }
+	allow_branch = {
+		date > 1912.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = 75
+		add_stability = -0.05
+		add_ideas = CAN_idea_the_closure_rule
+		set_country_flag = CAN_done_the_first_closure
+	}
+}
+
+shared_focus = {
+	id = CAN_dreadnoughts_for_the_empire
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_navy_battleship
+	x = 212
+	y = 7
+	cost = 10
+	prerequisite = { focus = CAN_the_first_closure }
+	mutually_exclusive = {
+		focus = CAN_the_senate_says_no
+		focus = CAN_a_fleet_unit_of_our_own
+		focus = CAN_plebiscite_on_the_navy
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_contribution_in_lieu_of_a_fleet
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		set_variable = { CAN_bt_arg_value = 8 }
+		set_variable = { CAN_bt_arg_cause = 5 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 503 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_dreadnoughts_for_the_empire_tt
+		set_country_flag = CAN_done_dreadnoughts_for_the_empire
+	}
+}
+
+# second reading, 29 may 1913
+shared_focus = {
+	id = CAN_the_senate_says_no
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_neutrality_focus
+	x = 220
+	y = 7
+	cost = 5
+	prerequisite = { focus = CAN_the_first_closure }
+	mutually_exclusive = {
+		focus = CAN_dreadnoughts_for_the_empire
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = 75
+		add_ideas = CAN_idea_the_bill_is_dead
+		hidden_effect = {
+			set_variable = { CAN_news_id = 504 }
+			set_variable = { CAN_news_scope = 1 }
+			CAN_headline = yes
+		}
+		set_country_flag = CAN_done_the_senate_says_no
+	}
+}
+
+shared_focus = {
+	id = CAN_the_ministry_of_the_naval_service
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_construct_shipyards
+	x = 216
+	y = 8
+	cost = 10
+	prerequisite = {
+		focus = CAN_dreadnoughts_for_the_empire
+		focus = CAN_the_senate_says_no
+	}
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = CAN_idea_the_naval_service_department
+		set_country_flag = CAN_done_the_ministry_of_the_naval_service
+	}
+}
+
+########################################################################
+##### CAMP C - THE QUESTION IS NOT PUT
+########################################################################
+
+shared_focus = {
+	id = CAN_the_ships_lie_at_the_wall
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_bankruptcy
+	x = 224
+	y = 2
+	cost = 5
+	prerequisite = { focus = CAN_no_naval_policy_without_the_people }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_ships_at_the_wall
+		set_country_flag = CAN_done_the_ships_lie_at_the_wall
+	}
+}
+
+shared_focus = {
+	id = CAN_a_coast_without_a_guard
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_defense_of_the_shores
+	x = 224
+	y = 3
+	cost = 5
+	prerequisite = { focus = CAN_the_ships_lie_at_the_wall }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_coast_without_a_guard
+		set_country_flag = CAN_done_a_coast_without_a_guard
+	}
+}
+
+# the estimate buys elevators
+shared_focus = {
+	id = CAN_the_money_goes_to_the_west
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_construct_civ_factory
+	x = 224
+	y = 4
+	cost = 10
+	prerequisite = { focus = CAN_a_coast_without_a_guard }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		467 = { add_extra_state_shared_building_slots = 1 }
+		469 = {
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = CAN_idea_the_money_went_west
+		set_country_flag = CAN_done_the_money_goes_to_the_west
+	}
+}
+
+shared_focus = {
+	id = CAN_the_admiralty_keeps_the_stations
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_admirality
+	x = 224
+	y = 7
+	cost = 10
+	prerequisite = { focus = CAN_the_money_goes_to_the_west }
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_imperial_stations
+		set_country_flag = CAN_done_the_admiralty_keeps_the_stations
+	}
+}
+
+########################################################################
+##### THE WAR TAKES THE DECISION BACK
+########################################################################
+
+# the three roads meet, 1914
+shared_focus = {
+	id = CAN_the_saint_lawrence_patrol
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_defense_of_the_shores
+	x = 208
+	y = 9
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_fleet_unit_of_our_own
+		focus = CAN_the_ministry_of_the_naval_service
+		focus = CAN_the_admiralty_keeps_the_stations
+	}
+	allow_branch = {
+		date > 1913.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_saint_lawrence_patrol
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 20
+			producer = ROOT
+		}
+		custom_effect_tooltip = CAN_the_saint_lawrence_patrol_tt
+		set_country_flag = CAN_done_the_saint_lawrence_patrol
+	}
+}
+
+# a province buys a fleet, 1914
+shared_focus = {
+	id = CAN_mcbrides_submarines
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_submarine
+	x = 200
+	y = 10
+	cost = 5
+	prerequisite = { focus = CAN_the_saint_lawrence_patrol }
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 15
+		add_tech_bonus = {
+			name = CAN_ww1_submarine_bonus
+			bonus = 0.5
+			uses = 1
+			category = ss_tech
+		}
+		custom_effect_tooltip = CAN_mcbrides_submarines_tt
+		set_country_flag = CAN_done_mcbrides_submarines
+	}
+}
+
+shared_focus = {
+	id = CAN_the_h_boats_of_canadian_vickers
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_shipyards
+	x = 216
+	y = 10
+	cost = 10
+	prerequisite = { focus = CAN_the_saint_lawrence_patrol }
+	allow_branch = {
+		date > 1914.12.31
+	}
+
+	bypass = {
+		OR = {
+			has_start_date > 1918.12.31
+			has_country_flag = CAN_done_a_ministry_not_a_board
+		}
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		466 = { add_extra_state_shared_building_slots = 1 }
+		add_ideas = CAN_idea_the_vickers_yard
+		custom_effect_tooltip = CAN_the_h_boats_of_canadian_vickers_tt
+		set_country_flag = CAN_done_the_h_boats_of_canadian_vickers
+	}
+}
+
+shared_focus = {
+	id = CAN_the_armed_trawlers
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_expand_the_naval_industry
+	x = 200
+	y = 11
+	cost = 15
+	prerequisite = {
+		focus = CAN_mcbrides_submarines
+		focus = CAN_the_h_boats_of_canadian_vickers
+	}
+	mutually_exclusive = {
+		focus = CAN_the_admiralty_will_provide
+	}
+	allow_branch = {
+		date > 1915.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_trawler_class
+		add_tech_bonus = {
+			name = CAN_ww1_escort_bonus
+			bonus = 0.5
+			uses = 1
+			category = dd_tech
+		}
+		custom_effect_tooltip = CAN_the_armed_trawlers_tt
+		set_country_flag = CAN_done_the_armed_trawlers
+	}
+}
+
+shared_focus = {
+	id = CAN_the_admiralty_will_provide
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_admirality
+	x = 216
+	y = 11
+	cost = 5
+	prerequisite = {
+		focus = CAN_mcbrides_submarines
+		focus = CAN_the_h_boats_of_canadian_vickers
+	}
+	mutually_exclusive = {
+		focus = CAN_the_armed_trawlers
+	}
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_ideas = CAN_idea_drifters_from_the_admiralty
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		custom_effect_tooltip = CAN_the_admiralty_will_provide_tt
+		set_country_flag = CAN_done_the_admiralty_will_provide
+	}
+}
+
+# summer 1918
+shared_focus = {
+	id = CAN_the_u_boats_off_nova_scotia
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 208
+	y = 12
+	cost = 10
+	prerequisite = {
+		focus = CAN_the_armed_trawlers
+		focus = CAN_the_admiralty_will_provide
+	}
+	allow_branch = {
+		date > 1917.12.31
+	}
+
+	bypass = {
+		has_start_date > 1918.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_atlantic_lesson
+		add_tech_bonus = {
+			name = CAN_ww1_asw_bonus
+			bonus = 0.5
+			uses = 1
+			category = asw_tech
+		}
+		hidden_effect = {
+			set_variable = { CAN_news_id = 505 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_u_boats_off_nova_scotia_tt
+		set_country_flag = CAN_done_the_u_boats_off_nova_scotia
+	}
+}
+
+########################################################################
+##### THE LEAN YEARS
+########################################################################
+
+shared_focus = {
+	id = CAN_the_jellicoe_report
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 208
+	y = 13
+	cost = 10
+	prerequisite = { focus = CAN_the_u_boats_off_nova_scotia }
+	allow_branch = {
+		date > 1918.12.31
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		add_doctrine_cost_reduction = {
+			name = CAN_jellicoe_doctrine
+			cost_reduction = 0.25
+			uses = 2
+			category = naval_doctrine
+		}
+		custom_effect_tooltip = CAN_the_jellicoe_report_tt
+		set_country_flag = CAN_done_the_jellicoe_report
+	}
+}
+
+shared_focus = {
+	id = CAN_a_squadron_for_the_dominion
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 200
+	y = 14
+	cost = 15
+	prerequisite = { focus = CAN_the_jellicoe_report }
+	mutually_exclusive = { focus = CAN_the_cheapest_navy_in_the_empire }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = CAN_idea_a_squadron_for_the_dominion
+		set_country_flag = CAN_done_a_fleet_unit_of_our_own
+		custom_effect_tooltip = CAN_a_squadron_for_the_dominion_tt
+		set_country_flag = CAN_done_a_squadron_for_the_dominion
+	}
+}
+
+shared_focus = {
+	id = CAN_the_cheapest_navy_in_the_empire
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_navy_battleship
+	x = 216
+	y = 14
+	cost = 5
+	prerequisite = { focus = CAN_the_jellicoe_report }
+	mutually_exclusive = { focus = CAN_a_squadron_for_the_dominion }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_cheapest_navy_in_the_empire
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 15
+			producer = ROOT
+		}
+		custom_effect_tooltip = CAN_the_cheapest_navy_in_the_empire_tt
+		set_country_flag = CAN_done_the_cheapest_navy_in_the_empire
+	}
+}
+
+shared_focus = {
+	id = CAN_pay_off_the_aurora
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_bankruptcy
+	x = 204
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = CAN_a_squadron_for_the_dominion
+		focus = CAN_the_cheapest_navy_in_the_empire
+	}
+	mutually_exclusive = { focus = CAN_keep_the_naval_college }
+	allow_branch = {
+		date > 1920.12.31
+	}
+
+	bypass = {
+		has_idea = CAN_idea_a_paper_navy
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_paper_navy
+		custom_effect_tooltip = CAN_pay_off_the_aurora_tt
+		set_country_flag = CAN_done_pay_off_the_aurora
+	}
+}
+
+shared_focus = {
+	id = CAN_keep_the_naval_college
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_naval_academy
+	x = 212
+	y = 15
+	cost = 15
+	prerequisite = {
+		focus = CAN_a_squadron_for_the_dominion
+		focus = CAN_the_cheapest_navy_in_the_empire
+	}
+	mutually_exclusive = { focus = CAN_pay_off_the_aurora }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_corps_of_our_own_officers
+		add_doctrine_cost_reduction = {
+			name = CAN_college_doctrine
+			cost_reduction = 0.15
+			uses = 2
+			category = naval_doctrine
+		}
+		custom_effect_tooltip = CAN_keep_the_naval_college_tt
+		set_country_flag = CAN_done_keep_the_naval_college
+	}
+}
+
+# rcnvr, 31 january 1923
+shared_focus = {
+	id = CAN_the_volunteer_reserve
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_naval_academy
+	x = 200
+	y = 16
+	cost = 5
+	prerequisite = {
+		focus = CAN_pay_off_the_aurora
+		focus = CAN_keep_the_naval_college
+	}
+	allow_branch = {
+		date > 1922.12.31
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = {
+				has_idea = CAN_idea_a_paper_navy
+			}
+			remove_ideas = CAN_idea_a_paper_navy
+		}
+		add_ideas = CAN_idea_the_volunteer_navy
+		custom_effect_tooltip = CAN_the_volunteer_reserve_tt
+		set_country_flag = CAN_done_the_volunteer_reserve
+	}
+}
+
+shared_focus = {
+	id = CAN_the_preventive_service
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 216
+	y = 16
+	cost = 10
+	prerequisite = {
+		focus = CAN_pay_off_the_aurora
+		focus = CAN_keep_the_naval_college
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 25
+		add_ideas = CAN_idea_the_preventive_service
+		custom_effect_tooltip = CAN_the_preventive_service_tt
+		set_country_flag = CAN_done_the_preventive_service
+	}
+}
+
+# two s-class boats, 1928
+shared_focus = {
+	id = CAN_champlain_and_vancouver
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_build_navy
+	x = 200
+	y = 17
+	cost = 10
+	prerequisite = { focus = CAN_the_volunteer_reserve }
+	allow_branch = {
+		date > 1927.12.31
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_champlain_and_vancouver
+		add_tech_bonus = {
+			name = CAN_s_class_bonus
+			bonus = 0.5
+			uses = 1
+			category = dd_tech
+		}
+		set_country_flag = CAN_done_champlain_and_vancouver
+	}
+}
+
+# saguenay and skeena
+shared_focus = {
+	id = CAN_the_first_ships_built_for_us
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 212
+	y = 17
+	cost = 15
+	prerequisite = { focus = CAN_the_volunteer_reserve }
+	allow_branch = {
+		date > 1928.12.31
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			name = CAN_river_class_destroyers
+			bonus = 1.0
+			uses = 1
+			category = dd_tech
+		}
+		if = {
+			limit = {
+				has_idea = CAN_idea_the_tin_pot_navy
+			}
+			remove_ideas = CAN_idea_the_tin_pot_navy
+		}
+		custom_effect_tooltip = CAN_the_first_ships_built_for_us_tt
+		set_country_flag = CAN_done_the_first_ships_built_for_us
+	}
+}
+
+shared_focus = {
+	id = CAN_a_fleet_is_a_foreign_policy
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_forceful_treaty
+	x = 208
+	y = 18
+	cost = 15
+	prerequisite = {
+		focus = CAN_champlain_and_vancouver
+		focus = CAN_the_first_ships_built_for_us
+	}
+	allow_branch = {
+		date > 1930.12.31
+	}
+
+	bypass = {
+		has_start_date > 1932.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_a_fleet_is_a_foreign_policy
+		custom_effect_tooltip = CAN_a_fleet_is_a_foreign_policy_tt
+		set_country_flag = CAN_done_a_fleet_is_a_foreign_policy
+	}
+}
+
+########################################################################
+##### THE ATLANTIC
+########################################################################
+
+# thirteen ships in 1939
+shared_focus = {
+	id = CAN_corvettes_by_the_hundred
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_build_navy
+	x = 208
+	y = 19
+	cost = 10
+	prerequisite = { focus = CAN_a_fleet_is_a_foreign_policy }
+	allow_branch = {
+		date > 1938.12.31
+	}
+
+	bypass = {
+		has_start_date > 1944.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		276 = {
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_ideas = CAN_idea_green_crews_and_old_sets
+		custom_effect_tooltip = CAN_corvettes_by_the_hundred_tt
+		set_country_flag = CAN_done_corvettes_by_the_hundred
+	}
+}
+
+# st john's, may 1941
+shared_focus = {
+	id = CAN_the_newfoundland_escort_force
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 208
+	y = 20
+	cost = 10
+	prerequisite = { focus = CAN_corvettes_by_the_hundred }
+	allow_branch = {
+		date > 1940.12.31
+	}
+
+	bypass = {
+		has_start_date > 1944.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		add_ideas = CAN_idea_the_newfoundland_escort_force
+		hidden_effect = {
+			set_variable = { CAN_news_id = 506 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_newfoundland_escort_force_tt
+		set_country_flag = CAN_done_the_newfoundland_escort_force
+	}
+}
+
+# 9 september 1942
+shared_focus = {
+	id = CAN_close_the_river
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 200
+	y = 21
+	cost = 5
+	prerequisite = { focus = CAN_the_newfoundland_escort_force }
+	mutually_exclusive = { focus = CAN_escort_the_gulf }
+	allow_branch = {
+		date > 1941.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		add_ideas = CAN_idea_the_river_is_closed
+		hidden_effect = {
+			set_variable = { CAN_news_id = 507 }
+			set_variable = { CAN_news_scope = 1 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_close_the_river_tt
+		set_country_flag = CAN_done_close_the_river
+	}
+}
+
+shared_focus = {
+	id = CAN_escort_the_gulf
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_occupy_states_coastal
+	x = 216
+	y = 21
+	cost = 10
+	prerequisite = { focus = CAN_the_newfoundland_escort_force }
+	mutually_exclusive = { focus = CAN_close_the_river }
+	allow_branch = {
+		date > 1941.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_gulf_stays_open
+		custom_effect_tooltip = CAN_escort_the_gulf_tt
+		set_country_flag = CAN_done_escort_the_gulf
+	}
+}
+
+shared_focus = {
+	id = CAN_escort_group_reform
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 208
+	y = 22
+	cost = 10
+	prerequisite = {
+		focus = CAN_close_the_river
+		focus = CAN_escort_the_gulf
+	}
+	allow_branch = {
+		date > 1942.6.1
+	}
+
+	bypass = {
+		has_start_date > 1944.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_centimetric_sets
+			bonus = 1.0
+			uses = 1
+			category = radar_tech
+		}
+		if = {
+			limit = { has_idea = CAN_idea_green_crews_and_old_sets }
+			remove_ideas = CAN_idea_green_crews_and_old_sets
+		}
+		add_ideas = CAN_idea_radar_hf_df_and_time_to_train
+		custom_effect_tooltip = CAN_escort_group_reform_tt
+		set_country_flag = CAN_done_escort_group_reform
+	}
+}
+
+# the radar scandal, 1943
+shared_focus = {
+	id = CAN_nelles_is_relieved
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_political_pressure
+	x = 196
+	y = 23
+	cost = 5
+	prerequisite = { focus = CAN_escort_group_reform }
+	mutually_exclusive = { focus = CAN_the_naval_staff_closes_ranks }
+	allow_branch = {
+		date > 1942.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_minister_who_asks_questions
+		add_tech_bonus = {
+			name = CAN_radar_refit_bonus
+			bonus = 1.0
+			uses = 1
+			category = asw_tech
+		}
+		custom_effect_tooltip = CAN_nelles_is_relieved_tt
+		set_country_flag = CAN_done_nelles_is_relieved
+	}
+}
+
+shared_focus = {
+	id = CAN_the_naval_staff_closes_ranks
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_navy_battleship
+	x = 212
+	y = 23
+	cost = 5
+	prerequisite = { focus = CAN_escort_group_reform }
+	mutually_exclusive = { focus = CAN_nelles_is_relieved }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_service_closes_ranks
+		custom_effect_tooltip = CAN_the_naval_staff_closes_ranks_tt
+		set_country_flag = CAN_done_the_naval_staff_closes_ranks
+	}
+}
+
+shared_focus = {
+	id = CAN_the_tribal_class_at_halifax
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 220
+	y = 23
+	cost = 15
+	prerequisite = { focus = CAN_escort_group_reform }
+
+	bypass = {
+		OR = {
+			has_start_date > 1944.12.31
+			has_navy_size = {
+				unit = destroyer
+				size > 59
+			}
+		}
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = { add_extra_state_shared_building_slots = 1 }
+		add_tech_bonus = {
+			name = CAN_tribal_bonus
+			bonus = 1.0
+			uses = 1
+			category = dd_tech
+		}
+		add_ideas = CAN_idea_the_tribals
+		custom_effect_tooltip = CAN_the_tribal_class_at_halifax_tt
+		set_country_flag = CAN_done_the_tribal_class_at_halifax
+	}
+}
+
+shared_focus = {
+	id = CAN_the_river_class_frigates
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_build_navy
+	x = 204
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = CAN_nelles_is_relieved
+		focus = CAN_the_naval_staff_closes_ranks
+	}
+
+	bypass = {
+		OR = {
+			has_start_date > 1944.12.31
+			has_navy_size = {
+				unit = destroyer
+				size > 99
+			}
+		}
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_frigate_bonus
+			bonus = 1.0
+			uses = 1
+			category = asw_tech
+		}
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		custom_effect_tooltip = CAN_the_river_class_frigates_tt
+		set_country_flag = CAN_done_the_river_class_frigates
+	}
+}
+
+# murray takes the ocean, 1943
+shared_focus = {
+	id = CAN_a_theatre_of_our_own
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 216
+	y = 24
+	cost = 10
+	prerequisite = {
+		focus = CAN_nelles_is_relieved
+		focus = CAN_the_naval_staff_closes_ranks
+	}
+
+	bypass = {
+		has_start_date > 1944.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 50
+		add_doctrine_cost_reduction = {
+			name = CAN_north_west_atlantic
+			cost_reduction = 0.5
+			uses = 2
+			category = convoy_defense_tree
+		}
+		hidden_effect = {
+			set_variable = { CAN_news_id = 508 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_a_theatre_of_our_own_tt
+		set_country_flag = CAN_done_a_theatre_of_our_own
+	}
+}
+
+shared_focus = {
+	id = CAN_operation_neptune
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_amphibious_assault
+	x = 196
+	y = 25
+	cost = 10
+	prerequisite = { focus = CAN_a_theatre_of_our_own }
+	allow_branch = {
+		date > 1943.12.31
+	}
+	available = {
+		has_war = yes
+	}
+	bypass = {
+		has_start_date > 1944.12.31
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		army_experience = 25
+		add_tech_bonus = {
+			name = CAN_neptune_bonus
+			bonus = 0.5
+			uses = 1
+			category = naval_doctrine
+		}
+		custom_effect_tooltip = CAN_operation_neptune_tt
+		set_country_flag = CAN_done_operation_neptune
+	}
+}
+
+# the ship's company votes, 1945
+shared_focus = {
+	id = CAN_the_uganda_vote
+	search_filters = { FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_neutrality_focus
+	x = 208
+	y = 25
+	cost = 5
+	prerequisite = { focus = CAN_a_theatre_of_our_own }
+	allow_branch = {
+		date > 1944.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_uganda_vote
+		hidden_effect = {
+			set_variable = { CAN_news_id = 509 }
+			set_variable = { CAN_news_scope = 1 }
+			CAN_headline = yes
+		}
+		set_country_flag = CAN_done_the_uganda_vote
+	}
+}
+
+# three hundred and seventy-three
+shared_focus = {
+	id = CAN_the_third_navy_in_the_world
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_WAR_SUPPORT }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 220
+	y = 25
+	cost = 10
+	prerequisite = { focus = CAN_a_theatre_of_our_own }
+	allow_branch = {
+		date > 1944.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_third_navy
+		set_country_flag = CAN_done_the_third_navy_in_the_world
+	}
+}
+
+shared_focus = {
+	id = CAN_a_carrier_for_the_dominion
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_carrier
+	x = 200
+	y = 26
+	cost = 15
+	prerequisite = {
+		focus = CAN_operation_neptune
+		focus = CAN_the_uganda_vote
+		focus = CAN_the_third_navy_in_the_world
+	}
+	mutually_exclusive = { focus = CAN_the_anti_submarine_navy }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_light_fleet_carrier
+			bonus = 1.0
+			uses = 1
+			category = cv_tech
+		}
+		add_ideas = CAN_idea_a_fleet_worth_the_name
+		custom_effect_tooltip = CAN_a_carrier_for_the_dominion_tt
+		set_country_flag = CAN_done_a_carrier_for_the_dominion
+	}
+}
+
+shared_focus = {
+	id = CAN_the_anti_submarine_navy
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 216
+	y = 26
+	cost = 10
+	prerequisite = {
+		focus = CAN_operation_neptune
+		focus = CAN_the_uganda_vote
+		focus = CAN_the_third_navy_in_the_world
+	}
+	mutually_exclusive = { focus = CAN_a_carrier_for_the_dominion }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_doctrine_cost_reduction = {
+			name = CAN_trade_defence
+			cost_reduction = 0.25
+			uses = 2
+			category = convoy_defense_tree
+		}
+		add_ideas = CAN_idea_the_north_atlantic_trade
+		custom_effect_tooltip = CAN_the_anti_submarine_navy_tt
+		set_country_flag = CAN_done_the_anti_submarine_navy
+	}
+}
+
+shared_focus = {
+	id = CAN_the_naval_air_arm
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_AIR_XP }
+	icon = GFX_goal_generic_navy_carrier
+	x = 200
+	y = 27
+	cost = 10
+	prerequisite = { focus = CAN_a_carrier_for_the_dominion }
+	allow_branch = {
+		date > 1945.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		air_experience = 25
+		add_tech_bonus = {
+			name = CAN_naval_air_bonus
+			bonus = 1.0
+			uses = 1
+			category = naval_air
+		}
+		custom_effect_tooltip = CAN_the_naval_air_arm_tt
+		set_country_flag = CAN_done_the_naval_air_arm
+	}
+}
+
+shared_focus = {
+	id = CAN_the_ocean_escort_force
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 216
+	y = 27
+	cost = 10
+	prerequisite = { focus = CAN_the_anti_submarine_navy }
+	allow_branch = {
+		date > 1945.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		add_tech_bonus = {
+			name = CAN_ocean_escort_bonus
+			bonus = 1.0
+			uses = 1
+			category = asw_tech
+		}
+		custom_effect_tooltip = CAN_the_ocean_escort_force_tt
+		set_country_flag = CAN_done_the_ocean_escort_force
+	}
+}
+
+########################################################################
+##### THE SERVICE ANSWERS FOR ITSELF
+########################################################################
+
+# athabaskan, crescent, magnificent
+shared_focus = {
+	id = CAN_the_mainguy_report
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	icon = GFX_goal_generic_naval_academy
+	x = 208
+	y = 28
+	cost = 5
+	prerequisite = {
+		focus = CAN_the_naval_air_arm
+		focus = CAN_the_ocean_escort_force
+	}
+	allow_branch = {
+		date > 1948.12.31
+	}
+
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = CAN_the_mainguy_report_tt
+		set_country_flag = CAN_done_the_mainguy_report
+	}
+}
+
+shared_focus = {
+	id = CAN_a_navy_of_our_own
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_cruiser
+	x = 200
+	y = 29
+	cost = 10
+	prerequisite = { focus = CAN_the_mainguy_report }
+	mutually_exclusive = { focus = CAN_the_customs_of_the_service }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 25
+		add_ideas = CAN_idea_cw_a_navy_of_our_own
+		custom_effect_tooltip = CAN_a_navy_of_our_own_tt_rest
+		set_country_flag = CAN_done_a_navy_of_our_own
+	}
+}
+
+shared_focus = {
+	id = CAN_the_customs_of_the_service
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_battleship
+	x = 216
+	y = 29
+	cost = 5
+	prerequisite = { focus = CAN_the_mainguy_report }
+	mutually_exclusive = { focus = CAN_a_navy_of_our_own }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_admiralty_drawings
+			bonus = 0.5
+			uses = 1
+			category = naval_equipment
+		}
+		add_ideas = CAN_idea_cw_the_customs_of_the_service
+		custom_effect_tooltip = CAN_the_customs_of_the_service_tt_rest
+		set_country_flag = CAN_done_the_customs_of_the_service
+	}
+}
+
+shared_focus = {
+	id = CAN_the_north_atlantic_specialists
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_anti_submarine
+	x = 208
+	y = 30
+	cost = 15
+	prerequisite = {
+		focus = CAN_a_navy_of_our_own
+		focus = CAN_the_customs_of_the_service
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_doctrine_cost_reduction = {
+			name = CAN_sub_area_command
+			cost_reduction = 0.25
+			uses = 2
+			category = convoy_defense_tree
+		}
+		add_ideas = CAN_idea_cw_the_anti_submarine_specialists
+		custom_effect_tooltip = CAN_the_north_atlantic_specialists_tt_rest
+		set_country_flag = CAN_done_the_north_atlantic_specialists
+	}
+}
+
+shared_focus = {
+	id = CAN_the_saint_laurent_class
+	search_filters = { FOCUS_FILTER_INDUSTRY FOCUS_FILTER_MILITARY }
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 196
+	y = 31
+	cost = 20
+	prerequisite = { focus = CAN_the_north_atlantic_specialists }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = {
+				464 = {
+					is_owned_by = CAN
+				}
+			}
+			464 = {
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = CAN_saint_laurent_bonus
+			bonus = 1.0
+			uses = 1
+			category = dd_tech
+		}
+		custom_effect_tooltip = CAN_the_saint_laurent_class_tt
+		set_country_flag = CAN_done_the_saint_laurent_class
+	}
+}
+
+shared_focus = {
+	id = CAN_no_more_flat_tops
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 208
+	y = 31
+	cost = 5
+	prerequisite = { focus = CAN_the_north_atlantic_specialists }
+	mutually_exclusive = { focus = CAN_bonaventure }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = convoy
+			amount = 25
+			producer = ROOT
+		}
+		add_ideas = CAN_idea_cw_no_more_flat_tops
+		custom_effect_tooltip = CAN_no_more_flat_tops_tt_rest
+		set_country_flag = CAN_done_no_more_flat_tops
+	}
+}
+
+shared_focus = {
+	id = CAN_bonaventure
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	icon = GFX_goal_generic_navy_carrier
+	x = 220
+	y = 31
+	cost = 15
+	prerequisite = { focus = CAN_the_north_atlantic_specialists }
+	mutually_exclusive = { focus = CAN_no_more_flat_tops }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_angled_deck_bonus
+			bonus = 1.0
+			uses = 1
+			category = cv_tech
+		}
+		add_ideas = CAN_idea_cw_the_carrier
+		custom_effect_tooltip = CAN_bonaventure_tt_rest
+		set_country_flag = CAN_done_bonaventure
+	}
+}

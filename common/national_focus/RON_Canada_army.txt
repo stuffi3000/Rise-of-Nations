@@ -1,0 +1,2348 @@
+########################################################################################
+##### CANADA - THE ARMY, 1899-1951
+##### one trunk, dating moved inside
+########################################################################################
+
+# ------------------------------------------------------------------------------
+# y0-y4 - the militia
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_the_militia_act_of_1904
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_doctrines
+	x = 120
+	y = 0
+	cost = 10
+	mutually_exclusive = { focus = CAN_the_general_officer_commanding }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		if = {
+			limit = { has_idea = CAN_idea_british_officer_commanding }
+			remove_ideas = CAN_idea_british_officer_commanding
+		}
+		add_ideas = CAN_idea_the_militia_council
+		hidden_effect = {
+			set_variable = { CAN_news_id = 401 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		set_country_flag = CAN_done_the_militia_act_of_1904
+	}
+}
+
+shared_focus = {
+	id = CAN_the_general_officer_commanding
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_military_sphere
+	x = 126
+	y = 0
+	cost = 5
+	mutually_exclusive = { focus = CAN_the_militia_act_of_1904 }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_the_imperial_general_staff
+		custom_effect_tooltip = CAN_the_general_officer_commanding_tt
+		set_country_flag = CAN_done_the_general_officer_commanding
+	}
+}
+
+# second head, 1899
+shared_focus = {
+	id = CAN_the_south_african_contingents
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_march_infantry
+	x = 132
+	y = 0
+	cost = 10
+	available = {
+		date < 1920.1.1
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_war_support = 0.05
+		add_ideas = CAN_idea_the_south_african_contingents
+		set_variable = { CAN_bt_arg_value = 5 }
+		set_variable = { CAN_bt_arg_cause = 2 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 400 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		set_country_flag = CAN_done_the_south_african_contingents
+	}
+}
+
+# ------------------------------------------------------------------------------
+# the master fork
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_service_within_the_dominion
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_national_unity
+	x = 118
+	y = 1
+	cost = 10
+	prerequisite = {
+		focus = CAN_the_militia_act_of_1904
+		focus = CAN_the_general_officer_commanding
+	}
+	mutually_exclusive = { focus = CAN_liable_to_serve_abroad }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_service_within_the_dominion
+		set_variable = { CAN_bt_arg_value = -10 }
+		set_variable = { CAN_bt_arg_cause = 25 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 402 }
+			set_variable = { CAN_news_scope = 1 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_service_within_the_dominion_tt
+		set_country_flag = CAN_the_dominion_service_line
+		set_country_flag = CAN_done_service_within_the_dominion
+	}
+}
+
+shared_focus = {
+	id = CAN_liable_to_serve_abroad
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_tfv_can_forced_quebec_conscription
+	x = 124
+	y = 1
+	cost = 10
+	prerequisite = {
+		focus = CAN_the_militia_act_of_1904
+		focus = CAN_the_general_officer_commanding
+	}
+	mutually_exclusive = { focus = CAN_service_within_the_dominion }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_manpower = 15000
+		add_war_support = 0.08
+		add_ideas = CAN_idea_liable_to_serve_abroad
+		set_variable = { CAN_bt_arg_value = 10 }
+		set_variable = { CAN_bt_arg_cause = 20 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 403 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_liable_to_serve_abroad_tt
+		set_country_flag = CAN_the_overseas_service_line
+		set_country_flag = CAN_done_liable_to_serve_abroad
+	}
+}
+
+shared_focus = {
+	id = CAN_the_strathcona_trust
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_christian_education
+	x = 132
+	y = 1
+	cost = 10
+	prerequisite = { focus = CAN_the_south_african_contingents }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_stability = -0.05
+		add_ideas = CAN_idea_the_strathcona_trust
+		set_country_flag = CAN_done_the_strathcona_trust
+	}
+}
+
+shared_focus = {
+	id = CAN_the_services_that_make_an_army
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_mobilization
+	x = 118
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = CAN_service_within_the_dominion
+		focus = CAN_liable_to_serve_abroad
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = support_equipment
+			amount = 200
+			producer = CAN
+		}
+		add_tech_bonus = {
+			name = CAN_army_services_bonus
+			bonus = 1.0
+			uses = 1
+			category = support_tech
+		}
+		add_ideas = CAN_idea_the_services_that_make_an_army
+		set_country_flag = CAN_done_the_services_that_make_an_army
+	}
+}
+
+shared_focus = {
+	id = CAN_the_militia_staff_course
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_command_power
+	x = 122
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = CAN_service_within_the_dominion
+		focus = CAN_liable_to_serve_abroad
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_the_staff_course
+		set_country_flag = CAN_done_the_militia_staff_course
+	}
+}
+
+# the only research slot here
+shared_focus = {
+	id = CAN_the_royal_military_college
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	icon = GFX_goal_generic_education
+	x = 126
+	y = 2
+	cost = 15
+	prerequisite = {
+		focus = CAN_service_within_the_dominion
+		focus = CAN_liable_to_serve_abroad
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_research_slot = 1
+		add_ideas = CAN_idea_the_royal_military_college
+		set_country_flag = CAN_done_the_royal_military_college
+	}
+}
+
+shared_focus = {
+	id = CAN_take_over_the_imperial_fortresses
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_fortify_city
+	x = 130
+	y = 2
+	cost = 10
+	available = {
+		NOT = { has_country_flag = CAN_done_let_the_admiralty_stay }
+	}
+	prerequisite = {
+		focus = CAN_service_within_the_dominion
+		focus = CAN_liable_to_serve_abroad
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		464 = {
+			add_building_construction = {
+				type = coastal_bunker
+				level = 1
+				instant_build = yes
+				province = {
+					all_provinces = yes
+					limit_to_coastal = yes
+				}
+			}
+		}
+		740 = {
+			add_building_construction = {
+				type = coastal_bunker
+				level = 1
+				instant_build = yes
+				province = {
+					all_provinces = yes
+					limit_to_coastal = yes
+				}
+			}
+		}
+		add_ideas = CAN_idea_the_imperial_fortresses
+		set_country_flag = CAN_done_take_over_the_imperial_fortresses
+	}
+}
+
+shared_focus = {
+	id = CAN_adopt_the_ross_rifle
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_small_arms
+	x = 118
+	y = 3
+	cost = 10
+	prerequisite = { focus = CAN_the_services_that_make_an_army }
+	mutually_exclusive = { focus = CAN_order_the_lee_enfield }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		466 = { add_extra_state_shared_building_slots = 1 }
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 500
+			producer = CAN
+		}
+		add_ideas = CAN_idea_the_ross_rifle
+		custom_effect_tooltip = CAN_adopt_the_ross_rifle_tt
+		set_country_flag = CAN_the_ross_rifle_adopted
+		set_country_flag = CAN_done_adopt_the_ross_rifle
+	}
+}
+
+shared_focus = {
+	id = CAN_order_the_lee_enfield
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 122
+	y = 3
+	cost = 5
+	prerequisite = { focus = CAN_the_services_that_make_an_army }
+	mutually_exclusive = { focus = CAN_adopt_the_ross_rifle }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = ENG
+		}
+		add_ideas = CAN_idea_the_lee_enfield_contract
+		set_country_flag = CAN_done_order_the_lee_enfield
+	}
+}
+
+shared_focus = {
+	id = CAN_concentrate_the_force_at_petawawa
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_doctrines
+	x = 126
+	y = 3
+	cost = 10
+	prerequisite = { focus = CAN_the_militia_staff_course }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		276 = { add_extra_state_shared_building_slots = 1 }
+		add_tech_bonus = {
+			name = CAN_petawawa_bonus
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		custom_effect_tooltip = CAN_concentrate_the_force_at_petawawa_tt
+		set_country_flag = CAN_done_concentrate_the_force_at_petawawa
+	}
+}
+
+# otter, 1908
+shared_focus = {
+	id = CAN_the_first_canadian_chief_of_staff
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_officers
+	x = 130
+	y = 3
+	cost = 10
+	prerequisite = {
+		focus = CAN_the_royal_military_college
+		focus = CAN_the_militia_staff_course
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_command_power = 75
+		add_ideas = CAN_idea_the_first_canadian_chief_of_staff
+		set_country_flag = CAN_done_the_first_canadian_chief_of_staff
+	}
+}
+
+shared_focus = {
+	id = CAN_the_cartridge_factory_at_quebec
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_construct_mil_factory
+	x = 118
+	y = 4
+	cost = 10
+	bypass = {
+		num_of_military_factories > 6
+	}
+	prerequisite = {
+		focus = CAN_adopt_the_ross_rifle
+		focus = CAN_order_the_lee_enfield
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		466 = {
+			add_building_construction = {
+				type = arms_factory
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			name = CAN_dominion_arsenal_bonus
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+		custom_effect_tooltip = CAN_the_cartridge_factory_at_quebec_tt
+		set_country_flag = CAN_done_the_dominion_arsenal
+	}
+}
+
+shared_focus = {
+	id = CAN_a_nation_of_marksmen
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_hat_and_medal
+	x = 124
+	y = 4
+	cost = 10
+	prerequisite = { focus = CAN_concentrate_the_force_at_petawawa }
+	mutually_exclusive = { focus = CAN_a_permanent_force_worth_the_name }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_nation_of_marksmen
+		set_country_flag = CAN_done_a_nation_of_marksmen
+	}
+}
+
+shared_focus = {
+	id = CAN_a_permanent_force_worth_the_name
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_professionalism
+	x = 130
+	y = 4
+	cost = 15
+	prerequisite = { focus = CAN_concentrate_the_force_at_petawawa }
+	mutually_exclusive = { focus = CAN_a_nation_of_marksmen }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		army_experience = 40
+		add_political_power = -50
+		add_equipment_to_stockpile = {
+			type = artillery_equipment
+			amount = 100
+			producer = CAN
+		}
+		add_ideas = CAN_idea_a_permanent_force_worth_the_name
+		set_country_flag = CAN_done_a_permanent_force_worth_the_name
+	}
+}
+
+# ------------------------------------------------------------------------------
+# y5-y12 - the great war
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_the_ross_rifle_contract
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_small_arms
+	x = 120
+	y = 5
+	cost = 5
+	allow_branch = {
+		date > 1913.12.31
+	}
+
+	prerequisite = { focus = CAN_the_cartridge_factory_at_quebec }
+	bypass = {
+		has_country_flag = CAN_done_order_the_lee_enfield
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = {
+				NOT = { has_idea = CAN_idea_the_ross_rifle }
+				NOT = { has_idea = CAN_idea_the_lee_enfield_contract }
+			}
+			add_ideas = CAN_idea_the_ross_rifle
+		}
+		custom_effect_tooltip = CAN_the_ross_rifle_contract_tt
+		set_country_flag = CAN_the_ross_rifle_adopted
+		set_country_flag = CAN_done_the_ross_rifle_contract
+	}
+}
+
+shared_focus = {
+	id = CAN_the_canadian_expeditionary_force
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_mobilization
+	x = 128
+	y = 5
+	cost = 10
+	allow_branch = {
+		date > 1913.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_a_nation_of_marksmen
+		focus = CAN_a_permanent_force_worth_the_name
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 25
+		add_manpower = 20000
+		add_war_support = 0.10
+		add_ideas = CAN_idea_improvised_mobilization
+		custom_effect_tooltip = CAN_the_canadian_expeditionary_force_tt
+		set_country_flag = CAN_done_the_canadian_expeditionary_force
+	}
+}
+
+shared_focus = {
+	id = CAN_stand_by_the_ross
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_national_arsenal
+	x = 118
+	y = 6
+	cost = 10
+	available = {
+		has_idea = CAN_idea_the_ross_rifle
+	}
+	prerequisite = { focus = CAN_the_ross_rifle_contract }
+	mutually_exclusive = { focus = CAN_rifles_from_the_british_store }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1500
+			producer = CAN
+		}
+		swap_ideas = {
+			remove_idea = CAN_idea_the_ross_rifle
+			add_idea = CAN_idea_jamming_in_the_mud
+		}
+		custom_effect_tooltip = CAN_stand_by_the_ross_tt
+		set_country_flag = CAN_done_stand_by_the_ross
+	}
+}
+
+shared_focus = {
+	id = CAN_rifles_from_the_british_store
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_break_rifle
+	x = 122
+	y = 6
+	cost = 5
+	prerequisite = { focus = CAN_the_ross_rifle_contract }
+	mutually_exclusive = { focus = CAN_stand_by_the_ross }
+	bypass = {
+		OR = {
+			has_country_flag = CAN_done_the_general_officer_commanding
+			has_country_flag = CAN_done_order_the_lee_enfield
+		}
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1500
+			producer = ENG
+		}
+		if = {
+			limit = { has_idea = CAN_idea_the_ross_rifle }
+			swap_ideas = {
+				remove_idea = CAN_idea_the_ross_rifle
+				add_idea = CAN_idea_the_british_pattern
+			}
+		}
+		else_if = {
+			limit = {
+				NOT = { has_idea = CAN_idea_the_lee_enfield_contract }
+			}
+			add_ideas = CAN_idea_the_british_pattern
+		}
+		custom_effect_tooltip = CAN_rifles_from_the_british_store_tt
+		set_country_flag = CAN_done_rifles_from_the_british_store
+	}
+}
+
+shared_focus = {
+	id = CAN_raise_french_canadian_battalions
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_special_forces
+	x = 126
+	y = 6
+	cost = 15
+	prerequisite = { focus = CAN_the_canadian_expeditionary_force }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = -50
+		set_variable = { CAN_bt_arg_value = -15 }
+		set_variable = { CAN_bt_arg_cause = 21 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_raise_french_canadian_battalions_tt
+		set_country_flag = CAN_done_raise_french_canadian_battalions
+	}
+}
+
+shared_focus = {
+	id = CAN_second_ypres
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_intense_warfare
+	x = 130
+	y = 6
+	cost = 10
+	allow_branch = {
+		date > 1914.12.31
+	}
+
+	prerequisite = { focus = CAN_the_canadian_expeditionary_force }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 25
+		add_war_support = 0.08
+		add_ideas = CAN_idea_blooded_at_ypres
+		add_tech_bonus = {
+			name = CAN_ww1_gas_bonus
+			bonus = 1.0
+			uses = 1
+			category = support_tech
+		}
+		custom_effect_tooltip = CAN_second_ypres_tt
+		set_country_flag = CAN_done_second_ypres
+	}
+}
+
+shared_focus = {
+	id = CAN_the_overseas_ministry
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_army_hat_and_medal
+	x = 134
+	y = 6
+	cost = 10
+	prerequisite = { focus = CAN_the_canadian_expeditionary_force }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_overseas_ministry
+		custom_effect_tooltip = CAN_the_overseas_ministry_tt
+		set_country_flag = CAN_done_the_overseas_ministry
+	}
+}
+
+# the proclamation of 1916
+shared_focus = {
+	id = CAN_the_half_million_proclamation
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_mobilization
+	x = 122
+	y = 7
+	cost = 10
+	allow_branch = {
+		date > 1915.12.31
+	}
+
+	prerequisite = { focus = CAN_the_canadian_expeditionary_force }
+	mutually_exclusive = { focus = CAN_what_the_volunteer_can_bear }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_manpower = 50000
+		add_war_support = 0.10
+		add_ideas = CAN_idea_the_half_million
+		set_variable = { CAN_bt_arg_value = 15 }
+		set_variable = { CAN_bt_arg_cause = 7 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_the_half_million_proclamation_tt
+		set_country_flag = CAN_done_the_half_million_proclamation
+	}
+}
+
+shared_focus = {
+	id = CAN_what_the_volunteer_can_bear
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_national_unity
+	x = 126
+	y = 7
+	cost = 10
+	allow_branch = {
+		date > 1915.12.31
+	}
+
+	prerequisite = { focus = CAN_the_canadian_expeditionary_force }
+	mutually_exclusive = { focus = CAN_the_half_million_proclamation }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = 75
+		add_ideas = CAN_idea_what_the_volunteer_can_bear
+		set_variable = { CAN_bt_arg_value = -10 }
+		set_variable = { CAN_bt_arg_cause = 23 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_what_the_volunteer_can_bear_tt
+		set_country_flag = CAN_done_what_the_volunteer_can_bear
+	}
+}
+
+shared_focus = {
+	id = CAN_a_canadian_commands_the_corps
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_officers
+	x = 130
+	y = 7
+	cost = 10
+	allow_branch = {
+		date > 1916.12.31
+	}
+
+	prerequisite = { focus = CAN_the_overseas_ministry }
+	mutually_exclusive = { focus = CAN_an_imperial_corps_commander }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_the_currie_command
+		custom_effect_tooltip = CAN_a_canadian_commands_the_corps_tt
+		set_country_flag = CAN_done_a_canadian_commands_the_corps
+	}
+}
+
+shared_focus = {
+	id = CAN_an_imperial_corps_commander
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_military_sphere
+	x = 134
+	y = 7
+	cost = 5
+	prerequisite = { focus = CAN_the_overseas_ministry }
+	mutually_exclusive = { focus = CAN_a_canadian_commands_the_corps }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_corps_under_byng
+		custom_effect_tooltip = CAN_an_imperial_corps_commander_tt
+		set_country_flag = CAN_done_an_imperial_corps_commander
+	}
+}
+
+shared_focus = {
+	id = CAN_the_vimy_method
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_artillery
+	x = 120
+	y = 8
+	cost = 15
+	allow_branch = {
+		date > 1916.12.31
+	}
+
+	prerequisite = { focus = CAN_second_ypres }
+	ai_will_do = { factor = 3 }
+	completion_reward = {
+		army_experience = 40
+		add_war_support = 0.10
+		if = {
+			limit = { has_idea = CAN_idea_improvised_mobilization }
+			remove_ideas = CAN_idea_improvised_mobilization
+		}
+		if = {
+			limit = { has_idea = CAN_idea_colonial_defence_establishment_3 }
+			swap_ideas = {
+				remove_idea = CAN_idea_colonial_defence_establishment_3
+				add_idea = CAN_idea_colonial_defence_establishment_2
+			}
+		}
+		add_ideas = CAN_idea_birth_of_a_nation
+		hidden_effect = {
+			set_variable = { CAN_news_id = 404 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_vimy_method_tt
+		set_country_flag = can_birth_of_a_nation
+		set_country_flag = CAN_done_the_vimy_method
+	}
+}
+
+shared_focus = {
+	id = CAN_a_corps_of_our_own
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_elite
+	x = 126
+	y = 8
+	cost = 15
+	prerequisite = {
+		focus = CAN_a_canadian_commands_the_corps
+		focus = CAN_an_imperial_corps_commander
+	}
+	mutually_exclusive = { focus = CAN_divisions_at_the_disposal_of_the_army }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_corps_undivided
+		custom_effect_tooltip = CAN_a_corps_of_our_own_tt
+		set_country_flag = CAN_done_a_corps_of_our_own
+	}
+}
+
+shared_focus = {
+	id = CAN_divisions_at_the_disposal_of_the_army
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_multinational_army
+	x = 130
+	y = 8
+	cost = 5
+	prerequisite = {
+		focus = CAN_a_canadian_commands_the_corps
+		focus = CAN_an_imperial_corps_commander
+	}
+	mutually_exclusive = { focus = CAN_a_corps_of_our_own }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_command_power = 75
+		add_ideas = CAN_idea_divisions_at_disposal
+		custom_effect_tooltip = CAN_divisions_at_the_disposal_of_the_army_tt
+		set_country_flag = CAN_done_divisions_at_the_disposal_of_the_army
+	}
+}
+
+shared_focus = {
+	id = CAN_the_somme_and_courcelette
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_artillery
+	x = 134
+	y = 8
+	cost = 10
+	allow_branch = {
+		date > 1915.12.31
+	}
+
+	prerequisite = { focus = CAN_second_ypres }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 25
+		add_timed_idea = {
+			idea = CAN_idea_the_somme_casualties
+			days = 360
+		}
+		add_tech_bonus = {
+			name = CAN_ww1_barrage_bonus
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		custom_effect_tooltip = CAN_the_somme_and_courcelette_tt
+		set_country_flag = CAN_done_the_somme_and_courcelette
+	}
+}
+
+# 1917, the bill falls due
+shared_focus = {
+	id = CAN_the_voluntary_compact
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_national_unity
+	x = 118
+	y = 9
+	cost = 10
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = CAN_the_voluntary_compact_gate_tt
+			OR = {
+				has_country_flag = CAN_the_dominion_service_line
+				has_country_flag = CAN_done_what_the_volunteer_can_bear
+			}
+		}
+	}
+	prerequisite = { focus = CAN_the_vimy_method }
+	mutually_exclusive = { focus = CAN_the_military_service_act }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_stability = 0.10
+		add_political_power = 75
+		add_ideas = CAN_idea_the_compact_of_1917
+		custom_effect_tooltip = CAN_the_voluntary_compact_tt
+		set_country_flag = can_voluntary_compact
+		set_country_flag = CAN_done_the_voluntary_compact
+	}
+}
+
+shared_focus = {
+	id = CAN_the_military_service_act
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_mobilization
+	x = 122
+	y = 9
+	cost = 10
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = CAN_the_military_service_act_gate_tt
+			OR = {
+				has_country_flag = CAN_the_overseas_service_line
+				has_country_flag = CAN_done_the_half_million_proclamation
+			}
+		}
+	}
+	prerequisite = { focus = CAN_the_vimy_method }
+	mutually_exclusive = { focus = CAN_the_voluntary_compact }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_manpower = 50000
+		if = {
+			limit = { has_idea = disarmed_nation }
+			add_ideas = volunteer_only
+		}
+		else_if = {
+			limit = { has_idea = volunteer_only }
+			add_ideas = limited_conscription
+		}
+		else_if = {
+			limit = { has_idea = limited_conscription }
+			add_ideas = extensive_conscription
+		}
+		add_ideas = CAN_idea_the_crisis_of_1917
+		set_variable = { CAN_bt_arg_value = 25 }
+		set_variable = { CAN_bt_arg_cause = 8 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 405 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_military_service_act_tt
+		set_country_flag = CAN_done_the_military_service_act
+	}
+}
+
+shared_focus = {
+	id = CAN_break_up_the_fifth_division
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_doctrines
+	x = 128
+	y = 9
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_corps_of_our_own
+		focus = CAN_divisions_at_the_disposal_of_the_army
+	}
+	mutually_exclusive = { focus = CAN_a_fifth_division_for_the_corps }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_corps_at_full_strength
+		custom_effect_tooltip = CAN_break_up_the_fifth_division_tt
+		set_country_flag = CAN_done_break_up_the_fifth_division
+	}
+}
+
+shared_focus = {
+	id = CAN_a_fifth_division_for_the_corps
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_march_infantry
+	x = 132
+	y = 9
+	cost = 15
+	prerequisite = {
+		focus = CAN_a_corps_of_our_own
+		focus = CAN_divisions_at_the_disposal_of_the_army
+	}
+	mutually_exclusive = { focus = CAN_break_up_the_fifth_division }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_a_fifth_division
+		custom_effect_tooltip = CAN_a_fifth_division_for_the_corps_tt
+		set_country_flag = CAN_done_a_fifth_division_for_the_corps
+	}
+}
+
+# the compact must find men
+shared_focus = {
+	id = CAN_the_ranks_that_answer
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 118
+	y = 10
+	cost = 10
+	prerequisite = { focus = CAN_the_voluntary_compact }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_war_support = 0.08
+		add_ideas = CAN_idea_the_ranks_that_answer
+		custom_effect_tooltip = CAN_the_ranks_that_answer_tt
+		set_country_flag = CAN_done_the_ranks_that_answer
+	}
+}
+
+shared_focus = {
+	id = CAN_hill_seventy
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_position_armies
+	x = 128
+	y = 10
+	cost = 10
+
+	prerequisite = { focus = CAN_the_somme_and_courcelette }
+	prerequisite = { focus = CAN_the_vimy_method }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 30
+		add_war_support = 0.08
+		add_command_power = 50
+		custom_effect_tooltip = CAN_hill_seventy_tt
+		set_country_flag = CAN_done_hill_seventy
+	}
+}
+
+# april 1918
+shared_focus = {
+	id = CAN_cancel_the_farmers_exemptions
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_mobilization
+	x = 122
+	y = 10
+	cost = 5
+	allow_branch = {
+		date > 1917.12.31
+	}
+
+	prerequisite = { focus = CAN_the_military_service_act }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_manpower = 25000
+		add_ideas = CAN_idea_the_farmers_sons
+		set_variable = { CAN_bt_arg_value = 10 }
+		set_variable = { CAN_bt_arg_cause = 11 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 406 }
+			set_variable = { CAN_news_scope = 1 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_cancel_the_farmers_exemptions_tt
+		set_country_flag = CAN_done_cancel_the_farmers_exemptions
+	}
+}
+
+shared_focus = {
+	id = CAN_passchendaele
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_graveyard
+	x = 128
+	y = 11
+	cost = 15
+	prerequisite = { focus = CAN_hill_seventy }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 40
+		add_stability = -0.05
+		add_timed_idea = {
+			idea = CAN_idea_the_mud_of_passchendaele
+			days = 540
+		}
+		custom_effect_tooltip = CAN_passchendaele_tt
+		set_country_flag = CAN_done_passchendaele
+	}
+}
+
+shared_focus = {
+	id = CAN_the_hundred_days
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_professionalism
+	x = 126
+	y = 12
+	cost = 15
+	allow_branch = {
+		date > 1917.12.31
+	}
+
+	prerequisite = { focus = CAN_passchendaele }
+	prerequisite = {
+		focus = CAN_break_up_the_fifth_division
+		focus = CAN_a_fifth_division_for_the_corps
+	}
+	prerequisite = {
+		focus = CAN_the_voluntary_compact
+		focus = CAN_the_military_service_act
+	}
+	ai_will_do = { factor = 3 }
+	completion_reward = {
+		army_experience = 50
+		add_war_support = 0.10
+		add_command_power = 100
+		add_ideas = CAN_idea_the_hundred_days
+		hidden_effect = {
+			set_variable = { CAN_news_id = 407 }
+			set_variable = { CAN_news_scope = 3 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_hundred_days_tt
+		set_country_flag = CAN_done_the_hundred_days
+	}
+}
+
+# ------------------------------------------------------------------------------
+# y13-y16 - the lean years
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_bring_the_boys_home
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_army_mobilization
+	x = 120
+	y = 13
+	cost = 5
+	allow_branch = {
+		date > 1918.12.31
+	}
+
+	prerequisite = { focus = CAN_the_hundred_days }
+	ai_will_do = { factor = 3 }
+	completion_reward = {
+		add_war_support = -0.10
+		# the demobilised men vote
+		add_popularity = { ideology = democratic popularity = 0.05 }
+		custom_effect_tooltip = CAN_bring_the_boys_home_tt
+		set_country_flag = CAN_done_bring_the_boys_home
+	}
+}
+
+shared_focus = {
+	id = CAN_one_department_of_defence
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_defence
+	x = 128
+	y = 13
+	cost = 15
+	allow_branch = {
+		date > 1921.12.31
+	}
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = CAN_one_department_of_defence_gate_tt
+			has_country_flag = CAN_done_the_air_board
+		}
+	}
+	prerequisite = { focus = CAN_the_hundred_days }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		# can_imperial_defence_settled is lowercase
+		if = {
+			limit = {
+				NOT = { has_country_flag = can_imperial_defence_settled }
+			}
+			add_ideas = CAN_idea_peace_dividend
+		}
+		custom_effect_tooltip = CAN_one_department_of_defence_tt
+		set_country_flag = CAN_done_one_department_of_defence
+	}
+}
+
+shared_focus = {
+	id = CAN_the_otter_committee
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 118
+	y = 14
+	cost = 10
+	prerequisite = { focus = CAN_bring_the_boys_home }
+	mutually_exclusive = { focus = CAN_an_establishment_we_can_pay_for }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_an_order_of_battle_on_paper
+		custom_effect_tooltip = CAN_the_otter_committee_tt
+		set_country_flag = CAN_done_the_otter_committee
+	}
+}
+
+shared_focus = {
+	id = CAN_an_establishment_we_can_pay_for
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_special_forces
+	x = 122
+	y = 14
+	cost = 10
+	prerequisite = { focus = CAN_bring_the_boys_home }
+	mutually_exclusive = { focus = CAN_the_otter_committee }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_ideas = CAN_idea_an_establishment_we_can_pay_for
+		custom_effect_tooltip = CAN_an_establishment_we_can_pay_for_tt
+		set_country_flag = CAN_done_an_establishment_we_can_pay_for
+	}
+}
+
+shared_focus = {
+	id = CAN_in_aid_of_the_civil_power
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_position_armies
+	x = 128
+	y = 14
+	cost = 5
+	prerequisite = { focus = CAN_bring_the_boys_home }
+	mutually_exclusive = { focus = CAN_barracks_not_streets }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = 75
+		add_stability = -0.05
+		add_ideas = CAN_idea_the_army_in_the_streets
+		add_popularity = {
+			ideology = communism
+			popularity = 0.02
+		}
+		set_variable = { CAN_ledger_arg_debt = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_in_aid_of_the_civil_power_tt
+		set_country_flag = CAN_done_in_aid_of_the_civil_power
+	}
+}
+
+shared_focus = {
+	id = CAN_barracks_not_streets
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_secret_police
+	x = 132
+	y = 14
+	cost = 10
+	prerequisite = { focus = CAN_bring_the_boys_home }
+	mutually_exclusive = { focus = CAN_in_aid_of_the_civil_power }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_a_federal_constabulary
+		custom_effect_tooltip = CAN_barracks_not_streets_tt
+		set_country_flag = CAN_done_barracks_not_streets
+	}
+}
+
+shared_focus = {
+	id = CAN_a_rifle_of_our_own
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_small_arms
+	x = 118
+	y = 15
+	cost = 15
+	prerequisite = {
+		focus = CAN_the_otter_committee
+		focus = CAN_an_establishment_we_can_pay_for
+	}
+	mutually_exclusive = { focus = CAN_the_lee_enfield_pattern }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_own_rifle_bonus
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+		add_ideas = CAN_idea_a_rifle_of_our_own
+		custom_effect_tooltip = CAN_a_rifle_of_our_own_tt
+		set_country_flag = CAN_done_the_dominion_arsenal
+	}
+}
+
+shared_focus = {
+	id = CAN_the_lee_enfield_pattern
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_military_deal
+	x = 122
+	y = 15
+	cost = 5
+	prerequisite = {
+		focus = CAN_the_otter_committee
+		focus = CAN_an_establishment_we_can_pay_for
+	}
+	mutually_exclusive = { focus = CAN_a_rifle_of_our_own }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = ENG
+		}
+		add_ideas = CAN_idea_the_lee_enfield_pattern
+		custom_effect_tooltip = CAN_the_lee_enfield_pattern_tt
+		set_country_flag = CAN_done_the_lee_enfield_pattern
+	}
+}
+
+shared_focus = {
+	id = CAN_defence_scheme_no_one
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_intelligence_exchange
+	x = 128
+	y = 15
+	cost = 10
+	prerequisite = {
+		focus = CAN_in_aid_of_the_civil_power
+		focus = CAN_barracks_not_streets
+	}
+	bypass = {
+		is_in_faction_with = USA
+	}
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_the_plan_in_the_safe
+		custom_effect_tooltip = CAN_defence_scheme_no_one_tt
+		set_country_flag = CAN_done_defence_scheme_no_one
+	}
+}
+
+# cape breton, 1922
+shared_focus = {
+	id = CAN_the_troops_in_the_coalfields
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_martial_law
+	x = 132
+	y = 15
+	cost = 10
+	allow_branch = {
+		date > 1921.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_in_aid_of_the_civil_power
+		focus = CAN_barracks_not_streets
+	}
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_political_power = 75
+		add_popularity = {
+			ideology = communism
+			popularity = 0.03
+		}
+		add_ideas = CAN_idea_the_coalfield_deployment
+		set_variable = { CAN_ledger_arg_debt = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_the_troops_in_the_coalfields_tt
+		set_country_flag = CAN_done_the_troops_in_the_coalfields
+	}
+}
+
+shared_focus = {
+	id = CAN_a_staff_course_of_our_own
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_doctrines
+	x = 118
+	y = 16
+	cost = 15
+	prerequisite = {
+		focus = CAN_a_rifle_of_our_own
+		focus = CAN_the_lee_enfield_pattern
+	}
+	mutually_exclusive = { focus = CAN_officers_at_camberley }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_own_staff_bonus
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		add_ideas = CAN_idea_a_staff_course_of_our_own
+		custom_effect_tooltip = CAN_a_staff_course_of_our_own_tt
+		set_country_flag = CAN_done_a_staff_course_of_our_own
+	}
+}
+
+shared_focus = {
+	id = CAN_officers_at_camberley
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_military_sphere
+	x = 122
+	y = 16
+	cost = 5
+	prerequisite = {
+		focus = CAN_a_rifle_of_our_own
+		focus = CAN_the_lee_enfield_pattern
+	}
+	mutually_exclusive = { focus = CAN_a_staff_course_of_our_own }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_command_power = 50
+		add_ideas = CAN_idea_officers_at_camberley
+		custom_effect_tooltip = CAN_officers_at_camberley_tt
+		set_country_flag = CAN_done_officers_at_camberley
+	}
+}
+
+shared_focus = {
+	id = CAN_burn_the_scheme
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_improve_relations
+	x = 128
+	y = 16
+	cost = 5
+	prerequisite = { focus = CAN_defence_scheme_no_one }
+	prerequisite = { focus = CAN_one_department_of_defence }
+	bypass = {
+		NOT = { has_idea = CAN_idea_the_plan_in_the_safe }
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_political_power = 75
+		if = {
+			limit = {
+				has_idea = CAN_idea_the_plan_in_the_safe
+			}
+			remove_ideas = CAN_idea_the_plan_in_the_safe
+		}
+		custom_effect_tooltip = CAN_burn_the_scheme_tt
+		set_country_flag = CAN_done_burn_the_scheme
+	}
+}
+
+# the army as a cadre
+shared_focus = {
+	id = CAN_the_estimates_of_the_lean_years
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_consumer_goods
+	x = 132
+	y = 16
+	cost = 5
+
+	prerequisite = { focus = CAN_the_troops_in_the_coalfields }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_lean_years
+		custom_effect_tooltip = CAN_the_estimates_of_the_lean_years_tt
+		set_country_flag = CAN_done_the_estimates_of_the_lean_years
+	}
+}
+
+# ------------------------------------------------------------------------------
+# y17-y27 - the second war
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_the_joint_staff_programme
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_defence
+	x = 122
+	y = 17
+	cost = 10
+	allow_branch = {
+		date > 1932.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_a_staff_course_of_our_own
+		focus = CAN_officers_at_camberley
+	}
+	mutually_exclusive = { focus = CAN_a_field_force_for_overseas }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = { has_idea = CAN_idea_the_lean_years }
+			remove_ideas = CAN_idea_the_lean_years
+		}
+		if = {
+			limit = { has_idea = CAN_idea_a_militia_not_an_army }
+			remove_ideas = CAN_idea_a_militia_not_an_army
+		}
+		add_ideas = CAN_idea_no_plan_for_a_field_force
+		custom_effect_tooltip = CAN_the_joint_staff_programme_tt
+		set_country_flag = CAN_done_the_joint_staff_programme
+	}
+}
+
+shared_focus = {
+	id = CAN_a_field_force_for_overseas
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_doctrines
+	x = 130
+	y = 17
+	cost = 15
+	allow_branch = {
+		date > 1932.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_a_staff_course_of_our_own
+		focus = CAN_officers_at_camberley
+	}
+	mutually_exclusive = { focus = CAN_the_joint_staff_programme }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		army_experience = 50
+		add_manpower = 25000
+		if = {
+			limit = { has_idea = CAN_idea_peace_dividend }
+			remove_ideas = CAN_idea_peace_dividend
+		}
+		if = {
+			limit = { has_idea = CAN_idea_the_lean_years }
+			remove_ideas = CAN_idea_the_lean_years
+		}
+		if = {
+			limit = { has_idea = CAN_idea_a_militia_not_an_army }
+			remove_ideas = CAN_idea_a_militia_not_an_army
+		}
+		add_ideas = CAN_idea_the_ghost_of_1917
+		set_variable = { CAN_bt_arg_value = 5 }
+		set_variable = { CAN_bt_arg_cause = 15 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_a_field_force_for_overseas_tt
+		set_country_flag = CAN_done_a_field_force_for_overseas
+	}
+}
+
+# the bren file, 1938
+shared_focus = {
+	id = CAN_the_bren_gun_contract
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_national_arsenal
+	x = 120
+	y = 18
+	cost = 10
+	allow_branch = {
+		date > 1936.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_the_joint_staff_programme
+		focus = CAN_a_field_force_for_overseas
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = CAN
+		}
+		add_tech_bonus = {
+			name = CAN_bren_bonus
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+		add_ideas = CAN_idea_the_bren_gun_affair
+		custom_effect_tooltip = CAN_the_bren_gun_contract_tt
+		set_country_flag = CAN_done_the_bren_gun_contract
+	}
+}
+
+shared_focus = {
+	id = CAN_the_first_canadian_army
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_position_armies
+	x = 128
+	y = 18
+	cost = 10
+	allow_branch = {
+		date > 1938.12.31
+	}
+
+	prerequisite = {
+		focus = CAN_the_joint_staff_programme
+		focus = CAN_a_field_force_for_overseas
+	}
+	ai_will_do = { factor = 3 }
+	completion_reward = {
+		army_experience = 50
+		add_command_power = 100
+		custom_effect_tooltip = CAN_the_first_canadian_army_tt
+		set_country_flag = CAN_done_the_first_canadian_army
+	}
+}
+
+# nrma, june 1940
+shared_focus = {
+	id = CAN_the_mobilization_of_resources_act
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_army_mobilization
+	x = 118
+	y = 19
+	cost = 10
+	allow_branch = {
+		date > 1939.12.31
+	}
+
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_manpower = 50000
+		if = {
+			limit = { has_idea = volunteer_only }
+			add_ideas = limited_conscription
+		}
+		add_ideas = CAN_idea_the_home_defence_men
+		set_variable = { CAN_bt_arg_value = 10 }
+		set_variable = { CAN_bt_arg_cause = 15 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_the_mobilization_of_resources_act_tt
+		set_country_flag = CAN_done_the_mobilization_of_resources_act
+	}
+}
+
+# hong kong, december 1941
+shared_focus = {
+	id = CAN_the_force_at_hong_kong
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_graveyard
+	x = 122
+	y = 19
+	cost = 5
+	allow_branch = {
+		date > 1940.12.31
+	}
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		army_experience = 25
+		add_timed_idea = {
+			idea = CAN_idea_the_lesson_of_hong_kong
+			days = 720
+		}
+		set_variable = { CAN_ledger_arg_debt = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_the_force_at_hong_kong_tt
+		set_country_flag = CAN_done_the_force_at_hong_kong
+	}
+}
+
+shared_focus = {
+	id = CAN_the_ram_at_montreal
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_army_tanks
+	x = 126
+	y = 19
+	cost = 15
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	mutually_exclusive = { focus = CAN_the_pattern_of_the_allies }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_ram_bonus
+			bonus = 1.0
+			uses = 1
+			category = armor
+		}
+		add_ideas = CAN_idea_a_tank_that_never_fought
+		set_country_flag = CAN_canadian_armour_design
+		custom_effect_tooltip = CAN_the_ram_at_montreal_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_pattern_of_the_allies
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_army_motorized
+	x = 130
+	y = 19
+	cost = 5
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	mutually_exclusive = { focus = CAN_the_ram_at_montreal }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_grizzly_bonus
+			bonus = 1.0
+			uses = 2
+			category = cat_medium_armor
+		}
+		add_ideas = CAN_idea_designs_from_elsewhere
+		set_country_flag = CAN_armour_by_licence
+		custom_effect_tooltip = CAN_the_pattern_of_the_allies_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_pacific_command
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_defence
+	x = 134
+	y = 19
+	cost = 10
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		CAN_remove_pacific_panic = yes
+		add_ideas = CAN_idea_the_pacific_command
+		set_country_flag = CAN_pacific_command_stood_up
+		custom_effect_tooltip = CAN_the_pacific_command_tt
+	}
+}
+
+# the plebiscite, april 1942
+shared_focus = {
+	id = CAN_the_plebiscite_of_1942
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_election_rigged
+	x = 118
+	y = 20
+	cost = 10
+	allow_branch = {
+		date > 1941.12.31
+	}
+
+	prerequisite = { focus = CAN_the_mobilization_of_resources_act }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_war_support = 0.10
+		add_political_power = 100
+		add_ideas = CAN_idea_the_plebiscite_of_1942
+		set_variable = { CAN_bt_arg_value = 15 }
+		set_variable = { CAN_bt_arg_cause = 17 }
+		CAN_add_blood_tax = yes
+		hidden_effect = {
+			set_variable = { CAN_news_id = 408 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_the_plebiscite_of_1942_tt
+		set_country_flag = CAN_reinforcement_crisis_open
+		set_country_flag = CAN_done_the_plebiscite_of_1942
+	}
+}
+
+# dieppe, august 1942
+shared_focus = {
+	id = CAN_the_raid_on_dieppe
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_amphibious_assault
+	x = 122
+	y = 20
+	cost = 10
+	allow_branch = {
+		date > 1941.12.31
+	}
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		add_war_support = -0.05
+		add_tech_bonus = {
+			name = CAN_dieppe_bonus
+			bonus = 1.0
+			uses = 1
+			category = marine_tech
+		}
+		add_timed_idea = {
+			idea = CAN_idea_the_lesson_of_dieppe
+			days = 540
+		}
+		custom_effect_tooltip = CAN_the_raid_on_dieppe_tt
+		set_country_flag = CAN_done_the_raid_on_dieppe
+	}
+}
+
+shared_focus = {
+	id = CAN_the_sexton
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_army_artillery2
+	x = 126
+	y = 20
+	cost = 10
+	prerequisite = { focus = CAN_the_ram_at_montreal }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		if = {
+			limit = { has_idea = CAN_idea_a_tank_that_never_fought }
+			swap_ideas = {
+				remove_idea = CAN_idea_a_tank_that_never_fought
+				add_idea = CAN_idea_the_sexton
+			}
+		}
+		else = {
+			add_ideas = CAN_idea_the_sexton
+		}
+		add_tech_bonus = {
+			name = CAN_sexton_bonus
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		custom_effect_tooltip = CAN_the_sexton_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_military_vehicle_programme
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_construct_mil_factory
+	x = 130
+	y = 20
+	cost = 10
+	prerequisite = { focus = CAN_the_pattern_of_the_allies }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = motorized_equipment
+			amount = 300
+			producer = CAN
+		}
+		add_tech_bonus = {
+			name = CAN_cmp_bonus
+			bonus = 1.0
+			uses = 1
+			category = motorized_equipment
+		}
+		add_ideas = CAN_idea_wheels_for_the_empire
+		custom_effect_tooltip = CAN_the_military_vehicle_programme_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_canadian_womens_army_corps
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 134
+	y = 20
+	cost = 10
+	prerequisite = { focus = CAN_the_pacific_command }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_the_womens_army_corps
+		custom_effect_tooltip = CAN_the_canadian_womens_army_corps_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_operation_husky
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_amphibious_assault
+	x = 122
+	y = 21
+	cost = 10
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_the_raid_on_dieppe }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 40
+		navy_experience = 20
+		add_war_support = 0.05
+		add_tech_bonus = {
+			name = CAN_husky_bonus
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		set_country_flag = CAN_i_corps_in_the_mediterranean
+		add_to_variable = { CAN_reinforcement_deficit = 5 }
+		clamp_variable = { var = CAN_reinforcement_deficit min = 0 max = 100 }
+		custom_effect_tooltip = CAN_operation_husky_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_juno_beach
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_amphibious_assault
+	x = 130
+	y = 21
+	cost = 10
+	allow_branch = {
+		date > 1943.12.31
+	}
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_the_first_canadian_army }
+	ai_will_do = { factor = 3 }
+	completion_reward = {
+		army_experience = 50
+		navy_experience = 25
+		add_war_support = 0.10
+		custom_effect_tooltip = CAN_juno_beach_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_little_stalingrad
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_occupy_states_ongoing_war
+	x = 122
+	y = 22
+	cost = 10
+	prerequisite = { focus = CAN_operation_husky }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 25
+		add_tech_bonus = {
+			name = CAN_ortona_bonus
+			bonus = 1.0
+			uses = 1
+			category = infantry_tech
+		}
+		custom_effect_tooltip = CAN_little_stalingrad_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_clear_the_scheldt
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_occupy_states_coastal
+	x = 130
+	y = 22
+	cost = 10
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_juno_beach }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		add_tech_bonus = {
+			name = CAN_scheldt_bonus
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		add_to_variable = { CAN_reinforcement_deficit = 15 }
+		clamp_variable = { var = CAN_reinforcement_deficit min = 0 max = 100 }
+		set_country_flag = CAN_done_clear_the_scheldt
+		custom_effect_tooltip = CAN_clear_the_scheldt_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_breaking_the_hitler_line
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_artillery
+	x = 122
+	y = 23
+	cost = 10
+	available = {
+		has_war = yes
+	}
+	prerequisite = { focus = CAN_little_stalingrad }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		add_tech_bonus = {
+			name = CAN_hitler_line_bonus
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		add_to_variable = { CAN_reinforcement_deficit = 10 }
+		clamp_variable = { var = CAN_reinforcement_deficit min = 0 max = 100 }
+		set_country_flag = CAN_done_breaking_the_hitler_line
+		custom_effect_tooltip = CAN_breaking_the_hitler_line_tt
+	}
+}
+
+# the crisis of november 1944
+shared_focus = {
+	id = CAN_ralston_stays
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 118
+	y = 24
+	cost = 5
+	available = {
+		has_country_flag = CAN_reinforcement_crisis_open
+		custom_trigger_tooltip = {
+			tooltip = CAN_ralston_stays_gate_tt
+			NOT = { has_country_flag = CAN_the_dominion_service_line }
+		}
+	}
+	prerequisite = { focus = CAN_clear_the_scheldt }
+	prerequisite = { focus = CAN_breaking_the_hitler_line }
+	mutually_exclusive = { focus = CAN_the_king_manoeuvre focus = CAN_no_conscription }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_manpower = 60000
+		add_stability = -0.10
+		set_variable = { CAN_bt_arg_value = 25 }
+		set_variable = { CAN_bt_arg_cause = 19 }
+		CAN_add_blood_tax = yes
+		set_variable = { CAN_house_question = 3 }
+		hidden_effect = {
+			country_event = { id = can_imperial.15 days = 30 }
+			set_variable = { CAN_news_id = 409 }
+			set_variable = { CAN_news_scope = 2 }
+			CAN_headline = yes
+		}
+		custom_effect_tooltip = CAN_ralston_stays_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_king_manoeuvre
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_political_pressure
+	x = 124
+	y = 24
+	cost = 5
+	available = {
+		has_country_flag = CAN_reinforcement_crisis_open
+	}
+	prerequisite = { focus = CAN_clear_the_scheldt }
+	prerequisite = { focus = CAN_breaking_the_hitler_line }
+	mutually_exclusive = { focus = CAN_ralston_stays focus = CAN_no_conscription }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_manpower = 16000
+		set_variable = { CAN_bt_arg_value = 15 }
+		set_variable = { CAN_bt_arg_cause = 32 }
+		CAN_add_blood_tax = yes
+		add_timed_idea = {
+			idea = CAN_idea_one_time_levy
+			days = 180
+		}
+		custom_effect_tooltip = CAN_the_king_manoeuvre_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_no_conscription
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_neutrality_focus
+	x = 130
+	y = 24
+	cost = 5
+	available = {
+		has_country_flag = CAN_reinforcement_crisis_open
+	}
+	prerequisite = { focus = CAN_clear_the_scheldt }
+	prerequisite = { focus = CAN_breaking_the_hitler_line }
+	mutually_exclusive = { focus = CAN_ralston_stays focus = CAN_the_king_manoeuvre }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_war_support = -0.05
+		if = {
+			limit = { NOT = { has_idea = CAN_idea_the_pledge_of_no_conscription } }
+			add_ideas = CAN_idea_the_pledge_of_no_conscription
+		}
+		add_ideas = CAN_idea_battalions_at_half_strength
+		if = {
+			limit = { has_idea = CAN_idea_a_dominion_is_not_a_power_reduced }
+			swap_ideas = {
+				remove_idea = CAN_idea_a_dominion_is_not_a_power_reduced
+				add_idea = CAN_idea_a_dominion_is_not_a_power
+			}
+		}
+		custom_effect_tooltip = CAN_no_conscription_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_operation_goldflake
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_position_armies
+	x = 122
+	y = 25
+	cost = 10
+	prerequisite = {
+		focus = CAN_ralston_stays
+		focus = CAN_the_king_manoeuvre
+		focus = CAN_no_conscription
+	}
+	mutually_exclusive = { focus = CAN_the_mediterranean_corps }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		add_ideas = CAN_idea_one_army_at_last
+		set_country_flag = CAN_done_operation_goldflake
+		custom_effect_tooltip = CAN_operation_goldflake_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_mediterranean_corps
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_occupy_states_ongoing_war
+	x = 128
+	y = 25
+	cost = 5
+	prerequisite = {
+		focus = CAN_ralston_stays
+		focus = CAN_the_king_manoeuvre
+		focus = CAN_no_conscription
+	}
+	mutually_exclusive = { focus = CAN_operation_goldflake }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_two_theatres
+		set_country_flag = CAN_done_the_mediterranean_corps
+		custom_effect_tooltip = CAN_the_mediterranean_corps_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_hunger_winter
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_major_alliance
+	x = 126
+	y = 26
+	cost = 10
+	available = {
+		has_war = yes
+	}
+	prerequisite = {
+		focus = CAN_operation_goldflake
+		focus = CAN_the_mediterranean_corps
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_to_variable = { CAN_reinforcement_deficit = 10 }
+		clamp_variable = { var = CAN_reinforcement_deficit min = 0 max = 100 }
+		set_country_flag = CAN_done_the_hunger_winter
+		custom_effect_tooltip = CAN_the_hunger_winter_tt
+	}
+}
+
+shared_focus = {
+	id = CAN_the_mobile_striking_force
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_special_forces
+	x = 126
+	y = 27
+	cost = 15
+	allow_branch = {
+		date > 1944.12.31
+	}
+	available = {
+		has_war = no
+	}
+	prerequisite = { focus = CAN_the_hunger_winter }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		add_tech_bonus = {
+			name = CAN_msf_bonus
+			bonus = 1.0
+			uses = 1
+			category = para_tech
+		}
+		add_ideas = CAN_idea_the_mobile_striking_force
+		set_country_flag = CAN_done_the_mobile_striking_force
+		custom_effect_tooltip = CAN_the_mobile_striking_force_tt
+	}
+}
+
+# ------------------------------------------------------------------------------
+# y28-y32 - the peacetime army
+# ------------------------------------------------------------------------------
+
+shared_focus = {
+	id = CAN_the_special_force
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_generic_allies_build_infantry
+	x = 126
+	y = 28
+	cost = 10
+
+	prerequisite = { focus = CAN_the_mobile_striking_force }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_command_power = 50
+		custom_effect_tooltip = CAN_the_special_force_tt
+		set_country_flag = CAN_done_the_special_force
+	}
+}
+
+shared_focus = {
+	id = CAN_a_brigade_for_europe
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_mobilization
+	x = 120
+	y = 29
+	cost = 15
+	available = {
+		OR = {
+			has_country_flag = CAN_done_the_atlantic_pact
+			has_country_flag = CAN_done_a_commonwealth_pact
+		}
+	}
+	prerequisite = { focus = CAN_the_special_force }
+	mutually_exclusive = { focus = CAN_the_defence_of_the_north }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_ideas = CAN_idea_cw_the_brigade_in_europe
+		custom_effect_tooltip = CAN_a_brigade_for_europe_tt_rest
+		set_country_flag = CAN_done_a_brigade_for_europe
+	}
+}
+
+shared_focus = {
+	id = CAN_the_defence_of_the_north
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_special_forces
+	x = 128
+	y = 29
+	cost = 15
+	prerequisite = { focus = CAN_the_special_force }
+	mutually_exclusive = { focus = CAN_a_brigade_for_europe }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		if = {
+			limit = {
+				472 = {
+					is_owned_by = CAN
+				}
+			}
+			472 = {
+				add_building_construction = {
+					type = air_base
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_ideas = CAN_idea_cw_the_defence_of_the_north
+		custom_effect_tooltip = CAN_the_defence_of_the_north_tt_rest
+		set_country_flag = CAN_done_the_defence_of_the_north
+	}
+}
+
+shared_focus = {
+	id = CAN_kapyong
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_position_armies
+	x = 134
+	y = 29
+	cost = 5
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = CAN_kapyong_trigger_tt
+			has_war = yes
+		}
+	}
+	prerequisite = { focus = CAN_the_special_force }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		army_experience = 50
+		custom_effect_tooltip = CAN_kapyong_tt
+		set_country_flag = CAN_done_kapyong
+	}
+}
+
+shared_focus = {
+	id = CAN_the_nato_cartridge
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	icon = GFX_goal_generic_small_arms
+	x = 122
+	y = 30
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_brigade_for_europe
+		focus = CAN_the_defence_of_the_north
+	}
+	mutually_exclusive = { focus = CAN_the_british_rifle }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_tech_bonus = {
+			name = CAN_nato_cartridge_bonus
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+		add_ideas = CAN_idea_cw_the_nato_cartridge
+		custom_effect_tooltip = CAN_the_nato_cartridge_tt_rest
+		set_country_flag = CAN_done_the_nato_cartridge
+	}
+}
+
+shared_focus = {
+	id = CAN_the_british_rifle
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_army_artillery
+	x = 128
+	y = 30
+	cost = 10
+	prerequisite = {
+		focus = CAN_a_brigade_for_europe
+		focus = CAN_the_defence_of_the_north
+	}
+	mutually_exclusive = { focus = CAN_the_nato_cartridge }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 1000
+			producer = ENG
+		}
+		add_ideas = CAN_idea_cw_the_british_rifle
+		custom_effect_tooltip = CAN_the_british_rifle_tt_rest
+		set_country_flag = CAN_done_the_british_rifle
+	}
+}
+
+shared_focus = {
+	id = CAN_rockets_for_the_brigade
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	icon = GFX_goal_generic_secret_weapon
+	x = 118
+	y = 31
+	cost = 10
+	available = {
+		has_country_flag = CAN_done_warheads_for_the_bomarc
+	}
+	prerequisite = { focus = CAN_a_brigade_for_europe }
+	ai_will_do = { factor = 1 }
+	completion_reward = {
+		add_command_power = 50
+		add_tech_bonus = {
+			name = CAN_brigade_rockets_bonus
+			bonus = 1.0
+			uses = 1
+			category = mot_rockets
+		}
+		custom_effect_tooltip = CAN_rockets_for_the_brigade_tt
+		set_country_flag = CAN_done_rockets_for_the_brigade
+	}
+}
+
+shared_focus = {
+	id = CAN_national_service_in_peacetime
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	icon = GFX_goal_tfv_can_forced_quebec_conscription
+	x = 124
+	y = 31
+	cost = 20
+	available = {
+		custom_trigger_tooltip = {
+			tooltip = CAN_national_service_gate_tt
+			NOT = { has_country_flag = CAN_the_dominion_service_line }
+		}
+	}
+	prerequisite = {
+		focus = CAN_the_nato_cartridge
+		focus = CAN_the_british_rifle
+	}
+	mutually_exclusive = { focus = CAN_an_army_of_volunteers }
+	ai_will_do = { factor = 0 }
+	completion_reward = {
+		add_manpower = 25000
+		add_ideas = CAN_idea_cw_national_service
+		CAN_imperial_english_canada_rallies = yes
+		set_variable = { CAN_bt_arg_value = 20 }
+		set_variable = { CAN_bt_arg_cause = 20 }
+		CAN_add_blood_tax = yes
+		custom_effect_tooltip = CAN_national_service_in_peacetime_tt_rest
+		set_country_flag = CAN_done_national_service_in_peacetime
+	}
+}
+
+shared_focus = {
+	id = CAN_an_army_of_volunteers
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_STABILITY }
+	icon = GFX_goal_generic_army_doctrines
+	x = 130
+	y = 31
+	cost = 10
+	prerequisite = {
+		focus = CAN_the_nato_cartridge
+		focus = CAN_the_british_rifle
+	}
+	mutually_exclusive = { focus = CAN_national_service_in_peacetime }
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_ideas = CAN_idea_cw_an_army_of_volunteers
+		custom_effect_tooltip = CAN_an_army_of_volunteers_tt_rest
+		set_country_flag = CAN_done_an_army_of_volunteers
+	}
+}
+
+shared_focus = {
+	id = CAN_a_force_between_them
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	icon = GFX_goal_generic_neutrality_focus
+	x = 126
+	y = 32
+	cost = 10
+	prerequisite = {
+		focus = CAN_national_service_in_peacetime
+		focus = CAN_an_army_of_volunteers
+	}
+	ai_will_do = { factor = 2 }
+	completion_reward = {
+		add_political_power = 100
+		custom_effect_tooltip = CAN_a_force_between_them_tt
+		set_country_flag = CAN_done_a_force_between_them
+	}
+}

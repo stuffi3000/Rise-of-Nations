@@ -1,0 +1,166 @@
+####################################################################################################
+# MOROCCO - COLD WAR
+# 1949 on, 5 focuses
+####################################################################################################
+
+focus_tree = {
+	id = RON_Maroc_CW
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = MOR
+		}
+	}
+	default = no
+	reset_on_civilwar = no
+
+	##### A - THE SHERIFIAN SEAL
+
+	#Focus for The Throne and the Party
+	focus = {
+		id = MOR_cw_the_throne_and_the_party
+		icon = GFX_goal_generic_national_unity
+		x = 5
+		y = 0
+		cost = 10
+		available = {
+			has_country_flag = MOR_istiqlal_founded
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_political_power = 60
+			if = {
+				limit = {
+					check_variable = { MOR_baraka > 39 }
+				}
+				add_stability = 0.10
+				set_country_flag = MOR_throne_survives
+				custom_effect_tooltip = MOR_cw_the_throne_and_the_party_tt_throne
+				else = {
+					add_stability = -0.05
+					set_country_flag = MOR_party_takes_the_state
+					custom_effect_tooltip = MOR_cw_the_throne_and_the_party_tt_party
+				}
+			}
+			set_country_flag = MOR_throne_and_party_settled
+		}
+	}
+
+	##### F - TERRITORIAL UNITY
+
+	# baraka +5, trust -20
+	focus = {
+		id = MOR_cw_franco_at_the_bar
+		icon = GFX_goal_generic_political_pressure
+		x = 15
+		y = 0
+		cost = 10
+		available = {
+			has_country_flag = MOR_tangier_speech
+			has_country_flag = MOR_maghreb_bureau
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 60
+			add_to_variable = { MOR_baraka = 5 }
+			add_to_variable = { MOR_residency_trust = -20 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_franco_at_the_bar
+			custom_effect_tooltip = MOR_cw_franco_at_the_bar_tt
+		}
+	}
+
+	#Focus for The Northern Zone Redeemed
+	focus = {
+		id = MOR_cw_the_northern_zone_redeemed
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 13
+		y = 1
+		cost = 14
+		prerequisite = {
+			focus = MOR_cw_franco_at_the_bar
+		}
+		mutually_exclusive = {
+			focus = MOR_cw_no_inch_conceded
+		}
+		bypass = {
+			owns_state = 290
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = -75
+			add_stability = 0.05
+			add_to_variable = { MOR_baraka = 8 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			set_country_flag = MOR_border_left_open
+			set_country_flag = MOR_northern_zone_settled
+			custom_effect_tooltip = MOR_cw_the_northern_zone_redeemed_tt
+		}
+	}
+
+	#Focus for Not One Inch Conceded
+	focus = {
+		id = MOR_cw_no_inch_conceded
+		icon = GFX_goal_generic_more_territorial_claims
+		x = 17
+		y = 1
+		cost = 14
+		prerequisite = {
+			focus = MOR_cw_franco_at_the_bar
+		}
+		mutually_exclusive = {
+			focus = MOR_cw_the_northern_zone_redeemed
+		}
+		will_lead_to_war_with = SPR
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_war_support = 0.10
+			army_experience = 25
+			add_to_variable = { MOR_baraka = 15 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			set_country_flag = MOR_no_inch_conceded
+			set_country_flag = MOR_northern_zone_settled
+			custom_effect_tooltip = MOR_cw_no_inch_conceded_tt
+		}
+	}
+
+	#Focus for Ifni and the Sands
+	focus = {
+		id = MOR_cw_ifni_and_the_sands
+		icon = GFX_goal_generic_territory_or_war
+		x = 15
+		y = 2
+		cost = 14
+		prerequisite = {
+			focus = MOR_cw_the_northern_zone_redeemed
+			focus = MOR_cw_no_inch_conceded
+		}
+		bypass = {
+			owns_state = 783
+			owns_state = 1106
+			owns_state = 699
+			owns_state = 1118
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = -50
+			add_war_support = 0.05
+			add_to_variable = { MOR_baraka = 10 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			set_country_flag = MOR_ifni_and_the_sands
+			custom_effect_tooltip = MOR_cw_ifni_and_the_sands_tt
+		}
+	}
+}

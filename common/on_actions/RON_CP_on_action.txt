@@ -16,18 +16,84 @@ on_actions = {
 				}
 				subtract_from_variable = { CZE_support = 1 }
 			}
-			#if = {
-			#	limit = {
-			#		has_decision = increase_SER_support
-			#	}
-			#	add_to_variable = { SER_support = 1 }
-			#}
-			#if = {
-			#	limit = {
-			#		has_decision = increase_CRO_support
-			#	}
-			#	add_to_variable = { CRO_support = 1 }
-			#}
+			# a nationality decision runs thirty days and pays a point a week while it does
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_SER_support
+				}
+				add_to_variable = { SER_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_CRO_support
+				}
+				add_to_variable = { CRO_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_BOS_support
+				}
+				add_to_variable = { BOS_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_AUS_support
+				}
+				add_to_variable = { AUS_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_CZE_support
+				}
+				add_to_variable = { CZE_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_HUN_support
+				}
+				add_to_variable = { HUN_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_POL_support
+				}
+				add_to_variable = { POL_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_ROM_support
+				}
+				add_to_variable = { ROM_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_SLV_support
+				}
+				add_to_variable = { SLV_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_decision = decrease_UKR_support
+				}
+				add_to_variable = { UKR_support = 1 }
+			}
+			if = {
+				limit = {
+					tag = AUH
+					has_country_flag = AUH_ausgleich_open
+				}
+				AUH_clamp_nationality_support = yes
+			}
 			if = {
 				limit = {
 					date < 1920.1.1
@@ -211,9 +277,66 @@ on_actions = {
 		}
 	}
 
+	# Austria-Hungary : the settlement has to exist from the first day of the bookmark,
+	# not from the first month, because the renewal clock and the map text both read it.
+	on_startup = {
+		effect = {
+			if = {
+				limit = { country_exists = AUH }
+				AUH = { AUH_initialise_the_ausgleich = yes }
+			}
+		}
+	}
+
+	# FROM is the war target.
+	# Every war Vienna declares is charged to the common account, and Budapest re-prices it
+	# at the next term. Under a personal union there is no common foreign policy left to
+	# declare it with, and Hungary has to be asked first.
+	on_declare_war = {
+		effect = {
+			if = {
+				limit = {
+					tag = AUH
+					has_country_flag = AUH_ausgleich_open
+					NOT = { has_country_flag = AUH_dual_monarchy_dissolved }
+				}
+				add_to_variable = { AUH_quote = 5 }
+				clamp_variable = {
+					var = AUH_quote
+					min = 25
+					max = 70
+				}
+				if = {
+					limit = { check_variable = { AUH_ausgleich_tier = 1 } }
+					country_event = { id = auh_ausgleich.11 hours = 6 }
+				}
+			}
+		}
+	}
+
 	on_monthly = {
 		effect = {
 			            RON_update_crisis_gui_values = yes
+
+			# the settlement opens once; the tick then moves the community, the quota
+			# and the clock. monthly, not weekly, so a core is never lost without warning.
+			if = {
+				limit = { tag = AUH }
+				AUH_initialise_the_ausgleich = yes
+				if = {
+					limit = {
+						has_country_flag = AUH_ausgleich_open
+						NOT = { has_country_flag = AUH_dual_monarchy_dissolved }
+					}
+					AUH_monthly_ausgleich_tick = yes
+				}
+				if = {
+					limit = {
+						has_country_flag = AUH_ausgleich_open
+					}
+					calculate_uprising = yes
+				}
+			}
 
 			FRA = {
 				if = {

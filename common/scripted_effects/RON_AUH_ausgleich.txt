@@ -1,0 +1,668 @@
+########################################################################################
+# AUSTRIA-HUNGARY - THE AUSGLEICH
+########################################################################################
+# AUH_gemeinsamkeit 0-100    the Community
+# AUH_quote 25-70            Hungary's share
+# AUH_ausgleich_year         the term falls due
+# AUH_ausgleich_tier 1-5     derived, never set
+# AUH_missed_renewals        two open the floor crisis
+# AUH_ceiling_months         twelve at 90+ open the ceiling
+# 1919+ figures are contrafactual
+
+AUH_initialise_the_ausgleich = {
+	AUH_refresh_conciliation_terms = yes
+	if = {
+		limit = { NOT = { has_country_flag = AUH_ausgleich_open } }
+		set_country_flag = AUH_ausgleich_open
+
+		if = {
+			limit = { date > 1949.1.1 }
+			set_variable = { AUH_gemeinsamkeit = 28 }
+			set_variable = { AUH_quote = 48 }
+			set_variable = { AUH_ausgleich_year = 1957 }
+		}
+		else_if = {
+			limit = { date > 1933.1.1 }
+			set_variable = { AUH_gemeinsamkeit = 34 }
+			set_variable = { AUH_quote = 45 }
+			set_variable = { AUH_ausgleich_year = 1937 }
+		}
+		else_if = {
+			limit = { date > 1919.1.1 }
+			set_variable = { AUH_gemeinsamkeit = 40 }
+			set_variable = { AUH_quote = 42 }
+			set_variable = { AUH_ausgleich_year = 1927 }
+		}
+		else_if = {
+			limit = { date > 1910.1.1 }
+			set_variable = { AUH_gemeinsamkeit = 55 }
+			set_variable = { AUH_quote = 36 }
+			set_variable = { AUH_ausgleich_year = 1917 }
+		}
+		else = {
+			set_variable = { AUH_gemeinsamkeit = 62 }
+			set_variable = { AUH_quote = 34 }
+			set_variable = { AUH_ausgleich_year = 1907 }
+		}
+
+		# push the term past the start date
+		while_loop_effect = {
+			limit = { check_variable = { AUH_ausgleich_year < global.year } }
+			add_to_variable = { AUH_ausgleich_year = 10 }
+		}
+
+		set_variable = { AUH_ausgleich_tier = 0 }
+		set_variable = { AUH_renewal_window = 0 }
+		set_variable = { AUH_renewal_cost = 0 }
+		set_variable = { AUH_missed_renewals = 0 }
+		set_variable = { AUH_ceiling_months = 0 }
+		set_variable = { AUH_last_year = global.year }
+
+		AUH_recompute_months_to_renewal = yes
+
+		# frozen since 1889, until the Quota reopens it
+		if = {
+			limit = {
+				date < 1919.1.1
+				NOT = { has_idea = AUH_the_frozen_contingent }
+			}
+			add_ideas = AUH_the_frozen_contingent
+		}
+
+		# do not re-add if a focus traded it away
+		if = {
+			limit = {
+				NOT = { has_idea = AUH_the_decennial_bargain }
+				NOT = { has_idea = AUH_two_customs_territories }
+				NOT = { has_idea = AUH_the_danubian_settlement }
+			}
+			add_ideas = AUH_the_decennial_bargain
+		}
+
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+########################################################################################
+# RECOMPUTING THE TERM
+########################################################################################
+# always re-derive: a fixed month count drifts off
+# any write to AUH_ausgleich_year MUST call this next
+
+AUH_recompute_months_to_renewal = {
+	set_variable = { AUH_months_to_renewal = AUH_ausgleich_year }
+	subtract_from_variable = { AUH_months_to_renewal = global.year }
+	multiply_variable = { AUH_months_to_renewal = 12 }
+	subtract_from_variable = { AUH_months_to_renewal = 18 }
+	clamp_variable = {
+		var = AUH_months_to_renewal
+		min = 0
+		max = 240
+	}
+}
+
+########################################################################################
+# THE FIVE TIERS
+########################################################################################
+# read off AUH_gemeinsamkeit, never set directly
+
+AUH_refresh_the_ausgleich_tier = {
+	clamp_variable = {
+		var = AUH_gemeinsamkeit
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = AUH_quote
+		min = 25
+		max = 70
+	}
+
+	set_temp_variable = { AUH_tier_wanted = 1 }
+	if = {
+		limit = { check_variable = { AUH_gemeinsamkeit > 19 } }
+		set_temp_variable = { AUH_tier_wanted = 2 }
+	}
+	if = {
+		limit = { check_variable = { AUH_gemeinsamkeit > 39 } }
+		set_temp_variable = { AUH_tier_wanted = 3 }
+	}
+	if = {
+		limit = { check_variable = { AUH_gemeinsamkeit > 59 } }
+		set_temp_variable = { AUH_tier_wanted = 4 }
+	}
+	if = {
+		limit = { check_variable = { AUH_gemeinsamkeit > 79 } }
+		set_temp_variable = { AUH_tier_wanted = 5 }
+	}
+
+	if = {
+		limit = { NOT = { check_variable = { AUH_ausgleich_tier = AUH_tier_wanted } } }
+		set_variable = { AUH_ausgleich_tier = AUH_tier_wanted }
+
+		if = {
+			limit = { check_variable = { AUH_ausgleich_tier = 5 } }
+			AUH_wear_gesamtmonarchie = yes
+		}
+		else_if = {
+			limit = { check_variable = { AUH_ausgleich_tier = 4 } }
+			AUH_wear_the_indivisible_army = yes
+		}
+		else_if = {
+			limit = { check_variable = { AUH_ausgleich_tier = 3 } }
+			AUH_wear_the_two_parliaments = yes
+		}
+		else_if = {
+			limit = { check_variable = { AUH_ausgleich_tier = 2 } }
+			AUH_wear_the_hungarian_bargain = yes
+		}
+		else = {
+			AUH_wear_the_personal_union = yes
+		}
+	}
+}
+
+AUH_wear_gesamtmonarchie = {
+	if = {
+		limit = { has_idea = AUH_the_indivisible_army }
+		swap_ideas = {
+			remove_idea = AUH_the_indivisible_army
+			add_idea = AUH_gesamtmonarchie
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_two_parliaments }
+		swap_ideas = {
+			remove_idea = AUH_the_two_parliaments
+			add_idea = AUH_gesamtmonarchie
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_hungarian_bargain }
+		swap_ideas = {
+			remove_idea = AUH_the_hungarian_bargain
+			add_idea = AUH_gesamtmonarchie
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_personal_union }
+		swap_ideas = {
+			remove_idea = AUH_the_personal_union
+			add_idea = AUH_gesamtmonarchie
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_idea = AUH_gesamtmonarchie } }
+		add_ideas = AUH_gesamtmonarchie
+	}
+}
+
+AUH_wear_the_indivisible_army = {
+	if = {
+		limit = { has_idea = AUH_gesamtmonarchie }
+		swap_ideas = {
+			remove_idea = AUH_gesamtmonarchie
+			add_idea = AUH_the_indivisible_army
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_two_parliaments }
+		swap_ideas = {
+			remove_idea = AUH_the_two_parliaments
+			add_idea = AUH_the_indivisible_army
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_hungarian_bargain }
+		swap_ideas = {
+			remove_idea = AUH_the_hungarian_bargain
+			add_idea = AUH_the_indivisible_army
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_personal_union }
+		swap_ideas = {
+			remove_idea = AUH_the_personal_union
+			add_idea = AUH_the_indivisible_army
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_idea = AUH_the_indivisible_army } }
+		add_ideas = AUH_the_indivisible_army
+	}
+}
+
+AUH_wear_the_two_parliaments = {
+	if = {
+		limit = { has_idea = AUH_gesamtmonarchie }
+		swap_ideas = {
+			remove_idea = AUH_gesamtmonarchie
+			add_idea = AUH_the_two_parliaments
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_indivisible_army }
+		swap_ideas = {
+			remove_idea = AUH_the_indivisible_army
+			add_idea = AUH_the_two_parliaments
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_hungarian_bargain }
+		swap_ideas = {
+			remove_idea = AUH_the_hungarian_bargain
+			add_idea = AUH_the_two_parliaments
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_personal_union }
+		swap_ideas = {
+			remove_idea = AUH_the_personal_union
+			add_idea = AUH_the_two_parliaments
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_idea = AUH_the_two_parliaments } }
+		add_ideas = AUH_the_two_parliaments
+	}
+}
+
+AUH_wear_the_hungarian_bargain = {
+	if = {
+		limit = { has_idea = AUH_gesamtmonarchie }
+		swap_ideas = {
+			remove_idea = AUH_gesamtmonarchie
+			add_idea = AUH_the_hungarian_bargain
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_indivisible_army }
+		swap_ideas = {
+			remove_idea = AUH_the_indivisible_army
+			add_idea = AUH_the_hungarian_bargain
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_two_parliaments }
+		swap_ideas = {
+			remove_idea = AUH_the_two_parliaments
+			add_idea = AUH_the_hungarian_bargain
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_personal_union }
+		swap_ideas = {
+			remove_idea = AUH_the_personal_union
+			add_idea = AUH_the_hungarian_bargain
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_idea = AUH_the_hungarian_bargain } }
+		add_ideas = AUH_the_hungarian_bargain
+	}
+}
+
+AUH_wear_the_personal_union = {
+	if = {
+		limit = { has_idea = AUH_gesamtmonarchie }
+		swap_ideas = {
+			remove_idea = AUH_gesamtmonarchie
+			add_idea = AUH_the_personal_union
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_indivisible_army }
+		swap_ideas = {
+			remove_idea = AUH_the_indivisible_army
+			add_idea = AUH_the_personal_union
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_two_parliaments }
+		swap_ideas = {
+			remove_idea = AUH_the_two_parliaments
+			add_idea = AUH_the_personal_union
+		}
+	}
+	else_if = {
+		limit = { has_idea = AUH_the_hungarian_bargain }
+		swap_ideas = {
+			remove_idea = AUH_the_hungarian_bargain
+			add_idea = AUH_the_personal_union
+		}
+	}
+	else_if = {
+		limit = { NOT = { has_idea = AUH_the_personal_union } }
+		add_ideas = AUH_the_personal_union
+	}
+}
+
+########################################################################################
+# THE MONTHLY TICK
+########################################################################################
+# called from on_monthly under a tag = AUH guard
+
+AUH_monthly_ausgleich_tick = {
+	AUH_refresh_the_ausgleich_tier = yes
+	AUH_refresh_conciliation_terms = yes
+
+	# a quiet empire is a loyal one: stability carries all twelve
+	set_temp_variable = { AUH_drift = 0 }
+	if = {
+		limit = { has_stability > 0.7 }
+		set_temp_variable = { AUH_drift = 1 }
+	}
+	if = {
+		limit = { has_stability > 0.85 }
+		set_temp_variable = { AUH_drift = 2 }
+	}
+	if = {
+		limit = { NOT = { has_stability > 0.5 } }
+		set_temp_variable = { AUH_drift = -1 }
+	}
+	if = {
+		limit = { NOT = { has_stability > 0.3 } }
+		set_temp_variable = { AUH_drift = -2 }
+	}
+
+	# kept for the readout
+	set_variable = { AUH_stability_drift = AUH_drift }
+
+	add_to_variable = { AUS_support = AUH_drift }
+	add_to_variable = { HUN_support = AUH_drift }
+	add_to_variable = { CZE_support = AUH_drift }
+	add_to_variable = { SLO_support = AUH_drift }
+	add_to_variable = { POL_support = AUH_drift }
+	add_to_variable = { UKR_support = AUH_drift }
+	add_to_variable = { ROM_support = AUH_drift }
+	add_to_variable = { CRO_support = AUH_drift }
+	add_to_variable = { SLV_support = AUH_drift }
+	add_to_variable = { ITA_support = AUH_drift }
+	add_to_variable = { BOS_support = AUH_drift }
+	add_to_variable = { SER_support = AUH_drift }
+
+
+	# Tier 5 destroys itself: back under 80 in two years
+	if = {
+		limit = { check_variable = { AUH_ausgleich_tier = 5 } }
+		subtract_from_variable = { HUN_support = 2 }
+		subtract_from_variable = { CZE_support = 1 }
+		subtract_from_variable = { POL_support = 1 }
+		subtract_from_variable = { UKR_support = 1 }
+		subtract_from_variable = { ROM_support = 1 }
+		subtract_from_variable = { CRO_support = 1 }
+		subtract_from_variable = { SLV_support = 1 }
+		subtract_from_variable = { SER_support = 1 }
+		subtract_from_variable = { BOS_support = 1 }
+	}
+
+	if = {
+		limit = { check_variable = { AUH_ausgleich_tier = 2 } }
+		add_to_variable = { HUN_support = 1 }
+	}
+
+	# the strike runs past the event's twenty points
+	if = {
+		limit = { has_idea = AUH_hungarian_national_resistance }
+		subtract_from_variable = { HUN_support = 1 }
+	}
+
+	# Quota past 40 thaws the contingent
+	if = {
+		limit = {
+			check_variable = { AUH_ausgleich_tier > 3 }
+			check_variable = { AUH_quote < 40 }
+			NOT = { has_idea = AUH_the_frozen_contingent }
+		}
+		add_ideas = AUH_the_frozen_contingent
+	}
+	else_if = {
+		limit = {
+			check_variable = { AUH_quote > 39 }
+			has_idea = AUH_the_frozen_contingent
+		}
+		remove_ideas = AUH_the_frozen_contingent
+	}
+
+	AUH_ausgleich_ceiling_watch = yes
+	AUH_ausgleich_floor_watch = yes
+	AUH_ausgleich_clock = yes
+
+	if = {
+		limit = { NOT = { check_variable = { AUH_last_year = global.year } } }
+		set_variable = { AUH_last_year = global.year }
+		AUH_yearly_ausgleich_tick = yes
+	}
+
+	AUH_clamp_nationality_support = yes
+	AUH_refresh_the_ausgleich_tier = yes
+}
+
+AUH_yearly_ausgleich_tick = {
+	# frozen contingent, -1 a year
+	if = {
+		limit = { has_idea = AUH_the_frozen_contingent }
+		subtract_from_variable = { AUH_gemeinsamkeit = 1 }
+	}
+	if = {
+		limit = { has_idea = AUH_the_provisorium }
+		subtract_from_variable = { AUH_gemeinsamkeit = 1 }
+	}
+}
+
+########################################################################################
+# THE CEILING CRISIS
+########################################################################################
+# twelve months at 90+, the strike of the counties
+
+AUH_ausgleich_ceiling_watch = {
+	if = {
+		limit = { check_variable = { AUH_gemeinsamkeit > 89 } }
+		add_to_variable = { AUH_ceiling_months = 1 }
+	}
+	else = {
+		set_variable = { AUH_ceiling_months = 0 }
+	}
+
+	if = {
+		limit = {
+			check_variable = { AUH_ceiling_months > 11 }
+			NOT = { has_idea = AUH_hungarian_national_resistance }
+		}
+		set_variable = { AUH_ceiling_months = 0 }
+		country_event = { id = auh_ausgleich.30 hours = 6 }
+	}
+}
+
+########################################################################################
+# THE FLOOR CRISIS
+########################################################################################
+# Community 10 or under, or two settlements lapsed
+
+AUH_ausgleich_floor_watch = {
+	if = {
+		limit = {
+			NOT = { has_country_flag = AUH_floor_crisis_open }
+			NOT = { has_country_flag = AUH_dual_monarchy_dissolved }
+			OR = {
+				check_variable = { AUH_gemeinsamkeit < 11 }
+				check_variable = { AUH_missed_renewals > 1 }
+			}
+		}
+		set_country_flag = AUH_floor_crisis_open
+		country_event = { id = auh_ausgleich.20 hours = 6 }
+	}
+
+	if = {
+		limit = {
+			has_country_flag = AUH_floor_crisis_open
+			check_variable = { AUH_gemeinsamkeit > 20 }
+			check_variable = { AUH_missed_renewals < 2 }
+		}
+		clr_country_flag = AUH_floor_crisis_open
+	}
+}
+
+########################################################################################
+# THE CLOCK
+########################################################################################
+# it runs whether the player is ready or not
+
+AUH_ausgleich_clock = {
+	if = {
+		limit = { check_variable = { AUH_months_to_renewal > 0 } }
+		subtract_from_variable = { AUH_months_to_renewal = 1 }
+	}
+
+	if = {
+		limit = {
+			check_variable = { AUH_months_to_renewal < 1 }
+			check_variable = { AUH_renewal_window < 1 }
+			NOT = { has_country_flag = AUH_dual_monarchy_dissolved }
+		}
+		set_variable = { AUH_renewal_window = 1 }
+		country_event = { id = auh_ausgleich.10 hours = 6 }
+	}
+
+	# the bill is re-read every month the window is open
+	if = {
+		limit = { check_variable = { AUH_renewal_window > 0 } }
+		set_variable = { AUH_renewal_cost = AUH_quote }
+		multiply_variable = { AUH_renewal_cost = 3 }
+		round_variable = AUH_renewal_cost
+	}
+}
+
+AUH_the_renewal_succeeds = {
+	add_to_variable = { AUH_gemeinsamkeit = 4 }
+	add_to_variable = { AUH_quote = 2 }
+	add_to_variable = { AUH_ausgleich_year = 10 }
+	set_variable = { AUH_renewal_window = 0 }
+	set_variable = { AUH_missed_renewals = 0 }
+	AUH_recompute_months_to_renewal = yes
+
+	if = {
+		limit = { has_idea = AUH_the_provisorium }
+		remove_ideas = AUH_the_provisorium
+	}
+	if = {
+		limit = {
+			NOT = { has_idea = AUH_the_decennial_bargain }
+			NOT = { has_idea = AUH_two_customs_territories }
+			NOT = { has_idea = AUH_the_danubian_settlement }
+		}
+		add_ideas = AUH_the_decennial_bargain
+	}
+
+	AUH_refresh_the_ausgleich_tier = yes
+}
+
+AUH_the_renewal_lapses = {
+	subtract_from_variable = { AUH_gemeinsamkeit = 10 }
+	add_to_variable = { AUH_ausgleich_year = 10 }
+	set_variable = { AUH_renewal_window = 0 }
+	add_to_variable = { AUH_missed_renewals = 1 }
+	AUH_recompute_months_to_renewal = yes
+
+	if = {
+		limit = { NOT = { has_idea = AUH_the_provisorium } }
+		add_ideas = AUH_the_provisorium
+	}
+
+	AUH_refresh_the_ausgleich_tier = yes
+}
+
+########################################################################################
+# HOUSEKEEPING
+########################################################################################
+# the ten loyalty vars predate this, never bounded
+
+AUH_clamp_nationality_support = {
+	clamp_variable = {
+		var = AUS_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = HUN_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = CZE_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = CRO_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = ROM_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = UKR_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = SLV_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = POL_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = BOS_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = SER_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = SLO_support
+		min = 0
+		max = 100
+	}
+	clamp_variable = {
+		var = ITA_support
+		min = 0
+		max = 100
+	}
+}
+
+# what a settlement costs the treasury, and what it buys
+# a quiet country buys loyalty cheap; a shaken one cannot buy it at all
+AUH_refresh_conciliation_terms = {
+	set_variable = { AUH_conciliation_cost = 60 }
+	set_variable = { AUH_conciliation_gain = 15 }
+	if = {
+		limit = { has_stability > 0.7 }
+		set_variable = { AUH_conciliation_cost = 40 }
+		set_variable = { AUH_conciliation_gain = 20 }
+	}
+	if = {
+		limit = { has_stability > 0.85 }
+		set_variable = { AUH_conciliation_cost = 25 }
+		set_variable = { AUH_conciliation_gain = 25 }
+	}
+	if = {
+		limit = { NOT = { has_stability > 0.5 } }
+		set_variable = { AUH_conciliation_cost = 100 }
+		set_variable = { AUH_conciliation_gain = 8 }
+	}
+	if = {
+		limit = { NOT = { has_stability > 0.3 } }
+		set_variable = { AUH_conciliation_cost = 175 }
+		set_variable = { AUH_conciliation_gain = 4 }
+	}
+}

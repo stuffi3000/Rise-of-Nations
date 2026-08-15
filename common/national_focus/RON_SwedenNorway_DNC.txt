@@ -1,0 +1,783 @@
+#DNC FOCUS
+#1900-1909
+#cost is in weeks
+#cross-era gates are country flags
+#the gap kills, not the level
+
+focus_tree = {
+	id = RON_SwedenNorway_DNC
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = KNS
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1800 }
+
+	#THE CHANCERY BRANCH
+	#Focus for Two Crowns, One Chancery
+	focus = {
+		id = KNS_two_crowns_one_chancery
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_two_crowns
+			custom_effect_tooltip = KNS_two_crowns_one_chancery_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_committee_of_both_kingdoms
+		icon = GFX_goal_generic_forceful_treaty
+		x = 26
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_two_crowns_one_chancery }
+
+		completion_reward = {
+			# +5 riksdag, +5 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 5 }
+			set_variable = { KNS_arg_storting = 5 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_committee
+			custom_effect_tooltip = KNS_the_committee_of_both_kingdoms_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_communique_of_march
+		icon = GFX_goal_generic_improve_relations
+		x = 24
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_committee_of_both_kingdoms }
+		mutually_exclusive = { focus = KNS_conditions_of_dependency }
+
+		completion_reward = {
+			# riksdag capped at 70
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -20 }
+			set_variable = { KNS_arg_storting = 25 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_riksdag_capped
+			set_country_flag = KNS_done_communique
+			custom_effect_tooltip = KNS_the_communique_of_march_tt
+		}
+	}
+
+	focus = {
+		id = KNS_conditions_of_dependency
+		icon = GFX_goal_generic_national_unity
+		x = 28
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_committee_of_both_kingdoms }
+		mutually_exclusive = { focus = KNS_the_communique_of_march }
+
+		completion_reward = {
+			# +25 riksdag, -30 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 25 }
+			set_variable = { KNS_arg_storting = -30 }
+			KNS_move_the_chambers = yes
+			add_stability = 0.10
+			set_country_flag = KNS_done_conditions
+			custom_effect_tooltip = KNS_conditions_of_dependency_tt
+		}
+	}
+
+	focus = {
+		id = KNS_a_chancery_of_two_desks
+		icon = GFX_goal_generic_construct_civilian
+		x = 24
+		y = 3
+		cost = 10
+		prerequisite = { focus = KNS_the_communique_of_march }
+
+		completion_reward = {
+			# +4 riksdag, +8 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 4 }
+			set_variable = { KNS_arg_storting = 8 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_two_desks
+			custom_effect_tooltip = KNS_a_chancery_of_two_desks_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_principles_of_kristiania
+		icon = GFX_goal_generic_political_pressure
+		x = 28
+		y = 3
+		cost = 5
+		prerequisite = { focus = KNS_conditions_of_dependency }
+
+		completion_reward = {
+			# +6 riksdag, -12 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 6 }
+			set_variable = { KNS_arg_storting = -12 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_kristiania
+			custom_effect_tooltip = KNS_the_principles_of_kristiania_tt
+		}
+	}
+
+	#Focus for The Consular Bill of May
+	focus = {
+		id = KNS_the_consular_bill_of_may
+		icon = GFX_goal_generic_forceful_treaty
+		x = 26
+		y = 4
+		cost = 5
+		prerequisite = {
+			focus = KNS_a_chancery_of_two_desks
+			focus = KNS_the_principles_of_kristiania
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_consular_bill
+			custom_effect_tooltip = KNS_the_consular_bill_of_may_tt
+		}
+	}
+
+	#Focus for Sanction the Consular Bill
+	focus = {
+		id = KNS_sanction_the_consular_bill
+		icon = GFX_goal_generic_improve_relations
+		x = 22
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_the_consular_bill_of_may }
+		mutually_exclusive = { focus = KNS_a_riksakt_for_the_century }
+		mutually_exclusive = { focus = KNS_let_the_union_lapse }
+
+		completion_reward = {
+			# spends the veto outright
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -35 }
+			set_variable = { KNS_arg_storting = 40 }
+			KNS_move_the_chambers = yes
+			set_variable = { KNS_suspensive_veto = 3 }
+			set_country_flag = KNS_veto_spent
+			set_country_flag = KNS_done_sanctioned
+			custom_effect_tooltip = KNS_sanction_the_consular_bill_tt
+		}
+	}
+
+	#Focus for A Riksakt for the Century
+	focus = {
+		id = KNS_a_riksakt_for_the_century
+		icon = GFX_goal_generic_national_unity
+		x = 26
+		y = 5
+		cost = 15
+		prerequisite = { focus = KNS_the_consular_bill_of_may }
+		mutually_exclusive = { focus = KNS_sanction_the_consular_bill }
+		mutually_exclusive = { focus = KNS_let_the_union_lapse }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_union_survives
+			add_ideas = KNS_idea_one_realm_in_two_chambers
+			set_country_flag = KNS_done_riksakt
+			custom_effect_tooltip = KNS_a_riksakt_for_the_century_tt
+		}
+	}
+
+	#Focus for Let the Union Lapse
+	focus = {
+		id = KNS_let_the_union_lapse
+		icon = GFX_goal_generic_neutrality_focus
+		x = 30
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_the_consular_bill_of_may }
+		mutually_exclusive = { focus = KNS_sanction_the_consular_bill }
+		mutually_exclusive = { focus = KNS_a_riksakt_for_the_century }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_union_lapse
+			custom_effect_tooltip = KNS_let_the_union_lapse_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_crown_and_nothing_else
+		icon = GFX_goal_generic_political_pressure
+		x = 22
+		y = 6
+		cost = 10
+		prerequisite = { focus = KNS_sanction_the_consular_bill }
+
+		completion_reward = {
+			# personal union only
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_union_survives
+			add_stability = 0.05
+			set_country_flag = KNS_done_crown_only
+			custom_effect_tooltip = KNS_the_crown_and_nothing_else_tt
+		}
+	}
+
+	focus = {
+		id = KNS_a_parliament_of_the_union
+		icon = GFX_goal_generic_forceful_treaty
+		x = 26
+		y = 6
+		cost = 15
+		prerequisite = { focus = KNS_a_riksakt_for_the_century }
+
+		completion_reward = {
+			# +120 PP, +0.15 stability
+			KNS_open_the_two_chambers = yes
+			add_stability = 0.15
+			add_political_power = 120
+			set_country_flag = KNS_done_union_parliament
+			custom_effect_tooltip = KNS_a_parliament_of_the_union_tt
+		}
+	}
+
+	#Focus for The Karlstad Table
+	focus = {
+		id = KNS_the_karlstad_table
+		icon = GFX_goal_generic_improve_relations
+		x = 30
+		y = 6
+		cost = 10
+		prerequisite = { focus = KNS_let_the_union_lapse }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_karlstad
+			custom_effect_tooltip = KNS_the_karlstad_table_tt
+		}
+	}
+
+	#THE NORWEGIAN CLAIM BRANCH
+	#Focus for The Storting's Demand
+	focus = {
+		id = KNS_the_stortings_demand
+		icon = GFX_goal_generic_demand_territory
+		x = 36
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_ideas = KNS_idea_a_claim_fifteen_years_old
+			set_country_flag = KNS_done_stortings_demand
+			custom_effect_tooltip = KNS_the_stortings_demand_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_pure_flag_precedent
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 1
+		cost = 5
+		prerequisite = { focus = KNS_the_stortings_demand }
+
+		completion_reward = {
+			# -4 riksdag, +6 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -4 }
+			set_variable = { KNS_arg_storting = 6 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_pure_flag
+			custom_effect_tooltip = KNS_the_pure_flag_precedent_tt
+		}
+	}
+
+	focus = {
+		id = KNS_a_consular_service_of_our_own
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 34
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_pure_flag_precedent }
+
+		completion_reward = {
+			# -6 riksdag, +8 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -6 }
+			set_variable = { KNS_arg_storting = 8 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_consular_claim
+			custom_effect_tooltip = KNS_a_consular_service_of_our_own_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_michelsen_ministry
+		icon = GFX_goal_generic_political_pressure
+		x = 38
+		y = 2
+		cost = 5
+		prerequisite = { focus = KNS_the_pure_flag_precedent }
+
+		completion_reward = {
+			# -8 riksdag, +10 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -8 }
+			set_variable = { KNS_arg_storting = 10 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_michelsen
+			custom_effect_tooltip = KNS_the_michelsen_ministry_tt
+		}
+	}
+
+	focus = {
+		id = KNS_two_flags_no_mark
+		icon = GFX_goal_generic_national_unity
+		x = 32
+		y = 3
+		cost = 5
+		prerequisite = { focus = KNS_a_consular_service_of_our_own }
+
+		completion_reward = {
+			# -5 riksdag, +8 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -5 }
+			set_variable = { KNS_arg_storting = 8 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_two_flags
+			custom_effect_tooltip = KNS_two_flags_no_mark_tt
+		}
+	}
+
+	focus = {
+		id = KNS_a_foreign_minister_of_our_own
+		icon = GFX_goal_generic_forceful_treaty
+		x = 32
+		y = 4
+		cost = 10
+		prerequisite = { focus = KNS_two_flags_no_mark }
+
+		completion_reward = {
+			# -15 riksdag, +15 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -15 }
+			set_variable = { KNS_arg_storting = 15 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_own_foreign_minister
+			custom_effect_tooltip = KNS_a_foreign_minister_of_our_own_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_language_of_the_law
+		icon = GFX_goal_generic_forceful_treaty
+		x = 34
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_a_foreign_minister_of_our_own }
+
+		completion_reward = {
+			# +6 storting only
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 0 }
+			set_variable = { KNS_arg_storting = 6 }
+			KNS_move_the_chambers = yes
+			add_stability = 0.10
+			set_country_flag = KNS_done_language
+			custom_effect_tooltip = KNS_the_language_of_the_law_tt
+		}
+	}
+
+	focus = {
+		id = KNS_double_proportionality
+		icon = GFX_goal_generic_national_unity
+		x = 32
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_a_foreign_minister_of_our_own }
+
+		completion_reward = {
+			# +8 riksdag, +4 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 8 }
+			set_variable = { KNS_arg_storting = 4 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_proportionality
+			custom_effect_tooltip = KNS_double_proportionality_tt
+		}
+	}
+
+	#Focus for The Seventh of June
+	focus = {
+		id = KNS_the_seventh_of_june
+		icon = GFX_goal_generic_territory_or_war
+		x = 38
+		y = 3
+		cost = 5
+		prerequisite = { focus = KNS_the_michelsen_ministry }
+
+		available = {
+			# armed by the gap
+			has_country_flag = KNS_the_seventh_of_june_is_armed
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_seventh_of_june
+			custom_effect_tooltip = KNS_the_seventh_of_june_tt
+		}
+	}
+
+	#Focus for The Plebiscite of August
+	focus = {
+		id = KNS_the_plebiscite_of_august
+		icon = GFX_goal_generic_national_unity
+		x = 38
+		y = 4
+		cost = 5
+		prerequisite = { focus = KNS_the_seventh_of_june }
+		mutually_exclusive = { focus = KNS_march_on_kristiania }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_plebiscite
+			custom_effect_tooltip = KNS_the_plebiscite_of_august_tt
+		}
+	}
+
+	#Focus for March on Kristiania
+	focus = {
+		id = KNS_march_on_kristiania
+		icon = GFX_goal_generic_major_war
+		x = 42
+		y = 4
+		cost = 10
+		prerequisite = { focus = KNS_the_seventh_of_june }
+		mutually_exclusive = { focus = KNS_the_plebiscite_of_august }
+		will_lead_to_war_with = NOR
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_march
+			custom_effect_tooltip = KNS_march_on_kristiania_tt
+		}
+	}
+
+	#Focus for The Union Restored by Arms
+	focus = {
+		id = KNS_the_union_restored_by_arms
+		icon = GFX_goal_generic_army_doctrines
+		x = 42
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_march_on_kristiania }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_union_survives
+			add_ideas = KNS_idea_the_union_restored_by_arms
+			set_country_flag = KNS_done_union_by_arms
+			custom_effect_tooltip = KNS_the_union_restored_by_arms_tt
+		}
+	}
+
+	#Focus for A Bernadotte for Norway
+	focus = {
+		id = KNS_a_bernadotte_for_norway
+		icon = GFX_goal_generic_improve_relations
+		x = 36
+		y = 5
+		cost = 10
+		prerequisite = { focus = KNS_the_plebiscite_of_august }
+		mutually_exclusive = { focus = KNS_a_king_of_their_own_choosing }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_bernadotte
+			custom_effect_tooltip = KNS_a_bernadotte_for_norway_tt
+		}
+	}
+
+	#Focus for A King of Their Own Choosing
+	focus = {
+		id = KNS_a_king_of_their_own_choosing
+		icon = GFX_goal_generic_national_unity
+		x = 40
+		y = 5
+		cost = 5
+		prerequisite = { focus = KNS_the_plebiscite_of_august }
+		mutually_exclusive = { focus = KNS_a_bernadotte_for_norway }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_stability = 0.10
+			set_country_flag = KNS_done_own_king
+			custom_effect_tooltip = KNS_a_king_of_their_own_choosing_tt
+		}
+	}
+
+	focus = {
+		id = KNS_settle_the_dynasty_question
+		icon = GFX_goal_generic_political_pressure
+		x = 36
+		y = 6
+		cost = 10
+		prerequisite = { focus = KNS_a_bernadotte_for_norway }
+
+		completion_reward = {
+			# -75 PP
+			KNS_open_the_two_chambers = yes
+			add_political_power = -75
+			set_country_flag = KNS_done_dynasty_settled
+			custom_effect_tooltip = KNS_settle_the_dynasty_question_tt
+		}
+	}
+
+	#Focus for The Integrity Treaty
+	focus = {
+		id = KNS_the_integrity_treaty
+		icon = GFX_goal_generic_forceful_treaty
+		x = 40
+		y = 6
+		cost = 10
+		prerequisite = { focus = KNS_a_king_of_their_own_choosing }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_ideas = KNS_idea_the_integrity_treaty
+			set_country_flag = KNS_done_integrity_treaty
+			custom_effect_tooltip = KNS_the_integrity_treaty_tt
+		}
+	}
+
+	#THE ORE ROAD BRANCH
+	#Focus for A Railway to Ice-Free Water
+	focus = {
+		id = KNS_a_railway_to_ice_free_water
+		icon = GFX_goal_generic_construction2
+		x = 14
+		y = 0
+		cost = 15
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_ofotbanen
+			custom_effect_tooltip = KNS_a_railway_to_ice_free_water_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_company_at_kiruna
+		icon = GFX_goal_generic_construct_civilian
+		x = 12
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_a_railway_to_ice_free_water }
+
+		completion_reward = {
+			# +6 riksdag
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 6 }
+			set_variable = { KNS_arg_storting = 0 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_kiruna
+			custom_effect_tooltip = KNS_the_company_at_kiruna_tt
+		}
+	}
+
+	#Focus for The Norrland Line
+	focus = {
+		id = KNS_the_norrland_line
+		icon = GFX_goal_generic_construction2
+		x = 16
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_a_railway_to_ice_free_water }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_norrland
+			custom_effect_tooltip = KNS_the_norrland_line_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_ore_agreement_of_1907
+		icon = GFX_goal_generic_consumer_goods
+		x = 12
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_company_at_kiruna }
+
+		completion_reward = {
+			# +8 riksdag
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 8 }
+			set_variable = { KNS_arg_storting = 0 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_ore_agreement
+			custom_effect_tooltip = KNS_the_ore_agreement_of_1907_tt
+		}
+	}
+
+	#Focus for The Falls of the North
+	focus = {
+		id = KNS_the_falls_of_the_north
+		icon = GFX_goal_generic_construct_civilian
+		x = 18
+		y = 1
+		cost = 5
+		prerequisite = { focus = KNS_a_railway_to_ice_free_water }
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_falls
+			custom_effect_tooltip = KNS_the_falls_of_the_north_tt
+		}
+	}
+
+	focus = {
+		id = KNS_reversion_in_sixty_years
+		icon = GFX_goal_generic_national_unity
+		x = 18
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_falls_of_the_north }
+		mutually_exclusive = { focus = KNS_the_falls_are_open_to_all }
+
+		completion_reward = {
+			# -8 riksdag, +12 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -8 }
+			set_variable = { KNS_arg_storting = 12 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_reversion
+			custom_effect_tooltip = KNS_reversion_in_sixty_years_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_falls_are_open_to_all
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 20
+		y = 2
+		cost = 10
+		prerequisite = { focus = KNS_the_falls_of_the_north }
+		mutually_exclusive = { focus = KNS_reversion_in_sixty_years }
+
+		completion_reward = {
+			# +4 riksdag, -12 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 4 }
+			set_variable = { KNS_arg_storting = -12 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_falls_open
+			custom_effect_tooltip = KNS_the_falls_are_open_to_all_tt
+		}
+	}
+
+	#THE ARMY BRANCH
+	#Focus for Two Armies, One King
+	focus = {
+		id = KNS_two_armies_one_king
+		icon = GFX_goal_generic_army_doctrines
+		x = 48
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_two_armies
+			custom_effect_tooltip = KNS_two_armies_one_king_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_fortress_at_boden
+		icon = GFX_goal_generic_defence
+		x = 46
+		y = 1
+		cost = 15
+		prerequisite = { focus = KNS_two_armies_one_king }
+
+		completion_reward = {
+			# +8 riksdag, -10 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 8 }
+			set_variable = { KNS_arg_storting = -10 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_boden
+			custom_effect_tooltip = KNS_the_fortress_at_boden_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_works_at_kongsvinger
+		icon = GFX_goal_generic_defence
+		x = 50
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_two_armies_one_king }
+
+		completion_reward = {
+			# -8 riksdag, +10 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = -8 }
+			set_variable = { KNS_arg_storting = 10 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_kongsvinger
+			custom_effect_tooltip = KNS_the_works_at_kongsvinger_tt
+		}
+	}
+
+	#THE FLEET BRANCH
+	#Focus for The Fourth Merchant Fleet
+	focus = {
+		id = KNS_the_fourth_merchant_fleet
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 4
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 0 }
+			set_variable = { KNS_arg_storting = 5 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_merchant_fleet
+			custom_effect_tooltip = KNS_the_fourth_merchant_fleet_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_coastal_squadron
+		icon = GFX_goal_generic_navy_battleship
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_the_fourth_merchant_fleet }
+
+		completion_reward = {
+			# +6 riksdag, -4 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 6 }
+			set_variable = { KNS_arg_storting = -4 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_coastal_squadron
+			custom_effect_tooltip = KNS_the_coastal_squadron_tt
+		}
+	}
+
+}

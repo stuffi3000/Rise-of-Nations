@@ -1,0 +1,74 @@
+##############################
+# OTT COHESION STRAIN
+##############################
+# OTT_cohesion_strain 0-100, six bands of 20
+# centralise raises it, autonomy lowers it
+# carried across the OTT -> TUR tag change
+
+OTT_open_the_strain = {
+	if = {
+		limit = { NOT = { has_country_flag = OTT_strain_open } }
+		set_country_flag = OTT_strain_open
+		if = {
+			limit = { date > 1933.1.1 }
+			set_variable = { OTT_cohesion_strain = 62 }
+		}
+		else_if = {
+			limit = { date > 1919.1.1 }
+			set_variable = { OTT_cohesion_strain = 55 }
+		}
+		else_if = {
+			limit = { date > 1910.1.1 }
+			set_variable = { OTT_cohesion_strain = 42 }
+		}
+		else = {
+			set_variable = { OTT_cohesion_strain = 30 }
+		}
+	}
+}
+
+# add OTT_arg_strain, clamp, test crises
+OTT_move_the_strain = {
+	add_to_variable = { OTT_cohesion_strain = OTT_arg_strain }
+	clamp_variable = { var = OTT_cohesion_strain min = 0 max = 100 }
+
+	# inspectorate floor: 59
+	if = {
+		limit = { has_country_flag = OTT_inspectorate_floor }
+		clamp_variable = { var = OTT_cohesion_strain min = 59 max = 100 }
+	}
+
+	# ceiling 100: vilayets detach, reset to 55
+	# P.S The empire of one nation has the same problem.
+	if = {
+		limit = {
+			check_variable = { OTT_cohesion_strain > 99 }
+			NOT = { has_country_flag = OTT_the_empire_of_one_nation }
+		}
+		set_country_flag = OTT_the_empire_of_one_nation
+		set_variable = { OTT_cohesion_strain = 55 }
+	}
+
+	# band flags
+	clr_country_flag = OTT_band_many_nations
+	clr_country_flag = OTT_band_holding
+	clr_country_flag = OTT_band_by_force
+	if = {
+		limit = { check_variable = { OTT_cohesion_strain < 20 } }
+		# no revolts, -1/3 manpower
+		set_country_flag = OTT_band_many_nations
+	}
+	else_if = {
+		limit = { check_variable = { OTT_cohesion_strain < 60 } }
+		set_country_flag = OTT_band_holding
+	}
+	else = {
+		set_country_flag = OTT_band_by_force
+	}
+}
+
+# carry the counter to TUR
+OTT_carry_the_strain_to_the_republic = {
+	set_variable = { TUR_inherited_strain = OTT_cohesion_strain }
+	set_country_flag = OTT_strain_inherited
+}

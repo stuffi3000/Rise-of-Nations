@@ -1,0 +1,505 @@
+########################################################################################
+# AUSTRIA-HUNGARY - THE SETTLEMENTS
+########################################################################################
+# no settlement restores loyalty
+# it changes the legal title and bills it
+# to a nationality named in the tooltip
+
+########################################################################################
+# HOUSEKEEPING
+########################################################################################
+# call after every write
+
+AUH_settlement_bound_the_registers = {
+	AUH_clamp_nationality_support = yes
+	AUH_refresh_the_ausgleich_tier = yes
+}
+
+########################################################################################
+# COUNTING WHAT IS IN ARMS
+########################################################################################
+# ten of the twelve carry a mission
+
+AUH_settlement_count_the_risings = {
+	set_variable = { AUH_settlement_risings = 0 }
+	if = {
+		limit = { has_active_mission = serbian_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = croatian_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = bosnian_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = slovenian_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = austrian_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = CZE_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = HUN_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = ROM_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = POL_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+	if = {
+		limit = { has_active_mission = UKR_uprising }
+		add_to_variable = { AUH_settlement_risings = 1 }
+	}
+}
+
+########################################################################################
+# THE COMMISSION OF INQUIRY
+########################################################################################
+# buys days, nothing else
+
+AUH_settlement_adjourn_the_risings = {
+	if = {
+		limit = { has_active_mission = serbian_uprising }
+		add_days_mission_timeout = { mission = serbian_uprising days = 60 }
+		subtract_from_variable = { SER_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = croatian_uprising }
+		add_days_mission_timeout = { mission = croatian_uprising days = 60 }
+		subtract_from_variable = { CRO_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = bosnian_uprising }
+		add_days_mission_timeout = { mission = bosnian_uprising days = 60 }
+		subtract_from_variable = { BOS_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = slovenian_uprising }
+		add_days_mission_timeout = { mission = slovenian_uprising days = 60 }
+		subtract_from_variable = { SLV_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = austrian_uprising }
+		add_days_mission_timeout = { mission = austrian_uprising days = 60 }
+		subtract_from_variable = { AUS_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = CZE_uprising }
+		add_days_mission_timeout = { mission = CZE_uprising days = 60 }
+		subtract_from_variable = { CZE_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = HUN_uprising }
+		add_days_mission_timeout = { mission = HUN_uprising days = 60 }
+		subtract_from_variable = { HUN_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = ROM_uprising }
+		add_days_mission_timeout = { mission = ROM_uprising days = 60 }
+		subtract_from_variable = { ROM_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = POL_uprising }
+		add_days_mission_timeout = { mission = POL_uprising days = 60 }
+		subtract_from_variable = { POL_support = 2 }
+	}
+	if = {
+		limit = { has_active_mission = UKR_uprising }
+		add_days_mission_timeout = { mission = UKR_uprising days = 60 }
+		subtract_from_variable = { UKR_support = 2 }
+	}
+	AUH_settlement_bound_the_registers = yes
+}
+
+########################################################################################
+# THE STATE OF EXCEPTION
+########################################################################################
+# disarming alone only defers it
+# so each block lifts the register clear
+
+AUH_settlement_disperse_the_risings = {
+	AUH_settlement_count_the_risings = yes
+	if = {
+		limit = { has_active_mission = serbian_uprising }
+		remove_mission = serbian_uprising
+		if = {
+			limit = { check_variable = { SER_support < 12 } }
+			set_variable = { SER_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = SER
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = croatian_uprising }
+		remove_mission = croatian_uprising
+		if = {
+			limit = { check_variable = { CRO_support < 12 } }
+			set_variable = { CRO_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = CRO
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = bosnian_uprising }
+		remove_mission = bosnian_uprising
+		if = {
+			limit = { check_variable = { BOS_support < 12 } }
+			set_variable = { BOS_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = BOS
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = slovenian_uprising }
+		remove_mission = slovenian_uprising
+		if = {
+			limit = { check_variable = { SLV_support < 12 } }
+			set_variable = { SLV_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = SLV
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = austrian_uprising }
+		remove_mission = austrian_uprising
+		if = {
+			limit = { check_variable = { AUS_support < 12 } }
+			set_variable = { AUS_support = 12 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = CZE_uprising }
+		remove_mission = CZE_uprising
+		if = {
+			limit = { check_variable = { CZE_support < 12 } }
+			set_variable = { CZE_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = CZE
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	# the counties strike at twenty-five
+	if = {
+		limit = { has_active_mission = HUN_uprising }
+		remove_mission = HUN_uprising
+		if = {
+			limit = {
+				has_idea = AUH_hungarian_national_resistance
+				check_variable = { HUN_support < 30 }
+			}
+			set_variable = { HUN_support = 30 }
+		}
+		if = {
+			limit = { check_variable = { HUN_support < 12 } }
+			set_variable = { HUN_support = 12 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = ROM_uprising }
+		remove_mission = ROM_uprising
+		if = {
+			limit = { check_variable = { ROM_support < 12 } }
+			set_variable = { ROM_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = ROM
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = POL_uprising }
+		remove_mission = POL_uprising
+		if = {
+			limit = { check_variable = { POL_support < 12 } }
+			set_variable = { POL_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = POL
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	if = {
+		limit = { has_active_mission = UKR_uprising }
+		remove_mission = UKR_uprising
+		if = {
+			limit = { check_variable = { UKR_support < 12 } }
+			set_variable = { UKR_support = 12 }
+		}
+		every_state = {
+			limit = {
+				is_controlled_by = AUH
+				is_core_of = UKR
+			}
+			add_compliance = 10
+			add_resistance = -10
+		}
+	}
+	# two points of Community per province
+	set_temp_variable = { AUH_settlement_toll = AUH_settlement_risings }
+	multiply_variable = { AUH_settlement_toll = 2 }
+	subtract_from_variable = { AUH_gemeinsamkeit = AUH_settlement_toll }
+	AUH_settlement_bound_the_registers = yes
+}
+
+########################################################################################
+# THE CHARTER CONCEDED UNDER DURESS
+########################################################################################
+# paid in law, not in gendarmes
+
+AUH_settlement_charter_the_risings = {
+	if = {
+		limit = { has_active_mission = serbian_uprising }
+		remove_mission = serbian_uprising
+		set_variable = { SER_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = croatian_uprising }
+		remove_mission = croatian_uprising
+		set_variable = { CRO_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = bosnian_uprising }
+		remove_mission = bosnian_uprising
+		set_variable = { BOS_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = slovenian_uprising }
+		remove_mission = slovenian_uprising
+		set_variable = { SLV_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = austrian_uprising }
+		remove_mission = austrian_uprising
+		set_variable = { AUS_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = CZE_uprising }
+		remove_mission = CZE_uprising
+		set_variable = { CZE_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = HUN_uprising }
+		remove_mission = HUN_uprising
+		set_variable = { HUN_support = 32 }
+	}
+	if = {
+		limit = { has_active_mission = ROM_uprising }
+		remove_mission = ROM_uprising
+		set_variable = { ROM_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = POL_uprising }
+		remove_mission = POL_uprising
+		set_variable = { POL_support = 24 }
+	}
+	if = {
+		limit = { has_active_mission = UKR_uprising }
+		remove_mission = UKR_uprising
+		set_variable = { UKR_support = 24 }
+	}
+	AUH_settlement_bound_the_registers = yes
+}
+
+########################################################################################
+# SUBJECTS RATHER THAN REBELS
+########################################################################################
+# the timeout releases then annexes
+# a tag already on the map is dispersed
+
+AUH_settlement_subject_the_risings = {
+	AUH_settlement_count_the_risings = yes
+	if = {
+		limit = { has_active_mission = croatian_uprising }
+		remove_mission = croatian_uprising
+		if = {
+			limit = { NOT = { country_exists = CRO } }
+			release_autonomy = {
+				target = CRO
+				autonomy_state = autonomy_integrated_puppet
+			}
+			set_variable = { CRO_support = 40 }
+		}
+		else = {
+			set_variable = { CRO_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = bosnian_uprising }
+		remove_mission = bosnian_uprising
+		if = {
+			limit = { NOT = { country_exists = BOS } }
+			release_autonomy = {
+				target = BOS
+				autonomy_state = autonomy_supervised_state
+			}
+			set_variable = { BOS_support = 40 }
+		}
+		else = {
+			set_variable = { BOS_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = slovenian_uprising }
+		remove_mission = slovenian_uprising
+		if = {
+			limit = { NOT = { country_exists = SLV } }
+			release_autonomy = {
+				target = SLV
+				autonomy_state = autonomy_integrated_puppet
+			}
+			set_variable = { SLV_support = 40 }
+		}
+		else = {
+			set_variable = { SLV_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = CZE_uprising }
+		remove_mission = CZE_uprising
+		if = {
+			limit = { NOT = { country_exists = CZE } }
+			release_autonomy = {
+				target = CZE
+				autonomy_state = autonomy_integrated_puppet
+			}
+			set_variable = { CZE_support = 40 }
+		}
+		else = {
+			set_variable = { CZE_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = HUN_uprising }
+		remove_mission = HUN_uprising
+		if = {
+			limit = { NOT = { country_exists = HUN } }
+			release_autonomy = {
+				target = HUN
+				autonomy_state = autonomy_dominion
+			}
+			set_variable = { HUN_support = 40 }
+		}
+		else = {
+			set_variable = { HUN_support = 32 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = ROM_uprising }
+		remove_mission = ROM_uprising
+		if = {
+			limit = { NOT = { country_exists = ROM } }
+			release_autonomy = {
+				target = ROM
+				autonomy_state = autonomy_supervised_state
+			}
+			set_variable = { ROM_support = 40 }
+		}
+		else = {
+			set_variable = { ROM_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = POL_uprising }
+		remove_mission = POL_uprising
+		if = {
+			limit = { NOT = { country_exists = POL } }
+			release_autonomy = {
+				target = POL
+				autonomy_state = autonomy_integrated_puppet
+			}
+			set_variable = { POL_support = 40 }
+		}
+		else = {
+			set_variable = { POL_support = 16 }
+		}
+	}
+	if = {
+		limit = { has_active_mission = UKR_uprising }
+		remove_mission = UKR_uprising
+		if = {
+			limit = { NOT = { country_exists = UKR } }
+			release_autonomy = {
+				target = UKR
+				autonomy_state = autonomy_supervised_state
+			}
+			set_variable = { UKR_support = 40 }
+		}
+		else = {
+			set_variable = { UKR_support = 16 }
+		}
+	}
+	# no title to release these into
+	if = {
+		limit = { has_active_mission = serbian_uprising }
+		remove_mission = serbian_uprising
+		set_variable = { SER_support = 16 }
+	}
+	if = {
+		limit = { has_active_mission = austrian_uprising }
+		remove_mission = austrian_uprising
+		set_variable = { AUS_support = 16 }
+	}
+	# Budapest invoices every province given up
+	set_temp_variable = { AUH_settlement_toll = AUH_settlement_risings }
+	add_to_variable = { AUH_quote = AUH_settlement_toll }
+	AUH_settlement_bound_the_registers = yes
+}
+
+########################################################################################
+# THE LOCK
+########################################################################################
+# one charter to a reign
+
+AUH_settlement_seal_the_charter = {
+	set_country_flag = AUH_settlement_charter_signed
+	custom_effect_tooltip = AUH_settlement_charter_sealed_tt
+}

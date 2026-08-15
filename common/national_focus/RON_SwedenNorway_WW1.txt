@@ -1,0 +1,253 @@
+#WORLD WAR 1 FOCUS
+#1910-1918
+#cost is in weeks
+#cross-era gates are country flags
+
+focus_tree = {
+	id = RON_SwedenNorway_WW1
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = KNS
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1400 }
+
+	#Focus for A Ministry That Answers
+	focus = {
+		id = KNS_a_ministry_that_answers
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = KNS_done_union_survives
+				date > 1910.1.1
+			}
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_stability = 0.10
+			set_country_flag = KNS_done_ministry_answers
+			custom_effect_tooltip = KNS_a_ministry_that_answers_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_armoured_ship_fund
+		icon = GFX_goal_generic_navy_battleship
+		x = 24
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_a_ministry_that_answers }
+		mutually_exclusive = { focus = KNS_the_chamber_holds_the_purse }
+
+		completion_reward = {
+			# +8 riksdag, -10 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 8 }
+			set_variable = { KNS_arg_storting = -10 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_ship_fund
+			custom_effect_tooltip = KNS_the_armoured_ship_fund_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_chamber_holds_the_purse
+		icon = GFX_goal_generic_national_unity
+		x = 28
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_a_ministry_that_answers }
+		mutually_exclusive = { focus = KNS_the_armoured_ship_fund }
+
+		completion_reward = {
+			# +6 storting, +100 PP
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 0 }
+			set_variable = { KNS_arg_storting = 6 }
+			KNS_move_the_chambers = yes
+			add_stability = 0.15
+			add_political_power = 100
+			set_country_flag = KNS_done_chamber_purse
+			custom_effect_tooltip = KNS_the_chamber_holds_the_purse_tt
+		}
+	}
+
+	#Focus for Three Kings at Malmo
+	focus = {
+		id = KNS_three_kings_at_malmo
+		icon = GFX_goal_generic_improve_relations
+		x = 26
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = KNS_the_armoured_ship_fund
+			focus = KNS_the_chamber_holds_the_purse
+		}
+
+		completion_reward = {
+			# opinion with DEN
+			KNS_open_the_two_chambers = yes
+			DEN = { add_opinion_modifier = { target = KNS modifier = KNS_nordic_understanding } }
+			set_country_flag = KNS_done_malmo
+			custom_effect_tooltip = KNS_three_kings_at_malmo_tt
+		}
+	}
+
+	#Focus for The Hunger Ministry
+	focus = {
+		id = KNS_the_hunger_ministry
+		icon = GFX_goal_generic_consumer_goods
+		x = 36
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = KNS_done_union_survives
+				date > 1910.1.1
+			}
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_ideas = KNS_idea_the_hunger_ministry
+			set_country_flag = KNS_done_hunger_ministry
+			custom_effect_tooltip = KNS_the_hunger_ministry_tt
+		}
+	}
+
+	#Focus for The Aland Claim
+	focus = {
+		id = KNS_the_aland_claim
+		icon = GFX_goal_generic_territory_or_war
+		x = 34
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_the_hunger_ministry }
+		mutually_exclusive = { focus = KNS_submit_to_arbitration }
+		will_lead_to_war_with = FIN
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_aland_claim
+			custom_effect_tooltip = KNS_the_aland_claim_tt
+		}
+	}
+
+	focus = {
+		id = KNS_submit_to_arbitration
+		icon = GFX_goal_generic_improve_relations
+		x = 38
+		y = 1
+		cost = 5
+		prerequisite = { focus = KNS_the_hunger_ministry }
+		mutually_exclusive = { focus = KNS_the_aland_claim }
+
+		completion_reward = {
+			# arbitration, not war
+			KNS_open_the_two_chambers = yes
+			add_stability = 0.05
+			add_ideas = KNS_idea_nothing_to_expect_from_the_east
+			set_country_flag = KNS_done_arbitration
+			custom_effect_tooltip = KNS_submit_to_arbitration_tt
+		}
+	}
+
+	focus = {
+		id = KNS_two_markets_one_ledger
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 14
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = KNS_done_union_survives
+				date > 1910.1.1
+			}
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_two_markets
+			custom_effect_tooltip = KNS_two_markets_one_ledger_tt
+		}
+	}
+
+	focus = {
+		id = KNS_the_neutrality_watch
+		icon = GFX_goal_generic_defence
+		x = 48
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = KNS_done_union_survives
+				date > 1910.1.1
+			}
+		}
+
+		completion_reward = {
+			# no chamber movement
+			KNS_open_the_two_chambers = yes
+			set_country_flag = KNS_done_neutrality_watch
+			custom_effect_tooltip = KNS_the_neutrality_watch_tt
+		}
+	}
+
+	#Focus for The Fleet That Pays
+	focus = {
+		id = KNS_the_fleet_that_pays
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 4
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = KNS_done_union_survives
+				date > 1910.1.1
+			}
+		}
+
+		completion_reward = {
+			KNS_open_the_two_chambers = yes
+			add_ideas = KNS_idea_the_fleet_that_pays
+			set_country_flag = KNS_done_fleet_pays
+			custom_effect_tooltip = KNS_the_fleet_that_pays_tt
+		}
+	}
+
+	focus = {
+		id = KNS_a_navy_for_two_coasts
+		icon = GFX_goal_generic_navy_battleship
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = { focus = KNS_the_fleet_that_pays }
+
+		completion_reward = {
+			# -12 storting
+			KNS_open_the_two_chambers = yes
+			set_variable = { KNS_arg_riksdag = 0 }
+			set_variable = { KNS_arg_storting = -12 }
+			KNS_move_the_chambers = yes
+			set_country_flag = KNS_done_one_navy
+			custom_effect_tooltip = KNS_a_navy_for_two_coasts_tt
+		}
+	}
+
+}

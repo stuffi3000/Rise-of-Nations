@@ -1,0 +1,145 @@
+#THE LODGE REGISTER
+#five rings, 0-40 each
+#zawaya 0-150, dawla 0-100
+#no params: args go by variable
+
+SEO_open_the_register = {
+	if = {
+		limit = { NOT = { has_country_flag = SEO_register_open } }
+		set_country_flag = SEO_register_open
+
+		set_variable = { SEO_ring_gebel = 30 }
+		set_variable = { SEO_ring_oases = 30 }
+		set_variable = { SEO_ring_south = 25 }
+		set_variable = { SEO_ring_egypt = 30 }
+		set_variable = { SEO_ring_outer = 31 }
+		set_variable = { SEO_dawla = 5 }
+		set_variable = { SEO_ring_egypt_razed = 0 }
+		set_variable = { SEO_ring_south_razed = 0 }
+		SEO_recount_the_register = yes
+	}
+}
+
+# razed rings refuse adds
+SEO_add_zawaya = {
+	if = {
+		limit = { check_variable = { SEO_arg_ring = 1 } }
+		add_to_variable = { SEO_ring_gebel = SEO_arg_delta }
+		clamp_variable = { var = SEO_ring_gebel min = 0 max = 40 }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 2 } }
+		add_to_variable = { SEO_ring_oases = SEO_arg_delta }
+		clamp_variable = { var = SEO_ring_oases min = 0 max = 40 }
+	}
+	else_if = {
+		limit = {
+			check_variable = { SEO_arg_ring = 3 }
+			check_variable = { SEO_ring_south_razed < 1 }
+		}
+		add_to_variable = { SEO_ring_south = SEO_arg_delta }
+		clamp_variable = { var = SEO_ring_south min = 0 max = 40 }
+	}
+	else_if = {
+		limit = {
+			check_variable = { SEO_arg_ring = 4 }
+			check_variable = { SEO_ring_egypt_razed < 1 }
+		}
+		add_to_variable = { SEO_ring_egypt = SEO_arg_delta }
+		clamp_variable = { var = SEO_ring_egypt min = 0 max = 40 }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 5 } }
+		add_to_variable = { SEO_ring_outer = SEO_arg_delta }
+		clamp_variable = { var = SEO_ring_outer min = 0 max = 40 }
+	}
+	SEO_recount_the_register = yes
+}
+
+# rings 3 and 4 only
+SEO_raze_ring = {
+	if = {
+		limit = { check_variable = { SEO_arg_ring = 3 } }
+		set_variable = { SEO_ring_south = 0 }
+		set_variable = { SEO_ring_south_razed = 1 }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 4 } }
+		set_variable = { SEO_ring_egypt = 0 }
+		set_variable = { SEO_ring_egypt_razed = 1 }
+	}
+	SEO_recount_the_register = yes
+}
+
+# offensive costs a tenth
+SEO_consume_ring = {
+	if = {
+		limit = { check_variable = { SEO_arg_ring = 1 } }
+		set_variable = { SEO_arg_delta = SEO_ring_gebel }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 2 } }
+		set_variable = { SEO_arg_delta = SEO_ring_oases }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 3 } }
+		set_variable = { SEO_arg_delta = SEO_ring_south }
+	}
+	else_if = {
+		limit = { check_variable = { SEO_arg_ring = 4 } }
+		set_variable = { SEO_arg_delta = SEO_ring_egypt }
+	}
+	else = {
+		set_variable = { SEO_arg_delta = SEO_ring_outer }
+	}
+	multiply_variable = { SEO_arg_delta = 0.1 }
+	round_variable = SEO_arg_delta
+	multiply_variable = { SEO_arg_delta = -1 }
+	SEO_add_zawaya = yes
+}
+
+# Sharif caps dawla at 40
+SEO_add_dawla = {
+	add_to_variable = { SEO_dawla = SEO_arg_delta }
+	clamp_variable = { var = SEO_dawla min = 0 max = 100 }
+	if = {
+		limit = { has_country_flag = SEO_house_sharif }
+		clamp_variable = { var = SEO_dawla min = 0 max = 40 }
+	}
+	if = {
+		limit = { has_country_flag = SEO_no_seal_taken }
+		clamp_variable = { var = SEO_dawla min = 0 max = 30 }
+	}
+	if = {
+		limit = {
+			check_variable = { SEO_dawla > 79 }
+			NOT = { has_country_flag = SEO_they_know_where_to_strike }
+		}
+		# P.S The better it goes, the more there is to seize.
+		set_country_flag = SEO_they_know_where_to_strike
+	}
+}
+
+SEO_recount_the_register = {
+	set_variable = { SEO_zawaya = SEO_ring_gebel }
+	add_to_variable = { SEO_zawaya = SEO_ring_oases }
+	add_to_variable = { SEO_zawaya = SEO_ring_south }
+	add_to_variable = { SEO_zawaya = SEO_ring_egypt }
+	add_to_variable = { SEO_zawaya = SEO_ring_outer }
+	clamp_variable = { var = SEO_zawaya min = 0 max = 150 }
+
+	# floor: under 10 lodges
+	if = {
+		limit = { check_variable = { SEO_zawaya < 10 } }
+		set_country_flag = SEO_the_order_is_broken
+	}
+	else = {
+		clr_country_flag = SEO_the_order_is_broken
+	}
+
+	# ceiling: over 119 lodges
+	if = {
+		limit = { check_variable = { SEO_zawaya > 119 } }
+		set_country_flag = SEO_they_have_drawn_our_map
+	}
+}

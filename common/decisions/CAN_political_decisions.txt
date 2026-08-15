@@ -1,0 +1,1497 @@
+# ##############################################################################
+# CAN_political_decisions.txt - canadian political and economic decisions
+# ##############################################################################
+# CAN_home_front - home front, labour, finance, war industry
+# CAN_the_west   - settlement, wheat, freight rates, oil
+# both categories are declared in common/decisions/categories/
+# a decision cost is read before execution, so it stays fixed
+# the consequence grows with each take instead
+# CAN_blood_tax is written only through CAN_add_blood_tax
+# ##############################################################################
+
+
+# ##############################################################################
+# CAN_home_front
+# ##############################################################################
+
+CAN_home_front = {
+
+	# --------------------------------------------------------------------------
+	# THE RELIEF CAMPS - october 1932, order-in-council
+	# each take buys infrastructure and pays in communist support
+	# --------------------------------------------------------------------------
+	CAN_the_relief_camps = {
+
+		icon = generic_construction
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1932.10.8
+			date < 1937.1.1
+			NOT = { has_country_flag = CAN_relief_camps_closed }
+		}
+
+		available = {
+			has_war = no
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+
+			add_to_variable = { CAN_relief_camps_taken = 1 }
+
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = {
+						building = infrastructure
+						size > 0
+						include_locked = yes
+					}
+				}
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+
+			add_stability = -0.02
+			add_popularity = {
+				ideology = communism
+				popularity = 0.02
+			}
+			add_to_variable = { CAN_labour_grievance = 3 }
+
+			# third take, on to ottawa, june 1935
+			if = {
+				limit = {
+					check_variable = { var = CAN_relief_camps_taken value = 3 compare = greater_than_or_equals }
+					NOT = { has_country_flag = CAN_on_to_ottawa_ready }
+				}
+				set_country_flag = CAN_on_to_ottawa_ready
+				add_stability = -0.05
+				add_popularity = {
+					ideology = communism
+					popularity = 0.05
+				}
+				add_to_variable = { CAN_labour_grievance = 5 }
+				add_to_variable = { CAN_civil_liberties_debt = 1 }
+				custom_effect_tooltip = CAN_on_to_ottawa_ready_tt
+			}
+
+			custom_effect_tooltip = CAN_the_relief_camps_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# BLAST A WAY INTO THE MARKETS - september 1930
+	# the ottawa agreements and washington focuses read the flag
+	# --------------------------------------------------------------------------
+	CAN_blast_a_way_into_the_markets = {
+
+		icon = generic_break_treaty
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1930.7.28
+			date < 1936.1.1
+			NOT = { has_country_flag = CAN_blasted_a_way_into_the_markets }
+		}
+
+		available = {
+			NOT = { has_country_flag = CAN_done_a_mission_to_washington }
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_blasted_a_way_into_the_markets
+			add_political_power = 50
+			add_stability = 0.05
+			USA = {
+				add_opinion_modifier = {
+					target = CAN
+					modifier = sanctions
+				}
+			}
+			custom_effect_tooltip = CAN_blast_a_way_into_the_markets_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# THE OTTAWA ARSENAL - the ministry road, not the board
+	# barred to whoever let the munitions board do the work
+	# --------------------------------------------------------------------------
+	CAN_the_ottawa_arsenal = {
+
+		icon = generic_industry
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_done_a_ministry_not_a_board
+			NOT = { has_country_flag = CAN_done_the_ottawa_arsenal }
+		}
+
+		available = {
+			has_war = yes
+			NOT = { has_country_flag = CAN_done_the_imperial_munitions_board }
+		}
+
+		cost = 75
+		fire_only_once = yes
+
+		complete_effect = {
+
+			set_country_flag = CAN_done_the_ottawa_arsenal
+
+			if = {
+				limit = {
+					owns_state = 276
+					276 = {
+						free_building_slots = {
+							building = arms_factory
+							size > 1
+							include_locked = yes
+						}
+					}
+				}
+				276 = {
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+			else = {
+				random_owned_controlled_state = {
+					limit = {
+						is_core_of = ROOT
+						free_building_slots = {
+							building = arms_factory
+							size > 1
+							include_locked = yes
+						}
+					}
+					add_building_construction = {
+						type = arms_factory
+						level = 2
+						instant_build = yes
+					}
+				}
+			}
+
+			custom_effect_tooltip = CAN_the_ottawa_arsenal_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# FLOAT A VICTORY LOAN - 1915, then eight times 1941-1945
+	# each issue adds a notch to CAN_war_debt
+	# --------------------------------------------------------------------------
+	CAN_float_a_victory_loan = {
+
+		icon = ger_mefo_bills
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			OR = {
+				has_country_flag = CAN_done_a_ministry_not_a_board
+				has_country_flag = CAN_done_the_imperial_munitions_board
+			}
+		}
+
+		available = {
+			has_war = yes
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+
+			add_war_support = 0.03
+			add_equipment_to_stockpile = {
+				type = infantry_equipment
+				amount = 2500
+				producer = CAN
+			}
+			add_equipment_to_stockpile = {
+				type = support_equipment
+				amount = 500
+				producer = CAN
+			}
+
+			add_to_variable = { CAN_war_debt = 1 }
+
+			# the bank of canada places the paper cheaper
+			if = {
+				limit = { has_idea = CAN_idea_the_bank_of_canada }
+				add_political_power = 25
+			}
+
+			custom_effect_tooltip = CAN_float_a_victory_loan_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# NATIONALIZE THE BANK - majority 1936, all of it 1938
+	# --------------------------------------------------------------------------
+	CAN_nationalize_the_bank = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_the_bankers_charter
+		}
+
+		available = {
+			date > 1936.1.1
+		}
+
+		cost = 100
+		fire_only_once = yes
+
+		complete_effect = {
+			swap_ideas = {
+				remove_idea = CAN_idea_the_bankers_charter
+				add_idea = CAN_idea_state_credit
+			}
+			set_country_flag = CAN_bank_nationalized
+			custom_effect_tooltip = CAN_nationalize_the_bank_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# DEFICIT FINANCE - borrowing off the printing press
+	# gated by CAN_nationalize_the_bank
+	# --------------------------------------------------------------------------
+	CAN_deficit_finance = {
+
+		icon = ger_mefo_bills
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_state_credit
+		}
+
+		available = {
+			NOT = { has_idea = CAN_idea_the_bankers_charter }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 120
+
+		complete_effect = {
+
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = {
+						building = industrial_complex
+						size > 0
+						include_locked = yes
+					}
+				}
+				add_building_construction = {
+					type = industrial_complex
+					level = 1
+					instant_build = yes
+				}
+			}
+
+			add_to_variable = { CAN_war_debt = 1 }
+			add_stability = -0.02
+
+			custom_effect_tooltip = CAN_deficit_finance_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# LET THE BOUNTIES LAPSE - the other half of the national policy
+	# the idea costs political power every day it is kept
+	# --------------------------------------------------------------------------
+	CAN_let_the_bounties_lapse = {
+
+		icon = steel
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_iron_and_steel_bounties
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			remove_ideas = CAN_idea_iron_and_steel_bounties
+			add_stability = -0.05
+			set_country_flag = CAN_bounties_lapsed
+			custom_effect_tooltip = CAN_let_the_bounties_lapse_tt
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# THE WARTIME PRICES AND TRADE BOARD - 18 october 1941
+	# general price ceiling and wage freeze
+	# --------------------------------------------------------------------------
+	CAN_the_wartime_prices_and_trade_board = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_the_controller_of_everything
+			NOT = { has_country_flag = CAN_wptb_established }
+		}
+
+		available = {
+			has_war = yes
+			date > 1939.9.10
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_wptb_established
+			add_stability = 0.05
+			add_war_support = 0.05
+			custom_effect_tooltip = CAN_the_wartime_prices_and_trade_board_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# RATION GASOLINE - coupon books, april 1942
+	# --------------------------------------------------------------------------
+	CAN_ration_gasoline = {
+
+		icon = oil
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_wptb_established
+			NOT = { has_country_flag = CAN_gasoline_rationed }
+		}
+
+		available = {
+			has_war = yes
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_gasoline_rationed
+			add_war_support = 0.05
+			add_stability = -0.03
+			custom_effect_tooltip = CAN_ration_gasoline_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# INCORPORATE A CROWN COMPANY - Victory Aircraft, Research Enterprises, Polymer
+	# each take adds one to CAN_crown_companies
+	# --------------------------------------------------------------------------
+	CAN_incorporate_a_crown_company = {
+
+		icon = generic_construction
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_crown_corporations
+		}
+
+		available = {
+			has_war = yes
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+
+			random_owned_controlled_state = {
+				limit = {
+					is_core_of = ROOT
+					free_building_slots = {
+						building = arms_factory
+						size > 0
+						include_locked = yes
+					}
+				}
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+
+			add_to_variable = { CAN_crown_companies = 1 }
+
+			custom_effect_tooltip = CAN_incorporate_a_crown_company_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# TAKE OVER ELDORADO - 27 january 1944, backdated to 1943
+	# --------------------------------------------------------------------------
+	CAN_take_over_eldorado = {
+
+		icon = generic_decision
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_crown_corporations
+			NOT = { has_country_flag = CAN_eldorado_nationalized }
+		}
+
+		available = {
+			has_war = yes
+			date > 1943.1.27
+		}
+
+		cost = 75
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_eldorado_nationalized
+			add_research_slot = 1
+			add_tech_bonus = {
+				name = CAN_eldorado_bonus
+				bonus = 0.5
+				uses = 1
+				category = nuclear
+			}
+			custom_effect_tooltip = CAN_take_over_eldorado_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# MUTUAL AID APPROPRIATION - War Appropriation (United Nations Mutual Aid) Act
+	# may 1943, free equipment to an ally, opinion in return
+	# --------------------------------------------------------------------------
+	CAN_mutual_aid_appropriation = {
+
+		icon = generic_form_nation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			OR = {
+				has_idea = CAN_idea_arsenal_of_the_commonwealth
+				has_idea = CAN_idea_continental_production
+			}
+		}
+
+		available = {
+			has_war = yes
+			is_in_faction = yes
+		}
+
+		cost = 50
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+
+			random_other_country = {
+				limit = {
+					is_in_faction_with = ROOT
+					has_war = yes
+					NOT = { original_tag = CAN }
+				}
+				add_equipment_to_stockpile = {
+					type = infantry_equipment
+					amount = 3000
+					producer = CAN
+				}
+				add_equipment_to_stockpile = {
+					type = support_equipment
+					amount = 600
+					producer = CAN
+				}
+				add_opinion_modifier = {
+					target = CAN
+					modifier = trade_deal
+				}
+			}
+
+			# continental production pays extra
+			if = {
+				limit = { has_idea = CAN_idea_continental_production }
+				add_political_power = -50
+			}
+
+			custom_effect_tooltip = CAN_mutual_aid_appropriation_tt
+		}
+
+		ai_will_do = {
+			factor = 4
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# INVOKE SECTION 98 - criminal code, after winnipeg 1919
+	# authoritarian is rendered as the neutrality ideology
+	# --------------------------------------------------------------------------
+	CAN_invoke_section_98 = {
+
+		icon = oppression
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_section_98
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+
+			add_to_variable = { CAN_section_98_invocations = 1 }
+
+			add_popularity = {
+				ideology = communism
+				popularity = -0.03
+			}
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.02
+			}
+
+			add_to_variable = { CAN_labour_grievance = 4 }
+			add_to_variable = { CAN_civil_liberties_debt = 1 }
+			add_stability = -0.01
+
+			# from the third invocation the grievance doubles
+			if = {
+				limit = { check_variable = { var = CAN_section_98_invocations value = 3 compare = greater_than_or_equals } }
+				add_to_variable = { CAN_labour_grievance = 4 }
+				add_stability = -0.02
+			}
+
+			custom_effect_tooltip = CAN_invoke_section_98_tt
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# REPEAL SECTION 98 - repealed in 1936
+	# gives back no civil liberties debt
+	# locked under the corporatist order
+	# no has_government_since trigger, government only
+	# --------------------------------------------------------------------------
+	CAN_repeal_section_98 = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_section_98
+		}
+
+		available = {
+			NOT = { has_idea = CAN_idea_a_corporate_order }
+			OR = {
+				check_variable = { var = CAN_civil_liberties_debt value = 4 compare = greater_than_or_equals }
+				has_government = democratic
+			}
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			remove_ideas = CAN_idea_section_98
+			set_country_flag = CAN_section_98_repealed
+			add_stability = 0.05
+			add_popularity = {
+				ideology = communism
+				popularity = 0.03
+			}
+			custom_effect_tooltip = CAN_repeal_section_98_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# A PROVINCE JOINS THE PENSION - Old Age Pensions Act, 1927
+	# nine provinces, nine takes
+	# --------------------------------------------------------------------------
+	CAN_a_province_joins_the_pension = {
+
+		icon = generic_civil_support
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_old_age_pensions
+			NOT = { has_country_flag = CAN_pension_national }
+		}
+
+		available = {
+			check_variable = { var = CAN_provinces_in_the_pension value = 9 compare = less_than }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+
+			add_to_variable = { CAN_provinces_in_the_pension = 1 }
+			add_stability = 0.02
+
+			if = {
+				limit = {
+					check_variable = { var = CAN_provinces_in_the_pension value = 9 compare = greater_than_or_equals }
+					NOT = { has_country_flag = CAN_pension_national }
+				}
+				set_country_flag = CAN_pension_national
+				add_stability = 0.03
+				add_political_power = 25
+			}
+
+			custom_effect_tooltip = CAN_a_province_joins_the_pension_tt
+		}
+
+		ai_will_do = {
+			factor = 4
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# ORDER-IN-COUNCIL P.C. 1003 - 17 february 1944
+	# clears CAN_labour_grievance and the unrest idea
+	# --------------------------------------------------------------------------
+	CAN_pc_1003 = {
+
+		icon = eng_trade_unions_demand
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			NOT = { has_country_flag = CAN_pc_1003_passed }
+		}
+
+		available = {
+			has_war = yes
+			date > 1944.2.17
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+
+			set_country_flag = CAN_pc_1003_passed
+
+			if = {
+				limit = { has_idea = CAN_idea_industrial_unrest }
+				remove_ideas = CAN_idea_industrial_unrest
+			}
+
+			set_variable = { CAN_labour_grievance = 0 }
+			add_stability = 0.05
+			add_popularity = {
+				ideology = communism
+				popularity = -0.02
+			}
+
+			custom_effect_tooltip = CAN_pc_1003_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# THE VETERANS CHARTER - Veterans Charter, 1944-1945
+	# resettlement credits, training, land and mortgage
+	# --------------------------------------------------------------------------
+	CAN_the_veterans_charter = {
+
+		icon = generic_civil_support
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			NOT = { has_country_flag = CAN_veterans_charter }
+		}
+
+		available = {
+			date > 1944.10.1
+		}
+
+		cost = 75
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_veterans_charter
+			add_stability = 0.08
+			add_manpower = 25000
+			custom_effect_tooltip = CAN_the_veterans_charter_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# THE TAX RENTAL AGREEMENTS - budget of 29 april 1941
+	# provinces rent their income tax fields to ottawa
+	# --------------------------------------------------------------------------
+	CAN_the_tax_rental_agreements = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			NOT = { has_country_flag = CAN_tax_rental_agreements }
+		}
+
+		available = {
+			has_war = yes
+			date > 1941.4.29
+		}
+
+		cost = 75
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_tax_rental_agreements
+			add_political_power = 100
+			add_stability = -0.03
+			add_to_variable = { CAN_provincial_autonomy = -2 }
+			custom_effect_tooltip = CAN_the_tax_rental_agreements_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# EXTEND THE PROVINCIAL BOUNDARIES - boundaries to the bay, 1912
+	# state 683 takes the half effect once it holds a QUE core
+	# --------------------------------------------------------------------------
+	CAN_extend_the_provincial_boundaries = {
+
+		icon = generic_form_nation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			NOT = { has_country_flag = CAN_boundaries_to_the_bay }
+		}
+
+		available = {
+			date > 1912.4.1
+			owns_state = 683
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+
+			set_country_flag = CAN_boundaries_to_the_bay
+
+			683 = {
+				add_core_of = QUE
+				add_extra_state_shared_building_slots = 1
+			}
+
+			if = {
+				limit = { owns_state = 467 }
+				467 = { add_extra_state_shared_building_slots = 1 }
+			}
+
+			custom_effect_tooltip = CAN_extend_the_provincial_boundaries_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# ESTABLISH THE DEPARTMENT OF HEALTH - 6 june 1919
+	# --------------------------------------------------------------------------
+	CAN_establish_the_department_of_health = {
+
+		icon = generic_civil_support
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			NOT = { has_country_flag = CAN_department_of_health }
+		}
+
+		available = {
+			date > 1919.6.6
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_department_of_health
+			add_stability = 0.05
+			add_manpower = 15000
+			custom_effect_tooltip = CAN_establish_the_department_of_health_tt
+		}
+
+		ai_will_do = {
+			factor = 4
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# ARREST THE STRIKE COMMITTEE - winnipeg, 17 june 1919
+	# breaks the strike, the debt stays on the counter
+	# --------------------------------------------------------------------------
+	CAN_arrest_the_strike_committee = {
+
+		icon = oppression
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_the_one_big_union
+			NOT = { has_country_flag = CAN_strike_committee_arrested }
+		}
+
+		available = {
+			date > 1919.5.15
+			date < 1933.1.1
+		}
+
+		cost = 25
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_strike_committee_arrested
+			add_popularity = {
+				ideology = communism
+				popularity = -0.04
+			}
+			add_stability = -0.03
+			add_to_variable = { CAN_civil_liberties_debt = 2 }
+			add_to_variable = { CAN_labour_grievance = 6 }
+			custom_effect_tooltip = CAN_arrest_the_strike_committee_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# ASK THE NATION TO RELEASE US - plebiscite of 27 april 1942
+	# the result is scripted, no roll and no option
+	# ninety-five days from announcement to vote
+	# --------------------------------------------------------------------------
+	CAN_ask_the_nation_to_release_us = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		days_remove = 95
+		fire_only_once = yes
+
+		visible = {
+			date > 1940.1.1
+			NOT = { has_country_flag = CAN_plebiscite_held }
+		}
+
+		available = {
+			has_war = yes
+			OR = {
+				has_idea = CAN_idea_the_pledge_of_no_conscription
+				has_idea = CAN_idea_the_pledge_kept
+			}
+		}
+
+		cost = 100
+
+		complete_effect = {
+			set_country_flag = CAN_plebiscite_called
+			custom_effect_tooltip = CAN_ask_the_nation_to_release_us_tt
+		}
+
+		remove_effect = {
+
+			set_country_flag = CAN_plebiscite_held
+			set_country_flag = CAN_released_from_the_pledge
+
+			# the result is fixed, these two numbers never move
+			set_variable = { CAN_plebiscite_yes = 65 }
+			set_variable = { CAN_plebiscite_quebec_no = 72 }
+
+			# the pledge ideas are removed
+			if = {
+				limit = { has_idea = CAN_idea_the_pledge_of_no_conscription }
+				remove_ideas = CAN_idea_the_pledge_of_no_conscription
+			}
+			if = {
+				limit = { has_idea = CAN_idea_the_pledge_kept }
+				remove_ideas = CAN_idea_the_pledge_kept
+			}
+
+			add_war_support = 0.08
+			add_stability = -0.05
+
+			# the ligue becomes the bloc populaire
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.03
+			}
+
+			# blood tax cause 17, the plebiscite
+			set_variable = { CAN_bt_arg_value = 15 }
+			set_variable = { CAN_bt_arg_cause = 17 }
+			CAN_add_blood_tax = yes
+
+			custom_effect_tooltip = CAN_the_plebiscite_result_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# BILL 80 - july 1942, cardin resigns
+	# the overseas clause is struck from the act
+	# --------------------------------------------------------------------------
+	CAN_bill_eighty = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_plebiscite_held
+			NOT = { has_country_flag = CAN_bill_eighty_passed }
+		}
+
+		available = {
+			has_war = yes
+		}
+
+		cost = 75
+		fire_only_once = yes
+
+		complete_effect = {
+
+			set_country_flag = CAN_bill_eighty_passed
+
+			add_war_support = 0.05
+			add_stability = -0.03
+
+			# blood tax cause 18, bill 80
+			set_variable = { CAN_bt_arg_value = 5 }
+			set_variable = { CAN_bt_arg_cause = 18 }
+			CAN_add_blood_tax = yes
+
+			custom_effect_tooltip = CAN_bill_eighty_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+}
+
+
+# ##############################################################################
+# CAN_the_west
+# ##############################################################################
+
+CAN_the_west = {
+
+	# --------------------------------------------------------------------------
+	# RECRUIT EUROPEAN SETTLERS - sifton's campaign
+	# foreign west yields 1.5x, british west 0.5x
+	# --------------------------------------------------------------------------
+	CAN_recruit_european_settlers = {
+
+		icon = generic_form_nation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_done_the_last_best_west
+			date < 1931.1.1
+		}
+
+		available = {
+			has_war = no
+			NOT = { has_country_flag = CAN_gates_closed }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+
+			add_to_variable = { CAN_settlers_recruited = 1 }
+
+			if = {
+				limit = { has_idea = CAN_idea_foreign_born_west }
+				add_manpower = 30000
+			}
+			else_if = {
+				limit = { has_idea = CAN_idea_a_british_west }
+				add_manpower = 10000
+			}
+			else = {
+				add_manpower = 20000
+			}
+
+			random_owned_controlled_state = {
+				prioritize = { 469 470 467 }
+				limit = {
+					is_core_of = ROOT
+				}
+				add_extra_state_shared_building_slots = 1
+			}
+
+			custom_effect_tooltip = CAN_recruit_european_settlers_tt
+		}
+
+		ai_will_do = {
+			factor = 4
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# CLOSE THE GATES - orders-in-council of 9 june 1919
+	# recruitment closes while the gates are shut
+	# --------------------------------------------------------------------------
+	CAN_close_the_gates = {
+
+		icon = generic_break_treaty
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1919.6.9
+			NOT = { has_country_flag = CAN_gates_closed }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+
+		complete_effect = {
+			set_country_flag = CAN_gates_closed
+			clr_country_flag = CAN_gates_opened
+			add_stability = 0.05
+			add_political_power = 25
+			custom_effect_tooltip = CAN_close_the_gates_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# OPEN THE GATES - reopening costs stability
+	# --------------------------------------------------------------------------
+	CAN_open_the_gates = {
+
+		icon = generic_form_nation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_gates_closed
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 365
+
+		complete_effect = {
+			clr_country_flag = CAN_gates_closed
+			set_country_flag = CAN_gates_opened
+			add_manpower = 25000
+			add_stability = -0.03
+			add_popularity = {
+				ideology = neutrality
+				popularity = 0.02
+			}
+			custom_effect_tooltip = CAN_open_the_gates_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# RESTORE THE CROW'S NEST PASS RATES - act of 1922
+	# drops the freight grievance, adds an overbuild notch
+	# CAN_crows_nest_rates locks that notch against the CNR focus
+	# --------------------------------------------------------------------------
+	CAN_restore_the_crows_nest_pass_rates = {
+
+		icon = generic_construction
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_done_the_wheat_pools
+			NOT = { has_country_flag = CAN_crows_nest_rates }
+		}
+
+		available = {
+			date > 1922.7.7
+		}
+
+		cost = 50
+		fire_only_once = yes
+
+		complete_effect = {
+
+			set_country_flag = CAN_crows_nest_rates
+
+			if = {
+				limit = { has_idea = CAN_idea_freight_rate_grievance }
+				remove_ideas = CAN_idea_freight_rate_grievance
+			}
+
+			# tested top down so a take never promotes twice
+			if = {
+				limit = { has_idea = CAN_idea_railway_overbuild_2 }
+				swap_ideas = {
+					remove_idea = CAN_idea_railway_overbuild_2
+					add_idea = CAN_idea_railway_overbuild_3
+				}
+			}
+			else_if = {
+				limit = { has_idea = CAN_idea_railway_overbuild_1 }
+				swap_ideas = {
+					remove_idea = CAN_idea_railway_overbuild_1
+					add_idea = CAN_idea_railway_overbuild_2
+				}
+			}
+			else_if = {
+				limit = { NOT = { has_idea = CAN_idea_railway_overbuild_3 } }
+				add_ideas = CAN_idea_railway_overbuild_1
+			}
+
+			add_stability = 0.03
+
+			custom_effect_tooltip = CAN_restore_the_crows_nest_pass_rates_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# THE COMMUNITY PASTURES - Prairie Farm Rehabilitation Administration, 1935
+	# the building slot never comes back
+	# --------------------------------------------------------------------------
+	CAN_the_community_pastures = {
+
+		icon = generic_construction
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_idea_prairie_drought_relieved
+		}
+
+		available = {
+			check_variable = { var = CAN_community_pastures value = 3 compare = less_than }
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+
+			add_to_variable = { CAN_community_pastures = 1 }
+
+			random_owned_controlled_state = {
+				prioritize = { 469 470 467 }
+				limit = {
+					is_core_of = ROOT
+					NOT = { has_state_flag = CAN_community_pasture }
+				}
+				set_state_flag = CAN_community_pasture
+				add_extra_state_shared_building_slots = -1
+			}
+
+			add_stability = 0.02
+
+			custom_effect_tooltip = CAN_the_community_pastures_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# ONE HUNDRED AND THIRTY-THREE DRY HOLES - before leduc no 1
+	# each campaign usually fails, the eighth always strikes
+	# sets CAN_leduc_no_1_ready for the event to read
+	# --------------------------------------------------------------------------
+	CAN_one_hundred_and_thirty_three_dry_holes = {
+
+		icon = oil
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_completed_focus = CAN_the_canadian_wheat_board
+			NOT = { has_country_flag = CAN_leduc_no_1_ready }
+		}
+
+		available = {
+			date > 1938.1.1
+			owns_state = 470
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 90
+
+		complete_effect = {
+
+			add_to_variable = { CAN_dry_holes = 1 }
+
+			if = {
+				limit = { check_variable = { var = CAN_dry_holes value = 8 compare = greater_than_or_equals } }
+				set_country_flag = CAN_leduc_no_1_ready
+				custom_effect_tooltip = CAN_leduc_no_1_ready_tt
+			}
+			else = {
+				random_list = {
+					75 = {
+						custom_effect_tooltip = CAN_the_dry_hole_tt
+					}
+					25 = {
+						set_country_flag = CAN_leduc_no_1_ready
+						custom_effect_tooltip = CAN_leduc_no_1_ready_tt
+					}
+				}
+			}
+
+			custom_effect_tooltip = CAN_one_hundred_and_thirty_three_dry_holes_tt
+		}
+
+		ai_will_do = {
+			factor = 3
+		}
+	}
+
+
+	# --------------------------------------------------------------------------
+	# HOLD THE SURPLUS - the board stores what the convoys leave
+	# acreage reduction and storage, 1941-1942
+	# --------------------------------------------------------------------------
+	CAN_hold_the_surplus = {
+
+		icon = generic_construction
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_completed_focus = CAN_the_canadian_wheat_board
+		}
+
+		available = {
+			has_war = yes
+		}
+
+		cost = 25
+		fire_only_once = no
+		days_re_enable = 180
+
+		complete_effect = {
+			add_to_variable = { CAN_wheat_surplus_held = 1 }
+			add_stability = 0.03
+			add_war_support = -0.02
+			custom_effect_tooltip = CAN_hold_the_surplus_tt
+		}
+
+		ai_will_do = {
+			factor = 2
+		}
+	}
+}

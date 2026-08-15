@@ -1,0 +1,377 @@
+####################################################################################################
+# ECUADOR - WW2
+####################################################################################################
+####################################################################################################
+
+focus_tree = {
+	id = RON_Ecuador_WW2
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = ECU
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	### THE TITLE
+
+	focus = {
+		id = ECU_washington_will_not_decide
+		icon = GFX_goal_generic_forceful_treaty
+		x = 6
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = ECU_done_the_archive_case
+				date > 1936.1.1
+			}
+		}
+
+		completion_reward = {
+			# the file can only be spent once
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_washington
+			custom_effect_tooltip = ECU_washington_will_not_decide_tt
+		}
+	}
+
+	focus = {
+		id = ECU_shell_comes_to_the_oriente
+		icon = GFX_goal_generic_construct_civilian
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_washington_will_not_decide }
+		mutually_exclusive = { focus = ECU_the_oriente_is_not_for_sale }
+
+		completion_reward = {
+			# Title -6, possession +2
+			subtract_from_variable = { ECU_the_title = 6 }
+			add_to_variable = { ECU_effective_possession = 2 }
+			clamp_variable = { var = ECU_the_title min = 0 max = 100 }
+			clamp_variable = { var = ECU_effective_possession min = 0 max = 100 }
+			set_country_flag = ECU_done_shell
+			custom_effect_tooltip = ECU_shell_comes_to_the_oriente_tt
+		}
+	}
+
+	focus = {
+		id = ECU_the_oriente_is_not_for_sale
+		icon = GFX_goal_generic_national_unity
+		x = 8
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_washington_will_not_decide }
+		mutually_exclusive = { focus = ECU_shell_comes_to_the_oriente }
+
+		completion_reward = {
+			# Title +4, no revenue, no airstrip
+			add_to_variable = { ECU_the_title = 4 }
+			clamp_variable = { var = ECU_the_title min = 0 max = 100 }
+			set_country_flag = ECU_done_no_sale
+			custom_effect_tooltip = ECU_the_oriente_is_not_for_sale_tt
+		}
+	}
+
+	focus = {
+		id = ECU_ratify_the_protocol
+		icon = GFX_goal_generic_forceful_treaty
+		x = 4
+		y = 3
+		cost = 5
+		mutually_exclusive = { focus = ECU_we_will_not_sign }
+
+		available = {
+			has_country_flag = ECU_the_question_is_decided
+		}
+
+		completion_reward = {
+			# Title spent: stays at 0
+			set_variable = { ECU_the_title = 0 }
+			set_country_flag = ECU_done_protocol_ratified
+			add_ideas = ECU_idea_a_line_on_the_map
+			custom_effect_tooltip = ECU_ratify_the_protocol_tt
+		}
+	}
+
+	focus = {
+		id = ECU_we_will_not_sign
+		icon = GFX_goal_generic_territory_or_war
+		x = 8
+		y = 3
+		cost = 10
+		mutually_exclusive = { focus = ECU_ratify_the_protocol }
+
+		available = {
+			has_country_flag = ECU_the_question_is_decided
+		}
+
+		completion_reward = {
+			# divergence 7: Title kept, not spent
+			set_country_flag = ECU_done_protocol_refused
+			add_ideas = ECU_idea_the_claim_still_lives
+			custom_effect_tooltip = ECU_we_will_not_sign_tt
+		}
+	}
+
+	### LIBERALS IN UNIFORM
+
+	focus = {
+		id = ECU_the_labour_code
+		icon = GFX_goal_generic_national_unity
+		x = 16
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = ECU_done_womens_suffrage
+				date > 1938.11.1
+			}
+		}
+
+		completion_reward = {
+			# locks out the authoritarian right
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_labour_code
+			custom_effect_tooltip = ECU_the_labour_code_tt
+		}
+	}
+
+	### ONE FRUIT
+
+	# Focus for The Golden Fruit
+	focus = {
+		id = ECU_the_golden_fruit
+		icon = GFX_goal_generic_consumer_goods
+		x = 26
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = ECU_done_kemmerer
+				has_country_flag = ECU_done_own_remedy
+				date > 1944.1.1
+			}
+		}
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_banana_program
+			swap_ideas = {
+				remove_idea = ECU_idea_a_single_fruit
+				add_idea = ECU_idea_another_single_fruit
+			}
+			custom_effect_tooltip = ECU_the_golden_fruit_tt
+		}
+	}
+
+	### THE MONTONERAS
+
+	focus = {
+		id = ECU_a_dictatorship_of_order
+		icon = GFX_goal_generic_political_pressure
+		x = 34
+		y = 0
+		cost = 10
+		mutually_exclusive = { focus = ECU_a_constituent_assembly }
+
+		available = {
+			OR = {
+				has_country_flag = ECU_done_military_league
+				has_country_flag = ECU_done_compactacion
+				has_country_flag = ECU_done_congress_decides
+				date > 1935.8.20
+			}
+			NOT = { has_country_flag = ECU_done_labour_code }
+		}
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_dictatorship
+			add_stability = 0.10
+			add_political_power = 120
+			custom_effect_tooltip = ECU_a_dictatorship_of_order_tt
+		}
+	}
+
+	focus = {
+		id = ECU_a_constituent_assembly
+		icon = GFX_goal_generic_national_unity
+		x = 38
+		y = 0
+		cost = 10
+		mutually_exclusive = { focus = ECU_a_dictatorship_of_order }
+
+		available = {
+			OR = {
+				has_country_flag = ECU_done_military_league
+				has_country_flag = ECU_done_compactacion
+				has_country_flag = ECU_done_congress_decides
+				date > 1938.1.1
+			}
+		}
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_constituent
+			add_stability = 0.05
+			custom_effect_tooltip = ECU_a_constituent_assembly_tt
+		}
+	}
+
+	# Focus for The Glorious Twenty-Eighth
+	focus = {
+		id = ECU_the_glorious_twenty_eighth
+		icon = GFX_goal_generic_demand_territory
+		x = 36
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = ECU_a_dictatorship_of_order
+			focus = ECU_a_constituent_assembly
+		}
+
+		completion_reward = {
+			set_country_flag = ECU_done_glorious_may
+			add_stability = 0.10
+			add_political_power = 80
+			custom_effect_tooltip = ECU_the_glorious_twenty_eighth_tt
+		}
+	}
+
+	focus = {
+		id = ECU_dissolve_the_assembly
+		icon = GFX_goal_generic_secret_weapon
+		x = 34
+		y = 3
+		cost = 10
+		prerequisite = { focus = ECU_the_glorious_twenty_eighth }
+		mutually_exclusive = { focus = ECU_govern_with_the_alliance }
+
+		completion_reward = {
+			set_country_flag = ECU_done_assembly_dissolved
+			add_political_power = 120
+			custom_effect_tooltip = ECU_dissolve_the_assembly_tt
+		}
+	}
+
+	focus = {
+		id = ECU_govern_with_the_alliance
+		icon = GFX_goal_generic_national_unity
+		x = 38
+		y = 3
+		cost = 10
+		prerequisite = { focus = ECU_the_glorious_twenty_eighth }
+		mutually_exclusive = { focus = ECU_dissolve_the_assembly }
+
+		completion_reward = {
+			# divergence 8: 1945 constitution holds
+			set_country_flag = ECU_done_alliance_governs
+			add_stability = 0.15
+			custom_effect_tooltip = ECU_govern_with_the_alliance_tt
+		}
+	}
+
+	### THE SOUTHERN FRONTIER
+
+	focus = {
+		id = ECU_guns_before_archives
+		icon = GFX_goal_generic_army_doctrines
+		x = 44
+		y = 0
+		cost = 15
+		prerequisite = { focus = ECU_washington_will_not_decide }
+		mutually_exclusive = { focus = ECU_the_carabineros }
+
+		completion_reward = {
+			# divergence 6: possession +15
+			add_to_variable = { ECU_effective_possession = 15 }
+			clamp_variable = { var = ECU_effective_possession min = 0 max = 100 }
+			set_country_flag = ECU_done_guns_before_archives
+			army_experience = 25
+			custom_effect_tooltip = ECU_guns_before_archives_tt
+		}
+	}
+
+	focus = {
+		id = ECU_the_carabineros
+		icon = GFX_goal_generic_political_pressure
+		x = 48
+		y = 0
+		cost = 10
+		prerequisite = { focus = ECU_washington_will_not_decide }
+		mutually_exclusive = { focus = ECU_guns_before_archives }
+
+		completion_reward = {
+			set_country_flag = ECU_done_carabineros
+			add_political_power = 100
+			add_ideas = ECU_idea_the_carabineros
+			custom_effect_tooltip = ECU_the_carabineros_tt
+		}
+	}
+
+	focus = {
+		id = ECU_beta_base
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 44
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = ECU_guns_before_archives
+			focus = ECU_the_carabineros
+		}
+		mutually_exclusive = { focus = ECU_sovereignty_over_the_archipelago }
+
+		completion_reward = {
+			add_to_variable = { ECU_guarantors = 2 }
+			clamp_variable = { var = ECU_guarantors min = 0 max = 4 }
+			649 = {
+				add_building_construction = {
+					type = air_base
+					level = 4
+					instant_build = yes
+				}
+			}
+			305 = {
+				add_building_construction = {
+					type = naval_base
+					level = 2
+					instant_build = yes
+					province = 12253
+				}
+			}
+			set_country_flag = ECU_done_beta_base
+			custom_effect_tooltip = ECU_beta_base_tt
+		}
+	}
+
+	focus = {
+		id = ECU_sovereignty_over_the_archipelago
+		icon = GFX_goal_generic_national_unity
+		x = 48
+		y = 1
+		cost = 10
+		prerequisite = {
+			focus = ECU_guns_before_archives
+			focus = ECU_the_carabineros
+		}
+		mutually_exclusive = { focus = ECU_beta_base }
+
+		completion_reward = {
+			set_country_flag = ECU_done_archipelago_kept
+			add_war_support = 0.05
+			add_ideas = ECU_idea_nothing_to_trade_in_rio
+			custom_effect_tooltip = ECU_sovereignty_over_the_archipelago_tt
+		}
+	}
+}

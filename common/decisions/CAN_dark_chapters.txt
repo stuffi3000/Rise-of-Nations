@@ -1,0 +1,1066 @@
+# ##############################################################################
+# CAN_dark_chapters.txt - The Ledger
+# ##############################################################################
+#
+# category CAN_dark_chapters is declared in
+# common/decisions/categories/CAN_decision_categories.txt
+#
+# a window closes in available, never in visible
+# a running decision is cancelled if visible turns false
+# so visible bounds sit past the longest countdown
+# ##############################################################################
+
+CAN_dark_chapters = {
+
+	# ##########################################################################
+	# 1. the head tax - 1900, then 1903
+	# ##########################################################################
+
+	CAN_raise_the_head_tax = {
+
+		icon = generic_confiscation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date < 1924.1.1
+			NOT = { has_country_flag = CAN_done_repeal_the_head_tax }
+			check_variable = { var = CAN_head_tax_level value = 2 compare = less_than }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_raise_the_head_tax_window_tt
+				date < 1923.7.1
+				OR = {
+					check_variable = { var = CAN_head_tax_level value = 0 compare = equals }
+					date > 1903.1.1
+				}
+			}
+		}
+
+		cost = 25
+
+		days_remove = 30
+
+		fire_only_once = no
+
+		complete_effect = {
+			custom_effect_tooltip = CAN_raise_the_head_tax_pending_tt
+		}
+
+		remove_effect = {
+
+			add_to_variable = { CAN_head_tax_level = 1 }
+
+			# the small gain: five years of quiet on the coast
+			if = {
+				limit = { has_idea = CAN_anti_asiatic_agitation }
+				remove_ideas = CAN_anti_asiatic_agitation
+			}
+			set_variable = { CAN_head_tax_relief_days = 1825 }
+
+			# the permanent cost
+			if = {
+				limit = { NOT = { has_idea = CAN_exclusion_by_price } }
+				add_ideas = CAN_exclusion_by_price
+			}
+			CAN_place_exclusion_by_price_coast = yes
+
+			set_variable = { CAN_ledger_arg_debt = 1 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_one_tt
+
+			set_country_flag = CAN_done_raise_the_head_tax
+		}
+
+		ai_will_do = {
+			factor = 20
+		}
+	}
+
+	# repeal locks out the 1923 exclusion act
+	CAN_repeal_the_head_tax = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_exclusion_by_price
+			NOT = { has_country_flag = CAN_done_the_exclusion_act }
+			NOT = { has_country_flag = CAN_done_repeal_the_head_tax }
+		}
+
+		cost = 150
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			remove_ideas = CAN_exclusion_by_price
+			CAN_remove_exclusion_by_price_coast = yes
+
+			# the agitation was bought, not settled; it comes back
+			if = {
+				limit = { NOT = { has_idea = CAN_anti_asiatic_agitation } }
+				add_ideas = CAN_anti_asiatic_agitation
+			}
+			set_variable = { CAN_head_tax_relief_days = 0 }
+
+			add_stability = -0.05
+
+			# no debt point is refunded
+			custom_effect_tooltip = CAN_ledger_no_refund_tt
+
+			set_country_flag = CAN_done_repeal_the_head_tax
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+
+	# ##########################################################################
+	# 2. P.C. 1324 - 12 aug 1911, repealed 5 oct 1911
+	#
+	#    mutual exclusion, used throughout this file:
+	#    each flags _pending and tests the others, not itself
+	# ##########################################################################
+
+	# (a) divergence - never done
+	CAN_proclaim_pc_1324 = {
+
+		icon = generic_political_address
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1911.8.11
+			date < 1912.2.1
+			NOT = { has_country_flag = CAN_pc_1324_settled }
+			NOT = { has_country_flag = CAN_pc_1324_approve_pending }
+			NOT = { has_country_flag = CAN_pc_1324_strike_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_pc_1324_window_tt
+				date < 1911.10.6
+			}
+		}
+
+		cost = 50
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_pc_1324_proclaim_pending
+		}
+
+		remove_effect = {
+
+			add_stability = 0.05
+
+			add_ideas = CAN_the_colour_bar
+
+			set_variable = { CAN_ledger_arg_debt = 2 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_two_tt
+
+			# locks out A Mosaic, Not a Fortress
+			set_country_flag = CAN_pc_1324_settled
+			set_country_flag = CAN_done_proclaim_pc_1324
+			custom_effect_tooltip = CAN_the_mosaic_closed_tt
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	# (b) historical - approved, never proclaimed, applied
+	CAN_approve_pc_1324 = {
+
+		icon = generic_decision
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1911.8.11
+			date < 1912.2.1
+			NOT = { has_country_flag = CAN_pc_1324_settled }
+			NOT = { has_country_flag = CAN_pc_1324_proclaim_pending }
+			NOT = { has_country_flag = CAN_pc_1324_strike_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_pc_1324_window_tt
+				date < 1911.10.6
+			}
+		}
+
+		cost = 0
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_pc_1324_approve_pending
+		}
+
+		remove_effect = {
+
+			# no gain, by design
+			add_ideas = CAN_the_colour_bar_in_practice
+
+			set_variable = { CAN_ledger_arg_debt = 1 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_one_tt
+
+			set_country_flag = CAN_pc_1324_settled
+			set_country_flag = CAN_done_approve_pc_1324
+		}
+
+		ai_will_do = {
+			factor = 30
+		}
+	}
+
+	# (c) strike the order from the privy council register
+	CAN_strike_pc_1324 = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1911.8.11
+			date < 1912.2.1
+			NOT = { has_country_flag = CAN_pc_1324_settled }
+			NOT = { has_country_flag = CAN_pc_1324_proclaim_pending }
+			NOT = { has_country_flag = CAN_pc_1324_approve_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_pc_1324_window_tt
+				date < 1911.10.6
+			}
+		}
+
+		cost = 75
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_pc_1324_strike_pending
+		}
+
+		remove_effect = {
+
+			add_stability = -0.03
+
+			# no idea, no counter; prereq for Subjects of the King
+			set_country_flag = CAN_pc_1324_settled
+			set_country_flag = CAN_done_strike_pc_1324
+			custom_effect_tooltip = CAN_subjects_of_the_king_opened_tt
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+
+	# ##########################################################################
+	# 3. the oliver act - 1911
+	# ##########################################################################
+
+	CAN_the_oliver_act = {
+
+		icon = generic_break_treaty
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1911.1.1
+			date < 1931.1.1
+			NOT = { has_country_flag = CAN_done_the_oliver_act }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_the_oliver_act_window_tt
+				date < 1930.1.1
+			}
+		}
+
+		cost = 40
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			# the small gain: two urban lots freed
+			473 = { add_extra_state_shared_building_slots = 1 }
+			740 = { add_extra_state_shared_building_slots = 1 }
+
+			add_ideas = CAN_broken_treaties
+
+			set_variable = { CAN_ledger_arg_evidence = 1 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_evidence_one_tt
+
+			set_country_flag = CAN_done_the_oliver_act
+			custom_effect_tooltip = CAN_indigenous_enlistment_closed_tt
+		}
+
+		ai_will_do = {
+			factor = 15
+		}
+	}
+
+	# treaty renewal, opened by the paid bryce option
+	# shuts past two suppressed evidence; halves, never removes
+	CAN_treaty_renewal = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_broken_treaties
+			has_country_flag = CAN_bryce_report_funded
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_treaty_renewal_gate_tt
+				check_variable = { var = CAN_suppressed_evidence value = 2 compare = less_than_or_equals }
+				NOT = { has_idea = CAN_a_national_crime }
+			}
+		}
+
+		cost = 100
+
+		days_remove = 180
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			swap_ideas = {
+				remove_idea = CAN_broken_treaties
+				add_idea = CAN_broken_treaties_halved
+			}
+
+			add_political_power = -50
+
+			set_country_flag = CAN_done_treaty_renewal
+		}
+
+		ai_will_do = {
+			factor = 1
+		}
+	}
+
+	# the road not taken, closed by 49A and the buried report
+	CAN_indigenous_enlistment = {
+
+		icon = generic_military
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_war = yes
+			date > 1914.1.1
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_indigenous_enlistment_gate_tt
+				NOT = { has_idea = CAN_broken_treaties }
+				NOT = { has_idea = CAN_a_national_crime }
+				NOT = { has_idea = CAN_the_grand_river_dispute }
+			}
+		}
+
+		cost = 40
+
+		days_remove = 90
+
+		days_re_enable = 180
+
+		fire_only_once = no
+
+		remove_effect = {
+			add_manpower = 15000
+			set_country_flag = CAN_done_indigenous_enlistment
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+
+	# ##########################################################################
+	# 4. the exclusion act - 1 july 1923
+	# ##########################################################################
+
+	CAN_the_exclusion_act = {
+
+		icon = generic_political_address
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1923.6.30
+			date < 1936.1.1
+			has_idea = CAN_exclusion_by_price
+			NOT = { has_country_flag = CAN_exclusion_settled }
+			NOT = { has_country_flag = CAN_exclusion_refusal_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_the_exclusion_act_gate_tt
+				date < 1935.1.1
+				has_country_flag = CAN_done_raise_the_head_tax
+				NOT = { has_country_flag = CAN_done_repeal_the_head_tax }
+			}
+		}
+
+		cost = 50
+
+		days_remove = 45
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_exclusion_act_pending
+		}
+
+		remove_effect = {
+
+			# the small gain
+			add_stability = 0.05
+
+			swap_ideas = {
+				remove_idea = CAN_exclusion_by_price
+				add_idea = CAN_exclusion
+			}
+			CAN_place_exclusion_coast = yes
+
+			set_variable = { CAN_ledger_arg_debt = 2 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_two_tt
+
+			set_country_flag = CAN_exclusion_settled
+			set_country_flag = CAN_done_the_exclusion_act
+			custom_effect_tooltip = CAN_pacific_manpower_closed_tt
+		}
+
+		ai_will_do = {
+			factor = 20
+		}
+	}
+
+	# divergence: refuse the act, free pacific recruitment
+	CAN_refuse_the_exclusion_act = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1923.6.30
+			date < 1936.1.1
+			has_idea = CAN_exclusion_by_price
+			NOT = { has_country_flag = CAN_exclusion_settled }
+			NOT = { has_country_flag = CAN_exclusion_act_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_the_exclusion_act_window_tt
+				date < 1935.1.1
+			}
+		}
+
+		cost = 200
+
+		days_remove = 45
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_exclusion_refusal_pending
+		}
+
+		remove_effect = {
+
+			add_stability = -0.10
+
+			set_country_flag = CAN_exclusion_settled
+			set_country_flag = CAN_done_refuse_the_exclusion_act
+			custom_effect_tooltip = CAN_pacific_manpower_open_tt
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+	# force 136: free from 1939 without the act, else 1944
+	CAN_force_136_recruitment = {
+
+		icon = generic_military
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_war = yes
+			date > 1939.1.1
+			NOT = { has_country_flag = CAN_done_force_136_recruitment }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_force_136_gate_tt
+				OR = {
+					NOT = { has_country_flag = CAN_done_the_exclusion_act }
+					date > 1944.1.1
+				}
+			}
+		}
+
+		cost = 100
+
+		days_remove = 90
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			add_manpower = 20000
+
+			if = {
+				limit = { has_country_flag = CAN_done_the_exclusion_act }
+				add_stability = -0.05
+			}
+
+			set_country_flag = CAN_done_force_136_recruitment
+			custom_effect_tooltip = CAN_repeal_the_exclusion_act_opened_tt
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+	# repeal: locked before 14 may 1947 and gated on force 136
+	CAN_repeal_the_exclusion_act = {
+
+		icon = generic_political_discourse
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_exclusion
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_repeal_the_exclusion_act_gate_tt
+				date > 1947.5.13
+				has_country_flag = CAN_done_force_136_recruitment
+			}
+		}
+
+		cost = 100
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			remove_ideas = CAN_exclusion
+			CAN_remove_exclusion_coast = yes
+
+			custom_effect_tooltip = CAN_ledger_no_refund_tt
+
+			set_country_flag = CAN_done_repeal_the_exclusion_act
+		}
+
+		ai_will_do = {
+			factor = 10
+		}
+	}
+
+
+	# ##########################################################################
+	# 5. the deportations - 1931-1935
+	# ##########################################################################
+
+	CAN_deport_the_undesirables = {
+
+		icon = generic_train
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_closed_doors
+			date > 1931.3.20
+			date < 1936.9.1
+			check_variable = { var = CAN_deportation_count value = 5 compare = less_than }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_deport_the_undesirables_window_tt
+				date < 1936.1.1
+			}
+		}
+
+		cost = 30
+
+		days_remove = 60
+
+		days_re_enable = 30
+
+		fire_only_once = no
+
+		remove_effect = {
+
+			# the small gain, per activation
+			add_popularity = {
+				ideology = communism
+				popularity = -0.01
+			}
+			add_stability = 0.02
+
+			# the permanent cost, stacked by the dynamic modifier
+			add_to_variable = { CAN_deportation_count = 1 }
+			clamp_variable = { var = CAN_deportation_count min = 0 max = 5 }
+
+			set_variable = { CAN_ledger_arg_debt = 1 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_one_tt
+
+			set_country_flag = CAN_done_deport_the_undesirables
+
+			# third activation fires can_dark.6
+			if = {
+				limit = {
+					check_variable = { var = CAN_deportation_count value = 3 compare = equals }
+				}
+				country_event = { id = can_dark.6 days = 3 }
+			}
+		}
+
+		ai_will_do = {
+			factor = 15
+		}
+	}
+
+	# divergence: open the doors, 365 days before it bites
+	CAN_open_the_doors = {
+
+		icon = generic_welfare
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_idea = CAN_closed_doors
+			date > 1931.3.20
+			date < 1941.1.1
+			NOT = { has_country_flag = CAN_done_open_the_doors }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_open_the_doors_window_tt
+				date < 1939.1.1
+			}
+		}
+
+		cost = 75
+
+		days_remove = 365
+
+		fire_only_once = yes
+
+		# flag set at the end; visible turning false would cancel it
+		complete_effect = {
+			add_stability = -0.05
+		}
+
+		remove_effect = {
+
+			remove_ideas = CAN_closed_doors
+
+			if = {
+				limit = { NOT = { has_idea = CAN_idea_a_mosaic_not_a_fortress } }
+				add_ideas = CAN_idea_a_mosaic_not_a_fortress
+			}
+
+			set_country_flag = CAN_done_open_the_doors
+			custom_effect_tooltip = CAN_open_the_ports_opened_tt
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+
+	# ##########################################################################
+	# 6. close the door - july 1938
+	# ##########################################################################
+
+	CAN_close_the_door = {
+
+		icon = generic_decision
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1938.7.5
+			date < 1946.9.1
+			NOT = { has_idea = CAN_none_is_too_many }
+			NOT = { has_country_flag = CAN_done_open_the_ports }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_close_the_door_gate_tt
+				date < 1946.1.1
+			}
+		}
+
+		cost = 0
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			add_stability = 0.02
+
+			add_ideas = CAN_none_is_too_many
+
+			set_variable = { CAN_ledger_arg_evidence = 1 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_evidence_one_tt
+
+			set_country_flag = CAN_done_close_the_door
+			custom_effect_tooltip = CAN_displaced_persons_deferred_tt
+		}
+
+		ai_will_do = {
+			factor = 30
+		}
+	}
+
+	# divergence: open the ports, needs the doors opened first
+	CAN_open_the_ports = {
+
+		icon = generic_welfare
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1938.7.5
+			date < 1940.9.1
+			NOT = { has_idea = CAN_none_is_too_many }
+			NOT = { has_country_flag = CAN_done_open_the_ports }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_open_the_ports_gate_tt
+				date < 1940.1.1
+				has_country_flag = CAN_done_open_the_doors
+			}
+		}
+
+		cost = 100
+
+		days_remove = 90
+
+		fire_only_once = yes
+
+		remove_effect = {
+
+			add_stability = -0.10
+			add_manpower = 25000
+			add_research_slot = 1
+
+			if = {
+				limit = { NOT = { has_idea = CAN_idea_a_mosaic_not_a_fortress } }
+				add_ideas = CAN_idea_a_mosaic_not_a_fortress
+			}
+
+			set_country_flag = CAN_done_open_the_ports
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+
+	# ##########################################################################
+	# 7. P.C. 1486 - 24 feb 1942
+	# ##########################################################################
+
+	CAN_pc_1486 = {
+
+		icon = generic_arrest
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1942.2.23
+			date < 1946.9.1
+			NOT = { has_country_flag = CAN_removal_settled }
+			NOT = { has_country_flag = CAN_removal_refusal_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_pc_1486_gate_tt
+				date < 1946.1.1
+				has_war_with = JAP
+			}
+		}
+
+		cost = 75
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_removal_order_pending
+		}
+
+		remove_effect = {
+
+			# the small gain: contract labour in the beet fields
+			CAN_place_the_beet_fields = yes
+			CAN_remove_pacific_panic = yes
+
+			# the permanent cost
+			add_ideas = CAN_injustice_on_the_coast
+			473 = {
+				if = {
+					limit = { OWNER = { original_tag = CAN } }
+					add_dynamic_modifier = { modifier = CAN_the_coast_under_order days = 1825 }
+				}
+			}
+
+			set_variable = { CAN_ledger_arg_debt = 3 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_three_tt
+
+			set_country_flag = CAN_removal_settled
+			set_country_flag = CAN_done_pc_1486
+			custom_effect_tooltip = CAN_citizenship_for_all_closed_tt
+		}
+
+		ai_will_do = {
+			factor = 25
+		}
+	}
+
+	# divergence: refuse removal, no repair event on this line
+	CAN_refuse_the_removal = {
+
+		icon = generic_protection
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			date > 1942.2.23
+			date < 1946.9.1
+			NOT = { has_country_flag = CAN_removal_settled }
+			NOT = { has_country_flag = CAN_removal_order_pending }
+		}
+
+		available = {
+			custom_trigger_tooltip = {
+				tooltip = CAN_pc_1486_gate_tt
+				date < 1946.1.1
+				has_war_with = JAP
+			}
+		}
+
+		cost = 50
+
+		days_remove = 30
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_removal_refusal_pending
+		}
+
+		remove_effect = {
+
+			add_stability = -0.05
+			CAN_place_pacific_panic = yes
+
+			set_country_flag = CAN_removal_settled
+			set_country_flag = CAN_done_refuse_the_removal
+		}
+
+		ai_will_do = {
+			factor = 0
+		}
+	}
+
+
+	# ##########################################################################
+	# 8. the sale of their property - january 1943
+	# ##########################################################################
+
+	CAN_the_auction_of_their_property = {
+
+		icon = generic_confiscation
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_done_pc_1486
+			date > 1943.1.1
+			NOT = { has_country_flag = CAN_estates_settled }
+			NOT = { has_country_flag = CAN_estates_trust_pending }
+		}
+
+		cost = 0
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_estates_auction_pending
+		}
+
+		remove_effect = {
+
+			add_dynamic_modifier = { modifier = CAN_the_custodian_sells days = 180 }
+
+			swap_ideas = {
+				remove_idea = CAN_injustice_on_the_coast
+				add_idea = CAN_injustice_on_the_coast_aggravated
+			}
+
+			set_variable = { CAN_ledger_arg_debt = 2 }
+			CAN_add_ledger = yes
+			custom_effect_tooltip = CAN_ledger_debt_two_tt
+
+			set_country_flag = CAN_estates_settled
+			set_country_flag = CAN_done_the_auction_of_their_property
+			custom_effect_tooltip = CAN_restitution_closed_tt
+		}
+
+		ai_will_do = {
+			factor = 20
+		}
+	}
+
+	# trust instead: pays less, leaves something for 1947
+	CAN_freeze_the_estates = {
+
+		icon = generic_decision
+
+		allowed = {
+			original_tag = CAN
+		}
+
+		visible = {
+			has_country_flag = CAN_done_pc_1486
+			date > 1943.1.1
+			NOT = { has_country_flag = CAN_estates_settled }
+			NOT = { has_country_flag = CAN_estates_auction_pending }
+		}
+
+		cost = 25
+
+		days_remove = 60
+
+		fire_only_once = yes
+
+		complete_effect = {
+			set_country_flag = CAN_estates_trust_pending
+		}
+
+		remove_effect = {
+
+			add_dynamic_modifier = { modifier = CAN_the_estates_in_trust days = 1095 }
+
+			set_country_flag = CAN_estates_settled
+			set_country_flag = CAN_done_freeze_the_estates
+			custom_effect_tooltip = CAN_restitution_kept_open_tt
+		}
+
+		ai_will_do = {
+			factor = 5
+		}
+	}
+}

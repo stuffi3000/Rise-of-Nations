@@ -1,0 +1,268 @@
+####################################################################################################
+# MONTENEGRO - DNC
+####################################################################################################
+# no keep_completed: use flags cross-era
+# cost is in weeks
+
+focus_tree = {
+	id = RON_Montenegro_DNC
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = MNT
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	### THE PURSE AND THE PORT
+
+	focus = {
+		id = MNT_the_petersburg_subvention
+		icon = GFX_goal_generic_position_armies
+		x = 16
+		y = 0
+		cost = 10
+
+		available = {
+			NOT = { has_country_flag = MNT_done_petersburg }
+		}
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			add_to_variable = { MNT_the_dowry = 12 }
+			add_to_variable = { MNT_the_claim = 3 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_petersburg
+			add_political_power = 50
+			custom_effect_tooltip = MNT_the_petersburg_subvention_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_money_from_montana
+		icon = GFX_goal_generic_construct_civilian
+		x = 14
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_petersburg_subvention }
+
+		completion_reward = {
+			# Dowry +6, no Claim
+			add_to_variable = { MNT_the_dowry = 6 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			set_country_flag = MNT_done_montana
+			add_ideas = MNT_idea_the_emigrant_remittances
+			custom_effect_tooltip = MNT_the_money_from_montana_tt
+		}
+	}
+
+	focus = {
+		id = MNT_a_coin_of_our_own
+		icon = GFX_goal_generic_consumer_goods
+		x = 18
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_petersburg_subvention }
+
+		completion_reward = {
+			set_country_flag = MNT_done_perper
+			swap_ideas = {
+				remove_idea = MNT_idea_a_treasury_paid_abroad
+				add_idea = MNT_idea_a_treasury_half_our_own
+			}
+			custom_effect_tooltip = MNT_a_coin_of_our_own_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_road_to_the_sea
+		icon = GFX_goal_generic_construct_naval_dockyard
+		x = 12
+		y = 2
+		cost = 15
+		prerequisite = { focus = MNT_a_coin_of_our_own }
+
+		bypass = {
+			# harbour already built
+			105 = { naval_base > 1 }
+		}
+
+		completion_reward = {
+			105 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			set_country_flag = MNT_done_bar_port
+			# art. 29 not lifted: no warships
+			custom_effect_tooltip = MNT_the_road_to_the_sea_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_narrow_gauge_to_the_lake
+		icon = GFX_goal_generic_construction2
+		x = 16
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_the_road_to_the_sea }
+
+		completion_reward = {
+			add_to_variable = { MNT_the_dowry = 10 }
+			add_to_variable = { MNT_the_claim = 6 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_antivari
+			add_ideas = MNT_idea_the_antivari_concession
+			custom_effect_tooltip = MNT_the_narrow_gauge_to_the_lake_tt
+		}
+	}
+
+	### THE CROWN AND THE FAMILY
+
+	focus = {
+		id = MNT_the_prince_of_the_black_mountain
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			set_country_flag = MNT_done_the_prince
+			add_ideas = {
+				MNT_idea_article_twenty_nine_of_berlin
+				MNT_idea_no_standing_army
+				MNT_idea_a_treasury_paid_abroad
+			}
+			custom_effect_tooltip = MNT_the_prince_of_the_black_mountain_tt
+		}
+	}
+
+	# Focus for The Nikoljdan Constitution
+	focus = {
+		id = MNT_the_saint_nicholas_constitution
+		icon = GFX_goal_generic_forceful_treaty
+		x = 24
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_prince_of_the_black_mountain }
+		mutually_exclusive = { focus = MNT_rule_as_before }
+
+		completion_reward = {
+			add_to_variable = { MNT_the_claim = 4 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_constitution
+			add_political_power = 75
+			add_stability = 0.05
+			custom_effect_tooltip = MNT_the_saint_nicholas_constitution_tt
+		}
+	}
+
+	focus = {
+		id = MNT_rule_as_before
+		icon = GFX_goal_generic_secret_weapon
+		x = 28
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_prince_of_the_black_mountain }
+		mutually_exclusive = { focus = MNT_the_saint_nicholas_constitution }
+
+		completion_reward = {
+			add_stability = 0.12
+			set_country_flag = MNT_done_rule_as_before
+			custom_effect_tooltip = MNT_rule_as_before_tt
+		}
+	}
+
+	focus = {
+		id = MNT_a_daughter_on_the_throne_of_italy
+		icon = GFX_goal_generic_improve_relations
+		x = 30
+		y = 2
+		cost = 5
+		prerequisite = { focus = MNT_the_prince_of_the_black_mountain }
+
+		completion_reward = {
+			# Dowry +8, Claim +4
+			add_to_variable = { MNT_the_dowry = 8 }
+			add_to_variable = { MNT_the_claim = 4 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_court_rome
+			set_country_flag = MNT_done_italian_marriage
+			ITA = { add_opinion_modifier = { target = MNT modifier = MNT_dynastic_tie } }
+			custom_effect_tooltip = MNT_a_daughter_on_the_throne_of_italy_tt
+		}
+	}
+
+	### THE GREEN AND THE WHITE
+
+	focus = {
+		id = MNT_the_clubmen
+		icon = GFX_goal_generic_demand_territory
+		x = 34
+		y = 2
+		cost = 10
+		prerequisite = { focus = MNT_the_saint_nicholas_constitution }
+		mutually_exclusive = { focus = MNT_the_true_peoples_party }
+
+		completion_reward = {
+			add_to_variable = { MNT_the_claim = 6 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_clubmen
+			add_political_power = 100
+			add_stability = -0.08
+			custom_effect_tooltip = MNT_the_clubmen_tt
+		}
+	}
+
+	# Focus for The True People's Party
+	focus = {
+		id = MNT_the_true_peoples_party
+		icon = GFX_goal_generic_national_unity
+		x = 38
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = MNT_the_saint_nicholas_constitution
+			focus = MNT_rule_as_before
+		}
+		mutually_exclusive = { focus = MNT_the_clubmen }
+
+		completion_reward = {
+			add_stability = 0.10
+			set_country_flag = MNT_done_pravasi
+			custom_effect_tooltip = MNT_the_true_peoples_party_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_clubmen_take_the_house
+		icon = GFX_goal_generic_dangerous_deal
+		x = 34
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_the_clubmen }
+
+		completion_reward = {
+			# divergence 1: Dowry -20, Claim 25
+			subtract_from_variable = { MNT_the_dowry = 20 }
+			set_variable = { MNT_the_claim = 25 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_clubmen_house
+			add_research_slot = 1
+			custom_effect_tooltip = MNT_the_clubmen_take_the_house_tt
+		}
+	}
+}

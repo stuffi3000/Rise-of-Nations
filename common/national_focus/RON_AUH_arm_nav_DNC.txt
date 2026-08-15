@@ -1,0 +1,2257 @@
+###############################################################################
+##### auh - the army and the fleet, dnc
+##### how the army is manned and what the fleet is for, both decided on rank one
+###############################################################################
+
+
+###############################################################################
+##### f5 - the army, x 312-342
+###############################################################################
+
+# one common army, two landwehren
+shared_focus = {
+	id = AUHDNC_arm_the_three_armies
+	icon = GFX_goal_AUS_austrohungarian_army
+	x = 451
+	y = 0
+	cost = 10
+	search_filters = { FOCUS_FILTER_MILITARY }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_three_armies
+		custom_effect_tooltip = AUH_ref_tt_three_armies
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_three_armies
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+##### rank 1 - who owns the recruit, and there is no going back on it
+
+# hold the army above the two states
+shared_focus = {
+	id = AUHDNC_arm_hold_the_common_army
+	icon = GFX_goal_AUS_austriahungary
+	x = 445
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_armies }
+	mutually_exclusive = {
+		focus = AUHDNC_arm_pay_the_price_of_budapest
+		focus = AUHDNC_arm_impose_the_contingent
+	}
+	available = {
+		NOT = { has_completed_focus = AUHNAT_HUN_concede_the_word_of_command }
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_army_of_all_the_peoples
+		custom_effect_tooltip = AUH_ref_tt_hold_common_army
+		add_command_power = 30
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		add_to_variable = { HUN_support = -10 }
+		add_to_variable = { CZE_support = 3 }
+		add_to_variable = { POL_support = 3 }
+		add_to_variable = { UKR_support = 3 }
+		add_to_variable = { ROM_support = 3 }
+		add_to_variable = { CRO_support = 3 }
+		add_to_variable = { SLV_support = 3 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# buy the men from budapest at budapest's price
+shared_focus = {
+	id = AUHDNC_arm_pay_the_price_of_budapest
+	icon = GFX_focus_HUN_expand_the_army
+	x = 449
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_armies }
+	mutually_exclusive = {
+		focus = AUHDNC_arm_hold_the_common_army
+		focus = AUHDNC_arm_impose_the_contingent
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_purchased_contingent
+		custom_effect_tooltip = AUH_ref_tt_price_of_budapest
+		add_to_variable = { AUH_quote = 5 }
+		add_to_variable = { HUN_support = 10 }
+		add_to_variable = { AUH_gemeinsamkeit = -4 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# take the men by imperial ordinance
+shared_focus = {
+	id = AUHDNC_arm_impose_the_contingent
+	icon = GFX_goal_AUS_divide_military
+	x = 453
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_armies }
+	mutually_exclusive = {
+		focus = AUHDNC_arm_hold_the_common_army
+		focus = AUHDNC_arm_pay_the_price_of_budapest
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_army_by_ordinance
+		add_timed_idea = { idea = AUH_hungarian_national_resistance days = 730 }
+		custom_effect_tooltip = AUH_ref_tt_impose_contingent
+		add_to_variable = { HUN_support = -20 }
+		add_to_variable = { AUH_gemeinsamkeit = 6 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the contingent and what the estimates buy
+
+# the annual intake frozen since the law of 11 april 1889
+shared_focus = {
+	id = AUHDNC_arm_the_recruit_contingent
+	icon = GFX_goal_generic_army_mobilization
+	x = 493
+	y = 2
+	cost = 10
+	prerequisite = {
+		focus = AUHDNC_arm_hold_the_common_army
+		focus = AUHDNC_arm_pay_the_price_of_budapest
+		focus = AUHDNC_arm_impose_the_contingent
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_manpower = 10000
+		custom_effect_tooltip = AUH_ref_tt_recruit_contingent
+		add_to_variable = { AUH_quote = 1 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# the military line of the common budget
+shared_focus = {
+	id = AUHDNC_arm_the_army_estimates
+	icon = GFX_goal_generic_military_funding
+	x = 495
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_recruit_contingent }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_ideas = AUH_ref_the_common_army_estimate
+		custom_effect_tooltip = AUH_ref_tt_army_estimates
+		if = {
+			limit = { owns_state = 4 }
+			4 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### road a - hold the common army
+
+# the army order of chlopy, 16 september 1903
+shared_focus = {
+	id = AUHDNC_arm_the_chlopy_army_order
+	icon = GFX_goal_AUS_the_austrian_compromise
+	x = 501
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_hold_the_common_army }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_ideas = AUH_ref_the_order_of_chlopy
+		custom_effect_tooltip = AUH_ref_tt_chlopy
+		add_to_variable = { AUH_gemeinsamkeit = 6 }
+		add_to_variable = { HUN_support = -5 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+		hidden_effect = {
+			set_variable = { AUH_news_id = 312 }
+			set_variable = { AUH_news_scope = 1 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# the german words of command and nothing more
+shared_focus = {
+	id = AUHDNC_arm_the_eighty_words_of_command
+	icon = GFX_goal_generic_multinational_army
+	x = 503
+	y = 3
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_chlopy_army_order }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_words_of_command
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_eighty_words_of_command
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		add_to_variable = { CZE_support = 2 }
+		add_to_variable = { POL_support = 2 }
+		add_to_variable = { UKR_support = 2 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the regiment is instructed in the tongue it musters in
+shared_focus = {
+	id = AUHDNC_arm_the_regimental_languages
+	icon = GFX_focus_generic_diverse_army
+	x = 481
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_eighty_words_of_command }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_command_power = 30
+		custom_effect_tooltip = AUH_ref_tt_regimental_languages
+		add_to_variable = { ROM_support = 5 }
+		add_to_variable = { SLV_support = 5 }
+		add_to_variable = { CRO_support = 5 }
+		add_to_variable = { SER_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# one oath sworn to the person of the emperor
+shared_focus = {
+	id = AUHDNC_arm_one_oath_and_one_flag
+	icon = GFX_goal_AUS_austrian_military
+	x = 426
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_regimental_languages }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_army_of_all_the_peoples
+			add_idea = AUH_arm_one_oath_and_one_flag
+		}
+		custom_effect_tooltip = AUH_ref_tt_one_oath
+		add_to_variable = { AUH_gemeinsamkeit = 10 }
+		add_to_variable = { HUN_support = -10 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### road b - buy the recruits with the quota
+
+# recruits priced in percentage points
+shared_focus = {
+	id = AUHDNC_arm_the_quota_for_the_recruits
+	icon = GFX_goal_generic_bills
+	x = 505
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_pay_the_price_of_budapest }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		add_political_power = 75
+		custom_effect_tooltip = AUH_ref_tt_quota_recruits
+		add_to_variable = { AUH_quote = 3 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# the intake the two chambers finally voted
+shared_focus = {
+	id = AUHDNC_arm_the_contingent_of_the_new_law
+	icon = GFX_goal_generic_recruitment
+	x = 507
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_quota_for_the_recruits }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		add_timed_idea = { idea = AUH_ref_the_new_recruit_class days = 730 }
+		custom_effect_tooltip = AUH_ref_tt_new_contingent
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_contingent_of_the_new_law
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+	}
+}
+
+# a war ministry answerable to neither parliament
+shared_focus = {
+	id = AUHDNC_arm_the_common_war_ministry
+	icon = GFX_goal_generic_army_command_power
+	x = 485
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_contingent_of_the_new_law }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		add_political_power = 75
+		add_command_power = 50
+		custom_effect_tooltip = AUH_ref_tt_war_ministry
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# an army that exists because a treaty renews it
+shared_focus = {
+	id = AUHDNC_arm_an_army_paid_for_by_treaty
+	icon = GFX_goal_generic_deals
+	x = 430
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_common_war_ministry }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_purchased_contingent
+			add_idea = AUH_arm_an_army_paid_for_by_treaty
+		}
+		custom_effect_tooltip = AUH_ref_tt_army_by_treaty
+		add_to_variable = { AUH_quote = 5 }
+		add_to_variable = { HUN_support = 15 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### road c - take the men by ordinance
+
+# paragraph 14 turned on the recruit lists
+shared_focus = {
+	id = AUHDNC_arm_the_ordinance_of_the_crown
+	icon = GFX_goal_generic_dissolve_parliament
+	x = 509
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_impose_the_contingent }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_war_support = 0.05
+		add_political_power = 75
+		add_command_power = 30
+		custom_effect_tooltip = AUH_ref_tt_ordinance
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		add_to_variable = { HUN_support = -5 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# the chamber cleared by the public force
+shared_focus = {
+	id = AUHDNC_arm_the_hussars_in_the_chamber
+	icon = GFX_goal_generic_martial_law
+	x = 511
+	y = 3
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_ordinance_of_the_crown }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_WAR_SUPPORT FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_war_support = 0.08
+		custom_effect_tooltip = AUH_ref_tt_hussars
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		add_to_variable = { HUN_support = -10 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# the comitats refuse the men, the army takes them
+shared_focus = {
+	id = AUHDNC_arm_the_army_recruits_itself
+	icon = GFX_goal_generic_army_mobilization2
+	x = 489
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_hussars_in_the_chamber }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_ideas = AUH_ref_the_comitats_refuse
+		custom_effect_tooltip = AUH_ref_tt_army_recruits_itself
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_army_recruits_itself
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# an army that answers to the crown alone
+shared_focus = {
+	id = AUHDNC_arm_an_army_above_the_nations
+	icon = GFX_goal_generic_army_professionalism
+	x = 434
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_army_recruits_itself }
+	available = {
+		NOT = { has_completed_focus = AUHNAT_HUN_concede_the_word_of_command }
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_army_by_ordinance
+			add_idea = AUH_arm_an_army_above_the_nations
+		}
+		custom_effect_tooltip = AUH_ref_tt_above_the_nations
+		add_to_variable = { AUH_gemeinsamkeit = 15 }
+		add_to_variable = { HUN_support = -15 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+		hidden_effect = {
+			set_variable = { AUH_news_id = 307 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### the three roads meet at the army law
+
+# the wehrgesetz that thaws the intake of 1889
+shared_focus = {
+	id = AUHDNC_arm_the_wehrgesetz
+	icon = GFX_goal_generic_national_defense_fund
+	x = 419
+	y = 6
+	cost = 10
+	prerequisite = {
+		focus = AUHDNC_arm_one_oath_and_one_flag
+		focus = AUHDNC_arm_an_army_paid_for_by_treaty
+		focus = AUHDNC_arm_an_army_above_the_nations
+	}
+	prerequisite = { focus = AUHDNC_arm_the_army_estimates }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_MANPOWER }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_manpower = 25000
+		add_ideas = AUH_ref_the_wehrgesetz_of_1912
+		if = {
+			limit = { has_idea = AUH_the_frozen_contingent }
+			remove_ideas = AUH_the_frozen_contingent
+		}
+		custom_effect_tooltip = AUH_ref_tt_wehrgesetz
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_wehrgesetz
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+		hidden_effect = {
+			set_variable = { AUH_news_id = 306 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### the general staff
+
+# beck-rzikowsky, chief since 1881
+shared_focus = {
+	id = AUHDNC_arm_the_general_staff_of_beck
+	icon = GFX_goal_generic_officers
+	x = 517
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_armies }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		army_experience = 25
+		add_command_power = 50
+		custom_effect_tooltip = AUH_ref_tt_beck
+		add_doctrine_cost_reduction = {
+			name = AUHDNC_arm_the_general_staff_of_beck
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# the belvedere wants the chair
+shared_focus = {
+	id = AUHDNC_arm_the_succession_at_the_staff
+	icon = GFX_goal_AUS_franz_ferdinand_legacy
+	x = 521
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_general_staff_of_beck }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_political_power = 75
+		add_ideas = AUH_ref_the_belvedere_chancery
+		custom_effect_tooltip = AUH_ref_tt_succession
+	}
+}
+
+# conrad von hoetzendorf, 18 november 1906
+shared_focus = {
+	id = AUHDNC_arm_conrads_general_staff
+	icon = GFX_goal_generic_army_doctrines
+	x = 519
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_succession_at_the_staff }
+	mutually_exclusive = { focus = AUHDNC_arm_keep_beck_at_the_staff }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		army_experience = 25
+		add_ideas = AUH_the_preventive_war_memoranda
+		custom_effect_tooltip = AUH_ref_tt_conrad
+		add_tech_bonus = {
+			name = AUHDNC_arm_conrads_general_staff
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# keep the old man and his caution
+shared_focus = {
+	id = AUHDNC_arm_keep_beck_at_the_staff
+	icon = GFX_goal_generic_defence
+	x = 527
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_succession_at_the_staff }
+	mutually_exclusive = { focus = AUHDNC_arm_conrads_general_staff }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_school_of_beck
+		custom_effect_tooltip = AUH_ref_tt_keep_beck
+	}
+}
+
+# the great manoeuvres of the autumn
+shared_focus = {
+	id = AUHDNC_arm_the_autumn_manoeuvres
+	icon = GFX_goal_generic_position_armies
+	x = 509
+	y = 4
+	cost = 5
+	prerequisite = {
+		focus = AUHDNC_arm_conrads_general_staff
+		focus = AUHDNC_arm_keep_beck_at_the_staff
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		army_experience = 25
+		add_ideas = AUH_ref_the_manoeuvre_season
+		custom_effect_tooltip = AUH_ref_tt_manoeuvres
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_autumn_manoeuvres
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# the staff college on the stiftgasse
+shared_focus = {
+	id = AUHDNC_arm_the_kriegsschule
+	icon = GFX_focus_generic_military_academy
+	x = 450
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_autumn_manoeuvres }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		army_experience = 25
+		add_command_power = 50
+		add_ideas = AUH_arm_the_kriegsschule
+		custom_effect_tooltip = AUH_ref_tt_kriegsschule
+	}
+}
+
+# plan r, plan b, and the choice between them
+shared_focus = {
+	id = AUHDNC_arm_the_deployment_plans
+	icon = GFX_goal_AUS_organize_the_war_plans
+	x = 497
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_conrads_general_staff }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		add_ideas = AUH_ref_the_deployment_plans
+		custom_effect_tooltip = AUH_ref_tt_deployment_plans
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_deployment_plans
+			bonus = 1.0
+			uses = 1
+			category = land_doctrine
+		}
+	}
+}
+
+# the case for settling with the ally first
+shared_focus = {
+	id = AUHDNC_arm_the_memorandum_on_italy
+	icon = GFX_goal_generic_attack_italy_alt
+	x = 438
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_deployment_plans }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_WAR_SUPPORT }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_war_support = 0.08
+		add_ideas = AUH_arm_the_case_against_italy
+		custom_effect_tooltip = AUH_ref_tt_memorandum_italy
+		add_opinion_modifier = { target = ITA modifier = large_decrease }
+		add_named_threat = {
+			threat = 2
+			name = AUH_ref_threat_italy
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_memorandum_on_italy
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+	}
+}
+
+# an army that asks for the war it was built for
+shared_focus = {
+	id = AUHDNC_arm_the_army_that_asks_for_its_war
+	icon = GFX_goal_generic_major_war
+	x = 407
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_memorandum_on_italy }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_WAR_SUPPORT }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_war_support = 0.10
+		swap_ideas = {
+			remove_idea = AUH_arm_the_case_against_italy
+			add_idea = AUH_arm_the_army_that_asks_for_its_war
+		}
+		add_timed_idea = { idea = AUH_ref_the_mobilisation_that_fired_no_shot days = 365 }
+		custom_effect_tooltip = AUH_ref_tt_asks_for_war
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# fortify and wait
+shared_focus = {
+	id = AUHDNC_arm_the_school_of_caution
+	icon = GFX_goal_generic_defense_of_the_lands
+	x = 505
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_keep_beck_at_the_staff }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_school_of_caution
+		add_doctrine_cost_reduction = {
+			name = AUHDNC_arm_the_school_of_caution_doctrine
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_school_of_caution
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+	}
+}
+
+# an instrument that keeps its value by not being spent
+shared_focus = {
+	id = AUHDNC_arm_an_army_not_to_be_used
+	icon = GFX_goal_AUS_defence_of_the_fatherland
+	x = 446
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_school_of_caution }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL FOCUS_FILTER_STABILITY }
+	ai_will_do = { factor = 10 }
+	completion_reward = {
+		add_stability = 0.10
+		add_political_power = 120
+		swap_ideas = {
+			remove_idea = AUH_arm_the_school_of_beck
+			add_idea = AUH_arm_an_army_not_to_be_used
+		}
+		custom_effect_tooltip = AUH_ref_tt_not_to_be_used
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the evidenzbureau, tenth section of the staff
+
+# the intelligence bureau of the general staff
+shared_focus = {
+	id = AUHDNC_arm_the_evidenzbureau
+	icon = GFX_focus_AUS_the_evidenzburo
+	x = 513
+	y = 2
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_general_staff_of_beck }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_evidenzbureau
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_evidenzbureau
+			bonus = 1.0
+			uses = 1
+			category = decryption_tech
+		}
+		if = {
+			limit = { NOT = { has_idea = AUH_Evidenzbureau1 } }
+			add_ideas = AUH_Evidenzbureau1
+		}
+		else = {
+			add_political_power = 50
+		}
+	}
+}
+
+# agents on the drina and on the po
+shared_focus = {
+	id = AUHDNC_arm_the_kundschaftsdienst
+	icon = GFX_goal_generic_secret_documents
+	x = 515
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_evidenzbureau }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_kundschaftsdienst
+		custom_effect_tooltip = AUH_ref_tt_kundschaftsdienst
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_kundschaftsdienst
+			bonus = 1.0
+			uses = 1
+			category = encryption_tech
+		}
+	}
+}
+
+# watch the watchers
+shared_focus = {
+	id = AUHDNC_arm_the_counter_espionage_group
+	icon = GFX_focus_generic_secret_service_agency
+	x = 493
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_kundschaftsdienst }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_kundschaftsdienst
+			add_idea = AUH_arm_the_counter_espionage_group
+		}
+		custom_effect_tooltip = AUH_ref_tt_counter_espionage
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_counter_espionage_group
+			bonus = 1.0
+			uses = 1
+			category = decryption_tech
+		}
+		set_country_flag = AUH_ref_counter_espionage_established
+		add_to_variable = { SER_support = -5 }
+		add_to_variable = { CRO_support = -5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+##### the guns
+
+# heavy siege pieces or a light field gun
+shared_focus = {
+	id = AUHDNC_arm_the_artillery_question
+	icon = GFX_goal_generic_army_artillery
+	x = 473
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_army_estimates }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_artillery_question
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_artillery_question
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+	}
+}
+
+# the heavy train that opens a fortress
+shared_focus = {
+	id = AUHDNC_arm_the_siege_batteries
+	icon = GFX_goal_generic_army_artillery2
+	x = 418
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_artillery_question }
+	mutually_exclusive = { focus = AUHDNC_arm_the_field_gun_of_1905 }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_siege_train
+		custom_effect_tooltip = AUH_ref_tt_siege_batteries
+		if = {
+			limit = { owns_state = 9 }
+			9 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_siege_batteries
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		add_to_variable = { CZE_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the quick firing field piece of 1905
+shared_focus = {
+	id = AUHDNC_arm_the_field_gun_of_1905
+	icon = GFX_goal_generic_artillery_improved
+	x = 426
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_artillery_question }
+	mutually_exclusive = { focus = AUHDNC_arm_the_siege_batteries }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_field_artillery_of_1905
+		custom_effect_tooltip = AUH_ref_tt_field_gun
+		add_equipment_to_stockpile = {
+			type = artillery_equipment
+			amount = 300
+			producer = AUH
+		}
+		if = {
+			limit = { owns_state = 75 }
+			75 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_field_gun_of_1905
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+	}
+}
+
+# the 30,5 cm mortar of pilsen
+shared_focus = {
+	id = AUHDNC_arm_the_thirty_and_a_half_mortar
+	icon = GFX_goal_generic_railway_artillery
+	x = 398
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_siege_batteries }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_mortar
+		add_equipment_to_stockpile = {
+			type = heavy_artillery_equipment
+			amount = 40
+			producer = AUH
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_thirty_and_a_half_mortar
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+	}
+}
+
+# guns that a mule can carry over a pass
+shared_focus = {
+	id = AUHDNC_arm_the_mountain_batteries
+	icon = GFX_goal_generic_mobile_artillery_light
+	x = 402
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_field_gun_of_1905 }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_mountain_batteries
+		if = {
+			limit = { owns_state = 153 }
+			153 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_mountain_batteries
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+	}
+}
+
+# guns for the landwehr and the honved as well
+shared_focus = {
+	id = AUHDNC_arm_the_artillery_of_the_landwehr
+	icon = GFX_goal_generic_national_arsenal
+	x = 387
+	y = 7
+	cost = 10
+	prerequisite = {
+		focus = AUHDNC_arm_the_thirty_and_a_half_mortar
+		focus = AUHDNC_arm_the_mountain_batteries
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_landwehr_guns
+		add_equipment_to_stockpile = {
+			type = artillery_equipment
+			amount = 300
+			producer = AUH
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_artillery_of_the_landwehr
+			bonus = 1.0
+			uses = 1
+			category = artillery
+		}
+		add_to_variable = { AUS_support = 5 }
+		add_to_variable = { HUN_support = 5 }
+		add_to_variable = { AUH_gemeinsamkeit = -4 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the rifles
+
+# the works on the enns, under the army contract
+shared_focus = {
+	id = AUHDNC_arm_the_steyr_rifle_works
+	icon = GFX_focus_AUS_steyr_arms_investment
+	x = 465
+	y = 4
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_army_estimates }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_ARMY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_steyr_rifles
+		if = {
+			limit = { owns_state = 152 }
+			152 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_steyr_rifle_works
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+	}
+}
+
+# the straight pull repeater of 1895
+shared_focus = {
+	id = AUHDNC_arm_the_mannlicher_repeater
+	icon = GFX_goal_generic_small_arms
+	x = 385
+	y = 5
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_steyr_rifle_works }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_mannlicher_standard
+		custom_effect_tooltip = AUH_ref_tt_mannlicher
+		add_equipment_to_stockpile = {
+			type = infantry_equipment
+			amount = 2000
+			producer = AUH
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_mannlicher_repeater
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+	}
+}
+
+# the water cooled gun of the schwarzlose pattern
+shared_focus = {
+	id = AUHDNC_arm_the_schwarzlose_machine_gun
+	icon = GFX_goal_generic_break_rifle
+	x = 377
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_mannlicher_repeater }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_schwarzlose
+		add_equipment_production = {
+			equipment = {
+				type = support_equipment_1
+				creator = "AUH"
+			}
+			requested_factories = 2
+			progress = 0.4
+			efficiency = 50
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_schwarzlose_machine_gun
+			bonus = 1.0
+			uses = 1
+			category = infantry_weapons
+		}
+	}
+}
+
+# boots, bread and the rolling kitchen
+shared_focus = {
+	id = AUHDNC_arm_the_boot_and_the_field_kitchen
+	icon = GFX_goal_generic_march_infantry
+	x = 394
+	y = 6
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_mannlicher_repeater }
+	search_filters = { FOCUS_FILTER_MILITARY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_train_and_the_kitchen
+		custom_effect_tooltip = AUH_ref_tt_field_kitchen
+	}
+}
+
+# the army the population could have carried
+shared_focus = {
+	id = AUHDNC_arm_the_army_of_fifty_millions
+	icon = GFX_goal_generic_army_elite
+	x = 377
+	y = 7
+	cost = 15
+	prerequisite = { focus = AUHDNC_arm_the_schwarzlose_machine_gun }
+	prerequisite = { focus = AUHDNC_arm_the_boot_and_the_field_kitchen }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 30 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_mannlicher_standard
+			add_idea = AUH_arm_the_army_of_fifty_millions
+		}
+		custom_effect_tooltip = AUH_ref_tt_fifty_millions
+		add_doctrine_cost_reduction = {
+			name = AUHDNC_arm_the_army_of_fifty_millions
+			cost_reduction = 0.5
+			uses = 1
+			category = land_doctrine
+		}
+		if = {
+			limit = { date > 1919.1.1 }
+			add_tech_bonus = {
+				name = AUHDNC_arm_the_army_of_fifty_millions_late
+				bonus = 1.0
+				uses = 2
+				category = infantry_weapons
+			}
+		}
+		add_to_variable = { AUH_gemeinsamkeit = 8 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### hangs off the legacy military academy
+
+# officers who must pass in a second tongue
+shared_focus = {
+	id = AUHDNC_arm_the_officer_corps_of_many_tongues
+	icon = GFX_goal_generic_officers
+	x = 324
+	y = 10
+	cost = 10
+	prerequisite = { focus = AUH_DNC_military_academy }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_command_power = 30
+		add_ideas = AUH_arm_the_officer_corps_of_many_tongues
+		custom_effect_tooltip = AUH_ref_tt_officer_corps
+	}
+}
+
+# three years to learn the regiment's language
+shared_focus = {
+	id = AUHDNC_arm_the_three_year_language_rule
+	icon = GFX_goal_generic_education
+	x = 324
+	y = 11
+	cost = 5
+	prerequisite = { focus = AUHDNC_arm_the_officer_corps_of_many_tongues }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_POLITICAL FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_political_power = 50
+		custom_effect_tooltip = AUH_ref_tt_language_rule
+		add_to_variable = { CZE_support = 3 }
+		add_to_variable = { POL_support = 3 }
+		add_to_variable = { UKR_support = 3 }
+		add_to_variable = { ROM_support = 3 }
+		add_to_variable = { CRO_support = 3 }
+		add_to_variable = { SLV_support = 3 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# the tyrolean rifles of the two crownlands
+shared_focus = {
+	id = AUHDNC_arm_the_kaiserjager_and_the_landesschutzen
+	icon = GFX_focus_AUS_osterreichische_gebirgsjager
+	x = 322
+	y = 12
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_year_language_rule }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_tyrolean_rifles
+		set_technology = { tech_mountaineers = 1 }
+		custom_effect_tooltip = AUH_ref_tt_kaiserjager
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_kaiserjager_and_the_landesschutzen
+			bonus = 1.0
+			uses = 1
+			category = mountaineers_tech
+		}
+	}
+}
+
+# the lines the staff draws before the diets do
+shared_focus = {
+	id = AUHDNC_arm_the_military_railways
+	icon = GFX_goal_generic_railroad
+	x = 326
+	y = 12
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_three_year_language_rule }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_military_railways
+		if = {
+			limit = { owns_state = 1107 }
+			1107 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = { owns_state = 153 }
+			153 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		random_owned_controlled_state = {
+			limit = {
+				OR = {
+					state = 91
+					state = 89
+				}
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_military_railways
+			bonus = 1.0
+			uses = 1
+			category = construction_tech
+		}
+	}
+}
+
+# works on the passes into the venetian plain
+shared_focus = {
+	id = AUHDNC_arm_the_alpine_barrier
+	icon = GFX_focus_generic_mountain_fortification
+	x = 322
+	y = 13
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_kaiserjager_and_the_landesschutzen }
+	prerequisite = { focus = AUHDNC_arm_the_military_railways }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		add_ideas = AUH_arm_the_alpine_barrier
+		custom_effect_tooltip = AUH_ref_tt_alpine_barrier
+		if = {
+			limit = { owns_state = 153 }
+			153 = {
+				add_building_construction = {
+					type = bunker
+					level = 2
+					instant_build = yes
+					province = {
+						all_provinces = yes
+						limit_to_border = yes
+					}
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_alpine_barrier
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+	}
+}
+
+# what the estimates would actually carry
+shared_focus = {
+	id = AUHDNC_arm_the_army_the_monarchy_could_afford
+	icon = GFX_goal_generic_military_equipment
+	x = 322
+	y = 14
+	cost = 10
+	prerequisite = { focus = AUHDNC_arm_the_alpine_barrier }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		swap_ideas = {
+			remove_idea = AUH_arm_the_officer_corps_of_many_tongues
+			add_idea = AUH_arm_the_army_the_monarchy_could_afford
+		}
+		custom_effect_tooltip = AUH_ref_tt_army_afforded
+		add_tech_bonus = {
+			name = AUHDNC_arm_the_army_the_monarchy_could_afford
+			bonus = 1.0
+			uses = 2
+			category = land_doctrine
+		}
+		add_to_variable = { AUH_quote = 3 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+
+###############################################################################
+##### f7 - the navy, x 364-390
+##### no focus in this tree pays in political power
+###############################################################################
+
+# the fleet of a land power
+shared_focus = {
+	id = AUHDNC_nav_the_kuk_kriegsmarine
+	icon = GFX_focus_AUS_reestablish_austrian_navy
+	x = 563
+	y = 0
+	cost = 10
+	available = {
+		any_owned_state = {
+			is_coastal = yes
+			is_controlled_by = ROOT
+		}
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_nav_the_common_fleet
+		custom_effect_tooltip = AUH_ref_tt_kriegsmarine
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_kuk_kriegsmarine
+			bonus = 1.0
+			uses = 1
+			category = naval_equipment
+		}
+		if = {
+			limit = { owns_state = 993 }
+			993 = { add_extra_state_shared_building_slots = 1 }
+		}
+	}
+}
+
+##### rank 1 - what the fleet is for, and the answer is binding
+
+# torpedo boats, monitors and the coast
+shared_focus = {
+	id = AUHDNC_nav_the_coast_defence_school
+	icon = GFX_focus_generic_coastal_fort
+	x = 499
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_kuk_kriegsmarine }
+	mutually_exclusive = { focus = AUHDNC_nav_the_high_seas_school }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		navy_experience = 25
+		swap_ideas = {
+			remove_idea = AUH_nav_the_common_fleet
+			add_idea = AUH_nav_the_coast_defence_school
+		}
+		custom_effect_tooltip = AUH_ref_tt_coast_school
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					instant_build = yes
+					province = 6626
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_coast_defence_school
+			bonus = 1.0
+			uses = 1
+			category = cat_torpedoes
+		}
+		add_to_variable = { AUH_quote = -1 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# a line of battle in the adriatic
+shared_focus = {
+	id = AUHDNC_nav_the_high_seas_school
+	icon = GFX_goal_generic_blue_navy
+	x = 563
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_kuk_kriegsmarine }
+	mutually_exclusive = { focus = AUHDNC_nav_the_coast_defence_school }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		swap_ideas = {
+			remove_idea = AUH_nav_the_common_fleet
+			add_idea = AUH_nav_the_high_seas_school
+		}
+		custom_effect_tooltip = AUH_ref_tt_high_seas_school
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		add_to_variable = { AUH_quote = 2 }
+		add_to_variable = { HUN_support = -5 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the merchant flag
+
+# the lloyd austriaco and its subsidised routes
+shared_focus = {
+	id = AUHDNC_nav_the_austrian_lloyd
+	icon = GFX_goal_generic_trade
+	x = 581
+	y = 1
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_kuk_kriegsmarine }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 10
+		add_ideas = AUH_nav_the_austrian_lloyd
+		custom_effect_tooltip = AUH_ref_tt_lloyd
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		if = {
+			limit = { country_exists = ENG }
+			ENG = {
+				diplomatic_relation = {
+					country = AUH
+					relation = docking_rights
+					active = yes
+				}
+			}
+		}
+	}
+}
+
+# dalmatian and istrian seamen fill the lists
+shared_focus = {
+	id = AUHDNC_nav_the_seamen_of_the_littoral
+	icon = GFX_goal_generic_marines2
+	x = 581
+	y = 2
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_austrian_lloyd }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_seamen
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_seamen_of_the_littoral
+			bonus = 1.0
+			uses = 1
+			category = marine_tech
+		}
+		add_to_variable = { CRO_support = 5 }
+		add_to_variable = { SLV_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# quays, cranes and the warehouse road
+shared_focus = {
+	id = AUHDNC_nav_the_harbour_of_trieste
+	icon = GFX_goal_generic_construct_naval_dockyard
+	x = 581
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_seamen_of_the_littoral }
+	bypass = {
+		NOT = { owns_state = 993 }
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 10
+		custom_effect_tooltip = AUH_ref_tt_harbour_trieste
+		993 = {
+			add_extra_state_shared_building_slots = 2
+			add_building_construction = {
+				type = dockyard
+				level = 2
+				instant_build = yes
+			}
+			add_building_construction = {
+				type = infrastructure
+				level = 1
+				instant_build = yes
+			}
+		}
+	}
+}
+
+##### the credits both delegations have to vote
+
+# the naval section of the common war ministry
+shared_focus = {
+	id = AUHDNC_nav_the_marinesektion
+	icon = GFX_focus_AUS_promote_admirals
+	x = 573
+	y = 2
+	cost = 5
+	prerequisite = {
+		focus = AUHDNC_nav_the_coast_defence_school
+		focus = AUHDNC_nav_the_high_seas_school
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_ref_the_marinesektion
+		custom_effect_tooltip = AUH_ref_tt_marinesektion
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_marinesektion
+			bonus = 1.0
+			uses = 1
+			category = naval_doctrine
+		}
+	}
+}
+
+# sixty delegates in vienna, sixty in budapest
+shared_focus = {
+	id = AUHDNC_nav_the_vote_of_the_two_delegations
+	icon = GFX_goal_generic_parliament
+	x = 573
+	y = 3
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_marinesektion }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_nav_the_delegation_credits
+		custom_effect_tooltip = AUH_ref_tt_delegations
+		add_command_power = 50
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the coast defence road
+
+# armoured river craft for the danube
+shared_focus = {
+	id = AUHDNC_nav_the_monitors_of_the_danube
+	icon = GFX_goal_generic_navy_cruiser
+	x = 545
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHDNC_nav_the_coast_defence_school }
+	prerequisite = { focus = AUHDNC_nav_the_vote_of_the_two_delegations }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_monitors
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_monitors_of_the_danube
+			bonus = 1.0
+			uses = 1
+			category = naval_equipment
+		}
+	}
+}
+
+# small hulls that can close a strait
+shared_focus = {
+	id = AUHDNC_nav_the_torpedo_flotillas
+	icon = GFX_goal_generic_destroyer
+	x = 480
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_monitors_of_the_danube }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_torpedo_flotillas
+		if = {
+			limit = { owns_state = 163 }
+			163 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_torpedo_flotillas
+			bonus = 1.0
+			uses = 1
+			category = cat_torpedoes
+		}
+	}
+}
+
+# the torpedo works at fiume
+shared_focus = {
+	id = AUHDNC_nav_the_whitehead_works
+	icon = GFX_goal_generic_wolf_pack
+	x = 445
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_torpedo_flotillas }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		add_ideas = AUH_nav_the_whitehead_torpedo
+		custom_effect_tooltip = AUH_ref_tt_whitehead
+		if = {
+			limit = { owns_state = 103 }
+			103 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_whitehead_works
+			bonus = 1.0
+			uses = 1
+			category = cat_torpedoes
+		}
+	}
+}
+
+# a fleet nobody has to argue about
+shared_focus = {
+	id = AUHDNC_nav_a_fleet_that_stays_at_home
+	icon = GFX_goal_generic_defense_of_the_shores
+	x = 383
+	y = 7
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_whitehead_works }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		navy_experience = 50
+		swap_ideas = {
+			remove_idea = AUH_nav_the_coast_defence_school
+			add_idea = AUH_nav_a_fleet_that_stays_at_home
+		}
+		custom_effect_tooltip = AUH_ref_tt_fleet_at_home
+		add_doctrine_cost_reduction = {
+			name = AUHDNC_nav_a_fleet_that_stays_at_home
+			cost_reduction = 0.5
+			uses = 1
+			category = naval_doctrine
+		}
+		add_to_variable = { AUH_quote = -3 }
+		add_to_variable = { AUH_gemeinsamkeit = -4 }
+		add_to_variable = { HUN_support = 10 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the high seas road
+
+# montecuccoli degli erri takes the marinekommando
+shared_focus = {
+	id = AUHDNC_nav_montecuccoli_takes_the_helm
+	icon = GFX_goal_generic_admirality
+	x = 553
+	y = 4
+	cost = 5
+	prerequisite = { focus = AUHDNC_nav_the_high_seas_school }
+	prerequisite = { focus = AUHDNC_nav_the_vote_of_the_two_delegations }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_HISTORICAL }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_ref_the_montecuccoli_programme
+		custom_effect_tooltip = AUH_ref_tt_montecuccoli
+		add_tech_bonus = {
+			name = AUHDNC_nav_montecuccoli_takes_the_helm
+			bonus = 1.0
+			uses = 1
+			category = naval_doctrine
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 308 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+# a navy league to make the credits popular
+shared_focus = {
+	id = AUHDNC_nav_the_flottenverein
+	icon = GFX_goal_generic_propaganda
+	x = 488
+	y = 5
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_montecuccoli_takes_the_helm }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_WAR_SUPPORT }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_war_support = 0.08
+		add_ideas = AUH_nav_the_flottenverein
+		custom_effect_tooltip = AUH_ref_tt_flottenverein
+		add_popularity = {
+			ideology = neutrality
+			popularity = 0.03
+		}
+	}
+}
+
+# three battleships of ten thousand tons
+shared_focus = {
+	id = AUHDNC_nav_the_erzherzog_karl_class
+	icon = GFX_goal_generic_battleship
+	x = 453
+	y = 6
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_flottenverein }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_erzherzog_karl
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_erzherzog_karl_class
+			bonus = 1.0
+			uses = 1
+			category = bb_tech
+		}
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# semi dreadnoughts laid down after dreadnought
+shared_focus = {
+	id = AUHDNC_nav_the_radetzky_class
+	icon = GFX_goal_generic_navy_battleship
+	x = 427
+	y = 7
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_erzherzog_karl_class }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 50
+		custom_effect_tooltip = AUH_ref_tt_radetzky
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_radetzky_class
+			bonus = 1.0
+			uses = 1
+			category = bb_tech
+		}
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+		hidden_effect = {
+			set_variable = { AUH_news_id = 309 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### hungary pays, hungary wants the keels
+
+# the yards are shared out before the ships are ordered
+shared_focus = {
+	id = AUHDNC_nav_the_price_of_the_keels
+	icon = GFX_goal_generic_positive_trade_relations
+	x = 383
+	y = 8
+	cost = 10
+	prerequisite = {
+		focus = AUHDNC_nav_a_fleet_that_stays_at_home
+		focus = AUHDNC_nav_the_radetzky_class
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_ref_the_keels_of_two_states
+		custom_effect_tooltip = AUH_ref_tt_price_of_keels
+		if = {
+			limit = { owns_state = 1066 }
+			1066 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_to_variable = { HUN_support = 10 }
+		add_to_variable = { AUH_quote = 2 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+##### the bases
+
+# the war port at the head of the istrian peninsula
+shared_focus = {
+	id = AUHDNC_nav_the_arsenal_at_pola
+	icon = GFX_goal_generic_naval_base
+	x = 378
+	y = 9
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_price_of_the_keels }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_ref_the_arsenal_at_pola
+		custom_effect_tooltip = AUH_ref_tt_pola
+		if = {
+			limit = { owns_state = 736 }
+			736 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = arms_factory
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_arsenal_at_pola
+			bonus = 1.0
+			uses = 1
+			category = naval_equipment
+		}
+	}
+}
+
+# the anchorage under the black mountain
+shared_focus = {
+	id = AUHDNC_nav_the_bay_of_cattaro
+	icon = GFX_goal_generic_occupy_states_coastal
+	x = 378
+	y = 10
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_arsenal_at_pola }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_cattaro
+		if = {
+			limit = { owns_state = 163 }
+			163 = {
+				add_extra_state_shared_building_slots = 1
+				add_building_construction = {
+					type = naval_base
+					level = 3
+					instant_build = yes
+					province = 11901
+				}
+			}
+		}
+		add_victory_points = {
+			province = 11901
+			value = 5
+		}
+	}
+}
+
+# guns that answer the heights
+shared_focus = {
+	id = AUHDNC_nav_the_coastal_batteries
+	icon = GFX_goal_generic_defence_sweden
+	x = 380
+	y = 11
+	cost = 5
+	prerequisite = { focus = AUHDNC_nav_the_bay_of_cattaro }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 10
+		custom_effect_tooltip = AUH_ref_tt_coastal_batteries
+		if = {
+			limit = { owns_state = 163 }
+			163 = {
+				add_building_construction = {
+					type = coastal_bunker
+					level = 2
+					instant_build = yes
+					province = 11901
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_coastal_batteries
+			bonus = 1.0
+			uses = 1
+			category = cat_fortification
+		}
+	}
+}
+
+##### the mountain that overlooks the anchorage
+
+# the montenegrin guns above cattaro
+shared_focus = {
+	id = AUHDNC_nav_the_lovcen_question
+	icon = GFX_goal_generic_mountain_warfare
+	x = 376
+	y = 11
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_bay_of_cattaro }
+	will_lead_to_war_with = MNT
+	allow_branch = {
+		country_exists = MNT
+	}
+	available = {
+		country_exists = MNT
+		NOT = { has_war_with = MNT }
+	}
+	bypass = {
+		OR = {
+			NOT = { country_exists = MNT }
+			MNT = { is_subject_of = AUH }
+		}
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_ANNEXATION }
+	ai_will_do = { factor = 5 }
+	completion_reward = {
+		add_war_support = 0.08
+		create_wargoal = {
+			type = annex_everything
+			target = MNT
+		}
+		add_ideas = AUH_nav_the_guns_above_cattaro
+		custom_effect_tooltip = AUH_ref_tt_lovcen
+		add_named_threat = {
+			threat = 3
+			name = AUH_ref_threat_lovcen
+		}
+		add_opinion_modifier = { target = SER modifier = large_decrease }
+		add_to_variable = { SER_support = -10 }
+		AUH_clamp_nationality_support = yes
+		hidden_effect = {
+			set_variable = { AUH_news_id = 310 }
+			set_variable = { AUH_news_scope = 3 }
+			AUH_headline = yes
+		}
+	}
+}
+
+##### the yards
+
+# the stabilimento tecnico triestino
+shared_focus = {
+	id = AUHDNC_nav_the_stabilimento_tecnico
+	icon = GFX_focus_AUS_revive_stt
+	x = 388
+	y = 9
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_price_of_the_keels }
+	bypass = {
+		NOT = { owns_state = 993 }
+	}
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INDUSTRY }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		add_ideas = AUH_nav_the_triestine_yards
+		custom_effect_tooltip = AUH_ref_tt_stt
+		993 = {
+			add_extra_state_shared_building_slots = 1
+			add_building_construction = {
+				type = dockyard
+				level = 1
+				instant_build = yes
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_stabilimento_tecnico
+			bonus = 1.0
+			uses = 1
+			category = naval_equipment
+		}
+	}
+}
+
+# the first boats of the submarine station
+shared_focus = {
+	id = AUHDNC_nav_the_first_submarines
+	icon = GFX_goal_generic_navy_submarine
+	x = 388
+	y = 10
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_stabilimento_tecnico }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_ideas = AUH_ref_the_submarine_station
+		custom_effect_tooltip = AUH_ref_tt_submarines
+		if = {
+			limit = { owns_state = 163 }
+			163 = {
+				add_building_construction = {
+					type = dockyard
+					level = 1
+					instant_build = yes
+				}
+			}
+		}
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_first_submarines
+			bonus = 1.0
+			uses = 1
+			category = ss_tech
+		}
+	}
+}
+
+# mines, nets and the barrage across the strait
+shared_focus = {
+	id = AUHDNC_nav_the_mine_and_torpedo_service
+	icon = GFX_focus_generic_mine_warfare
+	x = 388
+	y = 11
+	cost = 5
+	prerequisite = { focus = AUHDNC_nav_the_first_submarines }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		custom_effect_tooltip = AUH_ref_tt_mine_service
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_mine_and_torpedo_service
+			bonus = 1.0
+			uses = 1
+			category = naval_mines
+		}
+	}
+}
+
+##### what the fleet is for, answered a second time
+
+# two states, one flag, one estimate
+shared_focus = {
+	id = AUHDNC_nav_the_fleet_and_the_two_states
+	icon = GFX_goal_generic_navy_doctrines_tactics
+	x = 376
+	y = 12
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_coastal_batteries }
+	prerequisite = { focus = AUHDNC_nav_the_mine_and_torpedo_service }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_INTERNAL_AFFAIRS }
+	ai_will_do = { factor = 25 }
+	completion_reward = {
+		navy_experience = 25
+		add_command_power = 50
+		custom_effect_tooltip = AUH_ref_tt_fleet_two_states
+		add_to_variable = { AUH_quote = 2 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# pay off the hulls and man the carpathians
+shared_focus = {
+	id = AUHDNC_nav_the_fleet_of_a_land_power
+	icon = GFX_goal_generic_army_hat_and_medal
+	x = 372
+	y = 13
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_fleet_and_the_two_states }
+	mutually_exclusive = { focus = AUHDNC_nav_the_adriatic_is_ours }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_RESEARCH }
+	ai_will_do = { factor = 15 }
+	completion_reward = {
+		custom_effect_tooltip = AUH_ref_tt_land_power
+		add_tech_bonus = {
+			name = AUHDNC_nav_the_fleet_of_a_land_power
+			bonus = 1.0
+			uses = 2
+			category = mountaineers_tech
+		}
+		if = {
+			limit = { has_idea = AUH_nav_the_high_seas_school }
+			swap_ideas = {
+				remove_idea = AUH_nav_the_high_seas_school
+				add_idea = AUH_nav_the_fleet_of_a_land_power
+			}
+		}
+		else_if = {
+			limit = { has_idea = AUH_nav_a_fleet_that_stays_at_home }
+			swap_ideas = {
+				remove_idea = AUH_nav_a_fleet_that_stays_at_home
+				add_idea = AUH_nav_the_fleet_of_a_land_power
+			}
+		}
+		else_if = {
+			limit = { NOT = { has_idea = AUH_nav_the_fleet_of_a_land_power } }
+			add_ideas = AUH_nav_the_fleet_of_a_land_power
+		}
+		if = {
+			limit = { date > 1919.1.1 }
+			add_doctrine_cost_reduction = {
+				name = AUHDNC_nav_the_fleet_of_a_land_power_late
+				cost_reduction = 0.5
+				uses = 1
+				category = land_doctrine
+			}
+		}
+		add_to_variable = { HUN_support = 15 }
+		add_to_variable = { AUH_quote = -3 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# the sea between two coasts is a national interest
+shared_focus = {
+	id = AUHDNC_nav_the_adriatic_is_ours
+	icon = GFX_goal_generic_large_fleet
+	x = 380
+	y = 13
+	cost = 10
+	prerequisite = { focus = AUHDNC_nav_the_fleet_and_the_two_states }
+	mutually_exclusive = { focus = AUHDNC_nav_the_fleet_of_a_land_power }
+	search_filters = { FOCUS_FILTER_MILITARY FOCUS_FILTER_NAVY_XP FOCUS_FILTER_WAR_SUPPORT }
+	ai_will_do = { factor = 20 }
+	completion_reward = {
+		navy_experience = 50
+		add_war_support = 0.10
+		custom_effect_tooltip = AUH_ref_tt_adriatic
+		if = {
+			limit = { has_idea = AUH_nav_the_high_seas_school }
+			swap_ideas = {
+				remove_idea = AUH_nav_the_high_seas_school
+				add_idea = AUH_nav_the_adriatic_is_ours
+			}
+		}
+		else_if = {
+			limit = { has_idea = AUH_nav_a_fleet_that_stays_at_home }
+			swap_ideas = {
+				remove_idea = AUH_nav_a_fleet_that_stays_at_home
+				add_idea = AUH_nav_the_adriatic_is_ours
+			}
+		}
+		else_if = {
+			limit = { NOT = { has_idea = AUH_nav_the_adriatic_is_ours } }
+			add_ideas = AUH_nav_the_adriatic_is_ours
+		}
+		if = {
+			limit = { owns_state = 993 }
+			993 = {
+				add_extra_state_shared_building_slots = 2
+				add_building_construction = {
+					type = dockyard
+					level = 2
+					instant_build = yes
+				}
+			}
+		}
+		add_named_threat = {
+			threat = 3
+			name = AUH_ref_threat_adriatic
+		}
+		add_opinion_modifier = { target = ITA modifier = large_decrease }
+		if = {
+			limit = { date > 1919.1.1 }
+			navy_experience = 50
+		}
+		add_to_variable = { AUH_quote = 5 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}

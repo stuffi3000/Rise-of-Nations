@@ -1,0 +1,1390 @@
+# ##############################################################################
+# CAN_domestic_events.txt - domestic politics and unrest, namespace can_domestic
+# ##############################################################################
+
+add_namespace = can_domestic
+
+
+# ##############################################################################
+# branch 02 - the home front
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# can_domestic.5 - CAN_schools_of_the_new_provinces
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.5
+	title = can_domestic.5.t
+	desc = can_domestic.5.d
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1905.7.20
+		date < 1912.1.1
+		has_country_flag = CAN_done_the_autonomy_bills
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.5.a
+		add_stability = -0.03
+		set_variable = { CAN_bt_arg_value = 8 }
+		set_variable = { CAN_bt_arg_cause = 3 }
+		CAN_add_blood_tax = yes
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.3 - CAN_the_lethbridge_lockout
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.3
+	title = can_domestic.3.t
+	desc = can_domestic.3.d
+	picture = GFX_report_event_generic_factory
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1906.10.15
+		date < 1908.4.1
+		has_country_flag = CAN_done_the_conciliation_act
+		NOT = { has_country_flag = CAN_done_the_industrial_disputes_act }
+	}
+
+	mean_time_to_happen = {
+		days = 14
+	}
+
+	option = {
+		name = can_domestic.3.a
+		add_political_power = -25
+		add_stability = 0.02
+		set_country_flag = CAN_lethbridge_arbitrated
+		custom_effect_tooltip = can_domestic.3.a.tt
+	}
+
+	option = {
+		name = can_domestic.3.b
+		add_stability = -0.03
+		add_to_variable = { CAN_labour_grievance = 5 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		set_country_flag = CAN_lethbridge_law_stands
+		custom_effect_tooltip = can_domestic.3.b.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.4 - CAN_the_spanish_influenza
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.4
+	title = can_domestic.4.t
+	desc = can_domestic.4.d
+	picture = GFX_report_event_generic_medical
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1918.9.25
+		date < 1919.5.1
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.4.a
+		add_manpower = -50000
+		add_stability = -0.05
+		add_political_power = -30
+		set_country_flag = { flag = CAN_influenza_pandemic value = 1 days = 365 }
+		custom_effect_tooltip = can_domestic.4.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.1 - CAN_the_winnipeg_general_strike
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.1
+	title = can_domestic.1.t
+	desc = can_domestic.1.d
+	picture = GFX_report_event_general_strike
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1919.5.14
+		date < 1921.1.1
+		has_war = no
+		OR = {
+			has_country_flag = CAN_done_the_western_labour_conference
+			has_idea = CAN_idea_the_one_big_union
+			has_idea = CAN_idea_compulsory_conciliation
+			has_idea = CAN_idea_organized_labour
+			check_variable = { var = CAN_labour_grievance value = 30 compare = greater_than_or_equals }
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	option = {
+		name = can_domestic.1.a
+		add_stability = -0.06
+		add_political_power = -25
+		add_popularity = {
+			ideology = communism
+			popularity = 0.02
+		}
+		add_to_variable = { CAN_labour_grievance = 5 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		set_country_flag = { flag = CAN_a_city_stopped value = 1 days = 45 }
+		custom_effect_tooltip = can_domestic.1.a.tt
+		hidden_effect = {
+			country_event = { id = can_domestic.2 days = 37 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.2 - CAN_bloody_saturday
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.2
+
+	title = {
+		text = can_domestic.2.t_charge
+		trigger = { has_country_flag = CAN_strike_committee_arrested }
+	}
+	title = {
+		text = can_domestic.2.t_quiet
+		trigger = { NOT = { has_country_flag = CAN_strike_committee_arrested } }
+	}
+
+	desc = {
+		text = can_domestic.2.d_charge
+		trigger = { has_country_flag = CAN_strike_committee_arrested }
+	}
+	desc = {
+		text = can_domestic.2.d_quiet
+		trigger = { NOT = { has_country_flag = CAN_strike_committee_arrested } }
+	}
+
+	picture = GFX_report_event_generic_riot
+
+	is_triggered_only = yes
+
+	option = {
+		name = can_domestic.2.a
+		trigger = { has_country_flag = CAN_strike_committee_arrested }
+		add_to_variable = { CAN_labour_grievance = 8 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		add_to_variable = { CAN_civil_liberties_debt = 1 }
+		if = {
+			limit = { has_country_flag = CAN_done_section_ninety_eight }
+			add_stability = 0.02
+			custom_effect_tooltip = can_domestic.2.a.tt_section
+		}
+		else = {
+			add_stability = -0.05
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.02
+			}
+			custom_effect_tooltip = can_domestic.2.a.tt_nothing
+		}
+	}
+
+	option = {
+		name = can_domestic.2.b
+		trigger = { NOT = { has_country_flag = CAN_strike_committee_arrested } }
+		add_stability = -0.02
+		add_to_variable = { CAN_labour_grievance = 3 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.02
+		}
+		set_country_flag = CAN_the_strike_ended_without_the_mounted_police
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.7 - CAN_the_senate_rejects_the_pension
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.7
+	title = can_domestic.7.t
+	desc = can_domestic.7.d
+	picture = GFX_report_event_generic_congress_senate
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1926.6.1
+		date < 1929.1.1
+		has_country_flag = CAN_done_twenty_dollars_a_month
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.7.a
+		add_political_power = -25
+		add_stability = 0.02
+	}
+
+	option = {
+		name = can_domestic.7.b
+		add_stability = -0.05
+		add_political_power = -50
+		set_country_flag = CAN_threatened_to_pack_the_senate_1926
+		custom_effect_tooltip = can_domestic.7.b.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.6 - CAN_a_five_cent_piece
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.6
+	title = can_domestic.6.t
+	desc = can_domestic.6.d
+	picture = GFX_report_event_generic_parliament
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1930.4.3
+		date < 1931.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 5
+	}
+
+	option = {
+		name = can_domestic.6.a
+		add_political_power = -50
+		add_stability = -0.03
+		set_country_flag = CAN_the_five_cent_piece
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.9 - CAN_ultra_vires
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.9
+	title = can_domestic.9.t
+	desc = can_domestic.9.d
+	picture = GFX_report_event_hapsburg_law
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1937.1.28
+		date < 1942.1.1
+		has_completed_focus = CAN_the_premier_speaks_to_the_people
+		NOT = { has_completed_focus = CAN_the_consent_of_the_provinces }
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.9.a
+		add_stability = -0.05
+		add_political_power = -50
+		set_country_flag = CAN_ultra_vires_in_force
+		custom_effect_tooltip = can_domestic.9.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.8 - CAN_the_padlock_law
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.8
+	title = can_domestic.8.t
+	desc = can_domestic.8.d
+	picture = GFX_report_event_hapsburg_law
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1937.3.24
+		date < 1939.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.8.a
+		add_popularity = {
+			ideology = communism
+			popularity = -0.01
+		}
+		set_country_flag = CAN_padlock_law_in_force
+		custom_effect_tooltip = can_domestic.8.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.10 - CAN_the_provinces_say_no
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.10
+	title = can_domestic.10.t
+	desc = can_domestic.10.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1941.1.14
+		date < 1943.1.1
+		has_war = yes
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.10.a
+		add_political_power = -25
+		set_country_flag = CAN_the_provinces_said_no
+		custom_effect_tooltip = can_domestic.10.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.11 - CAN_the_marsh_report
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.11
+	title = can_domestic.11.t
+	desc = can_domestic.11.d
+	picture = GFX_report_event_generic_read_write
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1943.3.15
+		date < 1944.7.1
+		has_war = yes
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.11.a
+		add_political_power = -25
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.02
+		}
+		set_country_flag = CAN_the_marsh_report_tabled
+		custom_effect_tooltip = can_domestic.11.a.tt
+		hidden_effect = {
+			country_event = { id = can_domestic.32 days = 465 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.12 - CAN_the_green_book
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.12
+	title = can_domestic.12.t
+	desc = can_domestic.12.d
+	picture = GFX_report_event_generic_conference
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1945.8.6
+		date < 1947.1.1
+		has_completed_focus = CAN_the_wartime_tax_agreements
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.12.a
+		add_political_power = -25
+		set_country_flag = CAN_green_book_refused
+		custom_effect_tooltip = can_domestic.12.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.13 - CAN_the_cipher_clerk
+# no fire_only_once, the settled flag is the lock
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.13
+	title = can_domestic.13.t
+	desc = can_domestic.13.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	trigger = {
+		tag = CAN
+		date > 1945.9.5
+		date < 1948.1.1
+		NOT = { has_country_flag = CAN_the_cipher_clerk_settled }
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.13.a
+		add_political_power = 25
+		add_to_variable = { CAN_civil_liberties_debt = 2 }
+		add_popularity = {
+			ideology = communism
+			popularity = -0.10
+		}
+		set_country_flag = CAN_the_cipher_clerk_settled
+		set_country_flag = CAN_the_spy_trials
+		if = {
+			limit = { has_country_flag = CAN_fred_rose_in_the_commons }
+			clr_country_flag = CAN_fred_rose_in_the_commons
+			add_popularity = {
+				ideology = communism
+				popularity = -0.05
+			}
+			add_popularity = {
+				ideology = democratic
+				popularity = 0.03
+			}
+			custom_effect_tooltip = can_domestic.13.a.tt_rose
+		}
+	}
+
+	option = {
+		name = can_domestic.13.b
+		add_stability = -0.02
+		add_political_power = -25
+		custom_effect_tooltip = can_domestic.13.b.tt
+		hidden_effect = {
+			country_event = { id = can_domestic.13 days = 90 }
+		}
+	}
+
+	option = {
+		name = can_domestic.13.c
+		add_political_power = -25
+		set_country_flag = CAN_the_cipher_clerk_settled
+		hidden_effect = {
+			set_country_flag = CAN_penetrated_chalk_river
+		}
+		custom_effect_tooltip = can_domestic.13.c.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.14 - CAN_asbestos_1949
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.14
+	title = can_domestic.14.t
+	desc = can_domestic.14.d
+	picture = GFX_report_event_danish_strike
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1949.2.14
+		date < 1950.6.1
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.14.a
+		add_stability = -0.01
+		add_to_variable = { CAN_labour_grievance = 4 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		set_country_flag = CAN_asbestos_left_to_quebec
+	}
+
+	option = {
+		name = can_domestic.14.b
+		add_stability = 0.02
+		add_political_power = -25
+		set_country_flag = CAN_asbestos_settled_by_the_archbishop
+		custom_effect_tooltip = can_domestic.14.b.tt
+	}
+
+	option = {
+		name = can_domestic.14.c
+		add_political_power = -75
+		add_stability = -0.03
+		add_to_variable = { CAN_labour_grievance = -6 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		set_country_flag = CAN_asbestos_federal_intervention
+		custom_effect_tooltip = can_domestic.14.c.tt
+	}
+}
+
+
+# ##############################################################################
+# branch 04 - the insurgencies
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# can_domestic.20 - CAN_the_estevan_shootings
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.20
+	title = can_domestic.20.t
+	desc = can_domestic.20.d
+	picture = GFX_report_event_generic_riot
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1931.9.29
+		date < 1933.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.20.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.03
+		}
+		add_to_variable = { CAN_civil_liberties_debt = 1 }
+		set_country_flag = CAN_estevan_inquiry_held
+	}
+
+	option = {
+		name = can_domestic.20.b
+		add_political_power = 25
+		add_popularity = {
+			ideology = communism
+			popularity = 0.04
+		}
+		add_to_variable = { CAN_labour_grievance = 8 }
+		clamp_variable = { var = CAN_labour_grievance min = 0 max = 100 }
+		set_country_flag = CAN_estevan_law_was_upheld
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.21 - CAN_christie_pits
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.21
+	title = can_domestic.21.t
+	desc = can_domestic.21.d
+	picture = GFX_report_event_gathering_protest
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1933.8.16
+		date < 1935.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.21.a
+		add_stability = -0.03
+		add_popularity = {
+			ideology = fascism
+			popularity = -0.04
+		}
+		set_country_flag = CAN_christie_pits_prosecuted
+	}
+
+	option = {
+		name = can_domestic.21.b
+		add_popularity = {
+			ideology = fascism
+			popularity = 0.02
+		}
+		add_to_variable = { CAN_suppressed_evidence = 1 }
+		set_country_flag = CAN_christie_pits_unpunished
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.22 - CAN_on_to_ottawa
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.22
+	title = can_domestic.22.t
+	desc = can_domestic.22.d
+	picture = GFX_report_event_american_hunger_march
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1935.6.3
+		date < 1936.6.1
+	}
+
+	mean_time_to_happen = {
+		days = 20
+		modifier = {
+			factor = 0.2
+			has_country_flag = CAN_relief_camps_third_intake
+		}
+	}
+
+	option = {
+		name = can_domestic.22.a
+		add_political_power = -50
+		add_to_variable = { CAN_prairie_anger = -5 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_trek_received
+		hidden_effect = {
+			country_event = { id = can_domestic.23 days = 9 }
+		}
+	}
+
+	option = {
+		name = can_domestic.22.b
+		add_political_power = 25
+		add_to_variable = { CAN_prairie_anger = 5 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_trek_stopped
+		hidden_effect = {
+			country_event = { id = can_domestic.23 days = 9 }
+		}
+	}
+
+	option = {
+		name = can_domestic.22.c
+		add_political_power = -75
+		add_stability = 0.02
+		set_country_flag = CAN_relief_camps_closed
+		set_country_flag = CAN_trek_received
+		hidden_effect = {
+			country_event = { id = can_domestic.23 days = 9 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.23 - CAN_the_market_square
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.23
+
+	title = {
+		text = can_domestic.23.t_riot
+		trigger = { has_country_flag = CAN_trek_stopped }
+	}
+	title = {
+		text = can_domestic.23.t_quiet
+		trigger = { NOT = { has_country_flag = CAN_trek_stopped } }
+	}
+
+	desc = {
+		text = can_domestic.23.d_riot
+		trigger = { has_country_flag = CAN_trek_stopped }
+	}
+	desc = {
+		text = can_domestic.23.d_quiet
+		trigger = { NOT = { has_country_flag = CAN_trek_stopped } }
+	}
+
+	picture = GFX_report_event_generic_riot
+
+	is_triggered_only = yes
+
+	option = {
+		name = can_domestic.23.a
+		trigger = { has_country_flag = CAN_trek_stopped }
+		add_stability = -0.05
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.05
+		}
+		add_popularity = {
+			ideology = communism
+			popularity = 0.03
+		}
+		add_to_variable = { CAN_prairie_anger = 5 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		add_to_variable = { CAN_civil_liberties_debt = 1 }
+		set_country_flag = CAN_the_regina_riot_happened
+	}
+
+	option = {
+		name = can_domestic.23.b
+		trigger = { NOT = { has_country_flag = CAN_trek_stopped } }
+		add_political_power = -25
+		add_to_variable = { CAN_prairie_anger = -8 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_the_delegation_was_heard
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.24 - CAN_the_dividend_is_not_paid
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.24
+	title = can_domestic.24.t
+	desc = can_domestic.24.d
+	picture = GFX_report_event_generic_rally
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1937.8.22
+		date < 1942.1.1
+		has_completed_focus = CAN_twenty_five_dollars_a_month
+	}
+
+	mean_time_to_happen = {
+		days = 14
+	}
+
+	option = {
+		name = can_domestic.24.a
+		add_stability = -0.15
+		add_popularity = {
+			ideology = neutrality
+			popularity = -0.10
+		}
+		add_to_variable = { CAN_prairie_anger = 5 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_the_dividend_was_never_paid
+		custom_effect_tooltip = can_domestic.24.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.25 - CAN_alberta_defaults
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.25
+	title = can_domestic.25.t
+	desc = can_domestic.25.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1936.4.1
+		date < 1940.1.1
+		has_completed_focus = CAN_fifty_six_of_sixty_three
+		NOT = { has_completed_focus = CAN_the_loan_council }
+		NOT = { has_completed_focus = CAN_the_first_default }
+		NOT = { has_idea = CAN_idea_the_default_of_1936 }
+	}
+
+	mean_time_to_happen = {
+		days = 14
+	}
+
+	option = {
+		name = can_domestic.25.a
+		add_ideas = CAN_idea_the_default_of_1936
+		add_to_variable = { CAN_prairie_anger = 5 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_alberta_defaulted
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.26 - CAN_reference_re_alberta_statutes
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.26
+	title = can_domestic.26.t
+	desc = can_domestic.26.d
+	picture = GFX_report_event_hapsburg_law
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1938.3.4
+		date < 1941.1.1
+		OR = {
+			has_country_flag = CAN_accurate_news_act_passed
+			has_idea = CAN_idea_alberta_defies_ottawa
+			has_completed_focus = CAN_fifty_six_of_sixty_three
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 14
+	}
+
+	option = {
+		name = can_domestic.26.a
+		add_political_power = -50
+		add_stability = -0.05
+		set_country_flag = CAN_reference_appealed_to_london
+	}
+
+	option = {
+		name = can_domestic.26.b
+		add_political_power = -25
+		set_country_flag = CAN_treasury_branches_opened
+		custom_effect_tooltip = can_domestic.26.b.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.27 - CAN_the_certificates_come_back
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.27
+	title = can_domestic.27.t
+	desc = can_domestic.27.d
+	picture = GFX_report_event_generic_factory
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		has_country_flag = CAN_prosperity_certificates_issued
+		date < 1945.1.1
+	}
+
+	mean_time_to_happen = {
+		days = 1460
+	}
+
+	option = {
+		name = can_domestic.27.a
+		add_stability = -0.05
+		add_political_power = -25
+		add_to_variable = { CAN_prairie_anger = 3 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.28 - CAN_woodsworth_votes_alone
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.28
+	title = can_domestic.28.t
+	desc = can_domestic.28.d
+	picture = GFX_report_event_generic_parliament
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1939.9.9
+		date < 1941.6.1
+		has_war = yes
+		has_country_flag = CAN_done_the_calgary_convention
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.28.a
+		add_stability = -0.01
+		add_popularity = {
+			ideology = democratic
+			popularity = -0.01
+		}
+		set_country_flag = CAN_woodsworth_voted_alone
+		custom_effect_tooltip = can_domestic.28.a.tt
+		hidden_effect = {
+			country_event = { id = can_domestic.29 days = 1040 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.29 - CAN_the_leader_is_replaced
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.29
+	title = can_domestic.29.t
+	desc = can_domestic.29.d
+	picture = GFX_report_event_generic_funeral
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1942.7.1
+		date < 1944.1.1
+		has_country_flag = CAN_woodsworth_voted_alone
+	}
+
+	mean_time_to_happen = {
+		days = 30
+	}
+
+	option = {
+		name = can_domestic.29.a
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.03
+		}
+		set_country_flag = CAN_coldwell_leads
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.30 - CAN_york_south
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.30
+	title = can_domestic.30.t
+	desc = can_domestic.30.d
+	picture = GFX_report_event_election_vote
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1942.2.9
+		date < 1943.6.1
+		has_country_flag = CAN_done_the_calgary_convention
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.30.a
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.06
+		}
+		set_country_flag = CAN_york_south_lost
+		hidden_effect = {
+			country_event = { id = can_domestic.36 days = 305 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.36 - CAN_the_party_takes_his_name
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.36
+	title = can_domestic.36.t
+	desc = can_domestic.36.d
+	picture = GFX_report_event_generic_politician_meeting
+
+	is_triggered_only = yes
+
+	option = {
+		name = can_domestic.36.a
+		add_popularity = {
+			ideology = democratic
+			popularity = -0.04
+		}
+		add_to_variable = { CAN_prairie_anger = -3 }
+		clamp_variable = { var = CAN_prairie_anger min = 0 max = 100 }
+		set_country_flag = CAN_the_progressive_conservatives
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.31 - CAN_the_gallup_of_september_1943
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.31
+	title = can_domestic.31.t
+	desc = can_domestic.31.d
+	picture = GFX_report_event_newspaper
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1943.9.1
+		date < 1945.1.1
+		has_country_flag = CAN_the_marsh_report_tabled
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.31.a
+		add_political_power = -50
+		set_country_flag = CAN_gallup_answered
+		custom_effect_tooltip = can_domestic.31.a.tt
+	}
+
+	option = {
+		name = can_domestic.31.b
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.03
+		}
+		set_country_flag = CAN_gallup_ignored
+		hidden_effect = {
+			country_event = { id = can_domestic.32 days = 300 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.32 - CAN_ccf_sweeps_saskatchewan
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.32
+	title = can_domestic.32.t
+	desc = can_domestic.32.d
+	picture = GFX_report_event_generic_general_meeting
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1944.6.15
+		date < 1946.1.1
+		OR = {
+			has_country_flag = CAN_done_hold_the_line_on_spending
+			has_country_flag = CAN_the_marsh_report_tabled
+			has_country_flag = CAN_gallup_ignored
+		}
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.32.a
+		add_stability = -0.05
+		add_popularity = {
+			ideology = democratic
+			popularity = 0.08
+		}
+		set_country_flag = CAN_ccf_in_office_in_regina
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.33 - CAN_fred_rose_elected
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.33
+	title = can_domestic.33.t
+	desc = can_domestic.33.d
+	picture = GFX_report_event_generic_communist_congress
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1943.8.9
+		date < 1946.1.1
+		communism > 0.08
+	}
+
+	mean_time_to_happen = {
+		days = 10
+	}
+
+	option = {
+		name = can_domestic.33.a
+		add_stability = -0.02
+		add_popularity = {
+			ideology = communism
+			popularity = 0.01
+		}
+		set_country_flag = CAN_fred_rose_in_the_commons
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.34 - CAN_regulation_39c
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.34
+	title = can_domestic.34.t
+	desc = can_domestic.34.d
+	picture = GFX_report_event_degrelle_arrested
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1939.9.10
+		date < 1944.1.1
+		has_war = yes
+		has_completed_focus = CAN_no_war_for_the_english_kings
+		NOT = { has_government = fascism }
+	}
+
+	mean_time_to_happen = {
+		days = 30
+		modifier = {
+			factor = 4
+			fascism > 0.25
+		}
+		modifier = {
+			factor = 6
+			fascism > 0.33
+		}
+	}
+
+	option = {
+		name = can_domestic.34.a
+		add_popularity = {
+			ideology = fascism
+			popularity = -0.25
+		}
+		add_to_variable = { CAN_civil_liberties_debt = 1 }
+		set_country_flag = { flag = CAN_39c_internment value = 1 days = 1825 }
+		set_country_flag = CAN_39c_was_applied
+		custom_effect_tooltip = can_domestic.34.a.tt
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.35 - CAN_the_bloc_takes_the_ground
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.35
+	title = can_domestic.35.t
+	desc = can_domestic.35.d
+	picture = GFX_report_event_generic_rally
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1942.9.1
+		date < 1945.6.1
+		has_war = yes
+		check_variable = { var = CAN_blood_tax value = 40 compare = greater_than_or_equals }
+	}
+
+	mean_time_to_happen = {
+		days = 20
+	}
+
+	option = {
+		name = can_domestic.35.a
+		add_stability = -0.02
+		add_popularity = {
+			ideology = fascism
+			popularity = -0.03
+		}
+		set_country_flag = CAN_the_bloc_holds_the_ground
+		custom_effect_tooltip = can_domestic.35.a.tt
+	}
+}
+
+
+# ##############################################################################
+# newfoundland - the two referendums of 1948
+# ##############################################################################
+
+# ------------------------------------------------------------------------------
+# can_domestic.40 - CAN_the_first_referendum
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.40
+	title = can_domestic.40.t
+	desc = can_domestic.40.d
+	picture = GFX_report_event_election_vote
+
+	fire_only_once = yes
+
+	trigger = {
+		tag = CAN
+		date > 1948.6.3
+		date < 1950.1.1
+		has_country_flag = CAN_done_the_newfoundland_question
+	}
+
+	mean_time_to_happen = {
+		days = 7
+	}
+
+	option = {
+		name = can_domestic.40.a
+		add_political_power = -75
+		set_country_flag = CAN_confederate_campaign_funded
+		hidden_effect = {
+			country_event = { id = can_domestic.41 days = 49 }
+		}
+	}
+
+	option = {
+		name = can_domestic.40.b
+		add_political_power = -50
+		set_country_flag = CAN_terms_published_early
+		add_stability = -0.02
+		hidden_effect = {
+			country_event = { id = can_domestic.41 days = 49 }
+		}
+	}
+
+	option = {
+		name = can_domestic.40.c
+		set_country_flag = CAN_no_second_campaign
+		hidden_effect = {
+			country_event = { id = can_domestic.41 days = 49 }
+		}
+	}
+}
+
+
+# ------------------------------------------------------------------------------
+# can_domestic.41 - CAN_the_second_referendum
+# ------------------------------------------------------------------------------
+country_event = {
+	id = can_domestic.41
+
+	title = {
+		text = can_domestic.41.t_union
+		trigger = {
+			OR = {
+				has_country_flag = CAN_confederate_campaign_funded
+				has_country_flag = CAN_terms_published_early
+			}
+		}
+	}
+	title = {
+		text = can_domestic.41.t_out
+		trigger = { has_country_flag = CAN_no_second_campaign }
+	}
+
+	desc = {
+		text = can_domestic.41.d_union
+		trigger = {
+			OR = {
+				has_country_flag = CAN_confederate_campaign_funded
+				has_country_flag = CAN_terms_published_early
+			}
+		}
+	}
+	desc = {
+		text = can_domestic.41.d_out
+		trigger = { has_country_flag = CAN_no_second_campaign }
+	}
+
+	picture = GFX_report_event_canada_patriation
+
+	is_triggered_only = yes
+
+	option = {
+		name = can_domestic.41.a
+		trigger = {
+			OR = {
+				has_country_flag = CAN_confederate_campaign_funded
+				has_country_flag = CAN_terms_published_early
+			}
+		}
+		add_political_power = -50
+		set_country_flag = CAN_newfoundland_votes_for_union
+		custom_effect_tooltip = can_domestic.41.a.tt
+	}
+
+	option = {
+		name = can_domestic.41.b
+		trigger = { has_country_flag = CAN_no_second_campaign }
+		add_political_power = -25
+		set_country_flag = CAN_newfoundland_stays_out
+		custom_effect_tooltip = can_domestic.41.b.tt
+	}
+
+	option = {
+		name = can_domestic.41.c
+		trigger = {
+			has_country_flag = CAN_no_second_campaign
+			USA = { has_opinion = { target = CAN value < 40 } }
+		}
+		add_stability = -0.03
+		set_country_flag = CAN_newfoundland_stays_out
+		set_country_flag = CAN_newfoundland_takes_the_american_bid
+		custom_effect_tooltip = can_domestic.41.c.tt
+	}
+}

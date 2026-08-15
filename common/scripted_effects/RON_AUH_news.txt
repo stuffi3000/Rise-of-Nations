@@ -1,0 +1,37 @@
+# a focus sets AUH_news_id and AUH_news_scope, then calls this.
+# AUH_news_shown is stamped on every reader, so the text holds.
+# 1 vienna alone, 2 the neighbourhood, 3 the world.
+
+AUH_headline = {
+	set_variable = { AUH_news_shown = AUH_news_id }
+
+	if = {
+		limit = { check_variable = { AUH_news_scope = 3 } }
+		every_country = {
+			limit = { NOT = { tag = AUH } }
+			set_variable = { AUH_news_shown = AUH.AUH_news_id }
+		}
+		news_event = { id = auh_news.3 hours = 6 }
+	}
+	else_if = {
+		limit = { check_variable = { AUH_news_scope = 2 } }
+		news_event = { id = auh_news.2 hours = 6 }
+		# read off the map, not off a list
+		every_other_country = {
+			limit = {
+				exists = yes
+				OR = {
+					is_neighbor_of = AUH
+					is_in_faction_with = AUH
+					has_war_with = AUH
+					any_core_state = { is_controlled_by = AUH }
+				}
+			}
+			set_variable = { AUH_news_shown = AUH.AUH_news_id }
+			news_event = { id = auh_news.2 hours = 6 }
+		}
+	}
+	else = {
+		news_event = { id = auh_news.1 hours = 6 }
+	}
+}

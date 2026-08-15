@@ -1,0 +1,176 @@
+####################################################################################################
+# MONTENEGRO - INTERWAR
+####################################################################################################
+
+focus_tree = {
+	id = RON_Montenegro_INT
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = MNT
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	### THE PURSE AND THE PORT
+
+	focus = {
+		id = MNT_the_mandates_from_america
+		icon = GFX_goal_generic_construct_civilian
+		x = 16
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = MNT_done_montana
+				date > 1919.1.1
+			}
+		}
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			# Dowry +8, no Claim
+			add_to_variable = { MNT_the_dowry = 8 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			set_country_flag = MNT_done_mandates
+			custom_effect_tooltip = MNT_the_mandates_from_america_tt
+		}
+	}
+
+	### THE CROWN AND THE FAMILY
+
+	focus = {
+		id = MNT_a_throne_without_a_protector
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = MNT_done_exile
+				has_country_flag = MNT_done_green_lists
+				date > 1921.3.1
+			}
+		}
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			# Dowry capped at 20 from here
+			set_country_flag = MNT_done_own_purse
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 20 }
+			add_political_power = 120
+			add_stability = 0.10
+			add_ideas = MNT_idea_a_throne_that_pays_itself
+			custom_effect_tooltip = MNT_a_throne_without_a_protector_tt
+		}
+	}
+
+	### THE GREEN AND THE WHITE
+
+	focus = {
+		id = MNT_the_christmas_rising
+		icon = GFX_goal_generic_territory_or_war
+		x = 36
+		y = 0
+		cost = 10
+		will_lead_to_war_with = SER
+
+		available = {
+			OR = {
+				has_country_flag = MNT_done_green_lists
+				has_country_flag = MNT_done_exile
+				date > 1919.1.7
+			}
+		}
+
+		bypass = {
+			# skip if all cores held
+			all_owned_state = { is_core_of = MNT }
+			has_country_flag = MNT_done_own_purse
+		}
+
+		completion_reward = {
+			set_country_flag = MNT_done_christmas
+			add_war_support = 0.10
+			custom_effect_tooltip = MNT_the_christmas_rising_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_gaeta_declaration
+		icon = GFX_goal_generic_improve_relations
+		x = 36
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_christmas_rising }
+
+		completion_reward = {
+			# Claim +8
+			add_to_variable = { MNT_the_claim = 8 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_gaeta
+			custom_effect_tooltip = MNT_the_gaeta_declaration_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_army_of_gaeta
+		icon = GFX_goal_generic_army_doctrines
+		x = 32
+		y = 2
+		cost = 15
+		prerequisite = { focus = MNT_the_gaeta_declaration }
+		mutually_exclusive = { focus = MNT_the_komiti_of_the_highlands }
+
+		completion_reward = {
+			# divergence 6: Claim +30
+			add_to_variable = { MNT_the_claim = 30 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_army_of_gaeta
+			custom_effect_tooltip = MNT_the_army_of_gaeta_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_komiti_of_the_highlands
+		icon = GFX_goal_generic_secret_weapon
+		x = 38
+		y = 2
+		cost = 10
+		prerequisite = { focus = MNT_the_gaeta_declaration }
+		mutually_exclusive = { focus = MNT_the_army_of_gaeta }
+
+		completion_reward = {
+			set_country_flag = MNT_done_komiti
+			add_ideas = MNT_idea_no_depot_no_rear
+			custom_effect_tooltip = MNT_the_komiti_of_the_highlands_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_federalist_party
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = MNT_the_army_of_gaeta
+			focus = MNT_the_komiti_of_the_highlands
+		}
+
+		completion_reward = {
+			# closes the armed Green branch
+			set_country_flag = MNT_done_federalists
+			add_political_power = 100
+			custom_effect_tooltip = MNT_the_federalist_party_tt
+		}
+	}
+}

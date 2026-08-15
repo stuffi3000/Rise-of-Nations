@@ -1,0 +1,251 @@
+#INTERWAR FOCUS
+#1919-1932
+
+focus_tree = {
+	id = RON_Senussi_INT
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = SEO
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1400 }
+
+
+	#BRANCH E - THE SEAL
+	#Focus for The Accord of al-Rajma
+	focus = {
+		id = SEO_the_accord_of_al_rajma
+		icon = GFX_goal_generic_forceful_treaty
+		x = 14
+		y = 0
+		cost = 15
+		mutually_exclusive = { focus = SEO_no_seal_no_stipend }
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_acroma
+				date > 1920.10.25
+			}
+		}
+
+		completion_reward = {
+			# +30 dawla, -5 ring 1
+			SEO_open_the_register = yes
+			set_variable = { SEO_arg_delta = 30 }
+			SEO_add_dawla = yes
+			set_variable = { SEO_arg_ring = 1 }
+			set_variable = { SEO_arg_delta = -5 }
+			SEO_add_zawaya = yes
+			set_country_flag = SEO_done_al_rajma
+			add_ideas = SEO_idea_the_stipend_of_al_rajma
+			custom_effect_tooltip = SEO_the_accord_of_al_rajma_tt
+		}
+	}
+
+	#Focus for No Seal, No Stipend
+	focus = {
+		id = SEO_no_seal_no_stipend
+		icon = GFX_goal_generic_neutrality_focus
+		x = 18
+		y = 0
+		cost = 10
+		mutually_exclusive = { focus = SEO_the_accord_of_al_rajma }
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_acroma
+				date > 1920.10.25
+			}
+		}
+
+		completion_reward = {
+			# dawla capped at 30
+			SEO_open_the_register = yes
+			set_country_flag = SEO_no_seal_taken
+			set_country_flag = SEO_done_no_seal
+			set_variable = { SEO_arg_delta = 0 }
+			SEO_add_dawla = yes
+			add_ideas = SEO_idea_no_seal_no_stipend
+			custom_effect_tooltip = SEO_no_seal_no_stipend_tt
+		}
+	}
+
+	focus = {
+		id = SEO_the_call_from_tripolitania
+		icon = GFX_goal_generic_territory_or_war
+		x = 12
+		y = 2
+		cost = 25
+		prerequisite = { focus = SEO_the_accord_of_al_rajma }
+		will_lead_to_war_with = ITA
+
+		completion_reward = {
+			# divergence 6, war ITA
+			set_variable = { SEO_arg_delta = 20 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_tripolitania
+			custom_effect_tooltip = SEO_the_call_from_tripolitania_tt
+		}
+	}
+
+	focus = {
+		id = SEO_the_house_in_cairo
+		icon = GFX_goal_generic_improve_relations
+		x = 14
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = SEO_the_call_from_tripolitania
+			focus = SEO_the_accord_of_al_rajma
+		}
+
+		completion_reward = {
+			# exile, chosen
+			set_country_flag = SEO_done_house_in_cairo
+			add_political_power = 100
+			add_ideas = SEO_idea_the_house_in_cairo
+			custom_effect_tooltip = SEO_the_house_in_cairo_tt
+		}
+	}
+
+
+	#BRANCH A - THE NETWORK
+	#Focus for The Jaghbub Question
+	focus = {
+		id = SEO_the_jaghbub_question
+		icon = GFX_goal_generic_forceful_treaty
+		x = 24
+		y = 3
+		cost = 15
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_jaghbub_school
+				date > 1925.12.6
+			}
+		}
+
+		bypass = {
+			NOT = { 1070 = { is_owned_by = SEO } }
+		}
+
+		completion_reward = {
+			# -6 ring 2, by treaty
+			SEO_open_the_register = yes
+			set_variable = { SEO_arg_ring = 2 }
+			set_variable = { SEO_arg_delta = -6 }
+			SEO_add_zawaya = yes
+			set_country_flag = SEO_done_jaghbub_lost
+			custom_effect_tooltip = SEO_the_jaghbub_question_tt
+		}
+	}
+
+
+	#BRANCH C - THE TITHE
+	focus = {
+		id = SEO_the_tithe_that_feeds_the_jebel
+		icon = GFX_goal_generic_consumer_goods
+		x = 38
+		y = 1
+		cost = 10
+		prerequisite = { focus = SEO_the_jebel_is_our_fortress }
+
+		completion_reward = {
+			set_country_flag = SEO_done_tithe_jebel
+			add_ideas = SEO_idea_the_tithe_that_feeds_the_jebel
+			custom_effect_tooltip = SEO_the_tithe_that_feeds_the_jebel_tt
+		}
+	}
+
+
+	#BRANCH D - THE JEBEL
+	focus = {
+		id = SEO_the_jebel_is_our_fortress
+		icon = GFX_goal_generic_army_doctrines
+		x = 44
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_as_bedouin
+				has_country_flag = SEO_done_acroma
+				date > 1923.1.1
+			}
+		}
+
+		completion_reward = {
+			# opens branch D
+			SEO_open_the_register = yes
+			set_country_flag = SEO_done_jebel_fortress
+			add_ideas = SEO_idea_the_jebel_is_our_fortress
+			custom_effect_tooltip = SEO_the_jebel_is_our_fortress_tt
+		}
+	}
+
+	#Focus for Treat with Badoglio
+	focus = {
+		id = SEO_treat_with_badoglio
+		icon = GFX_goal_generic_improve_relations
+		x = 42
+		y = 2
+		cost = 15
+		prerequisite = { focus = SEO_the_jebel_is_our_fortress }
+		mutually_exclusive = { focus = SEO_no_terms_with_rome }
+
+		completion_reward = {
+			# divergence 7
+			set_variable = { SEO_arg_delta = 10 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_badoglio_truce
+			add_ideas = SEO_idea_the_truce_that_saved_the_tribes
+			custom_effect_tooltip = SEO_treat_with_badoglio_tt
+		}
+	}
+
+	focus = {
+		id = SEO_no_terms_with_rome
+		icon = GFX_goal_generic_major_war
+		x = 46
+		y = 2
+		cost = 10
+		prerequisite = { focus = SEO_the_jebel_is_our_fortress }
+		mutually_exclusive = { focus = SEO_treat_with_badoglio }
+
+		completion_reward = {
+			set_country_flag = SEO_done_no_terms
+			add_war_support = 0.10
+			custom_effect_tooltip = SEO_no_terms_with_rome_tt
+		}
+	}
+
+	#Focus for The Last Citadel
+	focus = {
+		id = SEO_the_last_citadel
+		icon = GFX_goal_generic_defence
+		x = 46
+		y = 3
+		cost = 15
+		prerequisite = { focus = SEO_no_terms_with_rome }
+
+		bypass = {
+			NOT = { 1071 = { is_controlled_by = SEO } }
+		}
+
+		completion_reward = {
+			# Kufra: -8 ring 2
+			set_variable = { SEO_arg_ring = 2 }
+			set_variable = { SEO_arg_delta = -8 }
+			SEO_add_zawaya = yes
+			set_country_flag = SEO_done_last_citadel
+			custom_effect_tooltip = SEO_the_last_citadel_tt
+		}
+	}
+}

@@ -1,0 +1,336 @@
+# ##############################################################################
+# CAN_dark_chapters_on_actions.txt - startup and monthly tick
+# ##############################################################################
+#
+# on_startup seeds the ledger for later bookmarks
+# on_monthly_CAN fires dated events and resyncs derivatives
+# monthly, not daily: no event here needs day precision
+# bookmark bounds match common/on_actions/CAN_startup.txt
+# deportations are not seeded, they are a decision
+# ##############################################################################
+
+on_actions = {
+
+	# ##########################################################################
+	# 1. bookmark seeding
+	# ##########################################################################
+
+	on_startup = {
+		effect = {
+
+			CAN = {
+
+				if = {
+					limit = { NOT = { has_country_flag = CAN_ledger_bootstrapped } }
+
+					set_country_flag = CAN_ledger_bootstrapped
+
+					# head tax 1900 and 1903, exclusion act 1923; never both
+					if = {
+						limit = { has_start_date > 1923.7.1 }
+
+						set_variable = { CAN_head_tax_level = 2 }
+						add_ideas = CAN_exclusion
+						CAN_place_exclusion_coast = yes
+
+						set_variable = { CAN_ledger_arg_debt = 3 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_done_raise_the_head_tax
+						set_country_flag = CAN_done_the_exclusion_act
+						set_country_flag = CAN_exclusion_settled
+					}
+					else_if = {
+						limit = { has_start_date > 1903.1.1 }
+
+						set_variable = { CAN_head_tax_level = 2 }
+						add_ideas = CAN_exclusion_by_price
+						CAN_place_exclusion_by_price_coast = yes
+
+						set_variable = { CAN_ledger_arg_debt = 2 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_done_raise_the_head_tax
+					}
+
+					# bryce report 1907, buried
+					if = {
+						limit = { has_start_date > 1907.6.1 }
+
+						add_ideas = CAN_a_national_crime
+
+						set_variable = { CAN_ledger_arg_evidence = 2 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_bryce_report_buried
+						set_country_flag = CAN_bryce_report_seen
+					}
+
+					# oliver act, indian act s.49A, 1911
+					if = {
+						limit = { has_start_date > 1911.6.1 }
+
+						add_ideas = CAN_broken_treaties
+
+						set_variable = { CAN_ledger_arg_evidence = 1 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_done_the_oliver_act
+					}
+
+					# P.C. 1324, approved 12 aug 1911, repealed 5 oct 1911
+					if = {
+						limit = { has_start_date > 1911.10.5 }
+
+						add_ideas = CAN_the_colour_bar_in_practice
+
+						set_variable = { CAN_ledger_arg_debt = 1 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_pc_1324_settled
+					}
+
+					# geneva 1923, ohsweken 1924
+					if = {
+						limit = { has_start_date > 1924.10.7 }
+
+						add_ideas = CAN_the_grand_river_dispute
+						CAN_place_the_grand_river_closed = yes
+
+						set_variable = { CAN_ledger_arg_evidence = 1 }
+						set_variable = { CAN_ledger_arg_debt = 1 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_domestic_jurisdiction_asserted
+						set_country_flag = CAN_deskaheh_seen
+					}
+
+					# P.C. 695, 21 march 1931
+					if = {
+						limit = {
+							has_start_date > 1931.3.21
+							has_start_date < 1946.1.1
+						}
+
+						add_ideas = CAN_closed_doors
+						set_country_flag = CAN_pc_695_seen
+					}
+
+					# evian 1938, blair at immigration
+					if = {
+						limit = { has_start_date > 1938.7.6 }
+
+						add_ideas = CAN_none_is_too_many
+
+						set_variable = { CAN_ledger_arg_evidence = 1 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_done_close_the_door
+					}
+
+					# flag only for bookmarks after june 1939
+					if = {
+						limit = { has_start_date > 1939.6.1 }
+						set_country_flag = CAN_st_louis_seen
+					}
+
+					# P.C. 1486, 24 feb 1942; auctions from january 1943
+					if = {
+						limit = { has_start_date > 1942.2.24 }
+
+						add_ideas = CAN_injustice_on_the_coast
+						473 = {
+							if = {
+								limit = { OWNER = { original_tag = CAN } }
+								add_dynamic_modifier = { modifier = CAN_the_coast_under_order days = 1825 }
+							}
+						}
+
+						set_variable = { CAN_ledger_arg_debt = 3 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_removal_settled
+						set_country_flag = CAN_done_pc_1486
+					}
+
+					if = {
+						limit = { has_start_date > 1943.1.1 }
+
+						swap_ideas = {
+							remove_idea = CAN_injustice_on_the_coast
+							add_idea = CAN_injustice_on_the_coast_aggravated
+						}
+
+						set_variable = { CAN_ledger_arg_debt = 2 }
+						CAN_add_ledger = yes
+
+						set_country_flag = CAN_estates_settled
+						set_country_flag = CAN_done_the_auction_of_their_property
+					}
+
+					CAN_update_ledger = yes
+				}
+			}
+		}
+	}
+
+
+	# ##########################################################################
+	# 2. monthly tick - each trigger guarded by a one-shot flag
+	# ##########################################################################
+
+	on_monthly_CAN = {
+		effect = {
+
+			# five years of quiet bought by the head tax
+			if = {
+				limit = {
+					check_variable = { var = CAN_head_tax_relief_days value = 0 compare = greater_than }
+				}
+				subtract_from_variable = { CAN_head_tax_relief_days = 30 }
+
+				if = {
+					limit = {
+						check_variable = { var = CAN_head_tax_relief_days value = 0 compare = less_than_or_equals }
+						NOT = { has_idea = CAN_anti_asiatic_agitation }
+						NOT = { has_country_flag = CAN_done_repeal_the_head_tax }
+					}
+					add_ideas = CAN_anti_asiatic_agitation
+				}
+			}
+
+			# bryce report, 1907
+			if = {
+				limit = {
+					date > 1907.4.1
+					NOT = { has_country_flag = CAN_bryce_report_seen }
+				}
+				set_country_flag = CAN_bryce_report_seen
+				country_event = { id = can_dark.1 days = 3 }
+			}
+
+			# P.C. 1324 lapses 5 oct 1911 if nothing was decided
+			if = {
+				limit = {
+					date > 1911.10.5
+					NOT = { has_country_flag = CAN_pc_1324_settled }
+					NOT = { has_country_flag = CAN_pc_1324_proclaim_pending }
+					NOT = { has_country_flag = CAN_pc_1324_approve_pending }
+					NOT = { has_country_flag = CAN_pc_1324_strike_pending }
+				}
+				country_event = { id = can_dark.7 days = 1 }
+			}
+
+			# deskaheh petitions geneva, 14 july 1923
+			if = {
+				limit = {
+					date > 1923.7.14
+					NOT = { has_country_flag = CAN_deskaheh_seen }
+				}
+				set_country_flag = CAN_deskaheh_seen
+				country_event = { id = can_dark.2 days = 3 }
+			}
+
+			# P.C. 695, 21 march 1931
+			if = {
+				limit = {
+					date > 1931.3.21
+					NOT = { has_country_flag = CAN_pc_695_seen }
+					NOT = { has_idea = CAN_closed_doors }
+				}
+				set_country_flag = CAN_pc_695_seen
+				country_event = { id = can_dark.5 days = 3 }
+			}
+
+			# the st. louis, june 1939; the door policy picks the event
+			if = {
+				limit = {
+					date > 1939.6.1
+					date < 1940.1.1
+					NOT = { has_country_flag = CAN_st_louis_seen }
+				}
+				set_country_flag = CAN_st_louis_seen
+
+				if = {
+					limit = { has_idea = CAN_none_is_too_many }
+					country_event = { id = can_dark.8 days = 3 }
+					else = {
+						country_event = { id = can_dark.9 days = 3 }
+					}
+				}
+			}
+
+			# the open doors research slot only lands from 1938
+			if = {
+				limit = {
+					has_country_flag = CAN_done_open_the_doors
+					date > 1938.1.1
+					NOT = { has_country_flag = CAN_open_the_doors_slot_given }
+				}
+				set_country_flag = CAN_open_the_doors_slot_given
+				add_research_slot = 1
+			}
+
+			# without the exclusion act, pacific recruitment is free
+			if = {
+				limit = {
+					has_war = yes
+					date > 1914.1.1
+					NOT = { has_country_flag = CAN_done_the_exclusion_act }
+					NOT = { has_idea = CAN_exclusion }
+					NOT = { has_idea = CAN_idea_pacific_manpower }
+				}
+				add_ideas = CAN_idea_pacific_manpower
+			}
+
+			# repair events, after 1945
+
+			# the ledger presented, 1 jan 1946, from eight points
+			if = {
+				limit = {
+					date > 1946.1.1
+					check_variable = { var = CAN_civil_liberties_debt value = 8 compare = greater_than_or_equals }
+					NOT = { has_country_flag = CAN_ledger_presented_seen }
+				}
+				set_country_flag = CAN_ledger_presented_seen
+				country_event = { id = can_dark.10 days = 3 }
+			}
+
+			# repatriation orders rescinded, 24 jan 1947
+			if = {
+				limit = {
+					date > 1947.1.24
+					has_country_flag = CAN_done_pc_1486
+					NOT = { has_country_flag = CAN_repatriation_seen }
+				}
+				set_country_flag = CAN_repatriation_seen
+				country_event = { id = can_dark.11 days = 3 }
+			}
+
+			# joint committee, 1948
+			if = {
+				limit = {
+					date > 1948.1.1
+					check_variable = { var = CAN_suppressed_evidence value = 3 compare = greater_than_or_equals }
+					NOT = { has_country_flag = CAN_joint_committee_seen }
+				}
+				set_country_flag = CAN_joint_committee_seen
+				country_event = { id = can_dark.12 days = 3 }
+			}
+
+			# what survived of the files, 1949
+			if = {
+				limit = {
+					date > 1949.1.1
+					check_variable = { var = CAN_suppressed_evidence value = 6 compare = greater_than_or_equals }
+					NOT = { has_country_flag = CAN_evidence_survived_seen }
+				}
+				set_country_flag = CAN_evidence_survived_seen
+				country_event = { id = can_dark.13 days = 3 }
+			}
+
+			# resync: branches may write counters without CAN_add_ledger
+			CAN_update_ledger = yes
+		}
+	}
+}

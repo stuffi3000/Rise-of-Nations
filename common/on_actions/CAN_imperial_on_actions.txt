@@ -1,0 +1,259 @@
+# ##############################################################################
+# CAN_imperial_on_actions.txt - dispatcher for the imperial chain
+# ##############################################################################
+#
+# calls events/CAN_imperial_events.txt
+# windows close at both ends, else 1907 fires in 1936
+# daily, not weekly: these events are dated to the day
+# on_actions stack, CAN_startup.txt is untouched
+# ##############################################################################
+
+on_actions = {
+
+	# ##############################################################
+	# argument seeding
+	# no parameterised scripted effects, args are variables
+	# CAN_house_question defaults to 1, the contingent question
+	# ##############################################################
+	on_startup = {
+		effect = {
+			CAN = {
+				set_variable = { CAN_house_question = 1 }
+				set_variable = { CAN_house_margin = 0 }
+				set_variable = { CAN_house_ayes = 0 }
+				set_variable = { CAN_house_noes = 0 }
+				set_variable = { CAN_kb_margin = 0 }
+				set_variable = { CAN_kb_ayes = 0 }
+				set_variable = { CAN_kb_noes = 0 }
+				set_variable = { CAN_writ_granted = 0 }
+			}
+		}
+	}
+
+	# ##############################################################
+	# the dispatcher
+	# ROOT is Canada, each block tests window and guard
+	# ##############################################################
+	on_daily_CAN = {
+		effect = {
+
+			# ----------------------------------------------------------
+			# 15 April 1907 - the colonial conference becomes imperial
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1907.4.14
+					date < 1907.6.15
+					NOT = { has_country_flag = CAN_imperial_conference_1907_seen }
+				}
+				country_event = { id = can_imperial.1 }
+			}
+
+			# ----------------------------------------------------------
+			# 20 October 1903 - the Alaska award
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1903.10.19
+					date < 1903.12.31
+					NOT = { has_country_flag = CAN_imperial_alaska_award_seen }
+				}
+				country_event = { id = can_imperial.2 }
+			}
+
+			# ----------------------------------------------------------
+			# 4 August 1914 - the King is at war
+			# wide window, it waits for Britain to be at war
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1914.8.3
+					date < 1915.1.1
+					ENG = { has_war = yes }
+					NOT = { has_war_with = ENG }
+					NOT = { has_country_flag = CAN_imperial_king_is_at_war_seen }
+				}
+				country_event = { id = can_imperial.3 }
+			}
+
+			# ----------------------------------------------------------
+			# 16 September 1922 - the Chanak telegram
+			# window closes at the Mudanya armistice, 11 October
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1922.9.15
+					date < 1922.10.12
+					NOT = { has_country_flag = CAN_imperial_chanak_seen }
+				}
+				country_event = { id = can_imperial.4 }
+			}
+
+			# ----------------------------------------------------------
+			# 26 June 1926 - the King-Byng affair, first screen
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1926.6.25
+					date < 1926.8.1
+					NOT = { has_country_flag = CAN_imperial_king_byng_seen }
+				}
+				country_event = { id = can_imperial.6 }
+			}
+
+
+			# ----------------------------------------------------------
+			# 2 November 1935 - the Riddell telegram
+			# short window, 2 December is chained from this one
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1935.11.1
+					date < 1935.11.20
+					NOT = { has_country_flag = CAN_imperial_riddell_telegram_seen }
+				}
+				country_event = { id = can_imperial.12 }
+			}
+
+			# ----------------------------------------------------------
+			# 18 August 1938 - Kingston, Woodbridge two days later
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1938.8.17
+					date < 1938.9.20
+					NOT = { has_country_flag = CAN_imperial_kingston_seen }
+				}
+				country_event = { id = can_imperial.14 }
+			}
+
+			# ----------------------------------------------------------
+			# January 1942 - the Combined Chiefs
+			# only if Canada is actually at war
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1942.1.13
+					date < 1942.3.15
+					has_war = yes
+					NOT = { has_country_flag = CAN_imperial_combined_chiefs_seen }
+				}
+				country_event = { id = can_imperial.18 }
+			}
+
+			# ----------------------------------------------------------
+			# 12 April 1946 - Alexander of Tunis at Rideau Hall
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1946.4.11
+					date < 1946.6.15
+					NOT = { has_country_flag = CAN_imperial_rideau_hall_seen }
+				}
+				country_event = { id = can_imperial.20 }
+			}
+
+			# ----------------------------------------------------------
+			# late 1947 - the UNTCOK crisis
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1947.11.13
+					date < 1948.2.15
+					NOT = { has_country_flag = CAN_imperial_untcok_seen }
+				}
+				country_event = { id = can_imperial.21 }
+			}
+
+			# ----------------------------------------------------------
+			# spring 1948 - the secret negotiation with Washington
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					date > 1948.3.16
+					date < 1948.6.15
+					NOT = { has_country_flag = CAN_imperial_secret_negotiation_seen }
+				}
+				country_event = { id = can_imperial.24 }
+			}
+
+			# ##############################################################
+			# flag calls
+			# no date window, these follow a focus
+			# ##############################################################
+
+			# ----------------------------------------------------------
+			# 2 March 1923 - Lapointe signs alone at Washington
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_country_flag = CAN_done_the_halibut_precedent
+					NOT = { has_country_flag = CAN_imperial_halibut_seen }
+				}
+				country_event = { id = can_imperial.5 days = 3 }
+			}
+
+			# ----------------------------------------------------------
+			# 1911 - no truck nor trade with the Yankees
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_country_flag = CAN_done_reciprocity_1911
+					NOT = { has_country_flag = CAN_imperial_no_truck_seen }
+				}
+				country_event = { id = can_imperial.26 days = 7 }
+			}
+
+			# ----------------------------------------------------------
+			# the loyalist leagues, after the break with the Crown
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_country_flag = CAN_done_a_dominion_no_longer
+					NOT = { has_country_flag = CAN_imperial_loyalist_leagues_seen }
+				}
+				country_event = { id = can_imperial.28 days = 21 }
+			}
+
+			# ----------------------------------------------------------
+			# September 1940 - Churchill takes it badly
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_completed_focus = CAN_ogdensburg
+					NOT = { has_country_flag = CAN_imperial_churchill_seen }
+				}
+				country_event = { id = can_imperial.19 days = 14 }
+			}
+
+			# ----------------------------------------------------------
+			# the coaling call, warning before the ports decision
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_completed_focus = CAN_the_neutrality_of_a_dominion
+					has_war = no
+					ENG = { has_war = yes }
+					NOT = { has_country_flag = CAN_imperial_ports_demanded_seen }
+				}
+				country_event = { id = can_imperial.29 days = 10 }
+			}
+
+
+			# ----------------------------------------------------------
+			# September 1939 - the separate declaration
+			# fallback, it sets the question itself
+			# ----------------------------------------------------------
+			if = {
+				limit = {
+					has_completed_focus = CAN_a_separate_declaration
+					ENG = { has_war = yes }
+					NOT = { has_country_flag = CAN_imperial_house_declaration_put }
+				}
+				set_country_flag = CAN_imperial_house_declaration_put
+				set_variable = { CAN_house_question = 2 }
+				country_event = { id = can_imperial.15 days = 7 }
+			}
+		}
+	}
+}

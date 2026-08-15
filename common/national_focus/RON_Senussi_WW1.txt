@@ -1,0 +1,309 @@
+#WORLD WAR 1 FOCUS
+#1910-1918
+
+focus_tree = {
+	id = RON_Senussi_WW1
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = SEO
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1800 }
+
+
+	#BRANCH B - THE SUZERAIN
+	#Focus for The Jihad Proclaimed
+	focus = {
+		id = SEO_the_jihad_proclaimed
+		icon = GFX_goal_generic_major_war
+		x = 31
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_the_lodges
+				date > 1911.10.1
+			}
+		}
+
+		completion_reward = {
+			SEO_open_the_register = yes
+			set_variable = { SEO_arg_delta = 10 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_jihad
+			add_war_support = 0.25
+			custom_effect_tooltip = SEO_the_jihad_proclaimed_tt
+		}
+	}
+
+	focus = {
+		id = SEO_the_officers_from_stamboul
+		icon = GFX_goal_generic_army_doctrines
+		x = 29
+		y = 1
+		cost = 10
+		prerequisite = { focus = SEO_the_jihad_proclaimed }
+		mutually_exclusive = { focus = SEO_we_fight_as_bedouin }
+
+		completion_reward = {
+			# +12 dawla, a staff
+			set_variable = { SEO_arg_delta = 12 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_stamboul_officers
+			army_experience = 20
+			custom_effect_tooltip = SEO_the_officers_from_stamboul_tt
+		}
+	}
+
+	#Focus for We Fight as Bedouin
+	focus = {
+		id = SEO_we_fight_as_bedouin
+		icon = GFX_goal_generic_neutrality_focus
+		x = 33
+		y = 1
+		cost = 10
+		prerequisite = { focus = SEO_the_jihad_proclaimed }
+		mutually_exclusive = { focus = SEO_the_officers_from_stamboul }
+
+		completion_reward = {
+			# no cadres, no line held
+			set_country_flag = SEO_done_as_bedouin
+			add_ideas = SEO_idea_we_fight_as_bedouin
+			custom_effect_tooltip = SEO_we_fight_as_bedouin_tt
+		}
+	}
+
+	#Focus for The Officers Who Stayed
+	focus = {
+		id = SEO_the_officers_who_stayed
+		icon = GFX_goal_generic_military_sphere
+		x = 29
+		y = 2
+		cost = 15
+		prerequisite = { focus = SEO_the_officers_from_stamboul }
+
+		completion_reward = {
+			# divergence 2, +15 dawla
+			set_variable = { SEO_arg_delta = 15 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_officers_stayed
+			custom_effect_tooltip = SEO_the_officers_who_stayed_tt
+		}
+	}
+
+
+	#BRANCH C - THE TITHE
+	focus = {
+		id = SEO_the_blockade_runners
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 38
+		y = 1
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_tithe_and_toll
+				date > 1912.1.1
+			}
+		}
+
+		completion_reward = {
+			SEO_open_the_register = yes
+			set_country_flag = SEO_done_blockade_runners
+			add_ideas = SEO_idea_the_blockade_runners
+			custom_effect_tooltip = SEO_the_blockade_runners_tt
+		}
+	}
+
+
+	#BRANCH D - THE LEVY
+	focus = {
+		id = SEO_a_field_army_at_last
+		icon = GFX_goal_generic_army_doctrines
+		x = 45
+		y = 2
+		cost = 15
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_tribal_levy
+				date > 1913.1.1
+			}
+		}
+
+		completion_reward = {
+			# +18 dawla, 6000 men
+			SEO_open_the_register = yes
+			set_variable = { SEO_arg_delta = 18 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_field_army
+			add_manpower = 6000
+			custom_effect_tooltip = SEO_a_field_army_at_last_tt
+		}
+	}
+
+
+	#BRANCH E - WHICH WAR
+	#Focus for The Call of the Caliph
+	focus = {
+		id = SEO_the_call_of_the_caliph
+		icon = GFX_goal_generic_territory_or_war
+		x = 4
+		y = 3
+		cost = 25
+		mutually_exclusive = { focus = SEO_strike_the_italian_first }
+		mutually_exclusive = { focus = SEO_the_lodges_stay_shut }
+		will_lead_to_war_with = ENG
+
+		available = {
+			has_country_flag = SEO_house_sharif
+			OR = {
+				has_country_flag = SEO_done_field_army
+				date > 1915.11.1
+			}
+		}
+
+		completion_reward = {
+			# divergence 3: ring 4 razed
+			set_variable = { SEO_arg_ring = 4 }
+			SEO_raze_ring = yes
+			set_country_flag = SEO_done_egypt_campaign
+			custom_effect_tooltip = SEO_the_call_of_the_caliph_tt
+		}
+	}
+
+	#Focus for Strike the Italian First
+	focus = {
+		id = SEO_strike_the_italian_first
+		icon = GFX_goal_generic_major_war
+		x = 14
+		y = 3
+		cost = 15
+		mutually_exclusive = { focus = SEO_the_call_of_the_caliph }
+		mutually_exclusive = { focus = SEO_the_lodges_stay_shut }
+		will_lead_to_war_with = ITA
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_field_army
+				date > 1915.1.1
+			}
+		}
+
+		completion_reward = {
+			# ring 1 consumed, not razed
+			set_variable = { SEO_arg_ring = 1 }
+			SEO_consume_ring = yes
+			set_country_flag = SEO_done_strike_italian
+			add_war_support = 0.15
+			custom_effect_tooltip = SEO_strike_the_italian_first_tt
+		}
+	}
+
+	#Focus for The Lodges Stay Shut
+	focus = {
+		id = SEO_the_lodges_stay_shut
+		icon = GFX_goal_generic_neutrality_focus
+		x = 18
+		y = 3
+		cost = 10
+		mutually_exclusive = { focus = SEO_the_call_of_the_caliph }
+		mutually_exclusive = { focus = SEO_strike_the_italian_first }
+
+		available = {
+			OR = {
+				has_country_flag = SEO_done_the_lodges
+				date > 1914.8.1
+			}
+		}
+
+		completion_reward = {
+			# +2 on all five rings
+			SEO_open_the_register = yes
+			set_variable = { SEO_arg_ring = 1 }
+			set_variable = { SEO_arg_delta = 2 }
+			SEO_add_zawaya = yes
+			set_variable = { SEO_arg_ring = 2 }
+			set_variable = { SEO_arg_delta = 2 }
+			SEO_add_zawaya = yes
+			set_variable = { SEO_arg_ring = 3 }
+			set_variable = { SEO_arg_delta = 2 }
+			SEO_add_zawaya = yes
+			set_variable = { SEO_arg_ring = 4 }
+			set_variable = { SEO_arg_delta = 2 }
+			SEO_add_zawaya = yes
+			set_variable = { SEO_arg_ring = 5 }
+			set_variable = { SEO_arg_delta = 2 }
+			SEO_add_zawaya = yes
+			set_country_flag = SEO_done_lodges_shut
+			custom_effect_tooltip = SEO_the_lodges_stay_shut_tt
+		}
+	}
+
+	focus = {
+		id = SEO_the_sharif_holds_fast
+		icon = GFX_goal_generic_political_pressure
+		x = 6
+		y = 5
+		cost = 15
+		prerequisite = { focus = SEO_the_call_of_the_caliph }
+		mutually_exclusive = { focus = SEO_the_abdication_of_ahmed_sharif }
+
+		completion_reward = {
+			# divergence 4, dawla 40 cap
+			set_country_flag = SEO_done_sharif_holds
+			custom_effect_tooltip = SEO_the_sharif_holds_fast_tt
+		}
+	}
+
+	focus = {
+		id = SEO_the_abdication_of_ahmed_sharif
+		icon = GFX_goal_generic_forceful_treaty
+		x = 14
+		y = 5
+		cost = 10
+		prerequisite = { focus = SEO_the_call_of_the_caliph }
+		mutually_exclusive = { focus = SEO_the_sharif_holds_fast }
+
+		completion_reward = {
+			clr_country_flag = SEO_house_sharif
+			set_country_flag = SEO_house_idris
+			set_country_flag = SEO_done_abdication
+			custom_effect_tooltip = SEO_the_abdication_of_ahmed_sharif_tt
+		}
+	}
+
+	#Focus for The Modus Vivendi of Acroma
+	focus = {
+		id = SEO_the_modus_vivendi_of_acroma
+		icon = GFX_goal_generic_improve_relations
+		x = 14
+		y = 6
+		cost = 15
+		prerequisite = {
+			focus = SEO_the_abdication_of_ahmed_sharif
+			focus = SEO_strike_the_italian_first
+			focus = SEO_the_lodges_stay_shut
+		}
+
+		available = {
+			NOT = { has_country_flag = SEO_house_sharif }
+		}
+
+		completion_reward = {
+			# era terminal, +20 dawla
+			set_variable = { SEO_arg_delta = 20 }
+			SEO_add_dawla = yes
+			set_country_flag = SEO_done_acroma
+			custom_effect_tooltip = SEO_the_modus_vivendi_of_acroma_tt
+		}
+	}
+}

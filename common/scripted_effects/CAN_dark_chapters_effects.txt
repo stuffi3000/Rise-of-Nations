@@ -1,0 +1,196 @@
+# the canadian ledger - two country counters and their modifiers
+# CAN_suppressed_evidence 0-10, CAN_civil_liberties_debt 0-20
+# CAN_deportation_count 0-5
+# no parameterised scripted effect in hoi4, args go through variables
+#   set_variable = { CAN_ledger_arg_debt = 2 } then CAN_add_ledger = yes
+# CAN_update_ledger also runs from on_monthly_CAN
+
+
+# 1. INCREMENT
+# counters only fall through the post-1945 reparation events
+# always clamped, an unbounded counter gives absurd modifiers
+
+CAN_add_ledger = {
+
+	add_to_variable = { CAN_civil_liberties_debt = CAN_ledger_arg_debt }
+	add_to_variable = { CAN_suppressed_evidence = CAN_ledger_arg_evidence }
+
+	clamp_variable = { var = CAN_civil_liberties_debt min = 0 max = 20 }
+	clamp_variable = { var = CAN_suppressed_evidence min = 0 max = 10 }
+
+	# args are consumed, never inherited by the next caller
+	set_variable = { CAN_ledger_arg_debt = 0 }
+	set_variable = { CAN_ledger_arg_evidence = 0 }
+
+	CAN_update_ledger = yes
+}
+
+
+# 2. RECALCULATE AND POST
+# research -0.01 per evidence, stability -0.01 per debt
+# manpower -0.005 per deportation
+# the modifier appears at the first line written and stays
+
+CAN_update_ledger = {
+
+	set_variable = { global.CAN_ledger_research = CAN_suppressed_evidence }
+	multiply_variable = { global.CAN_ledger_research = -0.01 }
+
+	set_variable = { global.CAN_ledger_stability = CAN_civil_liberties_debt }
+	multiply_variable = { global.CAN_ledger_stability = -0.01 }
+
+	set_variable = { global.CAN_deportation_manpower = CAN_deportation_count }
+	multiply_variable = { global.CAN_deportation_manpower = -0.005 }
+
+	if = {
+		limit = {
+			OR = {
+				check_variable = { var = CAN_civil_liberties_debt value = 0 compare = greater_than }
+				check_variable = { var = CAN_suppressed_evidence value = 0 compare = greater_than }
+			}
+			NOT = { has_dynamic_modifier = { modifier = CAN_the_ledger_modifier } }
+		}
+		add_dynamic_modifier = { modifier = CAN_the_ledger_modifier }
+		set_country_flag = CAN_ledger_opened
+	}
+
+	if = {
+		limit = {
+			check_variable = { var = CAN_deportation_count value = 0 compare = greater_than }
+			NOT = { has_dynamic_modifier = { modifier = CAN_the_deportation_ledger } }
+		}
+		add_dynamic_modifier = { modifier = CAN_the_deportation_ledger }
+	}
+}
+
+
+# 3. STATE MODIFIERS
+# country scope, states listed by id, called from decisions not a tick
+
+# 473 British Columbia, 739 Haida Gwaii, 740 Vancouver Island
+CAN_place_exclusion_by_price_coast = {
+	473 = { CAN_place_exclusion_by_price_state = yes }
+	739 = { CAN_place_exclusion_by_price_state = yes }
+	740 = { CAN_place_exclusion_by_price_state = yes }
+}
+
+CAN_place_exclusion_by_price_state = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast } }
+		}
+		add_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast }
+	}
+}
+
+CAN_remove_exclusion_by_price_coast = {
+	473 = { CAN_remove_exclusion_by_price_state = yes }
+	739 = { CAN_remove_exclusion_by_price_state = yes }
+	740 = { CAN_remove_exclusion_by_price_state = yes }
+}
+
+CAN_remove_exclusion_by_price_state = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast } }
+		remove_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast }
+	}
+}
+
+# the closed door of 1923 replaces the priced door of 1903, same states
+CAN_place_exclusion_coast = {
+	473 = { CAN_place_exclusion_state = yes }
+	739 = { CAN_place_exclusion_state = yes }
+	740 = { CAN_place_exclusion_state = yes }
+}
+
+CAN_place_exclusion_state = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast } }
+		remove_dynamic_modifier = { modifier = CAN_exclusion_by_price_coast }
+	}
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_exclusion_coast } }
+		}
+		add_dynamic_modifier = { modifier = CAN_exclusion_coast }
+	}
+}
+
+CAN_remove_exclusion_coast = {
+	473 = { CAN_remove_exclusion_state = yes }
+	739 = { CAN_remove_exclusion_state = yes }
+	740 = { CAN_remove_exclusion_state = yes }
+}
+
+CAN_remove_exclusion_state = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = CAN_exclusion_coast } }
+		remove_dynamic_modifier = { modifier = CAN_exclusion_coast }
+	}
+}
+
+# 473, 739, 740 - the December 1941 panic
+CAN_place_pacific_panic = {
+	473 = { CAN_place_pacific_panic_state = yes }
+	739 = { CAN_place_pacific_panic_state = yes }
+	740 = { CAN_place_pacific_panic_state = yes }
+}
+
+CAN_place_pacific_panic_state = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_pacific_panic } }
+		}
+		add_dynamic_modifier = { modifier = CAN_pacific_panic }
+	}
+}
+
+CAN_remove_pacific_panic = {
+	473 = { CAN_remove_pacific_panic_state = yes }
+	739 = { CAN_remove_pacific_panic_state = yes }
+	740 = { CAN_remove_pacific_panic_state = yes }
+}
+
+CAN_remove_pacific_panic_state = {
+	if = {
+		limit = { has_dynamic_modifier = { modifier = CAN_pacific_panic } }
+		remove_dynamic_modifier = { modifier = CAN_pacific_panic }
+	}
+}
+
+# 467 Manitoba, 469 Saskatchewan, 470 Alberta - the beet fields
+# 1825 days is the length of a farm labour contract
+CAN_place_the_beet_fields = {
+	467 = { CAN_place_the_beet_fields_state = yes }
+	469 = { CAN_place_the_beet_fields_state = yes }
+	470 = { CAN_place_the_beet_fields_state = yes }
+}
+
+CAN_place_the_beet_fields_state = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_the_beet_fields } }
+		}
+		add_dynamic_modifier = { modifier = CAN_the_beet_fields days = 1825 }
+	}
+}
+
+# 276 Southern Ontario, 682 Northern Ontario - the Grand River
+CAN_place_the_grand_river_closed = {
+	276 = { CAN_place_the_grand_river_state = yes }
+	682 = { CAN_place_the_grand_river_state = yes }
+}
+
+CAN_place_the_grand_river_state = {
+	if = {
+		limit = {
+			OWNER = { original_tag = CAN }
+			NOT = { has_dynamic_modifier = { modifier = CAN_the_grand_river_closed } }
+		}
+		add_dynamic_modifier = { modifier = CAN_the_grand_river_closed }
+	}
+}

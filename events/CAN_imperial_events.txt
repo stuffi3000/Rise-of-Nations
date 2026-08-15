@@ -1,0 +1,1465 @@
+########################################################################################
+# CAN_imperial_events.txt - imperial and constitutional chain
+# namespace can_imperial
+#
+# all is_triggered_only, fired from the on_actions
+# date windows close at both ends, else 1907 fires in 1936
+# blood tax draws: cause 6 +5 in 1914, cause 12 +8 at Chanak
+# cause 24 -8 is done by CAN_a_separate_declaration, not here
+# the caller sets CAN_house_question before .15
+# CAN_done_<slug> comes from the focus trees
+########################################################################################
+
+add_namespace = can_imperial
+
+
+########################################################################################
+##### 1907 - the colonial conference becomes imperial
+########################################################################################
+
+country_event = {
+	id = can_imperial.1
+	title = can_imperial.1.t
+	desc = can_imperial.1.d
+	picture = GFX_report_event_generic_sign_treaty1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_conference_1907_seen
+		}
+	}
+
+	# historical: Laurier refuses a binding secretariat
+	option = {
+		name = can_imperial.1.a
+		ai_chance = { factor = 80 }
+
+		add_political_power = 75
+		add_stability = 0.05
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_secretariat_refused } }
+
+		set_country_flag = CAN_imperial_secretariat_refused
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+
+	# divergence: the secretariat sits in London
+	option = {
+		name = can_imperial.1.b
+		ai_chance = { factor = 20 }
+
+		add_political_power = -50
+		army_experience = 10
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_secretariat_accepted } }
+
+		set_country_flag = CAN_imperial_secretariat_accepted
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### 20 October 1903 - the Alaska award
+########################################################################################
+
+country_event = {
+	id = can_imperial.2
+	title = can_imperial.2.t
+	desc = can_imperial.2.d
+	picture = GFX_report_event_canada_treaty
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_alaska_award_seen
+		}
+	}
+
+	# opens CAN_reject_the_alaska_award
+	option = {
+		name = can_imperial.2.a
+		ai_chance = { factor = 35 }
+
+		add_war_support = 0.05
+		add_political_power = 25
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_betrayed_at_london } }
+
+		set_country_flag = CAN_imperial_london_sold_us
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+
+	# opens CAN_treat_direct_with_washington
+	option = {
+		name = can_imperial.2.b
+		ai_chance = { factor = 35 }
+
+		add_political_power = 50
+		add_stability = 0.05
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_kingston_answered } }
+
+		set_country_flag = CAN_imperial_london_cannot_speak
+	}
+
+	# leads to CAN_the_alaska_tribunal
+	option = {
+		name = can_imperial.2.c
+		ai_chance = { factor = 30 }
+
+		add_political_power = 25
+		add_stability = -0.05
+
+		set_country_flag = CAN_imperial_the_tribunal_has_ruled
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### 4 August 1914 - the King is at war
+########################################################################################
+
+country_event = {
+	id = can_imperial.3
+	title = can_imperial.3.t
+	desc = can_imperial.3.d
+	picture = GFX_report_event_king_speech
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+		ENG = { has_war = yes }
+		NOT = { has_war_with = ENG }
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_king_is_at_war_seen
+		}
+	}
+
+	# only one answer left
+	option = {
+		name = can_imperial.3.a
+		ai_chance = { factor = 100 }
+
+		add_war_support = 0.10
+
+		set_variable = { CAN_bt_arg_value = 5 }
+		set_variable = { CAN_bt_arg_cause = 6 }
+		CAN_add_blood_tax = yes
+
+		# auto-join the british faction
+		if = {
+			limit = {
+				ENG = { is_faction_leader = yes }
+				NOT = { is_in_faction_with = ENG }
+			}
+			ENG = { add_to_faction = PREV }
+		}
+		else_if = {
+			limit = {
+				ENG = { NOT = { is_in_faction = yes } }
+				NOT = { is_in_faction = yes }
+			}
+			ENG = {
+				create_faction = CAN_faction_the_empire
+				add_to_faction = PREV
+			}
+		}
+
+		set_country_flag = CAN_imperial_the_king_is_at_war
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### 16 September 1922 - the Chanak telegram
+########################################################################################
+
+country_event = {
+	id = can_imperial.4
+	title = can_imperial.4.t
+	desc = can_imperial.4.d
+	picture = GFX_report_event_MON_party_successor_newspaper
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_chanak_seen
+		}
+	}
+
+	# historical: parliament will decide
+	option = {
+		name = can_imperial.4.a
+		ai_chance = { factor = 60 }
+
+		add_stability = 0.15
+		add_political_power = 25
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_imperial_chill } }
+
+		set_country_flag = CAN_imperial_chanak_parliament
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+
+	# divergence: ready, aye ready
+	# blood tax cause 12, +8
+	option = {
+		name = can_imperial.4.b
+		ai_chance = { factor = 20 }
+
+		add_war_support = 0.05
+		army_experience = 25
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_stood_by_the_crown } }
+
+		set_variable = { CAN_bt_arg_value = 8 }
+		set_variable = { CAN_bt_arg_cause = 12 }
+		CAN_add_blood_tax = yes
+
+		set_country_flag = CAN_imperial_chanak_ready
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+
+	# summon parliament first, 60 days, house question 1
+	option = {
+		name = can_imperial.4.c
+		ai_chance = { factor = 20 }
+
+		add_political_power = -25
+
+		set_country_flag = CAN_imperial_chanak_summoned
+
+		hidden_effect = {
+			set_variable = { CAN_house_question = 1 }
+			country_event = { id = can_imperial.15 days = 60 }
+		}
+	}
+}
+
+
+########################################################################################
+##### 2 March 1923 - Lapointe signs alone
+########################################################################################
+
+country_event = {
+	id = can_imperial.5
+	title = can_imperial.5.t
+	desc = can_imperial.5.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_halibut_seen
+		}
+	}
+
+	option = {
+		name = can_imperial.5.a
+		ai_chance = { factor = 100 }
+
+		add_political_power = 50
+		add_stability = 0.05
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_signed_without_london } }
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_kingston_answered } }
+
+		set_country_flag = CAN_imperial_signed_alone
+	}
+}
+
+
+########################################################################################
+##### 26 June - 2 July 1926 - the King-Byng affair
+########################################################################################
+
+country_event = {
+	id = can_imperial.6
+	title = can_imperial.6.t
+	desc = can_imperial.6.d
+	picture = GFX_report_event_EGY_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_king_byng_seen
+		}
+	}
+
+	# historical: ask for dissolution before the censure vote
+	option = {
+		name = can_imperial.6.a
+		ai_chance = { factor = 75 }
+
+		add_political_power = -25
+
+		hidden_effect = {
+			country_event = { id = can_imperial.7 days = 2 }
+		}
+	}
+
+	# take the censure vote, no constitutional crisis
+	option = {
+		name = can_imperial.6.b
+		ai_chance = { factor = 25 }
+
+		add_political_power = -75
+		add_stability = 0.05
+
+		set_country_flag = CAN_imperial_no_constitutional_crisis
+
+		hidden_effect = {
+			country_event = { id = can_imperial.8 days = 6 }
+		}
+	}
+}
+
+
+########################################################################################
+##### second screen - 28 June 1926, Byng refuses
+########################################################################################
+
+country_event = {
+	id = can_imperial.7
+	title = can_imperial.7.t
+	desc = can_imperial.7.d
+	picture = GFX_report_event_canada_patriation
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	# historical: resign the same day
+	option = {
+		name = can_imperial.7.a
+		ai_chance = { factor = 75 }
+
+		add_political_power = -25
+
+		set_country_flag = CAN_imperial_resigned_the_same_day
+
+		hidden_effect = {
+			country_event = { id = can_imperial.8 days = 4 }
+		}
+	}
+
+	# divergence: appeal to the King over his head
+	option = {
+		name = can_imperial.7.b
+		ai_chance = { factor = 25 }
+
+		add_stability = -0.20
+		add_political_power = 50
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_imperial_chill } }
+
+		set_country_flag = CAN_imperial_appeal_to_the_king
+
+		hidden_effect = {
+			country_event = { id = can_imperial.8 days = 4 }
+		}
+	}
+}
+
+
+########################################################################################
+##### third screen - 2 July 1926, 95 to 94
+########################################################################################
+
+country_event = {
+	id = can_imperial.8
+	title = can_imperial.8.t
+	desc = can_imperial.8.d
+	picture = GFX_report_event_election_vote
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			CAN_kingbyng_resolve_vote = yes
+		}
+	}
+
+	option = {
+		name = can_imperial.8.a
+		ai_chance = { factor = 100 }
+
+		hidden_effect = {
+			if = {
+				limit = { check_variable = { var = CAN_kb_margin value = 0 compare = less_than } }
+				country_event = { id = can_imperial.9 hours = 6 }
+			}
+			else = {
+				country_event = { id = can_imperial.10 hours = 6 }
+			}
+		}
+	}
+}
+
+
+########################################################################################
+##### outcome A - the ministry falls, constitutional victory
+########################################################################################
+
+country_event = {
+	id = can_imperial.9
+	title = can_imperial.9.t
+	desc = can_imperial.9.d
+	picture = GFX_report_event_canada_patriation
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	option = {
+		name = can_imperial.9.a
+		ai_chance = { factor = 100 }
+
+		add_political_power = 100
+		add_stability = 0.10
+
+		# the reserve power is spent
+		if = {
+			limit = { has_idea = CAN_idea_the_governor_generals_reserve_power }
+			remove_ideas = CAN_idea_the_governor_generals_reserve_power
+		}
+
+		set_country_flag = CAN_imperial_constitutional_victory
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### outcome B - Meighen survives, reserve power holds
+########################################################################################
+
+country_event = {
+	id = can_imperial.10
+	title = can_imperial.10.t
+	desc = can_imperial.10.d
+	picture = GFX_report_event_EGY_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	option = {
+		name = can_imperial.10.a
+		ai_chance = { factor = 100 }
+
+		add_political_power = -50
+		add_stability = -0.05
+
+		if = {
+			limit = { NOT = { has_idea = CAN_idea_the_governor_generals_reserve_power } }
+			add_ideas = CAN_idea_the_governor_generals_reserve_power
+		}
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_stood_by_the_crown } }
+
+		set_country_flag = CAN_imperial_reserve_power_confirmed
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+########################################################################################
+##### early November 1935 - the Riddell telegram
+########################################################################################
+
+country_event = {
+	id = can_imperial.12
+	title = can_imperial.12.t
+	desc = can_imperial.12.d
+	picture = GFX_report_event_generic_sign_treaty3
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_riddell_telegram_seen
+		}
+	}
+
+	# opens CAN_answer_the_riddell_telegram
+	option = {
+		name = can_imperial.12.a
+		ai_chance = { factor = 30 }
+
+		add_political_power = -50
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_pressed } }
+		FRA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_pressed } }
+		ITA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_resented } }
+
+		set_country_flag = CAN_imperial_oil_sanction_pressed
+
+		hidden_effect = {
+			country_event = { id = can_imperial.13 days = 30 }
+		}
+	}
+
+	# no answer today, 2 December fires anyway
+	option = {
+		name = can_imperial.12.b
+		ai_chance = { factor = 70 }
+
+		add_political_power = 25
+
+		hidden_effect = {
+			country_event = { id = can_imperial.13 days = 30 }
+		}
+	}
+}
+
+
+########################################################################################
+##### 2 December 1935 - the Riddell affair
+########################################################################################
+
+country_event = {
+	id = can_imperial.13
+	title = can_imperial.13.t
+	desc = can_imperial.13.d
+	picture = GFX_report_event_generic_sign_treaty1
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_riddell_affair_seen
+		}
+	}
+
+	# historical: disavowed, opens CAN_no_commitments_in_advance
+	option = {
+		name = can_imperial.13.a
+		ai_chance = { factor = 70 }
+
+		add_stability = 0.10
+		add_political_power = 25
+
+		ITA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_delegate_disavowed } }
+
+		set_country_flag = CAN_imperial_riddell_disavowed
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+
+	# divergence: upheld, opens CAN_champion_of_collective_security
+	option = {
+		name = can_imperial.13.b
+		ai_chance = { factor = 30 }
+
+		add_stability = -0.10
+		add_war_support = 0.05
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_pressed } }
+		FRA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_pressed } }
+		ITA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_oil_sanction_resented } }
+
+		set_country_flag = CAN_imperial_riddell_upheld
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### 18-20 August 1938 - Kingston and Woodbridge
+########################################################################################
+
+country_event = {
+	id = can_imperial.14
+	title = can_imperial.14.t
+	desc = can_imperial.14.d
+	picture = GFX_report_event_britain_america_friend
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_kingston_seen
+		}
+	}
+
+	# historical: answer at Woodbridge
+	option = {
+		name = can_imperial.14.a
+		ai_chance = { factor = 75 }
+
+		add_political_power = 25
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_kingston_answered } }
+
+		add_to_variable = { CAN_continental_alignment = 1 }
+		clamp_variable = { var = CAN_continental_alignment min = 0 max = 10 }
+
+		set_country_flag = CAN_imperial_kingston_answered
+	}
+
+	# the Dominion says nothing
+	option = {
+		name = can_imperial.14.b
+		ai_chance = { factor = 25 }
+
+		add_political_power = -25
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_silence_at_woodbridge } }
+
+		set_country_flag = CAN_imperial_kingston_silent
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### CAN_the_house_decides - one id, three questions
+##### the division is resolved by CAN_house_resolve_vote
+########################################################################################
+
+country_event = {
+	id = can_imperial.15
+	title = can_imperial.15.t
+
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+		text = can_imperial.15.d.declaration
+	}
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		text = can_imperial.15.d.confidence
+	}
+	desc = {
+		trigger = {
+			NOT = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+			NOT = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		}
+		text = can_imperial.15.d.contingent
+	}
+
+	picture = GFX_report_event_EGY_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			CAN_house_resolve_vote = yes
+		}
+	}
+
+	option = {
+		name = can_imperial.15.a
+		ai_chance = { factor = 100 }
+
+		hidden_effect = {
+			if = {
+				limit = { check_variable = { var = CAN_house_margin value = 0 compare = greater_than } }
+				country_event = { id = can_imperial.16 hours = 6 }
+			}
+			else = {
+				country_event = { id = can_imperial.17 hours = 6 }
+			}
+		}
+	}
+}
+
+
+########################################################################################
+##### the House carries the address
+########################################################################################
+
+country_event = {
+	id = can_imperial.16
+	title = can_imperial.16.t
+
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+		text = can_imperial.16.d.declaration
+	}
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		text = can_imperial.16.d.confidence
+	}
+	desc = {
+		trigger = {
+			NOT = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+			NOT = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		}
+		text = can_imperial.16.d.contingent
+	}
+
+	picture = GFX_report_event_canadian_soldiers
+
+	is_triggered_only = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	option = {
+		name = can_imperial.16.a
+		ai_chance = { factor = 100 }
+
+		add_war_support = 0.10
+		add_political_power = 50
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_house_has_spoken } }
+
+		set_country_flag = CAN_imperial_house_carried
+		clr_country_flag = CAN_imperial_house_rejected
+
+		# question 1 only, the contingent is a Chanak commitment
+		if = {
+			limit = { check_variable = { var = CAN_house_question value = 1 compare = equals } }
+			set_variable = { CAN_bt_arg_value = 8 }
+			set_variable = { CAN_bt_arg_cause = 12 }
+			CAN_add_blood_tax = yes
+		}
+
+		# question 2: the separate declaration is voted
+		if = {
+			limit = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+			set_country_flag = CAN_imperial_declared_by_our_own_act
+		}
+
+		# question 3: the ministry keeps the confidence of the House
+		if = {
+			limit = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+			add_stability = 0.05
+			set_country_flag = CAN_imperial_ministry_sustained
+		}
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### the House refuses
+########################################################################################
+
+country_event = {
+	id = can_imperial.17
+	title = can_imperial.17.t
+
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+		text = can_imperial.17.d.declaration
+	}
+	desc = {
+		trigger = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		text = can_imperial.17.d.confidence
+	}
+	desc = {
+		trigger = {
+			NOT = { check_variable = { var = CAN_house_question value = 2 compare = equals } }
+			NOT = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+		}
+		text = can_imperial.17.d.contingent
+	}
+
+	picture = GFX_report_event_EGY_parliament
+
+	is_triggered_only = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	option = {
+		name = can_imperial.17.a
+		ai_chance = { factor = 100 }
+
+		add_stability = 0.05
+		add_political_power = -50
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_house_withheld_its_word } }
+
+		set_country_flag = CAN_imperial_house_rejected
+		clr_country_flag = CAN_imperial_house_carried
+
+		# question 3: losing confidence brings the ministry down
+		if = {
+			limit = { check_variable = { var = CAN_house_question value = 3 compare = equals } }
+			add_stability = -0.20
+			add_political_power = -100
+			set_country_flag = CAN_imperial_ministry_fell
+		}
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### January 1942 - the Combined Chiefs of Staff
+########################################################################################
+
+country_event = {
+	id = can_imperial.18
+	title = can_imperial.18.t
+	desc = can_imperial.18.d
+	picture = GFX_report_event_british_mission
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_combined_chiefs_seen
+		}
+	}
+
+	option = {
+		name = can_imperial.18.a
+		ai_chance = { factor = 100 }
+
+		add_political_power = -50
+
+		if = {
+			limit = {
+				NOT = { has_idea = CAN_idea_a_dominion_is_not_a_power }
+				NOT = { has_idea = CAN_idea_a_dominion_is_not_a_power_reduced }
+			}
+			add_ideas = CAN_idea_a_dominion_is_not_a_power
+		}
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_a_dominion_is_not_a_power } }
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_a_dominion_is_not_a_power } }
+
+		set_country_flag = CAN_imperial_dominion_is_not_a_power
+	}
+}
+
+
+########################################################################################
+##### September 1940 - Churchill takes it badly
+##### fired from CAN_ogdensburg
+########################################################################################
+
+country_event = {
+	id = can_imperial.19
+	title = can_imperial.19.t
+	desc = can_imperial.19.d
+	picture = GFX_report_event_britain_entente
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_churchill_seen
+		}
+	}
+
+	# apologise to London
+	option = {
+		name = can_imperial.19.a
+		ai_chance = { factor = 50 }
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_apology_to_london } }
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_treated_behind_our_back } }
+
+		set_country_flag = CAN_imperial_apologised_to_london
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+
+	# remind him who holds the Saint Lawrence line
+	option = {
+		name = can_imperial.19.b
+		ai_chance = { factor = 50 }
+
+		add_stability = 0.10
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_saint_lawrence_line } }
+
+		add_to_variable = { CAN_continental_alignment = 1 }
+		clamp_variable = { var = CAN_continental_alignment min = 0 max = 10 }
+
+		set_country_flag = CAN_imperial_the_saint_lawrence_line
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### 12 April 1946 - Alexander of Tunis
+########################################################################################
+
+country_event = {
+	id = can_imperial.20
+	title = can_imperial.20.t
+	desc = can_imperial.20.d
+	picture = GFX_report_event_british_mission
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_rideau_hall_seen
+		}
+	}
+
+	# receive His Excellency
+	option = {
+		name = can_imperial.20.a
+		ai_chance = { factor = 60 }
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_a_briton_at_rideau_hall } }
+
+		set_country_flag = CAN_imperial_a_briton_at_rideau_hall
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+
+	# ask the King for a Canadian
+	option = {
+		name = can_imperial.20.b
+		ai_chance = { factor = 40 }
+
+		add_stability = 0.05
+		add_political_power = 25
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_a_canadian_at_rideau_hall } }
+
+		set_country_flag = CAN_imperial_a_canadian_at_rideau_hall
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+##### late 1947 - the UNTCOK crisis
+########################################################################################
+
+country_event = {
+	id = can_imperial.21
+	title = can_imperial.21.t
+	desc = can_imperial.21.d
+	picture = GFX_report_event_generic_sign_treaty2
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_untcok_seen
+		}
+	}
+
+	# withdraw, External Affairs stays with the prime minister
+	option = {
+		name = can_imperial.21.a
+		ai_chance = { factor = 40 }
+
+		add_political_power = 50
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_a_seat_refused } }
+
+		set_country_flag = CAN_imperial_untcok_refused
+	}
+
+	# give way, the minister takes External Affairs
+	option = {
+		name = can_imperial.21.b
+		ai_chance = { factor = 60 }
+
+		add_political_power = -50
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_a_seat_taken } }
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_a_seat_taken } }
+
+		set_country_flag = CAN_imperial_untcok_accepted
+	}
+}
+
+########################################################################################
+##### spring 1948 - the secret negotiation
+##### opens CAN_continental_free_trade, 180 day offer
+########################################################################################
+
+country_event = {
+	id = can_imperial.24
+	title = can_imperial.24.t
+	desc = can_imperial.24.d
+	picture = GFX_report_event_USA_treaty
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_secret_negotiation_seen
+		}
+	}
+
+	# let the officials carry on
+	option = {
+		name = can_imperial.24.a
+		ai_chance = { factor = 60 }
+
+		add_political_power = 25
+
+		set_country_flag = CAN_imperial_secret_offer_open
+
+		hidden_effect = {
+			country_event = { id = can_imperial.25 days = 180 }
+		}
+	}
+
+	# refuse to open the file
+	option = {
+		name = can_imperial.24.b
+		ai_chance = { factor = 40 }
+
+		add_stability = 0.05
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_offer_declined } }
+
+		set_country_flag = CAN_imperial_secret_offer_declined
+	}
+}
+
+
+########################################################################################
+##### the offer lapses, 180 days on
+##### clears the flag that opened the focus
+########################################################################################
+
+country_event = {
+	id = can_imperial.25
+	title = can_imperial.25.t
+	desc = can_imperial.25.d
+	picture = GFX_report_event_USA_treaty
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+		has_country_flag = CAN_imperial_secret_offer_open
+		NOT = { has_country_flag = CAN_done_continental_free_trade }
+	}
+
+	option = {
+		name = can_imperial.25.a
+		ai_chance = { factor = 100 }
+
+		clr_country_flag = CAN_imperial_secret_offer_open
+		set_country_flag = CAN_imperial_secret_offer_lapsed
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_offer_declined } }
+	}
+}
+
+
+########################################################################################
+##### 1911 - NO TRUCK NOR TRADE WITH THE YANKEES
+##### the annexation scare runs for 180 days
+########################################################################################
+
+country_event = {
+	id = can_imperial.26
+	title = can_imperial.26.t
+	desc = can_imperial.26.d
+	picture = GFX_report_event_generic_rally
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_no_truck_seen
+		}
+	}
+
+	# go to the country on the agreement
+	option = {
+		name = can_imperial.26.a
+		ai_chance = { factor = 60 }
+
+		add_stability = -0.10
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_no_truck_nor_trade } }
+
+		set_country_flag = CAN_imperial_annexation_scare
+
+		hidden_effect = {
+			country_event = { id = can_imperial.27 days = 180 }
+		}
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+
+	# withdraw the agreement
+	option = {
+		name = can_imperial.26.b
+		ai_chance = { factor = 40 }
+
+		add_political_power = -75
+
+		USA = { add_opinion_modifier = { target = ROOT modifier = CAN_the_offer_declined } }
+
+		set_country_flag = CAN_imperial_agreement_withdrawn
+	}
+}
+
+
+########################################################################################
+##### the scare fades, 180 days on
+########################################################################################
+
+country_event = {
+	id = can_imperial.27
+	title = can_imperial.27.t
+	desc = can_imperial.27.d
+	picture = GFX_report_event_generic_rally
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+		has_country_flag = CAN_imperial_annexation_scare
+	}
+
+	option = {
+		name = can_imperial.27.a
+		ai_chance = { factor = 100 }
+
+		add_stability = 0.05
+
+		clr_country_flag = CAN_imperial_annexation_scare
+	}
+}
+
+
+########################################################################################
+##### the loyalist leagues
+##### fired from CAN_a_dominion_no_longer
+##### opens CAN_intern_the_loyalist_leagues
+########################################################################################
+
+country_event = {
+	id = can_imperial.28
+	title = can_imperial.28.t
+	desc = can_imperial.28.d
+	picture = GFX_report_event_generic_rally_3
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_loyalist_leagues_seen
+		}
+	}
+
+	# opens the internment decision
+	option = {
+		name = can_imperial.28.a
+		ai_chance = { factor = 60 }
+
+		add_political_power = -25
+
+		set_country_flag = CAN_imperial_loyalist_leagues_risen
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+
+	# let them march
+	option = {
+		name = can_imperial.28.b
+		ai_chance = { factor = 40 }
+
+		add_stability = -0.10
+
+		set_country_flag = CAN_imperial_loyalist_leagues_tolerated
+	}
+}
+
+
+########################################################################################
+##### the coaling call - warning before the ports decision
+########################################################################################
+
+country_event = {
+	id = can_imperial.29
+	title = can_imperial.29.t
+	desc = can_imperial.29.d
+	picture = GFX_report_event_canada
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_ports_demanded_seen
+		}
+	}
+
+	# note the demand, opens the decision to close the ports
+	option = {
+		name = can_imperial.29.a
+		ai_chance = { factor = 60 }
+
+		add_political_power = -25
+
+		set_country_flag = CAN_imperial_ports_demanded
+
+		custom_effect_tooltip = CAN_imperial_ports_warning_tt
+	}
+
+	# grant the coaling
+	option = {
+		name = can_imperial.29.b
+		ai_chance = { factor = 40 }
+
+		add_stability = -0.05
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_coaling_granted } }
+
+		set_country_flag = CAN_imperial_coaling_granted
+	}
+}
+
+
+########################################################################################
+##### London refuses the writ
+##### 50/50 draw for the CAN_pack_the_senate decision
+########################################################################################
+
+country_event = {
+	id = can_imperial.30
+	title = can_imperial.30.t
+	desc = can_imperial.30.d
+	picture = GFX_report_event_canada_patriation
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	trigger = {
+		original_tag = CAN
+	}
+
+	immediate = {
+		hidden_effect = {
+			set_country_flag = CAN_imperial_writ_seen
+
+			random_list = {
+				50 = { set_variable = { CAN_writ_granted = 1 } }
+				50 = { set_variable = { CAN_writ_granted = 0 } }
+			}
+
+			if = {
+				limit = { NOT = { has_idea = CAN_idea_a_packed_upper_house } }
+				add_ideas = CAN_idea_a_packed_upper_house
+			}
+		}
+	}
+
+	# writ granted, the Naval Aid Bill passes
+	option = {
+		name = can_imperial.30.a
+		trigger = { check_variable = { var = CAN_writ_granted value = 1 compare = equals } }
+		ai_chance = { factor = 100 }
+
+		set_country_flag = CAN_imperial_naval_aid_bill_passed
+
+		CAN_imperial_english_canada_rallies = yes
+	}
+
+	# writ refused, the cost is paid without the bill
+	option = {
+		name = can_imperial.30.b
+		trigger = { check_variable = { var = CAN_writ_granted value = 0 compare = equals } }
+		ai_chance = { factor = 100 }
+
+		add_political_power = -50
+		add_stability = -0.05
+
+		ENG = { add_opinion_modifier = { target = ROOT modifier = CAN_the_writ_refused } }
+
+		set_country_flag = CAN_imperial_writ_refused
+
+		CAN_imperial_french_canada_rallies = yes
+	}
+}
+
+
+########################################################################################
+# entry points for callers
+#
+#   CAN_the_halibut_precedent (focus, INT)
+#       country_event = { id = can_imperial.5 }
+#
+#   CAN_parliament_will_decide / CAN_a_separate_declaration / CAN_ralston_stays
+#       set_variable = { CAN_house_question = 1 }   (contingent, faction)
+#       set_variable = { CAN_house_question = 2 }   (declaration distincte)
+#       set_variable = { CAN_house_question = 3 }   (confiance, novembre 1944)
+#       country_event = { id = can_imperial.15 days = 30 }
+#
+#   CAN_ogdensburg (focus, WW2)
+#       country_event = { id = can_imperial.19 days = 20 }
+#
+#   CAN_a_dominion_no_longer (focus, WW2)
+#       country_event = { id = can_imperial.28 days = 30 }
+#
+#   CAN_ratify_without_an_election (decision, 03)
+#       country_event = { id = can_imperial.26 }
+#
+#   CAN_the_ports_are_closed (decision, 03) - warn first
+#       country_event = { id = can_imperial.29 }
+#
+#   CAN_pack_the_senate (decision, 03) - the 50/50 draw
+#       country_event = { id = can_imperial.30 }
+#
+#   CAN_the_terms_of_union (decision, 01)
+#       available = { has_country_flag = CAN_newfoundland_votes_for_union }
+#
+#   CAN_answer_the_riddell_telegram (focus, WW2)
+#       available = { has_country_flag = CAN_imperial_oil_sanction_pressed }
+#
+#   CAN_no_commitments_in_advance (focus, WW2)
+#       available = { has_country_flag = CAN_imperial_riddell_disavowed }
+#   CAN_champion_of_collective_security (focus, WW2)
+#       available = { has_country_flag = CAN_imperial_riddell_upheld }
+#
+#   CAN_the_kingston_pledge (focus, WW2)
+#       available = { has_country_flag = CAN_imperial_kingston_answered }
+#
+#   CAN_reject_the_alaska_award (focus, DNC)
+#       available = { has_country_flag = CAN_imperial_london_sold_us }
+#   CAN_treat_direct_with_washington (focus, DNC)
+#       available = { has_country_flag = CAN_imperial_london_cannot_speak }
+#
+#   CAN_parliament_will_decide (focus, INT)
+#       available = { has_country_flag = CAN_imperial_chanak_parliament }
+#   CAN_ready_aye_ready (focus, INT)
+#       available = { has_country_flag = CAN_imperial_chanak_ready }
+#
+#   CAN_continental_free_trade (focus, WW2)
+#       available = { has_country_flag = CAN_imperial_secret_offer_open }
+#
+#   CAN_intern_the_loyalist_leagues (decision, 03)
+#       available = { has_country_flag = CAN_imperial_loyalist_leagues_risen }
+########################################################################################

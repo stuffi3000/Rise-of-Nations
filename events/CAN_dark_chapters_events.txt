@@ -1,0 +1,571 @@
+########################################################################################
+# CAN_dark_chapters_events.txt - The Ledger
+#
+# thirteen events, all forced from outside
+#
+# can_dark.1   on_actions 1907           bryce report
+# can_dark.2   on_actions 14 jul 1923    deskaheh at geneva
+# can_dark.3   can_dark.2 (a) +451 days  RCMP at ohsweken
+# can_dark.4   can_dark.2 (b) or .3      deskaheh dies in exile
+# can_dark.5   on_actions 21 mar 1931    P.C. 695
+# can_dark.6   CAN_deport_the_undesirables, 3rd use
+# can_dark.7   on_actions 5 oct 1911     P.C. 1324 lapses
+# can_dark.8   on_actions jun 1939       st. louis, door shut
+# can_dark.9   on_actions jun 1939       st. louis, door open
+# can_dark.10  on_actions 1 jan 1946     the ledger presented
+# can_dark.11  on_actions 24 jan 1947    repatriation orders
+# can_dark.12  on_actions 1 jan 1948     joint committee
+# can_dark.13  on_actions 1 jan 1949     what survived
+#
+# on_actions: common/on_actions/CAN_dark_chapters_on_actions.txt
+########################################################################################
+
+add_namespace = can_dark
+
+
+########################################################################################
+# can_dark.1 - THE BRYCE REPORT, 1907
+########################################################################################
+
+country_event = {
+	id = can_dark.1
+	title = can_dark.1.t
+	desc = can_dark.1.d
+	picture = GFX_report_event_generic_read_write
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	# (a) historical: report withdrawn, post cut in 1919
+	option = {
+		name = can_dark.1.a
+
+		set_variable = { CAN_ledger_arg_evidence = 2 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_evidence_two_tt
+
+		add_ideas = CAN_a_national_crime
+
+		set_country_flag = CAN_bryce_report_buried
+
+		ai_chance = {
+			factor = 80
+		}
+	}
+
+	# (b) fund sanatoria and day schools; reformed, not ended
+	option = {
+		name = can_dark.1.b
+
+		add_political_power = -150
+		add_stability = -0.05
+
+		if = {
+			limit = { has_idea = CAN_residential_schools }
+			swap_ideas = {
+				remove_idea = CAN_residential_schools
+				add_idea = CAN_residential_schools_reformed
+			}
+			else = {
+				if = {
+					limit = { NOT = { has_idea = CAN_residential_schools_reformed } }
+					add_ideas = CAN_residential_schools_reformed
+				}
+			}
+		}
+
+		# opens CAN_treaty_renewal
+		set_country_flag = CAN_bryce_report_funded
+		custom_effect_tooltip = CAN_treaty_renewal_opened_tt
+
+		ai_chance = {
+			factor = 10
+		}
+	}
+
+	# (c) publish it and let parliament read
+	option = {
+		name = can_dark.1.c
+
+		add_political_power = -75
+
+		add_timed_idea = {
+			idea = CAN_the_department_under_scrutiny
+			days = 1825
+		}
+
+		set_country_flag = CAN_bryce_report_published
+
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.2 - DESKAHEH GOES TO GENEVA, 14 july 1923
+########################################################################################
+
+country_event = {
+	id = can_dark.2
+	title = can_dark.2.t
+	desc = can_dark.2.d
+	picture = GFX_report_event_generic_conference
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	# (a) historical: petition ruled inadmissible
+	option = {
+		name = can_dark.2.a
+
+		add_stability = 0.02
+
+		set_variable = { CAN_ledger_arg_evidence = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_evidence_one_tt
+
+		add_ideas = CAN_the_grand_river_dispute
+		CAN_place_the_grand_river_closed = yes
+
+		set_country_flag = CAN_domestic_jurisdiction_asserted
+
+		# the dissolution of 1924 is no longer optional, 7 oct 1924
+		country_event = { id = can_dark.3 days = 451 }
+
+		ai_chance = {
+			factor = 90
+		}
+	}
+
+	# (b) divergence: let the league hear it
+	option = {
+		name = can_dark.2.b
+
+		add_stability = -0.10
+
+		set_country_flag = CAN_the_league_heard_him
+		custom_effect_tooltip = CAN_status_of_the_first_nations_opened_tt
+
+		# he dies in exile anyway, 25 june 1925
+		country_event = { id = can_dark.4 days = 712 }
+
+		ai_chance = {
+			factor = 10
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.3 - THE RCMP AT OHSWEKEN, 7 october 1924
+#
+# offers the manner only; neither option is a refusal
+########################################################################################
+
+country_event = {
+	id = can_dark.3
+	title = can_dark.3.t
+	desc = can_dark.3.d
+	picture = GFX_report_event_canadian_soldiers
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.3.a
+
+		set_variable = { CAN_ledger_arg_debt = 2 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_two_tt
+
+		country_event = { id = can_dark.4 days = 261 }
+
+		ai_chance = {
+			factor = 40
+		}
+	}
+
+	option = {
+		name = can_dark.3.b
+
+		set_variable = { CAN_ledger_arg_debt = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_one_tt
+
+		add_stability = -0.03
+
+		country_event = { id = can_dark.4 days = 261 }
+
+		ai_chance = {
+			factor = 60
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.4 - DESKAHEH DIES IN EXILE, 25 june 1925
+#
+# minor event, no option
+########################################################################################
+
+country_event = {
+	id = can_dark.4
+	title = can_dark.4.t
+	desc = can_dark.4.d
+	picture = GFX_report_event_generic_funeral
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.4.a
+	}
+}
+
+
+########################################################################################
+# can_dark.5 - ORDER-IN-COUNCIL P.C. 695, 21 march 1931
+#
+# suffered, no option
+########################################################################################
+
+country_event = {
+	id = can_dark.5
+	title = can_dark.5.t
+	desc = can_dark.5.d
+	picture = GFX_report_event_american_hunger_march
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.5.a
+
+		add_ideas = CAN_closed_doors
+	}
+}
+
+
+########################################################################################
+# can_dark.6 - THIRTY THOUSAND NAMES
+#
+# third activation of the deportation decision, no option
+########################################################################################
+
+country_event = {
+	id = can_dark.6
+	title = can_dark.6.t
+	desc = can_dark.6.d
+	picture = GFX_report_event_generic_train
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.6.a
+
+		if = {
+			limit = { NOT = { has_idea = CAN_a_shameful_ledger } }
+			add_ideas = CAN_a_shameful_ledger
+		}
+
+		set_country_flag = CAN_shameful_ledger
+		custom_effect_tooltip = CAN_immigration_decisions_dearer_tt
+	}
+}
+
+
+########################################################################################
+# can_dark.7 - P.C. 1324 EXPIRES, 5 october 1911
+#
+# default if the player does nothing: no gain, still costs
+########################################################################################
+
+country_event = {
+	id = can_dark.7
+	title = can_dark.7.t
+	desc = can_dark.7.d
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.7.a
+
+		add_ideas = CAN_the_colour_bar_in_practice
+
+		set_variable = { CAN_ledger_arg_debt = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_one_tt
+
+		set_country_flag = CAN_pc_1324_settled
+	}
+}
+
+
+########################################################################################
+# can_dark.8 - THE ST. LOUIS, june 1939 - the door is shut
+#
+# one option only
+########################################################################################
+
+country_event = {
+	id = can_dark.8
+	title = can_dark.8.t
+	desc = can_dark.8.d
+	picture = GFX_report_event_merchant_ship_01
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.8.a
+
+		set_variable = { CAN_ledger_arg_evidence = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_evidence_one_tt
+	}
+}
+
+
+########################################################################################
+# can_dark.9 - THE ST. LOUIS, june 1939 - door not shut
+#
+# one option only
+########################################################################################
+
+country_event = {
+	id = can_dark.9
+	title = can_dark.9.t
+	desc = can_dark.9.d
+	picture = GFX_report_event_merchant_ship_01
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.9.a
+
+		add_manpower = 5000
+		add_political_power = -25
+	}
+}
+
+
+########################################################################################
+# can_dark.10 - THE LEDGER PRESENTED, 1 january 1946
+#
+# under fourteen debt points a commission takes back two
+########################################################################################
+
+country_event = {
+	id = can_dark.10
+	title = can_dark.10.t
+	desc = can_dark.10.d
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	# royal commission: two points back, no more
+	option = {
+		name = can_dark.10.a
+
+		trigger = {
+			check_variable = { var = CAN_civil_liberties_debt value = 14 compare = less_than }
+		}
+
+		add_political_power = -100
+
+		set_variable = { CAN_ledger_arg_debt = -2 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_remitted_two_tt
+
+		ai_chance = {
+			factor = 60
+		}
+	}
+
+	# do nothing; past thirteen points the only option left
+	option = {
+		name = can_dark.10.b
+
+		if = {
+			limit = {
+				check_variable = { var = CAN_civil_liberties_debt value = 14 compare = greater_than_or_equals }
+				NOT = { has_idea = CAN_a_shameful_ledger }
+			}
+			add_ideas = CAN_a_shameful_ledger
+			set_country_flag = CAN_shameful_ledger
+		}
+
+		ai_chance = {
+			factor = 40
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.11 - THE REPATRIATION ORDERS RESCINDED, 1947
+#
+# if the property was auctioned, only compensation is left
+########################################################################################
+
+country_event = {
+	id = can_dark.11
+	title = can_dark.11.t
+	desc = can_dark.11.d
+	picture = GFX_report_event_merchant_ship_01
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	# rescind the orders
+	option = {
+		name = can_dark.11.a
+
+		add_stability = 0.03
+
+		set_variable = { CAN_ledger_arg_debt = -1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_remitted_one_tt
+
+		473 = {
+			if = {
+				limit = { has_dynamic_modifier = { modifier = CAN_the_coast_under_order } }
+				remove_dynamic_modifier = { modifier = CAN_the_coast_under_order }
+			}
+		}
+
+		ai_chance = {
+			factor = 70
+		}
+	}
+
+	# return their property, only if it still exists
+	option = {
+		name = can_dark.11.b
+
+		trigger = {
+			NOT = { has_country_flag = CAN_done_the_auction_of_their_property }
+		}
+
+		add_political_power = -100
+		add_stability = 0.02
+
+		set_variable = { CAN_ledger_arg_debt = -1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_remitted_one_tt
+
+		473 = {
+			if = {
+				limit = { has_dynamic_modifier = { modifier = CAN_the_coast_under_order } }
+				remove_dynamic_modifier = { modifier = CAN_the_coast_under_order }
+			}
+		}
+
+		ai_chance = {
+			factor = 30
+		}
+	}
+
+	# compensate, at triple, there is nothing left to return
+	option = {
+		name = can_dark.11.c
+
+		trigger = {
+			has_country_flag = CAN_done_the_auction_of_their_property
+		}
+
+		add_political_power = -300
+
+		set_variable = { CAN_ledger_arg_debt = -1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_debt_remitted_one_tt
+
+		custom_effect_tooltip = CAN_the_property_has_been_sold_tt
+
+		ai_chance = {
+			factor = 20
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.12 - THE JOINT COMMITTEE REPORTS, 1948
+#
+# neither option removes CAN_residential_schools
+########################################################################################
+
+country_event = {
+	id = can_dark.12
+	title = can_dark.12.t
+	desc = can_dark.12.d
+	picture = GFX_report_event_generic_parliament
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.12.a
+
+		add_political_power = -50
+
+		add_timed_idea = {
+			idea = CAN_a_revision_announced
+			days = 1095
+		}
+
+		custom_effect_tooltip = CAN_residential_schools_not_removed_tt
+
+		ai_chance = {
+			factor = 60
+		}
+	}
+
+	option = {
+		name = can_dark.12.b
+
+		set_variable = { CAN_ledger_arg_evidence = 1 }
+		CAN_add_ledger = yes
+		custom_effect_tooltip = CAN_ledger_evidence_one_tt
+
+		custom_effect_tooltip = CAN_residential_schools_not_removed_tt
+
+		ai_chance = {
+			factor = 40
+		}
+	}
+}
+
+
+########################################################################################
+# can_dark.13 - THE EVIDENCE THAT SURVIVED, 1949
+#
+# one option only
+########################################################################################
+
+country_event = {
+	id = can_dark.13
+	title = can_dark.13.t
+	desc = can_dark.13.d
+	picture = GFX_report_event_generic_read_write
+
+	is_triggered_only = yes
+	fire_only_once = yes
+
+	option = {
+		name = can_dark.13.a
+
+		if = {
+			limit = { NOT = { has_idea = CAN_the_record_is_lost } }
+			add_ideas = CAN_the_record_is_lost
+		}
+	}
+}

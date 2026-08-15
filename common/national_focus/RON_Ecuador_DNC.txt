@@ -1,0 +1,217 @@
+####################################################################################################
+# ECUADOR - DNC
+####################################################################################################
+# no keep_completed: use flags cross-era
+# cost is in weeks
+
+focus_tree = {
+	id = RON_Ecuador_DNC
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = ECU
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	### THE TITLE
+
+	focus = {
+		id = ECU_titles_without_garrisons
+		icon = GFX_goal_generic_forceful_treaty
+		x = 6
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_titles_without_garrison
+			custom_effect_tooltip = ECU_titles_without_garrisons_tt
+		}
+	}
+
+	focus = {
+		id = ECU_the_tobar_treaty
+		icon = GFX_goal_generic_improve_relations
+		x = 4
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_titles_without_garrisons }
+		mutually_exclusive = { focus = ECU_not_one_league_to_brazil }
+
+		completion_reward = {
+			add_to_variable = { ECU_the_title = 8 }
+			add_to_variable = { ECU_guarantors = 1 }
+			clamp_variable = { var = ECU_the_title min = 0 max = 100 }
+			clamp_variable = { var = ECU_guarantors min = 0 max = 4 }
+			set_country_flag = ECU_done_tobar_treaty
+			BRA = { add_opinion_modifier = { target = ECU modifier = ECU_amazon_settlement } }
+			custom_effect_tooltip = ECU_the_tobar_treaty_tt
+		}
+	}
+
+	focus = {
+		id = ECU_not_one_league_to_brazil
+		icon = GFX_goal_generic_territory_or_war
+		x = 8
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_titles_without_garrisons }
+		mutually_exclusive = { focus = ECU_the_tobar_treaty }
+
+		completion_reward = {
+			# no Title, no guarantor, lower ceiling
+			set_country_flag = ECU_done_no_league
+			add_stability = 0.05
+			custom_effect_tooltip = ECU_not_one_league_to_brazil_tt
+		}
+	}
+
+	### LIBERALS IN UNIFORM
+
+	focus = {
+		id = ECU_the_liberal_revolution_in_arms
+		icon = GFX_goal_generic_political_pressure
+		x = 16
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_liberal_revolution
+			swap_ideas = {
+				remove_idea = ECU_idea_a_party_in_uniform
+				add_idea = ECU_idea_a_party_in_uniform_2
+			}
+			custom_effect_tooltip = ECU_the_liberal_revolution_in_arms_tt
+		}
+	}
+
+	focus = {
+		id = ECU_the_law_of_dead_hands
+		icon = GFX_goal_generic_consumer_goods
+		x = 14
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_the_liberal_revolution_in_arms }
+
+		completion_reward = {
+			add_political_power = 80
+			set_country_flag = ECU_done_dead_hands
+			add_ideas = ECU_idea_the_church_against_the_state
+			custom_effect_tooltip = ECU_the_law_of_dead_hands_tt
+		}
+	}
+
+	# Focus for The January Revolution
+	focus = {
+		id = ECU_the_january_revolution
+		icon = GFX_goal_generic_secret_weapon
+		x = 18
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_the_liberal_revolution_in_arms }
+		mutually_exclusive = { focus = ECU_let_garcia_govern }
+
+		completion_reward = {
+			set_country_flag = ECU_done_power_by_barracks
+			add_political_power = 100
+			add_ideas = ECU_idea_power_by_barracks
+			custom_effect_tooltip = ECU_the_january_revolution_tt
+		}
+	}
+
+	focus = {
+		id = ECU_let_garcia_govern
+		icon = GFX_goal_generic_national_unity
+		x = 20
+		y = 1
+		cost = 10
+		prerequisite = { focus = ECU_the_liberal_revolution_in_arms }
+		mutually_exclusive = { focus = ECU_the_january_revolution }
+
+		completion_reward = {
+			# divergence 1: no coup rolls ever
+			set_country_flag = ECU_done_constitutional
+			add_stability = 0.10
+			custom_effect_tooltip = ECU_let_garcia_govern_tt
+		}
+	}
+
+	### ONE FRUIT
+
+	focus = {
+		id = ECU_the_first_cacao_in_the_world
+		icon = GFX_goal_generic_construct_civilian
+		x = 26
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_cacao_economy
+			add_ideas = ECU_idea_a_single_fruit
+			custom_effect_tooltip = ECU_the_first_cacao_in_the_world_tt
+		}
+	}
+
+	focus = {
+		id = ECU_the_iron_road_to_quito
+		icon = GFX_goal_generic_construction2
+		x = 26
+		y = 1
+		cost = 15
+		prerequisite = { focus = ECU_the_first_cacao_in_the_world }
+
+		completion_reward = {
+			305 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			490 = {
+				add_building_construction = {
+					type = infrastructure
+					level = 1
+					instant_build = yes
+				}
+			}
+			set_country_flag = ECU_done_railway
+			add_ideas = ECU_idea_bonds_of_the_railway
+			custom_effect_tooltip = ECU_the_iron_road_to_quito_tt
+		}
+	}
+
+	### THE MONTONERAS
+
+	focus = {
+		id = ECU_an_army_of_montoneras
+		icon = GFX_goal_generic_demand_territory
+		x = 36
+		y = 0
+		cost = 10
+
+		# do not date-gate: discontent gate only
+		available = {
+			OR = {
+				has_stability < 0.60
+				has_country_flag = ECU_done_dead_hands
+				has_country_flag = ECU_done_power_by_barracks
+			}
+		}
+
+		completion_reward = {
+			ECU_initialise_the_file = yes
+			set_country_flag = ECU_done_montoneras
+			custom_effect_tooltip = ECU_an_army_of_montoneras_tt
+		}
+	}
+}

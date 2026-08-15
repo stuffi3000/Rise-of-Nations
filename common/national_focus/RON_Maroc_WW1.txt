@@ -1,0 +1,372 @@
+####################################################################################################
+# MOROCCO - WW1
+# 1910-1918, 11 focuses
+####################################################################################################
+
+focus_tree = {
+	id = RON_Maroc_WW1
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			tag = MOR
+		}
+	}
+	default = no
+	reset_on_civilwar = no
+
+	##############################################################################################
+	##### A - THE SHERIFIAN SEAL
+	##############################################################################################
+
+	# baraka +25, trust +40
+	focus = {
+		id = MOR_ww1_the_sherifian_seal
+		icon = GFX_goal_generic_national_unity
+		x = 5
+		y = 0
+		cost = 5
+		bypass = {
+			NOT = {
+				OR = {
+					country_exists = FRA
+					country_exists = SPR
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			if = {
+				limit = {
+					NOT = {
+						check_variable = { MOR_baraka > 24 }
+					}
+				}
+				set_variable = { MOR_baraka = 25 }
+			}
+			if = {
+				limit = {
+					NOT = {
+						check_variable = { MOR_residency_trust > 39 }
+					}
+				}
+				set_variable = { MOR_residency_trust = 40 }
+			}
+			add_political_power = 25
+			set_country_flag = MOR_sherifian_seal_registry
+			custom_effect_tooltip = MOR_ww1_the_sherifian_seal_tt
+		}
+	}
+
+	#Focus for A Sultan Who Signs
+	focus = {
+		id = MOR_ww1_a_sultan_who_signs
+		icon = GFX_goal_generic_military_deal
+		x = 3
+		y = 1
+		cost = 7
+		prerequisite = {
+			focus = MOR_ww1_the_sherifian_seal
+		}
+		mutually_exclusive = {
+			focus = MOR_ww1_a_sultan_of_war
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_political_power = 75
+			add_stability = 0.05
+			add_to_variable = { MOR_residency_trust = 30 }
+			add_to_variable = { MOR_baraka = -6 }
+			if = {
+				limit = {
+					has_country_flag = MOR_hafid_guaranteed_the_treaties
+				}
+				add_political_power = 40
+				add_to_variable = { MOR_residency_trust = 10 }
+			}
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_sultan_signs
+			custom_effect_tooltip = MOR_ww1_a_sultan_who_signs_tt
+		}
+	}
+
+	# baraka +35, trust -60
+	focus = {
+		id = MOR_ww1_a_sultan_of_war
+		icon = GFX_goal_generic_major_war
+		x = 7
+		y = 1
+		cost = 14
+		prerequisite = {
+			focus = MOR_ww1_the_sherifian_seal
+		}
+		mutually_exclusive = {
+			focus = MOR_ww1_a_sultan_who_signs
+		}
+		available = {
+			OR = {
+				has_country_flag = MOR_askris_mutiny
+				has_country_flag = MOR_hafid_promised_expulsion
+				has_country_flag = MOR_aziz_kept_the_throne
+			}
+		}
+		will_lead_to_war_with = FRA
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_war_support = 0.15
+			add_manpower = 15000
+			add_to_variable = { MOR_baraka = 35 }
+			add_to_variable = { MOR_residency_trust = -60 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_war_of_the_sultan
+			custom_effect_tooltip = MOR_ww1_a_sultan_of_war_tt
+		}
+	}
+
+	##############################################################################################
+	##### B - THE DEBT AND THE GAGE
+	##############################################################################################
+
+	#Focus for Rabat, Not Fes
+	focus = {
+		id = MOR_ww1_rabat_not_fes
+		icon = GFX_goal_generic_construct_infrastructure
+		x = 13
+		y = 2
+		cost = 10
+		prerequisite = {
+			focus = MOR_ww1_a_sultan_who_signs
+		}
+		bypass = {
+			has_country_flag = MOR_capital_at_the_port
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 40
+			add_stability = 0.03
+			add_to_variable = { MOR_baraka = -5 }
+			if = {
+				limit = {
+					has_country_flag = MOR_customs_under_gage
+				}
+				add_political_power = 25
+			}
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			set_country_flag = MOR_capital_at_the_port
+			custom_effect_tooltip = MOR_ww1_rabat_not_fes_tt
+		}
+	}
+
+	#Focus for The Casablanca Fair
+	focus = {
+		id = MOR_ww1_the_casablanca_fair
+		icon = GFX_goal_generic_positive_trade_relations
+		x = 13
+		y = 3
+		cost = 7
+		prerequisite = {
+			focus = MOR_ww1_rabat_not_fes
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 50
+			add_to_variable = { MOR_land_pressure = 1 }
+			add_to_variable = { MOR_residency_trust = 10 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_casablanca_fair
+			custom_effect_tooltip = MOR_ww1_the_casablanca_fair_tt
+		}
+	}
+
+	##############################################################################################
+	##### C - THE SOLDIER AS COIN
+	##############################################################################################
+
+	#Focus for Hold the Shell, Empty the Core
+	focus = {
+		id = MOR_ww1_hold_the_shell_empty_the_core
+		icon = GFX_goal_generic_defence
+		x = 21
+		y = 0
+		cost = 5
+		available = {
+			OR = {
+				FRA = {
+					has_war = yes
+				}
+				NOT = {
+					country_exists = FRA
+				}
+			}
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 25
+			set_country_flag = MOR_shell_and_core
+			custom_effect_tooltip = MOR_ww1_hold_the_shell_empty_the_core_tt
+		}
+	}
+
+	#Focus for Keep the Peace of the Bled
+	focus = {
+		id = MOR_ww1_keep_the_peace_of_the_bled
+		icon = GFX_goal_generic_neutrality_focus
+		x = 19
+		y = 1
+		cost = 7
+		prerequisite = {
+			focus = MOR_ww1_hold_the_shell_empty_the_core
+		}
+		mutually_exclusive = {
+			focus = MOR_ww1_seize_the_empty_shell
+		}
+		ai_will_do = {
+			factor = 10
+		}
+		completion_reward = {
+			add_stability = 0.05
+			add_to_variable = { MOR_residency_trust = 20 }
+			add_to_variable = { MOR_baraka = -5 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_peace_of_the_bled
+			custom_effect_tooltip = MOR_ww1_keep_the_peace_of_the_bled_tt
+		}
+	}
+
+	# baraka +30, trust -50
+	focus = {
+		id = MOR_ww1_seize_the_empty_shell
+		icon = GFX_goal_generic_attack_allies
+		x = 23
+		y = 1
+		cost = 14
+		prerequisite = {
+			focus = MOR_ww1_hold_the_shell_empty_the_core
+		}
+		mutually_exclusive = {
+			focus = MOR_ww1_keep_the_peace_of_the_bled
+		}
+		will_lead_to_war_with = FRA
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_war_support = 0.15
+			add_manpower = 12000
+			army_experience = 15
+			add_to_variable = { MOR_baraka = 30 }
+			add_to_variable = { MOR_residency_trust = -50 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_war_of_the_sultan
+			custom_effect_tooltip = MOR_ww1_seize_the_empty_shell_tt
+		}
+	}
+
+	#Focus for The Regiments Sail
+	focus = {
+		id = MOR_ww1_the_regiments_sail
+		icon = GFX_goal_generic_allies_build_infantry
+		x = 19
+		y = 2
+		cost = 7
+		prerequisite = {
+			focus = MOR_ww1_keep_the_peace_of_the_bled
+		}
+		bypass = {
+			has_country_flag = MOR_contingent_already_sailed
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_manpower = -20000
+			add_stability = -0.05
+			add_to_variable = { MOR_lent_battalions = 1 }
+			add_to_variable = { MOR_baraka = -4 }
+			add_to_variable = { MOR_residency_trust = 15 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_contingent_already_sailed
+			custom_effect_tooltip = MOR_ww1_the_regiments_sail_tt
+		}
+	}
+
+	#Focus for A Claim Written in Blood
+	focus = {
+		id = MOR_ww1_a_claim_written_in_blood
+		icon = GFX_goal_generic_political_pressure
+		x = 19
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = MOR_ww1_the_regiments_sail
+		}
+		ai_will_do = {
+			factor = 5
+		}
+		completion_reward = {
+			add_political_power = 60
+			add_stability = -0.05
+			add_to_variable = { MOR_lent_battalions = 1 }
+			clamp_variable = { var = MOR_lent_battalions min = 0 max = 10 }
+			set_country_flag = MOR_blood_claim_1918
+			custom_effect_tooltip = MOR_ww1_a_claim_written_in_blood_tt
+		}
+	}
+
+	##############################################################################################
+	##### D - REPUBLIC OF THE RIF
+	##############################################################################################
+
+	#Focus for Abd al-Malik's Riders
+	focus = {
+		id = MOR_ww1_the_riders_of_taza
+		icon = GFX_goal_generic_special_forces
+		x = 29
+		y = 0
+		cost = 10
+		available = {
+			OR = {
+				has_country_flag = MOR_berlin_patronage
+				AND = {
+					country_exists = GER
+					country_exists = FRA
+					GER = {
+						has_war_with = FRA
+					}
+				}
+			}
+		}
+		will_lead_to_war_with = FRA
+		ai_will_do = {
+			factor = 0
+		}
+		completion_reward = {
+			add_war_support = 0.10
+			add_manpower = 8000
+			army_experience = 10
+			add_to_variable = { MOR_baraka = 6 }
+			add_to_variable = { MOR_residency_trust = -30 }
+			clamp_variable = { var = MOR_baraka min = 0 max = 100 }
+			clamp_variable = { var = MOR_residency_trust min = 0 max = 100 }
+			set_country_flag = MOR_taza_rising
+			custom_effect_tooltip = MOR_ww1_the_riders_of_taza_tt
+		}
+	}
+}

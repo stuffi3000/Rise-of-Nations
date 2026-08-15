@@ -1,0 +1,169 @@
+####################################################################################################
+# MONTENEGRO - WW2
+####################################################################################################
+
+focus_tree = {
+	id = RON_Montenegro_WW2
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = MNT
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1200 }
+
+	### THE CROWN AND THE FAMILY
+
+	focus = {
+		id = MNT_the_petrovdan_crown
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+		mutually_exclusive = { focus = MNT_the_thirteenth_of_july }
+
+		completion_reward = {
+			# divergence 8: Claim +15
+			MNT_initialise_ledger = yes
+			set_cosmetic_tag = MNT_Kingdom
+			set_country_flag = MNT_done_petrovdan
+			add_to_variable = { MNT_the_claim = 15 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			add_ideas = MNT_idea_a_throne_held_by_foreigners
+			custom_effect_tooltip = MNT_the_petrovdan_crown_tt
+		}
+	}
+
+	### THE NATIONAL LEVY
+
+	focus = {
+		id = MNT_the_thirteenth_of_july
+		icon = GFX_goal_generic_major_war
+		x = 46
+		y = 0
+		cost = 10
+		mutually_exclusive = { focus = MNT_the_petrovdan_crown }
+		will_lead_to_war_with = ITA
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			set_country_flag = MNT_done_thirteenth_july
+			add_war_support = 0.20
+			custom_effect_tooltip = MNT_the_thirteenth_of_july_tt
+		}
+	}
+
+	# Focus for The Lovcen Brigade
+	focus = {
+		id = MNT_the_lovcen_brigade
+		icon = GFX_goal_generic_army_doctrines
+		x = 44
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_petrovdan_crown }
+
+		completion_reward = {
+			set_country_flag = MNT_done_lovcen_brigade
+			custom_effect_tooltip = MNT_the_lovcen_brigade_tt
+		}
+	}
+
+	### THE GREEN AND THE WHITE
+
+	focus = {
+		id = MNT_the_party_of_the_mountains
+		icon = GFX_goal_generic_demand_territory
+		x = 34
+		y = 0
+		cost = 10
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			set_country_flag = MNT_done_party_mountains
+			add_popularity = { ideology = communism popularity = 0.10 }
+			custom_effect_tooltip = MNT_the_party_of_the_mountains_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_comintern_on_the_national_question
+		icon = GFX_goal_generic_national_unity
+		x = 34
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_party_of_the_mountains }
+		mutually_exclusive = { focus = MNT_a_banovina_of_our_own }
+
+		completion_reward = {
+			# closes every parliamentary road
+			set_country_flag = MNT_done_comintern
+			add_political_power = 80
+			custom_effect_tooltip = MNT_the_comintern_on_the_national_question_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_sporazum_and_the_others
+		icon = GFX_goal_generic_forceful_treaty
+		x = 38
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = MNT_done_federalists
+				date > 1939.8.26
+			}
+			# do not date-gate this window
+			NOT = { has_war_with = GER }
+		}
+
+		completion_reward = {
+			set_country_flag = MNT_done_sporazum
+			add_political_power = 60
+			custom_effect_tooltip = MNT_the_sporazum_and_the_others_tt
+		}
+	}
+
+	focus = {
+		id = MNT_a_banovina_of_our_own
+		icon = GFX_goal_generic_improve_relations
+		x = 38
+		y = 1
+		cost = 10
+		prerequisite = { focus = MNT_the_sporazum_and_the_others }
+		mutually_exclusive = { focus = MNT_the_comintern_on_the_national_question }
+
+		completion_reward = {
+			# divergence 7: banovina in 1939
+			set_country_flag = MNT_done_banovina
+			add_ideas = MNT_idea_the_ready_made_administration
+			custom_effect_tooltip = MNT_a_banovina_of_our_own_tt
+		}
+	}
+
+	focus = {
+		id = MNT_a_republic_of_our_own
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 3
+		cost = 10
+		prerequisite = {
+			focus = MNT_the_comintern_on_the_national_question
+			focus = MNT_a_banovina_of_our_own
+		}
+
+		completion_reward = {
+			# Claim unchanged: title changed owner
+			set_country_flag = MNT_done_republic
+			add_stability = 0.10
+			custom_effect_tooltip = MNT_a_republic_of_our_own_tt
+		}
+	}
+}

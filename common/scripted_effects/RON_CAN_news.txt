@@ -1,0 +1,47 @@
+# the focus sets id and scope.
+# every reader is stamped.
+# 1 ottawa, 2 the north atlantic, 3 the world.
+
+CAN_headline = {
+	set_variable = { CAN_news_shown = CAN_news_id }
+
+	if = {
+		limit = { check_variable = { CAN_news_scope = 3 } }
+		every_country = {
+			limit = { NOT = { tag = CAN } }
+			set_variable = { CAN_news_shown = CAN.CAN_news_id }
+		}
+		news_event = { id = can_news.3 hours = 6 }
+	}
+	else_if = {
+		limit = { check_variable = { CAN_news_scope = 2 } }
+		news_event = { id = can_news.2 hours = 6 }
+		# london and washington differ.
+		# the dominions read the precedent.
+		every_other_country = {
+			limit = {
+				exists = yes
+				OR = {
+					tag = ENG
+					tag = USA
+					tag = AST
+					tag = NZL
+					tag = SAF
+					tag = RAJ
+					tag = NFL
+					tag = IRE
+					is_neighbor_of = CAN
+					is_in_faction_with = CAN
+					has_war_with = CAN
+					is_subject_of = CAN
+					any_core_state = { is_controlled_by = CAN }
+				}
+			}
+			set_variable = { CAN_news_shown = CAN.CAN_news_id }
+			news_event = { id = can_news.2 hours = 6 }
+		}
+	}
+	else = {
+		news_event = { id = can_news.1 hours = 6 }
+	}
+}

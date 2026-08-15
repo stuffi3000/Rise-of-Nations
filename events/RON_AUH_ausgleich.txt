@@ -1,0 +1,226 @@
+###########################
+# AUSTRIA-HUNGARY - THE AUSGLEICH
+###########################
+# 10 term falls due, 11 Budapest consents, 12 Provisorium
+# 20 floor crisis, 30 ceiling crisis
+
+add_namespace = auh_ausgleich
+
+# The term falls due
+country_event = {
+	id = auh_ausgleich.10
+	title = auh_ausgleich.10.t
+	desc = auh_ausgleich.10.d
+	picture = GFX_report_event_internal_focus
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_ausgleich.10.a
+		ai_chance = {
+			factor = 70
+		}
+		add_political_power = 25
+		custom_effect_tooltip = auh_ausgleich_renewal_window_tt
+	}
+
+	option = {
+		name = auh_ausgleich.10.b
+		ai_chance = {
+			factor = 30
+		}
+		trigger = {
+			has_political_power > 50
+		}
+		add_political_power = -50
+		subtract_from_variable = { AUH_quote = 1 }
+		add_to_variable = { HUN_support = 3 }
+		subtract_from_variable = { AUS_support = 2 }
+		AUH_clamp_nationality_support = yes
+	}
+}
+
+# Budapest must consent to the war
+country_event = {
+	id = auh_ausgleich.11
+	title = auh_ausgleich.11.t
+	desc = auh_ausgleich.11.d
+	picture = GFX_report_event_hungarian_support
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_ausgleich.11.a
+		ai_chance = {
+			factor = 60
+		}
+		add_political_power = -75
+		add_to_variable = { AUH_quote = 3 }
+		add_to_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+
+	option = {
+		name = auh_ausgleich.11.b
+		ai_chance = {
+			factor = 40
+		}
+		add_war_support = 0.05
+		subtract_from_variable = { AUH_gemeinsamkeit = 5 }
+		subtract_from_variable = { HUN_support = 10 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# The Provisorium
+country_event = {
+	id = auh_ausgleich.12
+	title = auh_ausgleich.12.t
+	desc = auh_ausgleich.12.d
+	picture = GFX_report_event_home_front
+
+	is_triggered_only = yes
+
+	option = {
+		name = auh_ausgleich.12.a
+		ai_chance = {
+			factor = 60
+		}
+		add_political_power = 50
+		add_stability = -0.05
+		subtract_from_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+
+	option = {
+		name = auh_ausgleich.12.b
+		ai_chance = {
+			factor = 40
+		}
+		trigger = {
+			has_political_power > 50
+		}
+		add_political_power = -50
+		add_to_variable = { AUH_gemeinsamkeit = 2 }
+		add_to_variable = { AUH_quote = 2 }
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# The amicable separation, floor crisis
+country_event = {
+	id = auh_ausgleich.20
+	title = auh_ausgleich.20.t
+	desc = auh_ausgleich.20.d
+	picture = GFX_report_event_AUH_minorities
+
+	is_triggered_only = yes
+
+	# A - Grant it
+	option = {
+		name = auh_ausgleich.20.a
+		ai_chance = {
+			factor = 30
+		}
+		set_country_flag = AUH_dual_monarchy_dissolved
+		# release_puppet: not if HUN already exists
+		if = {
+			limit = { NOT = { country_exists = HUN } }
+			release_puppet = HUN
+		}
+		set_variable = { HUN_support = 70 }
+		if = {
+			limit = { NOT = { has_idea = AUH_the_personal_union } }
+			AUH_wear_the_personal_union = yes
+		}
+		set_variable = { AUH_ausgleich_tier = 1 }
+		set_variable = { AUH_gemeinsamkeit = 0 }
+		add_stability = 0.05
+		AUH_clamp_nationality_support = yes
+	}
+
+	# B - Refuse it
+	option = {
+		name = auh_ausgleich.20.b
+		ai_chance = {
+			factor = 30
+		}
+		set_country_flag = AUH_dual_monarchy_dissolved
+		add_war_support = 0.10
+		# activate_mission: not if already running
+		if = {
+			limit = { NOT = { has_active_mission = HUN_uprising } }
+			activate_mission = HUN_uprising
+		}
+		subtract_from_variable = { HUN_support = 15 }
+		add_to_variable = { AUS_support = 5 }
+		AUH_clamp_nationality_support = yes
+	}
+
+	# C - Pay for it
+	option = {
+		name = auh_ausgleich.20.c
+		ai_chance = {
+			factor = 40
+		}
+		trigger = {
+			has_political_power > 100
+		}
+		add_political_power = -100
+		set_variable = { AUH_quote = 50 }
+		add_to_variable = { AUH_gemeinsamkeit = 15 }
+		add_to_variable = { HUN_support = 10 }
+		# must reset: else the floor crisis never reopens
+		set_variable = { AUH_missed_renewals = 0 }
+		if = {
+			limit = { NOT = { has_idea = AUH_bought_union } }
+			add_ideas = AUH_bought_union
+		}
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}
+
+# The strike of the counties, ceiling crisis
+country_event = {
+	id = auh_ausgleich.30
+	title = auh_ausgleich.30.t
+	desc = auh_ausgleich.30.d
+	picture = GFX_report_event_martin_declaration
+
+	is_triggered_only = yes
+
+	# Hold the line with royal commissioners
+	option = {
+		name = auh_ausgleich.30.a
+		ai_chance = {
+			factor = 60
+		}
+		add_political_power = -50
+		add_timed_idea = {
+			idea = AUH_hungarian_national_resistance
+			days = 730
+		}
+		subtract_from_variable = { HUN_support = 20 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 5 }
+		add_to_variable = { AUS_support = 2 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+
+	# Give way, dissolve the Diet
+	option = {
+		name = auh_ausgleich.30.b
+		ai_chance = {
+			factor = 40
+		}
+		add_stability = -0.05
+		subtract_from_variable = { AUH_gemeinsamkeit = 12 }
+		add_to_variable = { AUH_quote = 2 }
+		subtract_from_variable = { HUN_support = 5 }
+		AUH_clamp_nationality_support = yes
+		AUH_refresh_the_ausgleich_tier = yes
+	}
+}

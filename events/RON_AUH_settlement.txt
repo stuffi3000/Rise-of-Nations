@@ -1,0 +1,177 @@
+###########################
+# AUSTRIA-HUNGARY - THE SETTLEMENTS
+###########################
+# 1 Bohemia, 2 Transylvania
+# both were refused in life
+
+add_namespace = auh_settlement
+
+# The Bohemian negotiation
+country_event = {
+	id = auh_settlement.1
+	title = auh_settlement.1.t
+	desc = auh_settlement.1.d
+	picture = GFX_report_event_generic_congress_senate
+
+	is_triggered_only = yes
+
+	# four laws, as in Moravia
+	option = {
+		name = auh_settlement.1.a
+		ai_chance = {
+			factor = 50
+		}
+		add_ideas = AUH_settlement_the_bohemian_cadastre_signed
+		add_stability = 0.06
+		add_to_variable = { CZE_support = 20 }
+		subtract_from_variable = { AUS_support = 14 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 8 }
+		every_owned_state = {
+			limit = {
+				is_core_of = CZE
+				is_controlled_by = AUH
+			}
+			add_compliance = 10
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 605 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+		AUH_settlement_bound_the_registers = yes
+	}
+
+	# districts, not registers
+	option = {
+		name = auh_settlement.1.b
+		ai_chance = {
+			factor = 30
+		}
+		add_to_variable = { AUS_support = 12 }
+		subtract_from_variable = { CZE_support = 8 }
+		add_to_variable = { AUH_gemeinsamkeit = 4 }
+		add_political_power = 75
+		random_owned_controlled_state = {
+			limit = { is_core_of = CZE }
+			add_extra_state_shared_building_slots = 1
+		}
+		custom_effect_tooltip = AUH_settlement_bohemia_partitioned_tt
+		AUH_settlement_bound_the_registers = yes
+	}
+
+	# the Saint Anne patents, 1913
+	option = {
+		name = auh_settlement.1.c
+		ai_chance = {
+			factor = 20
+		}
+		add_timed_idea = {
+			idea = AUH_settlement_government_by_commissioner
+			days = 540
+		}
+		subtract_from_variable = { CZE_support = 10 }
+		subtract_from_variable = { AUS_support = 4 }
+		add_stability = 0.04
+		every_owned_state = {
+			limit = {
+				is_core_of = CZE
+				is_controlled_by = AUH
+			}
+			add_compliance = 8
+			add_resistance = 6
+		}
+		custom_effect_tooltip = AUH_settlement_bohemia_by_commission_tt
+		AUH_settlement_bound_the_registers = yes
+	}
+}
+
+# The Transylvanian negotiation
+country_event = {
+	id = auh_settlement.2
+	title = auh_settlement.2.t
+	desc = auh_settlement.2.d
+	picture = GFX_report_event_generic_cabinet_meeting
+
+	is_triggered_only = yes
+
+	# Tisza's price: approve the dualism
+	option = {
+		name = auh_settlement.2.a
+		ai_chance = {
+			factor = 40
+		}
+		random_list = {
+			35 = {
+				add_ideas = AUH_settlement_the_transylvanian_terms
+				add_to_variable = { ROM_support = 20 }
+				add_to_variable = { HUN_support = 4 }
+				add_stability = 0.05
+				if = {
+					limit = { country_exists = ROM }
+					diplomatic_relation = {
+						country = ROM
+						relation = non_aggression_pact
+						active = yes
+					}
+				}
+				hidden_effect = {
+					set_variable = { AUH_news_id = 606 }
+					set_variable = { AUH_news_scope = 2 }
+					AUH_headline = yes
+				}
+			}
+			65 = {
+				subtract_from_variable = { ROM_support = 6 }
+				add_to_variable = { HUN_support = 3 }
+				add_political_power = -40
+				custom_effect_tooltip = AUH_settlement_transylvania_refused_tt
+			}
+		}
+		AUH_settlement_bound_the_registers = yes
+	}
+
+	# revisable, and no renunciation
+	option = {
+		name = auh_settlement.2.b
+		ai_chance = {
+			factor = 40
+		}
+		add_ideas = AUH_settlement_the_transylvanian_terms
+		add_to_variable = { ROM_support = 14 }
+		add_to_variable = { SLO_support = 4 }
+		subtract_from_variable = { HUN_support = 10 }
+		add_stability = 0.03
+		if = {
+			limit = { country_exists = ROM }
+			diplomatic_relation = {
+				country = ROM
+				relation = non_aggression_pact
+				active = yes
+			}
+		}
+		hidden_effect = {
+			set_variable = { AUH_news_id = 606 }
+			set_variable = { AUH_news_scope = 2 }
+			AUH_headline = yes
+		}
+		AUH_settlement_bound_the_registers = yes
+	}
+
+	# the school laws, not the seats
+	option = {
+		name = auh_settlement.2.c
+		ai_chance = {
+			factor = 20
+		}
+		trigger = {
+			NOT = { has_idea = AUH_settlement_the_school_laws_suspended }
+		}
+		add_ideas = AUH_settlement_the_school_laws_suspended
+		add_to_variable = { ROM_support = 10 }
+		add_to_variable = { SLO_support = 16 }
+		subtract_from_variable = { HUN_support = 16 }
+		subtract_from_variable = { AUH_gemeinsamkeit = 5 }
+		custom_effect_tooltip = AUH_settlement_school_laws_reopened_tt
+		AUH_settlement_bound_the_registers = yes
+	}
+}

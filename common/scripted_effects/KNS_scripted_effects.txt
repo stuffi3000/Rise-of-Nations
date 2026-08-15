@@ -1,0 +1,83 @@
+#THE TWO ASSENTS
+#riksdag, storting 0-100; veto 0-3
+#country vars outlive an era
+
+KNS_open_the_two_chambers = {
+	if = {
+		limit = { NOT = { has_country_flag = KNS_chambers_open } }
+		set_country_flag = KNS_chambers_open
+
+		set_variable = { KNS_riksdag = 62 }
+		set_variable = { KNS_storting = 38 }
+		set_variable = { KNS_suspensive_veto = 0 }
+		# precedent set in 1898
+		set_country_flag = KNS_pure_flag_precedent
+		KNS_measure_the_gap = yes
+	}
+}
+
+KNS_move_the_chambers = {
+	add_to_variable = { KNS_riksdag = KNS_arg_riksdag }
+	add_to_variable = { KNS_storting = KNS_arg_storting }
+	clamp_variable = { var = KNS_riksdag min = 0 max = 100 }
+	clamp_variable = { var = KNS_storting min = 0 max = 100 }
+	if = {
+		limit = { has_country_flag = KNS_riksdag_capped }
+		clamp_variable = { var = KNS_riksdag min = 0 max = 70 }
+	}
+	KNS_measure_the_gap = yes
+}
+
+KNS_measure_the_gap = {
+	set_variable = { KNS_union_gap = KNS_riksdag }
+	subtract_from_variable = { KNS_union_gap = KNS_storting }
+	if = {
+		limit = { check_variable = { KNS_union_gap < 0 } }
+		multiply_variable = { KNS_union_gap = -1 }
+	}
+	clamp_variable = { var = KNS_union_gap min = 0 max = 100 }
+
+	# gap > 64 arms 7 June
+	if = {
+		limit = { check_variable = { KNS_union_gap > 64 } }
+		set_country_flag = KNS_the_seventh_of_june_is_armed
+	}
+	else = {
+		clr_country_flag = KNS_the_seventh_of_june_is_armed
+	}
+
+	# floor resets Storting to 50
+	if = {
+		limit = {
+			check_variable = { KNS_storting > 79 }
+			check_variable = { KNS_riksdag < 36 }
+			NOT = { has_country_flag = KNS_what_is_the_union_for }
+		}
+		set_country_flag = KNS_what_is_the_union_for
+		set_variable = { KNS_storting = 50 }
+		set_variable = { KNS_union_gap = KNS_riksdag }
+		subtract_from_variable = { KNS_union_gap = 50 }
+		if = {
+			limit = { check_variable = { KNS_union_gap < 0 } }
+			multiply_variable = { KNS_union_gap = -1 }
+		}
+	}
+}
+
+KNS_withhold_the_sanction = {
+	add_to_variable = { KNS_suspensive_veto = 1 }
+	clamp_variable = { var = KNS_suspensive_veto min = 0 max = 3 }
+	if = {
+		limit = { check_variable = { KNS_suspensive_veto > 2 } }
+		set_variable = { KNS_arg_riksdag = -10 }
+		set_variable = { KNS_arg_storting = 15 }
+		KNS_move_the_chambers = yes
+		set_country_flag = KNS_veto_spent
+	}
+}
+
+KNS_sanction_the_bill = {
+	set_variable = { KNS_arg_riksdag = -10 }
+	set_variable = { KNS_arg_storting = 7 }
+	KNS_move_the_chambers = yes
+}

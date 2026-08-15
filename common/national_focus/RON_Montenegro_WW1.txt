@@ -1,0 +1,284 @@
+####################################################################################################
+# MONTENEGRO - WW1
+####################################################################################################
+
+focus_tree = {
+	id = RON_Montenegro_WW1
+
+	country = {
+		factor = 0
+		modifier = {
+			add = 10
+			original_tag = MNT
+		}
+	}
+
+	default = no
+	reset_on_civilwar = no
+
+	continuous_focus_position = { x = 50 y = 1800 }
+
+	### THE CROWN AND THE FAMILY
+
+	focus = {
+		id = MNT_a_crown_for_the_jubilee
+		icon = GFX_goal_generic_political_pressure
+		x = 26
+		y = 0
+		cost = 10
+
+		available = {
+			OR = {
+				has_country_flag = MNT_done_the_prince
+				# later bookmarks have no DNC era
+				date > 1910.8.28
+			}
+		}
+
+		bypass = {
+			NOT = { has_cosmetic_tag = MNT_Principality }
+		}
+
+		completion_reward = {
+			MNT_initialise_ledger = yes
+			drop_cosmetic_tag = yes
+			add_to_variable = { MNT_the_dowry = 4 }
+			add_to_variable = { MNT_the_claim = 2 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_crowned
+			custom_effect_tooltip = MNT_a_crown_for_the_jubilee_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_neutral_mountain
+		icon = GFX_goal_generic_neutrality_focus
+		x = 22
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_a_crown_for_the_jubilee }
+		mutually_exclusive = { focus = MNT_the_assembly_decides_for_war }
+
+		completion_reward = {
+			# divergence 3: Claim -25
+			subtract_from_variable = { MNT_the_claim = 25 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_neutral
+			add_ideas = MNT_idea_the_king_who_did_not_fight
+			custom_effect_tooltip = MNT_the_neutral_mountain_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_assembly_decides_for_war
+		icon = GFX_goal_generic_major_war
+		x = 26
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_a_crown_for_the_jubilee }
+		mutually_exclusive = { focus = MNT_the_neutral_mountain }
+		will_lead_to_war_with = AUH
+
+		completion_reward = {
+			set_country_flag = MNT_done_war_1914
+			add_war_support = 0.15
+			create_wargoal = {
+				type = annex_everything
+				target = AUH
+			}
+			custom_effect_tooltip = MNT_the_assembly_decides_for_war_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_crown_in_a_suitcase
+		icon = GFX_goal_generic_forceful_treaty
+		x = 26
+		y = 6
+		cost = 10
+		prerequisite = {
+			focus = MNT_cover_the_retreat
+			focus = MNT_hold_the_lovcen
+		}
+
+		completion_reward = {
+			set_country_flag = MNT_done_exile
+			add_political_power = 100
+			custom_effect_tooltip = MNT_the_crown_in_a_suitcase_tt
+		}
+	}
+
+	### THE NATIONAL LEVY
+
+	focus = {
+		id = MNT_the_balkan_league
+		icon = GFX_goal_generic_alliance
+		x = 46
+		y = 0
+		cost = 10
+		prerequisite = { focus = MNT_a_crown_for_the_jubilee }
+		will_lead_to_war_with = TUR
+
+		bypass = {
+			has_war_with = TUR
+		}
+
+		completion_reward = {
+			set_country_flag = MNT_done_league
+			SER = { add_opinion_modifier = { target = MNT modifier = MNT_balkan_league } }
+			custom_effect_tooltip = MNT_the_balkan_league_tt
+		}
+	}
+
+	focus = {
+		id = MNT_first_to_fire
+		icon = GFX_goal_generic_army_doctrines
+		x = 46
+		y = 1
+		cost = 5
+		prerequisite = { focus = MNT_the_balkan_league }
+
+		completion_reward = {
+			# Claim +6
+			add_to_variable = { MNT_the_claim = 6 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			add_war_support = 0.15
+			set_country_flag = MNT_done_first_to_fire
+			custom_effect_tooltip = MNT_first_to_fire_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_walls_of_scutari
+		icon = GFX_goal_generic_army_artillery
+		x = 46
+		y = 2
+		cost = 10
+		prerequisite = { focus = MNT_first_to_fire }
+
+		completion_reward = {
+			add_to_variable = { MNT_the_claim = 8 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_scutari
+			add_manpower = -3000
+			custom_effect_tooltip = MNT_the_walls_of_scutari_tt
+		}
+	}
+
+	focus = {
+		id = MNT_we_do_not_leave_scutari
+		icon = GFX_goal_generic_territory_or_war
+		x = 42
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_the_walls_of_scutari }
+		mutually_exclusive = { focus = MNT_the_treaty_of_london }
+
+		completion_reward = {
+			# divergence 2: Dowry -25
+			subtract_from_variable = { MNT_the_dowry = 25 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			set_country_flag = MNT_done_kept_scutari
+			add_ideas = MNT_idea_the_adriatic_blockade
+			custom_effect_tooltip = MNT_we_do_not_leave_scutari_tt
+		}
+	}
+
+	focus = {
+		id = MNT_the_treaty_of_london
+		icon = GFX_goal_generic_demand_territory
+		x = 48
+		y = 3
+		cost = 10
+		prerequisite = { focus = MNT_the_walls_of_scutari }
+		mutually_exclusive = { focus = MNT_we_do_not_leave_scutari }
+
+		completion_reward = {
+			# Claim +10
+			add_to_variable = { MNT_the_claim = 10 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_sandzak
+			custom_effect_tooltip = MNT_the_treaty_of_london_tt
+		}
+	}
+
+	focus = {
+		id = MNT_a_serbian_chief_of_staff
+		icon = GFX_goal_generic_military_sphere
+		x = 48
+		y = 4
+		cost = 10
+		prerequisite = { focus = MNT_the_assembly_decides_for_war }
+
+		completion_reward = {
+			# Claim +12
+			add_to_variable = { MNT_the_claim = 12 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_serbian_staff
+			army_experience = 25
+			custom_effect_tooltip = MNT_a_serbian_chief_of_staff_tt
+		}
+	}
+
+	focus = {
+		id = MNT_hold_the_lovcen
+		icon = GFX_goal_generic_position_armies
+		x = 44
+		y = 5
+		cost = 10
+		prerequisite = { focus = MNT_the_assembly_decides_for_war }
+		mutually_exclusive = { focus = MNT_cover_the_retreat }
+
+		completion_reward = {
+			# divergence 4: Dowry -30
+			subtract_from_variable = { MNT_the_dowry = 30 }
+			clamp_variable = { var = MNT_the_dowry min = 0 max = 100 }
+			set_country_flag = MNT_done_lovcen
+			custom_effect_tooltip = MNT_hold_the_lovcen_tt
+		}
+	}
+
+	focus = {
+		id = MNT_cover_the_retreat
+		icon = GFX_goal_generic_defence
+		x = 48
+		y = 5
+		cost = 10
+		prerequisite = {
+			focus = MNT_a_serbian_chief_of_staff
+			focus = MNT_the_assembly_decides_for_war
+		}
+		mutually_exclusive = { focus = MNT_hold_the_lovcen }
+
+		completion_reward = {
+			# Mojkovac: Claim +20, -10k manpower
+			add_to_variable = { MNT_the_claim = 20 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_mojkovac
+			add_ideas = MNT_idea_the_debt_of_mojkovac
+			add_manpower = -10000
+			custom_effect_tooltip = MNT_cover_the_retreat_tt
+		}
+	}
+
+	### THE GREEN AND THE WHITE
+
+	focus = {
+		id = MNT_the_green_lists
+		icon = GFX_goal_generic_national_unity
+		x = 36
+		y = 6
+		cost = 10
+		prerequisite = { focus = MNT_the_crown_in_a_suitcase }
+
+		completion_reward = {
+			# divergence 5: Claim -15
+			subtract_from_variable = { MNT_the_claim = 15 }
+			clamp_variable = { var = MNT_the_claim min = 0 max = 100 }
+			set_country_flag = MNT_done_green_lists
+			add_ideas = MNT_idea_brother_against_brother
+			custom_effect_tooltip = MNT_the_green_lists_tt
+		}
+	}
+}
